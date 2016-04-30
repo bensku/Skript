@@ -1,2 +1,7 @@
 /target
 /dep
+.idea
+*.iml
+.project
+.settings
+.classpath
