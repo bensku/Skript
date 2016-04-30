@@ -36,6 +36,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 
+import ch.njol.skript.classes.Serializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -82,8 +83,27 @@ public abstract class Variables {
 			
 			@SuppressWarnings("unchecked")
 			private final void init() {
-				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+				/**
+				 * ROY 30th April 2016: The following use of reflection is an ugly work-
+				 * around, that makes this code compile in javac.
+				 *
+				 * This is the original code:
+				 * info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+				 *
+				 * Previously, Skript relied on the Eclipse compiler. Because of a difference
+				 * between how Eclipse and javac handle generics, the above line compiles
+				 * fine in Eclipse but fails in javac.
+				 *
+				 * Instead of trying to change any internals, I instead used reflection
+				 * to forcefully assign the value to the info field, without error.
+				 */
+				try {
+					// used by asserts
+					ClassInfo objectClassInfo = Classes.getExactClassInfo(Object.class);
+					Serializer.class.getDeclaredField("info").set(this, objectClassInfo);
+				} catch (Exception e) {
+					throw new RuntimeException("Could not apply reflection workaround", e);
+				}
 			}
 			
 			@SuppressWarnings({"unchecked"})
