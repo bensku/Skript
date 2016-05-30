@@ -38,7 +38,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 public interface Container<T> {
 	
-	@SuppressWarnings("null")
+
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented

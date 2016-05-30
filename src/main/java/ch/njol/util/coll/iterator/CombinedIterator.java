@@ -48,7 +48,7 @@ public class CombinedIterator<T> implements Iterator<T> {
 	@Nullable
 	private Iterator<T> current = null;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean hasNext() {
 		while ((current == null || !current.hasNext()) && iterators.hasNext()) {

@@ -59,9 +59,9 @@ public class EffEquip extends Effect implements Testable {
 				"make %livingentity% wear %itemtypes%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> entities;
-	@SuppressWarnings("null")
+
 	private Expression<ItemType> types;
 	
 	@SuppressWarnings({"unchecked", "null"})

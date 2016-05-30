@@ -63,7 +63,7 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 		Skript.registerExpression(ExprDrops.class, ItemStack.class, ExpressionType.SIMPLE, "[the] drops");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Kleenean delayed;
 	
 	@Override

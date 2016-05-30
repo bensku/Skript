@@ -41,9 +41,9 @@ public class ExprValue extends SimpleExpression<Unit> {
 //		Skript.registerExpression(ExprValue.class, Unit.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "%~number% %*unit%");
 //	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Number> amount;
-	@SuppressWarnings("null")
+
 	private Unit unit;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -72,7 +72,7 @@ public class ExprValue extends SimpleExpression<Unit> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Class<? extends Unit> getReturnType() {
 		return unit.getClass();

@@ -61,7 +61,7 @@ public class EffCancelEvent extends Effect {
 	
 	private boolean cancel;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (isDelayed == Kleenean.TRUE) {

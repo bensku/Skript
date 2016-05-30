@@ -51,9 +51,9 @@ public class EffMessage extends Effect {
 		Skript.registerEffect(EffMessage.class, "(message|send [message]) %strings% [to %commandsenders%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> messages;
-	@SuppressWarnings("null")
+
 	private Expression<CommandSender> recipients;
 	
 	@SuppressWarnings({"unchecked", "null"})

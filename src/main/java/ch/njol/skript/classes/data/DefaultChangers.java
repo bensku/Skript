@@ -194,7 +194,7 @@ public class DefaultChangers {
 			return CollectionUtils.array(ItemType[].class, Inventory[].class);
 		}
 		
-		@SuppressWarnings("null")
+	
 		@Override
 		public void change(final Inventory[] invis, final @Nullable Object[] delta, final ChangeMode mode) {
 			for (final Inventory invi : invis) {

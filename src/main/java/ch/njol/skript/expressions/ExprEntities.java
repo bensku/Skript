@@ -74,7 +74,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				"[all] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
 	}
 	
-	@SuppressWarnings("null")
+
 	Expression<? extends EntityData<?>> types;
 	
 	@Nullable
@@ -168,7 +168,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		return false;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public Iterator<? extends Entity> iterator(final Event e) {
@@ -241,7 +241,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "all entities of types " + types.toString(e, debug) +

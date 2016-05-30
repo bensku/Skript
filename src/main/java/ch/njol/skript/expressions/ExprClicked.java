@@ -99,7 +99,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 		return entityType != null ? entityType.getType() : Block.class;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected Object[] get(final Event e) {

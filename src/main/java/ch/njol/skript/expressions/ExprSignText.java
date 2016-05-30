@@ -58,9 +58,9 @@ public class ExprSignText extends SimpleExpression<String> {
 				"[the] line %number% [of %block%]", "[the] (1¦1st|1¦first|2¦2nd|2¦second|3¦3rd|3¦third|4¦4th|4¦fourth) line [of %block%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Number> line;
-	@SuppressWarnings("null")
+
 	private Expression<Block> block;
 	
 	@SuppressWarnings({"unchecked", "null"})

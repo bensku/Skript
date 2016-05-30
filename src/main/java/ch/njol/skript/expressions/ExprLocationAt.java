@@ -53,9 +53,9 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 				"[the] (location|position) [at] [\\(][x[ ][=[ ]]]%number%, [y[ ][=[ ]]]%number%, [and] [z[ ][=[ ]]]%number%[\\)] [[(in|of) [[the] world]] %world%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<World> world;
-	@SuppressWarnings("null")
+
 	private Expression<Number> x, y, z;
 	
 	@SuppressWarnings({"unchecked", "null"})

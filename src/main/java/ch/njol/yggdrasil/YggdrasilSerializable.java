@@ -53,7 +53,7 @@ public interface YggdrasilSerializable {
 		 * @return Whether the field was handled. If false,
 		 *         <tt>yggdrasil.{@link Yggdrasil#incompatibleField(Object, Field, FieldContext) incompatibleField}(this, field, value)</tt> will be called.
 		 */
-		@SuppressWarnings("null")
+	
 		public boolean incompatibleField(@NonNull Field field, @NonNull FieldContext value) throws StreamCorruptedException;
 		
 		/**
@@ -62,7 +62,7 @@ public interface YggdrasilSerializable {
 		 * @param field The field read from stream
 		 * @return Whether the field was handled. If false, <tt>yggdrasil.{@link Yggdrasil#excessiveField(Object, FieldContext) excessiveField}(this, field)</tt> will be called.
 		 */
-		@SuppressWarnings("null")
+	
 		public boolean excessiveField(@NonNull FieldContext field) throws StreamCorruptedException;
 		
 		/**
@@ -72,7 +72,7 @@ public interface YggdrasilSerializable {
 		 * @return Whether the field was handled (e.g. true if the default value is fine). If false,
 		 *         <tt>yggdrasil.{@link Yggdrasil#missingField(Object, Field) missingField}(this, field)</tt> will be called.
 		 */
-		@SuppressWarnings("null")
+	
 		public boolean missingField(@NonNull Field field) throws StreamCorruptedException;
 		
 	}
@@ -128,7 +128,7 @@ public interface YggdrasilSerializable {
 		 * @throws StreamCorruptedException If the Fields object is invalid, i.e. was not written by {@link #serialize()} or Yggrdasil's default serialisation.
 		 * @throws NotSerializableException
 		 */
-		@SuppressWarnings("null")
+	
 		public void deserialize(@NonNull Fields fields) throws StreamCorruptedException, NotSerializableException;
 		
 	}

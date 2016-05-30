@@ -39,7 +39,7 @@ import ch.njol.skript.localization.Language;
  */
 public class TimingReporter {
 	
-	@SuppressWarnings("null")
+
 	public static String getReport() {
 		Map<Object,Timing> timings = Timings.timings;
 		Map<String,Long> triggers = new HashMap<String,Long>();

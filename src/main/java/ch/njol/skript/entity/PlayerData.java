@@ -22,6 +22,7 @@
 package ch.njol.skript.entity;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -105,7 +106,7 @@ public class PlayerData extends EntityData<Player> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new PlayerData();
 	}
 	

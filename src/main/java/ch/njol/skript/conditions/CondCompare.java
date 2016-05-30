@@ -93,19 +93,19 @@ public class CondCompare extends Condition {
 		Skript.registerCondition(CondCompare.class, patterns.getPatterns());
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> first;
-	@SuppressWarnings("null")
+
 	Expression<?> second;
 	@Nullable
 	Expression<?> third;
-	@SuppressWarnings("null")
+
 	Relation relation;
 	@SuppressWarnings("rawtypes")
 	@Nullable
 	Comparator comp;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		

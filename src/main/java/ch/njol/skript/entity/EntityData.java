@@ -118,7 +118,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		}
 		
 //		return getInfo((Class<? extends EntityData<?>>) d.getClass()).codeName + ":" + d.serialize();
-		@SuppressWarnings("null")
+	
 		@Override
 		@Deprecated
 		@Nullable
@@ -269,7 +269,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		throw new IllegalStateException();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public final boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		this.matchedPattern = matchedPattern;
@@ -309,7 +309,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		return toString(0);
 	}
 	
-	@SuppressWarnings("null")
+
 	protected Noun getName() {
 		return info.names[matchedPattern];
 	}
@@ -319,7 +319,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		return baby.isTrue() ? m_baby : baby.isFalse() ? m_adult : null;
 	}
 	
-	@SuppressWarnings("null")
+
 	public String toString(final int flags) {
 		final Noun name = info.names[matchedPattern];
 		return baby.isTrue() ? m_baby.toString(name, flags) : baby.isFalse() ? m_adult.toString(name, flags) : name.toString(flags);
@@ -392,7 +392,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	 * @param s String with optional indefinite article at the beginning
 	 * @return The parsed entity data
 	 */
-	@SuppressWarnings("null")
+
 	@Nullable
 	public final static EntityData<?> parse(final String s) {
 		return SkriptParser.parseStatic(Noun.stripIndefiniteArticle(s), infos.iterator(), null);
@@ -404,7 +404,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	 * @param s
 	 * @return The parsed entity data
 	 */
-	@SuppressWarnings("null")
+
 	@Nullable
 	public final static EntityData<?> parseWithoutIndefiniteArticle(final String s) {
 		return SkriptParser.parseStatic(s, infos.iterator(), null);

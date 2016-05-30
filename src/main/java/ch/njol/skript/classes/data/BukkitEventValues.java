@@ -690,7 +690,7 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		EventValues.registerEventValue(InventoryClickEvent.class, Slot.class, new Getter<Slot, InventoryClickEvent>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			@Nullable
 			public Slot get(final InventoryClickEvent e) {

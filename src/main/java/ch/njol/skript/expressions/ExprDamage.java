@@ -55,7 +55,7 @@ public class ExprDamage extends SimpleExpression<Double> {
 		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Kleenean delay;
 	
 	@Override

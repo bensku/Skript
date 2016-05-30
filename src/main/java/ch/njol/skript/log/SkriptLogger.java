@@ -37,7 +37,7 @@ import ch.njol.skript.log.LogHandler.LogResult;
  */
 public abstract class SkriptLogger {
 	
-	@SuppressWarnings("null")
+
 	public final static Level SEVERE = Level.SEVERE;
 	
 	@Nullable
@@ -47,13 +47,13 @@ public abstract class SkriptLogger {
 	
 	static boolean debug;
 	
-	@SuppressWarnings("null")
+
 	public final static Level DEBUG = Level.INFO; // CraftBukkit 1.7+ uses the worst logging library I've ever encountered
 //			new Level("DEBUG", Level.INFO.intValue()) {
 //				private final static long serialVersionUID = 8959282461654206205L;
 //			};
 	
-	@SuppressWarnings("null")
+
 	public final static Logger LOGGER = Bukkit.getServer() != null ? Bukkit.getLogger() : Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // cannot use Bukkit in tests
 	
 	private final static HandlerList handlers = new HandlerList();

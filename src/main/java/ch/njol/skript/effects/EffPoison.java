@@ -56,7 +56,7 @@ public class EffPoison extends Effect {
 	
 	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds on hard difficulty, same as EffPotion
 	
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> entites;
 	@Nullable
 	private Expression<Timespan> duration;

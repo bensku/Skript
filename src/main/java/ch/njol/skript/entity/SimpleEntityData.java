@@ -229,7 +229,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		throw new IllegalStateException();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		info = types.get(matchedPattern);
@@ -320,7 +320,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new SimpleEntityData(info);
 	}
 	

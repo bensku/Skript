@@ -54,7 +54,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	 * @param mode See above, UPPER or LOWER.
 	 * @return Changed string.
 	 */
-	@SuppressWarnings("null")
+
 	private static String changeCase(@Nullable String str, int mode) {
 		if (str == null)
 			return "";

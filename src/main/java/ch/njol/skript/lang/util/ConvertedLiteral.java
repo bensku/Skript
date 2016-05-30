@@ -85,7 +85,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 		return getArray();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T getSingle() {
 		if (getAnd() && data.length > 1)

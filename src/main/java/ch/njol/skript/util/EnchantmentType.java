@@ -95,13 +95,13 @@ public class EnchantmentType implements YggdrasilSerializable {
 		return toString(type) + (level == -1 ? "" : " " + level);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static String toString(final Enchantment e) {
 		return enchantmentNames.get(e);
 	}
 	
 	// REMIND flags?
-	@SuppressWarnings("null")
+
 	public static String toString(final Enchantment e, final int flags) {
 		return enchantmentNames.get(e);
 	}
@@ -123,10 +123,10 @@ public class EnchantmentType implements YggdrasilSerializable {
 		});
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern pattern = Pattern.compile(".+ \\d+");
 	
-	@SuppressWarnings("null")
+
 	@Nullable
 	public static EnchantmentType parse(final String s) {
 		if (pattern.matcher(s).matches()) {
@@ -146,7 +146,7 @@ public class EnchantmentType implements YggdrasilSerializable {
 		return enchantmentPatterns.get(s.toLowerCase());
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static Collection<String> getNames() {
 		return enchantmentNames.values();
 	}

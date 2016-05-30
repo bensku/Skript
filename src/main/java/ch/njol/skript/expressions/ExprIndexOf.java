@@ -51,7 +51,7 @@ public class ExprIndexOf extends SimpleExpression<Integer> {
 	
 	boolean first;
 	
-	@SuppressWarnings("null")
+
 	Expression<String> haystack, needle;
 	
 	@SuppressWarnings({"unchecked", "null"})

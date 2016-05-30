@@ -76,7 +76,7 @@ public class ExprLore extends SimpleExpression<String> {
 	@Nullable
 	private Expression<Number> line;
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> item;
 	
 	@SuppressWarnings({"unchecked", "null"})

@@ -167,10 +167,10 @@ public class ExprMessage extends SimpleExpression<String> {
 		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
 	}
 	
-	@SuppressWarnings("null")
+
 	private MessageType type;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = MessageType.values()[matchedPattern];

@@ -52,7 +52,7 @@ public class EffKick extends Effect {
 		Skript.registerEffect(EffKick.class, "kick %players% [(by reason of|because [of]|on account of|due to) %-string%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Player> players;
 	@Nullable
 	private Expression<String> reason;

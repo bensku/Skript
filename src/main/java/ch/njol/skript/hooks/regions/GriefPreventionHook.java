@@ -64,7 +64,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 	@Nullable
 	Field claimsField;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init() {
 		// ownerID is a public field
@@ -191,7 +191,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 			return "Claim #" + claim.getID();
 		}
 		
-		@SuppressWarnings("null")
+	
 		@Override
 		public Fields serialize() {
 			final Fields f = new Fields();
@@ -231,7 +231,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Collection<? extends Region> getRegionsAt_i(final Location l) {
 		final Claim c = plugin.dataStore.getClaimAt(l, false, null);

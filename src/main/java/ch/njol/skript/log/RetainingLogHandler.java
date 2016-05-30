@@ -182,7 +182,7 @@ public class RetainingLogHandler extends LogHandler {
 		return log.size();
 	}
 	
-	@SuppressWarnings("null")
+
 	public Collection<LogEntry> getLog() {
 		return Collections.unmodifiableCollection(log);
 	}

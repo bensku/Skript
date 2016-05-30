@@ -78,7 +78,7 @@ public class EntityType implements Cloneable, YggdrasilSerializable {
 						final String[] split = s.split("\\*", 2);
 						if (split.length != 2)
 							return null;
-						@SuppressWarnings("null")
+					
 						final EntityData<?> d = EntityData.serializer.deserialize(split[1]);
 						if (d == null)
 							return null;
@@ -150,7 +150,7 @@ public class EntityType implements Cloneable, YggdrasilSerializable {
 		return data.equals(other.data);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Nullable
 	public static EntityType parse(String s) {
 		assert s != null && s.length() != 0;

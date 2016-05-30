@@ -34,7 +34,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public class ConfigReader extends BufferedReader {
 	
-	@SuppressWarnings("null")
+
 	public final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	@Nullable

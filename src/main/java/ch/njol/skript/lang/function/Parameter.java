@@ -46,7 +46,7 @@ public final class Parameter<T> {
 	
 	final boolean single;
 	
-	@SuppressWarnings("null")
+
 	public Parameter(final String name, final ClassInfo<T> type, final boolean single, final @Nullable Expression<? extends T> def) {
 		this.name = name != null ? name.toLowerCase() : null;
 		this.type = type;

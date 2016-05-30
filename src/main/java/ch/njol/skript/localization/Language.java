@@ -152,7 +152,7 @@ public class Language {
 		return " " + s + " ";
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern listSplitPattern = Pattern.compile("\\s*,\\s*");
 	
 	/**

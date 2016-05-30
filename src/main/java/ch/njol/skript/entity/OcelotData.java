@@ -21,6 +21,7 @@
 
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Ocelot;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -97,7 +98,7 @@ public class OcelotData extends EntityData<Ocelot> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new OcelotData();
 	}
 	

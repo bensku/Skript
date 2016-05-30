@@ -59,7 +59,7 @@ public class EffHealth extends Effect {
 				"repair %slots/itemstack% [by %-number%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> damageables;
 	@Nullable
 	private Expression<Number> damage;

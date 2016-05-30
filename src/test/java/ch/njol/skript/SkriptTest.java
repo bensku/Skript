@@ -40,7 +40,7 @@ import ch.njol.skript.lang.Trigger;
  */
 public class SkriptTest {
 	
-	@SuppressWarnings("null")
+
 	private static Player njol = createMock(Player.class);
 	static {
 		
@@ -76,7 +76,7 @@ public class SkriptTest {
 		
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static SectionNode nodeFromString(final String s) {
 		try {
 			return new Config(s, "test.sk", true, false, ":").getMainNode();//.getNode(0);

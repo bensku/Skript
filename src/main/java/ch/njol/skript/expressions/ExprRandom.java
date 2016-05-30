@@ -53,7 +53,7 @@ public class ExprRandom extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprRandom.class, Object.class, ExpressionType.COMBINED, "[a] random %*classinfo% [out] of %objects%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> expr;
 	
 	@SuppressWarnings("unchecked")

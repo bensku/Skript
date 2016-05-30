@@ -33,14 +33,14 @@ public class ScriptOptions {
 	
 	private HashMap<File, Boolean> usesNewLoops = new HashMap<File, Boolean>();
 	
-	@SuppressWarnings("null")
+
 	private static ScriptOptions instance = null;
 	
 	private ScriptOptions(){
 		ScriptOptions.instance = this;
 	}
 	
-	@SuppressWarnings("null")
+
 	public static ScriptOptions getInstance(){
 		return instance != null ? instance : new ScriptOptions();
 	}

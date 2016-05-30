@@ -23,6 +23,7 @@ package ch.njol.skript.entity;
 
 import java.util.Arrays;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -57,7 +58,7 @@ public class SheepData extends EntityData<Sheep> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init(final @Nullable Class<? extends Sheep> c, final @Nullable Sheep e) {
 		sheared = e == null ? 0 : e.isSheared() ? 1 : -1;
@@ -182,7 +183,7 @@ public class SheepData extends EntityData<Sheep> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new SheepData();
 	}
 	

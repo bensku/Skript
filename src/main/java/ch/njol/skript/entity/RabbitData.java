@@ -21,6 +21,7 @@
 
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Rabbit;
 
 import ch.njol.skript.Skript;
@@ -72,7 +73,7 @@ public class RabbitData extends EntityData<Rabbit> {
     }
 
     @Override
-    public EntityData getSuperType() {
+    public EntityData<? extends Entity> getSuperType() {
         return new RabbitData();
     }
 

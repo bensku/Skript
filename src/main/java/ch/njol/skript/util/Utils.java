@@ -226,7 +226,7 @@ public abstract class Utils {
 	 * @param s trimmed string
 	 * @return Pair of singular string + boolean whether it was plural
 	 */
-	@SuppressWarnings("null")
+
 	public final static NonNullPair<String, Boolean> getEnglishPlural(final String s) {
 		assert s != null;
 		if (s.isEmpty())
@@ -398,7 +398,7 @@ public abstract class Utils {
 		return chat.get(s);
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern stylePattern = Pattern.compile("<([^<>]+)>");
 	
 	/**

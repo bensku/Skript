@@ -23,6 +23,7 @@ package ch.njol.skript.entity;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
@@ -42,7 +43,7 @@ import ch.njol.skript.variables.Variables;
  */
 @SuppressWarnings("deprecation")
 public class MinecartData extends EntityData<Minecart> {
-	@SuppressWarnings("null")
+
 	private static enum MinecartType {
 		ANY(Minecart.class, "minecart"),
 		NORMAL(Skript.classExists("org.bukkit.entity.minecart.RideableMinecart") ? RideableMinecart.class : Minecart.class, "regular minecart"),
@@ -92,14 +93,14 @@ public class MinecartData extends EntityData<Minecart> {
 		this.type = type;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		type = MinecartType.values()[matchedPattern];
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init(final @Nullable Class<? extends Minecart> c, final @Nullable Minecart e) {
 		final MinecartType[] ts = MinecartType.values();
@@ -163,7 +164,7 @@ public class MinecartData extends EntityData<Minecart> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new MinecartData(type);
 	}
 	

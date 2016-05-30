@@ -79,13 +79,13 @@ public abstract class PotionEffectUtils {
 		return types.get(s.toLowerCase());
 	}
 	
-	@SuppressWarnings("null")
+
 	public static String toString(final PotionEffectType t) {
 		return names[t.getId()];
 	}
 	
 	// REMIND flags?
-	@SuppressWarnings("null")
+
 	public static String toString(final PotionEffectType t, final int flags) {
 		return names[t.getId()];
 	}

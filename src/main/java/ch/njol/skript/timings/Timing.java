@@ -52,7 +52,7 @@ public class Timing {
 		eventTime = time;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Map<Trigger,Long> getTriggerTimes() {
 		return ImmutableMap.copyOf(triggerTimes);
 	}

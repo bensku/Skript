@@ -55,9 +55,9 @@ public class CondIsMember extends Condition {
 				"%offlineplayers% (is|are)(n't| not) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<OfflinePlayer> players;
-	@SuppressWarnings("null")
+
 	Expression<Region> regions;
 	
 	boolean owner;

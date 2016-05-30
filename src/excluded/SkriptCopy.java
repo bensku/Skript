@@ -525,7 +525,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 		});
 	}
 	
-	@SuppressWarnings("null")
+
 	static String getMirreVersion(){
 		try {
 	      URL url = new URL("http://mirre.eu.pn/version/");
@@ -709,7 +709,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 		Aliases.load();
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Collection<Closeable> closeOnDisable = Collections.synchronizedCollection(new ArrayList<Closeable>());
 	
 	/**
@@ -909,7 +909,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 		return addons.get(name);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Collection<SkriptAddon> getAddons() {
 		return Collections.unmodifiableCollection(addons.values());
 	}
@@ -941,7 +941,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	 * @param condition The condition's class
 	 * @param patterns Skript patterns to match this condition
 	 */
-	@SuppressWarnings("null")
+
 	public static <E extends Condition> void registerCondition(final Class<E> condition, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
 		
@@ -959,7 +959,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	 * @param effect The effect's class
 	 * @param patterns Skript patterns to match this effect
 	 */
-	@SuppressWarnings("null")
+
 	public static <E extends Effect> void registerEffect(final Class<E> effect, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
 		Pair<Boolean, String[]> pair = FeatureConfig.contains(effect.getSimpleName(), patterns);
@@ -997,7 +997,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	 * @param patterns Skript patterns that match this expression
 	 * @throws IllegalArgumentException if returnType is not a normal class
 	 */
-	@SuppressWarnings("null")
+
 	public static <E extends Expression<T>, T> void registerExpression(final Class<E> c, final Class<T> returnType, final ExpressionType type, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
 		Pair<Boolean, String[]> pair = FeatureConfig.contains(c.getSimpleName(), patterns);
@@ -1012,7 +1012,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterator<ExpressionInfo<?, ?>> getExpressions() {
 		return expressions.iterator();
 	}
@@ -1067,7 +1067,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	 * @param patterns Skript patterns to match this event
 	 * @return A SkriptEventInfo representing the registered event. Used to generate Skript's documentation.
 	 */
-	@SuppressWarnings("null")
+
 	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(final String name, final Class<E> c, final Class<? extends Event>[] events, final String... patterns) {
 		checkAcceptRegistrations();
 		Pair<Boolean, String[]> pair = FeatureConfig.contains(c.getSimpleName(), patterns);
@@ -1147,7 +1147,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void info(final String info) {
 		SkriptLogger.log(Level.INFO, info);
 	}
@@ -1155,7 +1155,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void warning(final String warning) {
 		SkriptLogger.log(Level.WARNING, warning);
 	}
@@ -1163,7 +1163,7 @@ public final class SkriptCopy extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void error(final @Nullable String error) {
 		if (error != null)
 			SkriptLogger.log(Level.SEVERE, error);

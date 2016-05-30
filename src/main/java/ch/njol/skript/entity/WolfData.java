@@ -21,6 +21,7 @@
 
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wolf;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -126,7 +127,7 @@ public class WolfData extends EntityData<Wolf> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new WolfData();
 	}
 	

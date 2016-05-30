@@ -217,7 +217,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private NameType type;
 	
 	@SuppressWarnings({"null", "unchecked"})

@@ -73,10 +73,10 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprLoopValue.class, Object.class, ExpressionType.SIMPLE, "[the] loop-<.+>");
 	}
 	
-	@SuppressWarnings("null")
+
 	private String name;
 	
-	@SuppressWarnings("null")
+
 	private Loop loop;
 	
 	// whether this loops a variable
@@ -98,7 +98,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		int j = 1;
 		Loop loop = null;
 		
-		@SuppressWarnings("null")
+	
 		boolean b = ScriptOptions.getInstance().usesNewLoops(ScriptLoader.currentScript.getFile());
 		for (final Loop l : ScriptLoader.currentLoops) {
 			if ((c != null && c.isAssignableFrom(l.getLoopedExpression().getReturnType())) || (b ? "value".equals(s) : false) || l.getLoopedExpression().isLoopOf(s)) {

@@ -54,7 +54,7 @@ public class EffEnchant extends Effect {
 				"disenchant %~itemstack%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<ItemStack> item;
 	@Nullable
 	private Expression<EnchantmentType> enchs;

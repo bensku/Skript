@@ -57,7 +57,7 @@ public class EffReplace extends Effect {
 				"replace (all|every|) %strings% with %string% in %string%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> haystack, needles, replacement;
 	
 	@SuppressWarnings({"unchecked", "null"})

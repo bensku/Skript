@@ -50,9 +50,9 @@ public class EffPush extends Effect {
 		Skript.registerEffect(EffPush.class, "(push|thrust) %entities% %direction% [(at|with) (speed|velocity|force) %-number%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
-	@SuppressWarnings("null")
+
 	private Expression<Direction> direction;
 	@Nullable
 	private Expression<Number> speed = null;

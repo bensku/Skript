@@ -62,7 +62,7 @@ public abstract class StringUtils {
 	 *            If the callback returns null for any given match this function will immediately terminate and return null.
 	 * @return
 	 */
-	@SuppressWarnings("null")
+
 	@Nullable
 	public final static String replaceAll(final CharSequence string, final String regex, final Callback<String, Matcher> callback) {
 		return replaceAll(string, Pattern.compile(regex), callback);

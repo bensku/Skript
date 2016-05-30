@@ -50,7 +50,7 @@ public class LitConsole extends SimpleLiteral<ConsoleCommandSender> {
 		Skript.registerExpression(LitConsole.class, ConsoleCommandSender.class, ExpressionType.SIMPLE, "[the] (console|server)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static ConsoleCommandSender console = Bukkit.getConsoleSender();
 	
 	public LitConsole() {

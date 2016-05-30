@@ -117,7 +117,7 @@ public abstract class Node {
 		newParent.add(this);
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern linePattern = Pattern.compile("^((?:[^#]|##)*)(\\s*#(?!#).*)$");
 	
 	/**

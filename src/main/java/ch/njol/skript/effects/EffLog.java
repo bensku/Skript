@@ -74,7 +74,7 @@ public class EffLog extends Effect {
 		});
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> messages;
 	@Nullable
 	private Expression<String> files;

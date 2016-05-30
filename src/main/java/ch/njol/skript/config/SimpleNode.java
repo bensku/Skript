@@ -34,7 +34,7 @@ public class SimpleNode extends Node {
 		super(c);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	String save_i() {
 		return key;

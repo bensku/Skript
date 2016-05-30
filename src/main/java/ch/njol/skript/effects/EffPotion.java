@@ -58,11 +58,11 @@ public class EffPotion extends Effect {
 	
 	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds, same as EffPoison
 	
-	@SuppressWarnings("null")
+
 	private Expression<PotionEffectType> potions;
 	@Nullable
 	private Expression<Number> tier;
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> entities;
 	@Nullable
 	private Expression<Timespan> duration;

@@ -97,7 +97,7 @@ public abstract class Functions {
 	
 	public final static String functionNamePattern = "[\\p{IsAlphabetic}][\\p{IsAlphabetic}\\p{IsDigit}_]*";
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern functionPattern = Pattern.compile("function (" + functionNamePattern + ")\\((.*)\\)(?: :: (.+))?", Pattern.CASE_INSENSITIVE),
 			paramPattern = Pattern.compile("\\s*(.+?)\\s*:\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
 	
@@ -124,7 +124,7 @@ public abstract class Functions {
 		if (Skript.debug() || node.debug())
 			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")" + (c != null && p != null ? " :: " + Utils.toEnglishPlural(c.getCodeName(), p.getSecond()) : "") + ":");
 		
-		@SuppressWarnings("null")
+	
 		final Function<?> f = new ScriptFunction<Object>(name, params.toArray(new Parameter[params.size()]), node, (ClassInfo<Object>) c, p == null ? false : !p.getSecond());
 //		functions.put(name, new FunctionData(f)); // in constructor
 		return f;
@@ -301,7 +301,7 @@ public abstract class Functions {
 		toValidate.clear();
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterable<JavaFunction<?>> getJavaFunctions() {
 		return javaFunctions.values();
 	}

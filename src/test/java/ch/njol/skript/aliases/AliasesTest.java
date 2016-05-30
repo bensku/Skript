@@ -89,7 +89,7 @@ public class AliasesTest {
 		};
 		
 		for (final String[] test : tests) {
-			@SuppressWarnings("null")
+		
 			final Set<String> names = Aliases.getAliases(test[0], t, v).keySet();
 			assertEquals(test[0], test.length - 1, names.size());
 			int i = 1;

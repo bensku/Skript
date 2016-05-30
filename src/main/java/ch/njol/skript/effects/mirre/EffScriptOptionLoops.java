@@ -46,7 +46,7 @@ public class EffScriptOptionLoops extends Effect {
 		Skript.registerEffect(EffScriptOptionLoops.class, "use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if(!ScriptLoader.isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE){
@@ -58,13 +58,13 @@ public class EffScriptOptionLoops extends Effect {
 		return true;
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "Script Option Loops";
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
 	protected void execute(Event e) {
 		

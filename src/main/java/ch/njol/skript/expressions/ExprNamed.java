@@ -54,7 +54,7 @@ public class ExprNamed extends PropertyExpression<ItemType, ItemType> {
 		Skript.registerExpression(ExprNamed.class, ItemType.class, ExpressionType.PROPERTY, "%itemtypes% (named|with name[s]) %string%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> name;
 	
 	@SuppressWarnings({"unchecked", "null"})

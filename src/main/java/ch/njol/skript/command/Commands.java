@@ -144,9 +144,9 @@ public abstract class Commands {
 	@Nullable
 	public static List<Argument<?>> currentArguments = null;
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern escape = Pattern.compile("[" + Pattern.quote("(|)<>%\\") + "]");
-	@SuppressWarnings("null")
+
 	private final static Pattern unescape = Pattern.compile("\\\\[" + Pattern.quote("(|)<>%\\") + "]");
 	
 	private final static String escape(final String s) {
@@ -158,14 +158,14 @@ public abstract class Commands {
 	}
 	
 	private final static Listener commandListener = new Listener() {
-		@SuppressWarnings("null")
+	
 		@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 		public void onPlayerCommand(final PlayerCommandPreprocessEvent e) {
 			if (handleCommand(e.getPlayer(), e.getMessage().substring(1)))
 				e.setCancelled(true);
 		}
 		
-		@SuppressWarnings("null")
+	
 		@EventHandler(priority = EventPriority.HIGHEST)
 		public void onServerCommand(final ServerCommandEvent e) {
 			if (e.getCommand() == null || e.getCommand().isEmpty())
@@ -202,7 +202,7 @@ public abstract class Commands {
 	
 	@Nullable
 	private final static Listener pre1_3chatListener = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
+	
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final PlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -213,7 +213,7 @@ public abstract class Commands {
 	};
 	@Nullable
 	private final static Listener post1_3chatListener = !Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
+	
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final AsyncPlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -313,7 +313,7 @@ public abstract class Commands {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern commandPattern = Pattern.compile("(?i)^command /?(\\S+)(\\s+(.+))?$"),
 			argumentPattern = Pattern.compile("<\\s*(?:(.+?)\\s*:\\s*)?(.+?)\\s*(?:=\\s*(" + SkriptParser.wildcard + "))?\\s*>");
 	

@@ -40,7 +40,7 @@ public class CaseInsensitiveString implements Serializable, Comparable<CharSeque
 	
 	private final Locale locale;
 	
-	@SuppressWarnings("null")
+
 	public CaseInsensitiveString(final String s) {
 		this.s = s;
 		locale = Locale.getDefault();
@@ -58,7 +58,7 @@ public class CaseInsensitiveString implements Serializable, Comparable<CharSeque
 		return lc.hashCode();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean equals(final @Nullable Object o) {
 		if (o == this)
@@ -88,7 +88,7 @@ public class CaseInsensitiveString implements Serializable, Comparable<CharSeque
 		return new CaseInsensitiveString("" + s.substring(start, end), locale);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public int compareTo(final CharSequence s) {
 		return lc.compareTo(s.toString().toLowerCase(locale));

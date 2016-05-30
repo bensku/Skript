@@ -52,10 +52,10 @@ public class CondIsSet extends Condition {
 				"%~objects% (do[es](n't| not) exist|(is|are)(n't| not) set)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> expr;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		expr = exprs[0];

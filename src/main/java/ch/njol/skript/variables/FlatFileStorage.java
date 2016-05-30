@@ -61,7 +61,7 @@ import ch.njol.util.NotifyingReference;
  */
 public class FlatFileStorage extends VariablesStorage {
 	
-	@SuppressWarnings("null")
+
 	public final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	/**
@@ -245,7 +245,7 @@ public class FlatFileStorage extends VariablesStorage {
 		return r;
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern csv = Pattern.compile("(?<=^|,)\\s*([^\",]*|\"([^\"]|\"\")*\")\\s*(,|$)");
 	
 	@Nullable
@@ -294,7 +294,7 @@ public class FlatFileStorage extends VariablesStorage {
 	/**
 	 * Use with find()
 	 */
-	@SuppressWarnings("null")
+
 	private final static Pattern containsWhitespace = Pattern.compile("\\s");
 	
 	private final static void writeCSV(final PrintWriter pw, final String... values) {
@@ -310,7 +310,7 @@ public class FlatFileStorage extends VariablesStorage {
 		pw.println();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected final void disconnect() {
 		synchronized (connectionLock) {

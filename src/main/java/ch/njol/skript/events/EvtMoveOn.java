@@ -92,14 +92,14 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 	
 //	private final static HashMap<BlockLocation, List<Trigger>> blockTriggers = new HashMap<BlockLocation, List<Trigger>>();
 	final static HashMap<Integer, List<Trigger>> itemTypeTriggers = new HashMap<Integer, List<Trigger>>();
-	@SuppressWarnings("null")
+
 	ItemType[] types = null;
 //	private World world;
 //	private int x, y, z;
 	
 	private static boolean registeredExecutor = false;
 	private final static EventExecutor executor = new EventExecutor() {
-		@SuppressWarnings("null")
+	
 		@Override
 		public void execute(final @Nullable Listener l, final @Nullable Event event) throws EventException {
 			if (event == null)
@@ -160,7 +160,7 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 		return (int) Math.ceil(y) - 1;
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static Block getBlock(final PlayerMoveEvent e) {
 		return e.getTo().subtract(0, 0.5, 0).getBlock();
 	}

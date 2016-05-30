@@ -50,7 +50,7 @@ public class CondIsOnline extends Condition {
 		Skript.registerCondition(CondIsOnline.class, "%offlineplayers% ((is|are) online|(is not|isn't|are not|aren't) offline)", "%offlineplayers% ((is|are) offline|(is not|isn't|are not|aren't) online)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<OfflinePlayer> players;
 	
 	@SuppressWarnings({"unchecked", "null"})

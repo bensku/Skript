@@ -193,7 +193,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 		return toString(millis, 0);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static String toString(final long millis, final int flags) {
 		for (int i = 0; i < simpleValues.length - 1; i++) {
 			if (millis >= simpleValues[i].getSecond()) {

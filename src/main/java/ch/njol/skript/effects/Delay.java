@@ -55,7 +55,7 @@ public class Delay extends Effect {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}
 	
-	@SuppressWarnings("null")
+
     protected Expression<Timespan> duration;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -88,7 +88,7 @@ public class Delay extends Effect {
 		return null;
 	}
 	
-	@SuppressWarnings("null")
+
 	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<Event, Boolean>());
 	
 	public final static boolean isDelayed(final Event e) {

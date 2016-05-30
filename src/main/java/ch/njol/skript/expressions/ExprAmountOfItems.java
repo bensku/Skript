@@ -50,9 +50,9 @@ public class ExprAmountOfItems extends SimpleExpression<Integer> {
 		Skript.registerExpression(ExprAmountOfItems.class, Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<ItemType> items;
-	@SuppressWarnings("null")
+
 	private Expression<Inventory> invis;
 	
 	@SuppressWarnings({"unchecked", "null"})

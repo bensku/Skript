@@ -44,7 +44,7 @@ public class RegexMessage extends Message {
 	/**
 	 * A pattern that doesn't match anything
 	 */
-	@SuppressWarnings("null")
+
 	public final static Pattern nop = Pattern.compile("(?!)");
 	
 	public RegexMessage(final String key, final @Nullable String prefix, final @Nullable String suffix, final int flags) {
@@ -72,7 +72,7 @@ public class RegexMessage extends Message {
 		return pattern;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Matcher matcher(final String s) {
 		final Pattern p = getPattern();
 		return p == null ? nop.matcher(s) : p.matcher(s);

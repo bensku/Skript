@@ -21,6 +21,7 @@
 
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
@@ -100,7 +101,7 @@ public class HorseData extends EntityData<Horse> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new HorseData(variant);
 	}
 	

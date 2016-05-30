@@ -122,7 +122,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		return init();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init() {
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();

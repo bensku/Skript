@@ -103,9 +103,6 @@ public class EvtClick extends SkriptEvent {
 		if (e instanceof PlayerInteractEntityEvent) {
 			PlayerInteractEntityEvent clickEvent = ((PlayerInteractEntityEvent) e);
 			if (Skript.isRunningMinecraft(1, 9)) {
-				ItemStack mainHand = clickEvent.getPlayer().getInventory().getItemInMainHand();
-				ItemStack offHand = clickEvent.getPlayer().getInventory().getItemInOffHand();
-				
 				Player player = clickEvent.getPlayer();
 				assert player != null;
 				boolean useOffHand = checkUseOffHand(player, click, null, clickEvent.getRightClicked());
@@ -123,9 +120,6 @@ public class EvtClick extends SkriptEvent {
 		} else if (e instanceof PlayerInteractEvent) {
 			PlayerInteractEvent clickEvent = ((PlayerInteractEvent) e);
 			if (Skript.isRunningMinecraft(1, 9)) {
-				ItemStack mainHand = clickEvent.getPlayer().getInventory().getItemInMainHand();
-				ItemStack offHand = clickEvent.getPlayer().getInventory().getItemInOffHand();
-				
 				Player player = clickEvent.getPlayer();
 				assert player != null;
 				boolean useOffHand = checkUseOffHand(player, click, clickEvent.getClickedBlock(), null);
@@ -334,9 +328,6 @@ public class EvtClick extends SkriptEvent {
 		}
 		
 		boolean isSneaking = player.isSneaking();
-		boolean blockInMain = mainHand.getType().isBlock() && mainHand.getType() != Material.AIR;
-		boolean blockInOff = offHand.getType().isBlock() && offHand.getType() != Material.AIR;
-		
 		if (blockUsable) { // Special behavior
 			if (isSneaking) {
 				//Skript.info("Is sneaking on usable block!");

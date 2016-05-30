@@ -55,7 +55,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 		Skript.registerExpression(c, type, ExpressionType.PROPERTY, "[the] " + property + " of %" + fromType + "%", "%" + fromType + "%'[s] " + property);
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<? extends F> expr;
 	
 	/**

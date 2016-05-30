@@ -41,7 +41,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 	
-	@SuppressWarnings("null")
+
 	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private final short version;
@@ -178,7 +178,7 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		throw new StreamCorruptedException("Invalid boolean value " + r);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		switch (type) {
@@ -245,7 +245,7 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 	
 	// Class
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Class<?> readClass() throws IOException {
 		Tag type;

@@ -52,9 +52,9 @@ public class CondIsWearing extends Condition {
 		Skript.registerCondition(CondIsWearing.class, "%livingentities% (is|are) wearing %itemtypes%", "%livingentities% (isn't|is not|aren't|are not) wearing %itemtypes%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> entities;
-	@SuppressWarnings("null")
+
 	Expression<ItemType> types;
 	
 	@SuppressWarnings({"unchecked", "null"})

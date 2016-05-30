@@ -52,7 +52,7 @@ public abstract class Function<T> {
 		return name;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Parameter<?> getParameter(final int index) {
 		return parameters[index];
 	}
@@ -89,7 +89,7 @@ public abstract class Function<T> {
 	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()} elements.
 	 * @return The result of the function
 	 */
-	@SuppressWarnings("null")
+
 	@Nullable
 	public final T[] execute(final Object[][] params) {
 		final FunctionEvent e = new FunctionEvent();
@@ -130,7 +130,7 @@ public abstract class Function<T> {
 	 * (Java) function references.
 	 * @return Signature.
 	 */
-	@SuppressWarnings("null")
+
 	public Signature<T> getSignature() {
 		return new Signature<T>("unknown", name, Arrays.asList(parameters), returnType, null, single);
 	}

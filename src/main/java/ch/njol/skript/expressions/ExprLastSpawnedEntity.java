@@ -60,7 +60,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	}
 	
 	boolean spawned;
-	@SuppressWarnings("null")
+
 	private EntityData<?> type;
 	
 	@SuppressWarnings("unchecked")

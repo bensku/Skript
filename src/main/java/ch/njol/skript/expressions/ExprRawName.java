@@ -49,7 +49,7 @@ public class ExprRawName extends SimpleExpression<String> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
@@ -74,7 +74,7 @@ public class ExprRawName extends SimpleExpression<String> {
 		return String.class;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		String[] strs = get(e);

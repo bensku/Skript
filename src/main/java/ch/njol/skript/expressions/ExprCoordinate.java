@@ -60,7 +60,7 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Double convert(final Location l) {
 		return axis == 0 ? l.getX() : axis == 1 ? l.getY() : l.getZ();

@@ -95,7 +95,7 @@ public enum Tag {
 		return MIN_WRAPPER <= tag && tag <= MAX_WRAPPER;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Tag getWrapper() {
 		if (!isPrimitive()) {
 			assert false;

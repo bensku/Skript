@@ -59,7 +59,7 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 				"[(all|the)] blocks (in|of) [[the] region[s]] %regions%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Region> regions;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -69,7 +69,7 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Block[] get(final Event e) {
 		final Iterator<Block> iter = iterator(e);
@@ -99,7 +99,7 @@ public class ExprBlocksInRegion extends SimpleExpression<Block> {
 				return current.hasNext();
 			}
 			
-			@SuppressWarnings("null")
+		
 			@Override
 			public Block next() {
 				if (!hasNext())

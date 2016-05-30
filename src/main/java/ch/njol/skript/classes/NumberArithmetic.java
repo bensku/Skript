@@ -26,7 +26,7 @@ package ch.njol.skript.classes;
  */
 public class NumberArithmetic implements Arithmetic<Number, Number> {
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Number difference(final Number first, final Number second) {
 		return Math.abs(first.doubleValue() - second.doubleValue());

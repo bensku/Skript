@@ -56,7 +56,7 @@ public class EffIgnite extends Effect {
 	
 	private final static int DEFAULT_DURATION = 8 * 20; // default is 8 seconds for lava and fire, I didn't test other sources
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
 	private boolean ignite;
 	@Nullable

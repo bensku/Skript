@@ -56,7 +56,7 @@ public class EffCommand extends Effect {
 	
 	@Nullable
 	private Expression<CommandSender> senders;
-	@SuppressWarnings("null")
+
 	private Expression<String> commands;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -73,7 +73,7 @@ public class EffCommand extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void execute(final Event e) {
 		for (String command : commands.getArray(e)) {

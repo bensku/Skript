@@ -84,7 +84,7 @@ public class ExprPotionItem extends SimpleExpression<ItemType> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected ItemType[] get(final Event e) {

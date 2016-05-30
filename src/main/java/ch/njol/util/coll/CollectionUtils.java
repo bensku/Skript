@@ -297,7 +297,7 @@ public abstract class CollectionUtils {
 	 * @param sets
 	 * @return
 	 */
-	@SuppressWarnings("null")
+
 	public final static <E> Set<E> intersection(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
@@ -318,7 +318,7 @@ public abstract class CollectionUtils {
 	 * @param sets
 	 * @return
 	 */
-	@SuppressWarnings("null")
+
 	public final static <E> Set<E> union(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
@@ -404,7 +404,7 @@ public abstract class CollectionUtils {
 	 * @param ints The collection
 	 * @return An int[] containing the elements of the given collection in the order they were returned by the collection's iterator.
 	 */
-	@SuppressWarnings("null")
+
 	public final static int[] toArray(final @Nullable Collection<Integer> ints) {
 		if (ints == null)
 			return new int[0];

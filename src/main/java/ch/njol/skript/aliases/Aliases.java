@@ -312,7 +312,7 @@ public abstract class Aliases {
 		return r;
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern numberWordPattern = Pattern.compile("\\d+\\s+.+");
 	
 	/**
@@ -412,7 +412,7 @@ public abstract class Aliases {
 				} else {
 					if (n == null)
 						materialNames.put(Integer.valueOf(d.getId()), n = new MaterialName(d.getId(), "" + d.getId(), "" + d.getId(), g.getSecond()));
-					@SuppressWarnings("null")
+				
 					final NonNullPair<Short, Short> data = new NonNullPair<Short, Short>(Short.valueOf(d.dataMin), Short.valueOf(d.dataMax));
 					n.names.put(data, p);
 				}

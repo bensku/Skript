@@ -57,7 +57,7 @@ public class EvtDamage extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event evt) {
 		final EntityDamageEvent e = (EntityDamageEvent) evt;
@@ -86,7 +86,7 @@ public class EvtDamage extends SkriptEvent {
 	
 //	private final static WeakHashMap<LivingEntity, Integer> lastDamages = new WeakHashMap<LivingEntity, Integer>();
 	
-	@SuppressWarnings("null")
+
 	private static boolean checkDamage(final EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof LivingEntity))
 			return true;

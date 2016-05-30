@@ -201,7 +201,7 @@ public class FunctionReference<T> {
 			throw new SkriptAPIException("Signature of function is null when return type is asked!");
 		}
 		assert signature != null;
-		@SuppressWarnings("null") // Wait what, Eclipse? Already asserted this...
+	 // Wait what, Eclipse? Already asserted this...
 		ClassInfo<? extends T> ret = signature.returnType;
 		return (Class<? extends T>) (ret == null ? Unknown.class : ret.getC());
 	}

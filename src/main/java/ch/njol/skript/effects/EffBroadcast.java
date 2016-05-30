@@ -51,7 +51,7 @@ public class EffBroadcast extends Effect {
 		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> messages;
 	@Nullable
 	private Expression<World> worlds;

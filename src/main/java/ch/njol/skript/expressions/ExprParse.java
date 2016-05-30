@@ -82,7 +82,7 @@ public class ExprParse extends SimpleExpression<Object> {
 	@Nullable
 	static String lastError = null;
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> text;
 	
 	@Nullable
@@ -134,7 +134,7 @@ public class ExprParse extends SimpleExpression<Object> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected Object[] get(final Event e) {

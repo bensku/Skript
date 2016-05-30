@@ -96,7 +96,7 @@ public class EvtBlock extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event e) {
 		if (mine && e instanceof BlockBreakEvent) {

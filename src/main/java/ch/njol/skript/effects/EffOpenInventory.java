@@ -63,7 +63,7 @@ public class EffOpenInventory extends Effect {
 	boolean open;
 	private int invType;
 	
-	@SuppressWarnings("null")
+
 	private Expression<Player> players;
 	
 	@SuppressWarnings({"unchecked", "null"})

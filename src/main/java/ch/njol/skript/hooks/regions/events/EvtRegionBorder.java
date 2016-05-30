@@ -146,7 +146,7 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		@Nullable
 		Event last = null;
 		
-		@SuppressWarnings("null")
+	
 		@Override
 		public void execute(final @Nullable Listener listener, final Event event) throws EventException {
 			if (event == last)

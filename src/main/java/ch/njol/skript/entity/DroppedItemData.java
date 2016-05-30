@@ -23,6 +23,7 @@ package ch.njol.skript.entity;
 
 import java.util.Arrays;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -103,7 +104,7 @@ public class DroppedItemData extends EntityData<Item> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new DroppedItemData();
 	}
 	

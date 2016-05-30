@@ -76,7 +76,7 @@ public class ExprLightLevel extends PropertyExpression<Location, Byte> {
 	@Override
 	protected Byte[] get(final Event e, final Location[] source) {
 		return get(source, new Converter<Location, Byte>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Byte convert(final Location l) {
 				final Block b = l.getBlock();

@@ -36,42 +36,42 @@ public class NonNullPair<T1, T2> extends Pair<T1, T2> {
 	}
 	
 	@Override
-	@SuppressWarnings("null")
+
 	public T1 getFirst() {
 		return first;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void setFirst(final T1 first) {
 		this.first = first;
 	}
 	
 	@Override
-	@SuppressWarnings("null")
+
 	public T2 getSecond() {
 		return second;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void setSecond(final T2 second) {
 		this.second = second;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T1 getKey() {
 		return first;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T2 getValue() {
 		return second;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T2 setValue(final T2 value) {
 		final T2 old = second;

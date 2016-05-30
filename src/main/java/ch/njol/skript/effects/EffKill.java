@@ -54,7 +54,7 @@ public class EffKill extends Effect {
 		Skript.registerEffect(EffKill.class, "kill %entities%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
 	
 	@SuppressWarnings({"unchecked", "null"})

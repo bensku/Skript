@@ -701,7 +701,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		Aliases.load();
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Collection<Closeable> closeOnDisable = Collections.synchronizedCollection(new ArrayList<Closeable>());
 	
 	/**
@@ -901,7 +901,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		return addons.get(name);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Collection<SkriptAddon> getAddons() {
 		return Collections.unmodifiableCollection(addons.values());
 	}
@@ -991,7 +991,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterator<ExpressionInfo<?, ?>> getExpressions() {
 		return expressions.iterator();
 	}
@@ -1119,7 +1119,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void info(final String info) {
 		SkriptLogger.log(Level.INFO, info);
 	}
@@ -1127,7 +1127,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void warning(final String warning) {
 		SkriptLogger.log(Level.WARNING, warning);
 	}
@@ -1135,7 +1135,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void error(final @Nullable String error) {
 		if (error != null)
 			SkriptLogger.log(Level.SEVERE, error);

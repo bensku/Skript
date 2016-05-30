@@ -59,7 +59,7 @@ public class EffExplosion extends Effect {
 	
 	@Nullable
 	private Expression<Number> force;
-	@SuppressWarnings("null")
+
 	private Expression<Location> locations;
 	
 	private boolean blockDamage;

@@ -107,7 +107,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		lengthOrZ = length;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Direction(final BlockFace f, final double length) {
 		this(new Vector(f.getModX(), f.getModY(), f.getModZ()).normalize().multiply(length));
 	}
@@ -119,17 +119,17 @@ public class Direction implements YggdrasilRobustSerializable {
 		lengthOrZ = v.getZ();
 	}
 	
-	@SuppressWarnings("null")
+
 	public Location getRelative(final Location l) {
 		return l.clone().add(getDirection(l));
 	}
 	
-	@SuppressWarnings("null")
+
 	public Location getRelative(final Entity e) {
 		return e.getLocation().add(getDirection(e.getLocation()));
 	}
 	
-	@SuppressWarnings("null")
+
 	public Location getRelative(final Block b) {
 		return b.getLocation().add(getDirection(b));
 	}
@@ -140,7 +140,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		return getDirection(pitchOrX == IGNORE_PITCH ? 0 : pitchToRadians(l.getPitch()), yawToRadians(l.getYaw()));
 	}
 	
-	@SuppressWarnings("null")
+
 	public Vector getDirection(final Entity e) {
 		return getDirection(e.getLocation());
 	}
@@ -231,7 +231,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		return ((Directional) m.getNewData(b.getData())).getFacing();
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static BlockFace getFacing(final double yaw, final double pitch) {
 		if (-Math.PI / 4 < pitch && pitch < Math.PI / 4) {
 			if (yaw < Math.PI / 4 || yaw >= Math.PI * 7 / 4)
@@ -260,7 +260,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		return getFacing(yaw, pitch);
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static Location[] getRelatives(final Block[] blocks, final Direction[] directions) {
 		final Location[] r = new Location[blocks.length * directions.length];
 		if (r.length == 0)
@@ -274,7 +274,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		return r;
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static Location[] getRelatives(final Location[] locations, final Direction[] directions) {
 		final Location[] r = new Location[locations.length * directions.length];
 		if (r.length == 0)
@@ -329,7 +329,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		return toString(new double[] {dir.getX(), dir.getY(), dir.getZ()}, absoluteDirections);
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static String toString(final double[] mod, final Message[] names) {
 		assert mod.length == 3 && names.length == 6;
 		final StringBuilder b = new StringBuilder();
@@ -382,7 +382,7 @@ public class Direction implements YggdrasilRobustSerializable {
 	
 	public final static Expression<Location> combine(final Expression<? extends Direction> dirs, final Expression<? extends Location> locs) {
 		return new SimpleExpression<Location>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			protected Location[] get(final Event e) {
 				final Direction[] ds = dirs.getArray(e);
@@ -397,7 +397,7 @@ public class Direction implements YggdrasilRobustSerializable {
 				return r;
 			}
 			
-			@SuppressWarnings("null")
+		
 			@Override
 			public Location[] getAll(final Event e) {
 				final Direction[] ds = dirs.getAll(e);

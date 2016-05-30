@@ -51,7 +51,7 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Double
 		register(ExprMaxHealth.class, Double.class, "max[imum] health", "livingentities");
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Double convert(final LivingEntity e) {
 		return HealthUtils.getMaxHealth(e);

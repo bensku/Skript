@@ -22,6 +22,7 @@
 package ch.njol.skript.entity;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.eclipse.jdt.annotation.Nullable;
@@ -121,7 +122,7 @@ public class VillagerData extends EntityData<Villager> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new VillagerData();
 	}
 	

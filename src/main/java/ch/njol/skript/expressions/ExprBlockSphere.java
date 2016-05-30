@@ -57,9 +57,9 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 				"(all|the|) blocks around %location% in radius %number%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Number> radius;
-	@SuppressWarnings("null")
+
 	private Expression<Location> center;
 	
 	@SuppressWarnings({"unchecked", "null"})

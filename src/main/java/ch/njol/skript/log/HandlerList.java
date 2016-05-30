@@ -42,7 +42,7 @@ public class HandlerList implements Iterable<LogHandler> {
 		return list.pop();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Iterator<LogHandler> iterator() {
 		return list.iterator();

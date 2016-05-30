@@ -61,9 +61,9 @@ public class CondItemInHand extends Condition {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> entities;
-	@SuppressWarnings("null")
+
 	Expression<ItemType> types;
 	boolean offTool;
 	

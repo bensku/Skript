@@ -440,7 +440,7 @@ final public class ScriptLoader {
 							} finally {
 								log.stop();
 							}
-							@SuppressWarnings("null")
+						
 							final ClassInfo<?> ci = Classes.getSuperClassInfo(o.getClass());
 							if (ci.getSerializer() == null) {
 								Skript.error("Can't save '" + ((EntryNode) n).getValue() + "' in a variable");
@@ -615,10 +615,6 @@ final public class ScriptLoader {
 			final Config config = new Config(f, true, false, ":");
 			if (SkriptConfig.keepConfigsLoaded.value())
 				SkriptConfig.configs.add(config);
-			int numTriggers = 0;
-			int numCommands = 0;
-			int numFunctions = 0;
-			
 			currentAliases.clear();
 			currentOptions.clear();
 			currentScript = config;
@@ -649,7 +645,6 @@ final public class ScriptLoader {
 						
 						final Signature<?> func = Functions.loadSignature(config.getFileName(), node);
 						if (func != null) {
-							numFunctions++;
 						}
 						
 						deleteCurrentEvent();

@@ -44,7 +44,7 @@ import org.junit.Test;
 public class UtilsTest {
 	
 	@Test
-	@SuppressWarnings("null")
+
 	public void testPlural() {
 		
 		final String[][] strings = {
@@ -80,7 +80,7 @@ public class UtilsTest {
 	}
 	
 	@Test
-	@SuppressWarnings("null")
+
 	public void testSuperClass() {
 		
 		final Class<?>[][] classes = {

@@ -53,7 +53,7 @@ public class EvtPeriodical extends SelfRegisteringSkriptEvent {
 				.since("1.0");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Timespan period;
 	
 	@Nullable
@@ -94,7 +94,7 @@ public class EvtPeriodical extends SelfRegisteringSkriptEvent {
 		SkriptEventHandler.logEventEnd();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void register(final Trigger t) {
 		this.t = t;

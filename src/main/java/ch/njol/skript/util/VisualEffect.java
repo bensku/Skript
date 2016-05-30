@@ -151,7 +151,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		BLOCK_BREAK(Effect.TILE_BREAK) {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
@@ -168,7 +168,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		BLOCK_DUST(Effect.TILE_DUST) {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
@@ -271,10 +271,10 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	/**
 	 * For parsing & deserialisation
 	 */
-	@SuppressWarnings("null")
+
 	public VisualEffect() {}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = types.get(matchedPattern);

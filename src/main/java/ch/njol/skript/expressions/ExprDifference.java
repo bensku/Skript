@@ -60,12 +60,12 @@ public class ExprDifference extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprDifference.class, Object.class, ExpressionType.COMBINED, "difference (between|of) %object% and %object%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> first, second;
 	
 	@SuppressWarnings({"null", "rawtypes"})
 	private Arithmetic math;
-	@SuppressWarnings("null")
+
 	private Class<?> relativeType;
 	
 	@SuppressWarnings({"unchecked", "null", "unused"})

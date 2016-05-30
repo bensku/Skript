@@ -62,7 +62,7 @@ public final class EvtEntity extends SkriptEvent {
 	@Nullable
 	private EntityData<?>[] types;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		types = args[0] == null ? null : ((Literal<EntityData<?>>) args[0]).getAll();
@@ -86,7 +86,7 @@ public final class EvtEntity extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event e) {
 		if (types == null)

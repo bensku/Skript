@@ -72,7 +72,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 	private Trigger t;
 	int tick;
 	
-	@SuppressWarnings("null")
+
 	private transient World[] worlds;
 	/**
 	 * null if all worlds
@@ -99,7 +99,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		if (taskID != -1)
 			return;
 		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Skript.getInstance(), new Runnable() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public void run() {
 				for (final Entry<World, EvtAtInfo> e : triggers.entrySet()) {

@@ -56,7 +56,7 @@ public class ExprMembersOfRegion extends SimpleExpression<OfflinePlayer> {
 	}
 	
 	private boolean owners;
-	@SuppressWarnings("null")
+
 	private Expression<Region> regions;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -67,7 +67,7 @@ public class ExprMembersOfRegion extends SimpleExpression<OfflinePlayer> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected OfflinePlayer[] get(final Event e) {
 		final ArrayList<OfflinePlayer> r = new ArrayList<OfflinePlayer>();

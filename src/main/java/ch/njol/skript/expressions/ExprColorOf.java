@@ -54,7 +54,7 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "itemstacks/entities");
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public Color convert(final Object o) {

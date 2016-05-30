@@ -164,12 +164,12 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 //			if (!iter.hasNext())
 //				return EmptyIterator.get();
 //			return new Iterator<Block>() {
-//				@SuppressWarnings("null")
+//			
 //				BlockVector2D current = iter.next();
 //				int height = 0;
 //				final int maxHeight = world.getMaxHeight();
 //
-//				@SuppressWarnings("null")
+//			
 //				@Override
 //				public boolean hasNext() {
 //					if (height >= maxHeight && iter.hasNext()) {
@@ -179,7 +179,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 //					return height < maxHeight;
 //				}
 //
-//				@SuppressWarnings("null")
+//			
 //				@Override
 //				public Block next() {
 //					if (!hasNext())
@@ -239,7 +239,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 		
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Collection<? extends Region> getRegionsAt_i(final Location l) {
 		final ArrayList<Region> r = new ArrayList<Region>();

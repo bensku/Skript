@@ -59,10 +59,10 @@ public class ExprEntity extends SimpleExpression<Entity> {
 		Skript.registerExpression(ExprEntity.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "[the] [event-]<.+>");
 	}
 	
-	@SuppressWarnings("null")
+
 	private EntityData<?> type;
 	
-	@SuppressWarnings("null")
+
 	private EventValueExpression<Entity> entity;
 	
 	@Override

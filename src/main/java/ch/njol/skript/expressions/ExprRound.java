@@ -68,7 +68,7 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 	@Override
 	protected Long[] get(final Event e, final Number[] source) {
 		return get(source, new Converter<Number, Long>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Long convert(final Number n) {
 				if (n instanceof Integer)

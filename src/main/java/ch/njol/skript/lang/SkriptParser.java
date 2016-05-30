@@ -262,7 +262,7 @@ public class SkriptParser {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern varPattern = Pattern.compile("((the )?var(iable)? )?\\{([^{}]|%\\{|\\}%)+\\}", Pattern.CASE_INSENSITIVE);
 	
 	/**
@@ -371,7 +371,7 @@ public class SkriptParser {
 	 * <p>
 	 * group 1 is null for ',', otherwise it's one of and/or/nor (not necessarily lowercase).
 	 */
-	@SuppressWarnings("null")
+
 	public final static Pattern listSplitPattern = Pattern.compile("\\s*,?\\s+(and|n?or)\\s+|\\s*,\\s*", Pattern.CASE_INSENSITIVE);
 	
 	private final static String MULTIPLE_AND_OR = "List has multiple 'and' or 'or', will default to 'and'. Use brackets if you want to define multiple lists.";
@@ -676,7 +676,7 @@ public class SkriptParser {
 //		}
 //	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern functionCallPattern = Pattern.compile("(" + Functions.functionNamePattern + ")\\((.*)\\)");
 	
 	/**
@@ -740,7 +740,7 @@ public class SkriptParser {
 //					}
 //				}
 //			}
-//			@SuppressWarnings("null")
+//		
 			final FunctionReference<T> e = new FunctionReference<T>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
 			if (!e.validateFunction(true)) {
 				log.printError();

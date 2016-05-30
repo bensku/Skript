@@ -42,7 +42,7 @@ public class EntryNode extends Node implements Entry<String, String> {
 		this.value = value;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String getKey() {
 		return key;

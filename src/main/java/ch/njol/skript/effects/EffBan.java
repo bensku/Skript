@@ -61,7 +61,7 @@ public class EffBan extends Effect {
 				"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> players;
 	@Nullable
 	private Expression<String> reason;

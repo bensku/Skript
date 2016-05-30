@@ -49,7 +49,7 @@ public class ExprDistance extends SimpleExpression<Double> {
 		Skript.registerExpression(ExprDistance.class, Double.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> loc1, loc2;
 	
 	@SuppressWarnings({"unchecked", "null"})

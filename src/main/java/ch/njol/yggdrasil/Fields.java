@@ -399,7 +399,7 @@ public final class Fields implements Iterable<FieldContext> {
 		return fields.remove(fieldID) != null;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Iterator<FieldContext> iterator() {
 		return fields.values().iterator();

@@ -49,7 +49,7 @@ public class EffOp extends Effect {
 		Skript.registerEffect(EffOp.class, "[de[-]]op %offlineplayers%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<OfflinePlayer> players;
 	private boolean op;
 	

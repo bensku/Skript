@@ -47,7 +47,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	
 	private Expression<? extends T> expr;
 	
-	@SuppressWarnings("null")
+
 	protected WrapperExpression() {}
 	
 	public WrapperExpression(final SimpleExpression<? extends T> expr) {
