@@ -74,7 +74,6 @@ import ch.njol.skript.localization.Message;
 import ch.njol.skript.log.BukkitLoggerFilter;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.mirre.FilterPrintStream;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Callback;

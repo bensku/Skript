@@ -23,13 +23,12 @@ package ch.njol.skript.hooks;
 
 import java.io.IOException;
 
-import net.milkbowl.vault.Vault;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 
 import ch.njol.skript.Skript;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
 
 /**
  * @author Peter Güttinger

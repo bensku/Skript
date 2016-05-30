@@ -3,7 +3,6 @@ package ch.njol.skript.mirre;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Filter;
 
 import ch.njol.skript.command.Commands;
 

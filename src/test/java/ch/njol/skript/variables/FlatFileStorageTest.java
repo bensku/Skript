@@ -21,7 +21,7 @@
 
 package ch.njol.skript.variables;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 

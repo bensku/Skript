@@ -23,8 +23,6 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,7 +39,6 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
 /**

@@ -21,8 +21,6 @@
 
 package ch.njol.skript.classes.data;
 
-import java.util.Arrays;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;

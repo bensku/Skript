@@ -23,8 +23,6 @@ package ch.njol.skript.timings;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import ch.njol.skript.SkriptEventHandler;
 
