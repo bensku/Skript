@@ -129,7 +129,6 @@ public class AABB implements Iterable<Block> {
 				return y <= maxY && (x != maxX || y != maxY || z != maxZ);
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Block next() {
 				if (!hasNext())

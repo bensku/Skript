@@ -141,7 +141,6 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 		return valueSet();
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Set<T2> valueSet() {
 		return Collections.unmodifiableSet(other.keySet());

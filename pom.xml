@@ -68,6 +68,24 @@
             <artifactId>spigot-api</artifactId>
             <version>1.9.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>bungeecord-chat</artifactId>
+            		<groupId>net.md-5</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>persistence-api</artifactId>
+            		<groupId>javax.persistence</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>gson</artifactId>
+            		<groupId>com.google.code.gson</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>junit</artifactId>
+            		<groupId>junit</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <!-- Needs to be downloaded on the plugins folder! -->
         <dependency>
@@ -87,6 +105,36 @@
             <artifactId>worldguard</artifactId>
             <version>6.1.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>bukkit-classloader-check</artifactId>
+            		<groupId>com.sk89q.spigot</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>bukkit</artifactId>
+            		<groupId>org.bukkit</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>commandbook</artifactId>
+            		<groupId>com.sk89q</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>jsr305</artifactId>
+            		<groupId>com.google.code.findbugs</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>jchronic</artifactId>
+            		<groupId>com.sk89q</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>js</artifactId>
+            		<groupId>rhino</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>truezip</artifactId>
+            		<groupId>de.schlichtherle</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>me.ryanhamshire</groupId>
@@ -111,6 +159,16 @@
             <artifactId>annotations</artifactId>
             <version>3.0.1u2</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>jsr305</artifactId>
+            		<groupId>com.google.code.findbugs</groupId>
+            	</exclusion>
+            	<exclusion>
+            		<artifactId>jcip-annotations</artifactId>
+            		<groupId>net.jcip</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <!-- Test Deps -->
         <dependency>
@@ -118,6 +176,12 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>hamcrest-core</artifactId>
+            		<groupId>org.hamcrest</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
