@@ -53,7 +53,7 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 		Skript.registerExpression(ExprChunk.class, Chunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> locations;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -73,7 +73,7 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 	@Override
 	protected Chunk[] get(final Event e, final Location[] source) {
 		return get(source, new Converter<Location, Chunk>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Chunk convert(final Location l) {
 				return l.getChunk();

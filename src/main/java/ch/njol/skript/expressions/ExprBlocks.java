@@ -63,7 +63,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 				"[the] blocks between %block% and %block%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> from;
 	@Nullable
 	private Expression<Block> end;
@@ -94,7 +94,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected Block[] get(final Event e) {

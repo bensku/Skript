@@ -170,7 +170,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 	@Override
 	protected Slot[] get(final Event e, final Block[] source) {
 		return get(source, new Getter<Slot, Block>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			@Nullable
 			public Slot get(final Block b) {

@@ -61,7 +61,7 @@ public class ExprRegionsAt extends SimpleExpression<Region> {
 				"[the] region(1¦s|) %direction% %locations%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> locs;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -73,7 +73,7 @@ public class ExprRegionsAt extends SimpleExpression<Region> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected Region[] get(final Event e) {

@@ -57,7 +57,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				"%number% times");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Number> start, end;
 	boolean integer;
 	
@@ -101,7 +101,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				return i <= max;
 			}
 			
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number next() {
 				if (!hasNext())

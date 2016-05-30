@@ -28,7 +28,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -59,9 +58,9 @@ public class EffDrop extends Effect {
 				"drop %itemtypes/experience% [%directions% %locations%] without velocity");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> drops;
-	@SuppressWarnings("null")
+
 	private Expression<Location> locations;
 	
 	private boolean useVelocity = true;
@@ -75,7 +74,7 @@ public class EffDrop extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void execute(final Event e) {
 		final Object[] os = drops.getArray(e);

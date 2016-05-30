@@ -46,7 +46,7 @@ public class ExprEventCancelled extends SimpleExpression<Boolean> {
 		Skript.registerExpression(ExprEventCancelled.class, Boolean.class, ExpressionType.SIMPLE, "[is] event cancelled");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Kleenean delay;
 	
 	@Override

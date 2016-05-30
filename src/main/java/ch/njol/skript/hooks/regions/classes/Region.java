@@ -80,7 +80,7 @@ public abstract class Region implements YggdrasilExtendedSerializable {
 						s = VariableString.unquote(s, quoted);
 						Region r = null;
 						for (final World w : Bukkit.getWorlds()) {
-							@SuppressWarnings("null")
+						
 							final Region r2 = RegionsPlugin.getRegion(w, s);
 							if (r2 == null)
 								continue;

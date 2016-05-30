@@ -59,7 +59,7 @@ public class EffColorArmor extends Effect {
 				"(dye|colo[u]r|paint) %slots/itemstack% \\(%number%, %number%, %number%\\)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> items;
 	@Nullable
 	private Expression<Color> color;

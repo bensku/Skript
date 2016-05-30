@@ -52,7 +52,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 				"[the] (1¦first|2¦last) [%-number%] character[s] of %strings%", "[the] %number% (1¦first|2¦last) characters of %strings%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<String> string;
 	@Nullable
 	private Expression<Number> start, end;
@@ -95,7 +95,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 		return String.class;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (start == null) {

@@ -56,9 +56,9 @@ public class CondRegionContains extends Condition {
 				"[[the] region] %regions% (do|does)(n't| not) contain %directions% %locations%", "%locations% (is|are)(n't| not) (contained in|part of) [[the] region] %regions%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Region> regions;
-	@SuppressWarnings("null")
+
 	Expression<Location> locs;
 	
 	@SuppressWarnings({"unchecked", "null"})

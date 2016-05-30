@@ -61,9 +61,9 @@ public class EffShoot extends Effect {
 	
 	private final static Double DEFAULT_SPEED = 5.;
 	
-	@SuppressWarnings("null")
+
 	private Expression<EntityData<?>> types;
-	@SuppressWarnings("null")
+
 	private Expression<?> shooters;
 	@Nullable
 	private Expression<Number> velocity;
@@ -83,7 +83,7 @@ public class EffShoot extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected void execute(final Event e) {
 		lastSpawned = null;

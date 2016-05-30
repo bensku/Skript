@@ -49,7 +49,7 @@ public class EffPvP extends Effect {
 		Skript.registerEffect(EffPvP.class, "enable PvP [in %worlds%]", "disable PVP [in %worlds%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<World> worlds;
 	private boolean enable;
 	

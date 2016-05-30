@@ -54,7 +54,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 	
 	private static enum Operator {
 		PLUS('+') {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number calculate(final Number n1, final Number n2, final boolean integer) {
 				if (integer)
@@ -63,7 +63,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			}
 		},
 		MINUS('-') {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number calculate(final Number n1, final Number n2, final boolean integer) {
 				if (integer)
@@ -72,7 +72,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			}
 		},
 		MULT('*') {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number calculate(final Number n1, final Number n2, final boolean integer) {
 				if (integer)
@@ -81,7 +81,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			}
 		},
 		DIV('/') {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number calculate(final Number n1, final Number n2, final boolean integer) {
 				if (integer) {
@@ -94,7 +94,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			}
 		},
 		EXP('^') {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Number calculate(final Number n1, final Number n2, final boolean integer) {
 				if (integer)
@@ -133,12 +133,12 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 		Skript.registerExpression(ExprArithmetic.class, Number.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, patterns.getPatterns());
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<? extends Number> first, second;
-	@SuppressWarnings("null")
+
 	private Operator op;
 	
-	@SuppressWarnings("null")
+
 	private Class<? extends Number> returnType;
 	private boolean integer;
 	
@@ -167,7 +167,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Number[] get(final Event e) {
 		final Number[] one = (Number[]) Array.newInstance(returnType, 1);
@@ -195,7 +195,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 		return first.toString(e, debug) + " " + op + " " + second.toString(e, debug);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Expression<? extends Number> simplify() {
 		if (first instanceof Literal && second instanceof Literal)

@@ -64,7 +64,7 @@ public class Comparators {
 	public final static Relation compare(final @Nullable Object o1, final @Nullable Object o2) {
 		if (o1 == null || o2 == null)
 			return Relation.NOT_EQUAL;
-		@SuppressWarnings("null")
+	
 		final Comparator c = getComparator(o1.getClass(), o2.getClass());
 		if (c == null)
 			return Relation.NOT_EQUAL;

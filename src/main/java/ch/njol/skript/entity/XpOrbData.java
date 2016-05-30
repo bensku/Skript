@@ -22,6 +22,7 @@
 package ch.njol.skript.entity;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -130,7 +131,7 @@ public class XpOrbData extends EntityData<ExperienceOrb> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new XpOrbData();
 	}
 	

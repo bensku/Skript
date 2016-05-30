@@ -51,7 +51,7 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 		Skript.registerExpression(ExprXOf.class, Object.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "%number% of %itemstacks/entitytype%");
 	}
 	
-	@SuppressWarnings("null")
+
 	Expression<Number> amount;
 	
 	@SuppressWarnings({"unchecked", "null"})

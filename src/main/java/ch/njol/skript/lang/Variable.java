@@ -37,7 +37,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -240,7 +239,6 @@ public class Variable<T> implements Expression<T> {
 	 * because the player object inside the variable will be a (kinda) dead variable
 	 * as a new player object has been created by the server.
 	 */
-	@SuppressWarnings({"deprecation"})
 	@Nullable Object convertIfOldPlayer(String key, Event event, @Nullable Object t){
 		if(SkriptConfig.enablePlayerVariableFix.value() && t != null && t instanceof Player){
 			Player p = (Player) t;

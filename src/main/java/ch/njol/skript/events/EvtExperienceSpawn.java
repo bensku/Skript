@@ -97,7 +97,7 @@ public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
 	}
 	
 	private final static EventExecutor executor = new EventExecutor() {
-		@SuppressWarnings("null")
+	
 		@Override
 		public void execute(final @Nullable Listener listener, final @Nullable Event e) throws EventException {
 			if (e == null)

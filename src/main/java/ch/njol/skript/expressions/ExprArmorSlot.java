@@ -52,12 +52,12 @@ public class ExprArmorSlot extends SimplePropertyExpression<LivingEntity, Slot> 
 		register(ExprArmorSlot.class, Slot.class, "(0¦boot[s]|0¦shoe[s]|1¦leg[ging][s]|2¦chestplate[s]|3¦helm[et][s]) [slot]", "livingentities");
 	}
 	
-	@SuppressWarnings("null")
+
 	private EquipSlot slot;
 	
 	private final static EquipSlot[] slots = {EquipSlot.BOOTS, EquipSlot.LEGGINGS, EquipSlot.CHESTPLATE, EquipSlot.HELMET};
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		super.init(exprs, matchedPattern, isDelayed, parseResult);

@@ -54,10 +54,10 @@ public class EffReturn extends Effect {
 		Skript.registerEffect(EffReturn.class, "return %objects%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private ScriptFunction<?> function;
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> value;
 	
 	@SuppressWarnings("unchecked")

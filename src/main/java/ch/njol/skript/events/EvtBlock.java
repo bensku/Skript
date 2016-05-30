@@ -21,12 +21,7 @@
 
 package ch.njol.skript.events;
 
-import java.lang.invoke.MethodHandle;
-
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -51,7 +46,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 
@@ -102,7 +96,7 @@ public class EvtBlock extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event e) {
 		if (mine && e instanceof BlockBreakEvent) {

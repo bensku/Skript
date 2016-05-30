@@ -26,6 +26,7 @@ import java.util.Iterator;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -147,7 +148,7 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new FallingBlockData();
 	}
 	

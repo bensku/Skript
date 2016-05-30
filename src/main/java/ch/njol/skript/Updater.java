@@ -138,7 +138,7 @@ public final class Updater {
 	
 	static void start() {
 		checkerTask = new Task(Skript.getInstance(), 0, true) {
-			@SuppressWarnings("null")
+		
 			@Override
 			public void run() {
 				if (!SkriptConfig.checkForNewVersion.value())

@@ -22,6 +22,7 @@
 package ch.njol.skript.entity;
 
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.lang.Literal;
@@ -97,7 +98,7 @@ public class CreeperData extends EntityData<Creeper> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new CreeperData();
 	}
 	

@@ -84,10 +84,10 @@ public class ExprVersion extends SimpleExpression<String> {
 		Skript.registerExpression(ExprVersion.class, String.class, ExpressionType.SIMPLE, "(0¦[craft]bukkit|1¦minecraft|2¦skript)( |-)version");
 	}
 	
-	@SuppressWarnings("null")
+
 	private VersionType type;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = VersionType.values()[parseResult.mark];

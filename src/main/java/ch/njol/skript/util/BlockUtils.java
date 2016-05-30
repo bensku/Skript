@@ -282,12 +282,12 @@ public abstract class BlockUtils {
 		return isSolid[type];
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterable<Block> getBlocksAround(final Block b) {
 		return Arrays.asList(b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST));
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterable<BlockFace> getFaces() {
 		return Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 	}

@@ -51,9 +51,9 @@ public class CondIsRiding extends Condition {
 				"%entities% (isn't|is not|aren't|are not) riding [%entitydatas%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
-	@SuppressWarnings("null")
+
 	Expression<EntityData<?>> types;
 	
 	@SuppressWarnings({"unchecked", "null"})

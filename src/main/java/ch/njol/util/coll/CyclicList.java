@@ -78,13 +78,13 @@ public final class CyclicList<E> extends AbstractList<E> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void add(final int index, final E e) {
 		throw new UnsupportedOperationException();
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean addAll(final Collection<? extends E> c) {
 		for (final E e : c)
@@ -92,7 +92,7 @@ public final class CyclicList<E> extends AbstractList<E> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean addAll(final int index, final Collection<? extends E> c) {
 		throw new UnsupportedOperationException();

@@ -51,9 +51,9 @@ public class CondIsInWorld extends Condition {
 		Skript.registerCondition(CondIsInWorld.class, "%entities% (is|are) in [[the] world[s]] %worlds%", "%entities% (is not|isn't|are not|aren't) in [[the] world[s]] %worlds%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
-	@SuppressWarnings("null")
+
 	Expression<World> worlds;
 	
 	@SuppressWarnings({"unchecked", "null"})

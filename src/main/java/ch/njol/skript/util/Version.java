@@ -55,7 +55,7 @@ public class Version implements Serializable, Comparable<Version> {
 		this.postfix = postfix == null || postfix.isEmpty() ? null : postfix;
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static Pattern versionPattern = Pattern.compile("(\\d+)\\.(\\d+)(?:\\.(\\d+))?\\s*(.*)");
 	
 	public Version(final String version) {

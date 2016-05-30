@@ -60,7 +60,7 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 				"[all] items (in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Inventory> invis;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -72,7 +72,7 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Slot[] get(final Event e) {
 		final ArrayList<Slot> r = new ArrayList<Slot>();
@@ -92,12 +92,12 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 		if (is == null || !is.hasNext())
 			return null;
 		return new Iterator<Slot>() {
-			@SuppressWarnings("null")
+		
 			Inventory current = is.next();
 			
 			int next = 0;
 			
-			@SuppressWarnings("null")
+		
 			@Override
 			public boolean hasNext() {
 				while (next < current.getSize() && current.getItem(next) == null)

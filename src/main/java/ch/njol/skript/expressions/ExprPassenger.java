@@ -106,7 +106,7 @@ public class ExprPassenger extends SimplePropertyExpression<Entity, Entity> { //
 				v.setPassenger((Entity) o);
 			} else if (o instanceof EntityData) {
 				for (final Entity v : vs) {
-					@SuppressWarnings("null")
+				
 					final Entity p = ((EntityData<?>) o).spawn(v.getLocation());
 					if (p == null)
 						continue;

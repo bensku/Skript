@@ -22,7 +22,6 @@ package ch.njol.util.coll;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -54,14 +53,14 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 		return other;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public T1 getKey(final T2 value) {
 		return other.get(value);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public T2 getValue(final @Nullable T1 key) {
@@ -86,7 +85,7 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 		return oldValue;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void putAll(final Map<? extends T1, ? extends T2> m) {
 		for (final Entry<? extends T1, ? extends T2> e : m.entrySet()) {
@@ -125,13 +124,13 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 	
 	// TODO check how changes to the sets affect the map
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Set<Entry<T1, T2>> entrySet() {
 		return Collections.unmodifiableSet(super.entrySet());
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Set<T1> keySet() {
 		return Collections.unmodifiableSet(super.keySet());
@@ -142,7 +141,6 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 		return valueSet();
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Set<T2> valueSet() {
 		return Collections.unmodifiableSet(other.keySet());

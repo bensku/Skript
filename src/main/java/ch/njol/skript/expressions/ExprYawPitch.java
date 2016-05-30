@@ -58,7 +58,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Number convert(final Location l) {
 		return yaw ? convertToPositive(l.getYaw()) : l.getPitch();
@@ -82,7 +82,6 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 			return null;
 		}
 	
-		@SuppressWarnings({"incomplete-switch", "null"})
 		@Override
 		public void change(Event e, Object[] delta, ChangeMode mode) {
 			Location l = getExpr().getSingle(e);

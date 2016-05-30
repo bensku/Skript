@@ -38,19 +38,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
-import ch.njol.skript.variables.Variables;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
-
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.util.AABB;
+import ch.njol.skript.variables.Variables;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
 
 /**
  * @author Peter Güttinger
@@ -164,12 +164,12 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 //			if (!iter.hasNext())
 //				return EmptyIterator.get();
 //			return new Iterator<Block>() {
-//				@SuppressWarnings("null")
+//			
 //				BlockVector2D current = iter.next();
 //				int height = 0;
 //				final int maxHeight = world.getMaxHeight();
 //
-//				@SuppressWarnings("null")
+//			
 //				@Override
 //				public boolean hasNext() {
 //					if (height >= maxHeight && iter.hasNext()) {
@@ -179,7 +179,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 //					return height < maxHeight;
 //				}
 //
-//				@SuppressWarnings("null")
+//			
 //				@Override
 //				public Block next() {
 //					if (!hasNext())
@@ -239,7 +239,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 		
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Collection<? extends Region> getRegionsAt_i(final Location l) {
 		final ArrayList<Region> r = new ArrayList<Region>();

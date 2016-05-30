@@ -51,10 +51,10 @@ public class ExprAmount extends SimpleExpression<Integer> {
 		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, "(amount|number|size) of %objects%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> expr;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		expr = exprs[0];

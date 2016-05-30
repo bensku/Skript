@@ -57,12 +57,12 @@ public class CondDate extends Condition {
 				"%date% (was|were)((n't| not) more| less) than %timespan% [ago]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Date> date;
-	@SuppressWarnings("null")
+
 	Expression<Timespan> delta;
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		date = (Expression<Date>) exprs[0];

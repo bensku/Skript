@@ -21,18 +21,11 @@
 
 package ch.njol.skript.timings;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.bukkit.event.Event;
 
 import com.google.common.collect.ImmutableMap;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Trigger;
 
 /**
@@ -59,7 +52,7 @@ public class Timing {
 		eventTime = time;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Map<Trigger,Long> getTriggerTimes() {
 		return ImmutableMap.copyOf(triggerTimes);
 	}

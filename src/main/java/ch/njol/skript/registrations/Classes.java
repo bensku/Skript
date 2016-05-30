@@ -220,7 +220,6 @@ public abstract class Classes {
 		
 	}
 	
-	@SuppressWarnings({"null", "unused"})
 	private final static void removeNullElements() {
 		Iterator<ClassInfo<?>> it = tempClassInfos.iterator();
 		while (it.hasNext()) {
@@ -235,7 +234,7 @@ public abstract class Classes {
 			throw new IllegalStateException("Cannot use classinfos until registration is over");
 	}
 	
-	@SuppressWarnings("null")
+
 	public static List<ClassInfo<?>> getClassInfos() {
 		checkAllowClassInfoInteraction();
 		final ClassInfo<?>[] ci = classInfos;
@@ -289,7 +288,7 @@ public abstract class Classes {
 	 * @param c
 	 * @return The closest superclass's info
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	public static <T> ClassInfo<? super T> getSuperClassInfo(final Class<T> c) {
 		assert c != null;
 		checkAllowClassInfoInteraction();
@@ -642,7 +641,7 @@ public abstract class Classes {
 	 */
 	private final static byte[] YGGDRASIL_START = {(byte) 'Y', (byte) 'g', (byte) 'g', 0, (Variables.YGGDRASIL_VERSION >>> 8) & 0xFF, Variables.YGGDRASIL_VERSION & 0xFF};
 	
-	@SuppressWarnings("null")
+
 	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private final static byte[] getYggdrasilStart(final ClassInfo<?> c) throws NotSerializableException {
@@ -675,7 +674,7 @@ public abstract class Classes {
 		// temporary
 		assert Bukkit.isPrimaryThread();
 		
-		@SuppressWarnings("null")
+	
 		ClassInfo<?> ci = getSuperClassInfo(o.getClass());
 		if (ci.getSerializeAs() != null) {
 			ci = getExactClassInfo(ci.getSerializeAs());

@@ -50,11 +50,11 @@ public class CondChance extends Condition {
 		Skript.registerCondition(CondChance.class, "chance of %number%(1¦\\%|)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Double> chance;
 	boolean percent;
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		chance = (Expression<Double>) exprs[0];

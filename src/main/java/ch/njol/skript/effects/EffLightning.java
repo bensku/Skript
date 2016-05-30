@@ -50,7 +50,7 @@ public class EffLightning extends Effect {
 		Skript.registerEffect(EffLightning.class, "(create|strike) lightning(1¦[ ]effect|) %directions% %locations%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> locations;
 	
 	private boolean effectOnly;

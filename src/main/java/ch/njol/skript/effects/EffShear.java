@@ -51,7 +51,7 @@ public class EffShear extends Effect {
 				"un[-]shear %livingentities%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<LivingEntity> sheep;
 	private boolean shear;
 	

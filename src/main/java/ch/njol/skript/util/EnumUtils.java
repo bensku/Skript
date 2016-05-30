@@ -86,7 +86,7 @@ public final class EnumUtils<E extends Enum<E>> {
 		return parseMap.get(s.toLowerCase());
 	}
 	
-	@SuppressWarnings("null")
+
 	public final String toString(final E e, final int flags) {
 		validate(false);
 		return names[e.ordinal()];

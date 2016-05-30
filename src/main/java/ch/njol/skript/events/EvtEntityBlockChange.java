@@ -83,10 +83,10 @@ public class EvtEntityBlockChange extends SkriptEvent {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private ChangeEvent event;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		event = ChangeEvent.values()[matchedPattern];

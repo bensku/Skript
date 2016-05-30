@@ -21,7 +21,7 @@
 
 package ch.njol.skript.variables;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
@@ -40,7 +40,7 @@ public class FlatFileStorageTest {
 		assert Arrays.equals(bytes, FlatFileStorage.decode(string)) : Arrays.toString(bytes) + " != " + Arrays.toString(FlatFileStorage.decode(string));
 	}
 	
-	@SuppressWarnings("null")
+
 	@Test
 	public void testCSV() {
 		final String[][] vs = {

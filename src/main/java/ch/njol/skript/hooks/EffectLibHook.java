@@ -25,16 +25,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-
-import ch.njol.skript.Skript;
 import ch.njol.skript.util.VisualEffect;
 import de.slikey.effectlib.EffectLib;
 import de.slikey.effectlib.util.ParticleEffect;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-
-import ch.njol.skript.util.VisualEffect.Type;
 
 /**
  *	Hook for better particle effects.

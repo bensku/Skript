@@ -55,7 +55,7 @@ public class ExprEnchantmentLevel extends PropertyExpression<ItemType, Integer> 
 				"%itemtypes%'[s] (%-enchantment% level|level of [[the] enchant[ment]] %-enchantment%)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Enchantment> enchantment;
 	
 	@SuppressWarnings({"unchecked", "null"})

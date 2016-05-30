@@ -22,23 +22,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.util.Kleenean;
 
 public class ExprRawName extends SimpleExpression<String> {
@@ -57,7 +49,7 @@ public class ExprRawName extends SimpleExpression<String> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
@@ -82,7 +74,7 @@ public class ExprRawName extends SimpleExpression<String> {
 		return String.class;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		String[] strs = get(e);

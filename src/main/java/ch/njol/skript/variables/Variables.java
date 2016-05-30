@@ -226,10 +226,10 @@ public abstract class Variables {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern variableNameSplitPattern = Pattern.compile(Pattern.quote(Variable.SEPARATOR));
 	
-	@SuppressWarnings("null")
+
 	public final static String[] splitVariableName(final String name) {
 		return variableNameSplitPattern.split(name);
 	}
@@ -254,12 +254,12 @@ public abstract class Variables {
 	/**
 	 * Remember to lock with {@link #getReadLock()}!
 	 */
-	@SuppressWarnings("null")
+
 	static Map<String, Object> getVariablesHashMap() {
 		return Collections.unmodifiableMap(variables.hashMap);
 	}
 	
-	@SuppressWarnings("null")
+
 	static Lock getReadLock() {
 		return variablesLock.readLock();
 	}
@@ -298,7 +298,7 @@ public abstract class Variables {
 	public final static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
 		if (value != null) {
 			assert !name.endsWith("::*");
-			@SuppressWarnings("null")
+		
 			final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
 			final Class<?> sas = ci.getSerializeAs();
 			if (sas != null) {
@@ -397,7 +397,7 @@ public abstract class Variables {
 	 * 
 	 * @return How many variables were not stored anywhere
 	 */
-	@SuppressWarnings("null")
+
 	private static int onStoragesLoaded() {
 		if (loadConflicts > MAX_CONFLICT_WARNINGS)
 			Skript.warning("A total of " + loadConflicts + " variables were loaded more than once from different databases");

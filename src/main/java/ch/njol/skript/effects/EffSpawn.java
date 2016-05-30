@@ -54,9 +54,9 @@ public class EffSpawn extends Effect {
 				"spawn %number% of %entitytypes% [%directions% %locations%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> locations;
-	@SuppressWarnings("null")
+
 	private Expression<EntityType> types;
 	@Nullable
 	private Expression<Number> amount;

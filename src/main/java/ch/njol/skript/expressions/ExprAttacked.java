@@ -61,7 +61,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private EntityData<?> type;
 	
 	@SuppressWarnings("unchecked")

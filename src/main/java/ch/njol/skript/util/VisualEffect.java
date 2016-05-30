@@ -22,15 +22,12 @@
 package ch.njol.skript.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -154,7 +151,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		BLOCK_BREAK(Effect.TILE_BREAK) {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
@@ -171,7 +168,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		BLOCK_DUST(Effect.TILE_DUST) {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
@@ -274,10 +271,10 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	/**
 	 * For parsing & deserialisation
 	 */
-	@SuppressWarnings("null")
+
 	public VisualEffect() {}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = types.get(matchedPattern);

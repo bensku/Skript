@@ -52,7 +52,7 @@ public class CondPlayedBefore extends Condition {
 				"%offlineplayer% (has not|hasn't|did not|didn't) [(already|yet)] play[ed] [on (this|the) server] (before|already|yet)");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<OfflinePlayer> player;
 	
 	@SuppressWarnings({"unchecked", "null"})

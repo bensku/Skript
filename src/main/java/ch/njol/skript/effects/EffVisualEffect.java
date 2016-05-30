@@ -55,11 +55,11 @@ public class EffVisualEffect extends Effect {
 				"(play|show) %number% %visualeffects% (on|%directions%) %locations% [(to %-players%|in (radius|range) of %number%)]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<VisualEffect> effects;
-	@SuppressWarnings("null")
+
 	private Expression<Direction> direction;
-	@SuppressWarnings("null")
+
 	private Expression<?> where;
 	@Nullable
 	private Expression<Player> players;

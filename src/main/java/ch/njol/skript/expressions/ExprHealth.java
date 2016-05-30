@@ -70,7 +70,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
 //			});
 //		}
 		return get(source, new Getter<Double, LivingEntity>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Double get(final LivingEntity entity) {
 				return Double.valueOf(HealthUtils.getHealth(entity));

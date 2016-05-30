@@ -182,7 +182,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @throws IndexOutOfBoundsException if ID is < 0 or >= {@link #numConstants()}
 	 * @see #valueOf(String)
 	 */
-	@SuppressWarnings("null")
+
 	public final T getConstant(final int id) throws IndexOutOfBoundsException {
 		info.readLock.lock();
 		try {
@@ -236,7 +236,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static class Info<T extends PseudoEnum<T>> {
 		final List<T> values = new ArrayList<T>();
 		final Map<String, T> map = new HashMap<String, T>();

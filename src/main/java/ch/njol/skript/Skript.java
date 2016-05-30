@@ -33,12 +33,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Filter;
@@ -105,7 +102,6 @@ import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
-import ch.njol.skript.mirre.FilterPrintStream;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
@@ -121,7 +117,6 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NullableChecker;
-import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -706,7 +701,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		Aliases.load();
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Collection<Closeable> closeOnDisable = Collections.synchronizedCollection(new ArrayList<Closeable>());
 	
 	/**
@@ -906,7 +901,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		return addons.get(name);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Collection<SkriptAddon> getAddons() {
 		return Collections.unmodifiableCollection(addons.values());
 	}
@@ -996,7 +991,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
 	}
 	
-	@SuppressWarnings("null")
+
 	public static Iterator<ExpressionInfo<?, ?>> getExpressions() {
 		return expressions.iterator();
 	}
@@ -1124,7 +1119,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void info(final String info) {
 		SkriptLogger.log(Level.INFO, info);
 	}
@@ -1132,7 +1127,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void warning(final String warning) {
 		SkriptLogger.log(Level.WARNING, warning);
 	}
@@ -1140,7 +1135,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * @see SkriptLogger#log(Level, String)
 	 */
-	@SuppressWarnings("null")
+
 	public static void error(final @Nullable String error) {
 		if (error != null)
 			SkriptLogger.log(Level.SEVERE, error);

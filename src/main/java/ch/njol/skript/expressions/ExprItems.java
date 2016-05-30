@@ -85,7 +85,7 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 	@Nullable
 	private ItemStack[] buffer = null;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected ItemStack[] get(final Event e) {
 		if (buffer != null)
@@ -122,16 +122,16 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 				
 			};
 		} else {
-			@SuppressWarnings("null")
+		
 			final Iterator<ItemType> it = new ArrayIterator<ItemType>(types.getArray(e));
 			if (!it.hasNext())
 				return null;
 			iter = new Iterator<ItemStack>() {
 				
-				@SuppressWarnings("null")
+			
 				Iterator<ItemStack> current = it.next().getAll().iterator();
 				
-				@SuppressWarnings("null")
+			
 				@Override
 				public boolean hasNext() {
 					while (!current.hasNext() && it.hasNext()) {
@@ -140,7 +140,7 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 					return current.hasNext();
 				}
 				
-				@SuppressWarnings("null")
+			
 				@Override
 				public ItemStack next() {
 					if (!hasNext())

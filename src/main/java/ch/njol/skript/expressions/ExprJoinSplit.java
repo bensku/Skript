@@ -54,7 +54,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	}
 	
 	private boolean join;
-	@SuppressWarnings("null")
+
 	private Expression<String> strings;
 	@Nullable
 	private Expression<String> delimiter;

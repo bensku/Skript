@@ -43,19 +43,19 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 		super(literals, returnType, and, source);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T[] getArray() {
 		return getArray(null);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T getSingle() {
 		return getSingle(null);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T[] getAll() {
 		return getAll(null);

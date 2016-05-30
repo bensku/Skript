@@ -29,12 +29,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import lib.PatPeter.SQLibrary.Database;
-import lib.PatPeter.SQLibrary.DatabaseException;
-import lib.PatPeter.SQLibrary.MySQL;
-import lib.PatPeter.SQLibrary.SQLibrary;
-import lib.PatPeter.SQLibrary.SQLite;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
@@ -48,6 +42,11 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.SynchronizedReference;
+import lib.PatPeter.SQLibrary.Database;
+import lib.PatPeter.SQLibrary.DatabaseException;
+import lib.PatPeter.SQLibrary.MySQL;
+import lib.PatPeter.SQLibrary.SQLibrary;
+import lib.PatPeter.SQLibrary.SQLite;
 
 /**
  * TODO create a metadata table to store some properties (e.g. Skript version, Yggdrasil version) -- but what if some variables cannot be converted? move them to a different table?
@@ -117,7 +116,7 @@ public class DatabaseStorage extends VariablesStorage {
 	
 	private final Type type;
 	
-	@SuppressWarnings("null")
+
 	final SynchronizedReference<Database> db = new SynchronizedReference<Database>(null);
 	
 	private boolean monitor = false;
@@ -218,7 +217,7 @@ public class DatabaseStorage extends VariablesStorage {
 							Variables.getReadLock().lock();
 							for (final Entry<String, Object> v : Variables.getVariablesHashMap().entrySet()) {
 								if (accept(v.getKey())) {// only one database was possible, so only checking this database is correct
-									@SuppressWarnings("null")
+								
 									final SerializedVariable var = Variables.serialize(v.getKey(), v.getValue());
 									final SerializedVariable.Value d = var.value;
 									save(var.name, d == null ? null : d.type, d == null ? null : d.data);
@@ -498,7 +497,7 @@ public class DatabaseStorage extends VariablesStorage {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void close() {
 		synchronized (db) {
@@ -723,7 +722,7 @@ public class DatabaseStorage extends VariablesStorage {
 		};
 		
 		final SQLException e = Task.callSync(new Callable<SQLException>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			@Nullable
 			public SQLException call() throws Exception {

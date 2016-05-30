@@ -34,7 +34,7 @@ public enum ErrorQuality {
 		return ordinal();
 	}
 	
-	@SuppressWarnings("null")
+
 	public static ErrorQuality get(final int quality) {
 		return values()[quality];
 	}

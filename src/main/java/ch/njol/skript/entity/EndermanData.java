@@ -24,6 +24,7 @@ package ch.njol.skript.entity;
 import java.util.Arrays;
 
 import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.eclipse.jdt.annotation.Nullable;
@@ -135,7 +136,7 @@ public class EndermanData extends EntityData<Enderman> {
 //			b.append(s.second.replace(",", ",,").replace(":", "::"));
 //		}
 //		return b.toString();
-	@SuppressWarnings("null")
+
 	@Override
 	@Deprecated
 	protected boolean deserialize(final String s) {
@@ -169,7 +170,7 @@ public class EndermanData extends EntityData<Enderman> {
 	}
 	
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new EndermanData();
 	}
 	

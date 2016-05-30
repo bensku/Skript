@@ -55,12 +55,12 @@ public class CondCanHold extends Condition {
 				"%inventories% (can(no|')t hold|(ha(s|ve) not|ha(s|ve)n't|do[es]n't have) [enough] space (for|to hold)) %itemtypes%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Inventory> invis;
-	@SuppressWarnings("null")
+
 	Expression<ItemType> items;
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		invis = (Expression<Inventory>) vars[0];

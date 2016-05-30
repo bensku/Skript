@@ -47,7 +47,7 @@ public abstract class Converters {
 	
 	private static List<ConverterInfo<?, ?>> converters = new ArrayList<ConverterInfo<?, ?>>(50);
 	
-	@SuppressWarnings("null")
+
 	public static List<ConverterInfo<?, ?>> getConverters() {
 		return Collections.unmodifiableList(converters);
 	}
@@ -132,7 +132,7 @@ public abstract class Converters {
 			return null;
 		if (to.isInstance(o))
 			return (T) o;
-		@SuppressWarnings("null")
+	
 		final Converter<? super F, ? extends T> conv = getConverter((Class<F>) o.getClass(), to);
 		if (conv == null)
 			return null;
@@ -158,7 +158,7 @@ public abstract class Converters {
 				return (T) o;
 		final Class<F> c = (Class<F>) o.getClass();
 		for (final Class<? extends T> t : to) {
-			@SuppressWarnings("null")
+		
 			final Converter<? super F, ? extends T> conv = getConverter(c, t);
 			if (conv != null)
 				return conv.convert(o);

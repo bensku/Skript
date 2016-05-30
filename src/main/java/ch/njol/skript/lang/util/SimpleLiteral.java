@@ -115,7 +115,7 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 		return data;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public T getSingle() {
 		return CollectionUtils.getRandom(data);

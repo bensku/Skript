@@ -55,9 +55,9 @@ public class EffTeleport extends Effect {
 		Skript.registerEffect(EffTeleport.class, "teleport %entities% (to|%direction%) %location%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Entity> entities;
-	@SuppressWarnings("null")
+
 	private Expression<Location> location;
 	
 	@SuppressWarnings({"unchecked", "null"})

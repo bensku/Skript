@@ -61,7 +61,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.PROPERTY, "[md5]( |-)hash(ed|[( |-|)code] of) %strings%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	@Nullable
@@ -85,7 +85,7 @@ public class ExprHash extends PropertyExpression<String, String> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected String[] get(final Event e, final String[] source) {
 		assert md5 != null;

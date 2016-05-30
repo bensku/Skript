@@ -235,7 +235,7 @@ public final class Yggdrasil {
 		return "" + f.getName();
 	}
 	
-	@SuppressWarnings("null")
+
 	public final static String getID(final Enum<?> e) {
 		try {
 			return getID(e.getDeclaringClass().getDeclaredField(e.name()));

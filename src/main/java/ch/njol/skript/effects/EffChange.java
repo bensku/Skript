@@ -99,12 +99,12 @@ public class EffChange extends Effect {
 		Skript.registerEffect(EffChange.class, patterns.getPatterns());
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> changed;
 	@Nullable
 	private Expression<?> changer = null;
 	
-	@SuppressWarnings("null")
+
 	private ChangeMode mode;
 	
 	private boolean single;

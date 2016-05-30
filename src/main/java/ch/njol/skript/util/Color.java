@@ -36,7 +36,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings({"deprecation", "null"})
+@SuppressWarnings("deprecation")
 public enum Color implements YggdrasilSerializable {
 	
 	BLACK(DyeColor.BLACK, ChatColor.BLACK, org.bukkit.Color.fromRGB(0x191919)),

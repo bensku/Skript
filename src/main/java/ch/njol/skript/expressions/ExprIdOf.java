@@ -75,7 +75,7 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Integer[] get(final Event e, final ItemType[] source) {
 		if (single) {
@@ -160,7 +160,7 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 		}
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public Iterator<Integer> iterator(final Event e) {

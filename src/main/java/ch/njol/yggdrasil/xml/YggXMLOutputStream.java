@@ -21,7 +21,9 @@
 
 package ch.njol.yggdrasil.xml;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -54,7 +56,7 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	private final short version;
 	
-	@SuppressWarnings("null")
+
 	public YggXMLOutputStream(final Yggdrasil y, final OutputStream out) throws IOException, FactoryConfigurationError {
 		super(y);
 		version = y.version;
@@ -71,7 +73,7 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	// private
 	
-	@SuppressWarnings("null")
+
 	private String getTypeName(Class<?> c) throws NotSerializableException {
 		String a = "";
 		while (c.isArray()) {
@@ -114,7 +116,7 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 		return s + a;
 	}
 	
-	@SuppressWarnings("null")
+
 	private final static Pattern valid = Pattern.compile("[\\u0009 \\u000A \\u000D \\u0020-\\u007E \\u0085 \\u00A0-\\uD7FF \\uE000-\\uFFFD \\x{10000}–\\x{10FFFF}]*", Pattern.COMMENTS);
 	
 	private final static void validateString(final String s) throws IOException {
@@ -182,7 +184,7 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writePrimitive_(final Object o) throws IOException {
-		@SuppressWarnings("null")
+	
 		final Tag type = getPrimitiveFromWrapper(o.getClass());
 		final int size;
 		final long value;

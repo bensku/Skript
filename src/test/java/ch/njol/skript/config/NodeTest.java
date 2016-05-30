@@ -21,7 +21,7 @@
 
 package ch.njol.skript.config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 

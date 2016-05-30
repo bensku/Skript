@@ -53,7 +53,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	@SuppressWarnings("unused")
 	private final short version;
 	
-	@SuppressWarnings("null")
+
 	public YggXMLInputStream(final Yggdrasil y, final InputStream in) throws IOException {
 		super(y);
 		is = in;
@@ -79,7 +79,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	
 	// private
 	
-	@SuppressWarnings("null")
+
 	private Class<?> getType(String s) throws StreamCorruptedException {
 		int dim = 0;
 		while (s.endsWith("[]")) {
@@ -127,7 +127,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 		} catch (final NoSuchElementException e) {
 			throw new EOFException();
 		}
-		@SuppressWarnings("null")
+	
 		final Tag t = Tag.byName(in.getLocalName());
 		if (t == null)
 			throw new StreamCorruptedException("Invalid tag " + in.getLocalName());
@@ -136,7 +136,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	
 	// Primitives
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		try {
@@ -175,7 +175,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	String primitiveData = null;
 	int primitiveDataIndex = 0;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected Object readPrimitive_(final Tag type) throws IOException {
 		try {
@@ -224,7 +224,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	
 	// String
 	
-	@SuppressWarnings("null")
+
 	@Override
 	protected String readString() throws IOException {
 		try {

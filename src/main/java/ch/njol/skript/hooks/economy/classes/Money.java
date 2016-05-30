@@ -118,7 +118,7 @@ public class Money {
 		});
 		
 		Converters.registerConverter(Money.class, Double.class, new Converter<Money, Double>() {
-			@SuppressWarnings("null")
+		
 			@Override
 			public Double convert(final Money m) {
 				return Double.valueOf(m.getAmount());

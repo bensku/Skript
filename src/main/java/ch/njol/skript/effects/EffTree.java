@@ -53,9 +53,9 @@ public class EffTree extends Effect {
 				"(grow|create|generate) %structuretype% [tree] %directions% %locations%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Location> blocks;
-	@SuppressWarnings("null")
+
 	private Expression<StructureType> type;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -66,7 +66,7 @@ public class EffTree extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void execute(final Event e) {
 		final StructureType type = this.type.getSingle(e);

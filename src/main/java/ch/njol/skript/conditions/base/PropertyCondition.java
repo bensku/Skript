@@ -36,7 +36,7 @@ import ch.njol.util.Kleenean;
  */
 public abstract class PropertyCondition<T> extends Condition implements Checker<T> {
 	
-	@SuppressWarnings("null")
+
 	private Expression<? extends T> expr;
 	
 	/**

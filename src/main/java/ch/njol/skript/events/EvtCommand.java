@@ -48,7 +48,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 	@Nullable
 	private String command = null;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		if (args[0] != null) {
@@ -59,7 +59,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event e) {
 		if (command == null)

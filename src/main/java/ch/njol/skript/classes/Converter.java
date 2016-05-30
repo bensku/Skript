@@ -48,7 +48,7 @@ public interface Converter<F, T> {
 	 * @param <F> same as in {@link Converter}
 	 * @param <T> dito
 	 */
-	@SuppressWarnings("null")
+
 	@NonNullByDefault
 	public final static class ConverterInfo<F, T> {
 		

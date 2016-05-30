@@ -96,7 +96,7 @@ public abstract class SkriptConfig {
 	public final static Option<Boolean> enablePlayerVariableFix = new Option<Boolean>("player variable fix", true);
 
 	
-	@SuppressWarnings("null")
+
 	private final static DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 	private final static Option<DateFormat> dateFormat = new Option<DateFormat>("date format", shortDateFormat, new Converter<String, DateFormat>() {
 		@Override

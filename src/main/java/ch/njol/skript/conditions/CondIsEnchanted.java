@@ -56,7 +56,7 @@ public class CondIsEnchanted extends Condition {
 				"%itemtypes% (isn't|is not|aren't|are not) enchanted [with %-enchantmenttype%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<ItemType> items;
 	@Nullable
 	Expression<EnchantmentType> enchs;

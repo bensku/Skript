@@ -21,7 +21,6 @@
 
 package ch.njol.skript.lang.function;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +32,7 @@ import ch.njol.util.NonNullPair;
 /**
  * Function signature: name, parameter types and a return type.
  */
+@SuppressWarnings("unused")
 public class Signature<T> {
 	
 	final String script;
@@ -44,7 +44,7 @@ public class Signature<T> {
 	final NonNullPair<String, Boolean> info;
 	final boolean single;
 	
-	@SuppressWarnings("null")
+
 	public Signature(String script, String name, List<Parameter<?>> parameters, @Nullable final ClassInfo<T> returnType, @Nullable final NonNullPair<String, Boolean> info, boolean single) {
 		this.script = script;
 		this.name = name;
@@ -58,7 +58,7 @@ public class Signature<T> {
 		return name;
 	}
 	
-	@SuppressWarnings("null")
+
 	public Parameter<?> getParameter(final int index) {
 		return parameters.get(index);
 	}

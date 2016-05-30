@@ -53,9 +53,9 @@ public class CondWeather extends Condition {
 		Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
 	}
 	
-	@SuppressWarnings("null")
+
 	Expression<WeatherType> weathers;
-	@SuppressWarnings("null")
+
 	private Expression<World> worlds;
 	
 	@SuppressWarnings({"unchecked", "null"})

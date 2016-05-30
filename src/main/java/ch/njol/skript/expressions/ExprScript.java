@@ -54,7 +54,7 @@ public class ExprScript extends SimpleExpression<String> {
 		Skript.registerExpression(ExprScript.class, String.class, ExpressionType.SIMPLE, "[the] script[['s] name]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private String name;
 	
 	@Override

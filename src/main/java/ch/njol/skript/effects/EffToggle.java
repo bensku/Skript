@@ -53,7 +53,7 @@ public class EffToggle extends Effect {
 		Skript.registerEffect(EffToggle.class, "(close|turn off|de[-]activate) %blocks%", "(toggle|switch) [[the] state of] %blocks%", "(open|turn on|activate) %blocks%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Block> blocks;
 	private int toggle;
 	

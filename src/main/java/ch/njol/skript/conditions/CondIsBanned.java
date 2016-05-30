@@ -57,12 +57,12 @@ public class CondIsBanned extends Condition {
 				"%offlineplayers/strings% (isn't|is not|aren't|are not) banned", "%players/strings% (isn't|is not|aren't|are not) IP(-| |)banned");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<?> players;
 	
 	boolean ipBanned;
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = exprs[0];

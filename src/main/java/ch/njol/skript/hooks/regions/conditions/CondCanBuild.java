@@ -60,12 +60,12 @@ public class CondCanBuild extends Condition {
 				"%players% (can('t|not)|(is|are)(n't| not) allowed to) build %directions% %locations%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<Player> players;
-	@SuppressWarnings("null")
+
 	Expression<Location> locations;
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = (Expression<Player>) exprs[0];

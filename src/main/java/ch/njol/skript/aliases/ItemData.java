@@ -185,7 +185,7 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 		if (typeid == -1) {
 			return new Iterator<ItemStack>() {
 				
-				@SuppressWarnings("null")
+			
 				private final Iterator<Material> iter = Arrays.asList(Material.values()).listIterator(1); // ignore air
 				
 				@Override

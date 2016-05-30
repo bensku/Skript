@@ -21,6 +21,7 @@
 
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Guardian;
 
 import ch.njol.skript.Skript;
@@ -46,7 +47,7 @@ public class GuardianData extends EntityData<Guardian> {
 		return true;
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
 	protected boolean init(Class<? extends Guardian> c, Guardian e) {
 		if(e != null)
@@ -72,7 +73,7 @@ public class GuardianData extends EntityData<Guardian> {
 	}
 
 	@Override
-	public EntityData getSuperType() {
+	public EntityData<? extends Entity> getSuperType() {
 		return new GuardianData();
 	}
 

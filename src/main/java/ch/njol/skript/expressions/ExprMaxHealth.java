@@ -21,7 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -52,7 +51,7 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Double
 		register(ExprMaxHealth.class, Double.class, "max[imum] health", "livingentities");
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public Double convert(final LivingEntity e) {
 		return HealthUtils.getMaxHealth(e);

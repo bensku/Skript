@@ -91,7 +91,7 @@ public class FeatureConfigLol {
 	
 
 	
-	@SuppressWarnings("null")
+
 	public static void load(File f){
 		if(loaded)
 			return;

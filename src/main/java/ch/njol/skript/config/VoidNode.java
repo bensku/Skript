@@ -39,7 +39,7 @@ public class VoidNode extends Node {
 //		initialIndentation = "" + line.replaceFirst("\\S.*$", "");
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public String getKey() {
 		return key;

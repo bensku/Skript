@@ -92,7 +92,7 @@ public class ReversedListView<T> implements List<T> {
 		return t;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean add(final T e) {
 		list.add(0, e);
@@ -112,7 +112,7 @@ public class ReversedListView<T> implements List<T> {
 		return list.containsAll(c);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean addAll(final Collection<? extends T> c) {
 		for (final T o : c)
@@ -120,7 +120,7 @@ public class ReversedListView<T> implements List<T> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean addAll(final int index, final Collection<? extends T> c) {
 		final int i = size() - index;
@@ -150,14 +150,14 @@ public class ReversedListView<T> implements List<T> {
 		return list.get(size() - index - 1);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
 	public T set(final int index, final T element) {
 		return list.set(size() - index - 1, element);
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public void add(final int index, final T element) {
 		list.add(size() - index, element);

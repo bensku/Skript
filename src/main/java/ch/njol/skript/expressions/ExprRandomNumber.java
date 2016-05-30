@@ -53,7 +53,7 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 				"[a] random (1¦integer|2¦number) (from|between) %number% (to|and) %number%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<? extends Number> lower, upper;
 	
 	private final Random rand = new Random();

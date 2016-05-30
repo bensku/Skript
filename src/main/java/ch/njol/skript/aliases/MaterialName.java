@@ -43,7 +43,7 @@ final class MaterialName {
 	public String toString(final short dataMin, final short dataMax, final boolean p) {
 //		if (names == null)
 //			return p ? plural : singular;
-		@SuppressWarnings("null")
+	
 		NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
 		if (s != null)
 			return p ? s.getSecond() : s.getFirst();
@@ -58,7 +58,7 @@ final class MaterialName {
 	public String getDebugName(final short dataMin, final short dataMax, final boolean p) {
 //		if (names == null)
 //			return p ? plural : singular;
-		@SuppressWarnings("null")
+	
 		final NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
 		if (s != null)
 			return p ? s.getSecond() : s.getFirst();

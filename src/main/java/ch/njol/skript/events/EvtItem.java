@@ -103,7 +103,7 @@ public class EvtItem extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
+
 	@Override
 	public boolean check(final Event e) {
 		if (types == null)

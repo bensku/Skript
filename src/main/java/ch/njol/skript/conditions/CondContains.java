@@ -61,12 +61,12 @@ public class CondContains extends Condition {
 				"%inventories/strings/objects% do[es](n't| not) contain %itemtypes/strings/objects%");
 	}
 	
-	@SuppressWarnings("null")
+
 	Expression<?> containers;
-	@SuppressWarnings("null")
+
 	Expression<?> items;
 	
-	@SuppressWarnings({"unchecked", "null", "unused"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		containers = exprs[0].getConvertedExpression(Object.class);

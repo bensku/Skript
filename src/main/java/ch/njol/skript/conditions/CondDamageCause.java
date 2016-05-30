@@ -61,10 +61,10 @@ public class CondDamageCause extends Condition {
 		Skript.registerCondition(CondDamageCause.class, "[the] damage (was|is|has)(0¦|1¦n('|o)t) [been] (caused|done|made) by %damagecause%");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Expression<DamageCause> cause, expected;
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		cause = new EventValueExpression<DamageCause>(DamageCause.class);

@@ -68,7 +68,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 				"[the] %*classinfo%( |-)arg[ument][( |-)<\\d+>]", "[the] arg[ument]( |-)%*classinfo%[( |-)<\\d+>]");
 	}
 	
-	@SuppressWarnings("null")
+
 	private Argument<?> arg;
 	
 	@Override
@@ -89,7 +89,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 				break;
 			case 1:
 			case 2:
-				@SuppressWarnings("null")
+			
 				final int i = Utils.parseInt(parser.regexes.get(0).group(1));
 				if (i > currentArguments.size()) {
 					Skript.error("The command doesn't have a " + StringUtils.fancyOrderNumber(i) + " argument", ErrorQuality.SEMANTIC_ERROR);
@@ -109,7 +109,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 			case 5:
 				@SuppressWarnings("unchecked")
 				final ClassInfo<?> c = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
-				@SuppressWarnings("null")
+			
 				final int num = parser.regexes.size() > 0 ? Utils.parseInt(parser.regexes.get(0).group()) : -1;
 				int j = 1;
 				for (final Argument<?> a : currentArguments) {

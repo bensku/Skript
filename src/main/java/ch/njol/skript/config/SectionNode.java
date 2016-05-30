@@ -138,7 +138,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	 */
 	@Override
 	public Iterator<Node> iterator() {
-		@SuppressWarnings("null")
+	
 		@NonNull
 		final Iterator<Node> iter = nodes.iterator();
 		return new CheckedIterator<Node>(iter, new NullableChecker<Node>() {

@@ -21,8 +21,6 @@
 
 package ch.njol.skript.classes.data;
 
-import java.util.Arrays;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -196,7 +194,7 @@ public class DefaultChangers {
 			return CollectionUtils.array(ItemType[].class, Inventory[].class);
 		}
 		
-		@SuppressWarnings("null")
+	
 		@Override
 		public void change(final Inventory[] invis, final @Nullable Object[] delta, final ChangeMode mode) {
 			for (final Inventory invi : invis) {

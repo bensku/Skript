@@ -57,7 +57,6 @@ public abstract class PlayerUtils {
 	
 	// created when first used
 	final static Task task = new Task(Skript.getInstance(), 1, 1) {
-		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
 			try {

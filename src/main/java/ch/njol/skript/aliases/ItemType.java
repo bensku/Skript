@@ -502,7 +502,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	@Override
 	public Iterator<ItemStack> containerIterator() {
 		return new Iterator<ItemStack>() {
-			@SuppressWarnings("null")
+		
 			Iterator<ItemData> iter = types.iterator();
 			@Nullable
 			Iterator<ItemStack> currentDataIter;
@@ -689,7 +689,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * @return List of ItemDatas. The returned list is not modifiable, use {@link #add(ItemData)} and {@link #remove(ItemData)} if you need to change the list, or use the
 	 *         {@link #iterator()}.
 	 */
-	@SuppressWarnings("null")
+
 	public List<ItemData> getTypes() {
 		return Collections.unmodifiableList(types);
 	}
@@ -715,7 +715,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 				return next < types.size();
 			}
 			
-			@SuppressWarnings("null")
+		
 			@Override
 			public ItemData next() {
 				if (!hasNext())

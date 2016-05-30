@@ -21,7 +21,7 @@
 
 package ch.njol.skript.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,7 +44,7 @@ import org.junit.Test;
 public class UtilsTest {
 	
 	@Test
-	@SuppressWarnings("null")
+
 	public void testPlural() {
 		
 		final String[][] strings = {
@@ -80,7 +80,7 @@ public class UtilsTest {
 	}
 	
 	@Test
-	@SuppressWarnings("null")
+
 	public void testSuperClass() {
 		
 		final Class<?>[][] classes = {

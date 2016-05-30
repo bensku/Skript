@@ -21,8 +21,10 @@
 
 package ch.njol.skript.registrations;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assume.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
