@@ -114,7 +114,9 @@ public class EffChange extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		Skript.info("Initing change, " + Arrays.toString(exprs));
+		if (SkriptLogger.debug()){
+			Skript.info("Initing change, " + Arrays.toString(exprs));
+		}
 		
 		mode = patterns.getInfo(matchedPattern);
 		
