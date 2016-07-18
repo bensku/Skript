@@ -21,55 +21,53 @@
 
 package ch.njol.skript.timings;
 
+import ch.njol.skript.SkriptEventHandler;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
-import ch.njol.skript.SkriptEventHandler;
 
 /**
  * Static utils for Skript timings.
  */
 public class Timings {
-	
-	protected static Map<Object,Timing> timings = new HashMap<Object,Timing>();
-	private static volatile boolean enabled;
-	protected static volatile long enableTime;
-	protected static volatile long disableTime;
-	
-	public static Timing of(Object ref) {
-		Timing timing;
-		synchronized (timings) {
-			if (timings.containsKey(ref)) {
-				timing = timings.get(ref);
-			} else {
-				timing = new Timing();
-				timings.put(ref, timing);
-			}
-		}
-		
-		assert timing != null;
-		return timing;
-	}
-	
-	public static boolean enabled() {
-		return enabled;
-	}
-	
-	public static void enable() {
-		enabled = true;
-		enableTime = System.nanoTime();
-	}
-	
-	public static void disable() {
-		enabled = false;
-		disableTime = System.nanoTime();
-		SkriptEventHandler.removeTiming();
-	}
-	
-	public static void clear() {
-		timings.clear();
-	}
-	
+
+    protected static Map<Object, Timing> timings = new HashMap<Object, Timing>();
+    protected static volatile long enableTime;
+    protected static volatile long disableTime;
+    private static volatile boolean enabled;
+
+    public static Timing of(Object ref) {
+        Timing timing;
+        synchronized (timings) {
+            if (timings.containsKey(ref)) {
+                timing = timings.get(ref);
+            } else {
+                timing = new Timing();
+                timings.put(ref, timing);
+            }
+        }
+
+        assert timing != null;
+        return timing;
+    }
+
+    public static boolean enabled() {
+        return enabled;
+    }
+
+    public static void enable() {
+        enabled = true;
+        enableTime = System.nanoTime();
+    }
+
+    public static void disable() {
+        enabled = false;
+        disableTime = System.nanoTime();
+        SkriptEventHandler.removeTiming();
+    }
+
+    public static void clear() {
+        timings.clear();
+    }
+
 }

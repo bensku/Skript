@@ -21,11 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
@@ -38,6 +33,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -45,57 +44,57 @@ import ch.njol.util.Kleenean;
 @Name("Enchant/Disenchant")
 @Description("Enchant or disenchant an existing item")
 @Examples({"enchant the player's tool with sharpness 5",
-		"disenchant the player's tool"})
+        "disenchant the player's tool"})
 @Since("2.0")
 public class EffEnchant extends Effect {
-	static {
-		Skript.registerEffect(EffEnchant.class,
-				"enchant %~itemstack% with %enchantmenttypes%",
-				"disenchant %~itemstack%");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<ItemStack> item;
-	@Nullable
-	private Expression<EnchantmentType> enchs;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		item = (Expression<ItemStack>) exprs[0];
-		if (!ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class)) {
-			Skript.error(item + " cannot be changed, thus it cannot be (dis)enchanted");
-			return false;
-		}
-		if (matchedPattern == 0)
-			enchs = (Expression<EnchantmentType>) exprs[1];
-		return true;
-	}
-	
-	@Override
-	protected void execute(final Event e) {
-		final ItemStack i = item.getSingle(e);
-		if (i == null)
-			return;
-		if (enchs != null) {
-			final EnchantmentType[] types = enchs.getArray(e);
-			if (types.length == 0)
-				return;
-			for (final EnchantmentType type : types) {
-				i.addUnsafeEnchantment(type.getType(), type.getLevel());
-			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
-		} else {
-			for (final Enchantment ench : i.getEnchantments().keySet()) {
-				i.removeEnchantment(ench);
-			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return enchs == null ? "disenchant " + item.toString(e, debug) : "enchant " + item.toString(e, debug) + " with " + enchs;
-	}
-	
+    static {
+        Skript.registerEffect(EffEnchant.class,
+                "enchant %~itemstack% with %enchantmenttypes%",
+                "disenchant %~itemstack%");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<ItemStack> item;
+    @Nullable
+    private Expression<EnchantmentType> enchs;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        item = (Expression<ItemStack>) exprs[0];
+        if (!ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class)) {
+            Skript.error(item + " cannot be changed, thus it cannot be (dis)enchanted");
+            return false;
+        }
+        if (matchedPattern == 0)
+            enchs = (Expression<EnchantmentType>) exprs[1];
+        return true;
+    }
+
+    @Override
+    protected void execute(final Event e) {
+        final ItemStack i = item.getSingle(e);
+        if (i == null)
+            return;
+        if (enchs != null) {
+            final EnchantmentType[] types = enchs.getArray(e);
+            if (types.length == 0)
+                return;
+            for (final EnchantmentType type : types) {
+                i.addUnsafeEnchantment(type.getType(), type.getLevel());
+            }
+            item.change(e, new ItemStack[]{i}, ChangeMode.SET);
+        } else {
+            for (final Enchantment ench : i.getEnchantments().keySet()) {
+                i.removeEnchantment(ench);
+            }
+            item.change(e, new ItemStack[]{i}, ChangeMode.SET);
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return enchs == null ? "disenchant " + item.toString(e, debug) : "enchant " + item.toString(e, debug) + " with " + enchs;
+    }
+
 }

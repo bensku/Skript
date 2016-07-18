@@ -21,17 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.logging.Level;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
@@ -46,85 +35,91 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Log")
 @Description({"Writes text into a .log file. Skript will write these files to /plugins/Skript/logs.",
-		"NB: Using 'server.log' as the log file will write to the default server log. Omitting the log file altogether will log the message as '[Skript] [&lt;script&gt;.sk] &lt;message&gt;' in the server log."})
+        "NB: Using 'server.log' as the log file will write to the default server log. Omitting the log file altogether will log the message as '[Skript] [&lt;script&gt;.sk] &lt;message&gt;' in the server log."})
 @Examples({"on place of TNT:",
-		"	log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
+        "	log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
 @Since("2.0")
 public class EffLog extends Effect {
-	static {
-		Skript.registerEffect(EffLog.class, "log %strings% [(to|in) [file[s]] %-strings%]");
-	}
-	
-	private final static File logsFolder = new File(Skript.getInstance().getDataFolder(), "logs");
-	
-	final static HashMap<String, PrintWriter> writers = new HashMap<String, PrintWriter>();
-	static {
-		Skript.closeOnDisable(new Closeable() {
-			@Override
-			public void close() {
-				for (final PrintWriter pw : writers.values())
-					pw.close();
-			}
-		});
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<String> messages;
-	@Nullable
-	private Expression<String> files;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		messages = (Expression<String>) exprs[0];
-		files = (Expression<String>) exprs[1];
-		return true;
-	}
-	
-	@SuppressWarnings("resource")
-	@Override
-	protected void execute(final Event e) {
-		for (final String message : messages.getArray(e)) {
-			if (files != null) {
-				for (String s : files.getArray(e)) {
-					s = s.toLowerCase();
-					if (!s.endsWith(".log"))
-						s += ".log";
-					if (s.equals("server.log")) {
-						SkriptLogger.LOGGER.log(Level.INFO, message);
-						continue;
-					}
-					PrintWriter w = writers.get(s);
-					if (w == null) {
-						final File f = new File(logsFolder, s); // REMIND what if s contains '..'?
-						try {
-							f.getParentFile().mkdirs();
-							w = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
-							writers.put(s, w);
-						} catch (final IOException ex) {
-							Skript.error("Cannot write to log file '" + s + "' (" + f.getPath() + "): " + ExceptionUtils.toString(ex));
-							return;
-						}
-					}
-					w.println("[" + SkriptConfig.formatDate(System.currentTimeMillis()) + "] " + message);
-					w.flush();
-				}
-			} else {
-				final Trigger t = getTrigger();
-				final File script = t == null ? null : t.getScript();
-				Skript.info("[" + (script != null ? script.getName() : "---") + "] " + message);
-			}
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "log " + messages.toString(e, debug) + (files != null ? " to " + files.toString(e, debug) : "");
-	}
+    final static HashMap<String, PrintWriter> writers = new HashMap<String, PrintWriter>();
+    private final static File logsFolder = new File(Skript.getInstance().getDataFolder(), "logs");
+
+    static {
+        Skript.registerEffect(EffLog.class, "log %strings% [(to|in) [file[s]] %-strings%]");
+    }
+
+    static {
+        Skript.closeOnDisable(new Closeable() {
+            @Override
+            public void close() {
+                for (final PrintWriter pw : writers.values())
+                    pw.close();
+            }
+        });
+    }
+
+    @SuppressWarnings("null")
+    private Expression<String> messages;
+    @Nullable
+    private Expression<String> files;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        messages = (Expression<String>) exprs[0];
+        files = (Expression<String>) exprs[1];
+        return true;
+    }
+
+    @SuppressWarnings("resource")
+    @Override
+    protected void execute(final Event e) {
+        for (final String message : messages.getArray(e)) {
+            if (files != null) {
+                for (String s : files.getArray(e)) {
+                    s = s.toLowerCase();
+                    if (!s.endsWith(".log"))
+                        s += ".log";
+                    if (s.equals("server.log")) {
+                        SkriptLogger.LOGGER.log(Level.INFO, message);
+                        continue;
+                    }
+                    PrintWriter w = writers.get(s);
+                    if (w == null) {
+                        final File f = new File(logsFolder, s); // REMIND what if s contains '..'?
+                        try {
+                            f.getParentFile().mkdirs();
+                            w = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+                            writers.put(s, w);
+                        } catch (final IOException ex) {
+                            Skript.error("Cannot write to log file '" + s + "' (" + f.getPath() + "): " + ExceptionUtils.toString(ex));
+                            return;
+                        }
+                    }
+                    w.println("[" + SkriptConfig.formatDate(System.currentTimeMillis()) + "] " + message);
+                    w.flush();
+                }
+            } else {
+                final Trigger t = getTrigger();
+                final File script = t == null ? null : t.getScript();
+                Skript.info("[" + (script != null ? script.getName() : "---") + "] " + message);
+            }
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "log " + messages.toString(e, debug) + (files != null ? " to " + files.toString(e, debug) : "");
+    }
 }

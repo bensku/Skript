@@ -21,16 +21,15 @@
 
 package ch.njol.skript.conditions;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.util.Slot;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Peter Güttinger
@@ -40,27 +39,27 @@ import ch.njol.skript.util.Slot;
 @Examples("player's inventory is empty")
 @Since("")
 public class CondIsEmpty extends PropertyCondition<Object> {
-	static {
-		register(CondIsEmpty.class, "empty", "inventories/slots/strings");
-	}
-	
-	@Override
-	public boolean check(final Object o) {
-		if (o instanceof String)
-			return ((String) o).isEmpty();
-		if (o instanceof Inventory)
-			return !((Inventory) o).iterator().hasNext();
-		if (o instanceof Slot) {
-			final Slot s = (Slot) o;
-			final ItemStack i = s.getItem();
-			return i == null || i.getType() == Material.AIR;
-		}
-		return false;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "empty";
-	}
-	
+    static {
+        register(CondIsEmpty.class, "empty", "inventories/slots/strings");
+    }
+
+    @Override
+    public boolean check(final Object o) {
+        if (o instanceof String)
+            return ((String) o).isEmpty();
+        if (o instanceof Inventory)
+            return !((Inventory) o).iterator().hasNext();
+        if (o instanceof Slot) {
+            final Slot s = (Slot) o;
+            final ItemStack i = s.getItem();
+            return i == null || i.getType() == Material.AIR;
+        }
+        return false;
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "empty";
+    }
+
 }

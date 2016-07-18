@@ -1,11 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Build metadata -->
 	<groupId>ch.njol</groupId>
 	<artifactId>skript</artifactId>
-	<version>2.2-dev18</version>
+	<version>2.2-dev13d</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<!-- Project metadata -->
 	<name>Skript</name>
 	<description>A plugin for the Minecraft server API Bukkit that allows to create scripts in natural language.</description>
 	<url>http://njol.ch/projects/skript/</url>
+	<inceptionYear>2011</inceptionYear>
+
 	<licenses>
 		<license>
 			<name>GNU General Public License 3.0</name>
@@ -13,123 +26,128 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<inceptionYear>2011</inceptionYear>
+
 	<scm>
-		<developerConnection>scm:git:git://github.com/Njol/Skript.git</developerConnection>
-		<connection>scm:git:git://github.com/Njol/Skript.git</connection>
-		<url>http://github.com/Njol/Skript</url>
+		<developerConnection>scm:git:git://github.com/bensku/Skript.git</developerConnection>
+		<connection>scm:git:git://github.com/bensku/Skript.git</connection>
+		<url>http://github.com/bensku/Skript</url>
 	</scm>
+
 	<issueManagement>
 		<system>GitHub</system>
-		<url>http://github.com/Njol/Skript/issues</url>
+		<url>https://github.com/bensku/Skript/issues</url>
 	</issueManagement>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	<dependencies>
 
+	<repositories>
+		<!-- For Spigot/Bukkit snapshots -->
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<!-- For required plugin SQLibrary -->
+		<repository>
+			<id>sqlibrary-repo</id>
+			<url>http://repo.dakanilabs.com/content/repositories/public/</url>
+		</repository>
+		<!-- For optional plugin Vault -->
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+		</repository>
+		<!-- For WorldEdit/WorldGuard -->
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
+		<!-- For GriefPrevention -->
+		<repository>
+			<id>elmakers-repo</id>
+			<url>http://maven.elmakers.com/repository</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- Spigot 1.9 with Bukkit API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.10-R0.1-SNAPSHOT</version>
+			<version>1.9-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- SQLibrary; required plugin -->
 		<dependency>
 			<groupId>lib.PatPeter.SQLibrary</groupId>
 			<artifactId>SQLibrary</artifactId>
 			<version>7.1</version>
+			<scope>provided</scope>
 		</dependency>
 
+		<!-- Optional plugins for API support -->
 		<dependency>
+			<!-- Roy Curtis 13th April 2016: This dependency prints a warning in Maven -->
+			<!-- because of a malformed POM file. It can be safely ignored.            -->
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>1.5.4</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/Vault.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldguard</artifactId>
-			<version>6.1.2-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/worldguard-6.1.2.jar</systemPath>
-		</dependency>
-		
-		<dependency>
-			<groupId>me.ryanhamshire</groupId>
-			<artifactId>griefprevention</artifactId>
-			<version>8.2</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>jdt.annotation</artifactId>
+			<groupId>com.sk89q</groupId>
+			<artifactId>worldguard</artifactId>
+			<version>6.1.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>6.1.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>me.ryanhamshire</groupId>
+			<artifactId>griefprevention</artifactId>
+			<version>11.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Compile-time dependencies -->
+		<dependency>
+			<groupId>org.eclipse.jdt</groupId>
+			<artifactId>org.eclipse.jdt.annotation</artifactId>
 			<version>1.1.0</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>findbugs</artifactId>
 			<version>2.0.3</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<!-- Test-time dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 			<version>3.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>de.slikey</groupId>
-			<artifactId>EffectLib</artifactId>
-			<version>4.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>bekvon.bukkit</groupId>
-			<artifactId>residence</artifactId>
-			<systemPath>${project.basedir}/lib/Residence4.3.0.0.jar</systemPath>
-			<scope>system</scope>
-			<version>4.3.0.0</version>
-		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
-			<id>sqlibrary-repo</id>
-			<url>http://repo.dakanilabs.com/content/repositories/public/</url>
-		</repository>
-		<repository>
-			<id>vault-repo</id>
-			<url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
-		</repository>
-		<repository>
-			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/</url>
-		</repository>
-		<repository>
-			<id>njol-repo</id>
-			<url>http://maven.njol.ch/repo/</url>
-		</repository>
-		<repository>
-    		<id>elmakers-repo</id>
-    		<url>http://maven.elmakers.com/repository/</url>
-		</repository>
-	</repositories>
+
 	<build>
-		<finalName>${project.artifactId}</finalName>
 		<resources>
+			<!-- Includes specific resources after replacing tokens with project info -->
 			<resource>
 				<directory>src/main/resources/</directory>
 				<filtering>true</filtering>
@@ -140,6 +158,7 @@
 					<include>lang/*</include>
 				</includes>
 			</resource>
+			<!-- Includes all other resources with no filtering -->
 			<resource>
 				<directory>src/main/resources/</directory>
 				<filtering>false</filtering>
@@ -153,6 +172,7 @@
 					<exclude>lang/*</exclude>
 				</excludes>
 			</resource>
+			<!-- Include license file from repository root -->
 			<resource>
 				<directory>./</directory>
 				<filtering>false</filtering>
@@ -161,170 +181,31 @@
 				</includes>
 			</resource>
 		</resources>
+
 		<plugins>
+			<!-- Surefire is used for project testing -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.16</version>
 				<configuration>
+					<!-- Prevents test results being written to file; console only -->
 					<useFile>false</useFile>
 				</configuration>
 			</plugin>
+
 			<plugin>
-				<!-- not used; compiled with Eclipse -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 				<configuration>
-					<skipMain>true</skipMain>
-					<skip>true</skip>
-					<source>1.6</source>
-					<target>1.6</target>
-					<compilerVersion>1.7</compilerVersion>
+					<!-- JDK 1.8 or higher required -->
+					<source>1.8</source>
+					<target>1.8</target>
+					<compilerVersion>1.8</compilerVersion>
 					<optimize>true</optimize>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>shade</id>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<artifactSet>
-						<includes>
-							<include>ch.njol:utils</include>
-							<include>ch.njol:yggdrasil</include>
-							<!-- <include>org.mcstats:metrics</include> -->
-						</includes>
-					</artifactSet>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-compiler-plugin
-										</artifactId>
-										<versionRange>
-											[3.1,)
-										</versionRange>
-										<goals>
-											<goal>compile</goal>
-											<goal>testCompile</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-	<profiles>
-		<profile>
-			<id>build</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>deploy</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>2.1</version>
-						<executions>
-							<execution>
-								<id>shade</id>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<createSourcesJar>true</createSourcesJar>
-							<minimizeJar>true</minimizeJar>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
-						<executions>
-							<execution>
-								<id>javadoc</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<quiet>true</quiet>
-							<dependencySourceIncludes>
-								<dependencySourceInclude>ch.njol:*</dependencySourceInclude>
-							</dependencySourceIncludes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<distributionManagement>
-		<repository>
-			<id>njol-repo</id>
-			<url>file://///DISKSTATION/web/maven.njol.ch/repo/</url>
-		</repository>
-	</distributionManagement>
 </project>

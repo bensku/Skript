@@ -21,11 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -38,6 +33,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -45,55 +44,55 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Name("Spawn")
 @Description("Spawn a creature.")
 @Examples({"spawn 3 creepers at the targeted block",
-		"spawn a ghast 5 meters above the player"})
+        "spawn a ghast 5 meters above the player"})
 @Since("1.0")
 public class EffSpawn extends Effect {
-	static {
-		Skript.registerEffect(EffSpawn.class,
-				"spawn %entitytypes% [%directions% %locations%]",
-				"spawn %number% of %entitytypes% [%directions% %locations%]");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<Location> locations;
-	@SuppressWarnings("null")
-	private Expression<EntityType> types;
-	@Nullable
-	private Expression<Number> amount;
-	
-	@Nullable
-	public static Entity lastSpawned = null;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
-		types = (Expression<EntityType>) exprs[matchedPattern];
-		locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
-		return true;
-	}
-	
-	@Override
-	@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
-	public void execute(final Event e) {
-		lastSpawned = null;
-		final Number a = amount != null ? amount.getSingle(e) : 1;
-		if (a == null)
-			return;
-		final EntityType[] ts = types.getArray(e);
-		for (final Location l : locations.getArray(e)) {
-			assert l != null : locations;
-			for (final EntityType type : ts) {
-				for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-					lastSpawned = type.data.spawn(l);
-				}
-			}
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "spawn " + (amount != null ? amount.toString(e, debug) + " " : "") + types.toString(e, debug) + " " + locations.toString(e, debug);
-	}
-	
+    @Nullable
+    public static Entity lastSpawned = null;
+
+    static {
+        Skript.registerEffect(EffSpawn.class,
+                "spawn %entitytypes% [%directions% %locations%]",
+                "spawn %number% of %entitytypes% [%directions% %locations%]");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<Location> locations;
+    @SuppressWarnings("null")
+    private Expression<EntityType> types;
+    @Nullable
+    private Expression<Number> amount;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
+        types = (Expression<EntityType>) exprs[matchedPattern];
+        locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
+        return true;
+    }
+
+    @Override
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+    public void execute(final Event e) {
+        lastSpawned = null;
+        final Number a = amount != null ? amount.getSingle(e) : 1;
+        if (a == null)
+            return;
+        final EntityType[] ts = types.getArray(e);
+        for (final Location l : locations.getArray(e)) {
+            assert l != null : locations;
+            for (final EntityType type : ts) {
+                for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
+                    lastSpawned = type.data.spawn(l);
+                }
+            }
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "spawn " + (amount != null ? amount.toString(e, debug) + " " : "") + types.toString(e, debug) + " " + locations.toString(e, debug);
+    }
+
 }

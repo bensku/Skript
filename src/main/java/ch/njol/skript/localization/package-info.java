@@ -1,6 +1,6 @@
 /**
  * Localisation code goes here.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

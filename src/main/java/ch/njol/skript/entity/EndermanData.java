@@ -21,13 +21,6 @@
 
 package ch.njol.skript.entity;
 
-import java.util.Arrays;
-
-import org.bukkit.entity.Enderman;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -36,92 +29,98 @@ import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Checker;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.entity.Enderman;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
  */
 public class EndermanData extends EntityData<Enderman> {
-	static {
-		EntityData.register(EndermanData.class, "enderman", Enderman.class, "enderman");
-	}
-	
-	@Nullable
-	private ItemType[] hand = null;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
-		if (exprs[0] != null)
-			hand = ((Literal<ItemType>) exprs[0]).getAll();
-		return true;
-	}
-	
-	@Override
-	protected boolean init(final @Nullable Class<? extends Enderman> c, final @Nullable Enderman e) {
-		if (e != null) {
-			final MaterialData m = e.getCarriedMaterial();
-			if (m != null) {
-				final ItemStack i = m.toItemStack(1);
-				if (i == null)
-					return false;
-				hand = new ItemType[] {new ItemType(i)};
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public void set(final Enderman entity) {
-		if (hand != null) {
-			final ItemType t = CollectionUtils.getRandom(hand);
-			assert t != null;
-			final ItemStack i = t.getBlock().getRandom();
-			if (i != null)
-				entity.setCarriedMaterial(i.getData());
-		}
-		
-	}
-	
-	@Override
-	public boolean match(final Enderman entity) {
-		return hand == null || SimpleExpression.check(hand, new Checker<ItemType>() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public boolean check(final @Nullable ItemType t) {
-				return t != null && t.isOfType(entity.getCarriedMaterial().getItemTypeId(), entity.getCarriedMaterial().getData());
-			}
-		}, false, false);
-	}
-	
-	@Override
-	public Class<Enderman> getType() {
-		return Enderman.class;
-	}
-	
-	private final static ArgsMessage format = new ArgsMessage("entities.enderman.format");
-	
-	@Override
-	public String toString(final int flags) {
-		final ItemType[] hand = this.hand;
-		if (hand == null)
-			return super.toString(flags);
-		return format.toString(super.toString(flags), Classes.toString(hand, false));
-	}
-	
-	@Override
-	protected int hashCode_i() {
-		return Arrays.hashCode(hand);
-	}
-	
-	@Override
-	protected boolean equals_i(final EntityData<?> obj) {
-		if (!(obj instanceof EndermanData))
-			return false;
-		final EndermanData other = (EndermanData) obj;
-		return Arrays.equals(hand, other.hand);
-	}
-	
-//		if (hand == null)
+    private final static ArgsMessage format = new ArgsMessage("entities.enderman.format");
+
+    static {
+        EntityData.register(EndermanData.class, "enderman", Enderman.class, "enderman");
+    }
+
+    @Nullable
+    private ItemType[] hand = null;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
+        if (exprs[0] != null)
+            hand = ((Literal<ItemType>) exprs[0]).getAll();
+        return true;
+    }
+
+    @Override
+    protected boolean init(final @Nullable Class<? extends Enderman> c, final @Nullable Enderman e) {
+        if (e != null) {
+            final MaterialData m = e.getCarriedMaterial();
+            if (m != null) {
+                final ItemStack i = m.toItemStack(1);
+                if (i == null)
+                    return false;
+                hand = new ItemType[]{new ItemType(i)};
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void set(final Enderman entity) {
+        if (hand != null) {
+            final ItemType t = CollectionUtils.getRandom(hand);
+            assert t != null;
+            final ItemStack i = t.getBlock().getRandom();
+            if (i != null)
+                entity.setCarriedMaterial(i.getData());
+        }
+
+    }
+
+    @Override
+    public boolean match(final Enderman entity) {
+        return hand == null || SimpleExpression.check(hand, new Checker<ItemType>() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean check(final @Nullable ItemType t) {
+                return t != null && t.isOfType(entity.getCarriedMaterial().getItemTypeId(), entity.getCarriedMaterial().getData());
+            }
+        }, false, false);
+    }
+
+    @Override
+    public Class<Enderman> getType() {
+        return Enderman.class;
+    }
+
+    @Override
+    public String toString(final int flags) {
+        final ItemType[] hand = this.hand;
+        if (hand == null)
+            return super.toString(flags);
+        return format.toString(super.toString(flags), Classes.toString(hand, false));
+    }
+
+    @Override
+    protected int hashCode_i() {
+        return Arrays.hashCode(hand);
+    }
+
+    @Override
+    protected boolean equals_i(final EntityData<?> obj) {
+        if (!(obj instanceof EndermanData))
+            return false;
+        final EndermanData other = (EndermanData) obj;
+        return Arrays.equals(hand, other.hand);
+    }
+
+    //		if (hand == null)
 //			return "";
 //		final StringBuilder b = new StringBuilder();
 //		for (final ItemType h : hand) {
@@ -135,42 +134,42 @@ public class EndermanData extends EntityData<Enderman> {
 //			b.append(s.second.replace(",", ",,").replace(":", "::"));
 //		}
 //		return b.toString();
-	@SuppressWarnings("null")
-	@Override
-	@Deprecated
-	protected boolean deserialize(final String s) {
-		if (s.isEmpty())
-			return true;
-		final String[] split = s.split("(?<!,),(?!,)");
-		hand = new ItemType[split.length];
-		for (int i = 0; i < hand.length; i++) {
-			final String[] t = split[i].split("(?<!:):(?::)");
-			if (t.length != 2)
-				return false;
-			final Object o = Classes.deserialize(t[0], t[1].replace(",,", ",").replace("::", ":"));
-			if (o == null || !(o instanceof ItemType))
-				return false;
-			hand[i] = (ItemType) o;
-		}
-		return false;
-	}
-	
-	private boolean isSubhand(final @Nullable ItemType[] sub) {
-		if (hand != null)
-			return sub != null && ItemType.isSubset(hand, sub);
-		return true;
-	}
-	
-	@Override
-	public boolean isSupertypeOf(final EntityData<?> e) {
-		if (e instanceof EndermanData)
-			return isSubhand(((EndermanData) e).hand);
-		return false;
-	}
-	
-	@Override
-	public EntityData getSuperType() {
-		return new EndermanData();
-	}
-	
+    @SuppressWarnings("null")
+    @Override
+    @Deprecated
+    protected boolean deserialize(final String s) {
+        if (s.isEmpty())
+            return true;
+        final String[] split = s.split("(?<!,),(?!,)");
+        hand = new ItemType[split.length];
+        for (int i = 0; i < hand.length; i++) {
+            final String[] t = split[i].split("(?<!:):(?::)");
+            if (t.length != 2)
+                return false;
+            final Object o = Classes.deserialize(t[0], t[1].replace(",,", ",").replace("::", ":"));
+            if (o == null || !(o instanceof ItemType))
+                return false;
+            hand[i] = (ItemType) o;
+        }
+        return false;
+    }
+
+    private boolean isSubhand(final @Nullable ItemType[] sub) {
+        if (hand != null)
+            return sub != null && ItemType.isSubset(hand, sub);
+        return true;
+    }
+
+    @Override
+    public boolean isSupertypeOf(final EntityData<?> e) {
+        if (e instanceof EndermanData)
+            return isSubhand(((EndermanData) e).hand);
+        return false;
+    }
+
+    @Override
+    public EntityData getSuperType() {
+        return new EndermanData();
+    }
+
 }

@@ -21,50 +21,49 @@
 
 package ch.njol.skript.lang.function;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class ExprFunctionCall<T> extends SimpleExpression<T> {
-	
-	private final FunctionReference<T> function;
-	
-	public ExprFunctionCall(final FunctionReference<T> function) {
-		this.function = function;
-	}
-	
-	@Override
-	@Nullable
-	protected T[] get(final Event e) {
-		return function.execute(e);
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return function.isSingle();
-	}
-	
-	@Override
-	public Class<? extends T> getReturnType() {
-		return function.getReturnType();
-	}
-	
-	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
-		return function.toString(e, debug);
-	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		assert false;
-		return false;
-	}
-	
+
+    private final FunctionReference<T> function;
+
+    public ExprFunctionCall(final FunctionReference<T> function) {
+        this.function = function;
+    }
+
+    @Override
+    @Nullable
+    protected T[] get(final Event e) {
+        return function.execute(e);
+    }
+
+    @Override
+    public boolean isSingle() {
+        return function.isSingle();
+    }
+
+    @Override
+    public Class<? extends T> getReturnType() {
+        return function.getReturnType();
+    }
+
+    @Override
+    public String toString(@Nullable final Event e, final boolean debug) {
+        return function.toString(e, debug);
+    }
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        assert false;
+        return false;
+    }
+
 }

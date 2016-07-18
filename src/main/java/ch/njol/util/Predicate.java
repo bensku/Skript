@@ -13,7 +13,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * 
- * Copyright 2011-2013 Peter Güttinger
+ * Copyright 2011-2013 Peter Gï¿½ttinger
  * 
  */
 
@@ -22,10 +22,9 @@ package ch.njol.util;
 import javax.annotation.Nullable;
 
 /**
- * @author Peter Güttinger
- *
+ * @author Peter Gttinger
  */
 public abstract interface Predicate<T> {
-  public abstract boolean test(@Nullable T paramT);
+    public abstract boolean test(@Nullable T paramT);
 }
 

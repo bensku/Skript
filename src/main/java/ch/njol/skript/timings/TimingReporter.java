@@ -21,88 +21,85 @@
 
 package ch.njol.skript.timings;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Trigger;
+import ch.njol.skript.localization.Language;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.localization.Language;
 
 /**
  * Creates timing reports.
  */
 public class TimingReporter {
-	
-	@SuppressWarnings("null")
-	public static String getReport() {
-		Map<Object,Timing> timings = Timings.timings;
-		Map<String,Long> triggers = new HashMap<String,Long>();
-		Map<Object,Long> events = new HashMap<Object,Long>();
-		
-		for (Entry<Object,Timing> entry : timings.entrySet()) {
-			Object key = entry.getKey();
-			Timing val = entry.getValue();
-			
-			for (Entry<Trigger,Long> trigger : val.getTriggerTimes().entrySet()) {
-				String name = trigger.getKey().getName();
-				long tt = 0L;
-				if (triggers.containsKey(name))
-					tt = triggers.get(name);
-				tt += trigger.getValue();
-				triggers.put(name, tt);
-			}
-			
-			long evtTime = 0L;
-			if (events.containsKey(key))
-				evtTime = events.get(key);
-			evtTime += val.getEventTime();
-			events.put(key, evtTime);
-		}
-		
-		long length = Timings.disableTime - Timings.enableTime;
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format(Language.get("timings.start"), length / (float) 1000000000) + "\n");
-		
-		sb.append(Language.get("timings.triggers") + "\n");
-		for (Entry<String,Long> trigger : triggers.entrySet()) {
-			float percent = trigger.getValue() / (float) length * 100;
-			sb.append(trigger.getKey() + ": " + (trigger.getValue() / (float) 1000000) + "ms (" + percent + "%)\n");
-		}
-		
-		sb.append(Language.get("timings.events") + "\n");
-		for (Entry<Object,Long> event : events.entrySet()) {
-			float percent = event.getValue() / (float) length * 100;
-			sb.append(event.getKey() + ": " + (event.getValue() / (float) 1000000) + "ms (" + percent + "%)\n");
-		}
-		
-		return sb.toString();
-	}
-	
-	public static void saveToFile(String str) {
-		File folder = Skript.getInstance().getDataFolder();
-		File file = new File(folder + "/timings-" + DateFormat.getTimeInstance().format(System.currentTimeMillis()) + ".log");
-		if (!file.exists())
-			try {
-				file.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				return;
-			}
-		try {
-			PrintWriter out = new PrintWriter(file);
-			out.write(str);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace(); // Can't happen...
-		}
-	}
+
+    @SuppressWarnings("null")
+    public static String getReport() {
+        Map<Object, Timing> timings = Timings.timings;
+        Map<String, Long> triggers = new HashMap<String, Long>();
+        Map<Object, Long> events = new HashMap<Object, Long>();
+
+        for (Entry<Object, Timing> entry : timings.entrySet()) {
+            Object key = entry.getKey();
+            Timing val = entry.getValue();
+
+            for (Entry<Trigger, Long> trigger : val.getTriggerTimes().entrySet()) {
+                String name = trigger.getKey().getName();
+                long tt = 0L;
+                if (triggers.containsKey(name))
+                    tt = triggers.get(name);
+                tt += trigger.getValue();
+                triggers.put(name, tt);
+            }
+
+            long evtTime = 0L;
+            if (events.containsKey(key))
+                evtTime = events.get(key);
+            evtTime += val.getEventTime();
+            events.put(key, evtTime);
+        }
+
+        long length = Timings.disableTime - Timings.enableTime;
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(Language.get("timings.start"), length / (float) 1000000000) + "\n");
+
+        sb.append(Language.get("timings.triggers") + "\n");
+        for (Entry<String, Long> trigger : triggers.entrySet()) {
+            float percent = trigger.getValue() / (float) length * 100;
+            sb.append(trigger.getKey() + ": " + (trigger.getValue() / (float) 1000000) + "ms (" + percent + "%)\n");
+        }
+
+        sb.append(Language.get("timings.events") + "\n");
+        for (Entry<Object, Long> event : events.entrySet()) {
+            float percent = event.getValue() / (float) length * 100;
+            sb.append(event.getKey() + ": " + (event.getValue() / (float) 1000000) + "ms (" + percent + "%)\n");
+        }
+
+        return sb.toString();
+    }
+
+    public static void saveToFile(String str) {
+        File folder = Skript.getInstance().getDataFolder();
+        File file = new File(folder + "/timings-" + DateFormat.getTimeInstance().format(System.currentTimeMillis()) + ".log");
+        if (!file.exists())
+            try {
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                return;
+            }
+        try {
+            PrintWriter out = new PrintWriter(file);
+            out.write(str);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(); // Can't happen...
+        }
+    }
 }

@@ -26,6 +26,7 @@ package ch.njol.skript.lang.function;
  * unknown return types. Can not be instantiated.
  */
 public class Unknown {
-	
-	private Unknown() {}
+
+    private Unknown() {
+    }
 }

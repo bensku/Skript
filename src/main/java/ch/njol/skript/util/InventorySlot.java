@@ -21,6 +21,8 @@
 
 package ch.njol.skript.util;
 
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.registrations.Classes;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -28,56 +30,52 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.registrations.Classes;
-
 /**
  * @author Peter Güttinger
  */
 public class InventorySlot extends Slot {
-	
-	private final Inventory invi;
-	private final int index;
-	
-	public InventorySlot(final Inventory invi, final int index) {
-		this.invi = invi;
-		this.index = index;
-	}
-	
-	public Inventory getInventory() {
-		return invi;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	@Nullable
-	public ItemStack getItem() {
-		return invi.getItem(index) == null ? new ItemStack(Material.AIR, 1) : invi.getItem(index).clone();
-	}
-	
-	@Override
-	public void setItem(final @Nullable ItemStack item) {
-		invi.setItem(index, item != null && item.getType() != Material.AIR ? item : null);
-		if (invi instanceof PlayerInventory)
-			PlayerUtils.updateInventory((Player) invi.getHolder());
-	}
-	
-	@Override
-	public String toString_i() {
-		if (invi.getHolder() != null)
-			return "slot " + index + " of inventory of " + Classes.toString(invi.getHolder());
-		return "slot " + index + " of " + Classes.toString(invi);
-	}
 
-	@Override
-	public boolean isSameSlot(Slot o) {
-		if (o instanceof EquipmentSlot)
-			return o.isSameSlot(this); // Reverse call to avoid code copy-paste
-		return this.index == ((InventorySlot) o).getIndex();
-	}
-	
+    private final Inventory invi;
+    private final int index;
+
+    public InventorySlot(final Inventory invi, final int index) {
+        this.invi = invi;
+        this.index = index;
+    }
+
+    public Inventory getInventory() {
+        return invi;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getItem() {
+        return invi.getItem(index) == null ? new ItemStack(Material.AIR, 1) : invi.getItem(index).clone();
+    }
+
+    @Override
+    public void setItem(final @Nullable ItemStack item) {
+        invi.setItem(index, item != null && item.getType() != Material.AIR ? item : null);
+        if (invi instanceof PlayerInventory)
+            PlayerUtils.updateInventory((Player) invi.getHolder());
+    }
+
+    @Override
+    public String toString_i() {
+        if (invi.getHolder() != null)
+            return "slot " + index + " of inventory of " + Classes.toString(invi.getHolder());
+        return "slot " + index + " of " + Classes.toString(invi);
+    }
+
+    @Override
+    public boolean isSameSlot(Slot o) {
+        if (o instanceof EquipmentSlot)
+            return o.isSameSlot(this); // Reverse call to avoid code copy-paste
+        return this.index == ((InventorySlot) o).getIndex();
+    }
+
 }

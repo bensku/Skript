@@ -28,19 +28,20 @@ import org.bukkit.event.HandlerList;
  * @author Peter Güttinger
  */
 public class ScriptEvent extends Event {
-	
-	public ScriptEvent() {}
-	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
-	
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-	
+
+    // Bukkit stuff
+    private final static HandlerList handlers = new HandlerList();
+
+    public ScriptEvent() {
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
 }

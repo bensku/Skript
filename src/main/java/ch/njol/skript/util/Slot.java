@@ -21,46 +21,47 @@
 
 package ch.njol.skript.util;
 
+import ch.njol.skript.lang.Debuggable;
+import ch.njol.skript.registrations.Classes;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.registrations.Classes;
-
 /**
  * Represents a container for a single item. This can e.g. be an inventory slot or an item frame. // TODO actually make an item frame slot
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class Slot implements Debuggable {
-	
-	protected Slot() {}
-	
-	@Nullable
-	public abstract ItemStack getItem();
-	
-	public abstract void setItem(final @Nullable ItemStack item);
-	
-	@Override
-	public final String toString() {
-		return Classes.toString(getItem());
-	}
-	
-	@Override
-	public final String toString(final @Nullable Event e, final boolean debug) {
-		if (!debug)
-			Classes.toString(getItem());
-		return toString_i();
-	}
-	
-	protected abstract String toString_i();
-	
-	/**
-	 * Checks if given slot is in same position with this.
-	 * Ignores slot contents.
-	 * @param o Another slot
-	 * @return True if positions equal, false otherwise.
-	 */
-	public abstract boolean isSameSlot(Slot o);
+
+    protected Slot() {
+    }
+
+    @Nullable
+    public abstract ItemStack getItem();
+
+    public abstract void setItem(final @Nullable ItemStack item);
+
+    @Override
+    public final String toString() {
+        return Classes.toString(getItem());
+    }
+
+    @Override
+    public final String toString(final @Nullable Event e, final boolean debug) {
+        if (!debug)
+            Classes.toString(getItem());
+        return toString_i();
+    }
+
+    protected abstract String toString_i();
+
+    /**
+     * Checks if given slot is in same position with this.
+     * Ignores slot contents.
+     *
+     * @param o Another slot
+     * @return True if positions equal, false otherwise.
+     */
+    public abstract boolean isSameSlot(Slot o);
 }

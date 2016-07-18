@@ -21,10 +21,6 @@
 
 package ch.njol.skript.hooks.chat.expressions;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,6 +31,9 @@ import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -42,56 +41,56 @@ import ch.njol.util.Kleenean;
 @Name("Prefix/Suffix")
 @Description("The prefix or suffix as defined in the server's chat plugin.")
 @Examples({"on chat:",
-		"	cancel event",
-		"	broadcast \"%player's prefix%%player's display name%%player's suffix%: %message%\" to the player's world",
-		"set the player's prefix to \"[<red>Admin<reset>] \""})
+        "	cancel event",
+        "	broadcast \"%player's prefix%%player's display name%%player's suffix%: %message%\" to the player's world",
+        "set the player's prefix to \"[<red>Admin<reset>] \""})
 @Since("2.0")
 public class ExprPrefixSuffix extends SimplePropertyExpression<Player, String> {
-	static {
-		register(ExprPrefixSuffix.class, String.class, "[chat] (1¦prefix|2¦suffix)", "players");
-	}
-	
-	private boolean prefix;
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		prefix = parseResult.mark == 1;
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
-	}
-	
-	@Override
-	public String convert(final Player p) {
-		return prefix ? "" + VaultHook.chat.getPlayerPrefix(p) : "" + VaultHook.chat.getPlayerSuffix(p);
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return prefix ? "prefix" : "suffix";
-	}
-	
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
-	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET)
-			return new Class[] {String.class};
-		return null;
-	}
-	
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		assert mode == ChangeMode.SET;
-		assert delta != null;
-		for (final Player p : getExpr().getArray(e)) {
-			if (prefix)
-				VaultHook.chat.setPlayerPrefix(p, (String) delta[0]);
-			else
-				VaultHook.chat.setPlayerSuffix(p, (String) delta[0]);
-		}
-	}
-	
+    static {
+        register(ExprPrefixSuffix.class, String.class, "[chat] (1¦prefix|2¦suffix)", "players");
+    }
+
+    private boolean prefix;
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        prefix = parseResult.mark == 1;
+        return super.init(exprs, matchedPattern, isDelayed, parseResult);
+    }
+
+    @Override
+    public String convert(final Player p) {
+        return prefix ? "" + VaultHook.chat.getPlayerPrefix(p) : "" + VaultHook.chat.getPlayerSuffix(p);
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return prefix ? "prefix" : "suffix";
+    }
+
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
+
+    @Override
+    @Nullable
+    public Class<?>[] acceptChange(final ChangeMode mode) {
+        if (mode == ChangeMode.SET)
+            return new Class[]{String.class};
+        return null;
+    }
+
+    @Override
+    public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+        assert mode == ChangeMode.SET;
+        assert delta != null;
+        for (final Player p : getExpr().getArray(e)) {
+            if (prefix)
+                VaultHook.chat.setPlayerPrefix(p, (String) delta[0]);
+            else
+                VaultHook.chat.setPlayerSuffix(p, (String) delta[0]);
+        }
+    }
+
 }

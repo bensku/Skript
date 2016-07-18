@@ -25,21 +25,21 @@ package ch.njol.skript.classes;
  * @author Peter Güttinger
  */
 public class NumberArithmetic implements Arithmetic<Number, Number> {
-	
-	@SuppressWarnings("null")
-	@Override
-	public Number difference(final Number first, final Number second) {
-		return Math.abs(first.doubleValue() - second.doubleValue());
-	}
-	
-	@Override
-	public Number add(final Number value, final Number difference) {
-		return new Double(value.doubleValue() + difference.doubleValue());
-	}
-	
-	@Override
-	public Number subtract(final Number value, final Number difference) {
-		return new Double(value.doubleValue() - difference.doubleValue());
-	}
-	
+
+    @SuppressWarnings("null")
+    @Override
+    public Number difference(final Number first, final Number second) {
+        return Math.abs(first.doubleValue() - second.doubleValue());
+    }
+
+    @Override
+    public Number add(final Number value, final Number difference) {
+        return new Double(value.doubleValue() + difference.doubleValue());
+    }
+
+    @Override
+    public Number subtract(final Number value, final Number difference) {
+        return new Double(value.doubleValue() - difference.doubleValue());
+    }
+
 }

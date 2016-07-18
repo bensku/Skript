@@ -21,15 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import java.util.Arrays;
-
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Converter;
@@ -41,8 +32,13 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 /**
  * @author bensku
@@ -52,54 +48,54 @@ import ch.njol.util.Kleenean;
 @Examples("unbreakable iron sword #Creates unbreakable iron sword")
 @Since("2.2-dev13b")
 public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
-	
-	static {
-		Skript.registerExpression(ExprUnbreakable.class, ItemType.class, ExpressionType.PROPERTY, "unbreakable %itemtypes%");
-	}
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		setExpr((Expression<? extends ItemType>) exprs[0]);
-		return true;
-	}
-	
-	@Override
-	protected ItemType[] get(final Event e, final ItemType[] source) {
-		return get(source, new Converter<ItemType, ItemType>() {
-			@Override
-			public ItemType convert(final ItemType i) {
-				ItemType clone = i.clone();
-				
-				Object meta = clone.getItemMeta();
-				if (meta == null) {
-					ItemStack random = clone.getRandom(); // Should not happen, but...
-					if (random == null)
-						return clone;
-					meta = random.getItemMeta();
-				}
-				if (!(meta instanceof ItemMeta)) {
-					Skript.error("Unknown item meta type, can't make item unbreakable!");
-					return clone;
-				}
-				
-				((ItemMeta) meta).spigot().setUnbreakable(true);
-				clone.setItemMeta(meta);
-				
-				return clone;
-			}
-		});
-	}
 
-	@Override
-	public Class<? extends ItemType> getReturnType() {
-		return ItemType.class;
-	}
+    static {
+        Skript.registerExpression(ExprUnbreakable.class, ItemType.class, ExpressionType.PROPERTY, "unbreakable %itemtypes%");
+    }
 
-	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		if (e == null)
-			return "unbreakable items";
-		return "unbreakable " + Arrays.toString(getExpr().getAll(e));
-	}
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        setExpr((Expression<? extends ItemType>) exprs[0]);
+        return true;
+    }
+
+    @Override
+    protected ItemType[] get(final Event e, final ItemType[] source) {
+        return get(source, new Converter<ItemType, ItemType>() {
+            @Override
+            public ItemType convert(final ItemType i) {
+                ItemType clone = i.clone();
+
+                Object meta = clone.getItemMeta();
+                if (meta == null) {
+                    ItemStack random = clone.getRandom(); // Should not happen, but...
+                    if (random == null)
+                        return clone;
+                    meta = random.getItemMeta();
+                }
+                if (!(meta instanceof ItemMeta)) {
+                    Skript.error("Unknown item meta type, can't make item unbreakable!");
+                    return clone;
+                }
+
+                ((ItemMeta) meta).spigot().setUnbreakable(true);
+                clone.setItemMeta(meta);
+
+                return clone;
+            }
+        });
+    }
+
+    @Override
+    public Class<? extends ItemType> getReturnType() {
+        return ItemType.class;
+    }
+
+    @Override
+    public String toString(@Nullable Event e, boolean debug) {
+        if (e == null)
+            return "unbreakable items";
+        return "unbreakable " + Arrays.toString(getExpr().getAll(e));
+    }
 }

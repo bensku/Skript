@@ -21,45 +21,43 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * trigonometry uses degrees, so pi is mostly useless
- * 
+ *
  * @author Peter Güttinger
  */
 @Name("Pi")
 @Description("The most famous constant. It has the value 3.141592653589793 in Java.")
 @Examples("")
 public class LitPi extends SimpleLiteral<Double> {
-	static {
-		Skript.registerExpression(LitPi.class, Double.class, ExpressionType.SIMPLE, "pi");
-	}
-	
-	public LitPi() {
-		super(new Double(Math.PI), false);
-	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		return true;
-	}
-	
-	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
-		return "pi";
-	}
-	
+    static {
+        Skript.registerExpression(LitPi.class, Double.class, ExpressionType.SIMPLE, "pi");
+    }
+
+    public LitPi() {
+        super(new Double(Math.PI), false);
+    }
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        return true;
+    }
+
+    @Override
+    public String toString(@Nullable final Event e, final boolean debug) {
+        return "pi";
+    }
+
 }

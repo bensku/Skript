@@ -21,49 +21,49 @@
 
 package ch.njol.skript.aliases;
 
-import java.util.HashMap;
-
 import ch.njol.skript.Skript;
 import ch.njol.util.NonNullPair;
 
+import java.util.HashMap;
+
 final class MaterialName {
-	String singular;
-	String plural;
-	int gender = 0;
-	private final int id;
-	final HashMap<NonNullPair<Short, Short>, NonNullPair<String, String>> names = new HashMap<NonNullPair<Short, Short>, NonNullPair<String, String>>();
-	
-	public MaterialName(final int id, final String singular, final String plural, final int gender) {
-		this.id = id;
-		this.singular = singular;
-		this.plural = plural;
-		this.gender = gender;
-	}
-	
-	public String toString(final short dataMin, final short dataMax, final boolean p) {
+    final HashMap<NonNullPair<Short, Short>, NonNullPair<String, String>> names = new HashMap<NonNullPair<Short, Short>, NonNullPair<String, String>>();
+    private final int id;
+    String singular;
+    String plural;
+    int gender = 0;
+
+    public MaterialName(final int id, final String singular, final String plural, final int gender) {
+        this.id = id;
+        this.singular = singular;
+        this.plural = plural;
+        this.gender = gender;
+    }
+
+    public String toString(final short dataMin, final short dataMax, final boolean p) {
 //		if (names == null)
 //			return p ? plural : singular;
-		@SuppressWarnings("null")
-		NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
-		if (s != null)
-			return p ? s.getSecond() : s.getFirst();
-		if (dataMin == -1 && dataMax == -1 || dataMin == 0 && dataMax == 0)
-			return p ? plural : singular;
-		s = names.get(new NonNullPair<Short, Short>((short) -1, (short) -1));
-		if (s != null)
-			return p ? s.getSecond() : s.getFirst();
-		return p ? plural : singular;
-	}
-	
-	public String getDebugName(final short dataMin, final short dataMax, final boolean p) {
+        @SuppressWarnings("null")
+        NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
+        if (s != null)
+            return p ? s.getSecond() : s.getFirst();
+        if (dataMin == -1 && dataMax == -1 || dataMin == 0 && dataMax == 0)
+            return p ? plural : singular;
+        s = names.get(new NonNullPair<Short, Short>((short) -1, (short) -1));
+        if (s != null)
+            return p ? s.getSecond() : s.getFirst();
+        return p ? plural : singular;
+    }
+
+    public String getDebugName(final short dataMin, final short dataMax, final boolean p) {
 //		if (names == null)
 //			return p ? plural : singular;
-		@SuppressWarnings("null")
-		final NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
-		if (s != null)
-			return p ? s.getSecond() : s.getFirst();
-		if (dataMin == -1 && dataMax == -1 || dataMin == 0 && dataMax == 0)
-			return p ? plural : singular;
-		return (p ? plural : singular) + ":" + (dataMin == -1 ? 0 : dataMin) + (dataMin == dataMax ? "" : "-" + (dataMax == -1 ? (id <= Skript.MAXBLOCKID ? 15 : Short.MAX_VALUE) : dataMax));
-	}
+        @SuppressWarnings("null")
+        final NonNullPair<String, String> s = names.get(new NonNullPair<Short, Short>(Short.valueOf(dataMin), Short.valueOf(dataMax)));
+        if (s != null)
+            return p ? s.getSecond() : s.getFirst();
+        if (dataMin == -1 && dataMax == -1 || dataMin == 0 && dataMax == 0)
+            return p ? plural : singular;
+        return (p ? plural : singular) + ":" + (dataMin == -1 ? 0 : dataMin) + (dataMin == dataMax ? "" : "-" + (dataMax == -1 ? (id <= Skript.MAXBLOCKID ? 15 : Short.MAX_VALUE) : dataMax));
+    }
 }

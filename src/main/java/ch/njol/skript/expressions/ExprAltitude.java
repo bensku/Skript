@@ -21,13 +21,12 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.Location;
-
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import org.bukkit.Location;
 
 /**
  * @author Peter Güttinger
@@ -35,28 +34,28 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Name("Altitude")
 @Description("Effectively an alias of 'y-<a href='#ExprCoordinate'>coordinate</a> of …', it represents the height of some object above bedrock.")
 @Examples({"on damage:",
-		"	altitude of the attacker is higher that the altitude of the victim",
-		"	set damage to damage * 1.2"})
+        "	altitude of the attacker is higher that the altitude of the victim",
+        "	set damage to damage * 1.2"})
 @Since("1.4.3")
 public class ExprAltitude extends SimplePropertyExpression<Location, Double> {
-	static {
-		register(ExprAltitude.class, Double.class, "altitude[s]", "locations");
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public Double convert(final Location l) {
-		return l.getY();
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "altitude";
-	}
-	
-	@Override
-	public Class<Double> getReturnType() {
-		return Double.class;
-	}
-	
+    static {
+        register(ExprAltitude.class, Double.class, "altitude[s]", "locations");
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public Double convert(final Location l) {
+        return l.getY();
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "altitude";
+    }
+
+    @Override
+    public Class<Double> getReturnType() {
+        return Double.class;
+    }
+
 }

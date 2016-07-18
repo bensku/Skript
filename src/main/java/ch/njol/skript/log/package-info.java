@@ -1,6 +1,6 @@
 /**
  * Code related to logging.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

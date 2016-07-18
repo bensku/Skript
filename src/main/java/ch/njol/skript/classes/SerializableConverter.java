@@ -25,4 +25,5 @@ package ch.njol.skript.classes;
  * @author Peter Güttinger
  */
 @Deprecated
-public interface SerializableConverter<F, T> extends Converter<F, T> {}
+public interface SerializableConverter<F, T> extends Converter<F, T> {
+}

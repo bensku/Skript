@@ -28,18 +28,18 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public interface Debuggable {
-	
-	/**
-	 * @param e The event to get information to. This is always null if debug == false.
-	 * @param debug If true this should print more information, if false this should print what is shown to the end user
-	 * @return String representation of this object
-	 */
-	public String toString(@Nullable Event e, boolean debug);
-	
-	/**
-	 * Should return <tt>{@link #toString(Event, boolean) toString}(null, false)</tt>
-	 */
-	@Override
-	public String toString();
-	
+
+    /**
+     * @param e     The event to get information to. This is always null if debug == false.
+     * @param debug If true this should print more information, if false this should print what is shown to the end user
+     * @return String representation of this object
+     */
+    public String toString(@Nullable Event e, boolean debug);
+
+    /**
+     * Should return <tt>{@link #toString(Event, boolean) toString}(null, false)</tt>
+     */
+    @Override
+    public String toString();
+
 }

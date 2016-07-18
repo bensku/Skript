@@ -21,50 +21,49 @@
 
 package ch.njol.skript.util;
 
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.registrations.Classes;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.registrations.Classes;
 
 /**
  * Item that is in player's cursor.
  */
 public class CursorSlot extends Slot {
-	
-	private final Player player;
-	
-	public CursorSlot(Player p) {
-		this.player = p;
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-	
-	@Override
-	@Nullable
-	public ItemStack getItem() {
-		return player.getItemOnCursor();
-	}
 
-	@Override
-	public void setItem(@Nullable ItemStack item) {
-		player.setItemOnCursor(item);
-		PlayerUtils.updateInventory(player);
-	}
+    private final Player player;
 
-	@Override
-	protected String toString_i() {
-		return "cursor slot of inventory of " + Classes.toString(player);
-	}
+    public CursorSlot(Player p) {
+        this.player = p;
+    }
 
-	@Override
-	public boolean isSameSlot(Slot o) {
-		if (!(o instanceof CursorSlot))
-			return false;
-		return ((CursorSlot) o).getPlayer().equals(this.player);
-	}
-	
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getItem() {
+        return player.getItemOnCursor();
+    }
+
+    @Override
+    public void setItem(@Nullable ItemStack item) {
+        player.setItemOnCursor(item);
+        PlayerUtils.updateInventory(player);
+    }
+
+    @Override
+    protected String toString_i() {
+        return "cursor slot of inventory of " + Classes.toString(player);
+    }
+
+    @Override
+    public boolean isSameSlot(Slot o) {
+        if (!(o instanceof CursorSlot))
+            return false;
+        return ((CursorSlot) o).getPlayer().equals(this.player);
+    }
+
 }

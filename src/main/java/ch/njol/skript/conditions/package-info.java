@@ -1,6 +1,6 @@
 /**
  * Contains the default conditions of Skript.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

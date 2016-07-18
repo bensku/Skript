@@ -21,17 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -44,6 +33,15 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -51,70 +49,70 @@ import ch.njol.util.Kleenean;
 @Name("Drop")
 @Description("Drops one or more items.")
 @Examples({"on death of creeper:",
-		"	drop 1 TNT"})
+        "	drop 1 TNT"})
 @Since("1.0")
 public class EffDrop extends Effect {
-	static {
-		Skript.registerEffect(EffDrop.class, "drop %itemtypes/experience% [%directions% %locations%]",
-				"drop %itemtypes/experience% [%directions% %locations%] without velocity");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<?> drops;
-	@SuppressWarnings("null")
-	private Expression<Location> locations;
-	
-	private boolean useVelocity = true;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		drops = exprs[0];
-		locations = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
-		if (matchedPattern == 1) useVelocity = false;
-		return true;
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public void execute(final Event e) {
-		final Object[] os = drops.getArray(e);
-		if (e instanceof EntityDeathEvent && locations.isSingle() && ((EntityDeathEvent) e).getEntity().getLocation().equals(locations.getSingle(e)) && !Delay.isDelayed(e)) {
-			for (final Object o : os) {
-				if (o instanceof Experience) {
-					((EntityDeathEvent) e).setDroppedExp(((EntityDeathEvent) e).getDroppedExp() + ((Experience) o).getXP());
-				} else {
-					((ItemType) o).addTo(((EntityDeathEvent) e).getDrops());
-				}
-			}
-			return;
-		}
-		for (final Location l : locations.getArray(e)) {
-			final Location itemDropLoc = l.clone().subtract(0.5, 0.5, 0.5); // dropItemNaturally adds 0.15 to 0.85 randomly to all coordinates
-			for (final Object o : os) {
-				if (o instanceof Experience) {
-					final ExperienceOrb orb = l.getWorld().spawn(l, ExperienceOrb.class);
-					orb.setExperience(((Experience) o).getXP());
-				} else {
-					for (final ItemStack is : ((ItemType) o).getItem().getAll()) {
-						if (is.getType() != Material.AIR) {
-							if (useVelocity) {
-								l.getWorld().dropItemNaturally(itemDropLoc, is);
-							} else {
-								final Item item = l.getWorld().dropItem(l, is);
-								item.teleport(l);
-								item.setVelocity(new Vector(0, 0, 0));
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "drop " + drops.toString(e, debug) + " " + locations.toString(e, debug);
-	}
-	
+    static {
+        Skript.registerEffect(EffDrop.class, "drop %itemtypes/experience% [%directions% %locations%]",
+                "drop %itemtypes/experience% [%directions% %locations%] without velocity");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<?> drops;
+    @SuppressWarnings("null")
+    private Expression<Location> locations;
+
+    private boolean useVelocity = true;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        drops = exprs[0];
+        locations = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
+        if (matchedPattern == 1) useVelocity = false;
+        return true;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public void execute(final Event e) {
+        final Object[] os = drops.getArray(e);
+        if (e instanceof EntityDeathEvent && locations.isSingle() && ((EntityDeathEvent) e).getEntity().getLocation().equals(locations.getSingle(e)) && !Delay.isDelayed(e)) {
+            for (final Object o : os) {
+                if (o instanceof Experience) {
+                    ((EntityDeathEvent) e).setDroppedExp(((EntityDeathEvent) e).getDroppedExp() + ((Experience) o).getXP());
+                } else {
+                    ((ItemType) o).addTo(((EntityDeathEvent) e).getDrops());
+                }
+            }
+            return;
+        }
+        for (final Location l : locations.getArray(e)) {
+            final Location itemDropLoc = l.clone().subtract(0.5, 0.5, 0.5); // dropItemNaturally adds 0.15 to 0.85 randomly to all coordinates
+            for (final Object o : os) {
+                if (o instanceof Experience) {
+                    final ExperienceOrb orb = l.getWorld().spawn(l, ExperienceOrb.class);
+                    orb.setExperience(((Experience) o).getXP());
+                } else {
+                    for (final ItemStack is : ((ItemType) o).getItem().getAll()) {
+                        if (is.getType() != Material.AIR) {
+                            if (useVelocity) {
+                                l.getWorld().dropItemNaturally(itemDropLoc, is);
+                            } else {
+                                final Item item = l.getWorld().dropItem(l, is);
+                                item.teleport(l);
+                                item.setVelocity(new Vector(0, 0, 0));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "drop " + drops.toString(e, debug) + " " + locations.toString(e, debug);
+    }
+
 }

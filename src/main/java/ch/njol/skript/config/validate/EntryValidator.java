@@ -21,44 +21,43 @@
 
 package ch.njol.skript.config.validate;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Setter;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EntryValidator implements NodeValidator {
-	
-	@Nullable
-	private final Setter<String> setter;
-	
-	public EntryValidator() {
-		setter = null;
-	}
-	
-	public EntryValidator(final Setter<String> setter) {
-		this.setter = setter;
-	}
-	
-	@Override
-	public boolean validate(final Node node) {
-		if (!(node instanceof EntryNode)) {
-			notAnEntryError(node);
-			return false;
-		}
-		if (setter != null)
-			setter.set(((EntryNode) node).getValue());
-		return true;
-	}
-	
-	public final static void notAnEntryError(final Node node) {
-		SkriptLogger.setNode(node);
-		Skript.error("'" + node.getKey() + "' is not an entry (like 'name " + node.getConfig().getSeparator() + " value')");
-	}
-	
+
+    @Nullable
+    private final Setter<String> setter;
+
+    public EntryValidator() {
+        setter = null;
+    }
+
+    public EntryValidator(final Setter<String> setter) {
+        this.setter = setter;
+    }
+
+    public final static void notAnEntryError(final Node node) {
+        SkriptLogger.setNode(node);
+        Skript.error("'" + node.getKey() + "' is not an entry (like 'name " + node.getConfig().getSeparator() + " value')");
+    }
+
+    @Override
+    public boolean validate(final Node node) {
+        if (!(node instanceof EntryNode)) {
+            notAnEntryError(node);
+            return false;
+        }
+        if (setter != null)
+            setter.set(((EntryNode) node).getValue());
+        return true;
+    }
+
 }

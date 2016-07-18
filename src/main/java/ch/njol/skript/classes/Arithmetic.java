@@ -27,11 +27,11 @@ package ch.njol.skript.classes;
  * @author Peter Güttinger
  */
 public interface Arithmetic<A, R> {
-	
-	public R difference(A first, A second);
-	
-	public A add(A value, R difference);
-	
-	public A subtract(A value, R difference);
-	
+
+    public R difference(A first, A second);
+
+    public A add(A value, R difference);
+
+    public A subtract(A value, R difference);
+
 }

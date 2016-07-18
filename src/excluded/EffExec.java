@@ -21,54 +21,53 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptLogger;
 import ch.njol.skript.SkriptLogger.SubLog;
 import ch.njol.skript.api.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
 
 /**
  * @author Peter Güttinger
  */
 public class EffExec extends Effect {
-	
-	static {
+
+    static {
 //		Skript.registerEffect(EffExec.class, "exec[ute] %string%");
-	}
-	
-	private Expression<String> input;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, boolean isDelayed, final ParseResult parser) {
-		input = (Expression<String>) vars[0];
-		return true;
-	}
-	
-	@Override
-	protected void execute(final Event e) {
-		final String s = input.getSingle(e);
-		if (s == null)
-			return;
-		final SubLog log = SkriptLogger.startSubLog();
-		final Effect eff = Effect.parse(s, "can't understand this effect: '" + s + "'");
-		log.stop();
-		if (eff != null) {
-			eff.run(e);
-		} else {
-			final CommandSender sender = Skript.getEventValue(e, CommandSender.class, 0);
-			log.printErrors(sender == null ? Bukkit.getConsoleSender() : sender, null);
-		}
-	}
-	
-	@Override
-	public String toString(final Event e, final boolean debug) {
-		return "exec " + input.toString(e, debug);
-	}
-	
+    }
+
+    private Expression<String> input;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, boolean isDelayed, final ParseResult parser) {
+        input = (Expression<String>) vars[0];
+        return true;
+    }
+
+    @Override
+    protected void execute(final Event e) {
+        final String s = input.getSingle(e);
+        if (s == null)
+            return;
+        final SubLog log = SkriptLogger.startSubLog();
+        final Effect eff = Effect.parse(s, "can't understand this effect: '" + s + "'");
+        log.stop();
+        if (eff != null) {
+            eff.run(e);
+        } else {
+            final CommandSender sender = Skript.getEventValue(e, CommandSender.class, 0);
+            log.printErrors(sender == null ? Bukkit.getConsoleSender() : sender, null);
+        }
+    }
+
+    @Override
+    public String toString(final Event e, final boolean debug) {
+        return "exec " + input.toString(e, debug);
+    }
+
 }

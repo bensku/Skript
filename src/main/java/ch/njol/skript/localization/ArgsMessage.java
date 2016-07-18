@@ -21,32 +21,32 @@
 
 package ch.njol.skript.localization;
 
-import java.util.IllegalFormatException;
-
 import ch.njol.skript.Skript;
 
+import java.util.IllegalFormatException;
+
 public final class ArgsMessage extends Message {
-	
-	public ArgsMessage(final String key) {
-		super(key);
-	}
-	
-	@Override
-	public String toString() {
-		throw new UnsupportedOperationException();
-	}
-	
-	public String toString(final Object... args) {
-		try {
-			final String val = getValue();
-			return val == null ? key : "" + String.format(val, args);
-		} catch (final IllegalFormatException e) {
-			final String m = "The formatted message '" + key + "' uses an illegal format: " + e.getLocalizedMessage();
-			Skript.adminBroadcast("<red>" + m);
-			System.err.println("[Skript] " + m);
-			e.printStackTrace();
-			return "[ERROR]";
-		}
-	}
-	
+
+    public ArgsMessage(final String key) {
+        super(key);
+    }
+
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String toString(final Object... args) {
+        try {
+            final String val = getValue();
+            return val == null ? key : "" + String.format(val, args);
+        } catch (final IllegalFormatException e) {
+            final String m = "The formatted message '" + key + "' uses an illegal format: " + e.getLocalizedMessage();
+            Skript.adminBroadcast("<red>" + m);
+            System.err.println("[Skript] " + m);
+            e.printStackTrace();
+            return "[ERROR]";
+        }
+    }
+
 }

@@ -21,132 +21,130 @@
 
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.localization.LanguageChangeListener;
 import org.bukkit.World;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Peter Güttinger
  */
 public enum WeatherType {
-	
-	CLEAR, RAIN, THUNDER;
-	
-	String[] names;
-	
-	@Nullable
-	String adjective;
-	
-	final static Map<String, WeatherType> byName = new HashMap<String, WeatherType>();
-	
-	private WeatherType(final String... names) {
-		this.names = names;
-	}
-	
-	static {
-		Language.addListener(new LanguageChangeListener() {
-			@Override
-			public void onLanguageChange() {
-				byName.clear();
-				for (final WeatherType t : values()) {
-					t.names = Language.getList("weather." + t.name() + ".name");
-					t.adjective = Language.get("weather." + t.name() + ".adjective");
-					for (final String name : t.names) {
-						byName.put(name, t);
-					}
-				}
-			}
-		});
-	}
-	
-	@Nullable
-	public final static WeatherType parse(final String s) {
-		return byName.get(s);
-	}
-	
-	public static WeatherType fromWorld(final World world) {
-		assert world != null;
-		if (world.isThundering() && world.hasStorm()) // Sometimes thundering but no storm
-			return THUNDER;
-		if (world.hasStorm())
-			return RAIN;
-		return CLEAR;
-	}
-	
-	public static WeatherType fromEvent(final WeatherEvent e) {
-		if (e instanceof WeatherChangeEvent)
-			return fromEvent((WeatherChangeEvent) e);
-		if (e instanceof ThunderChangeEvent)
-			return fromEvent((ThunderChangeEvent) e);
-		assert false;
-		return CLEAR;
-	}
-	
-	public static WeatherType fromEvent(final WeatherChangeEvent e) {
-		assert e != null;
-		if (!e.toWeatherState())
-			return CLEAR;
-		if (e.getWorld().isThundering())
-			return THUNDER;
-		return RAIN;
-	}
-	
-	public static WeatherType fromEvent(final ThunderChangeEvent e) {
-		assert e != null;
-		if (e.toThunderState())
-			return THUNDER;
-		if (e.getWorld().hasStorm())
-			return RAIN;
-		return CLEAR;
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public String toString() {
-		return names[0];
-	}
-	
-	// REMIND flags?
-	@SuppressWarnings("null")
-	public String toString(final int flags) {
-		return names[0];
-	}
-	
-	@Nullable
-	public String adjective() {
-		return adjective;
-	}
-	
-	public boolean isWeather(final World w) {
-		return isWeather(w.hasStorm(), w.isThundering());
-	}
-	
-	public boolean isWeather(final boolean rain, final boolean thunder) {
-		switch (this) {
-			case CLEAR:
-				return !thunder && !rain;
-			case RAIN:
-				return !thunder && rain;
-			case THUNDER:
-				return thunder && rain;
-		}
-		assert false;
-		return false;
-	}
-	
-	public void setWeather(final World w) {
-		if (w.isThundering() != (this == THUNDER))
-			w.setThundering(this == THUNDER);
-		if (w.hasStorm() != (this != CLEAR))
-			w.setStorm(this != CLEAR);
-	}
-	
+
+    CLEAR, RAIN, THUNDER;
+
+    final static Map<String, WeatherType> byName = new HashMap<String, WeatherType>();
+
+    static {
+        Language.addListener(new LanguageChangeListener() {
+            @Override
+            public void onLanguageChange() {
+                byName.clear();
+                for (final WeatherType t : values()) {
+                    t.names = Language.getList("weather." + t.name() + ".name");
+                    t.adjective = Language.get("weather." + t.name() + ".adjective");
+                    for (final String name : t.names) {
+                        byName.put(name, t);
+                    }
+                }
+            }
+        });
+    }
+
+    String[] names;
+    @Nullable
+    String adjective;
+
+    private WeatherType(final String... names) {
+        this.names = names;
+    }
+
+    @Nullable
+    public final static WeatherType parse(final String s) {
+        return byName.get(s);
+    }
+
+    public static WeatherType fromWorld(final World world) {
+        assert world != null;
+        if (world.isThundering() && world.hasStorm()) // Sometimes thundering but no storm
+            return THUNDER;
+        if (world.hasStorm())
+            return RAIN;
+        return CLEAR;
+    }
+
+    public static WeatherType fromEvent(final WeatherEvent e) {
+        if (e instanceof WeatherChangeEvent)
+            return fromEvent((WeatherChangeEvent) e);
+        if (e instanceof ThunderChangeEvent)
+            return fromEvent((ThunderChangeEvent) e);
+        assert false;
+        return CLEAR;
+    }
+
+    public static WeatherType fromEvent(final WeatherChangeEvent e) {
+        assert e != null;
+        if (!e.toWeatherState())
+            return CLEAR;
+        if (e.getWorld().isThundering())
+            return THUNDER;
+        return RAIN;
+    }
+
+    public static WeatherType fromEvent(final ThunderChangeEvent e) {
+        assert e != null;
+        if (e.toThunderState())
+            return THUNDER;
+        if (e.getWorld().hasStorm())
+            return RAIN;
+        return CLEAR;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public String toString() {
+        return names[0];
+    }
+
+    // REMIND flags?
+    @SuppressWarnings("null")
+    public String toString(final int flags) {
+        return names[0];
+    }
+
+    @Nullable
+    public String adjective() {
+        return adjective;
+    }
+
+    public boolean isWeather(final World w) {
+        return isWeather(w.hasStorm(), w.isThundering());
+    }
+
+    public boolean isWeather(final boolean rain, final boolean thunder) {
+        switch (this) {
+            case CLEAR:
+                return !thunder && !rain;
+            case RAIN:
+                return !thunder && rain;
+            case THUNDER:
+                return thunder && rain;
+        }
+        assert false;
+        return false;
+    }
+
+    public void setWeather(final World w) {
+        if (w.isThundering() != (this == THUNDER))
+            w.setThundering(this == THUNDER);
+        if (w.hasStorm() != (this != CLEAR))
+            w.setStorm(this != CLEAR);
+    }
+
 }

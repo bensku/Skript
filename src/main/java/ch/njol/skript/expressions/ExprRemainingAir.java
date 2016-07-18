@@ -21,14 +21,13 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.LivingEntity;
-
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Timespan;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Peter Güttinger
@@ -36,26 +35,26 @@ import ch.njol.skript.util.Timespan;
 @Name("Remaining Air")
 @Description("How much time a player has left underwater before starting to drown.")
 @Examples({"player's remaining air is less than 3 seconds:",
-		"	send \"hurry, get to the surface!\" to the player"})
+        "	send \"hurry, get to the surface!\" to the player"})
 @Since("")
 public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Timespan> {
-	static {
-		register(ExprRemainingAir.class, Timespan.class, "remaining air", "livingentities");
-	}
-	
-	@Override
-	public Class<Timespan> getReturnType() {
-		return Timespan.class;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "remaining air";
-	}
-	
-	@Override
-	public Timespan convert(final LivingEntity e) {
-		return Timespan.fromTicks(e.getRemainingAir());
-	}
-	
+    static {
+        register(ExprRemainingAir.class, Timespan.class, "remaining air", "livingentities");
+    }
+
+    @Override
+    public Class<Timespan> getReturnType() {
+        return Timespan.class;
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "remaining air";
+    }
+
+    @Override
+    public Timespan convert(final LivingEntity e) {
+        return Timespan.fromTicks(e.getRemainingAir());
+    }
+
 }

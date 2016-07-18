@@ -21,12 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -38,63 +32,68 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Named Item")
 @Description("Directly names an item, useful for defining a named item in a script. " +
-		"If you want to (re)name existing items you can either use this expression or use <code>set <a href='#ExprName'>name of &lt;item&gt;</a> to &lt;text&gt;</code>.")
+        "If you want to (re)name existing items you can either use this expression or use <code>set <a href='#ExprName'>name of &lt;item&gt;</a> to &lt;text&gt;</code>.")
 @Examples({"give a diamond sword of sharpness 100 named \"<gold>Excalibur\" to the player",
-		"set tool of player to the player's tool named \"<gold>Wand\"",
-		"set the name of the player's tool to \"<gold>Wand\""})
+        "set tool of player to the player's tool named \"<gold>Wand\"",
+        "set the name of the player's tool to \"<gold>Wand\""})
 @Since("2.0")
 public class ExprNamed extends PropertyExpression<ItemType, ItemType> {
-	static {
-		Skript.registerExpression(ExprNamed.class, ItemType.class, ExpressionType.PROPERTY, "%itemtypes% (named|with name[s]) %string%");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<String> name;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (!Skript.isRunningMinecraft(1, 4, 5)) {
-			Skript.error("Item names are only available in Minecraft 1.4.5+");
-			return false;
-		}
-		setExpr((Expression<? extends ItemType>) exprs[0]);
-		name = (Expression<String>) exprs[1];
-		return true;
-	}
-	
-	@Override
-	protected ItemType[] get(final Event e, final ItemType[] source) {
-		final String n = name.getSingle(e);
-		if (n == null)
-			return new ItemType[0];
-		final ItemType[] r = source.clone();
-		for (int i = 0; i < r.length; i++) {
-			r[i] = source[i].clone();
-			ItemMeta m = (ItemMeta) r[i].getItemMeta();
-			if (m == null)
-				m = Bukkit.getItemFactory().getItemMeta(Material.STONE); // AIR results in null
-			assert m != null : r[i];
-			m.setDisplayName(n);
-			r[i].setItemMeta(m);
-		}
-		return r;
-	}
-	
-	@Override
-	public Class<? extends ItemType> getReturnType() {
-		return ItemType.class;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return getExpr().toString(e, debug) + " named " + name;
-	}
-	
+    static {
+        Skript.registerExpression(ExprNamed.class, ItemType.class, ExpressionType.PROPERTY, "%itemtypes% (named|with name[s]) %string%");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<String> name;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        if (!Skript.isRunningMinecraft(1, 4, 5)) {
+            Skript.error("Item names are only available in Minecraft 1.4.5+");
+            return false;
+        }
+        setExpr((Expression<? extends ItemType>) exprs[0]);
+        name = (Expression<String>) exprs[1];
+        return true;
+    }
+
+    @Override
+    protected ItemType[] get(final Event e, final ItemType[] source) {
+        final String n = name.getSingle(e);
+        if (n == null)
+            return new ItemType[0];
+        final ItemType[] r = source.clone();
+        for (int i = 0; i < r.length; i++) {
+            r[i] = source[i].clone();
+            ItemMeta m = (ItemMeta) r[i].getItemMeta();
+            if (m == null)
+                m = Bukkit.getItemFactory().getItemMeta(Material.STONE); // AIR results in null
+            assert m != null : r[i];
+            m.setDisplayName(n);
+            r[i].setItemMeta(m);
+        }
+        return r;
+    }
+
+    @Override
+    public Class<? extends ItemType> getReturnType() {
+        return ItemType.class;
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return getExpr().toString(e, debug) + " named " + name;
+    }
+
 }
