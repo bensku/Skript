@@ -21,8 +21,12 @@
 
 package ch.njol.skript.effects;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Color;
 import net.minecraft.server.Item;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -30,45 +34,38 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Color;
-
 /**
- * 
  * @author Peter Güttinger
  */
 public class EffFertilize extends Effect {
-	
-	static {
+
+    static {
 //		Skript.registerEffect(EffFertilize.class, "fertili(z|s)e %blocks%");
-	}
-	
-	private Expression<Block> blocks;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final int isDelayed, final ParseResult parser) {
-		blocks = (Expression<Block>) vars[0];
-		if (!Skript.isRunningCraftBukkit()) {
-			Skript.error("The fertilize effect can only be used with CraftBukkit", ErrorQuality.);
-return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public void execute(final Event e) {
-		for (final Block b : blocks.getArray(e)) {
-			Item.INK_SACK.interactWith(CraftItemStack.createNMSItemStack(new ItemStack(Material.INK_SACK, 1, Color.WHITE.getDye())), null, ((CraftWorld) b.getWorld()).getHandle(), b.getX(), b.getY(), b.getZ(), 0, 0, 0, 0);
-		}
-	}
-	
-	@Override
-	public String toString(final Event e, final boolean debug) {
-		return "fertilize " + blocks.toString(e, debug);
-	}
-	
+    }
+
+    private Expression<Block> blocks;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, final int isDelayed, final ParseResult parser) {
+        blocks = (Expression<Block>) vars[0];
+        if (!Skript.isRunningCraftBukkit()) {
+            Skript.error("The fertilize effect can only be used with CraftBukkit", ErrorQuality.);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void execute(final Event e) {
+        for (final Block b : blocks.getArray(e)) {
+            Item.INK_SACK.interactWith(CraftItemStack.createNMSItemStack(new ItemStack(Material.INK_SACK, 1, Color.WHITE.getDye())), null, ((CraftWorld) b.getWorld()).getHandle(), b.getX(), b.getY(), b.getZ(), 0, 0, 0, 0);
+        }
+    }
+
+    @Override
+    public String toString(final Event e, final boolean debug) {
+        return "fertilize " + blocks.toString(e, debug);
+    }
+
 }

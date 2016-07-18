@@ -21,57 +21,53 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Glowing")
 @Description("Indicates if targeted entity is glowing (new 1.9 effect) or not. Glowing entities can be seen through walls.")
 @Examples({"set glowing of player on"})
 @Since("2.2-dev18")
 public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
-	
-	static {
-		register(ExprGlowing.class, Boolean.class, "glowing", "entities");
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public Boolean convert(final Entity e) {
-		return e.isGlowing();
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "glowing";
-	}
-	
-	@Override
-	public Class<Boolean> getReturnType() {
-		return Boolean.class;
-	}
-	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
-			return new Class[] {Boolean.class};
-		return null;
-	}
-	
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		for (final Entity entity : getExpr().getArray(e))
-			entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
-	}
+
+    static {
+        register(ExprGlowing.class, Boolean.class, "glowing", "entities");
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public Boolean convert(final Entity e) {
+        return e.isGlowing();
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "glowing";
+    }
+
+    @Override
+    public Class<Boolean> getReturnType() {
+        return Boolean.class;
+    }
+
+    @Override
+    @Nullable
+    public Class<?>[] acceptChange(final ChangeMode mode) {
+        if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
+            return new Class[]{Boolean.class};
+        return null;
+    }
+
+    @Override
+    public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+        for (final Entity entity : getExpr().getArray(e))
+            entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
+    }
 }

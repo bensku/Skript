@@ -22,12 +22,12 @@
 package ch.njol.skript.lang;
 
 public class ExpressionInfo<E extends Expression<T>, T> extends SyntaxElementInfo<E> {
-	
-	public Class<T> returnType;
-	
-	public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c) throws IllegalArgumentException {
-		super(patterns, c);
-		this.returnType = returnType;
-	}
-	
+
+    public Class<T> returnType;
+
+    public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c) throws IllegalArgumentException {
+        super(patterns, c);
+        this.returnType = returnType;
+    }
+
 }

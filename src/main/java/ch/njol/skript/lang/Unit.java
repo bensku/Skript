@@ -25,16 +25,16 @@ package ch.njol.skript.lang;
  * @author Peter Güttinger
  */
 public interface Unit extends Cloneable {
-	
-	public int getAmount();
-	
-	public void setAmount(double amount);
-	
-	@Override
-	public String toString();
-	
-	public String toString(int flags);
-	
-	public Unit clone();
-	
+
+    public int getAmount();
+
+    public void setAmount(double amount);
+
+    @Override
+    public String toString();
+
+    public String toString(int flags);
+
+    public Unit clone();
+
 }

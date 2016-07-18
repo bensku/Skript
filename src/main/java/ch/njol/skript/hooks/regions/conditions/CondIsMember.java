@@ -21,10 +21,6 @@
 
 package ch.njol.skript.hooks.regions.conditions;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -36,59 +32,61 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Is Member/Owner of Region")
 @Description({"Checks whether a player is a member or owner of a particular region.",
-		"This condition requires a supported regions plugin to be installed."})
+        "This condition requires a supported regions plugin to be installed."})
 @Examples({"on region enter:",
-		"	player is the owner of the region",
-		"	message \"Welcome back to %region%!\"",
-		"	send \"%player% just entered %region%!\" to all members of the region"})
+        "	player is the owner of the region",
+        "	message \"Welcome back to %region%!\"",
+        "	send \"%player% just entered %region%!\" to all members of the region"})
 @Since("2.1")
 public class CondIsMember extends Condition {
-	static {
-		Skript.registerCondition(CondIsMember.class,
-				"%offlineplayers% (is|are) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%",
-				"%offlineplayers% (is|are)(n't| not) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<OfflinePlayer> players;
-	@SuppressWarnings("null")
-	Expression<Region> regions;
-	
-	boolean owner;
-	
-	@SuppressWarnings({"null", "unchecked"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		players = (Expression<OfflinePlayer>) exprs[0];
-		regions = (Expression<Region>) exprs[1];
-		owner = parseResult.mark == 1;
-		setNegated(matchedPattern == 1);
-		return true;
-	}
-	
-	@Override
-	public boolean check(final Event e) {
-		return players.check(e, new Checker<OfflinePlayer>() {
-			@Override
-			public boolean check(final OfflinePlayer p) {
-				return regions.check(e, new Checker<Region>() {
-					@Override
-					public boolean check(final Region r) {
-						return owner ? r.isOwner(p) : r.isMember(p);
-					}
-				}, isNegated());
-			}
-		});
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return players.toString(e, debug) + " " + (players.isSingle() ? "is" : "are") + (isNegated() ? " not" : "") + " " + (owner ? "owner" : "member") + (players.isSingle() ? "" : "s") + " of " + regions.toString(e, debug);
-	}
+    static {
+        Skript.registerCondition(CondIsMember.class,
+                "%offlineplayers% (is|are) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%",
+                "%offlineplayers% (is|are)(n't| not) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%");
+    }
+
+    @SuppressWarnings("null")
+    Expression<Region> regions;
+    boolean owner;
+    @SuppressWarnings("null")
+    private Expression<OfflinePlayer> players;
+
+    @SuppressWarnings({"null", "unchecked"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        players = (Expression<OfflinePlayer>) exprs[0];
+        regions = (Expression<Region>) exprs[1];
+        owner = parseResult.mark == 1;
+        setNegated(matchedPattern == 1);
+        return true;
+    }
+
+    @Override
+    public boolean check(final Event e) {
+        return players.check(e, new Checker<OfflinePlayer>() {
+            @Override
+            public boolean check(final OfflinePlayer p) {
+                return regions.check(e, new Checker<Region>() {
+                    @Override
+                    public boolean check(final Region r) {
+                        return owner ? r.isOwner(p) : r.isMember(p);
+                    }
+                }, isNegated());
+            }
+        });
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return players.toString(e, debug) + " " + (players.isSingle() ? "is" : "are") + (isNegated() ? " not" : "") + " " + (owner ? "owner" : "member") + (players.isSingle() ? "" : "s") + " of " + regions.toString(e, debug);
+    }
 }

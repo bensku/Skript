@@ -1,6 +1,6 @@
 /**
  * Code related to item aliases.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

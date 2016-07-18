@@ -21,50 +21,42 @@
 
 package ch.njol.skript.timings;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.event.Event;
-
+import ch.njol.skript.lang.Trigger;
 import com.google.common.collect.ImmutableMap;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Trigger;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Timing for certain action.
  */
 public class Timing {
-	
-	private Map<Trigger,Long> triggerTimes;
-	private long eventTime;
-	
-	/**
-	 * Creates a new timing. Only used by {@link Timings}
-	 */
-	protected Timing() {
-		triggerTimes = new LinkedHashMap<Trigger,Long>();
-		eventTime = 0L;
-	}
-	
-	public void addTrigger(Trigger t, long time) {
-		triggerTimes.put(t, time);
-	}
-	
-	public void setEventTime(long time) {
-		eventTime = time;
-	}
-	
-	@SuppressWarnings("null")
-	public Map<Trigger,Long> getTriggerTimes() {
-		return ImmutableMap.copyOf(triggerTimes);
-	}
-	
-	public long getEventTime() {
-		return eventTime;
-	}
+
+    private Map<Trigger, Long> triggerTimes;
+    private long eventTime;
+
+    /**
+     * Creates a new timing. Only used by {@link Timings}
+     */
+    protected Timing() {
+        triggerTimes = new LinkedHashMap<Trigger, Long>();
+        eventTime = 0L;
+    }
+
+    public void addTrigger(Trigger t, long time) {
+        triggerTimes.put(t, time);
+    }
+
+    @SuppressWarnings("null")
+    public Map<Trigger, Long> getTriggerTimes() {
+        return ImmutableMap.copyOf(triggerTimes);
+    }
+
+    public long getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(long time) {
+        eventTime = time;
+    }
 }

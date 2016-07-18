@@ -25,31 +25,31 @@ package ch.njol.skript.config;
  * An empty line or a comment.
  * <p>
  * The subclass {@link InvalidNode} is used for invalid non-empty nodes, i.e. where a parsing error occurred.
- * 
+ *
  * @author Peter Güttinger
  */
 public class VoidNode extends Node {
-	
+
 //	private final int initialLevel;
 //	private final String initialIndentation;
-	
-	VoidNode(final String line, final String comment, final SectionNode parent, final int lineNum) {
-		super("" + line.trim(), comment, parent, lineNum);
+
+    VoidNode(final String line, final String comment, final SectionNode parent, final int lineNum) {
+        super("" + line.trim(), comment, parent, lineNum);
 //		initialLevel = getLevel();
 //		initialIndentation = "" + line.replaceFirst("\\S.*$", "");
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public String getKey() {
-		return key;
-	}
-	
-	public void set(final String s) {
-		key = s;
-	}
-	
-	// doesn't work reliably
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public String getKey() {
+        return key;
+    }
+
+    public void set(final String s) {
+        key = s;
+    }
+
+    // doesn't work reliably
 //	@Override
 //	protected String getIndentation() {
 //		int levelDiff = getLevel() - initialLevel;
@@ -65,10 +65,10 @@ public class VoidNode extends Node {
 //			return ind;
 //		}
 //	}
-	
-	@Override
-	String save_i() {
-		return "" + key;
-	}
-	
+
+    @Override
+    String save_i() {
+        return "" + key;
+    }
+
 }

@@ -25,16 +25,16 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public final class FunctionEvent extends Event {
-	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
-	
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+
+    // Bukkit stuff
+    private final static HandlerList handlers = new HandlerList();
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 }

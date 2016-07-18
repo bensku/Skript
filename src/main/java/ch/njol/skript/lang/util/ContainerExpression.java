@@ -21,91 +21,90 @@
 
 package ch.njol.skript.lang.util;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Container;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
  */
 public class ContainerExpression extends SimpleExpression<Object> {
-	
-	final Expression<? extends Container<?>> expr;
-	private final Class<?> c;
-	
-	public ContainerExpression(final Expression<? extends Container<?>> expr, final Class<?> c) {
-		this.expr = expr;
-		this.c = c;
-	}
-	
-	@Override
-	protected Object[] get(final Event e) {
-		throw new UnsupportedOperationException("ContanerExpression must only be used by Loops");
-	}
-	
-	@Override
-	@Nullable
-	public Iterator<Object> iterator(final Event e) {
-		final Iterator<? extends Container<?>> iter = expr.iterator(e);
-		if (iter == null)
-			return null;
-		return new Iterator<Object>() {
-			@Nullable
-			private Iterator<?> current;
-			
-			@Override
-			public boolean hasNext() {
-				Iterator<?> c = current;
-				while (iter.hasNext() && (c == null || !c.hasNext())) {
-					current = c = iter.next().containerIterator();
-				}
-				return c != null && c.hasNext();
-			}
-			
-			@Override
-			public Object next() {
-				if (!hasNext())
-					throw new NoSuchElementException();
-				final Iterator<?> c = current;
-				if (c == null)
-					throw new NoSuchElementException();
-				final Object o = c.next();
-				assert o != null : current + "; " + expr;
-				return o;
-			}
-			
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
-	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return c;
-	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return expr.toString(e, debug);
-	}
-	
+
+    final Expression<? extends Container<?>> expr;
+    private final Class<?> c;
+
+    public ContainerExpression(final Expression<? extends Container<?>> expr, final Class<?> c) {
+        this.expr = expr;
+        this.c = c;
+    }
+
+    @Override
+    protected Object[] get(final Event e) {
+        throw new UnsupportedOperationException("ContanerExpression must only be used by Loops");
+    }
+
+    @Override
+    @Nullable
+    public Iterator<Object> iterator(final Event e) {
+        final Iterator<? extends Container<?>> iter = expr.iterator(e);
+        if (iter == null)
+            return null;
+        return new Iterator<Object>() {
+            @Nullable
+            private Iterator<?> current;
+
+            @Override
+            public boolean hasNext() {
+                Iterator<?> c = current;
+                while (iter.hasNext() && (c == null || !c.hasNext())) {
+                    current = c = iter.next().containerIterator();
+                }
+                return c != null && c.hasNext();
+            }
+
+            @Override
+            public Object next() {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                final Iterator<?> c = current;
+                if (c == null)
+                    throw new NoSuchElementException();
+                final Object o = c.next();
+                assert o != null : current + "; " + expr;
+                return o;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
+    public Class<? extends Object> getReturnType() {
+        return c;
+    }
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return expr.toString(e, debug);
+    }
+
 }

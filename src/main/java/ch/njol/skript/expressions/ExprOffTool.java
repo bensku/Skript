@@ -21,6 +21,13 @@
 
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.effects.Delay;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.util.EquipmentSlot;
+import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.InventorySlot;
+import ch.njol.skript.util.Slot;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBucketEvent;
@@ -30,75 +37,67 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.effects.Delay;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.util.EquipmentSlot;
-import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
-
 /**
  * Offhand tool expression for Minecraft 1.9.
- * @author bensku
  *
+ * @author bensku
  */
 public class ExprOffTool extends ExprTool {
-	static {
-		if (Skript.isRunningMinecraft(1, 9)) {
-			Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
-		} else { // Don't break scripts if running older Minecraft
-			Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
-		}
-	}
-	
-	@Override
-	protected Slot[] get(final Event e, final LivingEntity[] source) {
-		final boolean delayed = Delay.isDelayed(e);
-		return get(source, new Getter<Slot, LivingEntity>() {
-			@Override
-			@Nullable
-			public Slot get(final LivingEntity p) {
-				if (!delayed) {
-					if (e instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) e).getPlayer() == p) {
-						Skript.info("ItemHeldEvent");
-						final PlayerInventory i = ((PlayerItemHeldEvent) e).getPlayer().getInventory();
-						assert i != null;
-						return new InventorySlot(i, getTime() >= 0 ? ((PlayerItemHeldEvent) e).getNewSlot() : ((PlayerItemHeldEvent) e).getPreviousSlot());
-					} else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == p) {
-						Skript.info("PlayerBucketEvent");
-						final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
-						assert i != null;
-						return new InventorySlot(i, ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {
-							@Override
-							@Nullable
-							public ItemStack getItem() {
-								return getTime() <= 0 ? super.getItem() : ((PlayerBucketEvent) e).getItemStack();
-							}
-							
-							@Override
-							public void setItem(final @Nullable ItemStack item) {
-								if (getTime() >= 0) {
-									((PlayerBucketEvent) e).setItemStack(item);
-								} else {
-									super.setItem(item);
-								}
-							}
-						};
-					}
-				}
-				final EntityEquipment e = p.getEquipment();
-				if (e == null)
-					return null;
-				return new EquipmentSlot(e, EquipmentSlot.EquipSlot.OFF_HAND) {
-					@Override
-					public String toString_i() {
-						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + super.toString_i();
-					}
-				};
-			}
-		});
-	}
+    static {
+        if (Skript.isRunningMinecraft(1, 9)) {
+            Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
+                    "[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
+        } else { // Don't break scripts if running older Minecraft
+            Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
+                    "[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
+        }
+    }
+
+    @Override
+    protected Slot[] get(final Event e, final LivingEntity[] source) {
+        final boolean delayed = Delay.isDelayed(e);
+        return get(source, new Getter<Slot, LivingEntity>() {
+            @Override
+            @Nullable
+            public Slot get(final LivingEntity p) {
+                if (!delayed) {
+                    if (e instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) e).getPlayer() == p) {
+                        Skript.info("ItemHeldEvent");
+                        final PlayerInventory i = ((PlayerItemHeldEvent) e).getPlayer().getInventory();
+                        assert i != null;
+                        return new InventorySlot(i, getTime() >= 0 ? ((PlayerItemHeldEvent) e).getNewSlot() : ((PlayerItemHeldEvent) e).getPreviousSlot());
+                    } else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == p) {
+                        Skript.info("PlayerBucketEvent");
+                        final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
+                        assert i != null;
+                        return new InventorySlot(i, ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {
+                            @Override
+                            @Nullable
+                            public ItemStack getItem() {
+                                return getTime() <= 0 ? super.getItem() : ((PlayerBucketEvent) e).getItemStack();
+                            }
+
+                            @Override
+                            public void setItem(final @Nullable ItemStack item) {
+                                if (getTime() >= 0) {
+                                    ((PlayerBucketEvent) e).setItemStack(item);
+                                } else {
+                                    super.setItem(item);
+                                }
+                            }
+                        };
+                    }
+                }
+                final EntityEquipment e = p.getEquipment();
+                if (e == null)
+                    return null;
+                return new EquipmentSlot(e, EquipmentSlot.EquipSlot.OFF_HAND) {
+                    @Override
+                    public String toString_i() {
+                        return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + super.toString_i();
+                    }
+                };
+            }
+        });
+    }
 }

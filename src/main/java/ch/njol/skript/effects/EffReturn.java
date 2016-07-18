@@ -21,9 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.Description;
@@ -40,6 +37,8 @@ import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -47,77 +46,77 @@ import ch.njol.util.Kleenean;
 @Name("Return")
 @Description("Makes a function return a value")
 @Examples({"function double(i: number) :: number:",
-		"	return 2 * {_i}"})
+        "	return 2 * {_i}"})
 @Since("2.2")
 public class EffReturn extends Effect {
-	static {
-		Skript.registerEffect(EffReturn.class, "return %objects%");
-	}
-	
-	@SuppressWarnings("null")
-	private ScriptFunction<?> function;
-	
-	@SuppressWarnings("null")
-	private Expression<?> value;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		final ScriptFunction<?> f = Functions.currentFunction;
-		if (f == null) {
-			Skript.error("The return statement can only be used in a function");
-			return false;
-		}
-		if (!isDelayed.isFalse()) {
-			Skript.error("A return statement after a delay is useless, as the calling trigger will resume when the delay starts (and won't get any returned value)");
-			return false;
-		}
-		function = f;
-		final ClassInfo<?> rt = function.getReturnType();
-		if (rt == null) {
-			Skript.error("This function doesn't return any value. Please use 'stop' or 'exit' if you want to stop the function.");
-			return false;
-		}
-		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
-		final Expression<?> v;
-		try {
-			v = exprs[0].getConvertedExpression(rt.getC());
-			if (v == null) {
-				log.printErrors("This function is declared to return " + rt.getName().withIndefiniteArticle() + ", but " + exprs[0].toString(null, false) + " is not of that type.");
-				return false;
-			}
-			log.printLog();
-		} finally {
-			log.stop();
-		}
-		if (f.isSingle() && !v.isSingle()) {
-			Skript.error("This function is defined to only return a single " + rt.toString() + ", but this return statement can return multiple values.");
-			return false;
-		}
-		value = v;
-		return true;
-	}
-	
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	@Override
-	@Nullable
-	protected TriggerItem walk(final Event e) {
-		debug(e, false);
-		if (e instanceof FunctionEvent)
-			((ScriptFunction) function).setReturnValue((FunctionEvent) e, value.getArray(e));
-		else
-			assert false : e;
-		return null;
-	}
-	
-	@Override
-	protected void execute(final Event e) {
-		assert false;
-	}
-	
-	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
-		return "return " + value.toString(e, debug);
-	}
-	
+    static {
+        Skript.registerEffect(EffReturn.class, "return %objects%");
+    }
+
+    @SuppressWarnings("null")
+    private ScriptFunction<?> function;
+
+    @SuppressWarnings("null")
+    private Expression<?> value;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        final ScriptFunction<?> f = Functions.currentFunction;
+        if (f == null) {
+            Skript.error("The return statement can only be used in a function");
+            return false;
+        }
+        if (!isDelayed.isFalse()) {
+            Skript.error("A return statement after a delay is useless, as the calling trigger will resume when the delay starts (and won't get any returned value)");
+            return false;
+        }
+        function = f;
+        final ClassInfo<?> rt = function.getReturnType();
+        if (rt == null) {
+            Skript.error("This function doesn't return any value. Please use 'stop' or 'exit' if you want to stop the function.");
+            return false;
+        }
+        final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+        final Expression<?> v;
+        try {
+            v = exprs[0].getConvertedExpression(rt.getC());
+            if (v == null) {
+                log.printErrors("This function is declared to return " + rt.getName().withIndefiniteArticle() + ", but " + exprs[0].toString(null, false) + " is not of that type.");
+                return false;
+            }
+            log.printLog();
+        } finally {
+            log.stop();
+        }
+        if (f.isSingle() && !v.isSingle()) {
+            Skript.error("This function is defined to only return a single " + rt.toString() + ", but this return statement can return multiple values.");
+            return false;
+        }
+        value = v;
+        return true;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    @Nullable
+    protected TriggerItem walk(final Event e) {
+        debug(e, false);
+        if (e instanceof FunctionEvent)
+            ((ScriptFunction) function).setReturnValue((FunctionEvent) e, value.getArray(e));
+        else
+            assert false : e;
+        return null;
+    }
+
+    @Override
+    protected void execute(final Event e) {
+        assert false;
+    }
+
+    @Override
+    public String toString(@Nullable final Event e, final boolean debug) {
+        return "return " + value.toString(e, debug);
+    }
+
 }

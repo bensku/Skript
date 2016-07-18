@@ -21,9 +21,6 @@
 
 package ch.njol.skript.hooks.regions.expressions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,29 +29,31 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.hooks.regions.classes.Region;
 import ch.njol.skript.lang.ExpressionType;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Region")
 @Description({"The <a href='../classes/#region'>region</a> involved in an event.",
-		"This expression requires a supported regions plugin to be installed."})
+        "This expression requires a supported regions plugin to be installed."})
 @Examples({"on region enter:",
-		"	region is {forbidden region}",
-		"	cancel the event"})
+        "	region is {forbidden region}",
+        "	cancel the event"})
 @Since("2.1")
 public class ExprRegion extends EventValueExpression<Region> {
-	static {
-		Skript.registerExpression(ExprRegion.class, Region.class, ExpressionType.SIMPLE, "[the] [event-]region");
-	}
-	
-	public ExprRegion() {
-		super(Region.class);
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the region";
-	}
-	
+    static {
+        Skript.registerExpression(ExprRegion.class, Region.class, ExpressionType.SIMPLE, "[the] [event-]region");
+    }
+
+    public ExprRegion() {
+        super(Region.class);
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "the region";
+    }
+
 }

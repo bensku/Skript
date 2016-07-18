@@ -22,8 +22,8 @@ package ch.njol.util;
 import org.eclipse.jdt.annotation.Nullable;
 
 public interface Callback<R, A> {
-	
-	@Nullable
-	public R run(A arg);
-	
+
+    @Nullable
+    public R run(A arg);
+
 }

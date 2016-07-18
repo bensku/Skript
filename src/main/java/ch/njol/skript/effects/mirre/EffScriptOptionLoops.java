@@ -21,9 +21,6 @@
 
 package ch.njol.skript.effects.mirre;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.events.bukkit.ScriptEvent;
@@ -33,41 +30,42 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.ScriptOptions;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
- *
  */
 public class EffScriptOptionLoops extends Effect {
 
-	//use (1¦old|2¦new|1¦2.1.2|2¦2.2) loops
-	
-	static{
-		Skript.registerEffect(EffScriptOptionLoops.class, "use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if(!ScriptLoader.isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE){
-			Skript.error("Current event is not Script Event or you have a delay before the script option. Defaulting to 2.2 loops.", ErrorQuality.SEMANTIC_ERROR);
-			ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), true);
-			return false;
-		}
-		ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), parseResult.mark == 2);
-		return true;
-	}
+    //use (1¦old|2¦new|1¦2.1.2|2¦2.2) loops
 
-	@SuppressWarnings("null")
-	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "Script Option Loops";
-	}
+    static {
+        Skript.registerEffect(EffScriptOptionLoops.class, "use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
+    }
 
-	@SuppressWarnings("null")
-	@Override
-	protected void execute(Event e) {
-		
-	}
-	
+    @SuppressWarnings("null")
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        if (!ScriptLoader.isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE) {
+            Skript.error("Current event is not Script Event or you have a delay before the script option. Defaulting to 2.2 loops.", ErrorQuality.SEMANTIC_ERROR);
+            ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), true);
+            return false;
+        }
+        ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), parseResult.mark == 2);
+        return true;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public String toString(@Nullable Event e, boolean debug) {
+        return "Script Option Loops";
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    protected void execute(Event e) {
+
+    }
+
 }

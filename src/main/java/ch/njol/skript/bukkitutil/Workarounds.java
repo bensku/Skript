@@ -21,6 +21,7 @@
 
 package ch.njol.skript.bukkitutil;
 
+import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.Event.Result;
@@ -29,30 +30,30 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import ch.njol.skript.Skript;
-
 /**
  * Workarounds for Minecraft & Bukkit quirks
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class Workarounds {
-	private Workarounds() {}
-	
-	public final static void init() {}
-	
-	static {
-		if (!Skript.isRunningMinecraft(1, 9)) {
-			// allows to properly remove a player's tool in right click events
-			Bukkit.getPluginManager().registerEvents(new Listener() {
-				@SuppressWarnings("deprecation")
-				@EventHandler(priority = EventPriority.HIGHEST)
-				public void onInteract(final PlayerInteractEvent e) {
-					if (e.hasItem() && (e.getPlayer().getInventory().getItemInHand() == null || e.getPlayer().getInventory().getItemInHand().getType() == Material.AIR || e.getPlayer().getInventory().getItemInHand().getAmount() == 0))
-						e.setUseItemInHand(Result.DENY);
-				}
-			}, Skript.getInstance());
-		}
-	}
-	
+    static {
+        if (!Skript.isRunningMinecraft(1, 9)) {
+            // allows to properly remove a player's tool in right click events
+            Bukkit.getPluginManager().registerEvents(new Listener() {
+                @SuppressWarnings("deprecation")
+                @EventHandler(priority = EventPriority.HIGHEST)
+                public void onInteract(final PlayerInteractEvent e) {
+                    if (e.hasItem() && (e.getPlayer().getInventory().getItemInHand() == null || e.getPlayer().getInventory().getItemInHand().getType() == Material.AIR || e.getPlayer().getInventory().getItemInHand().getAmount() == 0))
+                        e.setUseItemInHand(Result.DENY);
+                }
+            }, Skript.getInstance());
+        }
+    }
+
+    private Workarounds() {
+    }
+
+    public final static void init() {
+    }
+
 }

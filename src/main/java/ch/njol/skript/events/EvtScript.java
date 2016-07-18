@@ -21,66 +21,64 @@
 
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.events.bukkit.ScriptEvent;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EvtScript extends SelfRegisteringSkriptEvent {
-	static {
-		Skript.registerEvent("Script Load/Unload", EvtScript.class, ScriptEvent.class, "[script] (load|init|enable)", "[script] (unload|stop|disable)")
-				.description("Called directly after the trigger is loaded, or directly before the whole script is unloaded.")
-				.examples("on load:",
-						"	set {running.%script%} to true",
-						"on unload:",
-						"	set {running.%script%} to false")
-				.since("2.0");
-	}
-	
-	private boolean load;
-	
-	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
-		load = matchedPattern == 0;
-		return true;
-	}
-	
-	@Nullable
-	private Trigger t;
-	
-	@Override
-	public void register(final Trigger t) {
-		this.t = t;
-		if (load)
-			t.execute(new ScriptEvent());
-	}
-	
-	@Override
-	public void unregister(final Trigger t) {
-		assert t == this.t;
-		if (!load)
-			t.execute(new ScriptEvent());
-		this.t = null;
-	}
-	
-	@Override
-	public void unregisterAll() {
-		if (!load && t != null)
-			t.execute(new ScriptEvent());
-		t = null;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "script " + (load ? "" : "un") + "load";
-	}
-	
+    static {
+        Skript.registerEvent("Script Load/Unload", EvtScript.class, ScriptEvent.class, "[script] (load|init|enable)", "[script] (unload|stop|disable)")
+                .description("Called directly after the trigger is loaded, or directly before the whole script is unloaded.")
+                .examples("on load:",
+                        "	set {running.%script%} to true",
+                        "on unload:",
+                        "	set {running.%script%} to false")
+                .since("2.0");
+    }
+
+    private boolean load;
+    @Nullable
+    private Trigger t;
+
+    @Override
+    public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+        load = matchedPattern == 0;
+        return true;
+    }
+
+    @Override
+    public void register(final Trigger t) {
+        this.t = t;
+        if (load)
+            t.execute(new ScriptEvent());
+    }
+
+    @Override
+    public void unregister(final Trigger t) {
+        assert t == this.t;
+        if (!load)
+            t.execute(new ScriptEvent());
+        this.t = null;
+    }
+
+    @Override
+    public void unregisterAll() {
+        if (!load && t != null)
+            t.execute(new ScriptEvent());
+        t = null;
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "script " + (load ? "" : "un") + "load";
+    }
+
 }

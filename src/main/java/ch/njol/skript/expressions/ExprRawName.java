@@ -18,75 +18,66 @@
 
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ExprRawName extends SimpleExpression<String> {
-	
-	static {
-		Skript.registerExpression(ExprRawName.class, String.class, ExpressionType.SIMPLE, "(raw|minecraft|vanilla) name of %itemtypes%");
-	}
-	
-	@Nullable
-	private Expression<ItemType> types;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		this.types = (Expression<ItemType>) exprs[0];
-		return true;
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	@Nullable
-	protected String[] get(final Event e) {
-		if (types == null) return null;
-		
-		ItemType[] items = types.getAll(e);
-		List<String> names = new ArrayList<String>();
-		for (int i = 0; i < items.length; i++) {
-			names.addAll(items[i].getRawNames());
-		}
-		
-		return names.toArray(new String[names.size()]);
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
-	}
-	
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		String[] strs = get(e);
-		if (strs == null) return "";
-		return Arrays.toString(strs);
-	}
+
+    static {
+        Skript.registerExpression(ExprRawName.class, String.class, ExpressionType.SIMPLE, "(raw|minecraft|vanilla) name of %itemtypes%");
+    }
+
+    @Nullable
+    private Expression<ItemType> types;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        this.types = (Expression<ItemType>) exprs[0];
+        return true;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    @Nullable
+    protected String[] get(final Event e) {
+        if (types == null) return null;
+
+        ItemType[] items = types.getAll(e);
+        List<String> names = new ArrayList<String>();
+        for (int i = 0; i < items.length; i++) {
+            names.addAll(items[i].getRawNames());
+        }
+
+        return names.toArray(new String[names.size()]);
+    }
+
+    @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        String[] strs = get(e);
+        if (strs == null) return "";
+        return Arrays.toString(strs);
+    }
 }

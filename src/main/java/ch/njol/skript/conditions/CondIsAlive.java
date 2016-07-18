@@ -21,8 +21,6 @@
 
 package ch.njol.skript.conditions;
 
-import org.bukkit.entity.LivingEntity;
-
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,6 +29,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Peter Güttinger
@@ -40,26 +39,26 @@ import ch.njol.util.Kleenean;
 @Examples({"{villagerbuddy.%player%} is dead"})
 @Since("2.0")
 public class CondIsAlive extends PropertyCondition<LivingEntity> {
-	static {
-		register(CondIsAlive.class, "(1¦alive|0¦dead)", "livingentities");
-	}
-	
-	private boolean alive;
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		alive = parseResult.mark == 1;
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
-	}
-	
-	@Override
-	public boolean check(final LivingEntity e) {
-		return alive != e.isDead();
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return alive ? "alive" : "dead";
-	}
-	
+    static {
+        register(CondIsAlive.class, "(1¦alive|0¦dead)", "livingentities");
+    }
+
+    private boolean alive;
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        alive = parseResult.mark == 1;
+        return super.init(exprs, matchedPattern, isDelayed, parseResult);
+    }
+
+    @Override
+    public boolean check(final LivingEntity e) {
+        return alive != e.isDead();
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return alive ? "alive" : "dead";
+    }
+
 }

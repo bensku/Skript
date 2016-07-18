@@ -21,15 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Result;
-import org.bukkit.event.block.BlockCanBuildEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.PlayerUtils;
@@ -43,6 +34,14 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Result;
+import org.bukkit.event.block.BlockCanBuildEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -50,56 +49,56 @@ import ch.njol.util.Kleenean;
 @Name("Cancel Event")
 @Description("Cancels the event (e.g. prevent blocks from being placed, or damage being taken).")
 @Examples({"on damage:",
-		"	victim is a player",
-		"	victim has the permission \"skript.god\"",
-		"	cancel the event"})
+        "	victim is a player",
+        "	victim has the permission \"skript.god\"",
+        "	cancel the event"})
 @Since("1.0")
 public class EffCancelEvent extends Effect {
-	static {
-		Skript.registerEffect(EffCancelEvent.class, "cancel [the] event", "uncancel [the] event");
-	}
-	
-	private boolean cancel;
-	
-	@SuppressWarnings("null")
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (isDelayed == Kleenean.TRUE) {
-			Skript.error("Can't cancel an event anymore after is has already passed", ErrorQuality.SEMANTIC_ERROR);
-			return false;
-		}
-		cancel = matchedPattern == 0;
-		final Class<? extends Event>[] es = ScriptLoader.getCurrentEvents();
-		if (es == null)
-			return false;
-		for (final Class<? extends Event> e : es) {
-			if (Cancellable.class.isAssignableFrom(e) || BlockCanBuildEvent.class.isAssignableFrom(e))
-				return true; // TODO warning if some event(s) cannot be cancelled even though some can (needs a way to be suppressed)
-		}
-		if (ScriptLoader.isCurrentEvent(PlayerLoginEvent.class))
-			Skript.error("A connect event cannot be cancelled, but the player may be kicked ('kick player by reason of \"...\"')", ErrorQuality.SEMANTIC_ERROR);
-		else
-			Skript.error(Utils.A(ScriptLoader.getCurrentEventName()) + " event cannot be cancelled", ErrorQuality.SEMANTIC_ERROR);
-		return false;
-	}
-	
-	@Override
-	public void execute(final Event e) {
-		if (e instanceof Cancellable)
-			((Cancellable) e).setCancelled(cancel);
-		if (e instanceof PlayerInteractEvent) {
-			((PlayerInteractEvent) e).setUseItemInHand(cancel ? Result.DENY : Result.DEFAULT);
-			((PlayerInteractEvent) e).setUseInteractedBlock(cancel ? Result.DENY : Result.DEFAULT);
-		} else if (e instanceof BlockCanBuildEvent) {
-			((BlockCanBuildEvent) e).setBuildable(!cancel);
-		} else if (e instanceof PlayerDropItemEvent) {
-			PlayerUtils.updateInventory(((PlayerDropItemEvent) e).getPlayer());
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return (cancel ? "" : "un") + "cancel event";
-	}
-	
+    static {
+        Skript.registerEffect(EffCancelEvent.class, "cancel [the] event", "uncancel [the] event");
+    }
+
+    private boolean cancel;
+
+    @SuppressWarnings("null")
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        if (isDelayed == Kleenean.TRUE) {
+            Skript.error("Can't cancel an event anymore after is has already passed", ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
+        cancel = matchedPattern == 0;
+        final Class<? extends Event>[] es = ScriptLoader.getCurrentEvents();
+        if (es == null)
+            return false;
+        for (final Class<? extends Event> e : es) {
+            if (Cancellable.class.isAssignableFrom(e) || BlockCanBuildEvent.class.isAssignableFrom(e))
+                return true; // TODO warning if some event(s) cannot be cancelled even though some can (needs a way to be suppressed)
+        }
+        if (ScriptLoader.isCurrentEvent(PlayerLoginEvent.class))
+            Skript.error("A connect event cannot be cancelled, but the player may be kicked ('kick player by reason of \"...\"')", ErrorQuality.SEMANTIC_ERROR);
+        else
+            Skript.error(Utils.A(ScriptLoader.getCurrentEventName()) + " event cannot be cancelled", ErrorQuality.SEMANTIC_ERROR);
+        return false;
+    }
+
+    @Override
+    public void execute(final Event e) {
+        if (e instanceof Cancellable)
+            ((Cancellable) e).setCancelled(cancel);
+        if (e instanceof PlayerInteractEvent) {
+            ((PlayerInteractEvent) e).setUseItemInHand(cancel ? Result.DENY : Result.DEFAULT);
+            ((PlayerInteractEvent) e).setUseInteractedBlock(cancel ? Result.DENY : Result.DEFAULT);
+        } else if (e instanceof BlockCanBuildEvent) {
+            ((BlockCanBuildEvent) e).setBuildable(!cancel);
+        } else if (e instanceof PlayerDropItemEvent) {
+            PlayerUtils.updateInventory(((PlayerDropItemEvent) e).getPlayer());
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return (cancel ? "" : "un") + "cancel event";
+    }
+
 }

@@ -21,22 +21,9 @@
 
 package ch.njol.skript.expressions;
 
-import java.lang.reflect.Array;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -45,6 +32,14 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -52,66 +47,66 @@ import ch.njol.util.Kleenean;
 @Name("Attacked")
 @Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie.")
 @Examples({"on damage:",
-		"	victim is a creeper",
-		"	damage the attacked by 1 heart"})
+        "	victim is a creeper",
+        "	damage the attacked by 1 heart"})
 @Since("1.3")
 @Events({"damage", "death"})
 public class ExprAttacked extends SimpleExpression<Entity> {
-	static {
-		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
-	}
-	
-	@SuppressWarnings("null")
-	private EntityData<?> type;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class)) {
-			Skript.error("The expression 'victim' can only be used in a damage or death event", ErrorQuality.SEMANTIC_ERROR);
-			return false;
-		}
-		final String type = parser.regexes.size() == 0 ? null : parser.regexes.get(0).group();
-		if (type == null) {
-			this.type = EntityData.fromClass(Entity.class);
-		} else {
-			final EntityData<?> t = EntityData.parse(type);
-			if (t == null) {
-				Skript.error("'" + type + "' is not an entity type", ErrorQuality.NOT_AN_EXPRESSION);
-				return false;
-			}
-			this.type = t;
-		}
-		return true;
-	}
-	
-	@Override
-	@Nullable
-	protected Entity[] get(final Event e) {
-		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
-		final Entity entity = ((EntityEvent) e).getEntity();
-		if (type.isInstance(entity)) {
-			one[0] = entity;
-			return one;
-		}
-		return null;
-	}
-	
-	@Override
-	public Class<? extends Entity> getReturnType() {
-		return type.getType();
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		if (e == null)
-			return "the attacked " + type;
-		return Classes.getDebugMessage(getSingle(e));
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
+    static {
+        Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
+    }
+
+    @SuppressWarnings("null")
+    private EntityData<?> type;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class)) {
+            Skript.error("The expression 'victim' can only be used in a damage or death event", ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
+        final String type = parser.regexes.size() == 0 ? null : parser.regexes.get(0).group();
+        if (type == null) {
+            this.type = EntityData.fromClass(Entity.class);
+        } else {
+            final EntityData<?> t = EntityData.parse(type);
+            if (t == null) {
+                Skript.error("'" + type + "' is not an entity type", ErrorQuality.NOT_AN_EXPRESSION);
+                return false;
+            }
+            this.type = t;
+        }
+        return true;
+    }
+
+    @Override
+    @Nullable
+    protected Entity[] get(final Event e) {
+        final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
+        final Entity entity = ((EntityEvent) e).getEntity();
+        if (type.isInstance(entity)) {
+            one[0] = entity;
+            return one;
+        }
+        return null;
+    }
+
+    @Override
+    public Class<? extends Entity> getReturnType() {
+        return type.getType();
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        if (e == null)
+            return "the attacked " + type;
+        return Classes.getDebugMessage(getSingle(e));
+    }
+
+    @Override
+    public boolean isSingle() {
+        return true;
+    }
+
 }

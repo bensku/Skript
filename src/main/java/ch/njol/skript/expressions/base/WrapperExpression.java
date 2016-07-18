@@ -21,13 +21,7 @@
 
 package ch.njol.skript.expressions.base;
 
-import java.util.Iterator;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -36,109 +30,114 @@ import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
 
 /**
  * Represents an expression which is a wrapper of another one. Remember to set the wrapped expression in the constructor ({@link #WrapperExpression(SimpleExpression)})
  * or with {@link #setExpr(Expression)} in {@link SyntaxElement#init(Expression[], int, Kleenean, ParseResult) init()}.<br/>
  * If you override {@link #get(Event)} you must override {@link #iterator(Event)} as well.
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class WrapperExpression<T> extends SimpleExpression<T> {
-	
-	private Expression<? extends T> expr;
-	
-	@SuppressWarnings("null")
-	protected WrapperExpression() {}
-	
-	public WrapperExpression(final SimpleExpression<? extends T> expr) {
-		this.expr = expr;
-	}
-	
-	protected void setExpr(final Expression<? extends T> expr) {
-		this.expr = expr;
-	}
-	
-	public Expression<?> getExpr() {
-		return expr;
-	}
-	
-	@Override
-	@Nullable
-	protected <R> ConvertedExpression<T, ? extends R> getConvertedExpr(final Class<R>... to) {
-		for (final Class<R> c : to) {
-			assert c != null;
-			@SuppressWarnings("unchecked")
-			final Converter<? super T, ? extends R> conv = (Converter<? super T, ? extends R>) Converters.getConverter(getReturnType(), c);
-			if (conv == null)
-				continue;
-			return new ConvertedExpression<T, R>(expr, c, conv) {
-				@Override
-				public String toString(final @Nullable Event e, final boolean debug) {
-					if (debug && e == null)
-						return "(" + WrapperExpression.this.toString(e, debug) + ")->" + to.getName();
-					return WrapperExpression.this.toString(e, debug);
-				}
-			};
-		}
-		return null;
-	}
-	
-	@Override
-	protected T[] get(final Event e) {
-		return expr.getArray(e);
-	}
-	
-	@Override
-	@Nullable
-	public Iterator<? extends T> iterator(final Event e) {
-		return expr.iterator(e);
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return expr.isSingle();
-	}
-	
-	@Override
-	public boolean getAnd() {
-		return expr.getAnd();
-	}
-	
-	@Override
-	public Class<? extends T> getReturnType() {
-		return expr.getReturnType();
-	}
-	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		return expr.acceptChange(mode);
-	}
-	
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		expr.change(e, delta, mode);
-	}
-	
-	@Override
-	public boolean setTime(final int time) {
-		return expr.setTime(time);
-	}
-	
-	@Override
-	public int getTime() {
-		return expr.getTime();
-	}
-	
-	@Override
-	public boolean isDefault() {
-		return expr.isDefault();
-	}
-	
-	@Override
-	public Expression<? extends T> simplify() {
-		return expr;
-	}
-	
+
+    private Expression<? extends T> expr;
+
+    @SuppressWarnings("null")
+    protected WrapperExpression() {
+    }
+
+    public WrapperExpression(final SimpleExpression<? extends T> expr) {
+        this.expr = expr;
+    }
+
+    public Expression<?> getExpr() {
+        return expr;
+    }
+
+    protected void setExpr(final Expression<? extends T> expr) {
+        this.expr = expr;
+    }
+
+    @Override
+    @Nullable
+    protected <R> ConvertedExpression<T, ? extends R> getConvertedExpr(final Class<R>... to) {
+        for (final Class<R> c : to) {
+            assert c != null;
+            @SuppressWarnings("unchecked")
+            final Converter<? super T, ? extends R> conv = (Converter<? super T, ? extends R>) Converters.getConverter(getReturnType(), c);
+            if (conv == null)
+                continue;
+            return new ConvertedExpression<T, R>(expr, c, conv) {
+                @Override
+                public String toString(final @Nullable Event e, final boolean debug) {
+                    if (debug && e == null)
+                        return "(" + WrapperExpression.this.toString(e, debug) + ")->" + to.getName();
+                    return WrapperExpression.this.toString(e, debug);
+                }
+            };
+        }
+        return null;
+    }
+
+    @Override
+    protected T[] get(final Event e) {
+        return expr.getArray(e);
+    }
+
+    @Override
+    @Nullable
+    public Iterator<? extends T> iterator(final Event e) {
+        return expr.iterator(e);
+    }
+
+    @Override
+    public boolean isSingle() {
+        return expr.isSingle();
+    }
+
+    @Override
+    public boolean getAnd() {
+        return expr.getAnd();
+    }
+
+    @Override
+    public Class<? extends T> getReturnType() {
+        return expr.getReturnType();
+    }
+
+    @Override
+    @Nullable
+    public Class<?>[] acceptChange(final ChangeMode mode) {
+        return expr.acceptChange(mode);
+    }
+
+    @Override
+    public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+        expr.change(e, delta, mode);
+    }
+
+    @Override
+    public boolean setTime(final int time) {
+        return expr.setTime(time);
+    }
+
+    @Override
+    public int getTime() {
+        return expr.getTime();
+    }
+
+    @Override
+    public boolean isDefault() {
+        return expr.isDefault();
+    }
+
+    @Override
+    public Expression<? extends T> simplify() {
+        return expr;
+    }
+
 }

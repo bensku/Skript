@@ -35,24 +35,24 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Examples("set {_l} to length of the string argument")
 @Since("2.1")
 public class ExprLength extends SimplePropertyExpression<String, Integer> {
-	static {
-		register(ExprLength.class, Integer.class, "length", "strings");
-	}
-	
-	@SuppressWarnings("null")
-	@Override
-	public Integer convert(final String s) {
-		return Integer.valueOf(s.length());
-	}
-	
-	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "length";
-	}
-	
+    static {
+        register(ExprLength.class, Integer.class, "length", "strings");
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public Integer convert(final String s) {
+        return Integer.valueOf(s.length());
+    }
+
+    @Override
+    public Class<? extends Integer> getReturnType() {
+        return Integer.class;
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "length";
+    }
+
 }

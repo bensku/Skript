@@ -21,11 +21,6 @@
 
 package ch.njol.skript.conditions;
 
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.bukkit.event.weather.WeatherEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -38,58 +33,62 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.bukkit.event.weather.WeatherEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Weather")
 @Description({"Checks whether the weather in a world is of a specific type.",
-		"<i>I welcome any ideas how to write this condition differently.</i>"})
+        "<i>I welcome any ideas how to write this condition differently.</i>"})
 @Examples({"is thundering",
-		"is raining in \"world\" or \"world2\""})
+        "is raining in \"world\" or \"world2\""})
 @Since("1.0")
 public class CondWeather extends Condition {
-	static {
-		Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
-	}
-	
-	@SuppressWarnings("null")
-	Expression<WeatherType> weathers;
-	@SuppressWarnings("null")
-	private Expression<World> worlds;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		weathers = (Expression<WeatherType>) vars[0];
-		worlds = (Expression<World>) vars[1];
-		return true;
-	}
-	
-	@Override
-	public boolean check(final Event e) {
-		return worlds.check(e, new Checker<World>() {
-			@Override
-			public boolean check(final World w) {
-				final WeatherType t;
-				if (e instanceof WeatherEvent && w.equals(((WeatherEvent) e).getWorld()) && !Delay.isDelayed(e)) {
-					t = WeatherType.fromEvent((WeatherEvent) e);
-				} else {
-					t = WeatherType.fromWorld(w);
-				}
-				return weathers.check(e, new Checker<WeatherType>() {
-					@Override
-					public boolean check(final WeatherType wt) {
-						return wt == t;
-					}
-				}, isNegated());
-			}
-		});
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "is " + weathers.toString(e, debug) + " in " + worlds.toString(e, debug);
-	}
-	
+    static {
+        Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
+    }
+
+    @SuppressWarnings("null")
+    Expression<WeatherType> weathers;
+    @SuppressWarnings("null")
+    private Expression<World> worlds;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        weathers = (Expression<WeatherType>) vars[0];
+        worlds = (Expression<World>) vars[1];
+        return true;
+    }
+
+    @Override
+    public boolean check(final Event e) {
+        return worlds.check(e, new Checker<World>() {
+            @Override
+            public boolean check(final World w) {
+                final WeatherType t;
+                if (e instanceof WeatherEvent && w.equals(((WeatherEvent) e).getWorld()) && !Delay.isDelayed(e)) {
+                    t = WeatherType.fromEvent((WeatherEvent) e);
+                } else {
+                    t = WeatherType.fromWorld(w);
+                }
+                return weathers.check(e, new Checker<WeatherType>() {
+                    @Override
+                    public boolean check(final WeatherType wt) {
+                        return wt == t;
+                    }
+                }, isNegated());
+            }
+        });
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "is " + weathers.toString(e, debug) + " in " + worlds.toString(e, debug);
+    }
+
 }

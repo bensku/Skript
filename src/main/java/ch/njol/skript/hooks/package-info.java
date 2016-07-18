@@ -1,6 +1,6 @@
 /**
  * Hook interface & implementations for specific plugins.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

@@ -23,22 +23,22 @@ package ch.njol.skript.config;
 
 /**
  * Not used anymore
- * 
+ *
  * @author Peter Güttinger
  */
 public class ParseOptionNode extends Node {
-	
-	ParseOptionNode(final String name, final SectionNode parent, final ConfigReader r) {
-		super(name, parent, r);
-	}
-	
-	@Override
-	String save() {
-		final String option = orig.substring(getOrig().indexOf('[') + 1, orig.indexOf(']'));
-		if (orig.startsWith("!separator[")) {
-			config.separator = option;
-		}
-		return orig.trim();
-	}
-	
+
+    ParseOptionNode(final String name, final SectionNode parent, final ConfigReader r) {
+        super(name, parent, r);
+    }
+
+    @Override
+    String save() {
+        final String option = orig.substring(getOrig().indexOf('[') + 1, orig.indexOf(']'));
+        if (orig.startsWith("!separator[")) {
+            config.separator = option;
+        }
+        return orig.trim();
+    }
+
 }

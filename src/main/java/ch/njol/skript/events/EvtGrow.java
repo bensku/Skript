@@ -21,55 +21,54 @@
 
 package ch.njol.skript.events;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.world.StructureGrowEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.StructureType;
 import ch.njol.util.Checker;
+import org.bukkit.event.Event;
+import org.bukkit.event.world.StructureGrowEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EvtGrow extends SkriptEvent {
-	static {
-		Skript.registerEvent("Grow", EvtGrow.class, StructureGrowEvent.class, "grow [of %-structuretype%]")
-				.description("Called when a tree or giant mushroom grows to full size.")
-				.examples("on grow", "on grow of a tree", "on grow of a huge jungle tree")
-				.since("1.0");
-	}
-	
-	@Nullable
-	private Literal<StructureType> types;
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
-		types = (Literal<StructureType>) args[0];
-		return true;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "grow" + (types != null ? " of " + types.toString(e, debug) : "");
-	}
-	
-	@Override
-	public boolean check(final Event e) {
-		if (types != null) {
-			return types.check(e, new Checker<StructureType>() {
-				@SuppressWarnings("null")
-				@Override
-				public boolean check(final StructureType t) {
-					return t.is(((StructureGrowEvent) e).getSpecies());
-				}
-			});
-		}
-		return true;
-	}
-	
+    static {
+        Skript.registerEvent("Grow", EvtGrow.class, StructureGrowEvent.class, "grow [of %-structuretype%]")
+                .description("Called when a tree or giant mushroom grows to full size.")
+                .examples("on grow", "on grow of a tree", "on grow of a huge jungle tree")
+                .since("1.0");
+    }
+
+    @Nullable
+    private Literal<StructureType> types;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
+        types = (Literal<StructureType>) args[0];
+        return true;
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "grow" + (types != null ? " of " + types.toString(e, debug) : "");
+    }
+
+    @Override
+    public boolean check(final Event e) {
+        if (types != null) {
+            return types.check(e, new Checker<StructureType>() {
+                @SuppressWarnings("null")
+                @Override
+                public boolean check(final StructureType t) {
+                    return t.is(((StructureGrowEvent) e).getSpecies());
+                }
+            });
+        }
+        return true;
+    }
+
 }

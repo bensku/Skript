@@ -21,60 +21,60 @@
 
 package ch.njol.skript.lang;
 
-import java.io.File;
-import java.util.List;
-
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class Trigger extends TriggerSection {
-	
-	private final String name;
-	private final SkriptEvent event;
-	
-	@Nullable
-	private final File script;
-	
-	public Trigger(final @Nullable File script, final String name, final SkriptEvent event, final List<TriggerItem> items) {
-		super(items);
-		this.script = script;
-		this.name = name;
-		this.event = event;
-	}
-	
-	/**
-	 * @param e
-	 * @return false iff an exception occurred
-	 */
-	public boolean execute(final Event e) {
-		return TriggerItem.walk(this, e);
-	}
-	
-	@Override
-	@Nullable
-	protected TriggerItem walk(final Event e) {
-		return walk(e, true);
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return name + " (" + event.toString(e, debug) + ")";
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public SkriptEvent getEvent() {
-		return event;
-	}
-	
-	@Nullable
-	public File getScript() {
-		return script;
-	}
-	
+
+    private final String name;
+    private final SkriptEvent event;
+
+    @Nullable
+    private final File script;
+
+    public Trigger(final @Nullable File script, final String name, final SkriptEvent event, final List<TriggerItem> items) {
+        super(items);
+        this.script = script;
+        this.name = name;
+        this.event = event;
+    }
+
+    /**
+     * @param e
+     * @return false iff an exception occurred
+     */
+    public boolean execute(final Event e) {
+        return TriggerItem.walk(this, e);
+    }
+
+    @Override
+    @Nullable
+    protected TriggerItem walk(final Event e) {
+        return walk(e, true);
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return name + " (" + event.toString(e, debug) + ")";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public SkriptEvent getEvent() {
+        return event;
+    }
+
+    @Nullable
+    public File getScript() {
+        return script;
+    }
+
 }

@@ -1,6 +1,6 @@
 /**
  * Custom {@link org.bukkit.event.Event Bukkit events}.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

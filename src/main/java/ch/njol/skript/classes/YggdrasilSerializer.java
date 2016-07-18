@@ -21,41 +21,41 @@
 
 package ch.njol.skript.classes;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
+
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 
 /**
  * @author Peter Güttinger
  */
 public class YggdrasilSerializer<T extends YggdrasilSerializable> extends Serializer<T> {
-	
-	@Override
-	public Fields serialize(final T o) throws NotSerializableException {
-		if (o instanceof YggdrasilExtendedSerializable)
-			return ((YggdrasilExtendedSerializable) o).serialize();
-		return new Fields(o);
-	}
-	
-	@Override
-	public void deserialize(final T o, final Fields f) throws StreamCorruptedException, NotSerializableException {
-		if (o instanceof YggdrasilExtendedSerializable)
-			((YggdrasilExtendedSerializable) o).deserialize(f);
-		else
-			f.setFields(o);
-	}
-	
-	@Override
-	public boolean mustSyncDeserialization() {
-		return false;
-	}
-	
-	@Override
-	public boolean canBeInstantiated() {
-		return true;
-	}
-	
+
+    @Override
+    public Fields serialize(final T o) throws NotSerializableException {
+        if (o instanceof YggdrasilExtendedSerializable)
+            return ((YggdrasilExtendedSerializable) o).serialize();
+        return new Fields(o);
+    }
+
+    @Override
+    public void deserialize(final T o, final Fields f) throws StreamCorruptedException, NotSerializableException {
+        if (o instanceof YggdrasilExtendedSerializable)
+            ((YggdrasilExtendedSerializable) o).deserialize(f);
+        else
+            f.setFields(o);
+    }
+
+    @Override
+    public boolean mustSyncDeserialization() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeInstantiated() {
+        return true;
+    }
+
 }

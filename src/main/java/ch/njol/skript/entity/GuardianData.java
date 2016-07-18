@@ -21,79 +21,77 @@
 
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Guardian;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import org.bukkit.entity.Guardian;
 
 
 public class GuardianData extends EntityData<Guardian> {
 
-	static {
-		if(Skript.classExists("org.bukkit.entity.Guardian")){
-			EntityData.register(GuardianData.class, "guardian", Guardian.class, 1, "normal guardian", "guardian", "elder guardian");
-		}
-	}
-	
-	
-	
-	private boolean isElder = false;
-	
-	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
-		isElder = matchedPattern == 2;
-		return true;
-	}
+    static {
+        if (Skript.classExists("org.bukkit.entity.Guardian")) {
+            EntityData.register(GuardianData.class, "guardian", Guardian.class, 1, "normal guardian", "guardian", "elder guardian");
+        }
+    }
 
-	@SuppressWarnings("null")
-	@Override
-	protected boolean init(Class<? extends Guardian> c, Guardian e) {
-		if(e != null)
-			isElder = e.isElder();
-		return true;
-	}
 
-	@Override
-	public void set(Guardian entity) {
-		if(isElder)
-			entity.setElder(true);
-		
-	}
+    private boolean isElder = false;
 
-	@Override
-	protected boolean match(Guardian entity) {
-		return entity.isElder() == isElder;
-	}
+    @Override
+    protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+        isElder = matchedPattern == 2;
+        return true;
+    }
 
-	@Override
-	public Class<? extends Guardian> getType() {
-		return Guardian.class;
-	}
+    @SuppressWarnings("null")
+    @Override
+    protected boolean init(Class<? extends Guardian> c, Guardian e) {
+        if (e != null)
+            isElder = e.isElder();
+        return true;
+    }
 
-	@Override
-	public EntityData getSuperType() {
-		return new GuardianData();
-	}
+    @Override
+    public void set(Guardian entity) {
+        if (isElder)
+            entity.setElder(true);
 
-	@Override
-	protected int hashCode_i() {
-		return isElder ? 1 : 0;
-	}
+    }
 
-	@Override
-	protected boolean equals_i(EntityData<?> obj) {
-		if (!(obj instanceof GuardianData))
-			return false;
-		final GuardianData other = (GuardianData) obj;
-		return other.isElder == isElder;
-	}
+    @Override
+    protected boolean match(Guardian entity) {
+        return entity.isElder() == isElder;
+    }
 
-	@Override
-	public boolean isSupertypeOf(final EntityData<?> e) {
-		if (e instanceof GuardianData)
-			return ((GuardianData) e).isElder == isElder;
-		return false;
-	}
-	
+    @Override
+    public Class<? extends Guardian> getType() {
+        return Guardian.class;
+    }
+
+    @Override
+    public EntityData getSuperType() {
+        return new GuardianData();
+    }
+
+    @Override
+    protected int hashCode_i() {
+        return isElder ? 1 : 0;
+    }
+
+    @Override
+    protected boolean equals_i(EntityData<?> obj) {
+        if (!(obj instanceof GuardianData))
+            return false;
+        final GuardianData other = (GuardianData) obj;
+        return other.isElder == isElder;
+    }
+
+    @Override
+    public boolean isSupertypeOf(final EntityData<?> e) {
+        if (e instanceof GuardianData)
+            return ((GuardianData) e).isElder == isElder;
+        return false;
+    }
+
 }

@@ -21,12 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import java.lang.reflect.Array;
-
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -39,6 +33,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -46,29 +43,29 @@ import ch.njol.util.Kleenean;
 @Name("Location")
 @Description("The location where an event happened (e.g. at an entity or block), or a location <a href='#ExprDirection'>relative</a> to another (e.g. 1 meter above another location).")
 @Examples({"drop 5 apples at the event-location # exactly the same as writing 'drop 5 apples'",
-		"set {_loc} to the location 1 meter above the player"})
+        "set {_loc} to the location 1 meter above the player"})
 @Since("2.0")
 public class ExprLocation extends WrapperExpression<Location> {
-	static {
-		Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.SIMPLE, "[the] [event-](location|position)");
-		Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.COMBINED, "[the] (location|position) %directions% [%location%]");
-	}
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (exprs.length > 0) {
-			super.setExpr(Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]));
-			return true;
-		} else {
-			setExpr(new EventValueExpression<Location>(Location.class));
-			return ((EventValueExpression<Location>) getExpr()).init();
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return getExpr() instanceof EventValueExpression ? "the location" : "the location " + getExpr().toString(e, debug);
-	}
-	
+    static {
+        Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.SIMPLE, "[the] [event-](location|position)");
+        Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.COMBINED, "[the] (location|position) %directions% [%location%]");
+    }
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        if (exprs.length > 0) {
+            super.setExpr(Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]));
+            return true;
+        } else {
+            setExpr(new EventValueExpression<Location>(Location.class));
+            return ((EventValueExpression<Location>) getExpr()).init();
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return getExpr() instanceof EventValueExpression ? "the location" : "the location " + getExpr().toString(e, debug);
+    }
+
 }

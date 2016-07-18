@@ -21,13 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import java.util.Iterator;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -38,6 +31,12 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
 
 /**
  * @author Peter Güttinger
@@ -45,44 +44,44 @@ import ch.njol.util.Kleenean;
 @Name("Worlds")
 @Description("All worlds of the server, useful for looping.")
 @Examples({"loop all worlds:",
-		"	broadcast \"You're in %loop-world%\" to loop-world"})
+        "	broadcast \"You're in %loop-world%\" to loop-world"})
 @Since("1.0")
 public class ExprWorlds extends SimpleExpression<World> {
-	
-	static {
-		Skript.registerExpression(ExprWorlds.class, World.class, ExpressionType.SIMPLE, "[(the|all)] worlds");
-	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		return true;
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return Bukkit.getWorlds().size() == 1;
-	}
-	
-	@Override
-	public Class<? extends World> getReturnType() {
-		return World.class;
-	}
-	
-	@Override
-	@Nullable
-	protected World[] get(final Event e) {
-		return Bukkit.getWorlds().toArray(new World[0]);
-	}
-	
-	@Override
-	@Nullable
-	public Iterator<World> iterator(final Event e) {
-		return Bukkit.getWorlds().iterator();
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "worlds";
-	}
-	
+
+    static {
+        Skript.registerExpression(ExprWorlds.class, World.class, ExpressionType.SIMPLE, "[(the|all)] worlds");
+    }
+
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        return true;
+    }
+
+    @Override
+    public boolean isSingle() {
+        return Bukkit.getWorlds().size() == 1;
+    }
+
+    @Override
+    public Class<? extends World> getReturnType() {
+        return World.class;
+    }
+
+    @Override
+    @Nullable
+    protected World[] get(final Event e) {
+        return Bukkit.getWorlds().toArray(new World[0]);
+    }
+
+    @Override
+    @Nullable
+    public Iterator<World> iterator(final Event e) {
+        return Bukkit.getWorlds().iterator();
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "worlds";
+    }
+
 }

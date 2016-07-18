@@ -21,32 +21,27 @@
 
 package ch.njol.skript.hooks;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import ch.njol.skript.util.VisualEffect;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.io.IOException;
+
 
 /**
- *	Hook for better particle effects.
+ * Hook for better particle effects.
  */
 public abstract class ParticlesPlugin<P extends Plugin> extends Hook<P> {
-	
-	public ParticlesPlugin() throws IOException {}
-	
-	@Nullable
-	public static ParticlesPlugin<?> plugin;
-	
-	public abstract void playEffect(final @Nullable Player[] ps, final Location l, final int count, final int radius, final VisualEffect.Type type,
-			final @Nullable Object data, float speed, float dX, float dY, float dZ, final @Nullable Color color);
+
+    @Nullable
+    public static ParticlesPlugin<?> plugin;
+
+    public ParticlesPlugin() throws IOException {
+    }
+
+    public abstract void playEffect(final @Nullable Player[] ps, final Location l, final int count, final int radius, final VisualEffect.Type type,
+                                    final @Nullable Object data, float speed, float dX, float dY, float dZ, final @Nullable Color color);
 }

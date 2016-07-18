@@ -21,77 +21,74 @@
 
 package ch.njol.skript.events.bukkit;
 
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.Getter;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Experience;
-import ch.njol.skript.util.Getter;
-
 /**
  * @author Peter Güttinger
  */
 public class ExperienceSpawnEvent extends Event implements Cancellable {
-	static {
-		EventValues.registerEventValue(ExperienceSpawnEvent.class, Location.class, new Getter<Location, ExperienceSpawnEvent>() {
-			@Override
-			public Location get(final ExperienceSpawnEvent e) {
-				return e.getLocation();
-			}
-		}, 0);
-		EventValues.registerEventValue(ExperienceSpawnEvent.class, Experience.class, new Getter<Experience, ExperienceSpawnEvent>() {
-			@Override
-			public Experience get(final ExperienceSpawnEvent e) {
-				return new Experience(e.getSpawnedXP());
-			}
-		}, 0);
-	}
-	
-	private int xp;
-	
-	private final Location l;
-	
-	public ExperienceSpawnEvent(final int xp, final Location l) {
-		this.xp = xp;
-		this.l = l;
-	}
-	
-	public int getSpawnedXP() {
-		return xp;
-	}
-	
-	public void setSpawnedXP(final int xp) {
-		this.xp = Math.max(0, xp);
-	}
-	
-	public Location getLocation() {
-		return l;
-	}
-	
-	private boolean cancelled = false;
-	
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-	
-	@Override
-	public void setCancelled(final boolean cancel) {
-		cancelled = cancel;
-	}
-	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
-	
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-	
+    // Bukkit stuff
+    private final static HandlerList handlers = new HandlerList();
+
+    static {
+        EventValues.registerEventValue(ExperienceSpawnEvent.class, Location.class, new Getter<Location, ExperienceSpawnEvent>() {
+            @Override
+            public Location get(final ExperienceSpawnEvent e) {
+                return e.getLocation();
+            }
+        }, 0);
+        EventValues.registerEventValue(ExperienceSpawnEvent.class, Experience.class, new Getter<Experience, ExperienceSpawnEvent>() {
+            @Override
+            public Experience get(final ExperienceSpawnEvent e) {
+                return new Experience(e.getSpawnedXP());
+            }
+        }, 0);
+    }
+
+    private final Location l;
+    private int xp;
+    private boolean cancelled = false;
+
+    public ExperienceSpawnEvent(final int xp, final Location l) {
+        this.xp = xp;
+        this.l = l;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    public int getSpawnedXP() {
+        return xp;
+    }
+
+    public void setSpawnedXP(final int xp) {
+        this.xp = Math.max(0, xp);
+    }
+
+    public Location getLocation() {
+        return l;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(final boolean cancel) {
+        cancelled = cancel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
 }

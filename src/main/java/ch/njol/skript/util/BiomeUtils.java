@@ -29,19 +29,20 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public abstract class BiomeUtils {
-	private BiomeUtils() {}
-	
-	@Nullable
-	public final static Biome parse(final String s) {
-		return BiomeMappings.parse(s);
-	}
-	
-	public static String toString(final Biome b, final int flags) {
-		return BiomeMappings.toString(b, flags);
-	}
-	
-	public final static String getAllNames() {
-		return BiomeMappings.getAllNames();
-	}
-	
+    private BiomeUtils() {
+    }
+
+    @Nullable
+    public final static Biome parse(final String s) {
+        return BiomeMappings.parse(s);
+    }
+
+    public static String toString(final Biome b, final int flags) {
+        return BiomeMappings.toString(b, flags);
+    }
+
+    public final static String getAllNames() {
+        return BiomeMappings.getAllNames();
+    }
+
 }

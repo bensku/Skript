@@ -1,6 +1,6 @@
 /**
  * Various utility classes and methods.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

@@ -21,11 +21,6 @@
 
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -37,6 +32,10 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -46,69 +45,71 @@ import ch.njol.util.Kleenean;
 @Examples("message \"You have %number of ores in the player's inventory% ores in your inventory.\"")
 @Since("2.0")
 public class ExprAmountOfItems extends SimpleExpression<Integer> {
-	static {
-		Skript.registerExpression(ExprAmountOfItems.class, Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<ItemType> items;
-	@SuppressWarnings("null")
-	private Expression<Inventory> invis;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		items = (Expression<ItemType>) exprs[0];
-		invis = (Expression<Inventory>) exprs[1];
-		return true;
-	}
-	
-	@Override
-	protected Integer[] get(final Event e) {
-		int r = 0;
-		final ItemType[] types = items.getArray(e);
-		for (final Inventory invi : invis.getArray(e)) {
-			itemsLoop: for (final ItemStack i : invi.getContents()) {
-				for (final ItemType t : types) {
-					if (t.isOfType(i)) {
-						r += i == null ? 1 : i.getAmount();
-						continue itemsLoop;
-					}
-				}
-			}
-		}
-		return new Integer[] {r};
-	}
-	
-	@Override
-	public Integer[] getAll(final Event e) {
-		int r = 0;
-		final ItemType[] types = items.getAll(e);
-		for (final Inventory invi : invis.getAll(e)) {
-			itemsLoop: for (final ItemStack i : invi.getContents()) {
-				for (final ItemType t : types) {
-					if (t.isOfType(i)) {
-						r += i == null ? 1 : i.getAmount();
-						continue itemsLoop;
-					}
-				}
-			}
-		}
-		return new Integer[] {r};
-	}
-	
-	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "number of " + items + " in " + invis;
-	}
+    static {
+        Skript.registerExpression(ExprAmountOfItems.class, Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<ItemType> items;
+    @SuppressWarnings("null")
+    private Expression<Inventory> invis;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        items = (Expression<ItemType>) exprs[0];
+        invis = (Expression<Inventory>) exprs[1];
+        return true;
+    }
+
+    @Override
+    protected Integer[] get(final Event e) {
+        int r = 0;
+        final ItemType[] types = items.getArray(e);
+        for (final Inventory invi : invis.getArray(e)) {
+            itemsLoop:
+            for (final ItemStack i : invi.getContents()) {
+                for (final ItemType t : types) {
+                    if (t.isOfType(i)) {
+                        r += i == null ? 1 : i.getAmount();
+                        continue itemsLoop;
+                    }
+                }
+            }
+        }
+        return new Integer[]{r};
+    }
+
+    @Override
+    public Integer[] getAll(final Event e) {
+        int r = 0;
+        final ItemType[] types = items.getAll(e);
+        for (final Inventory invi : invis.getAll(e)) {
+            itemsLoop:
+            for (final ItemStack i : invi.getContents()) {
+                for (final ItemType t : types) {
+                    if (t.isOfType(i)) {
+                        r += i == null ? 1 : i.getAmount();
+                        continue itemsLoop;
+                    }
+                }
+            }
+        }
+        return new Integer[]{r};
+    }
+
+    @Override
+    public Class<? extends Integer> getReturnType() {
+        return Integer.class;
+    }
+
+    @Override
+    public boolean isSingle() {
+        return true;
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "number of " + items + " in " + invis;
+    }
 }

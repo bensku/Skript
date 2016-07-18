@@ -1,6 +1,6 @@
 /**
  * Contains the default events of Skript.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

@@ -21,13 +21,6 @@
 
 package ch.njol.skript.effects;
 
-import org.bukkit.GameMode;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.HealthUtils;
 import ch.njol.skript.doc.Description;
@@ -38,49 +31,55 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Kill")
 @Description({"Kills an entity.",
-		"Note: This effect does not set the entitie's health to 0 (which causes issues), but damages the entity by 100 times its maximum health."})
+        "Note: This effect does not set the entitie's health to 0 (which causes issues), but damages the entity by 100 times its maximum health."})
 @Examples({"kill the player",
-		"kill all creepers in the player's world",
-		"kill all endermen, witches and bats"})
+        "kill all creepers in the player's world",
+        "kill all endermen, witches and bats"})
 @Since("1.0")
 public class EffKill extends Effect {
-	static {
-		Skript.registerEffect(EffKill.class, "kill %entities%");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<Entity> entities;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		entities = (Expression<Entity>) vars[0];
-		return true;
-	}
-	
-	@Override
-	protected void execute(final Event e) {
-		for (final Entity entity : entities.getArray(e)) {
-			if (entity instanceof LivingEntity) {
-				final boolean creative = entity instanceof Player && ((Player) entity).getGameMode() == GameMode.CREATIVE;
-				if (creative)
-					((Player) entity).setGameMode(GameMode.SURVIVAL);
-				HealthUtils.damage((LivingEntity) entity, HealthUtils.getMaxHealth((LivingEntity) entity) * 100); // just to make sure that it really dies >:)
-				if (creative)
-					((Player) entity).setGameMode(GameMode.CREATIVE);
-			}
-		}
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "kill " + entities.toString(e, debug);
-	}
-	
+    static {
+        Skript.registerEffect(EffKill.class, "kill %entities%");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<Entity> entities;
+
+    @SuppressWarnings({"unchecked", "null"})
+    @Override
+    public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+        entities = (Expression<Entity>) vars[0];
+        return true;
+    }
+
+    @Override
+    protected void execute(final Event e) {
+        for (final Entity entity : entities.getArray(e)) {
+            if (entity instanceof LivingEntity) {
+                final boolean creative = entity instanceof Player && ((Player) entity).getGameMode() == GameMode.CREATIVE;
+                if (creative)
+                    ((Player) entity).setGameMode(GameMode.SURVIVAL);
+                HealthUtils.damage((LivingEntity) entity, HealthUtils.getMaxHealth((LivingEntity) entity) * 100); // just to make sure that it really dies >:)
+                if (creative)
+                    ((Player) entity).setGameMode(GameMode.CREATIVE);
+            }
+        }
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "kill " + entities.toString(e, debug);
+    }
+
 }

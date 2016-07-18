@@ -21,7 +21,7 @@
 
 /**
  * Classes for Bukkit workarounds and support for older versions.
- * 
+ *
  * @author Peter Güttinger
  */
 @NonNullByDefault

@@ -21,9 +21,6 @@
 
 package ch.njol.skript.conditions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -34,6 +31,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -41,51 +40,51 @@ import ch.njol.util.Kleenean;
 @Name("Exists/Is Set")
 @Description("Checks whether a given expression or variable is set.")
 @Examples({"{teamscript.%player%.preferred team} is not set",
-		"on damage:",
-		"	projectile exists",
-		"	broadcast \"%attacker% used a %projectile% to attack %victim%!\""})
+        "on damage:",
+        "	projectile exists",
+        "	broadcast \"%attacker% used a %projectile% to attack %victim%!\""})
 @Since("1.2")
 public class CondIsSet extends Condition {
-	static {
-		Skript.registerCondition(CondIsSet.class,
-				"%~objects% (exist[s]|(is|are) set)",
-				"%~objects% (do[es](n't| not) exist|(is|are)(n't| not) set)");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<?> expr;
-	
-	@SuppressWarnings("null")
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		expr = exprs[0];
-		setNegated(matchedPattern == 1);
-		return true;
-	}
-	
-	private boolean check(final Expression<?> expr, final Event e) {
-		if (expr instanceof ExpressionList) {
-			for (final Expression<?> ex : ((ExpressionList<?>) expr).getExpressions()) {
-				assert ex != null;
-				final boolean b = check(ex, e);
-				if (expr.getAnd() ^ b)
-					return !expr.getAnd();
-			}
-			return expr.getAnd();
-		}
-		assert expr.getAnd();
-		final Object[] all = expr.getAll(e);
-		return isNegated() ^ (all.length != 0);
-	}
-	
-	@Override
-	public boolean check(final Event e) {
-		return check(expr, e);
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return expr.toString(e, debug) + " " + (isNegated() ? "isn't" : "is") + " set";
-	}
-	
+    static {
+        Skript.registerCondition(CondIsSet.class,
+                "%~objects% (exist[s]|(is|are) set)",
+                "%~objects% (do[es](n't| not) exist|(is|are)(n't| not) set)");
+    }
+
+    @SuppressWarnings("null")
+    private Expression<?> expr;
+
+    @SuppressWarnings("null")
+    @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+        expr = exprs[0];
+        setNegated(matchedPattern == 1);
+        return true;
+    }
+
+    private boolean check(final Expression<?> expr, final Event e) {
+        if (expr instanceof ExpressionList) {
+            for (final Expression<?> ex : ((ExpressionList<?>) expr).getExpressions()) {
+                assert ex != null;
+                final boolean b = check(ex, e);
+                if (expr.getAnd() ^ b)
+                    return !expr.getAnd();
+            }
+            return expr.getAnd();
+        }
+        assert expr.getAnd();
+        final Object[] all = expr.getAll(e);
+        return isNegated() ^ (all.length != 0);
+    }
+
+    @Override
+    public boolean check(final Event e) {
+        return check(expr, e);
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return expr.toString(e, debug) + " " + (isNegated() ? "isn't" : "is") + " set";
+    }
+
 }

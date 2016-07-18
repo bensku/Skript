@@ -22,5 +22,5 @@
 package ch.njol.skript.localization;
 
 public interface LanguageChangeListener {
-	public void onLanguageChange();
+    public void onLanguageChange();
 }
