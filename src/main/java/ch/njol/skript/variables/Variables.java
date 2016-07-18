@@ -82,8 +82,8 @@ public abstract class Variables {
 			
 			@SuppressWarnings("unchecked")
 			private final void init() {
-				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+				// Temp fix till I figure out how to fix this
+				info = null; //(ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
 			}
 			
 			@SuppressWarnings({"unchecked"})

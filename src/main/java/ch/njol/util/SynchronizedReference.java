@@ -13,7 +13,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  * 
- * Copyright 2011-2013 Peter Güttinger
+ * Copyright 2011-2013 Peter G?ttinger
  * 
  */
 
@@ -22,7 +22,7 @@ package ch.njol.util;
 import javax.annotation.Nullable;
 
 /**
- * @author Peter Güttinger
+ * @author Peter Gttinger
  *
  */
 public class SynchronizedReference<V>

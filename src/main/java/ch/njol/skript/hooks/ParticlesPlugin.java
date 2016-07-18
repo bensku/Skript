@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.njol.skript.util.VisualEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -35,18 +36,6 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.hooks.particles.EffectLibHook;
-import ch.njol.skript.util.VisualEffect;
-import de.slikey.effectlib.EffectLib;
-import de.slikey.effectlib.util.ParticleEffect;
-import de.slikey.effectlib.util.ParticleEffect.BlockData;
-import de.slikey.effectlib.util.ParticleEffect.ItemData;
-import de.slikey.effectlib.util.ParticleEffect.ParticleData;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-
-import ch.njol.skript.util.VisualEffect.Type;
 
 /**
  *	Hook for better particle effects.

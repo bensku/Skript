@@ -21,7 +21,7 @@
 
 package ch.njol.skript.effects;
 
-import static ch.njol.skript.effects.Delay.*;
+import ch.njol.skript.effects.Delay.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;

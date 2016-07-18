@@ -36,12 +36,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 public class SkeletonData extends EntityData<Skeleton> {
 	
 	private final static boolean hasWither = Skript.methodExists(Skeleton.class, "getSkeletonType");
-	private final static boolean hasStray = Skript.isRunningMinecraft(1, 10);
-	
+
 	static {
-		if (hasStray)
-			register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton", "stray");
-		else if (hasWither)
+		if (hasWither)
 			register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton");
 		else
 			register(SkeletonData.class, "skeleton", Skeleton.class, "skeleton");
@@ -80,8 +77,6 @@ public class SkeletonData extends EntityData<Skeleton> {
 		
 		if (hasWither && e.getSkeletonType() == SkeletonType.WITHER)
 			type = WITHER;
-		if (hasStray && e.getSkeletonType() == SkeletonType.STRAY)
-			type = STRAY;
 		return true;
 	}
 	
@@ -105,9 +100,6 @@ public class SkeletonData extends EntityData<Skeleton> {
 			case WITHER:
 				e.setSkeletonType(SkeletonType.WITHER);
 				break;
-			case STRAY:
-				e.setSkeletonType(SkeletonType.STRAY);
-				break;
 			default:
 				e.setSkeletonType(SkeletonType.NORMAL);
 		}
@@ -118,8 +110,6 @@ public class SkeletonData extends EntityData<Skeleton> {
 		switch (type) {
 			case WITHER:
 				return e.getSkeletonType() == SkeletonType.WITHER;
-			case STRAY:
-				return e.getSkeletonType() == SkeletonType.STRAY;
 			default:
 				return e.getSkeletonType() == SkeletonType.NORMAL;
 		}

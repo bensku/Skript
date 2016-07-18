@@ -56,7 +56,7 @@ public class Delay extends Effect {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Timespan> duration;
+	public Expression<Timespan> duration;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
