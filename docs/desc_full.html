@@ -1,0 +1,34 @@
+
+
+<div id="${element.id}" class="item-title">${element.name}</div>
+<div class="item-content">
+  <table>
+
+    <tr>
+      <td class="item-table-label">Pattern:</td>
+      <ul>
+        ${generate element.patterns pattern_element.html}
+      </ul>
+    </tr>
+
+    <tr>
+      <td class="item-table-label">Since:</td>
+      <td>${element.since}</td>
+    </tr>
+
+  </table>
+
+  <div class="item-description">
+    ${element.desc}
+  </div>
+
+  <div class="item-examples">
+
+    Examples:
+
+    <div class="skript-code-block">
+      ${element.examples}
+    </div>
+
+  </div>
+</div>

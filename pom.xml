@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.njol</groupId>
 	<artifactId>skript</artifactId>
-	<version>2.2-dev18</version>
+	<version>2.2-dev18c</version>
 	<name>Skript</name>
 	<description>A plugin for the Minecraft server API Bukkit that allows to create scripts in natural language.</description>
 	<url>http://njol.ch/projects/skript/</url>

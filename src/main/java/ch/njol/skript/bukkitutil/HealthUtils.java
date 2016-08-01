@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.entity.Damageable;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -62,7 +61,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @return The amount of hearts the entity has left
 	 */
-	public final static double getHealth(final LivingEntity e) {
+	public final static double getHealth(final Damageable e) {
 		if (e.isDead())
 			return 0;
 		if (supportsDoubles)
@@ -83,7 +82,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @param health The amount of hearts to set
 	 */
-	public final static void setHealth(final LivingEntity e, final double health) {
+	public final static void setHealth(final Damageable e, final double health) {
 		if (supportsDoubles) {
 			e.setHealth(Math2.fit(0, health, getMaxHealth(e)) * 2);
 			return;
@@ -103,7 +102,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @return How many hearts the entity can have at most
 	 */
-	public final static double getMaxHealth(final LivingEntity e) {
+	public final static double getMaxHealth(final Damageable e) {
 		if (supportsDoubles)
 			return e.getMaxHealth() / 2;
 		try {
@@ -122,7 +121,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @param health How many hearts the entity can have at most
 	 */
-	public final static void setMaxHealth(final LivingEntity e, final double health) {
+	public final static void setMaxHealth(final Damageable e, final double health) {
 		if (supportsDoubles) {
 			e.setMaxHealth(Math.max(Skript.EPSILON / 2, health * 2)); // 0 is not allowed, so just use a small value - smaller than Skript.EPSILON though to compare as 0
 			return;
@@ -142,7 +141,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @param d Amount of hearts to damage
 	 */
-	public final static void damage(final LivingEntity e, final double d) {
+	public final static void damage(final Damageable e, final double d) {
 		if (d < 0) {
 			heal(e, -d);
 			return;
@@ -166,7 +165,7 @@ public abstract class HealthUtils {
 	 * @param e
 	 * @param h Amount of hearts to heal
 	 */
-	public final static void heal(final LivingEntity e, final double h) {
+	public final static void heal(final Damageable e, final double h) {
 		if (h < 0) {
 			damage(e, -h);
 			return;
@@ -220,7 +219,7 @@ public abstract class HealthUtils {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public final static void setDamageCause(final LivingEntity e, final DamageCause cause) {
+	public final static void setDamageCause(final Damageable e, final DamageCause cause) {
 		e.setLastDamageCause(new EntityDamageEvent(e, cause, 0)); // Use deprecated way too keep it compatible and create cleaner code
 		// Non-deprecated way is really, really bad
 	}

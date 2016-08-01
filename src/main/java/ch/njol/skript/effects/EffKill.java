@@ -22,9 +22,12 @@
 package ch.njol.skript.effects;
 
 import org.bukkit.GameMode;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -67,11 +70,13 @@ public class EffKill extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		for (final Entity entity : entities.getArray(e)) {
-			if (entity instanceof LivingEntity) {
+			if (entity instanceof ArmorStand || entity instanceof Vehicle) {
+				entity.remove(); // Got complaints in issue tracker, so this is possible... Not sure if good idea, though!
+			} else if (entity instanceof Damageable) {
 				final boolean creative = entity instanceof Player && ((Player) entity).getGameMode() == GameMode.CREATIVE;
 				if (creative)
 					((Player) entity).setGameMode(GameMode.SURVIVAL);
-				HealthUtils.damage((LivingEntity) entity, HealthUtils.getMaxHealth((LivingEntity) entity) * 100); // just to make sure that it really dies >:)
+				HealthUtils.damage((Damageable) entity, HealthUtils.getMaxHealth((LivingEntity) entity) * 100); // just to make sure that it really dies >:)
 				if (creative)
 					((Player) entity).setGameMode(GameMode.CREATIVE);
 			}

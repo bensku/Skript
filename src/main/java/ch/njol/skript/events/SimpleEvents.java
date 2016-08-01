@@ -334,6 +334,10 @@ public class SimpleEvents {
 				.description("Called when an <a href='../classes/#entity'>entity</a> enters a vehicle, either deliberately (players) or by falling into them (mobs).")
 				.examples("")
 				.since("1.0");
+		Skript.registerEvent("Vehicle Exit", SimpleEvent.class, VehicleExitEvent.class, "vehicle exit", "exit[ing] [a] vehicle")
+				.description("Called when an entity exits a vehicle.")
+				.examples("")
+				.since("1.0");
 		if (Skript.classExists("org.spigotmc.event.entity.EntityMountEvent")) {
 			Skript.registerEvent("Entity Mount", SimpleEvent.class, EntityMountEvent.class, "mount[ing]")
 					.description("Called when entity starts riding another.")

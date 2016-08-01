@@ -229,6 +229,8 @@ enchantments:
 		unknown_enchant_62: Lure
 		lure: Lure
 		unknown_enchant_8: Depth Strider
+		depth_strider: Depth Strider
+		mending: Mending
 
 # -- Potion Effects --
 potions:
