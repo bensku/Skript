@@ -270,6 +270,7 @@ public final class Updater {
 	 * @param sender
 	 */
 	final static void getChangelogs(final CommandSender sender) {
+		return;
 		InputStream in = null;
 		InputStreamReader r = null;
 		try {
