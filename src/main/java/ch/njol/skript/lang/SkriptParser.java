@@ -77,10 +77,12 @@ import ch.njol.util.coll.CollectionUtils;
 public class SkriptParser {
 	
 	final String expr;
-	
+	//FLAG CONSTANTS
 	public final static int PARSE_EXPRESSIONS = 1;
 	public final static int PARSE_LITERALS = 2;
-	public final static int ALL_FLAGS = PARSE_EXPRESSIONS | PARSE_LITERALS;
+	public final static int ALL_FLAGS = PARSE_EXPRESSIONS | PARSE_LITERALS; //3
+	
+	//OBJECT FLAGS
 	private final int flags;
 	
 	public final ParseContext context;
@@ -104,8 +106,8 @@ public class SkriptParser {
 	 */
 	public SkriptParser(final String expr, final int flags, final ParseContext context) {
 		assert expr != null;
-		assert (flags & ALL_FLAGS) != 0;
-		this.expr = "" + expr.trim();
+		assert (flags & ALL_FLAGS) != 0; //Asserts the flag is 1 or 2
+		this.expr = "" + expr.trim(); //Removes unnecessary whitespace
 		this.flags = flags;
 		this.context = context;
 	}
@@ -114,8 +116,8 @@ public class SkriptParser {
 		this(expr, other.flags, other.context);
 	}
 	
-	public final static String wildcard = "[^\"]*?(?:\"[^\"]*?\"[^\"]*?)*?";
-	public final static String stringMatcher = "\"[^\"]*?(?:\"\"[^\"]*)*?\"";
+	public final static String wildcard = "[^\"]*?(?:\"[^\"]*?\"[^\"]*?)*?"; //Really dunno
+	public final static String stringMatcher = "\"[^\"]*?(?:\"\"[^\"]*)*?\""; //Same
 	
 	public final static class ParseResult {
 		public final Expression<?>[] exprs;
@@ -129,7 +131,7 @@ public class SkriptParser {
 		
 		public ParseResult(final SkriptParser parser, final String pattern) {
 			expr = parser.expr;
-			exprs = new Expression<?>[countUnescaped(pattern, '%') / 2];
+			exprs = new Expression<?>[countUnescaped(pattern, '%') / 2]; //How many actual types there are in the pattern
 		}
 	}
 	
@@ -208,26 +210,27 @@ public class SkriptParser {
 	}
 	
 	@Nullable
-	private final <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) {
+	private final <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) { //This method seems to rely heavily on parse_i(), so t's not really explained that good
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
-			while (source.hasNext()) {
+			while (source.hasNext()) { //Iterating over "source"
 				final SyntaxElementInfo<? extends T> info = source.next();
-				patternsLoop: for (int i = 0; i < info.patterns.length; i++) {
+                        	patternsLoop: for (int i = 0; i < info.patterns.length; i++) { //Iterates over all patterns for each syntax element (expression, condition, effect)
 					log.clear();
 					try {
-						final String pattern = info.patterns[i];
+						final String pattern = info.patterns[i]; //Gets the current pattern
 						assert pattern != null;
-						final ParseResult res = parse_i(pattern, 0, 0);
+						final ParseResult res = parse_i(pattern, 0, 0); //Gets the ParseResult of the current pattern
 						if (res != null) {
-							int x = -1;
-							for (int j = 0; (x = nextUnescaped(pattern, '%', x + 1)) != -1; j++) {
-								final int x2 = nextUnescaped(pattern, '%', x + 1);
-								if (res.exprs[j] == null) {
-									final String name = pattern.substring(x + 1, x2);
-									if (!name.startsWith("-")) {
-										final ExprInfo vi = getExprInfo(name);
-										final DefaultExpression<?> expr = vi.classes[0].getDefaultExpression();
+							int x = -1; //Crappy variable naming 
+							for (int j = 0; (x = nextUnescaped(pattern, '%', x + 1)) != -1; j++) { //Iterating variable : j ; Continue condition : There's still more '%'s  //'x' is the index of next unescaped '%' which starts a new type
+								final int x2 = nextUnescaped(pattern, '%', x + 1); //Gets the '%' that closes the current type
+								if (res.exprs[j] == null) { //Will have to understand how parse_i() works before explaining this. Seems weird anyway
+									final String name = pattern.substring(x + 1, x2); //Gets the current type's name in the syntax
+									if (!name.startsWith("-")) { //If the default value shoudn't be null
+										final ExprInfo vi = getExprInfo(name); //Gets info about the current classinfo name				
+										final DefaultExpression<?> expr = vi.classes[0].getDefaultExpression(); //Gets the class' DefaultExpression
+										//Errors, needless to explain
 										if (expr == null)
 											throw new SkriptAPIException("The class '" + vi.classes[0].getCodeName() + "' does not provide a default expression. Either allow null (with %-" + vi.classes[0].getCodeName() + "%) or make it mandatory [pattern: " + info.patterns[i] + "]");
 										if (!(expr instanceof Literal) && (vi.flagMask & PARSE_EXPRESSIONS) == 0)
@@ -238,17 +241,17 @@ public class SkriptParser {
 											throw new SkriptAPIException("The default expression of '" + vi.classes[0].getCodeName() + "' is not a single-element expression. Change your pattern to allow multiple elements or make the expression mandatory [pattern: " + info.patterns[i] + "]");
 										if (vi.time != 0 && !expr.setTime(vi.time))
 											throw new SkriptAPIException("The default expression of '" + vi.classes[0].getCodeName() + "' does not have distinct time states. [pattern: " + info.patterns[i] + "]");
-										if (!expr.init())
-											continue patternsLoop;
-										res.exprs[j] = expr;
+										if (!expr.init()) 
+											continue patternsLoop; //Strangely enough, the named 'continue' explains perfectly what it does
+										res.exprs[j] = expr; //Edits the ParseResult's expressions
 									}
 								}
-								x = x2;
+								x = x2; //Makes the searchfor '%'s in the next iteration begin after the current closing '%'
 							}
-							final T t = info.c.newInstance();
-							if (t.init(res.exprs, i, ScriptLoader.hasDelayBefore, res)) {
+							final T t = info.c.newInstance(); //Creates a new instance of either an expression, an effect or a condition
+							if (t.init(res.exprs, i, ScriptLoader.hasDelayBefore, res)) { //If the SyntaxElement can be 'init'-ed sucessfully...
 								log.printLog();
-								return t;
+								return t; //... Return it
 							}
 						}
 					} catch (final InstantiationException e) {
@@ -259,7 +262,7 @@ public class SkriptParser {
 				}
 			}
 			log.printError();
-			return null;
+			return null; //Returns null if no syntax of any SyntaxElement has 
 		} finally {
 			log.stop();
 		}
