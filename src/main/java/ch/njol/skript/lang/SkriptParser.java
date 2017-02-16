@@ -1041,50 +1041,50 @@ public class SkriptParser {
 	 * @return Parsed result or null on error (which does not imply that an error was printed)
 	 */
 	@Nullable
-	private final ParseResult parse_i(final String pattern, int i, int j) {
-		ParseResult res;
+	private final ParseResult parse_i(final String pattern, int i, int j) { //It seems that this method only parses bits of the pattern and calls itself again to parse more until the whole patern is parsed. It would be logical that the first call to the method is 'parse_i(pattern, 0, 0)'
+		ParseResult res; //Empty parse result
 		int end, i2;
 		
-		while (j < pattern.length()) {
-			switch (pattern.charAt(j)) {
-				case '[': {
+		while (j < pattern.length()) {//While there are still letters in thepattern
+			switch (pattern.charAt(j)) { //Gets each character of the pattern 
+				case '[': {//Opening bracket case :
 					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 					try {
-						res = parse_i(pattern, i, j + 1);
-						if (res != null) {
+						res = parse_i(pattern, i, j + 1); //Parses what's in the brackets, since the method seems to stop (and call itself again) when encountering a Skript-special character
+						if (res != null) { //Needless to explain
 							log.printLog();
 							return res;
 						}
 						log.clear();
-						j = nextBracket(pattern, ']', '[', j + 1, true) + 1;
-						res = parse_i(pattern, i, j);
+						j = nextBracket(pattern, ']', '[', j + 1, true) + 1; //Gets the index of the character after the closing bracket
+						res = parse_i(pattern, i, j); //Parses everything after the closing bracket, while keeping the same position in the string, since a bracket section can be completely ignored file-wise 
 						if (res == null)
 							log.printError();
 						else
 							log.printLog();
-						return res;
+						return res; //This looks weird. Now I'm thinking that the calling class may be doing some weird stuff too
 					} finally {
-						log.stop();
+						log.stop(); 
 					}
 				}
-				case '(': {
+				case '(': { //Opening parenthesis case :
 					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 					try {
-						final int start = j;
-						for (; j < pattern.length(); j++) {
+						final int start = j; //Tracks the opening bracket, since the parser will have to match that against the string
+						for (; j < pattern.length(); j++) { //Wait wtf. It seems to create another loop to parse the whole pattern. Now that I look to it, it seems that the loop will 'break' if the closing parenthesis is reached
 							log.clear();
-							if (j == start || pattern.charAt(j) == '|') {
+							if (j == start || pattern.charAt(j) == '|') { //This will check for a mark and set it if it is present
 								int mark = 0;
-								if (j != pattern.length() - 1 && ('0' <= pattern.charAt(j + 1) && pattern.charAt(j + 1) <= '9' || pattern.charAt(j + 1) == '-')) {
-									final int j2 = pattern.indexOf('¦', j + 2);
-									if (j2 != -1) {
+							/*If*/  if (j != pattern.length() - 1 /*This is not the end*/ && ('0' <= pattern.charAt(j + 1) && pattern.charAt(j + 1) <= '9' /*The character after the opening '(' or '|' is a number*/ || pattern.charAt(j + 1) == '-' /*Wait dafuq*/)) {
+									final int j2 = pattern.indexOf('¦', j + 2); //Get where the broken bar is at
+									if (j2 != -1) { //Technically, this is unnecessary, but better safe than sorry
 										try {
-											mark = Integer.parseInt(pattern.substring(j + 1, j2));
-											j = j2;
+											mark = Integer.parseInt(pattern.substring(j + 1, j2)); //Set the mark
+											j = j2; //Go to character after the broken bar
 										} catch (final NumberFormatException e) {}
 									}
 								}
-								res = parse_i(pattern, i, j + 1);
+								res = parse_i(pattern, i, j + 1); //Parses what's in '(' (or after the broken bar part)
 								if (res != null) {
 									log.printLog();
 									res.mark ^= mark; // doesn't do anything if no mark was set as x ^ 0 == x
