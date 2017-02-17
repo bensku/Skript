@@ -1041,9 +1041,9 @@ public class SkriptParser {
 	 * @return Parsed result or null on error (which does not imply that an error was printed)
 	 */
 	@Nullable
-	private final ParseResult parse_i(final String pattern, int i, int j) { //It seems that this method only parses bits of the pattern and calls itself again to parse more until the whole patern is parsed. It would be logical that the first call to the method is 'parse_i(pattern, 0, 0)'
+	private final ParseResult parse_i(final String pattern, int i, int j) { //When is method is ran for the first time, it will call itself again after a short amount of characters, to parse more characters and call itself again. In fact, a 'return' won't be called until the whole pattern is parsed
 		ParseResult res; //Empty parse result
-		int end, i2;
+		int end, i2; //Both of these are only used when a '%' is encountered. 'end' represent the closing '%' and 'i2' the next charcter, according to the description of 'next()'
 		
 		while (j < pattern.length()) {//While there are still letters in thepattern
 			switch (pattern.charAt(j)) { //Gets each character of the pattern 
@@ -1062,7 +1062,7 @@ public class SkriptParser {
 							log.printError();
 						else
 							log.printLog();
-						return res; //This looks weird. Now I'm thinking that the calling class may be doing some weird stuff too
+						return res; //Won't happen until the whole pattern is parsed, actually
 					} finally {
 						log.stop(); 
 					}
@@ -1071,7 +1071,7 @@ public class SkriptParser {
 					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 					try {
 						final int start = j; //Tracks the opening bracket, since the parser will have to match that against the string
-						for (; j < pattern.length(); j++) { //Wait wtf. It seems to create another loop to parse the whole pattern. Now that I look to it, it seems that the loop will 'break' if the closing parenthesis is reached
+						for (; j < pattern.length(); j++) { //Iterates over the characters inside '()'
 							log.clear();
 							if (j == start || pattern.charAt(j) == '|') { //This will check for a mark and set it if it is present
 								int mark = 0;
@@ -1088,13 +1088,13 @@ public class SkriptParser {
 								if (res != null) {
 									log.printLog();
 									res.mark ^= mark; // doesn't do anything if no mark was set as x ^ 0 == x
-									return res;
+									return res; //Won't happen until the whole pattern is parsed, actually
 								}
 							} else if (pattern.charAt(j) == '(') {
-								j = nextBracket(pattern, ')', '(', j + 1, true);
+								j = nextBracket(pattern, ')', '(', j + 1, true); //Apparently skips another group when one is encountered. I think the method handles that group though
 							} else if (pattern.charAt(j) == ')') {
-								break;
-							} else if (j == pattern.length() - 1) {
+								break; //Breaks if the end of the group is reached
+							} else if (j == pattern.length() - 1) { //If the end of the pattern is reached
 								throw new MalformedPatternException(pattern, "Missing closing bracket ')'");
 							}
 						}
@@ -1104,31 +1104,31 @@ public class SkriptParser {
 						log.stop();
 					}
 				}
-				case '%': {
-					if (i == expr.length())
+				case '%': { //Percent case. Now this is going to be difficult :
+					if (i == expr.length()) //If 'i' is at the end of the input string
 						return null;
-					end = pattern.indexOf('%', j + 1);
-					if (end == -1)
+					end = pattern.indexOf('%', j + 1); //Get the next '%'
+					if (end == -1) //If it is not found
 						throw new MalformedPatternException(pattern, "Odd number of '%'");
-					final String name = "" + pattern.substring(j + 1, end);
-					final ExprInfo vi = getExprInfo(name);
-					if (end == pattern.length() - 1) {
-						i2 = expr.length();
+					final String name = "" + pattern.substring(j + 1, end); //Gets the class' name in the pattern
+					final ExprInfo vi = getExprInfo(name); //Gets the info about that class
+					if (end == pattern.length() - 1) { //If the closing '%' is at the end of the pattern
+						i2 = expr.length(); //Now 'i2' appears. Here, it's set to the input string's length
 					} else {
-						i2 = next(expr, i, context);
-						if (i2 == -1)
+						i2 = next(expr, i, context); //Gets the next character in the expression, according to 'next()'
+						if (i2 == -1) //In case 'next()' fails
 							return null;
 					}
 					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 					try {
-						for (; i2 != -1; i2 = next(expr, i2, context)) {
+						for (; i2 != -1; i2 = next(expr, i2, context)) { //Iterates over each 'next()' character of the expression,
 							log.clear();
-							res = parse_i(pattern, i2, end + 1);
+							res = parse_i(pattern, i2, end + 1); //Parses from 'i2' in the expression and after the closing '%' in the pattern
 							if (res != null) {
 								final ParseLogHandler log2 = SkriptLogger.startParseLogHandler();
 								try {
-									for (int k = 0; k < vi.classes.length; k++) {
-										if ((flags & vi.flagMask) == 0)
+									for (int k = 0; k < vi.classes.length; k++) { //Iterates over all the classes (separated by '/') in the current '%%'
+										if ((flags & vi.flagMask) == 0) //I'll explain when I understand all of this bitwise stuff
 											continue;
 										log2.clear();
 										@SuppressWarnings("unchecked")
@@ -1137,33 +1137,33 @@ public class SkriptParser {
 											if (!vi.isPlural[k] && !e.isSingle()) {
 												if (context == ParseContext.COMMAND) {
 													Skript.error(Commands.m_too_many_arguments.toString(vi.classes[k].getName().getIndefiniteArticle(), vi.classes[k].getName().toString()), ErrorQuality.SEMANTIC_ERROR);
-													return null;
+													return null; 
 												} else {
 													Skript.error("'" + expr.substring(0, i) + "<...>" + expr.substring(i2) + "' can only accept a single " + vi.classes[k].getName() + ", not more", ErrorQuality.SEMANTIC_ERROR);
-													return null;
+													return null; 
 												}
 											}
 											if (vi.time != 0) {
 												if (e instanceof Literal<?>)
-													return null;
+													return null; 
 												if (ScriptLoader.hasDelayBefore == Kleenean.TRUE) {
 													Skript.error("Cannot use time states after the event has already passed", ErrorQuality.SEMANTIC_ERROR);
-													return null;
+													return null; 
 												}
 												if (!e.setTime(vi.time)) {
 													Skript.error(e + " does not have a " + (vi.time == -1 ? "past" : "future") + " state", ErrorQuality.SEMANTIC_ERROR);
-													return null;
+													return null; 
 												}
 											}
 											log2.printLog();
 											log.printLog();
 											res.exprs[countUnescaped(pattern, '%', 0, j) / 2] = e;
-											return res;
+											return res; //Won't happen until the whole pattern is parsed, actually
 										}
 									}
 									// results in useless errors most of the time
 //									Skript.error("'" + expr.substring(i, i2) + "' is " + notOfType(vi.classes), ErrorQuality.NOT_AN_EXPRESSION);
-									return null;
+									return null; 
 								} finally {
 									log2.printError();
 								}
@@ -1173,7 +1173,7 @@ public class SkriptParser {
 						if (!log.isStopped())
 							log.printError();
 					}
-					return null;
+					return null; 
 				}
 				case '<': {
 					end = pattern.indexOf('>', j + 1);// not next()
@@ -1196,12 +1196,12 @@ public class SkriptParser {
 								if (res != null) {
 									res.regexes.add(0, m.toMatchResult());
 									log.printLog();
-									return res;
+									return res; //Won't happen until the whole pattern is parsed, actually
 								}
 							}
 						}
 						log.printError(null);
-						return null;
+						return null; 
 					} finally {
 						log.stop();
 					}
@@ -1230,7 +1230,7 @@ public class SkriptParser {
 						j++;
 						continue;
 					} else if (expr.charAt(i) != ' ') {
-						return null;
+						return null; 
 					}
 					i++;
 					j++;
