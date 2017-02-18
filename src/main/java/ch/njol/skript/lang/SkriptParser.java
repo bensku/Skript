@@ -149,7 +149,7 @@ public class SkriptParser {
         }
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
         try {
-            final T e = new SkriptParser(expr).parse(source);
+            final T e = new SkriptParser(expr).parse(source); //Will have ti 
             if (e != null) {
                 log.printLog();
                 return e;
@@ -160,18 +160,24 @@ public class SkriptParser {
             log.stop();
         }
     }
-
+    
+    /**
+     * Parses an effect, expression or condition
+     * 
+     * @param expr the string to parse as an effect, a condition or an expression
+     * @param source An iterator containing classes extending Effect, Condition, Expression or SkriptEvent
+     */
     @Nullable
-    public final static <T extends SyntaxElement> T parseStatic(String expr, final Iterator<? extends SyntaxElementInfo<? extends T>> source, final @Nullable String defaultError) {
+    public final static <T extends SyntaxElement> T parseStatic(String expr, final Iterator<? extends SyntaxElementInfo<? extends T>> source, final @Nullable String defaultError) { //Just a static version of 'parse()' that therefore requires a string to go with.
         expr = "" + expr.trim();
-        if (expr.isEmpty()) {
+        if (expr.isEmpty()) { 
             Skript.error(defaultError);
             return null;
         }
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
-        final T e;
+        final T e; //Either Expression, Condition, Effect or SkriptEvent
         try {
-            e = new SkriptParser(expr, PARSE_LITERALS).parse(source);
+            e = new SkriptParser(expr, PARSE_LITERALS).parse(source); //Just calls the non-static method
             if (e != null) {
                 log.printLog();
                 return e;
@@ -660,9 +666,13 @@ public class SkriptParser {
         }
         return r;
     }
-
+    /**
+     * Parses a string as an Expression, a Condition, an Effect or a SkriptEvent
+     * 
+     * @param source An Iterator containing 
+     */
     @Nullable
-    private final <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) { //This method seems to rely heavily on parse_i(), so t's not really explained that good
+    private final <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) { //This method relies heavily on parse_i()
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
         try {
             while (source.hasNext()) { //Iterating over "source"
@@ -676,9 +686,9 @@ public class SkriptParser {
                         final ParseResult res = parse_i(pattern, 0, 0); //Gets the ParseResult of the current pattern
                         if (res != null) {
                             int x = -1; //Crappy variable naming
-                            for (int j = 0; (x = nextUnescaped(pattern, '%', x + 1)) != -1; j++) { //Iterating variable : j ; Continue condition : There's still more '%'s  //'x' is the index of next unescaped '%' which starts a new type
+                            for (int j = 0; (x = nextUnescaped(pattern, '%', x + 1)) != -1; j++) { //Iterating variable is j ; Continue condition : There's still more '%'s  //'x' is the index of next unescaped '%' which starts a new type
                                 final int x2 = nextUnescaped(pattern, '%', x + 1); //Gets the '%' that closes the current type
-                                if (res.exprs[j] == null) { //Will have to understand how parse_i() works before explaining this. Seems weird anyway
+                                if (res.exprs[j] == null) { //If an expression is omitted in the statement (e.g it was between '[]'). Therefore, checks all of that DefaultExpression stuff
                                     final String name = pattern.substring(x + 1, x2); //Gets the current type's name in the syntax
                                     if (!name.startsWith("-")) { //If the default value shoudn't be null
                                         final ExprInfo vi = getExprInfo(name); //Gets info about the current classinfo name
@@ -699,9 +709,9 @@ public class SkriptParser {
                                         res.exprs[j] = expr; //Edits the ParseResult's expressions
                                     }
                                 }
-                                x = x2; //Makes the searchfor '%'s in the next iteration begin after the current closing '%'
+                                x = x2; //Makes the search for '%'s in the next iteration begin after the current closing '%'
                             }
-                            final T t = info.c.newInstance(); //Creates a new instance of either an expression, an effect or a condition
+                            final T t = info.c.newInstance(); //Creates a new instance of either an expression, an effect, a condition or a SkriptEvent
                             if (t.init(res.exprs, i, ScriptLoader.hasDelayBefore, res)) { //If the SyntaxElement can be 'init'-ed sucessfully...
                                 log.printLog();
                                 return t; //... Return it
@@ -713,7 +723,7 @@ public class SkriptParser {
                 }
             }
             log.printError();
-            return null; //Returns null if no syntax of any SyntaxElement has
+            return null; //Returns null if no syntax of any SyntaxElement has been found
         } finally {
             log.stop();
         }
@@ -820,20 +830,20 @@ public class SkriptParser {
     public final <T> Expression<? extends T> parseExpression(final Class<? extends T>... types) {
         if (expr.length() == 0)
             return null;
-
+        
         assert types != null && types.length > 0;
-        assert types.length == 1 || !CollectionUtils.contains(types, Object.class);
+        assert types.length == 1 || !CollectionUtils.contains(types, Object.class); //Makes sure that the types do not contain Object and, if not, makes sure only Object is in the types
 
-        final boolean isObject = types.length == 1 && types[0] == Object.class;
+        final boolean isObject = types.length == 1 && types[0] == Object.class; //I dunno why the second check would be of any use, but hey !
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
         try {
-            //Mirre
+            //Mirre << Not by Syst3ms
             if (isObject) {
-                if ((flags & PARSE_LITERALS) != 0) {
-                    // Hack as items use '..., ... and ...' for enchantments. Numbers and times are parsed beforehand as they use the same (deprecated) id[:data] syntax.
+                if ((flags & PARSE_LITERALS) != 0) { //if 'flags' isn't PARSE_EXPRESSIONS
+                    // Hack as items use '..., ... and ...' for enchantments. Numbers and times are parsed beforehand as they use the same (deprecated) id[:data] syntax. << Not by Syst3ms
                     final SkriptParser p = new SkriptParser(expr, PARSE_LITERALS, context);
                     for (final Class<?> c : new Class[]{Number.class, Time.class, ItemType.class, ItemStack.class}) {
-                        final Expression<?> e = p.parseExpression(c);
+                        final Expression<?> e = p.parseExpression(c); //Self-calling method. Oh God. Actually it's not too bad.
                         if (e != null) {
                             log.printLog();
                             return (Expression<? extends T>) e;
@@ -843,63 +853,63 @@ public class SkriptParser {
                 }
             }
             //Mirre
-            final Expression<? extends T> r = parseSingleExpr(false, null, types);
+            final Expression<? extends T> r = parseSingleExpr(false, null, types); //Welp.
             if (r != null) {
                 log.printLog();
                 return r;
             }
             log.clear();
 
-            final List<Expression<? extends T>> ts = new ArrayList<Expression<? extends T>>();
-            Kleenean and = Kleenean.UNKNOWN;
+            final List<Expression<? extends T>> ts = new ArrayList<Expression<? extends T>>(); //Omg variable naming
+            Kleenean and = Kleenean.UNKNOWN; 
             boolean isLiteralList = true;
 
             final List<int[]> pieces = new ArrayList<int[]>();
-            {
-                final Matcher m = listSplitPattern.matcher(expr);
-                int i = 0, j = 0;
-                for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) {
-                    if (i == expr.length() || m.region(i, expr.length()).lookingAt()) {
-                        pieces.add(new int[]{j, i});
-                        if (i == expr.length())
+            { //Anonymous codeblock restricts variable scope
+                final Matcher m = listSplitPattern.matcher(expr); //A pattern that splits expression lists into each of its elements
+                int i = 0, j = 0; //The variables are declared there to be available after the 'for'. 'i' iterates over the expression string. 'j'
+                for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) { //Runs if 'i' is in between 0 and the expression's length. Each time, 'i' is set to the 'next()' character
+                    if (i == expr.length() /*The search reached the end*/ || /*or*/ m.region(i, expr.length()).lookingAt() /*The listSplitPattern matches when starting from the pos'i'*/) { 
+                        pieces.add(new int[]{j, i}); //Those will be used to substring the expression to only get the expression list. In the first iteration, 'j' = 0
+                        if (i == expr.length()) //In this case, the search can't go further
                             break;
-                        j = i = m.end();
+                        j = i = m.end(); //Sets both to the index of the end of the match so that the search can happen again without any interference
                     }
                 }
-                if (i != expr.length()) {
-                    assert i == -1 && context != ParseContext.COMMAND : i + "; " + expr;
+                if (i != expr.length()) { //Happens if 'next()' returns -1, which happens when there are invalid brackets/quotes
+                    assert i == -1 /*Just as I said*/ && context != ParseContext.COMMAND /*'next()' ignores variables, quotes and parenthesises when the ParseContext is COMMAND*/ : i + "; " + expr;
                     log.printError("Invalid brackets/variables/text in '" + expr + "'", ErrorQuality.NOT_AN_EXPRESSION);
                     return null;
                 }
             }
 
-            if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above
-                if (expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length()) {
+            if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above << Not by Syst3ms. By Syst3ms >> If the expression was only a 'and'/'or' list
+                if (expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length() /*Technically unnecessary*/) { //If the list is enclosed between '()'
                     log.clear();
                     log.printLog();
-                    return new SkriptParser(this, "" + expr.substring(1, expr.length() - 1)).parseExpression(types);
+                    return new SkriptParser(this, "" + expr.substring(1, expr.length() - 1)).parseExpression(types); //Parse the list inside the parenthesises, excluding them from the expression to avoid infinite loop
                 }
-                if (isObject && (flags & PARSE_LITERALS) != 0) { // single expression - can return an UnparsedLiteral now
+                if (isObject && (flags & PARSE_LITERALS) != 0) { // single expression - can return an UnparsedLiteral now << Not by Syst3ms. By Syst3ms >> if the expression is a single object and if 'flags' is PARSE_LITERALS or ALL_FLAGS
                     log.clear();
                     log.printLog();
-                    return (Expression<? extends T>) new UnparsedLiteral(expr, log.getError());
+                    return (Expression<? extends T>) new UnparsedLiteral(expr, log.getError()); //You should know how Literals work better than me, Bensku. Seems legit anyway
                 }
                 // results in useless errors most of the time
 //				log.printError("'" + expr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
                 log.printError();
-                return null;
+                return null; //Makes kinda sense
             }
-
-            outer:
-            for (int b = 0; b < pieces.size(); ) {
-                for (int a = pieces.size() - b; a >= 1; a--) {
-                    if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above
+           
+            outer: //Oh no. Actually it's quite descriptive
+            for (int b = 0; b < pieces.size(); ) { //Iterates over 'pieces'. The for loop doesn't increment 'b' by itself, though. It must do so in the body
+                for (int a = pieces.size() - b; a >= 1; a--) { //Seems to iterate over pieces but in the opposite order
+                    if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above << Not by Syst3ms. By Syst3ms >> The first iteration does nothing, apparently
                         continue;
-                    final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
+                    final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1]; // Stopping here for today
                     final String subExpr = "" + expr.substring(x, y).trim();
-                    assert subExpr.length() < expr.length() : subExpr;
+                    assert subExpr.length() < expr.length() : subExpr; //Obvious
 
-                    final Expression<? extends T> t;
+                    final Expression<? extends T> t; //That's how you create an expression then
 
                     if (subExpr.startsWith("(") && subExpr.endsWith(")") && next(subExpr, 0, context) == subExpr.length())
                         t = new SkriptParser(this, subExpr).parseExpression(types); // only parse as possible expression list if its surrounded by brackets
@@ -1009,7 +1019,7 @@ public class SkriptParser {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public final <T> FunctionReference<T> parseFunction(final @Nullable Class<? extends T>... types) {
+    public final <T> FunctionReference<T> parseFunction(final @Nullable Class<? extends T>... types) { //It seems that the method is made to be able to expect multiple return types
         if (context != ParseContext.DEFAULT && context != ParseContext.EVENT)
             return null; //Of course
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
@@ -1035,13 +1045,13 @@ public class SkriptParser {
                     return null;
                 }
                 if (ps instanceof ExpressionList) {
-                    if (!ps.getAnd()) {
+                    if (!ps.getAnd()) { //If the parameters is only a "'or' list"
                         Skript.error("Function arguments must be separated by commas and optionally an 'and', but not an 'or'."
                                 + " Put the 'or' into a second set of parentheses if you want to make it a single parameter, e.g. 'give(player, (sword or axe))'");
                         log.printError();
                         return null;
                     }
-                    params = ((ExpressionList<?>) ps).getExpressions();
+                    params = ((ExpressionList<?>) ps).getExpressions(); //Gets all expressions of an expression list in case there is one
                 } else {
                     params = new Expression[]{ps};
                 }
@@ -1066,13 +1076,13 @@ public class SkriptParser {
 //				}
 //			}
 //			@SuppressWarnings("null")
-            final FunctionReference<T> e = new FunctionReference<T>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
-            if (!e.validateFunction(true)) {
+            final FunctionReference<T> e = new FunctionReference<T>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()])); //We know what this does, I'm too lazy to explain it in-depth
+            if (!e.validateFunction(true)) { //If the function is wrong (can be because of it's name, return type, argument count and/or argument types). Those checks aren't done when FunctionReference is instantiated
                 log.printError();
                 return null;
             }
             log.printLog();
-            return e;
+            return e; 
         } finally {
             log.stop();
         }
