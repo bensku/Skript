@@ -149,7 +149,7 @@ public class SkriptParser {
         }
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
         try {
-            final T e = new SkriptParser(expr).parse(source); //Will have ti 
+            final T e = new SkriptParser(expr).parse(source); //Just calls the non-static method
             if (e != null) {
                 log.printLog();
                 return e;
@@ -177,7 +177,7 @@ public class SkriptParser {
         final ParseLogHandler log = SkriptLogger.startParseLogHandler();
         final T e; //Either Expression, Condition, Effect or SkriptEvent
         try {
-            e = new SkriptParser(expr, PARSE_LITERALS).parse(source); //Just calls the non-static method
+            e = new SkriptParser(expr, PARSE_LITERALS).parse(source); //Just calls the non-static method with PARSE_LITERALS
             if (e != null) {
                 log.printLog();
                 return e;
@@ -201,10 +201,12 @@ public class SkriptParser {
 
     /**
      * Prints parse errors (i.e. must start a ParseLog before calling this method)
+     *
+     * @return Whether the arguments were parsed successfully
      */
-    public static boolean parseArguments(final String args, final ScriptCommand command, final ScriptCommandEvent event) {
+    public static boolean parseArguments(final String args, final ScriptCommand command, final ScriptCommandEvent event) {//Should be quite easy
         final SkriptParser parser = new SkriptParser(args, PARSE_LITERALS, ParseContext.COMMAND);
-        final ParseResult res = parser.parse_i(command.getPattern(), 0, 0);
+        final ParseResult res = parser.parse_i(command.getPattern(), 0, 0); //I see nothing related to commands in 'parse_i'. Hmmm...
         if (res == null)
             return false;
 
@@ -827,7 +829,10 @@ public class SkriptParser {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public final <T> Expression<? extends T> parseExpression(final Class<? extends T>... types) {
+    
+    public final <T> Expression<? extends T> parseExpression(final Class<? extends T>... types) { //Parses a literal list of expressions
+        //NOTE : 'literal list' means lists like '..., ... and ...' and not multiple literals
+        
         if (expr.length() == 0)
             return null;
         
@@ -861,16 +866,28 @@ public class SkriptParser {
             log.clear();
 
             final List<Expression<? extends T>> ts = new ArrayList<Expression<? extends T>>(); //Omg variable naming
-            Kleenean and = Kleenean.UNKNOWN; 
+            /**
+             Determines what kind of literal list this expression is
+             TRUE : 'and' or 'nor' list
+             FALSE : 'or' list
+             UNKNOWN : none specified
+             */
+            Kleenean isAndList = Kleenean.UNKNOWN; 
             boolean isLiteralList = true;
-
+            
+            /*
+             * This whole part (until line 946) :
+             *   - adds to 'pieces' the beginning and ending indexes of literal list separators ("," , "and", "or" or "nor")
+             *   - Parses all elements of the literal list EXCEPT the 'and'/'or'/'nor' and the following expression
+             *   - The last separator can't be a comma
+             */
             final List<int[]> pieces = new ArrayList<int[]>();
             { //Anonymous codeblock restricts variable scope
-                final Matcher m = listSplitPattern.matcher(expr); //A pattern that splits expression lists into each of its elements
-                int i = 0, j = 0; //The variables are declared there to be available after the 'for'. 'i' iterates over the expression string. 'j'
+                final Matcher m = listSplitPattern.matcher(expr); //A pattern that matches any literal list separator
+                int i = 0, j = 0; 
                 for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) { //Runs if 'i' is in between 0 and the expression's length. Each time, 'i' is set to the 'next()' character
                     if (i == expr.length() /*The search reached the end*/ || /*or*/ m.region(i, expr.length()).lookingAt() /*The listSplitPattern matches when starting from the pos'i'*/) { 
-                        pieces.add(new int[]{j, i}); //Those will be used to substring the expression to only get the expression list. In the first iteration, 'j' = 0
+                        pieces.add(new int[]{j, i}); //j = the beginning of the literal list separator's index, i = its end index
                         if (i == expr.length()) //In this case, the search can't go further
                             break;
                         j = i = m.end(); //Sets both to the index of the end of the match so that the search can happen again without any interference
@@ -883,7 +900,7 @@ public class SkriptParser {
                 }
             }
 
-            if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above << Not by Syst3ms. By Syst3ms >> If the expression was only a 'and'/'or' list
+            if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above << Not by Syst3ms. By Syst3ms >> If the expression was only a single literal list
                 if (expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length() /*Technically unnecessary*/) { //If the list is enclosed between '()'
                     log.clear();
                     log.printLog();
@@ -894,39 +911,39 @@ public class SkriptParser {
                     log.printLog();
                     return (Expression<? extends T>) new UnparsedLiteral(expr, log.getError()); //You should know how Literals work better than me, Bensku. Seems legit anyway
                 }
+              	//Mirre start
                 // results in useless errors most of the time
-//				log.printError("'" + expr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
+//				log.printError("'" + expr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION); 
+              	//Mirre end
                 log.printError();
                 return null; //Makes kinda sense
             }
-           
-            outer: //Oh no. Actually it's quite descriptive
-            for (int b = 0; b < pieces.size(); ) { //Iterates over 'pieces'. The for loop doesn't increment 'b' by itself, though. It must do so in the body
-                for (int a = pieces.size() - b; a >= 1; a--) { //Seems to iterate over pieces but in the opposite order
-                    if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above << Not by Syst3ms. By Syst3ms >> The first iteration does nothing, apparently
-                        continue;
-                    final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1]; // Stopping here for today
+
+            outer: //Oh no. Well, actually it's quite descriptive
+            for (int b = 0; b < pieces.size(); ) { 
+                for (int a = pieces.size() - b; a >= 1; a--) { 
+                    if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above << Not by Syst3ms. By Syst3ms >> The first iteration does nothing
+                      continue;
+                    final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
                     final String subExpr = "" + expr.substring(x, y).trim();
                     assert subExpr.length() < expr.length() : subExpr; //Obvious
-
                     final Expression<? extends T> t; //That's how you create an expression then
-
                     if (subExpr.startsWith("(") && subExpr.endsWith(")") && next(subExpr, 0, context) == subExpr.length())
-                        t = new SkriptParser(this, subExpr).parseExpression(types); // only parse as possible expression list if its surrounded by brackets
-                    else
+                        t = new SkriptParser(this, subExpr).parseExpression(types); // parse as a literal list if its surrounded by brackets
+                    else 
                         t = new SkriptParser(this, subExpr).parseSingleExpr(a == 1, log.getError(), types); // otherwise parse as a single expression only
                     if (t != null) {
-                        isLiteralList &= t instanceof Literal;
-                        ts.add(t);
+                        isLiteralList &= t instanceof Literal; //Same as 'isLiteralList = isLiteralList && t instanceof Literal'
+                        ts.add(t); //Add to the expression list
                         if (b != 0) {
                             final String d = expr.substring(pieces.get(b - 1)[1], x).trim();
                             if (!d.equals(",")) {
-                                if (and.isUnknown()) {
-                                    and = Kleenean.get(!d.equalsIgnoreCase("or")); // nor is and
+                                if (isAndList.isUnknown()) {
+                                    isAndList = Kleenean.get(!d.equalsIgnoreCase("or")); // nor == and
                                 } else {
-                                    if (and != Kleenean.get(!d.equalsIgnoreCase("or"))) {
+                                    if (isAndList != Kleenean.get(!d.equalsIgnoreCase("or"))) {
                                         Skript.warning(MULTIPLE_AND_OR + " List: " + expr);
-                                        and = Kleenean.TRUE;
+                                        isAndList = Kleenean.TRUE;
                                     }
                                 }
                             }
@@ -936,66 +953,19 @@ public class SkriptParser {
                     }
                 }
                 log.printError();
-                return null;
+                return null; //Most likely means the parsing above has fucked up
             }
-
-//			String lastExpr = expr;
-//			int end = expr.length();
-//			int expectedEnd = -1;
-//			boolean last = false;
-//			while (m.find() || (last = !last)) {
-//				if (expectedEnd == -1) {
-//					if (last)
-//						break;
-//					expectedEnd = m.start();
-//				}
-//				final int start = last ? 0 : m.end();
-//				final Expression<? extends T> t;
-//				if (context != ParseContext.COMMAND && (start < expr.length() && expr.charAt(start) == '(' || end - 1 > 0 && expr.charAt(end - 1) == ')')) {
-//					if (start < expr.length() && expr.charAt(start) == '(' && end - 1 > 0 && expr.charAt(end - 1) == ')' && next(expr, start, context) == end)
-//						t = new SkriptParser(lastExpr = "" + expr.substring(start + 1, end - 1), flags, context).parseExpression(types);
-//					else
-//						t = null;
-//				} else {
-//					t = new SkriptParser(lastExpr = "" + expr.substring(start, end), flags, context).parseSingleExpr(types);
-//				}
-//				if (t != null) {
-//					isLiteralList &= t instanceof Literal;
-//					if (!last && m.group(1) != null) {
-//						if (and.isUnknown()) {
-//							and = Kleenean.get(!m.group(1).equalsIgnoreCase("or")); // nor is and
-//						} else {
-//							if (and != Kleenean.get(!m.group(1).equalsIgnoreCase("or"))) {
-//								Skript.warning(MULTIPLE_AND_OR);
-//								and = Kleenean.TRUE;
-//							}
-//						}
-//					}
-//					ts.addFirst(t);
-//					if (last)
-//						break;
-//					end = m.start();
-//					m.region(0, end);
-//				} else {
-//					log.clear();
-//					if (last)
-//						end = -2; // fails the test below
-//				}
-//			}
-//			if (end != expectedEnd) {
-//				log.printError("'" + lastExpr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
-//				return null;
-//			}
 
             log.printLog();
 
-            if (ts.size() == 1)
-                return ts.get(0);
+            if (ts.size() == 1) //That'll make sense with what follows, I guess
+                return ts.get(0); 
 
-            if (and.isUnknown() && !suppressMissingAndOrWarnings)
+            if (and.isUnknown() && !suppressMissingAndOrWarnings) //If the literal list hasn't any type specified and the corresponding warnings are enabled
                 Skript.warning(MISSING_AND_OR + ": " + expr);
 
-            final Class<? extends T>[] exprRetTypes = new Class[ts.size()];
+            final Class<? extends T>[] exprRetTypes = new Class[ts.size()]; //Stores the return types of each expression
+            //TODO replace with final Class<? extends T>[] exprRetTypes = ts.stream().map(expr -> expr.getReturnType()).toArray(Class<? extends T>[]::new);
             for (int i = 0; i < ts.size(); i++)
                 exprRetTypes[i] = ts.get(i).getReturnType();
 
@@ -1059,23 +1029,6 @@ public class SkriptParser {
                 params = new Expression[0];
             }
 
-//			final List<Expression<?>> params = new ArrayList<Expression<?>>();
-//			if (args.length() != 0) {
-//				final int p = 0;
-//				int j = 0;
-//				for (int i = 0; i != -1 && i <= args.length(); i = next(args, i, context)) {
-//					if (i == args.length() || args.charAt(i) == ',') {
-//						final Expression<?> e = new SkriptParser("" + args.substring(j, i).trim(), flags | PARSE_LITERALS, context).parseExpression(function.getParameter(p).getType().getC());
-//						if (e == null) {
-//							log.printError("Can't understand this expression: '" + args.substring(j, i) + "'", ErrorQuality.NOT_AN_EXPRESSION);
-//							return null;
-//						}
-//						params.add(e);
-//						j = i + 1;
-//					}
-//				}
-//			}
-//			@SuppressWarnings("null")
             final FunctionReference<T> e = new FunctionReference<T>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()])); //We know what this does, I'm too lazy to explain it in-depth
             if (!e.validateFunction(true)) { //If the function is wrong (can be because of it's name, return type, argument count and/or argument types). Those checks aren't done when FunctionReference is instantiated
                 log.printError();
@@ -1313,7 +1266,7 @@ public class SkriptParser {
                         if (stringPosition == expr.length()) { //If 'stringPosition' is the end of the string
                             patternPosition = pattern.length(); //Make 'patternPosition' go to the end of the pattern
                             break;
-                        } else { //This part is really confusing me. Maybe having no group makes lonely pipes behave as if they were in a group ? It seems like it
+                        } else { //This part is really confusing me. Maybe having no group makes lonely pipes behave as if they were in a group ? It seems like it. Does the same in regex
                             stringPosition = 0; //Reset the string position ?
                             patternPosition++; //Go to the next pattern character
                             continue;
