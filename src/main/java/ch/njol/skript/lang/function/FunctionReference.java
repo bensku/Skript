@@ -52,6 +52,7 @@ public class FunctionReference<T> {
 	private Signature<? extends T> signature;
 	
 	private boolean singleUberParam;
+	@Nullable
 	private final Expression<?>[] parameters;
 	
 	private boolean single;
@@ -63,12 +64,12 @@ public class FunctionReference<T> {
 	@Nullable
 	public final File script;
 	
-	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
+	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, @Nullable final Expression<?>[] params) {
 		this.functionName = functionName;
 		this.node = node;
 		this.script = script;
 		this.returnTypes = returnTypes;
-		parameters = params;
+		this.parameters = params;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -115,52 +116,55 @@ public class FunctionReference<T> {
 			}
 		}
 		
-		// check number of parameters only if the function does not have a single parameter that accepts multiple values
-		singleUberParam = sign.getMaxParameters() == 1 && !sign.getParameter(0).single;
-		if (!singleUberParam) {
-			if (parameters.length > sign.getMaxParameters()) {
-				if (first) {
-					if (sign.getMaxParameters() == 0)
-						Skript.error("The function '" + functionName + "' has no arguments, but " + parameters.length + " are given."
-								+ " To call a function without parameters, just write the function name followed by '()', e.g. 'func()'.");
-					else
-						Skript.error("The function '" + functionName + "' has only " + sign.getMaxParameters() + " argument" + (sign.getMaxParameters() == 1 ? "" : "s") + ","
-								+ " but " + parameters.length + " are given."
-								+ " If you want to use lists in function calls, you have to use additional parentheses, e.g. 'give(player, (iron ore and gold ore))'");
-				} else {
-					Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
-							+ " These will continue to use the old version of the function until Skript restarts.");
-				}
-				return false;
-			}
-		}
-		if (parameters.length < sign.getMinParameters()) {
-			if (first)
-				Skript.error("The function '" + functionName + "' requires at least " + sign.getMinParameters() + " argument" + (sign.getMinParameters() == 1 ? "" : "s") + ","
-						+ " but only " + parameters.length + " " + (parameters.length == 1 ? "is" : "are") + " given.");
-			else
-				Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
-						+ " These will continue to use the old version of the function until Skript restarts.");
-			return false;
-		}
-		for (int i = 0; i < parameters.length; i++) {
-			final Parameter<?> p = sign.parameters.get(singleUberParam ? 0 : i);
-			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
-			try {
-				final Expression<?> e = parameters[i].getConvertedExpression(p.type.getC());
-				if (e == null) {
-					if (first)
-						Skript.error("The " + StringUtils.fancyOrderNumber(i + 1) + " argument given to the function '" + functionName + "' is not of the required type " + p.type + "."
-								+ " Check the correct order of the arguments and put lists into parentheses if appropriate (e.g. 'give(player, (iron ore and gold ore))')."
-								+ " Please note that storing the value in a variable and then using that variable as parameter will suppress this error, but it still won't work.");
-					else
-						Skript.error("The function '" + functionName + "' was redefined with different, incompatible arguments, but is still used in other script(s)."
+
+		if (sign.parameters.size() > 0 && parameters.length > 0) {
+			// check number of parameters only if the function does not have a single parameter that accepts multiple values
+			singleUberParam = sign.getMaxParameters() == 1 && !sign.getParameter(0).single;
+			if (!singleUberParam) {
+				if (parameters.length > sign.getMaxParameters()) {
+					if (first) {
+						if (sign.getMaxParameters() == 0)
+							Skript.error("The function '" + functionName + "' has no arguments, but " + parameters.length + " are given."
+									+ " To call a function without parameters, just write the function name followed by '()', e.g. 'func()'.");
+						else
+							Skript.error("The function '" + functionName + "' has only " + sign.getMaxParameters() + " argument" + (sign.getMaxParameters() == 1 ? "" : "s") + ","
+									+ " but " + parameters.length + " are given."
+									+ " If you want to use lists in function calls, you have to use additional parentheses, e.g. 'give(player, (iron ore and gold ore))'");
+					} else {
+						Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
 								+ " These will continue to use the old version of the function until Skript restarts.");
+					}
 					return false;
 				}
-				parameters[i] = e;
-			} finally {
-				log.printLog();
+			}
+			if (parameters.length < sign.getMinParameters()) {
+				if (first)
+					Skript.error("The function '" + functionName + "' requires at least " + sign.getMinParameters() + " argument" + (sign.getMinParameters() == 1 ? "" : "s") + ","
+							+ " but only " + parameters.length + " " + (parameters.length == 1 ? "is" : "are") + " given.");
+				else
+					Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
+							+ " These will continue to use the old version of the function until Skript restarts.");
+				return false;
+			}
+			for (int i = 0; i < parameters.length; i++) {
+				final Parameter<?> p = sign.parameters.get(singleUberParam ? 0 : i);
+				final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+				try {
+					final Expression<?> e = parameters[i].getConvertedExpression(p.type.getC());
+					if (e == null) {
+						if (first)
+							Skript.error("The " + StringUtils.fancyOrderNumber(i + 1) + " argument given to the function '" + functionName + "' is not of the required type " + p.type + "."
+									+ " Check the correct order of the arguments and put lists into parentheses if appropriate (e.g. 'give(player, (iron ore and gold ore))')."
+									+ " Please note that storing the value in a variable and then using that variable as parameter will suppress this error, but it still won't work.");
+						else
+							Skript.error("The function '" + functionName + "' was redefined with different, incompatible arguments, but is still used in other script(s)."
+									+ " These will continue to use the old version of the function until Skript restarts.");
+						return false;
+					}
+					parameters[i] = e;
+				} finally {
+					log.printLog();
+				}
 			}
 		}
 		
@@ -176,10 +180,9 @@ public class FunctionReference<T> {
 	protected T[] execute(final Event e) {
 		if (function == null)
 			function = (Function<? extends T>) Functions.getFunction(functionName);
-		
 		final Object[][] params = new Object[singleUberParam ? 1 : parameters.length][];
 		if (singleUberParam && parameters.length > 1) {
-			final ArrayList<Object> l = new ArrayList<Object>();
+			final ArrayList<Object> l = new ArrayList<>();
 			for (int i = 0; i < params.length; i++)
 				l.addAll(Arrays.asList(parameters[i].getArray(e))); // TODO what if an argument is not available? pass null or abort?
 			params[0] = l.toArray();
@@ -200,7 +203,6 @@ public class FunctionReference<T> {
 		if (signature == null) {
 			throw new SkriptAPIException("Signature of function is null when return type is asked!");
 		}
-		assert signature != null;
 		@SuppressWarnings("null") // Wait what, Eclipse? Already asserted this...
 		ClassInfo<? extends T> ret = signature.returnType;
 		return (Class<? extends T>) (ret == null ? Unknown.class : ret.getC());
