@@ -21,14 +21,12 @@
 
 package ch.njol.skript.lang.function;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.util.NonNullPair;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Function signature: name, parameter types and a return type.
@@ -37,6 +35,7 @@ public class Signature<T> {
 	
 	final String script;
 	final String name; // Stored for hashCode
+	@Nullable
 	final List<Parameter<?>> parameters;
 	@Nullable
 	final ClassInfo<T> returnType;
@@ -59,12 +58,13 @@ public class Signature<T> {
 	}
 	
 	@SuppressWarnings("null")
+	@Nullable
 	public Parameter<?> getParameter(final int index) {
-		return parameters.get(index);
+		return !parameters.isEmpty() ? parameters.get(index) : null;
 	}
 	
 	public List<Parameter<?>> getParameters() {
-		return parameters;
+		return !parameters.isEmpty() ? parameters : Collections.emptyList();
 	}
 	
 	@Nullable
@@ -81,6 +81,8 @@ public class Signature<T> {
 	}
 	
 	public int getMinParameters() {
+		if (parameters.isEmpty())
+			return 0;
 		for (int i = parameters.size() - 1; i >= 0; i--) {
 			if (parameters.get(i).def == null)
 				return i + 1;
