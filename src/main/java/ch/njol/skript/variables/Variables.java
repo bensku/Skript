@@ -21,28 +21,6 @@
 
 package ch.njol.skript.variables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -61,6 +39,21 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.SynchronizedReference;
 import ch.njol.yggdrasil.Yggdrasil;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -105,10 +98,10 @@ public abstract class Variables {
 		});
 	}
 	
-	static List<VariablesStorage> storages = new ArrayList<VariablesStorage>();
+	static List<VariablesStorage> storages = new ArrayList<>();
 	
 	public static boolean load() {
-		assert variables.treeMap.isEmpty();
+		assert variables.linkedHashMap.isEmpty();
 		assert variables.hashMap.isEmpty();
 		assert storages.isEmpty();
 		
@@ -242,13 +235,13 @@ public abstract class Variables {
 	/**
 	 * Not accessed concurrently
 	 */
-	private final static WeakHashMap<Event, VariablesMap> localVariables = new WeakHashMap<Event, VariablesMap>();
+	private final static WeakHashMap<Event, VariablesMap> localVariables = new WeakHashMap<>();
 	
 	/**
 	 * Remember to lock with {@link #getReadLock()} and to not make any changes!
 	 */
-	static TreeMap<String, Object> getVariables() {
-		return variables.treeMap;
+	static LinkedHashMap<String, Object> getVariables() {
+		return variables.linkedHashMap;
 	}
 	
 	/**
@@ -332,7 +325,7 @@ public abstract class Variables {
 	 * <p>
 	 * Access must be synchronised.
 	 */
-	final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>>(new HashMap<String, NonNullPair<Object, VariablesStorage>>());
+	final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<>(new HashMap<>());
 	
 	private static final int MAX_CONFLICT_WARNINGS = 50;
 	private static int loadConflicts = 0;
@@ -366,7 +359,7 @@ public abstract class Variables {
 						Skript.warning("[!] More than " + MAX_CONFLICT_WARNINGS + " variables were loaded more than once from different databases, no more warnings will be printed.");
 					v.getSecond().save(name, null, null);
 				}
-				tvs.put(name, new NonNullPair<Object, VariablesStorage>(value, source));
+				tvs.put(name, new NonNullPair<>(value, source));
 				return false;
 			}
 		}
@@ -443,7 +436,7 @@ public abstract class Variables {
 		queue.add(serialize(name, value));
 	}
 	
-	final static BlockingQueue<SerializedVariable> queue = new LinkedBlockingQueue<SerializedVariable>();
+	final static BlockingQueue<SerializedVariable> queue = new LinkedBlockingQueue<>();
 	
 	static volatile boolean closed = false;
 	
