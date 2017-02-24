@@ -73,65 +73,162 @@ public abstract class Variables {
 				init(); // separate method for the annotation
 			}
 			
-			@SuppressWarnings("unchecked")
-			private final void init() {
-				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+/*
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * Copyright 2011, 2012 Peter Güttinger
+ * 
+ */
+
+package ch.njol.skript.variables;
+
+import ch.njol.skript.lang.Variable;
+import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+final class VariablesMap {
+	
+	final HashMap<String, Object> hashMap = new HashMap<>();
+	final LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+	
+	/**
+	 * Returns the internal value of the requested variable.
+	 * <p>
+	 * <b>Do not modify the returned value!</b>
+	 * 
+	 * @param name
+	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
+	 */
+	@SuppressWarnings("unchecked")
+	@Nullable
+	final Object getVariable(final String name) {
+		if (!name.endsWith("*")) {
+			return hashMap.get(name);
+		} else {
+			final String[] split = Variables.splitVariableName(name);
+			Map<String, Object> current = linkedHashMap;
+			for (int i = 0; i < split.length; i++) {
+				final String n = split[i];
+				if (n.equals("*")) {
+					assert i == split.length - 1;
+					return current;
+				}
+				final Object o = current.get(n);
+				if (o == null)
+					return null;
+				if (o instanceof Map) {
+					current = (Map<String, Object>) o;
+					assert i != split.length - 1;
+				} else {
+					return null;
+				}
 			}
-			
-			@SuppressWarnings({"unchecked"})
-			@Override
-			@Nullable
-			public String getID(final @NonNull Class<?> c) {
-				if (ConfigurationSerializable.class.isAssignableFrom(c) && Classes.getSuperClassInfo(c) == Classes.getExactClassInfo(Object.class))
-					return configurationSerializablePrefix + ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) c);
-				return null;
-			}
-			
-			@Override
-			@Nullable
-			public Class<? extends ConfigurationSerializable> getClass(final @NonNull String id) {
-				if (id.startsWith(configurationSerializablePrefix))
-					return ConfigurationSerialization.getClassByAlias(id.substring(configurationSerializablePrefix.length()));
-				return null;
-			}
-		});
+			return null;
+		}
 	}
 	
-	static List<VariablesStorage> storages = new ArrayList<>();
-	
-	public static boolean load() {
-		assert variables.linkedHashMap.isEmpty();
-		assert variables.hashMap.isEmpty();
-		assert storages.isEmpty();
-		
-		final Config c = SkriptConfig.getConfig();
-		if (c == null)
-			throw new SkriptAPIException("Cannot load variables before the config");
-		final Node databases = c.getMainNode().get("databases");
-		if (databases == null || !(databases instanceof SectionNode)) {
-			Skript.error("The config is missing the required 'databases' section that defines where the variables are saved");
-			return false;
+	/**
+	 * Sets a variable.
+	 * 
+	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
+	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
+	 */
+	@SuppressWarnings("unchecked")
+	final void setVariable(final String name, final @Nullable Object value) {
+		if (!name.endsWith("*")) {
+			if (value == null)
+				hashMap.remove(name);
+			else
+				hashMap.put(name, value);
 		}
-		
-		Skript.closeOnDisable(new Closeable() {
-			@Override
-			public void close() {
-				Variables.close();
+		final String[] split = Variables.splitVariableName(name);
+		LinkedHashMap<String, Object> parent = linkedHashMap;
+		for (int i = 0; i < split.length; i++) {
+			final String n = split[i];
+			Object current = parent.get(n);
+			if (current == null) {
+				if (i == split.length - 1) {
+					if (value != null)
+						parent.put(n, value);
+					break;
+				} else if (value != null) {
+					parent.put(n, current = new LinkedHashMap<>());
+					parent = (LinkedHashMap<String, Object>) current;
+				} else {
+					break;
+				}
+			} else if (current instanceof LinkedHashMap) {
+				if (i == split.length - 1) {
+					if (value == null)
+						((HashMap<String, Object>) current).remove(null);
+					else
+						((HashMap<String, Object>) current).put(null, value);
+					break;
+				} else if (i == split.length - 2 && split[i + 1].equals("*")) {
+					assert value == null;
+					deleteFromHashMap(StringUtils.join(split, Variable.SEPARATOR, 0, i + 1), (HashMap<String, Object>) current);
+					final Object v = ((HashMap<String, Object>) current).get(null);
+					if (v == null)
+						parent.remove(n);
+					else
+						parent.put(n, v);
+					break;
+				} else {
+					parent = (LinkedHashMap<String, Object>) current;
+				}
+			} else {
+				if (i == split.length - 1) {
+					if (value == null)
+						parent.remove(n);
+					else
+						parent.put(n, value);
+					break;
+				} else if (value != null) {
+					final LinkedHashMap<String, Object> c = new LinkedHashMap<>();
+					c.put(null, current);
+					parent.put(n, c);
+					parent = c;
+				} else {
+					break;
+				}
 			}
-		});
-		
-		// reports once per second how many variables were loaded. Useful to make clear that Skript is still doing something if it's loading many variables
-		final Thread loadingLoggerThread = new Thread() {
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(Skript.logNormal() ? 1000 : 5000); // low verbosity won't disable these messages, but makes them more rare
-					} catch (final InterruptedException e) {}
-					synchronized (tempVars) {
-						final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
-						if (tvs != null)
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	void deleteFromHashMap(final String parent, final LinkedHashMap<String, Object> current) {
+		for (final Entry<String, Object> e : current.entrySet()) {
+			if (e.getKey() == null)
+				continue;
+			hashMap.remove(parent + Variable.SEPARATOR + e.getKey());
+			final Object val = e.getValue();
+			if (val instanceof LinkedHashMap) {
+				deleteFromHashMap(parent + Variable.SEPARATOR + e.getKey(), (LinkedHashMap<String, Object>) val);
+			}
+		}
+	}
+	
+}
+
 							Skript.info("Loaded " + tvs.size() + " variables so far...");
 						else
 							break;
