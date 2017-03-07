@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2016 Peter Güttinger and contributors
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.expressions;
 
 import java.util.Arrays;
@@ -66,7 +64,20 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] sorted = list.getAll(e).clone(); // Not yet sorted
+		Object[] unsorted = list.getAll(e);
+		Object[] sorted = new Object[unsorted.length]; // Not yet sorted...
+		
+		for (int i = 0; i < sorted.length; i++) {
+			Object value = unsorted[i];
+			if (value instanceof Long) {
+				// Hope it fits to the double...
+				sorted[i] = new Double(((Long) value).longValue());
+			} else {
+				// No conversion needed
+				sorted[i] = value;
+			}
+		}
+		
 		try {
 			Arrays.sort(sorted); // Now sorted
 		} catch (IllegalArgumentException ex) { // In case elements are not comparable

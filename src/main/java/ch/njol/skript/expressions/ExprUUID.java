@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.expressions;
 
 import org.bukkit.OfflinePlayer;
@@ -50,11 +48,11 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"		kick player due to \"Someone with your name has played on this server before\"",
 		"	else:",
 		"		set {uuids.%name of player%} to UUID of player"})
-@Since("2.1.2, 2.2 (offline players' UUIDs), 2.2-dev24 (entitiy's UUIDs)")
+@Since("2.1.2, 2.2 (offline players' UUIDs), 2.2-dev24 (other entities' UUIDs)")
 public class ExprUUID extends SimplePropertyExpression<Object, String> {
 	private final static boolean offlineUUIDSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
 	static {
-		register(ExprUUID.class, String.class, "UUID", "entities/" + (offlineUUIDSupported ? "offlineplayers" : "players") + "/worlds");
+		register(ExprUUID.class, String.class, "UUID", (offlineUUIDSupported ? "offlineplayers" : "players") + "/worlds/entities");
 	}
 	
 	@Override

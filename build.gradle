@@ -1,5 +1,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
 
@@ -22,6 +26,10 @@ repositories {
 		url 'http://maven.sk89q.com/repo'
 	}
 
+	maven {
+		url 'https://mvn.yawk.at'
+	}
+
 //	maven {
 //		url 'http://nexus.theyeticave.net/content/repositories/pub_releases'
 //	}
@@ -34,6 +42,7 @@ dependencies {
 	compile 'de.slikey:EffectLib:5.0'
 	compile 'com.sk89q:worldguard:6.1.1-SNAPSHOT'
 	compile 'net.milkbowl.vault:Vault:1.5.3'
+	compile 'net.sacredlabyrinth.Phaed:PreciousStones:10.0.5'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.easymock:easymock:3.4'
@@ -55,6 +64,10 @@ processResources {
 
 jar {
 	archiveName System.getenv('SKRIPT_JAR_NAME') == null ? 'Skript.jar' : System.getenv("SKRIPT_JAR_NAME")
+}
+
+license {
+    header file('licenseheader.txt')
 }
 
 configurations {

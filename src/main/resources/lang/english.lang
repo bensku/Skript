@@ -235,7 +235,7 @@ enchantments:
 		frost_walker: Frost Walker
 		vanishing_curse: Curse of Vanishing
 		binding_curse: Curse of Binding
-		sweeping_edge: Sweeping Edge
+		sweeping: Sweeping Edge
 
 # -- Potion Effects --
 potions:

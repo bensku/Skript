@@ -1,4 +1,4 @@
-#! VERSION: 2.0.1!
+#! VERSION: 2.0.5!
 
 #Clean up, ID order and updated by tim740, I will be updating this from now on!
 #Check out my other content here: https://tim740.github.io/
@@ -233,7 +233,7 @@ default aliases:
 	{stairs direction no default} {stairs} stair[s] = :
 	{stairs direction} {stairs} stair[s] (block|item)¦s = :
 
-	# -- doors, trapdoors and fence gates --
+	# -- doors, trapdoors and fence(_| )gates --
 	# I currently discourage from creating aliases like 'open door' or doors with specific facings
 	# as any 'block is <alias>' condition will fail if you click the wrong part of the door.
 	# 'set <block> to door:1' will correctly place an open door though.
@@ -317,13 +317,11 @@ default aliases:
 		<any> = :0-15
 
 #End
+
 	# -- 1.11 --
 	observer¦s = 218
-	totem(_| )of(_| )Undying¦s = 449
-	shulker(_| )shell¦s = 450
-	treasure(_| )map¦s = 358
 
-	[white(_| )]shulker(_| )(box|chest)¦s = 219
+	white(_| )shulker(_| )(box|chest)¦s = 219
 	orange(_| )shulker(_| )(box|chest)¦s = 220
 	magenta(_| )shulker(_| )(box|chest)¦s = 221
 	light(_| )blue(_| )shulker(_| )(box|chest)¦s = 222
@@ -333,13 +331,18 @@ default aliases:
 	gray(_| )shulker(_| )(box|chest)¦s = 226
 	light(_| )gray(_| )shulker(_| )(box|chest)¦s = 227
 	cyan(_| )shulker(_| )(box|chest)¦s = 228
-	purple(_| )shulker(_| )(box|chest)¦s = 229
+	[purple(_| )]shulker(_| )(box|chest)¦s = 229
 	blue(_| )shulker(_| )(box|chest)¦s = 230
 	brown(_| )shulker(_| )(box|chest)¦s = 231
 	green(_| )shulker(_| )(box|chest)¦s = 232
 	red(_| )shulker(_| )(box|chest)¦s = 233
 	black(_| )shulker(_| )(box|chest)¦s = 234
-	any(_| )shulker(_| )(box|chest)¦s = 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234
+	[<any>](_| )shulker(_| )(box|chest)¦s = 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234
+
+	treasure(_| )map¦s = 358
+	totem(_| )of(_| )Undying¦s = 449
+	shulker(_| )shell¦s = 450
+	iron(_| )nugget¦s = 452
 
 	# -- 1.10 --
 	magma(_| )block¦s = 213
@@ -394,16 +397,22 @@ default aliases:
 	diamond(_| )armo[u]r¦s = 310, 311, 312, 313
 	gold(_| )armo[u]r¦s= 314, 315, 316, 317
 
-	any(_| )helmet = 298, 302, 306, 310, 314
-	any(_| )chestplate = 299, 303, 307, 311, 315
-	any(_| )leggings = 300, 304, 308, 312, 316
-	any(_| )boots = 301, 305, 309, 313, 317
+	[<any>](_| )helmet = 298, 302, 306, 310, 314
+	[<any>](_| )chestplate = 299, 303, 307, 311, 315
+	[<any>](_| )leggings = 300, 304, 308, 312, 316
+	[<any>](_| )boots = 301, 305, 309, 313, 317
 
-	any(_| )sword = 268, 272, 283, 267, 276
-	any(_| )pickaxe = 257, 270, 274, 278, 285
-	any(_| )axe = 258, 271, 275, 279, 286
-	any(_| )shovel = 256, 269, 273, 277, 284
-	any(_| )hoe = 290, 291, 292, 293, 294
+	[<any>](_| )sword = 268, 272, 283, 267, 276
+	[<any>](_| )pickaxe = 257, 270, 274, 278, 285
+	[<any>](_| )axe = 258, 271, 275, 279, 286
+	[<any>](_| )shovel = 256, 269, 273, 277, 284
+	[<any>](_| )hoe = 290, 291, 292, 293, 294
+
+	[<any>](_| )fence(_| )gate¦s = 107, 183, 184, 185, 186, 187
+	[<any>](_| )trapdoor¦s = 96, 167
+	[<any>](_| )normal(_| )pressure(_| )plate¦s = 70, 72
+	[<any>](_| )weight(_| )pressure(_| )plate¦s = 147, 148
+	[<any>](_| )pressure(_| )plate¦s = 70, 72, 147, 148
 
 	# IN ID ORDER STARTING NOW
 	(air|nothing|none|empty) @- = 0
@@ -447,7 +456,7 @@ default aliases:
 	falling(_| )lava = 10:8, 11:8
 	moving(_| )lava = 10:1-8, 11:1-8
 
-	<any>(_| )sand = 12:0-1
+	[<any>](_| )sand = 12:0-1
 	sand = 12
 	normal(_| )sand = 12:0
 	redsand(_| )= 12:1
@@ -466,18 +475,18 @@ default aliases:
 	{log direction}(_| )log(_| )<item/block> = 17, 162
 
 
-	any(_| )oak(_| )leaves = 18, 18:4, 18:8, 18:12
-	any(_| )spruce(_| )leaves = 18:1, 18:5, 18:9, 18:13
-	any(_| )birch(_| )leaves = 18:2, 18:6, 18:10, 18:14
-	any(_| )jungle(_| )leaves = 18:3, 18:7, 18:11, 18:15
-	any(_| )acacia(_| )leaves = 161, 161:4, 161:8, 161:12
-	any(_| )dark(_| )oak(_| )leaves = 161:1, 161:5, 161:9, 161:13
+	[<any>](_| )oak(_| )leaves = 18, 18:4, 18:8, 18:12
+	[<any>](_| )spruce(_| )leaves = 18:1, 18:5, 18:9, 18:13
+	[<any>](_| )birch(_| )leaves = 18:2, 18:6, 18:10, 18:14
+	[<any>](_| )jungle(_| )leaves = 18:3, 18:7, 18:11, 18:15
+	[<any>](_| )acacia(_| )leaves = 161, 161:4, 161:8, 161:12
+	[<any>](_| )dark(_| )oak(_| )leaves = 161:1, 161:5, 161:9, 161:13
 
-	any(_| )leaves = 18:0-15, 161:0-1, 161:4-5, 161:8-9, 161:12-13
-	any(_| )normal(_| )leaves = 18:0-3, 161:0-1
-	any(_| )undecaying(_| )leaves = 18:4-7, 161:4-5
-	any(_| )decaying(_| )leaves = 18:8-11, 161:8-9
-	any(_| )decaying(_| )undecaying(_| )leaves = 18:12-15, 161:12-13
+	[<any>](_| )leaves = 18:0-15, 161:0-1, 161:4-5, 161:8-9, 161:12-13
+	[<any>](_| )normal(_| )leaves = 18:0-3, 161:0-1
+	[<any>](_| )undecaying(_| )leaves = 18:4-7, 161:4-5
+	[<any>](_| )decaying(_| )leaves = 18:8-11, 161:8-9
+	[<any>](_| )decaying(_| )undecaying(_| )leaves = 18:12-15, 161:12-13
 
 	oak(_| )leaves = 18
 	spruce(_| )leaves = 18:1
@@ -529,7 +538,7 @@ default aliases:
 	bed(_| )item¦s = 355
 	(head|top)(_| )bed(_| )block = 26:8-15
 	(foot|bottom)(_| )bed(_| )block = 26:0-7
-	any(_| )bed¦s = 26, 355
+	[<any>](_| )bed¦s = 26, 355
 
 #power rail=27 detector rail=28
 
@@ -539,7 +548,7 @@ default aliases:
 
 	cobweb¦s = 30
 
-	any(_| )tall(_| )grass = 31:1-2
+	[<any>](_| )tall(_| )grass = 31:1-2
 	dead(_| )grass = 31:0
 	(tall|long)(_| )grass = 31:1
 	fern¦s = 31:2
@@ -548,12 +557,12 @@ default aliases:
 
 	piston(_| )base¦s = 33
 	extended(_| )piston(_| )base¦s = 33:8-13
-	any(_| )piston(_| )base¦s = 33, 29
-	any(_| )piston¦s = 29, 33, 34
+	[<any>](_| )piston(_| )base¦s = 33, 29
+	[<any>](_| )piston¦s = 29, 33, 34
 	retracted(_| )piston¦s = 33:0-5
 	piston(_| )extension¦s = 34:0-5
 	sticky(_| )piston(_| )extension¦s = 34:8-13
-	any(_| )piston(_| )extension¦s = 34
+	[<any>](_| )piston(_| )extension¦s = 34
 
 	white(_| )wool(_| )block = 35
 	orange(_| )wool(_| )block = 35:1
@@ -571,7 +580,7 @@ default aliases:
 	[dark(_| )]green(_| )wool(_| )block = 35:13
 	red(_| )wool(_| )block = 35:14
 	black(_| )wool(_| )block = 35:15
-	any(_| )wool(_| )block = 35:0-15
+	[<any>](_| )wool(_| )block = 35:0-15
 
 	block(_| )36 = 36
 	block(_| )moved(_| )by(_| )piston = 36
@@ -756,7 +765,7 @@ default aliases:
 	4-tick[-delay](_| )redstone(_| )repeater(_| )on = 94:12-15
 
 	redstone(_| )repeater(_| )item = 356
-	any(_| )redstone(_| )repeater = 356, 93, 94
+	[<any>](_| )redstone(_| )repeater = 356, 93, 94
 
 	white(_| )glass(_| )block = 95
 	orange(_| )glass(_| )block = 95:1
@@ -774,7 +783,7 @@ default aliases:
 	[dark(_| )]green(_| )glass(_| )block = 95:13
 	red(_| )glass(_| )block = 95:14
 	black(_| )glass(_| )block = 95:15
-	any(_| )glass(_| )block = 95:0-15
+	[<any>](_| )glass(_| )block = 95:0-15
 
 	oak trapdoor¦s = 96
 	open[ed] oak trapdoor¦s = 96:4-7
@@ -787,7 +796,7 @@ default aliases:
 	[hidden](_| )stone(_| )brick[s](_| )silverfish¦es = 97:2
 
 	stone(_| )brick¦s = 98:0-3
-	<any>(_| )stone(_| )brick¦s = 98:0-3
+	[<any>](_| )stone(_| )brick¦s = 98:0-3
 	stone(_| )brick[s](_| )(item|block)¦s = 98:0
 	smooth(_| )[stone](_| )brick¦s = 98:0
 	mossy(_| )[stone](_| )brick¦s = 98:1
@@ -814,9 +823,9 @@ default aliases:
 	quadruple(_| )vine[s] = 106:15
 
 	#oak
-	oak fence gate¦s = 107
-	open[ed] oak fence gate¦s = 107:4-7
-	closed oak fence gate¦s = 107:0-3
+	oak(_| )fence(_| )gate¦s = 107
+	open[ed](_| )oak(_| )fence(_| )gate¦s = 107:4-7
+	closed(_| )oak(_| )fence(_| )gate¦s = 107:0-3
 
 #brick stairs=108 stone brick stairs=109
 
@@ -903,7 +912,7 @@ default aliases:
 	flower(_| )pot(_| )(holding|containing|with)(_| )[a[n]](_| ){flower pot} = 140
 	flower(_| )pot = 140
 	flower(_| )pot(_| )item = 390
-	any(_| )flower(_| )pot¦s = 140, 390
+	[<any>](_| )flower(_| )pot¦s = 140, 390
 
 	carrot(_| )plant¦s = 141
 	carrot[s](_| )block¦s = 141
@@ -966,7 +975,7 @@ default aliases:
 	[dark(_| )]green(_| )[stained](_| )[hard[ened]](_| )clay = 159:13
 	red(_| )[stained](_| )[hard[ened]](_| )clay = 159:14
 	black(_| )[stained](_| )[hard[ened]](_| )clay = 159:15
-	any(_| )[stained](_| )[hard[ened]](_| )clay = 159:0-15
+	[<any>](_| )[stained](_| )[hard[ened]](_| )clay = 159:0-15
 
 	white(_| )[stained](_| )glass(_| )[pane] = 160
 	orange(_| )[stained](_| )glass(_| )[pane] = 160:1
@@ -984,7 +993,7 @@ default aliases:
 	[dark(_| )]green(_| )[stained](_| )glass(_| )[pane] = 160:13
 	red(_| )[stained](_| )glass(_| )[pane] = 160:14
 	black(_| )[stained](_| )glass(_| )[pane] = 160:15
-	any(_| )[stained](_| )glass(_| )[pane] = 160:0-15
+	[<any>](_| )[stained](_| )glass(_| )[pane] = 160:0-15
 
 	acacia(_| )leaves = 161
 	dark(_| )oak(_| )leaves = 161:1
@@ -1031,7 +1040,7 @@ default aliases:
 	[dark(_| )]green(_| )(carpet|rug)¦s = 171:13
 	red(_| )(carpet|rug)¦s = 171:14
 	black(_| )(carpet|rug)¦s = 171:15
-	any(_| )(carpet|rug)¦s = 171:0-15
+	[<any>](_| )(carpet|rug)¦s = 171:0-15
 
 	hard[ened](_| )clay = 172
 
@@ -1065,25 +1074,25 @@ default aliases:
 #red sandstone stairs=180 double stone slab2=181 stone slab2=182
 
 #spruce
-	spruce fence gate¦s = 183
-	open[ed] spruce fence gate¦s = 183:4-7
-	closed spruce fence gate¦s = 183:0-3
+	spruce(_| )fence(_| )gate¦s = 183
+	open[ed](_| )spruce fence(_| )gate¦s = 183:4-7
+	closed(_| )spruce fence(_| )gate¦s = 183:0-3
 #birch
-	birch fence gate¦s = 184
-	open[ed] birch fence gate¦s = 184:4-7
-	closed birch fence gate¦s = 184:0-3
+	birch(_| )fence(_| )gate¦s = 184
+	open[ed](_| )birch(_| )fence(_| )gate¦s = 184:4-7
+	closed(_| )birch(_| )fence(_| )gate¦s = 184:0-3
 #jungle
-	jungle fence gate¦s = 185
-	open[ed] jungle fence gate¦s = 185:4-7
-	closed jungle fence gate¦s = 185:0-3
+	jungle(_| )fence(_| )gate¦s = 185
+	open[ed](_| )jungle fence(_| )gate¦s = 185:4-7
+	closed(_| )jungle(_| )fence(_| )gate¦s = 185:0-3
 #dark oak
-	dark oak fence gate¦s = 186
-	open[ed] dark oak fence gate¦s = 186:4-7
-	closed dark oak fence gate¦s = 186:0-3
+	dark(_| )oak(_| )fence(_| )gate¦s = 186
+	open[ed](_| )dark(_| )oak(_| )fence(_| )gate¦s = 186:4-7
+	closed(_| )dark(_| )oak(_| )fence(_| )gate¦s = 186:0-3
 #acacia
-	acacia fence gate¦s = 187
-	open[ed] acacia fence gate¦s = 187:4-7
-	closed acacia fence gate¦s = 187:0-3
+	acacia(_| )fence(_| )gate¦s = 187
+	open[ed](_| )acacia(_| )fence(_| )gate¦s = 187:4-7
+	closed(_| )acacia(_| )fence(_| )gate¦s = 187:0-3
 
 	spruce(_| )fence = 188
 
@@ -1126,8 +1135,8 @@ default aliases:
 	acacia(_| )door item¦s = 431
 	acacia(_| )door¦s = 431, 197
 
-	any(_| )wood[en](_| )door¦s = 64, 193, 194, 195, 196, 197
-	any(_| )door¦s = 64, 71, 193, 194, 195, 196, 197
+	[<any>](_| )wood[en](_| )door¦s = 64, 193, 194, 195, 196, 197
+	[<any>](_| )door¦s = 64, 71, 193, 194, 195, 196, 197
 
 #empty 198-255
 
@@ -1144,10 +1153,10 @@ default aliases:
 	flint'n'steel¦s = 259
 	apple¦s @an = 260
 	red(_| )apple¦s = 260
-	<any>(_| )apple¦s = 260, 322:0-1
+	[<any>](_| )apple¦s = 260, 322:0-1
 	bow¦s = 261
 	arrow¦s = 262
-	<any> coal = 263:0-1
+	[<any>](_| )coal = 263:0-1
 	charcoal = 263:1
 	coal(_| )<item> = 263:0
 	diamond¦s = 264
@@ -1340,12 +1349,12 @@ default aliases:
 	item(_| )frame¦s = 389
 	flower(_| )pot(_| )item¦s = 390
 	carrot[s](_| )[item¦s] = 391
-	any(_| )carrot[s](_| )[item¦s] = 391, 396
+	[<any>](_| )carrot[s](_| )[item¦s] = 391, 396
 	potato¦es = 392
 	potato[es](_| )item¦s = 392
 	baked(_| )potato¦es = 393
 	poisonous(_| )potato¦es = 394
-	any potato¦es = 392, 393, 394
+	[<any>](_| )potato¦es = 392, 393, 394
 	empty(_| )map¦s @an = 395
 	golden(_| )carrot¦s = 396
 	{mob head type}(_| )[mob](_| )head[(_| )item]¦s = 397
@@ -1362,7 +1371,7 @@ default aliases:
 	hopper(_| )minecart¦s = 408
 	prismarine(_| )shard¦s = 409:0
 	prismarine(_| )crystal¦s = 410
-	[<any>](_| )rabbit meat = 411, 412
+	[<any>](_| )rabbit(_| )meat = 411, 412
 	raw(_| )rabbit = 411
 	cooked(_| )rabbit = 412
 	rabbit(_| )stew = 413
@@ -1378,8 +1387,8 @@ default aliases:
 	[<any>](_| )mutton = 423, 424
 	raw(_| )mutton = 423
 	cooked(_| )mutton = 424
-	any(_| )banner = 176:0-15, 177:0-15, 425:0-15
-	any(_| )banner(_| )block = 176:0-15, 177:0-15
+	[<any>](_| )banner = 176:0-15, 177:0-15, 425:0-15
+	[<any>](_| )banner(_| )block = 176:0-15, 177:0-15
 
 	black(_| )banner(_| )item = 425
 	red(_| )banner(_| )item = 425:1
@@ -1397,7 +1406,7 @@ default aliases:
 	magenta(_| )banner(_| )item = 425:13
 	orange(_| )banner(_| )item = 425:14
 	white(_| )banner(_| )item = 425:15
-	any(_| )banner(_| )item = 425:0-15
+	[<any>](_| )banner(_| )item = 425:0-15
 
 	black(_| )standing(_| )banner[(_| )block] = 176
 	red(_| )standing(_| )banner[(_| )block] = 176:1
@@ -1415,7 +1424,7 @@ default aliases:
 	magenta(_| )standing(_| )banner[(_| )block] = 176:13
 	orange(_| )standing(_| )banner[(_| )block] = 176:14
 	white(_| )standing(_| )banner[(_| )block] = 176:15
-	any(_| )standing(_| )banner[(_| )block] = 176:0-15
+	[<any>](_| )standing(_| )banner[(_| )block] = 176:0-15
 
 	black(_| )wall(_| )banner[(_| )block] = 177
 	red(_| )wall(_| )banner[(_| )block] = 177:1
@@ -1433,33 +1442,33 @@ default aliases:
 	magenta(_| )wall(_| )banner[(_| )block] = 177:13
 	orange(_| )wall(_| )banner[(_| )block] = 177:14
 	white(_| )wall(_| )banner[(_| )block] = 177:15
-	any(_| )wall(_| )banner[(_| )block] = 177:0-15
+	[<any>](_| )wall(_| )banner[(_| )block] = 177:0-15
 
 #TYPE TO TYPE
 	piston¦s = piston base, piston extension
 	piston (item|block)¦s = piston base
 	sticky piston¦s = sticky piston base, sticky piston extension
 	sticky piston (item|block)¦s = sticky piston base
-	any extended piston base¦s = extended piston base, extended sticky piston base
+	[<any>](_| )extended piston base¦s = extended piston base, extended sticky piston base
 	extended piston¦s = extended piston base, piston extension
 	extended sticky piston¦s = extended sticky piston base, sticky piston extension
-	any extended piston¦s = any extended piston base, any piston extension
-	any retracted piston¦s = retracted piston, retracted sticky piston
+	[<any>](_| )extended piston¦s = any extended piston base, any piston extension
+	[<any>](_| )retracted piston¦s = retracted piston, retracted sticky piston
 
 	powered [redstone] wire¦s = redstone wire on
 	[redstone] wire¦s = redstone wire off
 	active [redstone] wire¦s = redstone wire on
 	inactive [redstone] wire¦s = redstone wire off
 
-	any stained glass block = 95:0-15
-	#any glass block = 20, any stained glass block
+	[<any>](_| )stained glass block = 95:0-15
+	#[<any>](_| )glass block = 20, [<any>](_| )stained glass block
 
-	any stained glass pane = 160:0-15
-	#any glass pane = 102, any stained glass pane
+	[<any>](_| )stained glass pane = 160:0-15
+	#[<any>](_| )glass pane = 102, [<any>](_| )stained glass pane
 
-	#any glass = any glass block, any glass pane
+	#[<any>](_| )glass = [<any>](_| )glass block, [<any>](_| )glass pane
 
-	any log = 162:0-1, 17:0-3
+	[<any>](_| )log = 162:0-1, 17:0-3
 
 	[<any>] leaves = 18:0-15, 161:0-15
 	[<any>] permanent leaves = 18:4-7, 18:12-15, 161:4-7, 161:12-15

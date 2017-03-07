@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.aliases;
 
 import java.io.File;
@@ -632,7 +630,7 @@ public abstract class Aliases {
 			if (!isAlias && d != null) {
 				Skript.warning("Using an ID instead of an alias is discouraged and will likely not be supported in future versions of Skript anymore. " +
 						(d.toString().equals(type) ?
-								"Please crate an alias for '" + type + (type.equals(s) ? "" : " or '" + s + "'") + "' (" + Material.getMaterial(d.getId()).name() + ") in aliases-english.sk or the script's aliases section and use that instead." :
+								"Please create an alias for '" + type + (type.equals(s) ? "" : " or '" + s + "'") + "' (" + Material.getMaterial(d.getId()).name() + ") in aliases-english.sk or the script's aliases section and use that instead." :
 								"Please replace '" + s + "' with e.g. '" + d.toString(true, false) + "'."));
 			}
 			t.add(d);

@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.entity;
 
 import java.io.NotSerializableException;
@@ -171,6 +169,10 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("squid", Squid.class));
 		types.add(new SimpleEntityDataInfo("bottle of enchanting", ThrownExpBottle.class));
 		types.add(new SimpleEntityDataInfo("tnt", TNTPrimed.class));
+		if (Skript.classExists("org.bukkit.entity.Husk")) {
+			// Husk must be registered before zombie to work correctly
+			types.add(new SimpleEntityDataInfo("husk", Husk.class));
+		}
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
 		
 		if (Skript.classExists("org.bukkit.entity.ItemFrame")) {
@@ -196,10 +198,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		if (Skript.classExists("org.bukkit.entity.AreaEffectCloud")) {
 			types.add(new SimpleEntityDataInfo("area effect cloud", AreaEffectCloud.class));
 		}
-		if (Skript.classExists("org.bukkit.entity.Husk")) {
-			types.add(new SimpleEntityDataInfo("husk", Husk.class));
-		}
-		if (Skript.isRunningMinecraft(1, 11)) { // Override SkeletonData on 1.11+ due to Bukkit API changes
+		if (Skript.isRunningMinecraft(1, 11)) { // More subtypes, more supertypes - changes needed
 			types.add(new SimpleEntityDataInfo("wither skeleton", WitherSkeleton.class));
 			types.add(new SimpleEntityDataInfo("stray", Stray.class));
 			types.add(new SimpleEntityDataInfo("skeleton", Skeleton.class, true));
@@ -223,6 +222,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 			
 			types.add(new SimpleEntityDataInfo("llama spit", LlamaSpit.class));
 			
+			// 1.11 hostile mobs
 			types.add(new SimpleEntityDataInfo("evoker", Evoker.class));
 			types.add(new SimpleEntityDataInfo("evoker fangs", EvokerFangs.class));
 			types.add(new SimpleEntityDataInfo("vex", Vex.class));

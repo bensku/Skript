@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.events;
 
 import java.util.Arrays;
@@ -38,6 +36,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -59,12 +58,18 @@ import ch.njol.util.coll.CollectionUtils;
 @SuppressWarnings("unchecked")
 public class EvtClick extends SkriptEvent {
 	
-	// Important: a click on an entity fires both an PlayerInteractEntityEvent and a PlayerInteractEvent
-	// TheBukor: It only fires a PlayerInteractEntityEvent in 1.9, I guess.
+	final static boolean twoHanded = Skript.isRunningMinecraft(1, 9);
 	
-	private final static boolean twoHanded = Skript.isRunningMinecraft(1, 9);
-	
+	/**
+	 * Click types.
+	 */
 	private final static int RIGHT = 1, LEFT = 2, ANY = RIGHT | LEFT;
+	
+	/**
+	 * If we used "holding" somewhere there, we must check if either hand
+	 * contains the tool.
+	 */
+	private final static int HOLDING = 4;
 	
 	static {
 		Class<? extends PlayerEvent> clickEvent;
@@ -73,11 +78,10 @@ public class EvtClick extends SkriptEvent {
 		else
 			clickEvent = PlayerInteractEntityEvent.class;
 		
-		@SuppressWarnings("unchecked")
 		Class<? extends PlayerEvent>[] eventTypes = CollectionUtils.array(PlayerInteractEvent.class, clickEvent);
 		Skript.registerEvent("Click", EvtClick.class, eventTypes,
-				"[(" + RIGHT + "¦right|" + LEFT + "¦left)(| |-)][mouse(| |-)]click[ing] [on %-entitydata/itemtype%] [(with|using|holding) %itemtype%]",
-				"[(" + RIGHT + "¦right|" + LEFT + "¦left)(| |-)][mouse(| |-)]click[ing] (with|using|holding) %itemtype% on %entitydata/itemtype%")
+				"[(" + RIGHT + "¦right|" + LEFT + "¦left)(| |-)][mouse(| |-)]click[ing] [on %-entitydata/itemtype%] [(with|using|" + HOLDING + "¦holding) %itemtype%]",
+				"[(" + RIGHT + "¦right|" + LEFT + "¦left)(| |-)][mouse(| |-)]click[ing] (with|using|" + HOLDING + "¦holding) %itemtype% on %entitydata/itemtype%")
 				.description("Called when a user clicks on a block, an entity or air with or without an item in their hand.",
 						"Please note that rightclick events with an empty hand while not looking at a block are not sent to the server, so there's no way to detect them.")
 				.examples("on click",
@@ -94,10 +98,11 @@ public class EvtClick extends SkriptEvent {
 	private Literal<ItemType> tools;
 	
 	private int click = ANY;
+	boolean isHolding = false;
 	
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
-		//Skript.info("matchedPattern is " + matchedPattern); // TODO there is something wrong here...
+		//Skript.info("matchedPattern is " + matchedPattern);
 		//Skript.info("args is " + Arrays.toString(args));
 		click = parser.mark == 0 ? ANY : parser.mark;
 		types = args[matchedPattern];
@@ -110,6 +115,7 @@ public class EvtClick extends SkriptEvent {
 			}
 		}
 		tools = (Literal<ItemType>) args[1 - matchedPattern];
+		isHolding = (parser.mark & HOLDING) != 0; // Check if third-least significant byte is 1
 		return true;
 	}
 	
@@ -181,7 +187,12 @@ public class EvtClick extends SkriptEvent {
 		if (e instanceof PlayerInteractEvent && tools != null && !tools.check(e, new Checker<ItemType>() {
 			@Override
 			public boolean check(final ItemType t) {
-				return t.isOfType(((PlayerInteractEvent) e).getItem());
+				if (isHolding && twoHanded) {
+					PlayerInventory invi = ((PlayerInteractEvent) e).getPlayer().getInventory();
+					return t.isOfType(invi.getItemInMainHand()) || t.isOfType(invi.getItemInOffHand());
+				} else {
+					return t.isOfType(((PlayerInteractEvent) e).getItem());
+				}
 			}
 		})) {
 			return false;

@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,10 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.classes.data;
 
 import java.util.List;
@@ -68,6 +66,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -92,6 +92,7 @@ import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.event.world.WorldEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
@@ -410,11 +411,11 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// EntityTameEvent
-		EventValues.registerEventValue(EntityTameEvent.class, Player.class, new Getter<Player, EntityTameEvent>() {
+		EventValues.registerEventValue(EntityTameEvent.class, Entity.class, new Getter<Entity, EntityTameEvent>() {
 			@Override
 			@Nullable
-			public Player get(final EntityTameEvent e) {
-				return e.getOwner() instanceof Player ? (Player) e.getOwner() : null;
+			public Entity get(final EntityTameEvent e) {
+				return e.getEntity();
 			}
 		}, 0);
 		// EntityChangeBlockEvent
@@ -766,6 +767,36 @@ public final class BukkitEventValues {
 				if (first instanceof Player) // Needs to be player... Usually it is
 					return (Player) first;
 				return null;
+			}
+		}, 0);
+		//InventoryOpenEvent
+		EventValues.registerEventValue(InventoryOpenEvent.class, Player.class, new Getter<Player, InventoryOpenEvent>() {
+			@Override
+			@Nullable
+			public Player get(final InventoryOpenEvent e) {
+				return (Player) e.getPlayer();
+			}
+		}, 0);
+		EventValues.registerEventValue(InventoryOpenEvent.class, Inventory.class, new Getter<Inventory, InventoryOpenEvent>() {
+			@Override
+			@Nullable
+			public Inventory get(final InventoryOpenEvent e) {
+				return e.getInventory();
+			}
+		}, 0);
+		//InventoryCloseEvent
+		EventValues.registerEventValue(InventoryCloseEvent.class, Player.class, new Getter<Player, InventoryCloseEvent>() {
+			@Override
+			@Nullable
+			public Player get(final InventoryCloseEvent e) {
+				return (Player) e.getPlayer();
+			}
+		}, 0);
+		EventValues.registerEventValue(InventoryCloseEvent.class, Inventory.class, new Getter<Inventory, InventoryCloseEvent>() {
+			@Override
+			@Nullable
+			public Inventory get(final InventoryCloseEvent e) {
+				return e.getInventory();
 			}
 		}, 0);
 	}

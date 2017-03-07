@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -15,10 +15,8 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2014 Peter Güttinger
- *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.effects;
 
 import java.util.Collections;
