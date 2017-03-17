@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -44,6 +45,10 @@ import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Utils;
+import ch.njol.util.Callback;
+import ch.njol.util.NonNullPair;
+import ch.njol.util.StringUtils;
 
 /**
  * Generates HTML based Skript documentation.
@@ -146,6 +151,7 @@ public class HTMLGenerator {
 				} else if (genType.equals("functions")) {
 					Iterable<JavaFunction<?>> functions = Functions.getJavaFunctions();
 					for (JavaFunction<?> info : functions) {
+						assert info != null;
 						generated += generateFunction(descTemp, info);
 					}
 				}
@@ -178,6 +184,7 @@ public class HTMLGenerator {
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description == null ? new String[0] : description.value()));
 		Examples examples = c.getAnnotation(Examples.class);
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples == null ? new String[0] : examples.value()));
+		desc = desc.replace("${element.id}", info.c.getName());
 		
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
@@ -191,13 +198,15 @@ public class HTMLGenerator {
 			generate = desc.indexOf("${generate", nextBracket);
 		}
 		
-		// Assume element.pattern generate; TODO
+		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
 			//Skript.info("Pattern is " + pattern);
 			String patterns = "";
 			for (String line : info.patterns) {
+				assert line != null;
+				line = cleanPatterns(line);
 				String parsed = pattern.replace("${element.pattern}", line);
 				//Skript.info("parsed is " + parsed);
 				patterns += parsed;
@@ -208,6 +217,7 @@ public class HTMLGenerator {
 			desc = desc.replace(toReplace, patterns);
 		}
 		
+		assert desc != null;
 		return desc;
 	}
 	
@@ -222,6 +232,7 @@ public class HTMLGenerator {
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description == null ? new String[0] : description));
 		String[] examples = info.getExamples();
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples == null ? new String[0] : examples));
+		desc = desc.replace("${element.id}", info.c.getName());
 		
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
@@ -233,12 +244,14 @@ public class HTMLGenerator {
 			generate = desc.indexOf("${generate", nextBracket);
 		}
 		
-		// Assume element.pattern generate; TODO
+		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
 			String patterns = "";
 			for (String line : info.patterns) {
+				assert line != null;
+				line = cleanPatterns(line);
 				String parsed = pattern.replace("${element.pattern}", line);
 				patterns += parsed;
 			}
@@ -246,6 +259,7 @@ public class HTMLGenerator {
 			desc = desc.replace("${generate element.patterns " + split[1] + "}", patterns);
 		}
 		
+		assert desc != null;
 		return desc;
 	}
 	
@@ -260,6 +274,7 @@ public class HTMLGenerator {
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description == null ? new String[0] : description));
 		String[] examples = info.getExamples();
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples == null ? new String[0] : examples));
+		desc = desc.replace("${element.id}", info.getCodeName());
 		
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
@@ -271,7 +286,7 @@ public class HTMLGenerator {
 			generate = desc.indexOf("${generate", nextBracket);
 		}
 		
-		// Assume element.pattern generate; TODO
+		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
@@ -280,6 +295,8 @@ public class HTMLGenerator {
 			if (lines == null)
 				continue;
 			for (String line : lines) {
+				assert line != null;
+				line = cleanPatterns(line);
 				String parsed = pattern.replace("${element.pattern}", line);
 				patterns += parsed;
 			}
@@ -287,6 +304,7 @@ public class HTMLGenerator {
 			desc = desc.replace("${generate element.patterns " + split[1] + "}", patterns);
 		}
 		
+		assert desc != null;
 		return desc;
 	}
 	
@@ -312,7 +330,7 @@ public class HTMLGenerator {
 			generate = desc.indexOf("${generate", nextBracket);
 		}
 		
-		// Assume element.pattern generate; TODO
+		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
@@ -328,6 +346,7 @@ public class HTMLGenerator {
 			desc = desc.replace("${generate element.patterns " + split[1] + "}", patterns);
 		}
 		
+		assert desc != null;
 		return desc;
 	}
 	
@@ -347,6 +366,54 @@ public class HTMLGenerator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	final static String cleanPatterns(final String patterns) {
+		final String s = StringUtils.replaceAll("" +
+				Documentation.escapeHTML(patterns) // escape HTML
+				.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
+				.replace("()", "") // remove empty mark setting groups (mark¦)
+				.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
+				.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
+				.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
+				.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
+		, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
+			@Override
+			public String run(final Matcher m) {
+				String s = m.group(1);
+				if (s.startsWith("-"))
+					s = s.substring(1);
+				String flag = "";
+				if (s.startsWith("*") || s.startsWith("~")) {
+					flag = s.substring(0, 1);
+					s = s.substring(1);
+				}
+				final int a = s.indexOf("@");
+				if (a != -1)
+					s = s.substring(0, a);
+				final StringBuilder b = new StringBuilder("%");
+				b.append(flag);
+				boolean first = true;
+				for (final String c : s.split("/")) {
+					assert c != null;
+					if (!first)
+						b.append("/");
+					first = false;
+					final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
+					final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
+					if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
+						b.append("<a href='classes.html#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
+					} else {
+						b.append(c);
+						if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
+							Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
+					}
+				}
+				return "" + b.append("%").toString();
+			}
+		});
+		assert s != null : patterns;
+		return s;
 	}
 	
 }
