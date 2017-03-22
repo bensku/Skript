@@ -163,6 +163,11 @@ soft api exceptions: false
 # However, if Skript or addons of it are not working correctly, this might help.
 # You may also get told to enable this by Skript or addon developers - then do so.
 
+enable timings: false
+# When enabled, triggers in scripts will be present in timings reports.
+# Note that this requires Paper (https://paper.readthedocs.io/en/paper-1.11/) to work; on Bukkit/Spigot this option has no effect.
+# When false, timings are not enabled for scripts even if you're running Paper.
+
 # ==== Variables ====
 
 databases:

@@ -25,8 +25,6 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.timings.Timing;
-import ch.njol.skript.timings.Timings;
 import ch.njol.util.StringUtils;
 
 /**

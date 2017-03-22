@@ -40,8 +40,7 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.PluralizingArgsMessage;
 import ch.njol.skript.log.RedirectingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.timings.TimingReporter;
-import ch.njol.skript.timings.Timings;
+import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
@@ -354,16 +353,6 @@ public class SkriptCommand implements CommandExecutor {
 				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
-			} else if (args[0].equalsIgnoreCase("timings")) {
-				if (args[1].equalsIgnoreCase("start")) {
-					Timings.enable();
-					Skript.adminBroadcast(Language.get("timings.start message"));
-				} else if (args[1].equalsIgnoreCase("stop")) {
-					Timings.disable();
-					TimingReporter.saveToFile(TimingReporter.getReport());
-					Timings.clear();
-					Skript.adminBroadcast(Language.get("timings.stop message"));
-				}
 			} else if (args[0].equalsIgnoreCase("gen-docs")) {
 				File templateDir = new File(Skript.getInstance().getDataFolder() + "/doc-templates/");
 				if (!templateDir.exists()) {

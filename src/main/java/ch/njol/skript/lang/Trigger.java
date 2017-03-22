@@ -36,17 +36,21 @@ public class Trigger extends TriggerSection {
 	
 	@Nullable
 	private final File script;
+	private int line = -1; // -1 is default: it means there is no line number available
+	private String debugLabel;
 	
 	public Trigger(final @Nullable File script, final String name, final SkriptEvent event, final List<TriggerItem> items) {
 		super(items);
 		this.script = script;
 		this.name = name;
 		this.event = event;
+		this.debugLabel = "unknown trigger";
 	}
 	
 	/**
-	 * @param e
-	 * @return false iff an exception occurred
+	 * Executes this trigger for certain event.
+	 * @param e Event.
+	 * @return false if an exception occurred
 	 */
 	public boolean execute(final Event e) {
 		return TriggerItem.walk(this, e);
@@ -63,6 +67,10 @@ public class Trigger extends TriggerSection {
 		return name + " (" + event.toString(e, debug) + ")";
 	}
 	
+	/**
+	 * Gets name of this trigger.
+	 * @return Name of trigger.
+	 */
 	public String getName() {
 		return name;
 	}
@@ -76,8 +84,36 @@ public class Trigger extends TriggerSection {
 		return script;
 	}
 
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		return false;
+		return false
 	}
+  
+	/**
+	 * Sets line number for this trigger's start.
+	 * Only used for debugging.
+	 * @param line Line number
+	 */
+	public void setLineNumber(int line) {
+		this.line  = line;
+	}
+	
+	/**
+	 * Gets line number for this trigger's start.
+	 * Only use it for debugging!
+	 * @return Line number.
+	 */
+	public int getLineNumber() {
+		return line;
+	}
+	
+	public void setDebugLabel(String label) {
+		this.debugLabel = label;
+	}
+	
+	public String getDebugLabel() {
+		return debugLabel;
+	}
+	
 }
