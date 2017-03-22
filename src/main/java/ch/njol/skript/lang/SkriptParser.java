@@ -29,6 +29,7 @@ import ch.njol.skript.command.Argument;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.command.ScriptCommand;
 import ch.njol.skript.command.ScriptCommandEvent;
+import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.expressions.ExprParse;
 import ch.njol.skript.lang.function.ExprFunctionCall;
 import ch.njol.skript.lang.function.FunctionReference;
@@ -47,6 +48,8 @@ import ch.njol.util.coll.CollectionUtils;
 import com.sun.istack.internal.Nullable;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.IntUnaryOperator;
 import java.util.function.UnaryOperator;
@@ -712,8 +715,9 @@ public class SkriptParser {
                                 }
                                 x = x2; //Makes the search for '%'s in the next iteration begin after the current closing '%'
                             }
-                            final T t = info.c.newInstance(); //Creates a new instance of either an expression, an effect, a condition or a SkriptEvent
-                            if (t.init(res.exprs, i, ScriptLoader.hasDelayBefore, res)) { //If the SyntaxElement can be 'init'-ed sucessfully...
+                            //Creates a new instance of either an expression, an effect, a condition or a SkriptEvent
+                            T t = info.c.newInstance();
+                            if (t.init(res.exprs, i, ScriptLoader.hasDelayBefore, res)) { //If the SyntaxElement can be 'init'-ed successfully...
                                 log.printLog();
                                 return t; //... Return it
                             }
@@ -767,11 +771,7 @@ public class SkriptParser {
             log.clear();
             if ((flags & PARSE_EXPRESSIONS) != 0) {
                 final Expression<?> e;
-                if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
-                    e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
-                } else {
-                    e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
-                }
+                e = expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class)) ? VariableString.newInstance("" + expr.substring(1, expr.length() - 1)) : (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
                 if (e != null) {
                     for (final Class<? extends T> t : types) {
                         if (t.isAssignableFrom(e.getReturnType())) {
@@ -960,7 +960,7 @@ public class SkriptParser {
             if (ts.size() == 1) //That'll make sense with what follows, I guess
                 return ts.get(0); 
 
-            if (and.isUnknown() && !suppressMissingAndOrWarnings) //If the literal list hasn't any type specified and the corresponding warnings are enabled
+            if (isAndList.isUnknown() && !suppressMissingAndOrWarnings) //If the literal list hasn't any type specified and the corresponding warnings are enabled
                 Skript.warning(MISSING_AND_OR + ": " + expr);
 
             final Class<? extends T>[] exprRetTypes = new Class[ts.size()]; //Stores the return types of each expression
@@ -970,12 +970,10 @@ public class SkriptParser {
 
             if (isLiteralList) {
                 final Literal<T>[] ls = ts.toArray(new Literal[ts.size()]);
-                assert ls != null;
-                return new LiteralList<T>(ls, (Class<T>) Utils.getSuperType(exprRetTypes), !and.isFalse());
+                return new LiteralList<T>(ls, (Class<T>) Utils.getSuperType(exprRetTypes), !isAndList.isFalse());
             } else {
                 final Expression<T>[] es = ts.toArray(new Expression[ts.size()]);
-                assert es != null;
-                return new ExpressionList<T>(es, (Class<T>) Utils.getSuperType(exprRetTypes), !and.isFalse());
+                return new ExpressionList<T>(es, (Class<T>) Utils.getSuperType(exprRetTypes), !isAndList.isFalse());
             }
         } finally {
             log.stop();
@@ -1121,7 +1119,7 @@ public class SkriptParser {
                                 int mark = 0;
                             /*If*/
                                 if (patternPosition != pattern.length() - 1 /*This is not the closingCharacterIndex*/ && ('0' <= pattern.charAt(patternPosition + 1) && pattern.charAt(patternPosition + 1) <= '9' /*The character after the opening '(' or '|' is a number*/ || pattern.charAt(patternPosition + 1) == '-' /*Wait dafuq*/)) {
-                                    final int j2 = pattern.indexOf('Â¦', patternPosition + 2); //Get where the broken bar is at
+                                    final int j2 = pattern.indexOf('¦', patternPosition + 2); //Get where the broken bar is at
                                     if (j2 != -1) { //Technically, this is unnecessary, but better safe than sorry
                                         try {
                                             mark = Integer.parseInt(pattern.substring(patternPosition + 1, j2)); //Set the mark

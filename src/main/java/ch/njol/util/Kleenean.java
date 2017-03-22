@@ -44,43 +44,23 @@ public enum Kleenean {
 	}
 	
 	public final Kleenean is(final Kleenean other) {
-		if (other == UNKNOWN || this == UNKNOWN)
-			return UNKNOWN;
-		if (other == this)
-			return TRUE;
-		return FALSE;
+		return other == UNKNOWN || this == UNKNOWN ? UNKNOWN : other == this ? TRUE : FALSE;
 	}
 	
 	public final Kleenean and(final Kleenean other) {
-		if (this == FALSE || other == FALSE)
-			return FALSE;
-		if (this == TRUE && other == TRUE)
-			return TRUE;
-		return UNKNOWN;
+		return this == FALSE || other == FALSE ? FALSE : this == TRUE && other == TRUE ? TRUE : UNKNOWN;
 	}
 	
 	public final Kleenean or(final Kleenean other) {
-		if (this == TRUE || other == TRUE)
-			return TRUE;
-		if (this == FALSE && other == FALSE)
-			return FALSE;
-		return UNKNOWN;
+		return this == TRUE || other == TRUE ? TRUE : this == FALSE && other == FALSE ? FALSE : UNKNOWN;
 	}
 	
 	public final Kleenean not() {
-		if (this == TRUE)
-			return FALSE;
-		if (this == FALSE)
-			return TRUE;
-		return UNKNOWN;
+		return this == TRUE ? FALSE : this == FALSE ? TRUE : UNKNOWN;
 	}
 	
 	public final Kleenean implies(final Kleenean other) {
-		if (this == FALSE || other == TRUE)
-			return TRUE;
-		if (this == TRUE && other == FALSE)
-			return FALSE;
-		return UNKNOWN;
+		return this == FALSE || other == TRUE ? TRUE : this == TRUE && other == FALSE ? FALSE : UNKNOWN;
 	}
 	
 	/**

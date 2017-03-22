@@ -21,16 +21,13 @@ package ch.njol.util;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Objects;
+
 public interface NullableChecker<T> extends Checker<T> {
 	
 	@Override
-	public boolean check(@Nullable T o);
+	boolean check(@Nullable T o);
 	
-	public static final NullableChecker<Object> nullChecker = new NullableChecker<Object>() {
-		@Override
-		public boolean check(final @Nullable Object o) {
-			return o != null;
-		}
-	};
+	NullableChecker<Object> nullChecker = Objects::nonNull;
 	
 }
