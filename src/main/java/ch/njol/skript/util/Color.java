@@ -59,7 +59,7 @@ public enum Color implements YggdrasilSerializable {
 	DARK_PURPLE(DyeColor.PURPLE, ChatColor.DARK_PURPLE, org.bukkit.Color.fromRGB(0x7F3FB2)),
 	LIGHT_PURPLE(DyeColor.MAGENTA, ChatColor.LIGHT_PURPLE, org.bukkit.Color.fromRGB(0xB24CD8));
 	
-	private final static String LANGUAGE_NODE = "colors";
+	public final static String LANGUAGE_NODE = "colors";
 	
 	private final DyeColor wool;
 	private final ChatColor chat;

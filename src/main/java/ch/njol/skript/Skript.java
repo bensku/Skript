@@ -107,6 +107,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.EmptyStacktraceException;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
@@ -510,6 +511,8 @@ public final class Skript extends JavaPlugin implements Listener {
 			}
 		}, this);
 		
+		// Tell Timings that we are here!
+		SkriptTimings.setSkript(this);
 		
 		Bukkit.getScheduler().runTaskAsynchronously(getInstance(), new Runnable(){
 

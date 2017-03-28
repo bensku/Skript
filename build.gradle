@@ -33,10 +33,14 @@ repositories {
 //	maven {
 //		url 'http://nexus.theyeticave.net/content/repositories/pub_releases'
 //	}
+
+	maven {
+		url 'https://repo.destroystokyo.com/repository/maven-public/'
+	}
 }
 
 dependencies {
-	compile 'org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT'
+	compile 'com.destroystokyo.paper:paper-api:1.11.2-R0.1-SNAPSHOT'
 	compile 'org.eclipse.jdt:org.eclipse.jdt.annotation:1.1.0'
 	compile 'com.google.code.findbugs:findbugs:2.0.3'
 	compile 'de.slikey:EffectLib:5.0'
@@ -52,7 +56,7 @@ dependencies {
 
 configurations.all {
 	resolutionStrategy.dependencySubstitution {
-		substitute module('org.bukkit:bukkit') with module('org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT')
+		substitute module('org.bukkit:bukkit') with module('com.destroystokyo.paper:paper-api:1.11.2-R0.1-SNAPSHOT')
 	}
 }
 

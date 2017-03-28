@@ -438,7 +438,6 @@ final public class ScriptLoader {
 							} finally {
 								log.stop();
 							}
-							@SuppressWarnings("null")
 							final ClassInfo<?> ci = Classes.getSuperClassInfo(o.getClass());
 							if (ci.getSerializer() == null) {
 								Skript.error("Can't save '" + ((EntryNode) n).getValue() + "' in a variable");
@@ -509,6 +508,8 @@ final public class ScriptLoader {
 					final Trigger trigger;
 					try {
 						trigger = new Trigger(config.getFile(), event, parsedEvent.getSecond(), loadItems(node));
+						trigger.setLineNumber(node.getLine()); // Set line number for debugging
+						trigger.setDebugLabel(config.getFileName() + ": line " + node.getLine());
 					} finally {
 						deleteCurrentEvent();
 					}

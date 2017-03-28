@@ -79,7 +79,7 @@ public class EvtBlock extends SkriptEvent {
 				.examples("on fade of snow or ice")
 				.since("1.0");
 		Skript.registerEvent("Form", EvtBlock.class, BlockFormEvent.class, "[block] form[ing] [[of] %itemtypes%]")
-				.description("Called when a block is created, but not by a player, e.g. snow forms due to snowfall, water freezes in cold biomes, or a block spreads (see <a href='#spread'>spread event</a>).")
+				.description("Called when a block is created, but not by a player, e.g. snow forms due to snowfall, water freezes in cold biomes. This isn't called when block spreads (mushroom growth, water physics etc.), as it has its own event (see <a href='#spread'>spread event</a>).")
 				.examples("on form of snow", "on form of a mushroom")
 				.since("1.0");
 	}

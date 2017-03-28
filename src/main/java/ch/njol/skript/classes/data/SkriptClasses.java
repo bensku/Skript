@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.classes.data;
 
+import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Locale;
 import java.util.Map;
@@ -62,6 +63,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.VisualEffect;
 import ch.njol.skript.util.WeatherType;
+import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.yggdrasil.Fields;
 
 /**

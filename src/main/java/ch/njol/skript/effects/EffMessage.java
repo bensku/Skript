@@ -20,6 +20,7 @@
 package ch.njol.skript.effects;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -31,7 +32,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 /**
  * @author Peter Güttinger
@@ -45,12 +48,16 @@ import ch.njol.util.Kleenean;
 		"	message \"You're currently looking at a %type of the targeted entity%!\""})
 @Since("1.0")
 public class EffMessage extends Effect {
+	
+	private static final boolean hasSendRaw = Skript.classExists("org.bukkit.conversations.Conversable");
+	
 	static {
-		Skript.registerEffect(EffMessage.class, "(message|send [message]) %strings% [to %commandsenders%]");
+		Skript.registerEffect(EffMessage.class, "(message|send [message]) %chatmessages% [to %commandsenders%]");
 	}
 	
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<String> messages;
+	
 	@SuppressWarnings("null")
 	private Expression<CommandSender> recipients;
 	
@@ -64,16 +71,28 @@ public class EffMessage extends Effect {
 	
 	@Override
 	protected void execute(final Event e) {
-		for (final String message : messages.getArray(e)) {
-//			message = StringUtils.fixCapitalization(message);
-			for (final CommandSender s : recipients.getArray(e)) {
-				s.sendMessage(message);
+		if (hasSendRaw) {
+			assert messages != null;
+			for (final String message : messages.getArray(e)) {
+				for (final CommandSender s : recipients.getArray(e)) {
+					if (s instanceof Conversable)
+						((Conversable) s).sendRawMessage(ChatMessages.get(message));
+					// If command block was supposed to receive this message, just ignore it
+				}
+			}
+		} else {
+			assert messages != null;
+			for (final String message : messages.getArray(e)) {
+				for (final CommandSender s : recipients.getArray(e)) {
+					s.sendMessage(message);
+				}
 			}
 		}
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
+		assert messages != null;
 		return "send " + messages.toString(e, debug) + " to " + recipients.toString(e, debug);
 	}
 }
