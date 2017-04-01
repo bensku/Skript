@@ -19,36 +19,23 @@
  */
 package ch.njol.skript.variables;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.skript.util.FileUtils;
-import ch.njol.skript.util.Task;
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.Version;
+import ch.njol.skript.util.*;
 import ch.njol.util.NotifyingReference;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * TODO use a database (SQLite) instead and only load a limited amount of variables into RAM - e.g. 2 GB (configurable). If more variables are available they will be loaded when
@@ -65,7 +52,7 @@ public class FlatFileStorage extends VariablesStorage {
 	/**
 	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link Variables#getReadLock()}).
 	 */
-	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<PrintWriter>();
+	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<>();
 	
 	private volatile boolean loaded = false;
 	
@@ -250,7 +237,7 @@ public class FlatFileStorage extends VariablesStorage {
 	final static String[] splitCSV(final String line) {
 		final Matcher m = csv.matcher(line);
 		int lastEnd = 0;
-		final ArrayList<String> r = new ArrayList<String>();
+		final ArrayList<String> r = new ArrayList<>();
 		while (m.find()) {
 			if (lastEnd != m.start())
 				return null;
@@ -425,13 +412,13 @@ public class FlatFileStorage extends VariablesStorage {
 	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
-	private final void save(final PrintWriter pw, final String parent, final TreeMap<String, Object> map) {
+	private final void save(final PrintWriter pw, final String parent, final LinkedHashMap<String, Object> map) {
 		outer: for (final Entry<String, Object> e : map.entrySet()) {
 			final Object val = e.getValue();
 			if (val == null)
 				continue;
-			if (val instanceof TreeMap) {
-				save(pw, parent + e.getKey() + Variable.SEPARATOR, (TreeMap<String, Object>) val);
+			if (val instanceof LinkedHashMap) {
+				save(pw, parent + e.getKey() + Variable.SEPARATOR, (LinkedHashMap<String, Object>) val);
 			} else {
 				final String name = (e.getKey() == null ? parent.substring(0, parent.length() - Variable.SEPARATOR.length()) : parent + e.getKey());
 				for (final VariablesStorage s : Variables.storages) {
