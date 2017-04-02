@@ -22,6 +22,7 @@ package ch.njol.skript.lang;
 import java.io.File;
 import java.util.List;
 
+import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -83,6 +84,12 @@ public class Trigger extends TriggerSection {
 		return script;
 	}
 
+
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		return false
+	}
+  
 	/**
 	 * Sets line number for this trigger's start.
 	 * Only used for debugging.

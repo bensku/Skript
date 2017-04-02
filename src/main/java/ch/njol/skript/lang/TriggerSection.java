@@ -21,6 +21,8 @@ package ch.njol.skript.lang;
 
 import java.util.List;
 
+import ch.njol.skript.scopes.Conditional;
+import ch.njol.skript.scopes.Loop;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -34,13 +36,17 @@ import ch.njol.skript.config.SectionNode;
  * @see Conditional
  * @see Loop
  */
-public abstract class TriggerSection extends TriggerItem {
+public abstract class TriggerSection extends TriggerItem implements SyntaxElement {
 	
 	@Nullable
-	private TriggerItem first = null;
+	protected TriggerItem first = null;
 	@Nullable
 	protected TriggerItem last = null;
-	
+
+	{
+		setTriggerItems(ScriptLoader.loadItems(ScriptLoader.getCurrentNode()));
+	}
+
 	/**
 	 * Reserved for new Trigger(...)
 	 */
@@ -48,19 +54,14 @@ public abstract class TriggerSection extends TriggerItem {
 		setTriggerItems(items);
 	}
 	
-	protected TriggerSection(final SectionNode node) {
+	protected TriggerSection() {
 		ScriptLoader.currentSections.add(this);
 		try {
-			setTriggerItems(ScriptLoader.loadItems(node));
+			setTriggerItems(ScriptLoader.loadItems(ScriptLoader.getCurrentNode()));
 		} finally {
 			ScriptLoader.currentSections.remove(ScriptLoader.currentSections.size() - 1);
 		}
 	}
-	
-	/**
-	 * Important when using this constructor: set the items with {@link #setTriggerItems(List)}!
-	 */
-	protected TriggerSection() {}
 	
 	/**
 	 * Remember to add this section to {@link ScriptLoader#currentSections} before parsing child elements!
@@ -105,9 +106,22 @@ public abstract class TriggerSection extends TriggerItem {
 	
 	@Override
 	@Nullable
+	/**
+	 * Returns the next item to be ran
+	 *
+	 * @param e the event
+	 * @return the next item to be ran
+	 */
 	protected abstract TriggerItem walk(Event e);
 	
 	@Nullable
+	/**
+	 * Returns the first item of this TriggerSection
+	 *
+	 * @param e the event
+	 * @param run you most likely want it set to true (it being false is the same as calling debug() + getNext())
+	 * @return the next item to be ran
+	 */
 	protected final TriggerItem walk(final Event e, final boolean run) {
 		debug(e, run);
 		if (run && first != null) {

@@ -53,7 +53,7 @@ public abstract class Functions {
 	
 	final static class FunctionData {
 		final Function<?> function;
-		final Collection<FunctionReference<?>> calls = new ArrayList<FunctionReference<?>>();
+		final Collection<FunctionReference<?>> calls = new ArrayList<>();
 		
 		public FunctionData(final Function<?> function) {
 			this.function = function;
@@ -63,12 +63,12 @@ public abstract class Functions {
 	@Nullable
 	public static ScriptFunction<?> currentFunction = null;
 	
-	final static Map<String, JavaFunction<?>> javaFunctions = new HashMap<String, JavaFunction<?>>();
-	final static Map<String, FunctionData> functions = new HashMap<String, FunctionData>();
-	final static Map<String, Signature<?>> javaSignatures = new HashMap<String, Signature<?>>();
-	final static Map<String, Signature<?>> signatures = new HashMap<String, Signature<?>>();
+	final static Map<String, JavaFunction<?>> javaFunctions = new HashMap<>();
+	final static Map<String, FunctionData> functions = new HashMap<>();
+	final static Map<String, Signature<?>> javaSignatures = new HashMap<>();
+	final static Map<String, Signature<?>> signatures = new HashMap<>();
 	
-	final static List<FunctionReference<?>> postCheckNeeded = new ArrayList<FunctionReference<?>>();
+	final static List<FunctionReference<?>> postCheckNeeded = new ArrayList<>();
 	
 	/**
 	 * @param function
@@ -97,8 +97,8 @@ public abstract class Functions {
 	public final static String functionNamePattern = "[\\p{IsAlphabetic}][\\p{IsAlphabetic}\\p{IsDigit}_]*";
 	
 	@SuppressWarnings("null")
-	private final static Pattern functionPattern = Pattern.compile("function (" + functionNamePattern + ")\\((.*)\\)(?: :: (.+))?", Pattern.CASE_INSENSITIVE),
-			paramPattern = Pattern.compile("\\s*(.+?)\\s*:\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
+	private final static Pattern functionPattern = Pattern.compile("function (" + functionNamePattern + ")\\((.*)?\\)(?: :: (.+))?", Pattern.CASE_INSENSITIVE),
+			paramPattern = Pattern.compile("(?:\\s*(.+?)\\s*:\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*)?+");
 	
 	/**
 	 * Loads a function from given node.
@@ -124,7 +124,7 @@ public abstract class Functions {
 			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")" + (c != null && p != null ? " :: " + Utils.toEnglishPlural(c.getCodeName(), p.getSecond()) : "") + ":");
 		
 		@SuppressWarnings("null")
-		final Function<?> f = new ScriptFunction<Object>(name, params.toArray(new Parameter[params.size()]), node, (ClassInfo<Object>) c, p == null ? false : !p.getSecond());
+		final Function<?> f = new ScriptFunction<>(name, params.toArray(new Parameter[params.size()]), node, (ClassInfo<Object>) c, p != null && !p.getSecond());
 //		functions.put(name, new FunctionData(f)); // in constructor
 		return f;
 	}
@@ -143,40 +143,44 @@ public abstract class Functions {
 		final Matcher m = functionPattern.matcher(definition);
 		if (!m.matches())
 			return signError("Invalid function definition. Please check for typos and that the function's name only contains letters and underscores. Refer to the documentation for more information.");
-		final String name = "" + m.group(1); // TODO check for name uniqueness (currently functions with same name silently override each other)
+		final String name = "" + m.group(1);
+		if (getFunction(name) != null)
+			return signError("The function '" + name + "' is already defined in '" + getFunction(name).getSignature().script + "'");
 		final String args = m.group(2);
 		final String returnType = m.group(3);
-		final List<Parameter<?>> params = new ArrayList<Parameter<?>>();
-		int j = 0;
-		for (int i = 0; i <= args.length(); i = SkriptParser.next(args, i, ParseContext.DEFAULT)) {
-			if (i == -1)
-				return signError("Invalid text/variables/parentheses in the arguments of this function");
-			if (i == args.length() || args.charAt(i) == ',') {
-				final String arg = args.substring(j, i);
-				final Matcher n = paramPattern.matcher(arg);
-				if (!n.matches())
-					return signError("The " + StringUtils.fancyOrderNumber(params.size() + 1) + " argument's definition is invalid. It should look like 'name: type' or 'name: type = default value'.");
-				final String paramName = "" + n.group(1);
-				for (final Parameter<?> p : params) {
-					if (p.name.toLowerCase(Locale.ENGLISH).equals(paramName.toLowerCase(Locale.ENGLISH)))
-						return signError("Each argument's name must be unique, but the name '" + paramName + "' occurs at least twice.");
+		final List<Parameter<?>> params = new ArrayList<>();
+		if (!args.isEmpty()) {
+			int j = 0;
+			for (int i = 0; i <= args.length(); i = SkriptParser.next(args, i, ParseContext.DEFAULT)) {
+				if (i == -1)
+					return signError("Invalid text/variables/parentheses in the arguments of this function");
+				if (i == args.length() || args.charAt(i) == ',') {
+					final String arg = args.substring(j, i); // The parameter
+					final Matcher n = paramPattern.matcher(arg);
+					if (!n.matches())
+						return signError("The " + StringUtils.fancyOrderNumber(params.size() + 1) + " argument's definition is invalid. It should look like 'name: type' or 'name: type = default value'.");
+					final String paramName = "" + n.group(1);
+					for (final Parameter<?> p : params) {
+						if (p.name.toLowerCase(Locale.ENGLISH).equals(paramName.toLowerCase(Locale.ENGLISH)))
+							return signError("Each argument's name must be unique, but the name '" + paramName + "' occurs at least twice.");
+					}
+					ClassInfo<?> c;
+					c = Classes.getClassInfoFromUserInput("" + n.group(2));
+					final NonNullPair<String, Boolean> pl = Utils.getEnglishPlural("" + n.group(2));
+					if (c == null)
+						c = Classes.getClassInfoFromUserInput(pl.getFirst());
+					if (c == null)
+						return signError("Cannot recognise the type '" + n.group(2) + "'");
+					final Parameter<?> p = Parameter.newInstance(paramName, c, !pl.getSecond(), n.group(3));
+					if (p == null)
+						return null;
+					params.add(p);
+
+					j = i + 1;
 				}
-				ClassInfo<?> c;
-				c = Classes.getClassInfoFromUserInput("" + n.group(2));
-				final NonNullPair<String, Boolean> pl = Utils.getEnglishPlural("" + n.group(2));
-				if (c == null)
-					c = Classes.getClassInfoFromUserInput(pl.getFirst());
-				if (c == null)
-					return signError("Cannot recognise the type '" + n.group(2) + "'");
-				final Parameter<?> p = Parameter.newInstance(paramName, c, !pl.getSecond(), n.group(3));
-				if (p == null)
-					return null;
-				params.add(p);
-				
-				j = i + 1;
+				if (i == args.length())
+					break;
 			}
-			if (i == args.length())
-				break;
 		}
 		ClassInfo<?> c;
 		final NonNullPair<String, Boolean> p;
@@ -194,7 +198,7 @@ public abstract class Functions {
 		}
 		
 		@SuppressWarnings("unchecked")
-		Signature<?> sign = new Signature<Object>(script, name, params, (ClassInfo<Object>) c, p, p == null ? false : !p.getSecond());
+		Signature<?> sign = new Signature<>(script, name, params, (ClassInfo<Object>) c, p, p != null && !p.getSecond());
 		Functions.signatures.put(name, sign);
 		return sign;
 	}
@@ -246,7 +250,7 @@ public abstract class Functions {
 		return signatures.get(name);
 	}
 	
-	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<FunctionReference<?>>();
+	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<>();
 	
 	/**
 	 * Remember to call {@link #validateFunctions()} after calling this

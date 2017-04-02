@@ -19,25 +19,6 @@
  */
 package ch.njol.skript.lang;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.TreeMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -61,6 +42,16 @@ import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.EmptyIterator;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author Peter Güttinger
@@ -151,7 +142,7 @@ public class Variable<T> implements Expression<T> {
 		final VariableString vs = VariableString.newInstance(name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : name, StringMode.VARIABLE_NAME);
 		if (vs == null)
 			return null;
-		return new Variable<T>(vs, types, name.startsWith(LOCAL_VARIABLE_TOKEN), name.endsWith(SEPARATOR + "*"), null);
+		return new Variable<>(vs, types, name.startsWith(LOCAL_VARIABLE_TOKEN), name.endsWith(SEPARATOR + "*"), null);
 	}
 	
 	@Override
@@ -191,7 +182,7 @@ public class Variable<T> implements Expression<T> {
 	
 	@Override
 	public <R> Variable<R> getConvertedExpression(final Class<R>... to) {
-		return new Variable<R>(name, to, local, list, this);
+		return new Variable<>(name, to, local, list, this);
 	}
 	
 	/**
@@ -216,7 +207,7 @@ public class Variable<T> implements Expression<T> {
 			return val;
 		if (val == null)
 			return Array.newInstance(types[0], 0);
-		final List<Object> l = new ArrayList<Object>();
+		final List<Object> l = new ArrayList<>();
 		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
 		for (final Entry<String, ?> v : ((Map<String, ?>) val).entrySet()) {
 			if (v.getKey() != null && v.getValue() != null) {
@@ -257,11 +248,11 @@ public class Variable<T> implements Expression<T> {
 		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
 		final Object val = Variables.getVariable(name + "*", e, local);
 		if (val == null)
-			return new EmptyIterator<Pair<String, Object>>();
-		assert val instanceof TreeMap;
+			return new EmptyIterator<>();
+		assert val instanceof LinkedHashMap;
 		// temporary list to prevent CMEs
 		@SuppressWarnings("unchecked")
-		final Iterator<String> keys = new ArrayList<String>(((Map<String, Object>) val).keySet()).iterator();
+		final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
 		return new Iterator<Pair<String, Object>>() {
 			@Nullable
 			private String key;
@@ -276,7 +267,7 @@ public class Variable<T> implements Expression<T> {
 					key = keys.next();
 					if (key != null) {
 						next = convertIfOldPlayer(name + key, e, Variables.getVariable(name + key, e, local));
-						if (next != null && !(next instanceof TreeMap))
+						if (next != null && !(next instanceof LinkedHashMap))
 							return true;
 					}
 				}
@@ -288,7 +279,7 @@ public class Variable<T> implements Expression<T> {
 			public Pair<String, Object> next() {
 				if (!hasNext())
 					throw new NoSuchElementException();
-				final Pair<String, Object> n = new Pair<String, Object>(key, next);
+				final Pair<String, Object> n = new Pair<>(key, next);
 				next = null;
 				return n;
 			}
@@ -307,11 +298,11 @@ public class Variable<T> implements Expression<T> {
 		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
 		final Object val = Variables.getVariable(name + "*", e, local);
 		if (val == null)
-			return new EmptyIterator<T>();
-		assert val instanceof TreeMap;
+			return new EmptyIterator<>();
+		assert val instanceof LinkedHashMap;
 		// temporary list to prevent CMEs
 		@SuppressWarnings("unchecked")
-		final Iterator<String> keys = new ArrayList<String>(((Map<String, Object>) val).keySet()).iterator();
+		final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
 		return new Iterator<T>() {
 			@Nullable
 			private String key;
@@ -328,7 +319,7 @@ public class Variable<T> implements Expression<T> {
 					if (key != null) {
 						next = Converters.convert(Variables.getVariable(name + key, e, local), types);
 						next = (T) convertIfOldPlayer(name + key, e, next);
-						if (next != null && !(next instanceof TreeMap))
+						if (next != null && !(next instanceof LinkedHashMap))
 							return true;
 					}
 				}
@@ -440,7 +431,7 @@ public class Variable<T> implements Expression<T> {
 					if (mode == ChangeMode.REMOVE) {
 						if (o == null)
 							return;
-						final ArrayList<String> rem = new ArrayList<String>(); // prevents CMEs
+						final ArrayList<String> rem = new ArrayList<>(); // prevents CMEs
 						for (final Object d : delta) {
 							for (final Entry<String, Object> i : o.entrySet()) {
 								if (Relation.EQUAL.is(Comparators.compare(i.getValue(), d))) {
@@ -456,7 +447,7 @@ public class Variable<T> implements Expression<T> {
 					} else if (mode == ChangeMode.REMOVE_ALL) {
 						if (o == null)
 							return;
-						final ArrayList<String> rem = new ArrayList<String>(); // prevents CMEs
+						final ArrayList<String> rem = new ArrayList<>(); // prevents CMEs
 						for (final Entry<String, Object> i : o.entrySet()) {
 							for (final Object d : delta) {
 								if (Relation.EQUAL.is(Comparators.compare(i.getValue(), d)))
@@ -526,7 +517,7 @@ public class Variable<T> implements Expression<T> {
 						for (int i = 0; i < cs.length; i++)
 							cs2[i] = cs[i].isArray() ? cs[i].getComponentType() : cs[i];
 						
-						final ArrayList<Object> l = new ArrayList<Object>();
+						final ArrayList<Object> l = new ArrayList<>();
 						for (final Object d : delta) {
 							final Object d2 = Converters.convert(d, cs2);
 							if (d2 != null)

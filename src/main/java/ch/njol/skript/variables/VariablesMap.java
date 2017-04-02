@@ -32,7 +32,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.StringUtils;
 
 final class VariablesMap {
-	
+
 	final static Comparator<String> variableNameComparator = new Comparator<String>() {
 		@Override
 		public int compare(final @Nullable String s1, final @Nullable String s2) {
@@ -69,15 +69,15 @@ final class VariablesMap {
 			return 0;
 		}
 	};
-	
+
 	final HashMap<String, Object> hashMap = new HashMap<String, Object>();
 	final TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
-	
+
 	/**
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
 	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
 	 */
@@ -109,10 +109,10 @@ final class VariablesMap {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Sets a variable.
-	 * 
+	 *
 	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
@@ -180,7 +180,7 @@ final class VariablesMap {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	void deleteFromHashMap(final String parent, final TreeMap<String, Object> current) {
 		for (final Entry<String, Object> e : current.entrySet()) {
@@ -193,5 +193,5 @@ final class VariablesMap {
 			}
 		}
 	}
-	
+
 }

@@ -17,12 +17,15 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.lang;
+package ch.njol.skript.scopes;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.*;
+import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -38,28 +41,44 @@ import ch.njol.skript.util.Container.ContainerType;
  * 
  * @author Peter Güttinger
  */
+@SuppressWarnings("unchecked")
 public class Loop extends TriggerSection {
 	
-	private final Expression<?> expr;
+	private Expression<?> expr;
+
+	static {
+		Skript.registerScope(
+				Loop.class,
+				"loop %objects%"
+		);
+	}
 	
-	private transient Map<Event, Object> current = new WeakHashMap<Event, Object>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<Event, Iterator<?>>();
-	
+	private transient Map<Event, Object> current = new WeakHashMap<>();
+	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
+
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		if (exprs[0].isSingle()) {
+			Skript.error("Can't loop a single object");
+			return false;
+		}
+		if (Container.class.isAssignableFrom(exprs[0].getReturnType())) {
+			final ContainerType type = exprs[0].getReturnType().getAnnotation(ContainerType.class);
+			if (type == null)
+				throw new SkriptAPIException(exprs[0].getReturnType().getName() + " implements Container but is missing the required @ContainerType annotation");
+			this.expr = new ContainerExpression((Expression<? extends Container<?>>) exprs[0], type.value());
+		} else {
+			this.expr = exprs[0];
+		}
+		return true;
+	}
+
 	@Nullable
 	private TriggerItem actualNext;
-	
+
 	@SuppressWarnings("unchecked")
-	public <T> Loop(final Expression<?> expr, final SectionNode node) {
-		assert expr != null;
+	public Loop(final SectionNode node) {
 		assert node != null;
-		if (Container.class.isAssignableFrom(expr.getReturnType())) {
-			final ContainerType type = expr.getReturnType().getAnnotation(ContainerType.class);
-			if (type == null)
-				throw new SkriptAPIException(expr.getReturnType().getName() + " implements Container but is missing the required @ContainerType annotation");
-			this.expr = new ContainerExpression((Expression<? extends Container<?>>) expr, type.value());
-		} else {
-			this.expr = expr;
-		}
 		ScriptLoader.currentSections.add(this);
 		ScriptLoader.currentLoops.add(this);
 		try {
@@ -70,7 +89,7 @@ public class Loop extends TriggerSection {
 		}
 		super.setNext(this);
 	}
-	
+
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
@@ -94,30 +113,29 @@ public class Loop extends TriggerSection {
 			return walk(e, true);
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "loop " + expr.toString(e, debug);
 	}
-	
+
 	@Nullable
 	public Object getCurrent(final Event e) {
 		return current.get(e);
 	}
-	
+
 	public Expression<?> getLoopedExpression() {
 		return expr;
 	}
-	
+
 	@Override
 	public Loop setNext(final @Nullable TriggerItem next) {
 		actualNext = next;
 		return this;
 	}
-	
+
 	@Nullable
 	public TriggerItem getActualNext() {
 		return actualNext;
 	}
-	
 }

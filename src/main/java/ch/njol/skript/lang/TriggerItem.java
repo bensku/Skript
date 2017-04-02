@@ -87,7 +87,6 @@ public abstract class TriggerItem implements Debuggable {
 		try {
 			while (i != null)
 				i = i.walk(e);
-			
 			return true;
 		} catch (final StackOverflowError err) {
 			final Trigger t = start.getTrigger();
