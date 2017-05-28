@@ -400,6 +400,10 @@ public class SimpleEvents {
 				.description("Called when slime splits.")
 				.examples("")
 				.since("2.2-dev26");
+		Skript.registerEvent("Entity Change Block", SimpleEvent.class, EntityChangeBlockEvent.class, "entity change block")
+				.description("Called when an entity changes a block.")
+				.examples("")
+				.since("2.2-dev28");
 		
 	}
 }
