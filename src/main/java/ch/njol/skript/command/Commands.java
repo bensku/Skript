@@ -354,7 +354,7 @@ public abstract class Commands {
 		final ScriptCommand existingCommand = commands.get(command);
 		if (alsoRegister && existingCommand != null && existingCommand.getLabel().equals(command)) {
 			final File f = existingCommand.getScript();
-			Skript.error("A command with the name /" + command + " is already defined" + (f == null ? "" : " in " + f.getName()));
+			Skript.error("A command with the name /" + existingCommand.getName() + " is already defined" + (f == null ? "" : " in " + f.getName()));
 			return null;
 		}
 		
@@ -492,7 +492,7 @@ public abstract class Commands {
 		final ScriptCommand existingCommand = commands.get(command.getLabel());
 		if (existingCommand != null && existingCommand.getLabel().equals(command.getLabel())) {
 			final File f = existingCommand.getScript();
-			Skript.error("A command with the name /" + command + " is already defined" + (f == null ? "" : " in " + f.getName()));
+			Skript.error("A command with the name /" + existingCommand.getName() + " is already defined" + (f == null ? "" : " in " + f.getName()));
 			return;
 		}
 		
