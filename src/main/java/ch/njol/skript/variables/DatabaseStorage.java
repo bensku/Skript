@@ -50,22 +50,21 @@ import ch.njol.util.SynchronizedReference;
 /**
  * TODO create a metadata table to store some properties (e.g. Skript version, Yggdrasil version) -- but what if some variables cannot be converted? move them to a different table?
  * TODO create my own database connector or find a better one
- * 
+ *
  * @author Peter Güttinger
  */
 public class DatabaseStorage extends VariablesStorage {
-	
+
 	public final static int MAX_VARIABLE_NAME_LENGTH = 380, // MySQL: 767 bytes max; cannot set max bytes, only max characters
 			MAX_CLASS_CODENAME_LENGTH = 50, // checked when registering a class
 			MAX_VALUE_SIZE = 10000;
-	
-	private final static String TABLE_NAME = "variables21",
-			OLD_TABLE_NAME = "variables";
-	
+
+	private final static String OLD_TABLE_NAME = "variables";
+
 	private final static String SELECT_ORDER = "name, type, value, rowid";
-	
+
 	public static enum Type {
-		MYSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+		MYSQL("CREATE TABLE IF NOT EXISTS %s (" +
 				"rowid        BIGINT  NOT NULL  AUTO_INCREMENT  PRIMARY KEY," +
 				"name         VARCHAR(" + MAX_VARIABLE_NAME_LENGTH + ")  NOT NULL  UNIQUE," +
 				"type         VARCHAR(" + MAX_CLASS_CODENAME_LENGTH + ")," +
@@ -80,12 +79,13 @@ public class DatabaseStorage extends VariablesStorage {
 				final String user = s.getValue(n, "user");
 				final String password = s.getValue(n, "password");
 				final String database = s.getValue(n, "database");
+				s.setTableName(n.get("table", "variables21"));
 				if (host == null || port == null || user == null || password == null || database == null)
 					return null;
 				return new MySQL(SkriptLogger.LOGGER, "[Skript]", host, port, database, user, password);
 			}
 		},
-		SQLITE("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+		SQLITE("CREATE TABLE IF NOT EXISTS %s (" +
 				"name         VARCHAR(" + MAX_VARIABLE_NAME_LENGTH + ")  NOT NULL  PRIMARY KEY," +
 				"type         VARCHAR(" + MAX_CLASS_CODENAME_LENGTH + ")," +
 				"value        BLOB(" + MAX_VALUE_SIZE + ")," +
@@ -97,42 +97,67 @@ public class DatabaseStorage extends VariablesStorage {
 				final File f = s.file;
 				if (f == null)
 					return null;
+				s.setTableName(config.get("table", "variables21"));
 				final String name = f.getName();
 				assert name.endsWith(".db");
 				return new SQLite(SkriptLogger.LOGGER, "[Skript]", f.getParent(), name.substring(0, name.length() - ".db".length()));
 			}
 		};
-		
+
 		final String createQuery;
-		
+
 		private Type(final String createQuery) {
 			this.createQuery = createQuery;
 		}
-		
+
 		@Nullable
 		protected abstract Object initialise(DatabaseStorage s, SectionNode config);
 	}
-	
+
 	private final Type type;
-	
+	private String tableName;
+	@Nullable
+	private String formattedCreateQuery;
+
 	@SuppressWarnings("null")
 	final SynchronizedReference<Database> db = new SynchronizedReference<Database>(null);
-	
+
 	private boolean monitor = false;
 	long monitor_interval;
-	
+
 	private final static String guid = "" + UUID.randomUUID().toString();
-	
+
 	/**
 	 * The delay between transactions in milliseconds.
 	 */
 	private final static long TRANSACTION_DELAY = 500;
-	
+
 	DatabaseStorage(final String name, final Type type) {
 		super(name);
 		this.type = type;
+		this.tableName = "variables21";
 	}
-	
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	/**
+	 * Retrieve the create query with the tableName in it
+	 * @return the create query with the tableName in it (%s -> tableName)
+	 */
+	@Nullable
+	public String getFormattedCreateQuery(){
+		if (formattedCreateQuery == null){
+			formattedCreateQuery = String.format(type.createQuery, tableName);
+		}
+		return formattedCreateQuery;
+	}
+
 	/**
 	 * Doesn't lock the database for reading (it's not used anywhere else, and locking while loading will interfere with loaded variables being deleted by
 	 * {@link Variables#variableLoaded(String, Object, VariablesStorage)}).
@@ -145,14 +170,14 @@ public class DatabaseStorage extends VariablesStorage {
 				Skript.error("You need the plugin SQLibrary in order to use a database with Skript. You can download the latest version from http://dev.bukkit.org/server-mods/sqlibrary/files/");
 				return false;
 			}
-			
+
 			final Boolean monitor_changes = getValue(n, "monitor changes", Boolean.class);
 			final Timespan monitor_interval = getValue(n, "monitor interval", Timespan.class);
 			if (monitor_changes == null || monitor_interval == null)
 				return false;
 			monitor = monitor_changes;
 			this.monitor_interval = monitor_interval.getMilliSeconds();
-			
+
 			final Database db;
 			try {
 				final Object o = type.initialise(this, n);
@@ -166,30 +191,36 @@ public class DatabaseStorage extends VariablesStorage {
 				}
 				throw e;
 			}
-			
+
 			SkriptLogger.setNode(null);
-			
+
 			if (!connect(true))
 				return false;
-			
+
 			try {
 				final boolean hasOldTable = db.isTable(OLD_TABLE_NAME);
-				final boolean hadNewTable = db.isTable(TABLE_NAME);
-				
-				try {
-					db.query(type.createQuery);
-				} catch (final SQLException e) {
-					Skript.error("Could not create the variables table in the database '" + databaseName + "': " + e.getLocalizedMessage() + ". "
-							+ "Please create the table yourself using the following query: " + type.createQuery.replace(",", ", ").replaceAll("\\s+", " "));
+				final boolean hadNewTable = db.isTable(getTableName());
+
+				if (getFormattedCreateQuery() == null){
+					Skript.error("Could not create the variables table in the database. The query to create the variables table '" + tableName + "' in the database '" + databaseName + "' is null.");
 					return false;
 				}
-				
+
+				try {
+					db.query(getFormattedCreateQuery());
+				} catch (final SQLException e) {
+					Skript.error("Could not create the variables table '" + tableName + "' in the database '" + databaseName + "': " + e.getLocalizedMessage() + ". "
+							+ "Please create the table yourself using the following query: " + String.format(type.createQuery, tableName).replace(",", ", ").replaceAll("\\s+", " "));
+					return false;
+				}
+
 				if (!prepareQueries()) {
 					return false;
 				}
 				
 				// old
-				if (hasOldTable) {
+				// Table name support was added after the verison that used the legacy database format
+				if (hasOldTable && !tableName.equals("variables")) {
 					final ResultSet r1 = db.query("SELECT " + SELECT_ORDER + " FROM " + OLD_TABLE_NAME);
 					assert r1 != null;
 					try {
@@ -198,16 +229,16 @@ public class DatabaseStorage extends VariablesStorage {
 						r1.close();
 					}
 				}
-				
+
 				// new
-				final ResultSet r2 = db.query("SELECT " + SELECT_ORDER + " FROM " + TABLE_NAME);
+				final ResultSet r2 = db.query("SELECT " + SELECT_ORDER + " FROM " + getTableName());
 				assert r2 != null;
 				try {
 					loadVariables(r2);
 				} finally {
 					r2.close();
 				}
-				
+
 				// store old variables in new table and delete the old table
 				if (hasOldTable) {
 					if (!hadNewTable) {
@@ -228,7 +259,7 @@ public class DatabaseStorage extends VariablesStorage {
 						}
 					}
 					db.query("DELETE FROM " + OLD_TABLE_NAME + " WHERE value IS NULL");
-					db.query("DELETE FROM old USING " + OLD_TABLE_NAME + " AS old, " + TABLE_NAME + " AS new WHERE old.name = new.name");
+					db.query("DELETE FROM old USING " + OLD_TABLE_NAME + " AS old, " + getTableName() + " AS new WHERE old.name = new.name");
 					final ResultSet r = db.query("SELECT * FROM " + OLD_TABLE_NAME + " LIMIT 1");
 					try {
 						if (r.next()) {// i.e. the old table is not empty
@@ -258,7 +289,7 @@ public class DatabaseStorage extends VariablesStorage {
 				sqlException(e);
 				return false;
 			}
-			
+
 			// periodically executes queries to keep the collection alive
 			Skript.newThread(new Runnable() {
 				@Override
@@ -268,7 +299,7 @@ public class DatabaseStorage extends VariablesStorage {
 							try {
 								final Database db = DatabaseStorage.this.db.get();
 								if (db != null)
-									db.query("SELECT * FROM " + TABLE_NAME + " LIMIT 1");
+									db.query("SELECT * FROM " + getTableName() + " LIMIT 1");
 							} catch (final SQLException e) {}
 						}
 						try {
@@ -277,15 +308,15 @@ public class DatabaseStorage extends VariablesStorage {
 					}
 				}
 			}, "Skript database '" + databaseName + "' connection keep-alive thread").start();
-			
+
 			return true;
 		}
 	}
-	
+
 	@Override
 	protected void allLoaded() {
 		Skript.debug("Database " + databaseName + " loaded. Queue size = " + changesQueue.size());
-		
+
 		// start committing thread. Its first execution will also commit the first batch of changed variables.
 		Skript.newThread(new Runnable() {
 			@Override
@@ -308,7 +339,7 @@ public class DatabaseStorage extends VariablesStorage {
 				}
 			}
 		}, "Skript database '" + databaseName + "' transaction committing thread").start();
-		
+
 		if (monitor) {
 			Skript.newThread(new Runnable() {
 				@Override
@@ -316,10 +347,10 @@ public class DatabaseStorage extends VariablesStorage {
 					try { // variables were just downloaded, not need to check for modifications straight away
 						Thread.sleep(monitor_interval);
 					} catch (final InterruptedException e1) {}
-					
+
 					long lastWarning = Long.MIN_VALUE;
 					final int WARING_INTERVAL = 10;
-					
+
 					while (!closed) {
 						final long next = System.currentTimeMillis() + monitor_interval;
 						checkDatabase();
@@ -340,26 +371,26 @@ public class DatabaseStorage extends VariablesStorage {
 				}
 			}, "Skript database '" + databaseName + "' monitor thread").start();
 		}
-		
+
 	}
-	
+
 	@Override
 	protected boolean requiresFile() {
 		return type == Type.SQLITE;
 	}
-	
+
 	@Override
 	protected File getFile(String file) {
 		if (!file.endsWith(".db"))
 			file = file + ".db"; // required by SQLibrary
 		return new File(file);
 	}
-	
+
 	@Override
 	protected boolean connect() {
 		return connect(false);
 	}
-	
+
 	private final boolean connect(final boolean first) {
 		synchronized (db) {
 			// isConnected doesn't work in SQLite
@@ -382,10 +413,10 @@ public class DatabaseStorage extends VariablesStorage {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * (Re)creates prepared statements as they get closed as well when closing the connection
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean prepareQueries() {
@@ -397,24 +428,24 @@ public class DatabaseStorage extends VariablesStorage {
 					if (writeQuery != null)
 						writeQuery.close();
 				} catch (final SQLException e) {}
-				writeQuery = db.prepare("REPLACE INTO " + TABLE_NAME + " (name, type, value, update_guid) VALUES (?, ?, ?, ?)");
-				
+				writeQuery = db.prepare("REPLACE INTO " + getTableName() + " (name, type, value, update_guid) VALUES (?, ?, ?, ?)");
+
 				try {
 					if (deleteQuery != null)
 						deleteQuery.close();
 				} catch (final SQLException e) {}
-				deleteQuery = db.prepare("DELETE FROM " + TABLE_NAME + " WHERE name = ?");
-				
+				deleteQuery = db.prepare("DELETE FROM " + getTableName() + " WHERE name = ?");
+
 				try {
 					if (monitorQuery != null)
 						monitorQuery.close();
 				} catch (final SQLException e) {}
-				monitorQuery = db.prepare("SELECT " + SELECT_ORDER + " FROM " + TABLE_NAME + " WHERE rowid > ? AND update_guid != ?");
+				monitorQuery = db.prepare("SELECT " + SELECT_ORDER + " FROM " + getTableName() + " WHERE rowid > ? AND update_guid != ?");
 				try {
 					if (monitorCleanUpQuery != null)
 						monitorCleanUpQuery.close();
 				} catch (final SQLException e) {}
-				monitorCleanUpQuery = db.prepare("DELETE FROM " + TABLE_NAME + " WHERE value IS NULL AND rowid < ?");
+				monitorCleanUpQuery = db.prepare("DELETE FROM " + getTableName() + " WHERE value IS NULL AND rowid < ?");
 			} catch (final SQLException e) {
 				Skript.exception(e, "Could not prepare queries for the database '" + databaseName + "': " + e.getLocalizedMessage());
 				return false;
@@ -422,7 +453,7 @@ public class DatabaseStorage extends VariablesStorage {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void disconnect() {
 		synchronized (db) {
@@ -433,7 +464,7 @@ public class DatabaseStorage extends VariablesStorage {
 				db.close();
 		}
 	}
-	
+
 	/**
 	 * Params: name, type, value, GUID
 	 * <p>
@@ -462,7 +493,7 @@ public class DatabaseStorage extends VariablesStorage {
 	 */
 	@Nullable
 	PreparedStatement monitorCleanUpQuery;
-	
+
 	@Override
 	protected boolean save(final String name, final @Nullable String type, final @Nullable byte[] value) {
 		synchronized (db) {
@@ -495,7 +526,7 @@ public class DatabaseStorage extends VariablesStorage {
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public void close() {
@@ -513,9 +544,9 @@ public class DatabaseStorage extends VariablesStorage {
 			}
 		}
 	}
-	
+
 	long lastRowID = -1;
-	
+
 	protected void checkDatabase() {
 		try {
 			final long lastRowID; // local variable as this is used to clean the database below
@@ -539,7 +570,7 @@ public class DatabaseStorage extends VariablesStorage {
 				if (r != null)
 					r.close();
 			}
-			
+
 			if (!closed) { // Skript may have been disabled in the meantime // TODO not fixed
 				new Task(Skript.getInstance(), (long) Math.ceil(2. * monitor_interval / 50) + 100, true) { // 2 times the interval + 5 seconds
 					@Override
@@ -563,7 +594,7 @@ public class DatabaseStorage extends VariablesStorage {
 			sqlException(e);
 		}
 	}
-	
+
 //	private final static class VariableInfo {
 //		final String name;
 //		final byte[] value;
@@ -575,16 +606,16 @@ public class DatabaseStorage extends VariablesStorage {
 //			this.ci = ci;
 //		}
 //	}
-	
+
 //	final static LinkedList<VariableInfo> syncDeserializing = new LinkedList<VariableInfo>();
-	
+
 	/**
 	 * Doesn't lock the database - {@link #save(String, String, byte[])} does that // what?
 	 */
 	private void loadVariables(final ResultSet r) throws SQLException {
 //		assert !Thread.holdsLock(db);
 //		synchronized (syncDeserializing) {
-		
+
 		final SQLException e = Task.callSync(new Callable<SQLException>() {
 			@Override
 			@Nullable
@@ -630,7 +661,7 @@ public class DatabaseStorage extends VariablesStorage {
 		});
 		if (e != null)
 			throw e;
-		
+
 //			if (!syncDeserializing.isEmpty()) {
 //				Task.callSync(new Callable<Void>() {
 //					@Override
@@ -653,7 +684,7 @@ public class DatabaseStorage extends VariablesStorage {
 //			}
 //		}
 	}
-	
+
 //	private final static class OldVariableInfo {
 //		final String name;
 //		final String value;
@@ -665,61 +696,61 @@ public class DatabaseStorage extends VariablesStorage {
 //			this.ci = ci;
 //		}
 //	}
-	
+
 //	final static LinkedList<OldVariableInfo> oldSyncDeserializing = new LinkedList<OldVariableInfo>();
-	
+
 	@Deprecated
 	private void oldLoadVariables(final ResultSet r, final boolean hadNewTable) throws SQLException {
 //		synchronized (oldSyncDeserializing) {
-		
+
 		final VariablesStorage temp = new VariablesStorage(databaseName + " old variables table") {
 			@Override
 			protected boolean save(final String name, @Nullable final String type, @Nullable final byte[] value) {
 				assert type == null : name + "; " + type;
 				return true;
 			}
-			
+
 			@Override
 			boolean accept(@Nullable final String var) {
 				assert false;
 				return false;
 			}
-			
+
 			@Override
 			protected boolean requiresFile() {
 				assert false;
 				return false;
 			}
-			
+
 			@Override
 			protected boolean load_i(final SectionNode n) {
 				assert false;
 				return false;
 			}
-			
+
 			@Override
 			protected File getFile(final String file) {
 				assert false;
 				return new File(file);
 			}
-			
+
 			@Override
 			protected void disconnect() {
 				assert false;
 			}
-			
+
 			@Override
 			protected boolean connect() {
 				assert false;
 				return false;
 			}
-			
+
 			@Override
 			protected void allLoaded() {
 				assert false;
 			}
 		};
-		
+
 		final SQLException e = Task.callSync(new Callable<SQLException>() {
 			@SuppressWarnings("null")
 			@Override
@@ -765,7 +796,7 @@ public class DatabaseStorage extends VariablesStorage {
 		});
 		if (e != null)
 			throw e;
-		
+
 //			if (!oldSyncDeserializing.isEmpty()) {
 //				Task.callSync(new Callable<Void>() {
 //					@Override
@@ -793,12 +824,12 @@ public class DatabaseStorage extends VariablesStorage {
 //			}
 //		}
 	}
-	
+
 	void sqlException(final SQLException e) {
 		Skript.error("database error: " + e.getLocalizedMessage());
 		if (Skript.testing())
 			e.printStackTrace();
 		prepareQueries(); // a query has to be recreated after an error
 	}
-	
+
 }
