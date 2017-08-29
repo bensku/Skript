@@ -1,10 +1,8 @@
-#! VERSION: 2.0.6!
+#! VERSION: 2.0.7!
 
-#Clean up, ID order and updated by tim740, he will be updating this from now on!
+#Clean up, ID order and updated by tim740, I will be updating this from now on!
 #Check out my other content here: https://tim740.github.io/
-#Download at: https://raw.githubusercontent.com/tim740/skAliases/master/aliases-english.sk
-
-#This copy was included with Skript 2.2-dev29
+#Download at: https://forums.skunity.com/t/latest-aliases-v1-9-9-id-order-full-1-11-support/40?u=tim740
 
 item = item¦s
 block = block¦s
@@ -329,6 +327,25 @@ default aliases:
 	black(_| )concrete(_| )powder¦s = 252:15
 	[<any>](_| )concrete(_| )powder¦s = 252, 252:1, 252:2, 252:3, 252:4, 252:5, 252:6, 252:7, 252:8, 252:9, 252:10, 252:11, 252:12, 252:13, 252:14, 252:15
 
+	[white(_| )]bed(_| )item¦s = 252
+	orange(_| )bed(_| )item¦s = 355:1
+	magenta(_| )bed(_| )item¦s = 355:2
+	light(_| )blue(_| )bed(_| )item¦s = 355:3
+	yellow(_| )bed(_| )item¦s = 355:4
+	(lime|light(_| )green)(_| )bed(_| )item¦s = 355:5
+	pink(_| )bed(_| )item¦s = 355:6
+	gray(_| )bed(_| )item¦s = 355:7
+	light(_| )gray(_| )bed(_| )item¦s = 355:8
+	cyan(_| )bed(_| )item¦s = 355:9
+	purple(_| )bed(_| )item¦s = 355:10
+	blue(_| )bed(_| )item¦s = 355:11
+	brown(_| )bed(_| )item¦s = 355:12
+	green(_| )bed(_| )item¦s = 355:13
+	red(_| )bed(_| )item¦s = 355:14
+	black(_| )bed(_| )item¦s = 355:15
+	[<any>](_| )bed(_| )item¦s = 355, 355:1, 355:2, 355:3, 355:4, 355:5, 355:6, 355:7, 355:8, 355:9, 355:10, 355:11, 355:12, 355:13, 355:14, 355:15
+
+
 	knowledge(_| )book¦s = 453
 
 	# -- 1.11 --
@@ -591,26 +608,9 @@ default aliases:
 	note(_| )block¦s = 25
 
 	bed(_| )block¦s = 26
-	bed(_| )item¦s = 355:14
 	(head|top)(_| )bed(_| )block = 26:8-15
 	(foot|bottom)(_| )bed(_| )block = 26:0-7
-	white(_| )bed¦s = 355:0
-	orange(_| )bed¦s = 355:1
-	magneta(_| )bed¦s = 355:2
-	light(_| )blue(_| )bed¦s = 355:3
-	yellow(_| )bed¦s = 355:4
-	lime(_| )bed¦s = 355:5
-	pink(_| )bed¦s = 355:6
-	gray(_| )bed¦s = 355:7
-	light(_| )gray(_| )bed¦s = 355:8
-	cyan(_| )bed¦s = 355:9
-	purple(_| )bed¦s = 355:10
-	blue(_| )bed¦s = 355:11
-	brown(_| )bed¦s = 355:12
-	green(_| )bed¦s = 355:13
-	red(_| )bed¦s = 355:14
-	black(_| )bed¦s = 355:15
-	[<any>](_| )bed¦s = 26, 355, 355:0, 355:1, 355:2, 355:3, 355:4, 355:5, 355:6, 355:7, 355:8, 355:9, 355:10, 355:11, 355:12, 355:13, 355:14, 355:15
+	[<any>](_| )bed¦s = 26, 355
 
 #power rail=27 detector rail=28
 
