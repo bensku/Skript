@@ -6,7 +6,7 @@ options:
 	custom helmets: iron block or gold block or diamond block # Change this to anything you'd like
 
 on inventory click:
-	inventory action is place all or nothing:
+	inventory action is place all or nothing
 	cursor slot of player is {@custom helmets} # Check if  item is allowed as helmet
 	event-slot is helmet slot of event-player # Check that player clicked the helmet
 	cancel the event
