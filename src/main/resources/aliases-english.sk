@@ -1,10 +1,8 @@
-#! VERSION: 2.0.6!
+#! VERSION: 2.0.8!
 
-#Clean up, ID order and updated by tim740, he will be updating this from now on!
+#Clean up, ID order and updated by tim740, I will be updating this from now on!
 #Check out my other content here: https://tim740.github.io/
-#Download at: https://raw.githubusercontent.com/tim740/skAliases/master/aliases-english.sk
-
-#This copy was included with Skript 2.2-dev29
+#Download at: https://forums.skunity.com/t/latest-aliases-v1-9-9-id-order-full-1-11-support/40?u=tim740
 
 item = item¦s
 block = block¦s
@@ -42,7 +40,7 @@ collections:
 	# === Collections ===
 
 	# all ores
-	ore¦s = coal ore, iron ore, gold ore, diamond ore, lapis ore, any redstone ore
+	ore¦s = coal ore, iron ore, gold ore, diamond ore, lapis ore, quartz ore, any redstone ore
 	# fuels, i.e. items which can be burned in the furnace
 	fuel¦s = lava bucket, blaze rod, any coal, any wood plank, log, huge mushroom, workbench, fence, wooden stairs, oak trapdoor, sapling, stick, chest, jukebox, note block
 	# note: the above aliases are used in 'furnace automatisation.cfg'
@@ -50,7 +48,7 @@ collections:
 	# all food which can be eaten by rightclicking, i.e. doesn't include cake.
 	food¦s = any apple, mushroom soup, bread, any porkchop, any fish, cookie, melon slice, any beef, any chicken, rotten flesh, any carrot, any potato, pumpkin pie
 	# the same list but without raw food & rotten flesh
-	healthy food¦s = any apple, mushroom soup, bread, cooked porkchop, cooked fish, cookie, melon slice, steak, cooked chicken, any carrot, potato, baked potato, pumpkin pie
+	healthy(_| )food¦s = any apple, mushroom soup, bread, cooked porkchop, cooked fish, cookie, melon slice, steak, cooked chicken, any carrot, potato, baked potato, pumpkin pie
 
 	# all vehicles, i.e. all minecarts and the boat
 	vehicle¦s = any minecart, boat
@@ -81,63 +79,63 @@ default aliases:
 		flat = :0-1, :8-9
 		inclined = :2-5, :10-13
 	# normal rail
-	[any] {minerail} [minecart] (rail|track)[s] = 27, 28, 66
-	{minerail} [minecart] (rail|track)[s] (item|block) = 66
+	[any](_| ){minerail}(_| )[minecart(_| )](rail|track)[s] = 27, 28, 66
+	{minerail}(_| )[minecart(_| )](rail|track)[s](_| )(item|block) = 66
 	# powered rail
-	{minerail straight} powered [minecart] (rail|track) = 27
-	{minerail straight} [minecart] booster¦s = 27
-	{minerail straight} [minecart] booster (rail|track)¦s = 27
-	{minerail straight} powered [minecart] (rail|track)¦ on¦s on = powered rail:8-15
-	{minerail straight} powered [minecart] (rail|track)¦ off¦s off = powered rail:0-7
-	{minerail straight} active powered [minecart] (rail|track)¦s = powered rail:8-15
-	{minerail straight} inactive powered [minecart] (rail|track)¦s = powered rail:0-7
-	{minerail straight} [minecart] booster¦ on¦s on = powered rail:8-15
-	{minerail straight} [minecart] booster¦ off¦s off = powered rail:0-7
-	{minerail straight} [minecart] booster (rail|track)¦ on¦s on = powered rail:8-15
-	{minerail straight} [minecart] booster (rail|track)¦ off¦s off = powered rail:0-7
-	{minerail straight} (active|powered) [minecart] booster¦s = powered rail:8-15
-	{minerail straight} (inactive|unpowered) [minecart] booster¦s = powered rail:0-7
-	{minerail straight} (active|powered) [minecart] booster (rail|track)¦s = powered rail:8-15
-	{minerail straight} (inactive|unpowered) [minecart] booster (rail|track)¦s = powered rail:0-7
-	# detector rail
-	{minerail straight} detector [minecart] (rail|track)¦s = 28
-	{minerail straight} detector [minecart] (rail|track)¦ on¦s on = detector rail:8-15
-	{minerail straight} detector [minecart] (rail|track)¦ off¦s off = detector rail:0-7
-	{minerail straight} active detector [minecart] (rail|track)¦s = detector rail:8-15
-	{minerail straight} inactive detector [minecart] (rail|track)¦s = detector rail:0-7
+	{minerail straight}(_| )powered(_| )[minecart(_| )](rail|track)¦s = 27
+	{minerail straight}(_| )[minecart(_| )]booster¦s = 27
+	{minerail straight}(_| )[minecart(_| )]booster(_| )(rail|track)¦s = 27
+	{minerail straight}(_| )powered(_| )[minecart(_| )](rail[s]|track[s])(_| )on = 27:8-15
+	{minerail straight}(_| )powered(_| )[minecart(_| )](rail[s]|track[s])(_| )off = 27:0-7
+	{minerail straight}(_| )active(_| )powered(_| )[minecart(_| )](rail|track)¦s = 27:8-15
+	{minerail straight}(_| )inactive(_| )powered(_| )[minecart(_| )](rail|track)¦s = 27:0-7
+	{minerail straight}(_| )[minecart(_| )]booster(_| )on = 27:8-15
+	{minerail straight}(_| )[minecart(_| )]booster(_| )off = 27:0-7
+	{minerail straight}(_| )[minecart(_| )]booster(_| )(rail[s]|track[s])(_| )on = 27:8-15
+	{minerail straight}(_| )[minecart(_| )]booster(_| )(rail[s]|track[s])(_| )off = 27:0-7
+	{minerail straight}(_| )(active|powered)(_| )[minecart(_| )]booster¦s = 27:8-15
+	{minerail straight}(_| )(inactive|unpowered)(_| )[minecart(_| )]booster¦s = 27:0-7
+	{minerail straight}(_| )(active|powered)(_| )[minecart(_| )]booster (rail|track)¦s = 27:8-15
+	{minerail straight}(_| )(inactive|unpowered)(_| )[minecart(_| )]booster (rail|track)¦s = 27:0-7
+	# detector rail flat minecart booster rail ons on
+	{minerail straight}(_| )detector(_| )[minecart(_| )](rail|track)¦s = 28
+	{minerail straight}(_| )detector(_| )[minecart(_| )](rail[s]|track[s]) on = 28:8-15
+	{minerail straight}(_| )detector(_| )[minecart(_| )](rail[s]|track[s]) off = 28:0-7
+	{minerail straight}(_| )active(_| )detector(_| )[minecart(_| )](rail|track)¦s = 28:8-15
+	{minerail straight}(_| )inactive(_| )detector(_| )[minecart(_| )](rail|track)¦s = 28:0-7
 	# activator rail
-	{minerail straight} activator [minecart] (rail|track)¦s = 157
+	{minerail straight}(_| )activator(_| )[minecart(_| )](rail|track)¦s = 157
 
 	{huge mushroom type}:
 		{default} = 99, 100
 		brown = 99
 		red = 100
-	huge {huge mushroom type} mushroom¦s = :
-	huge {huge mushroom type} mushroom cap¦s = :1-9 #0 is not a real cap piece
-	mushroom stem4 block = 99:10
-	mushroom stem6 block = 99:15
-	mushroom plain block = 99:0
+	huge(_| ){huge mushroom type}(_| )mushroom¦s = :
+	huge(_| ){huge mushroom type}(_| )mushroom cap¦s = :1-9 #0 is not a real cap piece
+	mushroom(_| )stem4(_| )block = 99:10
+	mushroom(_| )stem6(_| )block = 99:15
+	mushroom(_| )plain(_| )block = 99:0
 
 	{flower pot}:
 		(empty|nothing) = :0
 		(rose|red flower) = :1
 		(dandelion|yellow flower) = :2
 		flower = :1-2
-		(normal|regular|oak) sapling = :3
-		(pine|redwood|fir|spruce) sapling = :4
-		birch sapling = :5
-		jungle [tree] sapling = :6
+		(normal|regular|oak)(_| )sapling = :3
+		(pine|redwood|fir|spruce)(_| )sapling = :4
+		birch(_| )sapling = :5
+		jungle(_| )[tree](_| )sapling = :6
 		sapling = :3-6
-		red mushroom = :7
-		brown mushroom = :8
+		red(_| )mushroom = :7
+		brown(_| )mushroom = :8
 		mushroom = :7-8
 		cactus = :9
-		dead bush = :10
+		dead(_| )bush = :10
 		fern = :11
-	red sandstone double slab¦s = 181
-	red sandstone slab¦s = 182
-	nether brick slab¦s = 44:6
-	nether quartz slab¦s = 44:7
+	red(_| )sandstone(_| )double(_| )slab¦s = 181
+	red(_| )sandstone(_| )slab¦s = 182
+	nether(_| )brick(_| )slab¦s = 44:6
+	nether(_| )quartz(_| )slab¦s = 44:7
 	oak(_| )stair¦s= 126:0
 	spruce(_| )stair¦= 126:1
 	birch(_| )stair¦= 126:2
@@ -200,12 +198,12 @@ default aliases:
 		brick = :4, :12
 		stone(_| )brick[s] = :5, :13
 
-	{slab facing no default} {stone slab} {stone slab type no default} (step|slab)¦s = :
-	{slab facing} {stone slab} {stone slab type} (step|slab) (block|item)¦s = :
-	{slab facing no default} {wooden slab} {wooden slab type} [wood[en]] (step|slab)¦s = :
-	{slab facing} {wooden slab} {wooden slab type} (step|slab) (block|item)¦s = :
-	{slab facing no default} {any slab} (step|slab)¦s = :
-	{slab facing} {any slab} (step|slab) (block|item)¦s = :
+	{slab facing no default}(_| ){stone slab}(_| ){stone slab type no default}(_| )(step|slab)¦s = :
+	{slab facing}(_| ){stone slab}(_| ){stone slab type}(_| )(step|slab)(_| )(block|item)¦s = :
+	{slab facing no default}(_| ){wooden slab}(_| ){wooden slab type}(_| )[wood[en]](_| )(step|slab)¦s = :
+	{slab facing}(_| ){wooden slab}(_| ){wooden slab type} (step|slab)(_| )(block|item)¦s = :
+	{slab facing no default}(_| ){any slab}(_| )(step|slab)¦s = :
+	{slab facing}(_| ){any slab}(_| )(step|slab)(_| )(block|item)¦s = :
 
 	# -- stairs --
 	{stairs}:
@@ -232,8 +230,8 @@ default aliases:
 		any = :0-7
 		upside-down = :4-7
 
-	{stairs direction no default} {stairs} stair[s] = :
-	{stairs direction} {stairs} stair[s] (block|item)¦s = :
+	{stairs direction no default}(_| ){stairs}(_| )stair[s] = :
+	{stairs direction}(_| ){stairs}(_| )stair[s](_| )(block|item)¦s = :
 
 	# -- doors, trapdoors and fence(_| )gates --
 	# I currently discourage from creating aliases like 'open door' or doors with specific facings
@@ -245,13 +243,13 @@ default aliases:
 		{default} = 77, 143
 		stone = 77
 		wood[en] = 143
-	{button} button¦s = :
-	{button} button¦ on¦s on = :8-15
-	pressed {button} button¦s = :8-15
-	active {button} button¦s = :8-15
-	{button} button¦ off¦s off = :0-7
-	unpressed {button} button¦s = :0-7
-	inactive {button} button¦s = :0-7
+	{button}(_| )button¦s = :
+	{button}(_| )button(_| )on = :8-15
+	pressed(_| ){button}(_| )button¦s = :8-15
+	active(_| ){button}(_| )button¦s = :8-15
+	{button}(_| )button(_| )off = :0-7
+	unpressed(_| ){button}(_| )button¦s = :0-7
+	inactive(_| ){button}(_| )button¦s = :0-7
 
 	# -- mob head --
 	{mob head direction}:
@@ -259,10 +257,11 @@ default aliases:
 		wall = :2-5
 	{mob head type}:
 		skeleton = :0
-		wither skeleton = :1
+		wither(_| )skeleton = :1
 		zombie = :2
 		(human|player) = :3
 		creeper = :4
+		ender[(_| )]dragon = :5
 
 	# -- fish --
 	{fish}:
@@ -329,6 +328,25 @@ default aliases:
 	black(_| )concrete(_| )powder¦s = 252:15
 	[<any>](_| )concrete(_| )powder¦s = 252, 252:1, 252:2, 252:3, 252:4, 252:5, 252:6, 252:7, 252:8, 252:9, 252:10, 252:11, 252:12, 252:13, 252:14, 252:15
 
+	[white(_| )]bed(_| )item¦s = 252
+	orange(_| )bed(_| )item¦s = 355:1
+	magenta(_| )bed(_| )item¦s = 355:2
+	light(_| )blue(_| )bed(_| )item¦s = 355:3
+	yellow(_| )bed(_| )item¦s = 355:4
+	(lime|light(_| )green)(_| )bed(_| )item¦s = 355:5
+	pink(_| )bed(_| )item¦s = 355:6
+	gray(_| )bed(_| )item¦s = 355:7
+	light(_| )gray(_| )bed(_| )item¦s = 355:8
+	cyan(_| )bed(_| )item¦s = 355:9
+	purple(_| )bed(_| )item¦s = 355:10
+	blue(_| )bed(_| )item¦s = 355:11
+	brown(_| )bed(_| )item¦s = 355:12
+	green(_| )bed(_| )item¦s = 355:13
+	red(_| )bed(_| )item¦s = 355:14
+	black(_| )bed(_| )item¦s = 355:15
+	[<any>](_| )bed(_| )item¦s = 355, 355:1, 355:2, 355:3, 355:4, 355:5, 355:6, 355:7, 355:8, 355:9, 355:10, 355:11, 355:12, 355:13, 355:14, 355:15
+
+
 	knowledge(_| )book¦s = 453
 
 	# -- 1.11 --
@@ -353,7 +371,7 @@ default aliases:
 	[<any>](_| )shulker(_| )(box|chest)¦s = 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234
 
 	treasure(_| )map¦s = 358
-	totem(_| )of(_| )Undying¦s = 449
+	totem(_| )of(_| )undying¦s = 449
 	shulker(_| )shell¦s = 450
 	iron(_| )nugget¦s = 452
 
@@ -391,10 +409,10 @@ default aliases:
 	beetroot(_| )seeds = 435
 	beetroot(_| )soup¦s = 436
 	dragon(_| )breath¦s = 437
-	splash(_| )potion¦s = 438
+	splash(_| )water(_| )bottle¦s = 438
 	spectral(_| )arrow¦s = 439
 	tipped(_| )arrow¦s = 440
-	lingering(_| )potion¦s = 441
+	lingering(_| )water(_| )bottle¦s = 441
 	shield¦s = 442
 	elytra¦s = 443
 	spruce(_| )boat¦s = 444
@@ -445,7 +463,7 @@ default aliases:
 	coarse(_| )dirt = 3:1
 	podzol = 3:2
 
-	cobble[stone] = 4
+	cobble[(_| )stone] = 4
 
 	oak(_| )[wood[en](_| )]plank¦s = 5
 	spruce(_| )[wood[en](_| )]plank¦s = 5:1
@@ -460,7 +478,7 @@ default aliases:
 	birch(_| )sapling¦s = 6:2
 	jungle(_| )sapling¦s = 6:3
 	acacia(_| )sapling¦s = 6:4
-	dark(_| )sapling¦s = 6:5
+	dark(_| )[oak(_| )]sapling¦s = 6:5
 	[<any>](_| )sapling = 6:0-5
 
 	bedrock = 7
@@ -496,37 +514,43 @@ default aliases:
 
 	#---
 
-	oak(_| )[wood[en](_| )]log¦s = 17
-	spruce(_| )[wood[en](_| )]log¦s = 17:1
-	birch(_| )[wood[en](_| )]log¦s = 17:2
-	jungle(_| )[wood[en](_| )]log¦s = 17:3
-	acacia(_| )[wood[en](_| )]log¦s = 162
-	dark(_| )oak(_| )[wood[en](_| )]log¦s = 162:1
-	[<any>](_| )[wood[en](_| )]log¦s = 17:0-3, 162:0-1
+	[<any>](_| )oak(_| )[wood[en](_| )]log[s](_| )[item¦s] = 17
+	[<any>](_| )oak(_| )[wood[en](_| )]log(_| )block¦s = 17:0, 17:4, 17:8
+
+	[<any>]spruce(_| )[wood[en](_| )]log[s](_| )[item¦s] = 17:1
+	[<any>](_| )spruce(_| )[wood[en](_| )]log(_| )block¦s = 17:1, 17:5, 17:9
+	
+	[<any>]birch(_| )[wood[en](_| )]log[s](_| )[item¦s] = 17:2
+	[<any>](_| )birch(_| )[wood[en](_| )]log(_| )block¦s = 17:2, 17:6, 17:10
+	
+	[<any>]jungle(_| )[wood[en](_| )]log[s](_| )[item¦s] = 17:3
+	[<any>](_| )jungle(_| )[wood[en](_| )]log(_| )block¦s = 17:3, 17:7, 17:11
+	
+	[<any>]acacia(_| )[wood[en](_| )]log[s](_| )[item¦s] = 162
+	[<any>](_| )acacia(_| )[wood[en](_| )]log(_| )block¦s = 162:0, 162:4, 162:8
+	
+	[<any>]dark(_| )oak(_| )[wood[en](_| )]log[s](_| )[item¦s] = 162:1
+	[<any>](_| )dark(_| )oak(_| )[wood[en](_| )]log(_| )block¦s = 162:1, 162:5, 162:9
 
 
-	oak(_| )[wood[en](_| )]log¦s(_| )north-south = 17:8
-	spruce(_| )[wood[en](_| )]log¦s(_| )north-south = 17:9
-	birch(_| )[wood[en](_| )]log¦s(_| )north-south = 17:10
-	jungle(_| )[wood[en](_| )]log¦s(_| )north-south = 17:11
-	acacia(_| )[wood[en](_| )]log¦s(_| )north-south = 162:8
-	dark(_| )oak(_| )[wood[en](_| )]logv(_| )north-south = 162:9
-	[<any>](_| )[wood[en](_| )]log¦s(_| )north-south = 17:8-11, 162:8-9
+	oak(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 17:8
+	spruce(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 17:9
+	birch(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 17:10
+	jungle(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 17:11
+	acacia(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 162:8
+	dark(_| )oak(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 162:9
+	[<any>](_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(north-south|south-north) = 17:8-11, 162:8-9
 
-	oak(_| )[wood[en](_| )]log¦s(_| )east-west = 17:4
-	spruce(_| )[wood[en](_| )]log¦s(_| )east-west = 17:5
-	birch(_| )[wood[en](_| )]log¦s(_| )east-west = 17:6
-	junsgle(_| )[wood[en](_| )]log¦s(_| )east-west = 17:7
-	acacia(_| )[wood[en](_| )]log¦s(_| )east-west = 162:4
-	dark(_| )oak(_| )[wood[en](_| )]log¦s(_| )east-west = 162:5
-	[<any>](_| )[wood[en](_| )]log¦s(_| )east-west = 17:4-7, 162:4-5
+	oak(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 17:4
+	spruce(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 17:5
+	birch(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 17:6
+	jungle(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 17:7
+	acacia(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 162:4
+	dark(_| )oak(_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 162:5
+	[<any>](_| )[wood[en](_| )]log[s][(_| )block[s]](_| )(east-west|west-east) = 17:4-7, 162:4-5
 
-	[<any>](_| )oak(_| )[wood[en](_| )]log¦s = 17, 17:8, 17:4
-	[<any>](_| )spruce(_| )[wood[en](_| )]log¦s = 17:1, 17:9, 17:5
-	[<any>](_| )birch(_| )[wood[en](_| )]log¦s = 17:2, 17:10, 17:6
-	[<any>](_| )jungle(_| )[wood[en](_| )]log¦s = 17:3, 17:11, 17:7
-	[<any>](_| )acacia(_| )[wood[en](_| )]log¦s = 162, 162:8, 162:4
-	[<any>](_| )dark(_| )oak(_| )[wood[en](_| )]log¦s = 162:1, 162:9, 162:5
+	[<any>](_| )[wood[en](_| )]log[s](_| )[item¦s] = 17:0-3, 162:0-1
+	[<any>](_| )[wood[en](_| )]log(_| )block¦s = 17:0-11, 162:0-1, 162:4-5, 162:8-9
 
 	# ---
 
@@ -591,26 +615,9 @@ default aliases:
 	note(_| )block¦s = 25
 
 	bed(_| )block¦s = 26
-	bed(_| )item¦s = 355:14
 	(head|top)(_| )bed(_| )block = 26:8-15
 	(foot|bottom)(_| )bed(_| )block = 26:0-7
-	white(_| )bed¦s = 355:0
-	orange(_| )bed¦s = 355:1
-	magneta(_| )bed¦s = 355:2
-	light(_| )blue(_| )bed¦s = 355:3
-	yellow(_| )bed¦s = 355:4
-	lime(_| )bed¦s = 355:5
-	pink(_| )bed¦s = 355:6
-	gray(_| )bed¦s = 355:7
-	light(_| )gray(_| )bed¦s = 355:8
-	cyan(_| )bed¦s = 355:9
-	purple(_| )bed¦s = 355:10
-	blue(_| )bed¦s = 355:11
-	brown(_| )bed¦s = 355:12
-	green(_| )bed¦s = 355:13
-	red(_| )bed¦s = 355:14
-	black(_| )bed¦s = 355:15
-	[<any>](_| )bed¦s = 26, 355, 355:0, 355:1, 355:2, 355:3, 355:4, 355:5, 355:6, 355:7, 355:8, 355:9, 355:10, 355:11, 355:12, 355:13, 355:14, 355:15
+	[<any>](_| )bed¦s = 26, 355
 
 #power rail=27 detector rail=28
 
@@ -636,25 +643,24 @@ default aliases:
 	sticky(_| )piston(_| )extension¦s = 34:8-13
 	[<any>](_| )piston(_| )extension¦s = 34
 
-	white(_| )wool(_| )block = 35
-	orange(_| )wool(_| )block = 35:1
-	magenta(_| )wool(_| )block = 35:2
-	light(_| )blue(_| )wool(_| )block = 35:3
-	yellow(_| )wool(_| )block = 35:4
-	light(_| )green(_| )wool(_| )block = 35:5
-	pink(_| )wool(_| )block = 35:6
-	gray(_| )wool(_| )block = 35:7
-	light(_| )gray(_| )wool(_| )block = 35:8
-	cyan(_| )wool(_| )block = 35:9
-	purple(_| )wool(_| )block = 35:10
-	blue(_| )wool(_| )block = 35:11
-	brown(_| )wool(_| )block = 35:12
-	[dark(_| )]green(_| )wool(_| )block = 35:13
-	red(_| )wool(_| )block = 35:14
-	black(_| )wool(_| )block = 35:15
-	[<any>](_| )wool(_| )block = 35:0-15
+	white(_| )wool[(_| )block]¦s = 35
+	orange(_| )wool[(_| )block]¦s = 35:1
+	magenta(_| )wool[(_| )block]¦s = 35:2
+	light(_| )blue(_| )wool[(_| )block]¦s = 35:3
+	yellow(_| )wool[(_| )block]¦s = 35:4
+	light(_| )green(_| )wool[(_| )block]¦s = 35:5
+	pink(_| )wool[(_| )block]¦s = 35:6
+	gray(_| )wool[(_| )block]¦s = 35:7
+	light(_| )gray(_| )wool[(_| )block]¦s = 35:8
+	cyan(_| )wool[(_| )block]¦s = 35:9
+	purple(_| )wool[(_| )block]¦s = 35:10
+	blue(_| )wool[(_| )block]¦s = 35:11
+	brown(_| )wool[(_| )block]¦s = 35:12
+	[dark(_| )]green(_| )wool[(_| )block]¦s = 35:13
+	red(_| )wool[(_| )block]¦s = 35:14
+	black(_| )wool[(_| )block]¦s = 35:15
+	[<any>](_| )wool[(_| )block]¦s = 35:0-15
 
-	block(_| )36 = 36
 	block(_| )moved(_| )by(_| )piston = 36
 	moving(_| )block¦s = 36
 
@@ -689,9 +695,9 @@ default aliases:
 
 	(TNT|dynamite)¦s = 46
 
-	bookshel¦f¦ves = 47
+	book[s][(_| )]shel¦f¦ves = 47
 
-	mossy(_| )cobble[stone] = 48
+	moss[y](_| )cobble[(_| )stone] = 48
 
 	obsidian = 49
 
@@ -704,7 +710,7 @@ default aliases:
 	finite(_| )fire¦s = 51:0-14
 	(new|fresh)(_| )fire¦s = 51:0
 
-	mob(_| )spawner¦s = 52
+	[mob(_| )]spawner¦s = 52
 
 #oak stairs=53
 
@@ -717,7 +723,7 @@ default aliases:
 	diamond(_| )ore¦s = 56
 
 	diamond(_| )block¦s = 57
-	block¦¦s¦(_| )of(_| )diamond = 57
+	block[s](_| )of(_| )diamond = 57
 
 	crafting(_| )table¦s = 58
 	workbench¦es = 58
@@ -750,7 +756,7 @@ default aliases:
 #rail=66 cobble stairs=67
 
 	wall(_| )sign¦s = 68
-	sign¦s = 63, 68, 323
+	[<any>](_| )sign¦s = 63, 68, 323
 
 	lever¦s = 69
 	(unpulled|unthrown|inactive)(_| )lever¦s = 69:0-7
@@ -809,7 +815,8 @@ default aliases:
 
 	jukebox¦es = 84
 
-	fence¦s = 85
+	oak(_| )fence¦s = 85
+	[<any>](_| )[wood[en](_| )]fence¦s = 85, 189, 190, 191, 192
 
 	pumpkin¦s = 86
 
@@ -821,7 +828,7 @@ default aliases:
 
 	[nether](_| )portal¦s = 90
 
-	jack-o-lantern¦s = 91
+	jack(-| )o['](-| )lantern¦s = 91
 	glowing(_| )pumpkin¦s = 91
 
 	cake(_| )block¦s = 92
@@ -857,9 +864,9 @@ default aliases:
 	black(_| )glass(_| )block = 95:15
 	[<any>](_| )glass(_| )block = 95:0-15
 
-	oak trapdoor¦s = 96
-	open[ed] oak trapdoor¦s = 96:4-7
-	closed oak trapdoor¦s = 96:0-3
+	oak(_| )trapdoor¦s = 96
+	open[ed](_| )oak(_| )trapdoor¦s = 96:4-7
+	closed(_| )oak(_| )trapdoor¦s = 96:0-3
 
 	silverfish(_| )block¦s = 97:0-2
 	hidden(_| )silverfish¦es = 97:0-2
@@ -877,7 +884,8 @@ default aliases:
 
 #brown mushroom block=99/red=100
 
-	bars(_| )@x = 101
+	[iron](_| )bar[s](_| )block¦s = 101
+	iron(_| )(fence|wall) = 101
 
 	[plain(_| )]glass(_| )pane¦s = 102
 
@@ -913,8 +921,8 @@ default aliases:
 
 #nether brick stairs=114
 
-	nether(_| )wart(_| )block¦s = 115
-	freshly(_| )planted(_| )nether(_| )wart¦s = 115:0
+	nether(_| )wart(_| )plant[(_| )block]¦s = 115
+	[freshly](_| )planted(_| )nether(_| )wart[(_| )block]¦s = 115
 	ripe(_| )nether(_| )wart¦s = 115:3
 	nether(_| )wart¦s = 115, 372
 
@@ -966,7 +974,7 @@ default aliases:
 	tripwire¦s = 132
 
 	emerald(_| )block¦s @an = 133
-	block¦¦s¦(_| )of(_| )emerald = 133
+	block[s](_| )of(_| )emerald¦s = 133
 
 #spruce wood(_| )stairs=134/birch=135/jungle=136
 
@@ -1015,7 +1023,7 @@ default aliases:
 	daylight(_| )sensor¦s = 151
 
 	redstone(_| )block¦s = 152
-	block¦¦s¦(_| )of(_| )redstone = 152
+	block[s](_| )of(_| )redstone¦s = 152
 
 	[nether](_| )quartz(_| )ore = 153
 
@@ -1073,9 +1081,9 @@ default aliases:
 
 	barrier = 166
 
-	iron trapdoor¦s = 167
-	iron open[ed] trapdoor¦s = 167:4-7
-	iron closed trapdoor¦s = 167:0-3
+	iron(_| )trapdoor¦s = 167
+	open[ed](_| )iron(_| )trapdoor¦s = 167:4-7
+	closed(_| )iron(_| )trapdoor¦s = 167:0-3
 
 	prismarine = 168
 	prismarine(_| )bricks = 168:1
@@ -1084,7 +1092,7 @@ default aliases:
 	sea(_| )lantern = 169
 
 	(hay|wheat)(_| )block¦s = 170
-	block¦¦s¦(_| )of(_| )(hay|wheat) = 170
+	block¦s(_| )of(_| )(hay|wheat[s]) = 170
 
 	white(_| )(carpet|rug)¦s = 171
 	orange(_| )(carpet|rug)¦s = 171:1
@@ -1107,7 +1115,7 @@ default aliases:
 	hard[ened](_| )clay = 172
 
 	coal(_| )block = 173
-	block¦¦s¦(_| )of(_| )coal = 173
+	block[s](_| )of(_| )coal¦s = 173
 	coal = 263:0, 173
 
 	packed(_| )ice = 174
@@ -1186,15 +1194,15 @@ default aliases:
 	dark(_| )oak(_| )door(_| )top = 197:8-9
 	dark(_| )oak(_| )door(_| )bottom = 197:0-7
 
-	spruce(_| )door item¦s = 427
+	spruce(_| )door(_| )item¦s = 427
 	spruce(_| )door¦s = 427, 193
-	birch(_| )door item¦s = 428
+	birch(_| )door(_| )item¦s = 428
 	birch(_| )door¦s = 428, 194
-	jungle(_| )door item¦s = 429
+	jungle(_| )door(_| )item¦s = 429
 	jungle(_| )door¦s = 429, 195
-	dark(_| )oak(_| )door item¦s = 430
+	dark(_| )oak(_| )door(_| )item¦s = 430
 	dark(_| )oak(_| )door¦s = 430, 196
-	acacia(_| )door item¦s = 431
+	acacia(_| )door(_| )item¦s = 431
 	acacia(_| )door¦s = 431, 197
 
 	[<any>](_| )wood[en](_| )door¦s = 64, 193, 194, 195, 196, 197
@@ -1253,8 +1261,7 @@ default aliases:
 	gold[en](_| )axe¦s = 286
 	string¦s = 287
 	feather¦s = 288
-	sulphur = 289
-	gunpowder = 289
+	(gunpowder|sulphur)¦s = 289
 	wood[en](_| )hoe¦s = 290
 	stone(_| )hoe¦s = 291
 	iron(_| )hoe¦s@an = 292
@@ -1292,24 +1299,21 @@ default aliases:
 	pork[chop](_| )item¦s = 319
 	raw(_| )pork[chop]¦s = 319
 	(cooked|grilled)(_| )pork[chop]¦s = 320
-	painting¦s = 321
-	painting(_| )item¦s = 321
+	painting[(_| )item]¦s = 321
 	golden(_| )apple¦s = 322:0-1
 	golden(_| )apple(_| )item¦s = 322:0
-	enchanted(_| )golden(_| )apple¦s @an = 322:1
-	(god|notch)(_| )apple¦s @an = 322:1
+	(god|notch|enchanted|super)(_| )golden(_| )apple¦s @an = 322:1
 	sign(_| )item¦s = 323
-	oak(_| )door item¦s = 324
-	oak(_| )door¦s = 324, 194
+	oak(_| )door[s](_| )item¦s = 324
 	[empty](_| )bucket¦s = 325
 	water(_| )bucket¦s = 326
-	bucket¦¦s¦(_| )of(_| )water = 326
+	bucket[s](_| )of(_| )water = 326
 	lava(_| )bucket¦s = 327
-	bucket¦¦s¦(_| )of(_| )lava = 327
+	bucket[s](_| )of(_| )lava = 327
 	[<any>] minecart¦s = 328, 342, 343, 407, 408
 	minecart(_| )item¦s = 328
 	saddle¦s = 329
-	iron(_| )door item¦s = 330
+	iron(_| )door(_| )item¦s = 330
 	iron(_| )door¦s = 330, 71
 	redstone = 331
 	redstone(_| )dust = 331
@@ -1336,7 +1340,7 @@ default aliases:
 	glowstone(_| )dust = 348
 	{fish}(_| )item¦s = 349
 	raw(_| ){fish} = 349
-	[<any>] {fish} = 349, 350
+	[<any>](_| ){fish} = 349, 350
 	cooked(_| ){fish} = 350
 	dye¦s = 351:0-15
 	white(_| )dye¦s = 351:15
@@ -1362,7 +1366,7 @@ default aliases:
 	rose(_| )red = 351:1
 	black(_| )dye¦s = 351:0
 	ink(_| )sack¦s = 351:0
-	bone¦s = 352
+	bone[(_| )item]¦s = 352
 	sugar = 353
 	cake(_| )item¦s = 354
 	[redstone](_| )(repeater|diode)(_| )item¦s = 356
@@ -1374,7 +1378,7 @@ default aliases:
 	melon(_| )seeds = 362
 	[<any>](_| )beef = 363, 364
 	beef(_| )item¦s = 363, 364
-	[raw](_| )beef = 363
+	[raw(_| )]beef = 363
 	steak¦s = 364
 	cooked(_| )beef = 364
 	[<any>](_| )chicken¦s = 365, 366
@@ -1385,45 +1389,44 @@ default aliases:
 	ender(_| )pearl¦s @an = 368
 	blaze(_| )rod¦s = 369
 	ghast(_| )tear¦s = 370
-	gold(_| )nugget¦s = 371
+	gold[en](_| )nugget¦s = 371
 	nether(_| )wart(_| )item¦s = 372
 	water(_| )bottle¦s = 373
 	potion¦s = 373
-	bottle¦¦s¦(_| )of(_| )water = 373
+	bottle[s](_| )of(_| )water = 373
 	[glass](_| )bottle¦s = 374
 	vial¦s = 374
 	spider(_| )eye¦s = 375
 	fermented(_| )spider(_| )eye¦s = 376
-	blaze(_| )powder = 377
+	blaze[(_| )rod](_| )powder = 377
 	magma(_| )cream¦s = 378
 	brewing(_| )stand(_| )item¦s = 379
 	cauldron(_| )item¦s = 380
-	eye¦¦s¦(_| )of(_| )ender @an = 381
+	eye[s](_| )of(_| )ender @an = 381
 	glistering(_| )melon¦s = 382
-	spawn(_| )egg¦s = 383
+	spawn[er](_| )egg¦s = 383
 	noegg = 383:1
-	bottle¦¦s¦(_| )(o'|of)(_| )enchanting = 384
-	(xp|exp[erience])(_| )bottle¦s @an = 384
+	bottle[s](_| )(o[']|of)(_| )enchanting = 384
+	[e]xp[erience[s]](_| )bottle¦s = 384
 	fire(_| )charge¦s = 385
-	book¦¦s¦(_| )(and|with)(_| )quill = 386
+	book[s](_| )(and|with)(_| )[a(_| )]quill = 386
 	written(_| )book¦s = 387
-	emerald¦s = 388
+	emerald[(_| )item]¦s = 388
 	item(_| )frame¦s = 389
 	flower(_| )pot(_| )item¦s = 390
 	carrot[s](_| )[item¦s] = 391
 	[<any>](_| )carrot[s](_| )[item¦s] = 391, 396
-	potato¦es = 392
-	potato[es](_| )item¦s = 392
+	potato[es](_| )[item]¦s = 392
 	baked(_| )potato¦es = 393
-	poisonous(_| )potato¦es = 394
+	poison[ous](_| )potato¦es = 394
 	[<any>](_| )potato¦es = 392, 393, 394
 	empty(_| )map¦s @an = 395
-	golden(_| )carrot¦s = 396
+	gold[en](_| )carrot¦s = 396
 	{mob head type}(_| )[mob](_| )head[(_| )item]¦s = 397
-	carrot¦(_| )on(_| )a(_| )stick¦s(_| )on(_| )sticks = 398
+	carrot[s](_| )on(_| )[a(_| )]stick¦s = 398
 	(nether|wither)(_| )star¦s = 399
 	pumpkin(_| )pie¦s = 400
-	firework(_| )rocket¦s = 401
+	firework[(_| )rocket]¦s = 401
 	firework(_| )star¦s = 402
 	enchanted(_| )book¦s @an = 403
 	redstone(_| )comparator(_| )item¦s = 404
@@ -1439,13 +1442,13 @@ default aliases:
 	rabbit(_| )stew = 413
 	rabbit(_| )foot = 414
 	rabbit(_| )hide = 415
-	armor(_| )stand = 416
+	armo[u]r(_| )stand = 416
 	iron(_| )horse(_| )armo[u]r¦s = 417
 	gold(_| )horse(_| )armo[u]r¦s = 418
 	diamond(_| )horse(_| )armo[u]r¦s = 419
 	lead¦s = 420
 	name(_| )tag¦s = 421
-	command(_| )block(_| )minecart¦¦s¦ = 422
+	command(_| )block(_| )minecart¦s = 422
 	[<any>](_| )mutton = 423, 424
 	raw(_| )mutton = 423
 	cooked(_| )mutton = 424
@@ -1508,39 +1511,37 @@ default aliases:
 
 #TYPE TO TYPE
 	piston¦s = piston base, piston extension
-	piston (item|block)¦s = piston base
-	sticky piston¦s = sticky piston base, sticky piston extension
-	sticky piston (item|block)¦s = sticky piston base
-	[<any>](_| )extended piston base¦s = extended piston base, extended sticky piston base
-	extended piston¦s = extended piston base, piston extension
-	extended sticky piston¦s = extended sticky piston base, sticky piston extension
-	[<any>](_| )extended piston¦s = any extended piston base, any piston extension
-	[<any>](_| )retracted piston¦s = retracted piston, retracted sticky piston
+	piston(_| )(item|block)¦s = piston base
+	sticky(_| )piston¦s = sticky piston base, sticky piston extension
+	sticky(_| )piston(_| )(item|block)¦s = sticky piston base
+	[<any>](_| )extended(_| )piston(_| )base¦s = extended piston base, extended sticky piston base
+	extended(_| )piston¦s = extended piston base, piston extension
+	extended(_| )sticky piston¦s = extended sticky piston base, sticky piston extension
+	[<any>](_| )extended(_| )piston¦s = any extended piston base, any piston extension
+	[<any>](_| )retracted(_| )piston¦s = retracted piston, retracted sticky piston
 
-	powered [redstone] wire¦s = redstone wire on
-	[redstone] wire¦s = redstone wire off
-	active [redstone] wire¦s = redstone wire on
-	inactive [redstone] wire¦s = redstone wire off
+	powered[(_| )redstone](_| )wire¦s = redstone wire on
+	[redstone(_| )]wire¦s = redstone wire off
+	active[(_| )redstone](_| )wire¦s = redstone wire on
+	inactive[(_| )redstone](_| )wire¦s = redstone wire off
 
-	[<any>](_| )stained glass block = 95:0-15
+	[<any>](_| )stained(_| )glass(_| )block = 95:0-15
 	#[<any>](_| )glass block = 20, [<any>](_| )stained glass block
 
-	[<any>](_| )stained glass pane = 160:0-15
+	[<any>](_| )stained(_| )glass(_| )pane = 160:0-15
 	#[<any>](_| )glass pane = 102, [<any>](_| )stained glass pane
 
 	#[<any>](_| )glass = [<any>](_| )glass block, [<any>](_| )glass pane
 
-	[<any>](_| )log = 162:0-1, 17:0-3
+	[<any>](_| )leaves = 18:0-15, 161:0-15
+	[<any>](_| )permanent(_| )leaves = 18:4-7, 18:12-15, 161:4-7, 161:12-15
 
-	[<any>] leaves = 18:0-15, 161:0-15
-	[<any>] permanent leaves = 18:4-7, 18:12-15, 161:4-7, 161:12-15
-
-	[<any>] flower¦s = any small flower, any large flower
+	[<any>](_| )flower¦s = any small flower, any large flower
 
 	# -- music discs --
 	music(_| )disc¦s = 2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263, 2264, 2265, 2266, 2267
 	record¦s = music disc
-	gold(_| )[music] disc¦s = 2256
+	gold(_| )[music](_| )]disc¦s = 2256
 	13-disc¦s = 2256
 	(green|cat)(_| )[music](_| )disc¦s = 2257
 	blocks(_| )[music](_| )disc¦s = 2258

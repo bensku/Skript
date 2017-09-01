@@ -5,8 +5,8 @@
 on break of glass:
 	drop glass
 
-on break of thin glass:
-	drop thin glass
+on break of glass pane:
+	drop glass pane
 
 on break of bookshelf:
 	cancel event
