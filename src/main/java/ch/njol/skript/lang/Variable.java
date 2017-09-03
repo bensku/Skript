@@ -388,24 +388,7 @@ public class Variable<T> implements Expression<T> {
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		switch (mode) {
 			case DELETE:
-				assert delta != null;
-				if (list) {
-				final ArrayList<String> rem = new ArrayList<>(); 
-				final Map<String, Object> o = (Map<String, Object>) getRaw(e);
-					if (o == null)
-						return;
-					for (final Entry<String, Object> i : o.entrySet()) {
-						if (i.getKey() != null){
-						rem.add(i.getKey());
-						}
-					}
-					for (final String r : rem) {
-						assert r != null;
-						setIndex(e, r, null);
-					}
-				}else{
-					set(e, null);
-				}
+				set(e, null);
 				break;
 			case SET:
 				assert delta != null;
