@@ -42,16 +42,16 @@ import ch.njol.util.Kleenean;
 @Description({"Hashes the given text using the MD5, SHA-256 or PBKDF2 algorithms. Each algorithm is suitable for different use cases.<p>",
 		"MD5 is provided mostly for backwards compatibility, as it is outdated and not secure. ",
 		"SHA-256 is more secure, and can used to hash somewhat confidental data like IP addresses. You should NOT use it to hash passwords, though. ",
-		"PBKDF2 is most secure of hashing algorithms that Skript supports. Note that Skript does not salt hashes, that is your responsibility. ",
+		"PBKDF2 is the most secure of the hashing algorithms Skript supports. Note that Skript does not salt hashes, that is your responsibility. ",
 		"When hashing data, you <strong>must</strong> specify algorithms that will be used for security reasons! ",
-		"<p>Please note that a hash cannot be reversed under normal circumstanses. You will not be able to get original value from a hash with Skript."})
+		"<p>Please note that a hash cannot be reversed under normal circumstances. You will not be able to get original value from a hash with Skript."})
 @Examples({
 		"command /setpass <text>:",
 		"	trigger:",
-		"		set {password.%player%} to text-argument hashed with PBKDF2",
+		"		set {password::%uuid of player%} to arg-1 hashed with PBKDF2",
 		"command /login <text>:",
 		"	trigger:",
-		"		{password.%player%} is text-argument hashed with PBKDF2:",
+		"		if {password::%uuid of player%} is arg-1 hashed with PBKDF2:",
 		"			message \"login successful.\"",
 		"		else:",
 		"			message \"wrong password!\""})
