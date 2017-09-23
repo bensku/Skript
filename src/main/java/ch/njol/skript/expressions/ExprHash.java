@@ -55,7 +55,7 @@ import ch.njol.util.Kleenean;
 		"			message \"login successful.\"",
 		"		else:",
 		"			message \"wrong password!\""})
-@Since("2.0 (2.2-dev32 for algorithms other than SHA-256)")
+@Since("2.0 (2.2-dev32 for algorithms other than MD5)")
 public class ExprHash extends PropertyExpression<String, String> {
 	static {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
