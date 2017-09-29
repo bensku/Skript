@@ -52,10 +52,10 @@ import ch.njol.util.Kleenean;
 		"command /login <text>:",
 		"	trigger:",
 		"		{password.%player%} is text-argument hashed with SHA-256:",
-		"			message \"login successful.\"",
+		"			message \"Login successful.\"",
 		"		else:",
-		"			message \"wrong password!\""})
-@Since("2.0 (2.2-dev32 for SHA-256)")
+		"			message \"Wrong password!\""})
+@Since("2.0, 2.2-dev32 (SHA-256 algorithm)")
 public class ExprHash extends PropertyExpression<String, String> {
 	static {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
