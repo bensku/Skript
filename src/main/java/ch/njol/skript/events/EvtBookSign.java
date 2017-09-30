@@ -33,7 +33,7 @@ public class EvtBookSign extends SkriptEvent{
 		Skript.registerEvent("Book Sign", EvtBookSign.class, PlayerEditBookEvent.class, "book sign[ing]")
 				.description("Called when a player signs a book")
 				.examples("")
-				.since("");
+				.since("2.2-dev31");
 	}
 	
 	@Override
