@@ -50,9 +50,9 @@ public class EvtChat extends SelfRegisteringSkriptEvent {
 		Skript.registerEvent("Chat", EvtChat.class, PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class, "chat")
 				.description("Called whenever a player chats. Use <a href='../expressions.html#ExprChatFormat'>chat format</a> to change message format, use <a href='../expressions.html#ExprChatRecipients'>chat recipients</a> to edit chat recipients.")
 				.examples("on chat:",
-					 	"	if player has permission \"owner\"",
+					 	"	if player has permission \"owner\":",
 					 	"		set chat format to \"<red>[player]<light gray>: <light red>[message]\"",
-					 	"	else if player has permission \"admin\"",
+					 	"	else if player has permission \"admin\":",
 					 	"		set chat format to \"<light red>[player]<light gray>: <orange>[message]\"",
 					 	"	else: #default message format",
 					 	"		set chat format to \"<orange>[player]<light gray>: <white>[message]\"")
