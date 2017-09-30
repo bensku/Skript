@@ -31,9 +31,11 @@ import ch.njol.skript.doc.Since;
  * @author Peter Güttinger
  */
 @Name("Is Blocking")
-@Description("Checks whether a player is blocking with his sword.")
-@Examples("victim is blocking")
-@Since("")
+@Description("Checks whether a player is blocking with his shield.")
+@Examples("on damage of player:",
+	  	"	victim is blocking",
+	 	"	damage attacker by 0.5 hearts")
+@Since("<i>unknown</i> (before 2.1)")
 public class CondIsBlocking extends PropertyCondition<Player> {
 	
 	static {
