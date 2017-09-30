@@ -167,7 +167,7 @@ public class SimpleEvents {
 		Skript.registerEvent("Zombie Break Door", SimpleEvent.class, EntityBreakDoorEvent.class, "zombie break[ing] [a] [wood[en]] door")
 				.description("Called when a zombie is done breaking a wooden door. Can be cancelled to prevent the zombie from breaking the door.")
 				.examples("")
-				.since("");
+				.since("1.0");
 		Skript.registerEvent("Combust", SimpleEvent.class, EntityCombustEvent.class, "combust[ing]")
 				.description("Called when an entity is set on fire, e.g. by fire or lava, a fireball, or by standing in direct sunlight (zombies, skeletons).")
 				.examples("")
