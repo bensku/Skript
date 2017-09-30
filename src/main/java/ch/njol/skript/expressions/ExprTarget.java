@@ -52,7 +52,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on entity target:",
 		"    entity's target is a player",
 		"    send \"You're being followed by an %entity%!\" to target of entity"})
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	static {
 		Skript.registerExpression(ExprTarget.class, Entity.class, ExpressionType.PROPERTY,
