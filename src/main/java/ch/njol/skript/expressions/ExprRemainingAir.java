@@ -35,7 +35,7 @@ import ch.njol.skript.util.Timespan;
 @Description("How much time a player has left underwater before starting to drown.")
 @Examples({"player's remaining air is less than 3 seconds:",
 		"	send \"hurry, get to the surface!\" to the player"})
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Timespan> {
 	static {
 		register(ExprRemainingAir.class, Timespan.class, "remaining air", "livingentities");
