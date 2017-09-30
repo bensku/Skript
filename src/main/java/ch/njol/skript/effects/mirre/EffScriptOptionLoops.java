@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 @Description("Changes loops to emulate given Skript version's behaviour.")
 @Examples({"use old loops",
 		"use new loops"})
-@Since("unknown (2.2)")
+@Since("<i>unknown</i> (2.2)")
 public class EffScriptOptionLoops extends Effect {
 
 	//use (1¦old|2¦new|1¦2.1.2|2¦2.2) loops
