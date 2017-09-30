@@ -49,7 +49,7 @@ import ch.njol.util.Math2;
 		"Armor is colourable for all Minecraft versions. With Minecraft 1.11 or newer you can also colour potions and maps. Note that the colours might not look exactly how you'd expect.")
 @Examples({"dye player's helmet blue",
 		"colour the player's tool red"})
-@Since("2.0 (2.2-dev26 for maps and potions)")
+@Since("2.0, 2.2-dev26 (maps and potions)")
 public class EffColorArmor extends Effect {
 	
 	private static final boolean potionColors = Skript.isRunningMinecraft(1, 11);
