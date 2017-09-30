@@ -54,7 +54,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 		"	block contains loop-item",
 		"	message \"Theres at least one %loop-item% in this block\"",
 		"drop all blocks at the player # drops one of every block at the player"})
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class ExprItems extends SimpleExpression<ItemStack> {
 	
 	static {
