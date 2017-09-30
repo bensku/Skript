@@ -36,7 +36,7 @@ import ch.njol.skript.util.Slot;
 @Name("Is Empty")
 @Description("Checks whether an inventory, an inventory slot, or a text is empty.")
 @Examples("player's inventory is empty")
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class CondIsEmpty extends PropertyCondition<Object> {
 	static {
 		register(CondIsEmpty.class, "empty", "inventories/slots/strings");
