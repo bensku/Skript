@@ -43,7 +43,7 @@ import ch.njol.skript.util.Slot;
 @Examples({"on dispense:",
 		"	item is a clock",
 		"	set the time to 6:00"/*,"	delete the item"*/})
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class ExprItem extends EventValueExpression<ItemStack> {
 	static {
 		Skript.registerExpression(ExprItem.class, ItemStack.class, ExpressionType.SIMPLE, "[the] item");
