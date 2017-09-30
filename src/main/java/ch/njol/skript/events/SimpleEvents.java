@@ -304,7 +304,7 @@ public class SimpleEvents {
 				.description("Called when a player starts or stops sprinting. Use <a href='../conditions/#CondIsSprinting'>is sprinting</a> to get whether the player was sprinting before the event was called.")
 				.examples("on sprint toggle:",
 						"	player is not sprinting",
-						"	send "Run!")
+						"	send \"Run!\"")
 				.since("1.0");
 		Skript.registerEvent("Portal Create", SimpleEvent.class, PortalCreateEvent.class, "portal create")
 				.description("Called when a portal is created, either by a player or mob lighting an obsidian frame on fire, or by a nether portal creating its teleportation target in the nether/overworld.",
@@ -418,6 +418,9 @@ public class SimpleEvents {
 		}
 		Skript.registerEvent("Player World Change", SimpleEvent.class, PlayerChangedWorldEvent.class, "player world change[d]")
 				.description("Called when a player enters a world. Does not work with other entities!")
+				.examples("on player world change:",
+						"	world is \"city\"",
+					 	"	send \"Welcome to the City!\"")
 				.since("2.2-dev28");
 	}
 }
