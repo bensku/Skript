@@ -33,7 +33,7 @@ public class EvtBookEdit extends SkriptEvent{
 		Skript.registerEvent("Book Edit", EvtBookEdit.class, PlayerEditBookEvent.class, "book (edit|change|write)")
 			.description("Called when a player edits a book")
 			.examples("")
-			.since("");
+			.since("2.2-dev31");
 	}
 	
 	@Override
