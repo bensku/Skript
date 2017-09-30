@@ -52,7 +52,7 @@ import ch.njol.util.Kleenean;
 		"	loop-block is not air:",
 		"		exit 2 sections",
 		"	set loop-block to water"})
-@Since("")
+@Since("<i>unknown</i> (before 2.1)")
 public class EffExit extends Effect { // TODO [code style] warn user about code after a stop effect
 	static {
 		Skript.registerEffect(EffExit.class,
