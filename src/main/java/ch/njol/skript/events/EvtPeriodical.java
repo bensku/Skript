@@ -44,9 +44,9 @@ public class EvtPeriodical extends SelfRegisteringSkriptEvent {
 				.description(SkriptEventInfo.NO_DOC);
 		Skript.registerEvent("*Periodical", EvtPeriodical.class, ScheduledEvent.class, "every %timespan% in [world[s]] %worlds%")
 				.description("An event that is called periodically. The event is used like 'every &lt;<a href='../classes/#timespan'>timespan</a>&gt;', e.g. 'every second' or 'every 5 minutes'.")
-				.examples("every second",
+				.examples("every 2 seconds",
 						"every minecraft hour",
-						"every tick # warning: lag!",
+						"every ticks",
 						"every minecraft day in \"world\"")
 				.since("1.0");
 	}
