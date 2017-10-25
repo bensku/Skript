@@ -194,365 +194,375 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onEnable() {
-		if (disabled) {
-			Skript.error(m_invalid_reload.toString());
-			setEnabled(false);
-			return;
-		}
-		
-		//System.setOut(new FilterPrintStream(System.out));
-		
-		ChatMessages.registerListeners();
-		Language.loadDefault(getAddonInstance());
-		
-		Workarounds.init();
-		
-		version = new Version("" + getDescription().getVersion());
-		runningCraftBukkit = Bukkit.getServer().getClass().getName().equals("org.bukkit.craftbukkit.CraftServer");
-		runningSpigot = classExists("net.md_5.bungee.api.chat.TextComponent"); // Check for Bungee's chat
-		runningPaper = classExists("co.aikar.timings.Timings"); // Check for Paper timings
-		final String bukkitV = Bukkit.getBukkitVersion();
-		final Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
-		if (!m.find()) {
-			Skript.error("The Bukkit version '" + bukkitV + "' does not contain a version number which is required for Skript to enable or disable certain features. " +
-					"Skript will still work, but you might get random errors if you use features that are not available in your version of Bukkit.");
-			minecraftVersion = new Version(666, 0, 0);
-		} else {
-			minecraftVersion = new Version("" + m.group());
-		}
-		
-		if (!getDataFolder().isDirectory())
-			getDataFolder().mkdirs();
-		
-		final File scripts = new File(getDataFolder(), SCRIPTSFOLDER);
-		if (!scripts.isDirectory()) {
-			ZipFile f = null;
-			try {
-				if (!scripts.mkdirs())
-					throw new IOException("Could not create the directory " + scripts);
-				f = new ZipFile(getFile());
-				for (final ZipEntry e : new EnumerationIterable<ZipEntry>(f.entries())) {
-					if (e.isDirectory())
-						continue;
-					File saveTo = null;
-					if (e.getName().startsWith(SCRIPTSFOLDER + "/")) {
-						final String fileName = e.getName().substring(e.getName().lastIndexOf('/') + 1);
-						saveTo = new File(scripts, (fileName.startsWith("-") ? "" : "-") + fileName);
-					} else if (e.getName().equals("config.sk")) {
-						final File cf = new File(getDataFolder(), e.getName());
-						if (!cf.exists())
-							saveTo = cf;
-					} else if (e.getName().startsWith("aliases-") && e.getName().endsWith(".sk") && !e.getName().contains("/")) {
-						final File af = new File(getDataFolder(), e.getName());
-						if (!af.exists())
-							saveTo = af;
-					} else if (e.getName().startsWith("features.sk")) {
-						final File af = new File(getDataFolder(), e.getName());
-						if (!af.exists())
-							saveTo = af;
-					}
-					if (saveTo != null) {
-						final InputStream in = f.getInputStream(e);
-						try {
-							assert in != null;
-							FileUtils.save(in, saveTo);
-						} finally {
-							in.close();
-						}
-					}
-				}
-				info("Successfully generated the config, the example scripts and the aliases files.");
-			} catch (final ZipException e) {} catch (final IOException e) {
-				error("Error generating the default files: " + ExceptionUtils.toString(e));
-			} finally {
-				if (f != null) {
-					try {
-						f.close();
-					} catch (final IOException e) {}
-				}
+		if (Class.forName("org.spigotmc.SpigotConfig")) {
+			if (disabled) {
+				Skript.error(m_invalid_reload.toString());
+				setEnabled(false);
+				return;
 			}
-		}
-		
-		
-		getCommand("skript").setExecutor(new SkriptCommand());
-		
-		new JavaClasses();
-		new BukkitClasses();
-		new BukkitEventValues();
-		new SkriptClasses();
-		
-		new DefaultComparators();
-		new DefaultConverters();
-		new DefaultFunctions();
-		
-		
-		try {
-			getAddonInstance().loadClasses("ch.njol.skript", "conditions", "effects", "events", "expressions", "entity");
-		} catch (final Exception e) {
-			exception(e, "Could not load required .class files: " + e.getLocalizedMessage());
-			setEnabled(false);
-			return;
-		}
-		
-		SkriptConfig.load();
-		Language.setUseLocal(true);
-		
-		if (SkriptConfig.checkForNewVersion.value()) // We only start updater automatically if it was asked
-			Updater.start();
-		
-		Aliases.load();
-		
-		Commands.registerListeners();
-		
-		if (logNormal())
-			info(" " + Language.get("skript.copyright"));
-		
-		final long tick = testing() ? Bukkit.getWorlds().get(0).getFullTime() : 0;
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-			@SuppressWarnings("synthetic-access")
-			@Override
-			public void run() {
-				assert Bukkit.getWorlds().get(0).getFullTime() == tick;
-				
-				// load hooks
+
+			//System.setOut(new FilterPrintStream(System.out));
+
+			ChatMessages.registerListeners();
+			Language.loadDefault(getAddonInstance());
+
+			Workarounds.init();
+
+			version = new Version("" + getDescription().getVersion());
+			runningCraftBukkit = Bukkit.getServer().getClass().getName().equals("org.bukkit.craftbukkit.CraftServer");
+			runningSpigot = classExists("net.md_5.bungee.api.chat.TextComponent"); // Check for Bungee's chat
+			runningPaper = classExists("co.aikar.timings.Timings"); // Check for Paper timings
+			final String bukkitV = Bukkit.getBukkitVersion();
+			final Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
+			if (!m.find()) {
+				Skript.error("The Bukkit version '" + bukkitV + "' does not contain a version number which is required for Skript to enable or disable certain features. " +
+						"Skript will still work, but you might get random errors if you use features that are not available in your version of Bukkit.");
+				minecraftVersion = new Version(666, 0, 0);
+			} else {
+				minecraftVersion = new Version("" + m.group());
+			}
+
+			if (!getDataFolder().isDirectory())
+				getDataFolder().mkdirs();
+
+			final File scripts = new File(getDataFolder(), SCRIPTSFOLDER);
+			if (!scripts.isDirectory()) {
+				ZipFile f = null;
 				try {
-					final JarFile jar = new JarFile(getFile());
-					try {
-						for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
-							if (e.getName().startsWith("ch/njol/skript/hooks/") && e.getName().endsWith("Hook.class") && StringUtils.count("" + e.getName(), '/') <= 5) {
-								final String c = e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length());
-								try {
-									final Class<?> hook = Class.forName(c, true, getClassLoader());
-									if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook) {
-										hook.getDeclaredConstructor().setAccessible(true);
-										hook.getDeclaredConstructor().newInstance();
-									}
-								} catch (final ClassNotFoundException ex) {
-									Skript.exception(ex, "Cannot load class " + c);
-								} catch (final ExceptionInInitializerError err) {
-									Skript.exception(err.getCause(), "Class " + c + " generated an exception while loading");
-								}
-								continue;
+					if (!scripts.mkdirs())
+						throw new IOException("Could not create the directory " + scripts);
+					f = new ZipFile(getFile());
+					for (final ZipEntry e : new EnumerationIterable<ZipEntry>(f.entries())) {
+						if (e.isDirectory())
+							continue;
+						File saveTo = null;
+						if (e.getName().startsWith(SCRIPTSFOLDER + "/")) {
+							final String fileName = e.getName().substring(e.getName().lastIndexOf('/') + 1);
+							saveTo = new File(scripts, (fileName.startsWith("-") ? "" : "-") + fileName);
+						} else if (e.getName().equals("config.sk")) {
+							final File cf = new File(getDataFolder(), e.getName());
+							if (!cf.exists())
+								saveTo = cf;
+						} else if (e.getName().startsWith("aliases-") && e.getName().endsWith(".sk") && !e.getName().contains("/")) {
+							final File af = new File(getDataFolder(), e.getName());
+							if (!af.exists())
+								saveTo = af;
+						} else if (e.getName().startsWith("features.sk")) {
+							final File af = new File(getDataFolder(), e.getName());
+							if (!af.exists())
+								saveTo = af;
+						}
+						if (saveTo != null) {
+							final InputStream in = f.getInputStream(e);
+							try {
+								assert in != null;
+								FileUtils.save(in, saveTo);
+							} finally {
+								in.close();
 							}
 						}
-					} finally {
+					}
+					info("Successfully generated the config, the example scripts and the aliases files.");
+				} catch (final ZipException e) {} catch (final IOException e) {
+					error("Error generating the default files: " + ExceptionUtils.toString(e));
+				} finally {
+					if (f != null) {
 						try {
-							jar.close();
+							f.close();
 						} catch (final IOException e) {}
 					}
-				} catch (final Exception e) {
-					error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
-					if (testing())
-						e.printStackTrace();
 				}
-				
-				Language.setUseLocal(false);
-				
-				stopAcceptingRegistrations();
-				
-				
-				Documentation.generate(); // TODO move to test classes?
-				
-				if (logNormal())
-					info("Loading variables...");
-				final long vls = System.currentTimeMillis();
-				
-				final LogHandler h = SkriptLogger.startLogHandler(new ErrorDescLogHandler() {
-//					private final List<LogEntry> log = new ArrayList<LogEntry>();
-					
-					@Override
-					public LogResult log(final LogEntry entry) {
-						super.log(entry);
-						if (entry.level.intValue() >= Level.SEVERE.intValue()) {
-							logEx(entry.message); // no [Skript] prefix
-							return LogResult.DO_NOT_LOG;
-						} else {
-//							log.add(entry);
-//							return LogResult.CACHED;
-							return LogResult.LOG;
-						}
-					}
-					
-					@Override
-					protected void beforeErrors() {
-						logEx();
-						logEx("===!!!=== Skript variable load error ===!!!===");
-						logEx("Unable to load (all) variables:");
-					}
-					
-					@Override
-					protected void afterErrors() {
-						logEx();
-						logEx("Skript will work properly, but old variables might not be available at all and new ones may or may not be saved until Skript is able to create a backup of the old file and/or is able to connect to the database (which requires a restart of Skript)!");
-						logEx();
-					}
-					
-					@Override
-					protected void onStop() {
-						super.onStop();
-//						SkriptLogger.logAll(log);
-					}
-				});
-				final CountingLogHandler c = SkriptLogger.startLogHandler(new CountingLogHandler(SkriptLogger.SEVERE));
-				try {
-					if (!Variables.load())
-						if (c.getCount() == 0)
-							error("(no information available)");
-				} finally {
-					c.stop();
-					h.stop();
-				}
-				
-				final long vld = System.currentTimeMillis() - vls;
-				if (logNormal())
-					info("Loaded " + Variables.numVariables() + " variables in " + ((vld / 100) / 10.) + " seconds");
-				
-				ScriptLoader.loadScripts();
-				
-				Skript.info(m_finished_loading.toString());
-				
-				EvtSkript.onSkriptStart();
-				
-				final Metrics metrics = new Metrics(Skript.this);
-				
-				metrics.addCustomChart(new Metrics.SimplePie("pluginLanguage") {
-					
-					@Override
-					public String getValue() {
-						return Language.getName();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("effectCommands") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.enableEffectCommands.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("uuidsWithPlayers") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.usePlayerUUIDsInVariableNames.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("playerVariableFix") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.enablePlayerVariableFix.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("logVerbosity") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.verbosity.value().name().toLowerCase().replace('_', ' ');
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("pluginPriority") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.defaultEventPriority.value().name().toLowerCase().replace('_', ' ');
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("logPlayerCommands") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.logPlayerCommands.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("maxTargetDistance") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.maxTargetBlockDistance.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("softApiExceptions") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.apiSoftExceptions.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("timingsStatus") {
-					
-					@Override
-					public String getValue() {
-						if (!Skript.classExists("co.aikar.timings.Timings"))
-							return "unsupported";
-						else
-							return "" + SkriptConfig.enableTimings.value();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("parseLinks") {
-					
-					@Override
-					public String getValue() {
-						return "" + ChatMessages.linkParseMode.name().toLowerCase();
-					}
-				});
-				metrics.addCustomChart(new Metrics.SimplePie("colorResetCodes") {
-					
-					@Override
-					public String getValue() {
-						return "" + SkriptConfig.colorResetCodes.value();
-					}
-				});
-				
-				Skript.metrics = metrics;
-				
-				// suppresses the "can't keep up" warning after loading all scripts
-				final Filter f = new Filter() {
-					@Override
-					public boolean isLoggable(final @Nullable LogRecord record) {
-						if (record == null)
-							return false;
-						if (record.getMessage() != null && record.getMessage().toLowerCase().startsWith("can't keep up!"))
-							return false;
-						return true;
-					}
-				};
-				BukkitLoggerFilter.addFilter(f);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.this, new Runnable() {
-					@Override
-					public void run() {
-						BukkitLoggerFilter.removeFilter(f);
-					}
-				}, 1);
 			}
-		});
-		
-		Bukkit.getPluginManager().registerEvents(new Listener() {
-			@EventHandler
-			public void onJoin(final PlayerJoinEvent e) {
-				if (e.getPlayer().hasPermission("skript.admin")) {
-					new Task(Skript.this, 0) {
-						@SuppressWarnings("incomplete-switch")
+
+
+			getCommand("skript").setExecutor(new SkriptCommand());
+
+			new JavaClasses();
+			new BukkitClasses();
+			new BukkitEventValues();
+			new SkriptClasses();
+
+			new DefaultComparators();
+			new DefaultConverters();
+			new DefaultFunctions();
+
+
+			try {
+				getAddonInstance().loadClasses("ch.njol.skript", "conditions", "effects", "events", "expressions", "entity");
+			} catch (final Exception e) {
+				exception(e, "Could not load required .class files: " + e.getLocalizedMessage());
+				setEnabled(false);
+				return;
+			}
+
+			SkriptConfig.load();
+			Language.setUseLocal(true);
+
+			if (SkriptConfig.checkForNewVersion.value()) // We only start updater automatically if it was asked
+				Updater.start();
+
+			Aliases.load();
+
+			Commands.registerListeners();
+
+			if (logNormal())
+				info(" " + Language.get("skript.copyright"));
+
+			final long tick = testing() ? Bukkit.getWorlds().get(0).getFullTime() : 0;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+				@SuppressWarnings("synthetic-access")
+				@Override
+				public void run() {
+					assert Bukkit.getWorlds().get(0).getFullTime() == tick;
+
+					// load hooks
+					try {
+						final JarFile jar = new JarFile(getFile());
+						try {
+							for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
+								if (e.getName().startsWith("ch/njol/skript/hooks/") && e.getName().endsWith("Hook.class") && StringUtils.count("" + e.getName(), '/') <= 5) {
+									final String c = e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length());
+									try {
+										final Class<?> hook = Class.forName(c, true, getClassLoader());
+										if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook) {
+											hook.getDeclaredConstructor().setAccessible(true);
+											hook.getDeclaredConstructor().newInstance();
+										}
+									} catch (final ClassNotFoundException ex) {
+										Skript.exception(ex, "Cannot load class " + c);
+									} catch (final ExceptionInInitializerError err) {
+										Skript.exception(err.getCause(), "Class " + c + " generated an exception while loading");
+									}
+									continue;
+								}
+							}
+						} finally {
+							try {
+								jar.close();
+							} catch (final IOException e) {}
+						}
+					} catch (final Exception e) {
+						error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
+						if (testing())
+							e.printStackTrace();
+					}
+
+					Language.setUseLocal(false);
+
+					stopAcceptingRegistrations();
+
+
+					Documentation.generate(); // TODO move to test classes?
+
+					if (logNormal())
+						info("Loading variables...");
+					final long vls = System.currentTimeMillis();
+
+					final LogHandler h = SkriptLogger.startLogHandler(new ErrorDescLogHandler() {
+	//					private final List<LogEntry> log = new ArrayList<LogEntry>();
+
 						@Override
-						public void run() {
-							Player p = e.getPlayer();
-							if (p == null)
-								return;
-							
-							switch (Updater.state) {
-								case UPDATE_AVAILABLE:
-									Skript.info(p, "" + Updater.m_update_available);
-									break;
-								case DOWNLOADED:
-									Skript.info(p, "" + Updater.m_downloaded);
+						public LogResult log(final LogEntry entry) {
+							super.log(entry);
+							if (entry.level.intValue() >= Level.SEVERE.intValue()) {
+								logEx(entry.message); // no [Skript] prefix
+								return LogResult.DO_NOT_LOG;
+							} else {
+	//							log.add(entry);
+	//							return LogResult.CACHED;
+								return LogResult.LOG;
 							}
 						}
+
+						@Override
+						protected void beforeErrors() {
+							logEx();
+							logEx("===!!!=== Skript variable load error ===!!!===");
+							logEx("Unable to load (all) variables:");
+						}
+
+						@Override
+						protected void afterErrors() {
+							logEx();
+							logEx("Skript will work properly, but old variables might not be available at all and new ones may or may not be saved until Skript is able to create a backup of the old file and/or is able to connect to the database (which requires a restart of Skript)!");
+							logEx();
+						}
+
+						@Override
+						protected void onStop() {
+							super.onStop();
+	//						SkriptLogger.logAll(log);
+						}
+					});
+					final CountingLogHandler c = SkriptLogger.startLogHandler(new CountingLogHandler(SkriptLogger.SEVERE));
+					try {
+						if (!Variables.load())
+							if (c.getCount() == 0)
+								error("(no information available)");
+					} finally {
+						c.stop();
+						h.stop();
+					}
+
+					final long vld = System.currentTimeMillis() - vls;
+					if (logNormal())
+						info("Loaded " + Variables.numVariables() + " variables in " + ((vld / 100) / 10.) + " seconds");
+
+					ScriptLoader.loadScripts();
+
+					Skript.info(m_finished_loading.toString());
+
+					EvtSkript.onSkriptStart();
+
+					final Metrics metrics = new Metrics(Skript.this);
+
+					metrics.addCustomChart(new Metrics.SimplePie("pluginLanguage") {
+
+						@Override
+						public String getValue() {
+							return Language.getName();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("effectCommands") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.enableEffectCommands.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("uuidsWithPlayers") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.usePlayerUUIDsInVariableNames.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("playerVariableFix") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.enablePlayerVariableFix.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("logVerbosity") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.verbosity.value().name().toLowerCase().replace('_', ' ');
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("pluginPriority") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.defaultEventPriority.value().name().toLowerCase().replace('_', ' ');
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("logPlayerCommands") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.logPlayerCommands.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("maxTargetDistance") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.maxTargetBlockDistance.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("softApiExceptions") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.apiSoftExceptions.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("timingsStatus") {
+
+						@Override
+						public String getValue() {
+							if (!Skript.classExists("co.aikar.timings.Timings"))
+								return "unsupported";
+							else
+								return "" + SkriptConfig.enableTimings.value();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("parseLinks") {
+
+						@Override
+						public String getValue() {
+							return "" + ChatMessages.linkParseMode.name().toLowerCase();
+						}
+					});
+					metrics.addCustomChart(new Metrics.SimplePie("colorResetCodes") {
+
+						@Override
+						public String getValue() {
+							return "" + SkriptConfig.colorResetCodes.value();
+						}
+					});
+
+					Skript.metrics = metrics;
+
+					// suppresses the "can't keep up" warning after loading all scripts
+					final Filter f = new Filter() {
+						@Override
+						public boolean isLoggable(final @Nullable LogRecord record) {
+							if (record == null)
+								return false;
+							if (record.getMessage() != null && record.getMessage().toLowerCase().startsWith("can't keep up!"))
+								return false;
+							return true;
+						}
 					};
+					BukkitLoggerFilter.addFilter(f);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.this, new Runnable() {
+						@Override
+						public void run() {
+							BukkitLoggerFilter.removeFilter(f);
+						}
+					}, 1);
 				}
-			}
-		}, this);
-		
-		// Tell Timings that we are here!
-		SkriptTimings.setSkript(this);
+			});
+
+			Bukkit.getPluginManager().registerEvents(new Listener() {
+				@EventHandler
+				public void onJoin(final PlayerJoinEvent e) {
+					if (e.getPlayer().hasPermission("skript.admin")) {
+						new Task(Skript.this, 0) {
+							@SuppressWarnings("incomplete-switch")
+							@Override
+							public void run() {
+								Player p = e.getPlayer();
+								if (p == null)
+									return;
+
+								switch (Updater.state) {
+									case UPDATE_AVAILABLE:
+										Skript.info(p, "" + Updater.m_update_available);
+										break;
+									case DOWNLOADED:
+										Skript.info(p, "" + Updater.m_downloaded);
+								}
+							}
+						};
+					}
+				}
+			}, this);
+
+			// Tell Timings that we are here!
+			SkriptTimings.setSkript(this);
+		} else {
+            		// We assume the server is running craftbukkit as we couldn't find org.spigotmc.SpigotConfig
+            		Skript.error("=====================[Skript: Craftbukkit Detected]=====================");
+            		Skript.error("Due to issues with Craftbukkit and Skript, Skript will disabled.");
+            		Skript.error("We recommend using PaperSpigot or Spigot.");
+            		Skript.error("Skript will now be disabled.");
+            		Skript.error("=====================[Skript: Craftbukkit Detected]=====================");
+            		Bukkit.getServer().getPluginManager().disablePlugin(this);
+		}
 	}
 	
 	private static Version minecraftVersion = new Version(666);
