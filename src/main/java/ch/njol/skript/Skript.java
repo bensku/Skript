@@ -192,7 +192,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	public final static Message m_invalid_reload = new Message("skript.invalid reload"),
 			m_finished_loading = new Message("skript.finished loading");
 	
-	// Lets check before the server fully loads just to save time loading half way and needing to disable the plugin.
+	// Lets check before the server fully loads just to save time loading half way and needing to shut down the server.
 	@Override
 	public void onLoad() {
 		if (!(Class.forName("org.spigotmc.SpigotConfig"))) {
