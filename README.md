@@ -27,7 +27,7 @@ has been progress or provide more information. If it has been closed, you can do
 same thing, but then it might be good idea to ping `@bensku` since closed issues
 are not often checked.
 
-Due to several issues with Craftbukkit lately, your server will shut down with an error. We recommend using **PaperSpigot**, but other forms of spigot should work as well, but isnt recommended.
+Due to several issues with Craftbukkit lately, your server will shut down with an error. We recommend using **PaperSpigot** for better preformance, but regular spigot works too.
 
 Finally, there is no guarantee that issue will be resolved. Sometimes it might be
 harder than it sounds to you; in other cases, no one has time to take look at it.
