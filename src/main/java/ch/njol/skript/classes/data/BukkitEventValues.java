@@ -779,6 +779,13 @@ public final class BukkitEventValues {
 				return e.getClick();
 			}
 		}, 0);
+		EventValues.registerEventValue(InventoryClickEvent.class, Number.class, new Getter<Number, InventoryClickEvent>() {
+			@Override
+			@Nullable
+			public Number get(final InventoryClickEvent e) {
+				return e.getSlot();
+			}
+		}, 0);
 		// CraftItemEvent REMIND maybe re-add this when Skript parser is reworked?
 //		EventValues.registerEventValue(CraftItemEvent.class, ItemStack.class, new Getter<ItemStack, CraftItemEvent>() {
 //			@Override
