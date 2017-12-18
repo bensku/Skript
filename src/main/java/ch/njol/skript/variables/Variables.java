@@ -19,14 +19,8 @@
  */
 package ch.njol.skript.variables;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
@@ -294,8 +288,9 @@ public abstract class Variables {
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
 	public final static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
+		String n = name.toLowerCase(Locale.ENGLISH);
 		if (value != null) {
-			assert !name.endsWith("::*");
+			assert !n.endsWith("::*");
 			@SuppressWarnings("null")
 			final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
 			final Class<?> sas = ci.getSerializeAs();
@@ -305,24 +300,25 @@ public abstract class Variables {
 			}
 		}
 		if (local) {
-			assert e != null : name;
+			assert e != null : n;
 			VariablesMap map = localVariables.get(e);
 			if (map == null)
 				localVariables.put(e, map = new VariablesMap());
-			map.setVariable(name, value);
+			map.setVariable(n, value);
 		} else {
-			setVariable(name, value);
+			setVariable(n, value);
 		}
 	}
 	
 	final static void setVariable(final String name, @Nullable final Object value) {
+		String n = name.toLowerCase(Locale.ENGLISH);
 		try {
 			variablesLock.writeLock().lock();
-			variables.setVariable(name, value);
+			variables.setVariable(n, value);
 		} finally {
 			variablesLock.writeLock().unlock();
 		}
-		saveVariableChange(name, value);
+		saveVariableChange(n, value);
 	}
 	
 	/**
@@ -349,7 +345,7 @@ public abstract class Variables {
 	 */
 	final static boolean variableLoaded(final String name, final @Nullable Object value, final VariablesStorage source) {
 		assert Bukkit.isPrimaryThread(); // required by serialisation
-		
+
 		synchronized (tempVars) {
 			final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
 			if (tvs != null) {

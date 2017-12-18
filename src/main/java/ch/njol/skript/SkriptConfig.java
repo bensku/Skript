@@ -162,7 +162,7 @@ public abstract class SkriptConfig {
 	public final static Option<Boolean> disableVariableConflictWarnings = new Option<Boolean>("disable variable conflict warnings", false);
 	public final static Option<Boolean> disableObjectCannotBeSavedWarnings = new Option<Boolean>("disable variable will not be saved warnings", false);
 	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<Boolean>("disable variable missing and/or warnings", false);
-	
+
 	
 	public final static Option<Boolean> enableScriptCaching = new Option<Boolean>("enable script caching", false)
 			.optional(true);
