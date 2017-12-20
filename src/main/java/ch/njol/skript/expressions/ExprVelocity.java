@@ -41,12 +41,13 @@ import ch.njol.util.Kleenean;
  * @author Sashie
  */
 @Name("Vectors - Velocity")
-@Description("Gets, sets, adds or removes velocity to/from/of an entity")
-@Examples({"set player's velocity to {_v}"})
+@Description("Gets, sets, adds or removes the velocity/vector of entities.")
+@Examples("set player's velocity to {_vector}")
 @Since("2.2-dev31")
 public class ExprVelocity extends SimplePropertyExpression<Entity, Vector> {
+	
 	static {
-		register(ExprVelocity.class, Vector.class, "velocity", "entities");
+		register(ExprVelocity.class, Vector.class, "(vector[s]|velocit(y|ies))", "entities");
 	}
 	
 	@Override
@@ -62,38 +63,38 @@ public class ExprVelocity extends SimplePropertyExpression<Entity, Vector> {
 	@Override
 	@SuppressWarnings("null")
 	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
-		if ((mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE || mode == Changer.ChangeMode.DELETE))
+		if (!(mode == Changer.ChangeMode.REMOVE_ALL))
 			return new Class[] {Vector.class};
 		return null;
 	}
 	
 	@Override
 	@Nullable
-	public Vector convert(Entity e) {
-		return e.getVelocity();
+	public Vector convert(Entity entity) {
+		return entity.getVelocity();
 	}
 	
 	@Override
 	@SuppressWarnings("null")
-	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) throws UnsupportedOperationException {
-		for (final Entity ent : getExpr().getArray(e)) {
-			if (ent == null)
-				return;
+	public void change(final Event event, final @Nullable Object[] delta, final Changer.ChangeMode mode) throws UnsupportedOperationException {
+		if (delta == null) return;
+		for (final Entity entity : getExpr().getArray(event)) {
+			if (entity == null) return;
 			switch (mode) {
 				case ADD:
-					ent.setVelocity(ent.getVelocity().add((Vector) delta[0]));
+					entity.setVelocity(entity.getVelocity().add((Vector) delta[0]));
 					break;
 				case REMOVE:
-					ent.setVelocity(ent.getVelocity().subtract((Vector) delta[0]));
+					entity.setVelocity(entity.getVelocity().subtract((Vector) delta[0]));
 					break;
 				case REMOVE_ALL:
 					break;
 				case RESET:
 				case DELETE:
-					ent.setVelocity(new Vector());
+					entity.setVelocity(new Vector());
 					break;	
 				case SET:
-					ent.setVelocity((Vector) delta[0]);
+					entity.setVelocity((Vector) delta[0]);
 					break;
 			}
 		}
