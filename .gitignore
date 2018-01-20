@@ -10,3 +10,10 @@
 
 # Mac
 .DS_Store
+
+#Gradle
+/target
+/dep
+/build/
+/.gradle/
+/bin/
