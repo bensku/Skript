@@ -41,24 +41,36 @@ public final class Parameter<T> {
 	
 	@Nullable
 	final Expression<? extends T> def;
-	
+
 	final boolean single;
-	
+
+	final boolean nullable;
+
 	@SuppressWarnings("null")
 	public Parameter(final String name, final ClassInfo<T> type, final boolean single, final @Nullable Expression<? extends T> def) {
 		this.name = name != null ? name.toLowerCase() : null;
 		this.type = type;
 		this.def = def;
 		this.single = single;
+		this.nullable = false;
 	}
-	
+
+	@SuppressWarnings("null")
+	public Parameter(final String name, final ClassInfo<T> type, final boolean single, final @Nullable Expression<? extends T> def, boolean nullable) {
+		this.name = name != null ? name.toLowerCase() : null;
+		this.type = type;
+		this.def = def;
+		this.single = single;
+		this.nullable = nullable;
+	}
+
 	public ClassInfo<T> getType() {
 		return type;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def) {
+	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def, @Nullable Boolean nullable) {
 		if (!Variable.isValidVariableName(name, true, false)) {
 			Skript.error("An argument's name must be a valid variable name.");
 			return null;
@@ -101,9 +113,19 @@ public final class Parameter<T> {
 			}
 //			}
 		}
-		return new Parameter<>(name, type, single, d);
+		if (nullable == null) {
+			return new Parameter<>(name, type, single, d);
+		} else {
+			return new Parameter<>(name, type, single, d, nullable);
+		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def) {
+		return newInstance(name, type, single, def, null);
+	}
+
 	public String getName() {
 		return name;
 	}
