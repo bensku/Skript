@@ -21,7 +21,7 @@ where include is called.
 ## Pattern Reference
 ```
 skript.* - Information of Skript
-    version - Skript's version
+version - Skript's version
 include <filename> - Load given file and place them here
 generate <expressions/effects/events/types/functions> <loop template file> - Generated reference
 content - In template.html, marks the point where other file is placed
