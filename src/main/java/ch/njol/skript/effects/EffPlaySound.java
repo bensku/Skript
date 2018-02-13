@@ -45,7 +45,7 @@ import java.util.Locale;
 public class EffPlaySound extends Effect {
 
 	static {
-		Skript.registerEffect(EffPlaySound.class, "play sound %string% [with volume %number%] [(and|with) pitch %number%] at %location% [for %players%]");
+		Skript.registerEffect(EffPlaySound.class, "(play|send) sound %string% [with volume %number%] [(and|with) pitch %number%] at %location% [for %players%]");
 	}
 
 	@SuppressWarnings("null")

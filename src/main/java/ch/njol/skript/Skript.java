@@ -51,6 +51,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -1377,6 +1378,14 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx();
 		logEx("Current node: " + SkriptLogger.getNode());
 		logEx("Current item: " + (item == null ? "null" : item.toString(null, true)));
+		if (item != null && item.getTrigger() != null) {
+			Trigger trigger = item.getTrigger();
+			if (trigger != null) { // always true, but won't compile without this check
+				File script = trigger.getScript();
+				logEx("Current trigger: " + trigger.toString(null, true) + " (" + (script == null ? "null" : script.getName()) + ", line " + trigger.getLineNumber() + ")");
+			}
+		}
+		logEx();
 		logEx("Thread: " + (thread == null ? Thread.currentThread() : thread).getName());
 		logEx();
 		logEx("Language: " + Language.getName());
