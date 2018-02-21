@@ -39,7 +39,8 @@ public class ParrotData extends EntityData<Parrot> {
 	static {
 		if (Skript.classExists("org.bukkit.entity.Parrot")) {
 			variants = Parrot.Variant.values();
-			EntityData.register(ParrotData.class, "parrot", Parrot.class, 0, "parrot", "red parrot", "blue parrot", "green parrot", "cyan parrot", "gray parrot");
+			EntityData.register(ParrotData.class, "parrot", Parrot.class, 0,
+					"parrot", "red parrot", "blue parrot", "green parrot", "cyan parrot", "gray parrot");
 		}
 	}
 	

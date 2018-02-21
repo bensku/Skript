@@ -42,11 +42,11 @@ public class SkeletonData extends EntityData<Skeleton> {
 		// Register nothing on 1.11+ (see SimpleEntityData instead)
 		if (!separateClasses) {
 			if (hasStray)
-				register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton", "stray");
+				EntityData.register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton", "stray");
 			else if (hasWither)
-				register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton");
+				EntityData.register(SkeletonData.class, "skeleton", Skeleton.class, 0, "skeleton", "wither skeleton");
 			else
-				register(SkeletonData.class, "skeleton", Skeleton.class, "skeleton");
+				EntityData.register(SkeletonData.class, "skeleton", Skeleton.class, "skeleton");
 		}
 	}
 	
