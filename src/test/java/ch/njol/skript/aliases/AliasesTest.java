@@ -35,21 +35,18 @@ import ch.njol.skript.log.BukkitLoggerFilter;
  */
 public class AliasesTest {
 	static {
-		BukkitLoggerFilter.addFilter(new Filter() {
-			@Override
-			public boolean isLoggable(final @Nullable LogRecord record) {
-				if (record == null)
-					return false;
-				return record.getMessage() == null || !record.getMessage().startsWith("[Skript] Missing entry");
-			}
+		BukkitLoggerFilter.addFilter(record -> {
+			if (record == null)
+				return false;
+			return record.getMessage() == null || !record.getMessage().startsWith("[Skript] Missing entry");
 		});
 	}
-	
+
 	@Test
 	public void testNames() {
 		final ItemType t = new ItemType();
 		t.add(new ItemData(0));
-		
+
 		final Aliases.Variations v = new Aliases.Variations();
 		final LinkedHashMap<String, ItemType> var1 = new LinkedHashMap<>();
 		var1.put("{default}", t);
@@ -69,7 +66,7 @@ public class AliasesTest {
 		varL.put("normales ", t);
 		varL.put("Birken", t);
 		v.put("varL", varL);
-		
+
 		final String[][] tests = {
 				{"a", "a"},
 				{"a[b]c", "abc", "ac"},
@@ -84,15 +81,13 @@ public class AliasesTest {
 				{"[Holz]Block", "Holzblock", "Block"},
 				{"{varL}Holz", "Holz", "normales Holz", "Birkenholz"}
 		};
-		
+
 		for (final String[] test : tests) {
-			@SuppressWarnings("null")
-			final Set<String> names = Aliases.getAliases(test[0], t, v).keySet();
+			@SuppressWarnings("null") final Set<String> names = Aliases.getAliases(test[0], t, v).keySet();
 			assertEquals(test[0], test.length - 1, names.size());
 			int i = 1;
 			for (final String name : names)
 				assertEquals(test[0], test[i++], name);
 		}
 	}
-	
 }

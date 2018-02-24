@@ -28,7 +28,6 @@ import ch.njol.util.NonNullPair;
  * @author Peter Güttinger
  */
 public class NounTest {
-	
 	@Test
 	public void testGetPlural() {
 		final String[][] tests = {
@@ -41,13 +40,12 @@ public class NounTest {
 				{"a¦b¦c¦d¦e¦f¦g", "abdeg", "acdfg"},
 		};
 		for (final String[] test : tests) {
-			@SuppressWarnings("null")
-			final NonNullPair<String, String> p = Noun.getPlural(test[0]);
+			@SuppressWarnings("null") final NonNullPair<String, String> p = Noun.getPlural(test[0]);
 			assertEquals(test[1], p.getFirst());
 			assertEquals(test[2], p.getSecond());
 		}
 	}
-	
+
 	@SuppressWarnings("null")
 	@Test
 	public void testNormalizePluralMarkers() {
@@ -65,5 +63,4 @@ public class NounTest {
 			assertEquals(test[1] + "@x", Noun.normalizePluralMarkers(test[0] + "@x"));
 		}
 	}
-	
 }
