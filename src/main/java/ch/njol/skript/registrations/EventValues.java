@@ -1,44 +1,42 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.util.Getter;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class EventValues {
-	
-	private EventValues() {}
-	
+	private EventValues() {
+	}
+
 	private final static class EventValueInfo<E extends Event, T> {
-		
+
 		public final Class<E> event;
 		public final Class<T> c;
 		public final Getter<T, E> getter;
@@ -46,7 +44,7 @@ public class EventValues {
 		public final Class<? extends E>[] exculdes;
 		@Nullable
 		public final String excludeErrorMessage;
-		
+
 		public EventValueInfo(final Class<E> event, final Class<T> c, final Getter<T, E> getter, final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>[] exculdes) {
 			assert event != null;
 			assert c != null;
@@ -58,11 +56,11 @@ public class EventValues {
 			this.excludeErrorMessage = excludeErrorMessage;
 		}
 	}
-	
-	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<EventValueInfo<?, ?>>(30);
-	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<EventValueInfo<?, ?>>();
-	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<EventValueInfo<?, ?>>();
-	
+
+	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
+	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
+	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
+
 	private final static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
 		if (time == -1)
 			return pastEventValues;
@@ -72,10 +70,10 @@ public class EventValues {
 			return futureEventValues;
 		throw new IllegalArgumentException("time must be -1, 0, or 1");
 	}
-	
+
 	/**
 	 * Registers an event value.
-	 * 
+	 *
 	 * @param e the event type
 	 * @param c the type of the default value
 	 * @param g the getter to get the value
@@ -86,45 +84,50 @@ public class EventValues {
 	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time) {
 		registerEventValue(e, c, g, time, null, (Class<? extends E>[]) null);
 	}
-	
+
 	@Deprecated
-	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final ch.njol.skript.classes.SerializableGetter<T, E> g, final int time) {
+	public static <T, E extends Event> void registerEventValue(
+			final Class<E> e, final Class<T> c, final ch.njol.skript.classes.SerializableGetter<T, E> g, final int time) {
 		registerEventValue(e, c, (Getter<T, E>) g, time);
 	}
-	
+
 	/**
 	 * Same as {@link #registerEventValue(Class, Class, Getter, int)}
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param g
 	 * @param time
 	 * @param excludes Subclasses of the event for which this event value should not be registered for
 	 */
-	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time, final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>... excludes) {
+	public static <T, E extends Event> void registerEventValue(
+			final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time,
+			final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>... excludes) {
 		Skript.checkAcceptRegistrations();
 		final List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
 		for (int i = 0; i < eventValues.size(); i++) {
 			final EventValueInfo<?, ?> info = eventValues.get(i);
 			if (info.event != e ? info.event.isAssignableFrom(e) : info.c.isAssignableFrom(c)) {
-				eventValues.add(i, new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+				eventValues.add(i, new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 				return;
 			}
 		}
-		eventValues.add(new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+		eventValues.add(new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 	}
-	
+
 	@Deprecated
-	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final ch.njol.skript.classes.SerializableGetter<T, E> g, final int time, final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>... excludes) {
+	public static <T, E extends Event> void registerEventValue(
+			final Class<E> e, final Class<T> c, final ch.njol.skript.classes.SerializableGetter<T, E> g, final int time,
+			final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>... excludes) {
 		registerEventValue(e, c, (Getter<T, E>) g, time, excludeErrorMessage, excludes);
 	}
-	
+
 	/**
 	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to try and get the desired value).
 	 * <p>
 	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link EventValueExpression#EventValueExpression(Class)} instead of invoking this
 	 * method repeatedly.
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -133,18 +136,17 @@ public class EventValues {
 	 */
 	@Nullable
 	public static <T, E extends Event> T getEventValue(final E e, final Class<T> c, final int time) {
-		@SuppressWarnings({"null", "unchecked"})
-		final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
+		@SuppressWarnings({"null", "unchecked"}) final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
 		if (g == null)
 			return null;
 		return g.get(e);
 	}
-	
+
 	/**
 	 * Returns a getter to get a value from an event.
 	 * <p>
 	 * Can print an error if the event value is blocked for the given event.
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -153,13 +155,13 @@ public class EventValues {
 	 * @see EventValueExpression#EventValueExpression(Class)
 	 */
 	@Nullable
-	public final static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time) {
+	public static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time) {
 		return EventValues.getEventValueGetter(e, c, time, true);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
-	private final static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time, final boolean allowDefault) {
+	private static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time, final boolean allowDefault) {
 		final List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
 		boolean b;
 		for (final EventValueInfo<?, ?> ev : eventValues) {
@@ -211,9 +213,10 @@ public class EventValues {
 			return getEventValueGetter(e, c, 0, false);
 		return null;
 	}
-	
-	private final static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
-		final Class<? extends Event>[] excl = ev.exculdes;
+
+	@SuppressWarnings("unchecked")
+	private static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
+		final Class<? extends Event>[] excl = (Class<? extends Event>[]) ev.exculdes; // fixme? casted so Intellij doesn't complain but it's perfectly valid code without it
 		if (excl == null)
 			return true;
 		for (final Class<? extends Event> ex : excl) {
@@ -224,9 +227,10 @@ public class EventValues {
 		}
 		return true;
 	}
-	
+
 	@Nullable
-	private final static <E extends Event, F, T> Getter<? extends T, ? super E> getConvertedGetter(final EventValueInfo<E, F> i, final Class<T> to, final boolean checkInstanceOf) {
+	private static <E extends Event, F, T> Getter<? extends T, ? super E> getConvertedGetter(
+			final EventValueInfo<E, F> i, final Class<T> to, final boolean checkInstanceOf) {
 		final Converter<? super F, ? extends T> c = Converters.getConverter(i.c, to);
 		if (c == null)
 			return null;
@@ -243,9 +247,8 @@ public class EventValues {
 			}
 		};
 	}
-	
-	public final static boolean doesEventValueHaveTimeStates(final Class<? extends Event> e, final Class<?> c) {
+
+	public static boolean doesEventValueHaveTimeStates(final Class<? extends Event> e, final Class<?> c) {
 		return getEventValueGetter(e, c, -1, false) != null || getEventValueGetter(e, c, 1, false) != null;
 	}
-	
 }

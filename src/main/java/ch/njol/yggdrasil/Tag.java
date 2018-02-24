@@ -19,10 +19,10 @@
  */
 package ch.njol.yggdrasil;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 public enum Tag {
 	/** the null reference */

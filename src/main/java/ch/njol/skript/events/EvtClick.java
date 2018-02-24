@@ -1,28 +1,35 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.classes.data.DefaultComparators;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.log.ErrorQuality;
+import ch.njol.util.Checker;
+import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -39,45 +46,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.classes.Comparator.Relation;
-import ch.njol.skript.classes.data.DefaultComparators;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.log.ErrorQuality;
-import ch.njol.util.Checker;
-import ch.njol.util.coll.CollectionUtils;
-
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class EvtClick extends SkriptEvent {
-	
-	final static boolean twoHanded = Skript.isRunningMinecraft(1, 9);
-	
+	private final static boolean twoHanded = Skript.isRunningMinecraft(1, 9);
+
 	/**
 	 * Click types.
 	 */
 	private final static int RIGHT = 1, LEFT = 2, ANY = RIGHT | LEFT;
-	
+
 	/**
 	 * If we used "holding" somewhere there, we must check if either hand
 	 * contains the tool.
 	 */
 	private final static int HOLDING = 4;
-	
+
 	static {
 		Class<? extends PlayerEvent> clickEvent;
 		if (twoHanded) // Armor stand support!
 			clickEvent = PlayerInteractAtEntityEvent.class;
 		else
 			clickEvent = PlayerInteractEntityEvent.class;
-		
+
 		Class<? extends PlayerEvent>[] eventTypes = CollectionUtils.array(PlayerInteractEvent.class, clickEvent);
 		Skript.registerEvent("Click", EvtClick.class, eventTypes,
 				"[(" + RIGHT + "¦right|" + LEFT + "¦left)(| |-)][mouse(| |-)]click[ing] [on %-entitydata/itemtype%] [(with|using|" + HOLDING + "¦holding) %itemtype%]",
@@ -91,15 +84,15 @@ public class EvtClick extends SkriptEvent {
 						"on click with a sword")
 				.since("1.0");
 	}
-	
+
 	@Nullable
 	private Literal<?> types = null;
 	@Nullable
 	private Literal<ItemType> tools;
-	
+
 	private int click = ANY;
-	boolean isHolding = false;
-	
+	private boolean isHolding = false;
+
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		//Skript.info("matchedPattern is " + matchedPattern);
@@ -118,18 +111,18 @@ public class EvtClick extends SkriptEvent {
 		isHolding = (parser.mark & HOLDING) != 0; // Check if third-least significant byte is 1
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(final Event e) {
 		final Block block;
 		final Entity entity;
-		
+
 		if (e instanceof PlayerInteractEntityEvent) {
 			PlayerInteractEntityEvent clickEvent = ((PlayerInteractEntityEvent) e);
 			if (twoHanded) {
 				//ItemStack mainHand = clickEvent.getPlayer().getInventory().getItemInMainHand();
 				//ItemStack offHand = clickEvent.getPlayer().getInventory().getItemInOffHand();
-				
+
 				Player player = clickEvent.getPlayer();
 				assert player != null;
 				boolean useOffHand = checkUseOffHand(player, click, null, clickEvent.getRightClicked());
@@ -139,7 +132,7 @@ public class EvtClick extends SkriptEvent {
 					return false;
 				}
 			}
-			
+
 			if (click == LEFT || types == null) // types == null  will be handled by the PlayerInteractEvent that is fired as well
 				return false;
 			entity = clickEvent.getRightClicked();
@@ -149,7 +142,7 @@ public class EvtClick extends SkriptEvent {
 			if (twoHanded) {
 				//ItemStack mainHand = clickEvent.getPlayer().getInventory().getItemInMainHand();
 				//ItemStack offHand = clickEvent.getPlayer().getInventory().getItemInOffHand();
-				
+
 				Player player = clickEvent.getPlayer();
 				assert player != null;
 				boolean useOffHand = checkUseOffHand(player, click, clickEvent.getClickedBlock(), null);
@@ -159,7 +152,7 @@ public class EvtClick extends SkriptEvent {
 					return false;
 				}
 			}
-			
+
 			final Action a = clickEvent.getAction();
 			final int click;
 			switch (a) {
@@ -183,7 +176,7 @@ public class EvtClick extends SkriptEvent {
 			assert false;
 			return false;
 		}
-		
+
 		if (e instanceof PlayerInteractEvent && tools != null && !tools.check(e, new Checker<ItemType>() {
 			@Override
 			public boolean check(final ItemType t) {
@@ -197,43 +190,39 @@ public class EvtClick extends SkriptEvent {
 		})) {
 			return false;
 		}
-		
+
 		if (types != null) {
-			return types.check(e, new Checker<Object>() {
-				@Override
-				public boolean check(final Object o) {
-					if (entity != null) {
-						return o instanceof EntityData ? ((EntityData<?>) o).isInstance(entity) : Relation.EQUAL.is(DefaultComparators.entityItemComparator.compare(EntityData.fromEntity(entity), (ItemType) o));
-					} else {
-						return o instanceof EntityData ? false : ((ItemType) o).isOfType(block);
-					}
+			return types.check(e, (Checker<Object>) o -> {
+				if (entity != null) {
+					return o instanceof EntityData ? ((EntityData<?>) o).isInstance(entity) : Relation.EQUAL.is(DefaultComparators.entityItemComparator.compare(EntityData.fromEntity(entity), (ItemType) o));
+				} else {
+					return !(o instanceof EntityData) && ((ItemType) o).isOfType(block);
 				}
 			});
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return (click == LEFT ? "left" : click == RIGHT ? "right" : "") + "click" + (types != null ? " on " + types.toString(e, debug) : "") + (tools != null ? " holding " + tools.toString(e, debug) : "");
 	}
-	
+
 	public static boolean checkUseOffHand(Player player, int clickType, @Nullable Block block, @Nullable Entity entity) {
 		if (clickType != RIGHT) return false; // Attacking with off hand is not possible
-		
-		boolean mainUsable = false; // Usable item
-		boolean offUsable = false;
+
+		boolean mainUsable /*usable item*/, offUsable;
 		ItemStack mainHand = player.getInventory().getItemInMainHand();
 		ItemStack offHand = player.getInventory().getItemInOffHand();
-		
+
 		Material mainMat = mainHand.getType();
 		Material offMat = offHand.getType();
 		assert mainMat != null;
 		assert offMat != null;
-		
+
 		//Skript.info("block is " + block);
 		//Skript.info("entity is " + entity);
-		
+
 		switch (offHand.getType()) {
 			case BOW:
 			case EGG:
@@ -259,16 +248,16 @@ public class EvtClick extends SkriptEvent {
 			case MONSTER_EGG:
 				offUsable = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				offUsable = false;
 		}
-		
+
 		// Seriously? Empty hand -> block in hand, since id of AIR < 256 :O
 		if ((offMat.isBlock() && offMat != Material.AIR) || PlayerUtils.canEat(player, offMat)) {
 			offUsable = true;
 		}
-		
+
 		switch (mainHand.getType()) {
 			case BOW:
 			case EGG:
@@ -296,16 +285,16 @@ public class EvtClick extends SkriptEvent {
 			case WRITTEN_BOOK:
 				mainUsable = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				mainUsable = false;
 		}
-		
+
 		// Seriously? Empty hand -> block in hand, since id of AIR < 256 :O
 		if ((mainMat.isBlock() && mainMat != Material.AIR) || PlayerUtils.canEat(player, mainMat)) {
 			mainUsable = true;
 		}
-		
+
 		boolean blockUsable = false;
 		boolean mainOnly = false;
 		if (block != null) {
@@ -351,7 +340,7 @@ public class EvtClick extends SkriptEvent {
 				case CAKE_BLOCK:
 					mainOnly = true;
 					break;
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					blockUsable = false;
 			}
@@ -360,19 +349,19 @@ public class EvtClick extends SkriptEvent {
 				case ITEM_FRAME:
 					mainOnly = true;
 					break;
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					mainOnly = false;
 			}
-			
+
 			if (entity instanceof Vehicle)
 				mainOnly = true;
 		}
-		
+
 		boolean isSneaking = player.isSneaking();
 		//boolean blockInMain = mainHand.getType().isBlock() && mainHand.getType() != Material.AIR;
 		//boolean blockInOff = offHand.getType().isBlock() && offHand.getType() != Material.AIR;
-		
+
 		if (blockUsable) { // Special behavior
 			if (isSneaking) {
 				//Skript.info("Is sneaking on usable block!");
@@ -385,19 +374,18 @@ public class EvtClick extends SkriptEvent {
 		} else if (mainOnly) {
 			return false;
 		}
-		
+
 		//Skript.info("Check for usable items...");
 		if (mainUsable) return false;
 		if (offUsable) return true;
 		//Skript.info("No hand has usable item");
-		
+
 		// Still not returned?
 		if (mainHand.getType() != Material.AIR) return false;
 		//Skript.info("Main hand is not item.");
 		if (offHand.getType() != Material.AIR) return true;
-		
+
 		//Skript.info("Final return!");
 		return false; // Both hands are AIR material!
 	}
-	
 }

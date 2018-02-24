@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -49,13 +48,25 @@ public class ExprVectorNormalize extends SimpleExpression<Vector> {
 	private Expression<Vector> vector;
 
 	@Override
-	public boolean isSingle() {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		vector = (Expression<Vector>) exprs[0];
 		return true;
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return "normalized " + vector.toString();
+	@SuppressWarnings("null")
+	protected Vector[] get(final Event event) {
+		Vector v = vector.getSingle(event);
+		if (v == null) {
+			return null;
+		}
+		return new Vector[]{v.clone().normalize()};
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override
@@ -64,19 +75,7 @@ public class ExprVectorNormalize extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		vector = (Expression<Vector>)expressions[0];
-		return true;
-	}
-
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Vector v = vector.getSingle(event);
-		if (v == null){
-			return null;
-		}
-		return new Vector[]{ v.clone().normalize() };
+	public String toString(final @Nullable Event event, final boolean debug) {
+		return "normalized " + vector.toString();
 	}
 }

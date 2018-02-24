@@ -19,10 +19,10 @@
  */
 package ch.njol.yggdrasil;
 
+import ch.njol.yggdrasil.Fields.FieldContext;
+
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Field;
-
-import ch.njol.yggdrasil.Fields.FieldContext;
 
 public interface FieldHandler {
 	

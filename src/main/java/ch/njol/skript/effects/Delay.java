@@ -1,31 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -35,13 +26,19 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import edu.umd.cs.findbugs.ba.bcp.New;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * @author Peter Güttinger
@@ -57,7 +54,7 @@ public class Delay extends Effect {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({"null", "WeakerAccess"})
 	protected Expression<Timespan> duration;
 
 	@SuppressWarnings({"unchecked", "null"})
@@ -84,37 +81,34 @@ public class Delay extends Effect {
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
 				return null;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					if (Skript.debug())
-						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
-					
-					Object timing = null;
-					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
-						Trigger trigger = getTrigger();
-						if (trigger != null) {
-							timing = SkriptTimings.start(trigger.getDebugLabel());
-						}
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
+				if (Skript.debug())
+					Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+
+				Object timing = null;
+				if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
+					Trigger trigger = getTrigger();
+					if (trigger != null) {
+						timing = SkriptTimings.start(trigger.getDebugLabel());
 					}
-					
-					TriggerItem.walk(next, e);
-					
-					SkriptTimings.stop(timing); // Stop timing if it was even started
 				}
+
+				TriggerItem.walk(next, e);
+
+				SkriptTimings.stop(timing); // Stop timing if it was even started
 			}, d.getTicks_i() < 1 ? 1 : d.getTicks_i()); // Minimum delay is one tick, less than it is useless!
 		}
 		return null;
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({"null", "WeakerAccess"})
 	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<Event, Boolean>());
 
-	public final static boolean isDelayed(final Event e) {
+	public static boolean isDelayed(final Event e) {
 		return delayed.contains(e);
 	}
 
-	public static void addDelayedEvent(Event event){
+	public static void addDelayedEvent(Event event) {
 		delayed.add(event);
 	}
 
@@ -127,5 +121,4 @@ public class Delay extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "wait for " + duration.toString(e, debug) + (e == null ? "" : "...");
 	}
-
 }

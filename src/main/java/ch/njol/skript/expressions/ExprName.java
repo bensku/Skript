@@ -1,33 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -39,12 +28,19 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -57,18 +53,18 @@ import ch.njol.util.coll.CollectionUtils;
 		"<li>display name: The name of a player as displayed in the chat and messages, e.g. when including %player% in a message. This name can be changed freely and can include colour codes, and is shared among all plugins (e.g. chat plugins will use a changed name).</li>",
 		"<li>tab list name: The name of a player used in the player lists that usually opens with the tab key. Please note that this is limited to 16 characters, including colour codes which are counted as 2 characters each, and that no two players can have the same tab list name at the same time.</li>",
 		"</ul>"})
-@Examples({"on join:",
-		"	player has permission \"name.red\"",
-		"	set the player's display name to \"<red>[admin]<gold>%name of player%\"",
-		"	set the player's tablist name to \"<green>%name of player%\"",
+@Examples({
+		"on join:",
+		"\tplayer has permission \"name.red\"",
+		"\tset the player's display name to \"<red>[admin]<gold>%name of player%\"",
+		"\tset the player's tablist name to \"<green>%name of player%\"",
 		"set the name of the player's tool to \"Legendary Sword of Awesomeness\""})
 @Since("1.4.6 (players' name & display name), <i>unknown</i> (player list name), 2.0 (item name), 2.2-dev20 (inventory name)")
 public class ExprName extends SimplePropertyExpression<Object, String> {
-	
 	final static int ITEMSTACK = 1, ENTITY = 2, PLAYER = 4, INVENTORY = 8;
 	final static String[] types = {"itemstacks/slots", "livingentities", "players", "inventories"};
-	
-	private static enum NameType {
+
+	private enum NameType {
 		NAME("name", "name[s]", PLAYER | ITEMSTACK | ENTITY | INVENTORY, ITEMSTACK | ENTITY) {
 			@Override
 			void set(final @Nullable Object o, final @Nullable String s) {
@@ -87,7 +83,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 					assert false;
 				}
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final @Nullable Object o) {
@@ -131,7 +127,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 					assert false;
 				}
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final @Nullable Object o) {
@@ -162,12 +158,12 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				if (o instanceof Player) {
 					try {
 						((Player) o).setPlayerListName(s == null ? "" : s);
-					} catch (final IllegalArgumentException e) {}
+					} catch (final IllegalArgumentException ignored) {}
 				} else {
 					assert false;
 				}
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final @Nullable Object o) {
@@ -181,24 +177,24 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				}
 			}
 		};
-		
+
 		final String name;
 		final String pattern;
 		final int from;
 		final int acceptChange;
-		
+
 		NameType(final String name, final String pattern, final int from, final int change) {
 			this.name = name;
 			this.pattern = "(" + ordinal() + "¦)" + pattern;
 			this.from = from;
 			acceptChange = change;
 		}
-		
+
 		abstract void set(@Nullable Object o, @Nullable String s);
-		
+
 		@Nullable
 		abstract String get(@Nullable Object o);
-		
+
 		String getFrom() {
 			final StringBuilder b = new StringBuilder();
 			for (int i = 0; i < types.length; i++) {
@@ -215,45 +211,45 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			return "" + b;
 		}
 	}
-	
+
 	static {
-		for (final NameType n : NameType.values()){
+		for (final NameType n : NameType.values()) {
 			register(ExprName.class, String.class, n.pattern, n.getFrom());
 		}
 	}
-	
+
 	@SuppressWarnings("null")
 	private NameType type;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = NameType.values()[parseResult.mark];
-		if(exprs[0] instanceof Variable)
+		if (exprs[0] instanceof Variable)
 			setExpr(exprs[0].getConvertedExpression(Object.class));
 		else
 			setExpr(exprs[0]);
 		return true;
 	}
-	
+
 	@Override
 	public Class<String> getReturnType() {
 		return String.class;
 	}
-	
+
 	@Override
 	protected String getPropertyName() {
 		return type.name;
 	}
-	
+
 	@Override
 	@Nullable
 	public String convert(final Object o) {
 		return type.get(o instanceof Slot ? ((Slot) o).getItem() : o);
 	}
-	
+
 	private int changeType = 0;
-	
+
 	// TODO find a better method for handling changes (in general)
 	// e.g. a Changer that takes an object and returns another which should then be saved if applicable (the Changer includes the ChangeMode)
 	@SuppressWarnings("unchecked")
@@ -277,7 +273,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		}
 		return changeType == 0 ? null : CollectionUtils.array(String.class);
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		final String name = delta == null ? null : (String) delta[0];
@@ -297,9 +293,9 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				if (i instanceof Slot)
 					((Slot) i).setItem(is);
 				else if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class))
-					getExpr().change(e, new Object[] {i}, ChangeMode.SET);
+					getExpr().change(e, new Object[]{i}, ChangeMode.SET);
 				else
-					getExpr().change(e, new ItemType[] {new ItemType((ItemStack) i)}, ChangeMode.SET);
+					getExpr().change(e, new ItemType[]{new ItemType((ItemStack) i)}, ChangeMode.SET);
 			}
 		} else {
 			for (final Object o : getExpr().getArray(e)) {

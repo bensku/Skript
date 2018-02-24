@@ -19,24 +19,22 @@
  */
 package ch.njol.yggdrasil.xml;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Array;
-import java.util.NoSuchElementException;
+import ch.njol.yggdrasil.Tag;
+import ch.njol.yggdrasil.Yggdrasil;
+import ch.njol.yggdrasil.YggdrasilInputStream;
+import org.eclipse.jdt.annotation.Nullable;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.yggdrasil.Tag;
-import ch.njol.yggdrasil.Yggdrasil;
-import ch.njol.yggdrasil.YggdrasilInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StreamCorruptedException;
+import java.lang.reflect.Array;
+import java.util.NoSuchElementException;
 
 /**
  * @deprecated XML has so many quirks that storing arbitrary data cannot be guaranteed.

@@ -1,40 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Effect;
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -51,6 +33,22 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.YggdrasilSerializable;
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -58,7 +56,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
 public final class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 	public static boolean EFFECT_LIB = false;
 	private final static String LANGUAGE_NODE = "visual effects";
-	
+
 	public static enum Type implements YggdrasilSerializable {
 		ENDER_SIGNAL(Effect.ENDER_SIGNAL),
 		MOBSPAWNER_FLAMES(Effect.MOBSPAWNER_FLAMES),
@@ -81,7 +79,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		WOLF_HEARTS(EntityEffect.WOLF_HEARTS),
 		WOLF_SHAKE(EntityEffect.WOLF_SHAKE),
 		WOLF_SMOKE(EntityEffect.WOLF_SMOKE),
-		
+
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
 		CRIT(Particle.CRIT),
@@ -180,36 +178,36 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				}
 			}
 		},
-		
+
 		// 1.11 particles
 		TOTEM("TOTEM"),
 		SPIT("SPIT");
-		
+
 		@Nullable
 		final Object effect;
 		@Nullable
 		final String name;
-		
+
 		@SuppressWarnings("deprecation")
 		private Type(final Effect effect) {
 			this.effect = effect;
 			this.name = effect.getName();
 		}
-		
+
 		private Type(final EntityEffect effect) {
 			this.effect = effect;
 			this.name = null;
 		}
-		
+
 		private Type(final Particle effect) {
 			this.effect = effect;
 			this.name = null;
 		}
-		
+
 		private Type(final String name) {
 			this(name, false);
 		}
-		
+
 		private Type(final String name, boolean entityEffect) {
 			this.name = null;
 			if (entityEffect) {
@@ -230,7 +228,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				this.effect = real;
 			}
 		}
-		
+
 		/**
 		 * Converts the data from the pattern to the data required by Bukkit
 		 */
@@ -239,16 +237,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			assert raw == null;
 			return null;
 		}
-		
+
 		/**
 		 * Checks if this effect has color support.
 		 */
 		public boolean isColorable() {
 			return false;
 		}
-		
+
 		/**
 		 * Gets Minecraft name of the effect, if it exists.
+		 *
 		 * @return Name or null if effect uses numeric id instead.
 		 */
 		@Nullable
@@ -256,18 +255,20 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			return this.name;
 		}
 	}
-	
+
 	private final static String TYPE_ID = "VisualEffect.Type";
+
 	static {
 		Variables.yggdrasil.registerSingleClass(Type.class, TYPE_ID);
 		Variables.yggdrasil.registerSingleClass(Effect.class, "Bukkit_Effect");
 		Variables.yggdrasil.registerSingleClass(EntityEffect.class, "Bukkit_EntityEffect");
 	}
-	
+
 	@Nullable
 	static SyntaxElementInfo<VisualEffect> info;
 	final static List<Type> types = new ArrayList<>(Type.values().length);
 	final static Noun[] names = new Noun[Type.values().length];
+
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -295,44 +296,42 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 						names[i] = new Noun(node + ".name");
 				}
 				final String[] ps = patterns.toArray(new String[patterns.size()]);
-				assert ps != null;
 				info = new SyntaxElementInfo<>(ps, VisualEffect.class);
 			}
 		});
 	}
-	
+
 	private Type type;
 	@Nullable
 	private Object data;
 	private float speed = 0;
 	private float dX, dY, dZ = 0;
-	
+
 	/**
 	 * For parsing & deserialisation
 	 */
 	@SuppressWarnings("null")
 	public VisualEffect() {}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		type = types.get(matchedPattern);
-		
+
 		if (type.effect == null) {
 			Skript.error("Minecraft " + Skript.getMinecraftVersion() + " version does not support particle " + type);
 			return false;
 		}
-		
+
 		if (type.isColorable()) {
 			for (Expression<?> expr : exprs) {
-				if (expr == null) continue;
-				else if (expr.getReturnType().isAssignableFrom(Color.class)) {
+				if (expr == null) {} else if (expr.getReturnType().isAssignableFrom(Color.class)) {
 					org.bukkit.Color color = ((Color) expr.getSingle(null)).getBukkitColor();
-					
+
 					/*
 					 * Colored particles use dX, dY and dZ as RGB values which
 					 * have range from 0 to 1.
-					 * 
+					 *
 					 * For now, only speed exactly 1 is allowed.
 					 */
 					dX = color.getRed() / 255.0f + 0.00001f;
@@ -349,47 +348,46 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				if (expr.getReturnType() == Long.class || expr.getReturnType() == Integer.class || expr.getReturnType() == Number.class)
 					numberParams++;
 			}
-			
+
 			int dPos = 0; // Data index
 			Expression<?> expr = exprs[0];
 			if (expr.getReturnType() != Long.class && expr.getReturnType() != Integer.class && expr.getReturnType() != Number.class) {
 				dPos = 1;
 				data = exprs[0].getSingle(null);
 			}
-			
+
 			if (numberParams == 1) // Only speed
 				speed = ((Number) exprs[dPos].getSingle(null)).floatValue();
 			else if (numberParams == 3) { // Only dX, dY, dZ
 				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
 				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
 				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
-			} else if (numberParams == 4){ // Both present
+			} else if (numberParams == 4) { // Both present
 				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
 				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
 				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
 				speed = ((Number) exprs[dPos + 3].getSingle(null)).floatValue();
 			}
 		}
-		
 		return true;
 	}
-	
+
 	public boolean isEntityEffect() {
 		return type.effect instanceof EntityEffect;
 	}
-	
+
 	@Nullable
-	public final static VisualEffect parse(final String s) {
+	public static VisualEffect parse(final String s) {
 		final SyntaxElementInfo<VisualEffect> info = VisualEffect.info;
 		if (info == null)
 			return null;
 		return SkriptParser.parseStatic(Noun.stripIndefiniteArticle(s), new SingleItemIterator<>(info), null);
 	}
-	
+
 	public void play(final @Nullable Player[] ps, final Location l, final @Nullable Entity e) {
 		play(ps, l, e, 0, 32);
 	}
-	
+
 	@SuppressWarnings({"deprecation"})
 	public void play(final @Nullable Player[] ps, final Location l, final @Nullable Entity e, final int count, final int radius) {
 		assert e == null || l.equals(e.getLocation());
@@ -400,14 +398,14 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			if (type.effect instanceof Particle) {
 				// Particle effect...
 				Object pData = type.getData(data, l);
-				
+
 				assert type.effect != null;
 				// Check that data has correct type (otherwise bad things will happen)
 				if (pData != null && !((Particle) type.effect).getDataType().isAssignableFrom(pData.getClass())) {
 					pData = null;
 					Skript.warning("Incompatible particle data, resetting it!");
 				}
-				
+
 				if (ps == null) {
 					// Colored particles must be played one at time; otherwise, colors are broken
 					if (type.isColorable()) {
@@ -439,20 +437,20 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return toString(0);
 	}
-	
+
 	public String toString(final int flags) {
 		return names[type.ordinal()].toString(flags);
 	}
-	
+
 	public static String getAllNames() {
 		return StringUtils.join(names, ", ");
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -462,7 +460,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		result = prime * result + ((d == null) ? 0 : d.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(final @Nullable Object obj) {
 		if (this == obj)
@@ -476,12 +474,9 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			return false;
 		final Object d = data;
 		if (d == null) {
-			if (other.data != null)
-				return false;
-		} else if (!d.equals(other.data)) {
-			return false;
+			return other.data == null;
+		} else {
+			return d.equals(other.data);
 		}
-		return true;
 	}
-	
 }

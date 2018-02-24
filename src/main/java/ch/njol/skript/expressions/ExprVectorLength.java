@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -27,7 +26,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
-
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -49,7 +47,7 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Double> {
 
 	@Override
 	@SuppressWarnings({"unused", "null"})
-	public Double convert(Vector vector) {
+	public Double convert(final Vector vector) {
 		if (vector == null) {
 			return null;
 		}
@@ -57,26 +55,16 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Double> {
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "length of vector";
-	}
-
-	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
-	}
-
-	@Override
 	@SuppressWarnings("null")
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE || mode == Changer.ChangeMode.SET){
-			return new Class[]{ Number.class };
+	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
+		if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE || mode == Changer.ChangeMode.SET) {
+			return new Class[]{Number.class};
 		}
 		return null;
 	}
 
 	@Override
-	public void change(Event e, final @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) {
 		assert delta != null;
 		final Vector v = getExpr().getSingle(e);
 		if (v == null)
@@ -108,5 +96,15 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Double> {
 			case RESET:
 				assert false;
 		}
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "length of vector";
+	}
+
+	@Override
+	public Class<? extends Double> getReturnType() {
+		return Double.class;
 	}
 }

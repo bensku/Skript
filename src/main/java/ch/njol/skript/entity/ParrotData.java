@@ -1,41 +1,37 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
-
-import java.util.concurrent.ThreadLocalRandom;
-
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Parrot;
-import org.bukkit.entity.Parrot.Variant;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Parrot.Variant;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ParrotData extends EntityData<Parrot> {
-	
 	// Cached variants, values() copies array each time it is called
 	@SuppressWarnings("null") // If null, ParrotData is not registered
 	private static Object[] variants;
-	
+
 	static {
 		if (Skript.classExists("org.bukkit.entity.Parrot")) {
 			variants = Parrot.Variant.values();
@@ -43,7 +39,7 @@ public class ParrotData extends EntityData<Parrot> {
 					"parrot", "red parrot", "blue parrot", "green parrot", "cyan parrot", "gray parrot");
 		}
 	}
-	
+
 	/**
 	 * Parrot variant. To avoid literally crashing on MC<1.12,
 	 * we just map enum values to int.
@@ -108,9 +104,7 @@ public class ParrotData extends EntityData<Parrot> {
 
 	@Override
 	protected boolean equals_i(EntityData<?> obj) {
-		if (obj instanceof ParrotData)
-			return ((ParrotData) obj).variant == variant;
-		return false;
+		return obj instanceof ParrotData && ((ParrotData) obj).variant == variant;
 	}
 
 	@Override
@@ -118,5 +112,4 @@ public class ParrotData extends EntityData<Parrot> {
 		// True if e is parrot, and this is generic parrot OR if this and e are similar parrots
 		return e instanceof ParrotData && (variant == -1 || ((ParrotData) e).variant == variant);
 	}
-	
 }

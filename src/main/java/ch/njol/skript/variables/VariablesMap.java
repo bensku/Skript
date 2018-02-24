@@ -1,23 +1,27 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
+
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.util.Utils;
+import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,59 +29,48 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.util.Utils;
-import ch.njol.util.StringUtils;
-
 final class VariablesMap {
-	
-	final static Comparator<String> variableNameComparator = new Comparator<String>() {
-		@Override
-		public int compare(final @Nullable String s1, final @Nullable String s2) {
-			if (s1 == null)
-				return s2 == null ? 0 : -1;
-			if (s2 == null)
-				return 1;
-			int i = 0, j = 0;
-			while (i < s1.length() && j < s2.length()) {
-				final char c1 = s1.charAt(i), c2 = s2.charAt(j);
-				if ('0' <= c1 && c1 <= '9' && '0' <= c2 && c2 <= '9') { // TODO negative numbers? what about {blah-%number%}? // '-' < '0'
-					final int i2 = StringUtils.findLastDigit(s1, i), j2 = StringUtils.findLastDigit(s2, j);
-					final long n1 = Utils.parseLong("" + s1.substring(i, i2)), n2 = Utils.parseLong("" + s2.substring(j, j2));
-					if (n1 > n2)
-						return 1;
-					if (n1 < n2)
-						return -1;
-					i = i2;
-					j = j2;
-					continue;
-				} else {
-					if (c1 > c2)
-						return 1;
-					if (c1 < c2)
-						return -1;
-					i++;
-					j++;
-				}
+	private final static Comparator<String> variableNameComparator = (first, second) -> {
+		if (first == null)
+			return second == null ? 0 : -1;
+		if (second == null)
+			return 1;
+		int i = 0, j = 0;
+		while (i < first.length() && j < second.length()) {
+			final char c1 = first.charAt(i), c2 = second.charAt(j);
+			if ('0' <= c1 && c1 <= '9' && '0' <= c2 && c2 <= '9') { // TODO negative numbers? what about {blah-%number%}? // '-' < '0'
+				final int i2 = StringUtils.findLastDigit(first, i), j2 = StringUtils.findLastDigit(second, j);
+				final long n1 = Utils.parseLong("" + first.substring(i, i2)), n2 = Utils.parseLong("" + second.substring(j, j2));
+				if (n1 > n2)
+					return 1;
+				if (n1 < n2)
+					return -1;
+				i = i2;
+				j = j2;
+			} else {
+				if (c1 > c2)
+					return 1;
+				if (c1 < c2)
+					return -1;
+				i++;
+				j++;
 			}
-			if (i < s1.length())
-				return -1;
-			if (j < s2.length())
-				return 1;
-			return 0;
 		}
+		if (i < first.length())
+			return -1;
+		if (j < second.length())
+			return 1;
+		return 0;
 	};
-	
-	final HashMap<String, Object> hashMap = new HashMap<String, Object>();
-	final TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
-	
+
+	final HashMap<String, Object> hashMap = new HashMap<>();
+	final TreeMap<String, Object> treeMap = new TreeMap<>();
+
 	/**
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
 	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
 	 */
@@ -101,7 +94,6 @@ final class VariablesMap {
 				if (o instanceof Map) {
 					current = (Map<String, Object>) o;
 					assert i != split.length - 1;
-					continue;
 				} else {
 					return null;
 				}
@@ -109,10 +101,10 @@ final class VariablesMap {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Sets a variable.
-	 * 
+	 *
 	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
@@ -135,9 +127,8 @@ final class VariablesMap {
 						parent.put(n, value);
 					break;
 				} else if (value != null) {
-					parent.put(n, current = new TreeMap<String, Object>(variableNameComparator));
+					parent.put(n, current = new TreeMap<>(variableNameComparator));
 					parent = (TreeMap<String, Object>) current;
-					continue;
 				} else {
 					break;
 				}
@@ -159,7 +150,6 @@ final class VariablesMap {
 					break;
 				} else {
 					parent = (TreeMap<String, Object>) current;
-					continue;
 				}
 			} else {
 				if (i == split.length - 1) {
@@ -169,18 +159,17 @@ final class VariablesMap {
 						parent.put(n, value);
 					break;
 				} else if (value != null) {
-					final TreeMap<String, Object> c = new TreeMap<String, Object>(variableNameComparator);
+					final TreeMap<String, Object> c = new TreeMap<>(variableNameComparator);
 					c.put(null, current);
 					parent.put(n, c);
 					parent = c;
-					continue;
 				} else {
 					break;
 				}
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	void deleteFromHashMap(final String parent, final TreeMap<String, Object> current) {
 		for (final Entry<String, Object> e : current.entrySet()) {
@@ -193,5 +182,4 @@ final class VariablesMap {
 			}
 		}
 	}
-	
 }

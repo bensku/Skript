@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.localization;
 
@@ -23,23 +22,22 @@ import ch.njol.util.StringUtils;
 
 /**
  * An {@link ArgsMessage} that pluralises words following numbers. The plurals have to be in the format <tt>shel¦f¦ves¦</tt> (i.e. use 3 '¦'s).
- * 
+ *
  * @author Peter Güttinger
  */
 public class PluralizingArgsMessage extends Message {
-	
 	public PluralizingArgsMessage(final String key) {
 		super(key);
 	}
-	
+
 	public String toString(final Object... args) {
 		final String val = getValue();
 		if (val == null)
 			return key;
 		return format("" + String.format(val, args));
 	}
-	
-	public final static String format(final String s) {
+
+	public static String format(final String s) {
 		final StringBuilder b = new StringBuilder();
 		int last = 0;
 		boolean plural = false;
@@ -63,8 +61,6 @@ public class PluralizingArgsMessage extends Message {
 		}
 		if (last == 0)
 			return s;
-		b.append(s.substring(last, s.length()));
-		return "" + b;
+		return b.append(s.substring(last, s.length())).toString();
 	}
-	
 }

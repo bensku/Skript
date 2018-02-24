@@ -1,28 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -39,6 +33,10 @@ import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -49,16 +47,18 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.0")
 public class ExprFoodLevel extends PropertyExpression<Player, Float> {
 	static {
-		Skript.registerExpression(ExprFoodLevel.class, Float.class, ExpressionType.PROPERTY, "[the] (food|hunger)[[ ](level|met(er|re)|bar)] [of %player%]", "%player%'[s] (food|hunger)[[ ](level|met(er|re)|bar)]");
+		Skript.registerExpression(ExprFoodLevel.class, Float.class, ExpressionType.PROPERTY,
+				"[the] (food|hunger)[[ ](level|met(er|re)|bar)] [of %player%]",
+				"%player%'[s] (food|hunger)[[ ](level|met(er|re)|bar)]");
 	}
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		setExpr((Expression<Player>) vars[0]);
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		setExpr((Expression<Player>) exprs[0]);
 		return true;
 	}
-	
+
 	@Override
 	protected Float[] get(final Event e, final Player[] source) {
 		return get(source, new Getter<Float, Player>() {
@@ -72,17 +72,7 @@ public class ExprFoodLevel extends PropertyExpression<Player, Float> {
 			}
 		});
 	}
-	
-	@Override
-	public Class<Float> getReturnType() {
-		return Float.class;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the food level of " + getExpr().toString(e, debug);
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -91,11 +81,11 @@ public class ExprFoodLevel extends PropertyExpression<Player, Float> {
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode != ChangeMode.REMOVE_ALL;
-		
+
 		final int s = delta == null ? 0 : Math.round(((Number) delta[0]).floatValue() * 2);
 		for (final Player player : getExpr().getArray(e)) {
 			final boolean event = getTime() >= 0 && e instanceof FoodLevelChangeEvent && ((FoodLevelChangeEvent) e).getEntity() == player && !Delay.isDelayed(e);
@@ -127,7 +117,17 @@ public class ExprFoodLevel extends PropertyExpression<Player, Float> {
 				player.setFoodLevel(food);
 		}
 	}
-	
+
+	@Override
+	public Class<Float> getReturnType() {
+		return Float.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "the food level of " + getExpr().toString(e, debug);
+	}
+
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, FoodLevelChangeEvent.class, getExpr());

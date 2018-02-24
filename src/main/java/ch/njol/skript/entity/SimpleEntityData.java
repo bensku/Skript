@@ -1,29 +1,27 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.List;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.yggdrasil.Fields;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.AreaEffectCloud;
@@ -94,36 +92,35 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieHorse;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.yggdrasil.Fields;
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class SimpleEntityData extends EntityData<Entity> {
-	
 	public final static class SimpleEntityDataInfo {
 		final String codeName;
 		final Class<? extends Entity> c;
 		final boolean isSupertype;
-		
+
 		SimpleEntityDataInfo(final String codeName, final Class<? extends Entity> c) {
 			this(codeName, c, false);
 		}
-		
+
 		SimpleEntityDataInfo(final String codeName, final Class<? extends Entity> c, final boolean isSupertype) {
 			this.codeName = codeName;
 			this.c = c;
 			this.isSupertype = isSupertype;
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return c.hashCode();
 		}
-		
+
 		@Override
 		public boolean equals(final @Nullable Object obj) {
 			if (this == obj)
@@ -140,8 +137,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 			return true;
 		}
 	}
-	
+
 	private final static List<SimpleEntityDataInfo> types = new ArrayList<>();
+
 	static {
 		types.add(new SimpleEntityDataInfo("arrow", Arrow.class));
 		if (!Skript.methodExists(Boat.class, "getWoodType")) // Only for 1.9 and lower. See BoatData instead
@@ -176,7 +174,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("husk", Husk.class));
 		}
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
-		
+
 		if (Skript.classExists("org.bukkit.entity.ItemFrame")) {
 			types.add(new SimpleEntityDataInfo("item frame", ItemFrame.class));
 			types.add(new SimpleEntityDataInfo("bat", Bat.class));
@@ -186,7 +184,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		if (Skript.classExists("org.bukkit.entity.Firework"))
 			types.add(new SimpleEntityDataInfo("firework", Firework.class));
-		if(Skript.classExists("org.bukkit.entity.ArmorStand")){
+		if (Skript.classExists("org.bukkit.entity.ArmorStand")) {
 			types.add(new SimpleEntityDataInfo("endermite", Endermite.class));
 			types.add(new SimpleEntityDataInfo("armor stand", ArmorStand.class));
 		}
@@ -204,12 +202,12 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("wither skeleton", WitherSkeleton.class));
 			types.add(new SimpleEntityDataInfo("stray", Stray.class));
 			types.add(new SimpleEntityDataInfo("skeleton", Skeleton.class, true));
-			
+
 			// Guardians
 			types.add(new SimpleEntityDataInfo("elder guardian", ElderGuardian.class));
 			types.add(new SimpleEntityDataInfo("normal guardian", Guardian.class));
 			types.add(new SimpleEntityDataInfo("guardian", Guardian.class, true));
-			
+
 			// Horses
 			types.add(new SimpleEntityDataInfo("donkey", Donkey.class));
 			types.add(new SimpleEntityDataInfo("mule", Mule.class));
@@ -217,13 +215,13 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("undead horse", ZombieHorse.class));
 			types.add(new SimpleEntityDataInfo("skeleton horse", SkeletonHorse.class));
 			types.add(new SimpleEntityDataInfo("horse", Horse.class));
-			
+
 			// New 1.11 horse supertypes
 			types.add(new SimpleEntityDataInfo("chested horse", ChestedHorse.class, true));
 			types.add(new SimpleEntityDataInfo("any horse", AbstractHorse.class, true));
-			
+
 			types.add(new SimpleEntityDataInfo("llama spit", LlamaSpit.class));
-			
+
 			// 1.11 hostile mobs
 			types.add(new SimpleEntityDataInfo("evoker", Evoker.class));
 			types.add(new SimpleEntityDataInfo("evoker fangs", EvokerFangs.class));
@@ -234,7 +232,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
 		}
 		// TODO !Update with every version [entities]
-		
+
 		// supertypes
 		types.add(new SimpleEntityDataInfo("human", HumanEntity.class, true));
 		types.add(new SimpleEntityDataInfo("monster", Monster.class, true)); //I don't know why Njol never included that. I did now ^^
@@ -244,11 +242,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("projectile", Projectile.class, true));
 		types.add(new SimpleEntityDataInfo("living entity", LivingEntity.class, true));
 		types.add(new SimpleEntityDataInfo("entity", Entity.class, true));
-		
+
 		types.add(new SimpleEntityDataInfo("any fireball", Fireball.class, true));
-	}
-	
-	static {
+
 		final String[] codeNames = new String[types.size()];
 		int i = 0;
 		for (final SimpleEntityDataInfo info : types) {
@@ -256,19 +252,19 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		EntityData.register(SimpleEntityData.class, "simple", Entity.class, 0, codeNames);
 	}
-	
+
 	private transient SimpleEntityDataInfo info;
-	
+
 	public SimpleEntityData() {
 		this(Entity.class);
 	}
-	
+
 	private SimpleEntityData(final SimpleEntityDataInfo info) {
 		assert info != null;
 		this.info = info;
 		matchedPattern = types.indexOf(info);
 	}
-	
+
 	public SimpleEntityData(final Class<? extends Entity> c) {
 		assert c != null && c.isInterface() : c;
 		int i = 0;
@@ -282,7 +278,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		throw new IllegalStateException();
 	}
-	
+
 	public SimpleEntityData(final Entity e) {
 		int i = 0;
 		for (final SimpleEntityDataInfo info : types) {
@@ -295,7 +291,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		throw new IllegalStateException();
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -303,16 +299,17 @@ public class SimpleEntityData extends EntityData<Entity> {
 		assert info != null : matchedPattern;
 		return true;
 	}
-	
+
 	@Override
 	protected boolean init(final @Nullable Class<? extends Entity> c, final @Nullable Entity e) {
 		assert false;
 		return false;
 	}
-	
+
 	@Override
-	public void set(final Entity entity) {}
-	
+	public void set(final Entity entity) {
+	}
+
 	@Override
 	public boolean match(final Entity e) {
 		if (info.isSupertype)
@@ -324,17 +321,17 @@ public class SimpleEntityData extends EntityData<Entity> {
 		assert false;
 		return false;
 	}
-	
+
 	@Override
 	public Class<? extends Entity> getType() {
 		return info.c;
 	}
-	
+
 	@Override
 	protected int hashCode_i() {
 		return info.hashCode();
 	}
-	
+
 	@Override
 	protected boolean equals_i(final EntityData<?> obj) {
 		if (!(obj instanceof SimpleEntityData))
@@ -342,14 +339,14 @@ public class SimpleEntityData extends EntityData<Entity> {
 		final SimpleEntityData other = (SimpleEntityData) obj;
 		return info.equals(other.info);
 	}
-	
+
 	@Override
 	public Fields serialize() throws NotSerializableException {
 		final Fields f = super.serialize();
 		f.putObject("info.codeName", info.codeName);
 		return f;
 	}
-	
+
 	@Override
 	public void deserialize(final Fields fields) throws StreamCorruptedException, NotSerializableException {
 		final String codeName = fields.getAndRemoveObject("info.codeName", String.class);
@@ -362,8 +359,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		throw new StreamCorruptedException("Invalid SimpleEntityDataInfo code name " + codeName);
 	}
-	
-//		return info.c.getName();
+
 	@Override
 	@Deprecated
 	protected boolean deserialize(final String s) {
@@ -380,15 +376,14 @@ public class SimpleEntityData extends EntityData<Entity> {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean isSupertypeOf(final EntityData<?> e) {
 		return info.c == e.getType() || info.isSupertype && info.c.isAssignableFrom(e.getType());
 	}
-	
+
 	@Override
 	public EntityData getSuperType() {
 		return new SimpleEntityData(info);
 	}
-	
 }

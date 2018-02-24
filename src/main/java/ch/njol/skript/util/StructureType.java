@@ -1,44 +1,41 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
+
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.localization.Noun;
+import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.Location;
+import org.bukkit.TreeType;
+import org.bukkit.block.Block;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.bukkit.Location;
-import org.bukkit.TreeType;
-import org.bukkit.block.Block;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.skript.localization.Noun;
-import ch.njol.util.coll.CollectionUtils;
-
 public enum StructureType {
 	TREE(TreeType.TREE, TreeType.BIG_TREE, TreeType.REDWOOD, TreeType.TALL_REDWOOD, TreeType.MEGA_REDWOOD,
 			TreeType.BIRCH, TreeType.TALL_BIRCH, TreeType.SMALL_JUNGLE, TreeType.JUNGLE, TreeType.COCOA_TREE,
 			TreeType.ACACIA, TreeType.DARK_OAK, TreeType.SWAMP),
-	
+
 	REGULAR(TreeType.TREE, TreeType.BIG_TREE), SMALL_REGULAR(TreeType.TREE), BIG_REGULAR(TreeType.BIG_TREE),
 	REDWOOD(TreeType.REDWOOD, TreeType.TALL_REDWOOD), SMALL_REDWOOD(TreeType.REDWOOD), BIG_REDWOOD(TreeType.TALL_REDWOOD),
 	MEGA_REDWOOD(TreeType.MEGA_REDWOOD),
@@ -47,63 +44,56 @@ public enum StructureType {
 	JUNGLE_BUSH(TreeType.JUNGLE_BUSH), COCOA_TREE(TreeType.COCOA_TREE),
 	ACACIA(TreeType.ACACIA), DARK_OAK(TreeType.DARK_OAK),
 	SWAMP(TreeType.SWAMP),
-	
+
 	MUSHROOM(TreeType.RED_MUSHROOM, TreeType.BROWN_MUSHROOM),
-	RED_MUSHROOM(TreeType.RED_MUSHROOM), BROWN_MUSHROOM(TreeType.BROWN_MUSHROOM),
-	
-	;
-	
+	RED_MUSHROOM(TreeType.RED_MUSHROOM), BROWN_MUSHROOM(TreeType.BROWN_MUSHROOM),;
+
 	private Noun name;
 	private final TreeType[] types;
-	
-	private StructureType(final TreeType... types) {
+
+	StructureType(final TreeType... types) {
 		this.types = types;
 		name = new Noun("tree types." + name() + ".name");
 	}
-	
+
 	public void grow(final Location loc) {
 		loc.getWorld().generateTree(loc, CollectionUtils.getRandom(types));
 	}
-	
+
 	public void grow(final Block b) {
 		b.getWorld().generateTree(b.getLocation(), CollectionUtils.getRandom(types));
 	}
-	
+
 	public TreeType[] getTypes() {
 		return types;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name.toString();
 	}
-	
+
 	public String toString(final int flags) {
 		return name.toString(flags);
 	}
-	
+
 	public Noun getName() {
 		return name;
 	}
-	
+
 	public boolean is(final TreeType type) {
 		return CollectionUtils.contains(types, type);
 	}
-	
+
 	/**
 	 * lazy
 	 */
 	final static Map<Pattern, StructureType> parseMap = new HashMap<>();
-	
+
 	static {
-		Language.addListener(new LanguageChangeListener() {
-			@Override
-			public void onLanguageChange() {
-				parseMap.clear();
-			}
-		});
+		Language.addListener(parseMap::clear);
 	}
-	
+
 	@Nullable
 	public static StructureType fromName(String s) {
 		if (parseMap.isEmpty()) {
@@ -119,5 +109,4 @@ public enum StructureType {
 		}
 		return null;
 	}
-	
 }

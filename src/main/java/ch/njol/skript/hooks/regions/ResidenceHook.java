@@ -1,23 +1,39 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions;
+
+import ch.njol.skript.hooks.regions.WorldGuardHook.WorldGuardRegion;
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.variables.Variables;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+import com.google.common.base.Objects;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -27,57 +43,26 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
-import com.bekvon.bukkit.residence.containers.Flags;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
-import com.bekvon.bukkit.residence.protection.ResidencePermissions;
-import com.google.common.base.Objects;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.hooks.regions.WorldGuardHook.WorldGuardRegion;
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
-import ch.njol.skript.variables.Variables;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
 
 /**
  * Hook for Residence protection plugin. Currently supports
  * only basic operations.
+ *
  * @author bensku
  */
 public class ResidenceHook extends RegionsPlugin<Residence> {
-	
 	public ResidenceHook() throws IOException {}
-	
+
 	@Override
 	protected boolean init() {
 		return super.init();
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Residence";
 	}
-	
+
 	@Override
 	public boolean canBuild_i(final Player p, final Location l) {
 		final ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(l);
@@ -86,7 +71,7 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 		ResidencePermissions perms = res.getPermissions();
 		return perms.playerHas(p, Flags.build, true);
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public Collection<? extends Region> getRegionsAt_i(final Location l) {
@@ -97,7 +82,7 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 		ress.add(new ResidenceRegion(l.getWorld(), res));
 		return ress;
 	}
-	
+
 	@Override
 	@Nullable
 	public Region getRegion_i(final World world, final String name) {
@@ -106,37 +91,36 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 			return null;
 		return new ResidenceRegion(world, res);
 	}
-	
+
 	@Override
 	public boolean hasMultipleOwners_i() {
 		return true;
 	}
-	
+
 	@Override
 	protected Class<? extends Region> getRegionClass() {
 		return WorldGuardRegion.class;
 	}
-	
+
 	static {
 		Variables.yggdrasil.registerSingleClass(ResidenceRegion.class);
 	}
-	
+
 	@YggdrasilID("ResidenceRegion")
 	public class ResidenceRegion extends Region {
-		
 		private transient ClaimedResidence res;
 		final World world;
-		
+
 		@SuppressWarnings({"null", "unused"})
 		private ResidenceRegion() {
 			world = null;
 		}
-		
+
 		public ResidenceRegion(final World w, ClaimedResidence r) {
 			res = r;
 			world = w;
 		}
-		
+
 		@Override
 		public Fields serialize() throws NotSerializableException {
 			final Fields f = new Fields(this);
@@ -201,19 +185,13 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 
 		@Override
 		public boolean equals(@Nullable Object o) {
-			if (o == this)
-				return true;
-			if (!(o instanceof ResidenceRegion))
-				return false;
-			if (o.hashCode() == this.hashCode())
-				return true;
-			return false;
+			return o == this
+					|| o instanceof ResidenceRegion && o.hashCode() == this.hashCode();
 		}
 
 		@Override
 		public int hashCode() {
 			return res.getName().hashCode();
 		}
-		
 	}
 }

@@ -1,5 +1,5 @@
-/**
- *  This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
  * Skript is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,7 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
  *
  * Copyright 2011-2018 Peter Güttinger and contributors
  */
@@ -48,12 +47,7 @@ public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherT
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "weather";
-	}
-
-	@Override
-	public WeatherType convert(Player player) {
+	public WeatherType convert(final Player player) {
 		return WeatherType.fromPlayer(player);
 	}
 
@@ -72,6 +66,11 @@ public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherT
 		for (final Player p : getExpr().getArray(e)) {
 			t.setWeather(p);
 		}
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "weather";
 	}
 
 	@Override

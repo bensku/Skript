@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -50,6 +49,23 @@ public class ExprVectorOfLocation extends SimpleExpression<Vector> {
 	private Expression<Location> location;
 
 	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		location = (Expression<Location>) exprs[0];
+		return true;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	protected Vector[] get(final Event event) {
+		Location l = location.getSingle(event);
+		if (l == null) {
+			return null;
+		}
+		return new Vector[]{l.toVector()};
+	}
+
+	@Override
 	public boolean isSingle() {
 		return true;
 	}
@@ -60,24 +76,7 @@ public class ExprVectorOfLocation extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		location = (Expression<Location>)expressions[0];
-		return true;
-	}
-
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Location l = location.getSingle(event);
-		if (l == null){
-			return null;
-		}
-		return new Vector[] { l.toVector() };
-	}
-
-	@Override
-	public String toString(final @Nullable Event event, boolean b) {
+	public String toString(final @Nullable Event event, final boolean debug) {
 		return "vector of location " + location.toString();
 	}
 }

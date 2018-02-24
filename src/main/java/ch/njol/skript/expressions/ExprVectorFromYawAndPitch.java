@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -30,7 +29,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -51,8 +49,16 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 	private Expression<Number> pitch, yaw;
 
 	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		yaw = (Expression<Number>) exprs[0];
+		pitch = (Expression<Number>) exprs[1];
+		return true;
+	}
+
+	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
+	protected Vector[] get(final Event event) {
 		Number y = yaw.getSingle(event);
 		Number p = pitch.getSingle(event);
 		if (y == null || p == null) {
@@ -60,7 +66,7 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 		}
 		float yaw = VectorMath.fromSkriptYaw(VectorMath.wrapAngleDeg(y.floatValue()));
 		float pitch = VectorMath.fromSkriptPitch(VectorMath.wrapAngleDeg(p.floatValue()));
-		return new Vector[]{ VectorMath.fromYawAndPitch(yaw, pitch)};
+		return new Vector[]{VectorMath.fromYawAndPitch(yaw, pitch)};
 	}
 
 	@Override
@@ -74,15 +80,7 @@ public class ExprVectorFromYawAndPitch extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return "from yaw " + yaw.toString() + " and pitch " + pitch.toString();
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		yaw = (Expression<Number>) expressions[0];
-		pitch = (Expression<Number>) expressions[1];
-		return true;
+	public String toString(final @Nullable Event event, final boolean debug) {
+		return "vector from yaw " + yaw.toString() + " and pitch " + pitch.toString();
 	}
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -54,7 +53,6 @@ import java.util.UUID;
 })
 @Since("2.2-dev33")
 public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
-
     static {
         Skript.registerExpression(ExprCmdCooldownInfo.class, Object.class, ExpressionType.SIMPLE,
                 "[the] (0¦remaining [time]|1¦elapsed [time]|2¦cooldown [time] [length]|3¦last usage [date]|4¦cooldown bypass perm[ission]) [of] [the] [(cooldown|wait)] [((of|for)[the] [current] command)]");
@@ -63,8 +61,18 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
     private int mark;
 
     @Override
+    public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+        mark = parseResult.mark;
+        if (!ScriptLoader.isCurrentEvent(ScriptCommandEvent.class)) {
+            Skript.error("The expression '" + getExpressionName() + " time' can only be used within a command", ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     @Nullable
-    protected Object[] get(Event e) {
+    protected Object[] get(final Event e) {
         if (!(e instanceof ScriptCommandEvent)) {
             return null;
         }
@@ -96,51 +104,9 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
         return null;
     }
 
-    @Override
-    public boolean isSingle() {
-        return true;
-    }
-
-    @Override
-    public Class<?> getReturnType() {
-        return mark <= 2 ? Timespan.class : String.class;
-    }
-
-    @Override
-    public String toString(@Nullable Event e, boolean debug) {
-        return "the " + getExpressionName();
-    }
-
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        mark = parseResult.mark;
-        if (!ScriptLoader.isCurrentEvent(ScriptCommandEvent.class)) {
-            Skript.error("The expression '" + getExpressionName() + " time' can only be used within a command", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
-        return true;
-    }
-
-    @Nullable
-    private String getExpressionName() {
-        switch (mark) {
-            case 0:
-                return "remaining time";
-            case 1:
-                return "elapsed time";
-            case 2:
-                return "cooldown time";
-            case 3:
-                return "last usage date";
-            case 4:
-                return "cooldown bypass permission";
-        }
-        return null;
-    }
-
     @Nullable
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+    public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
         switch (mode) {
             case ADD:
             case REMOVE:
@@ -155,7 +121,7 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
                     // remaining or elapsed time
                     return new Class<?>[]{Timespan.class};
                 } else if (mark == 3) {
-                    // last usage dtae
+                    // last usage date
                     return new Class<?>[]{Date.class};
                 }
         }
@@ -163,7 +129,7 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
     }
 
     @Override
-    public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+    public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) {
         if (!(e instanceof ScriptCommandEvent)) {
             return;
         }
@@ -233,5 +199,37 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean isSingle() {
+        return true;
+    }
+
+    @Override
+    public Class<?> getReturnType() {
+        return mark <= 2 ? Timespan.class : String.class;
+    }
+
+    @Override
+    public String toString(final @Nullable Event e, final boolean debug) {
+        return "the " + getExpressionName();
+    }
+
+    @Nullable
+    private String getExpressionName() {
+        switch (mark) {
+            case 0:
+                return "remaining time";
+            case 1:
+                return "elapsed time";
+            case 2:
+                return "cooldown time";
+            case 3:
+                return "last usage date";
+            case 4:
+                return "cooldown bypass permission";
+        }
+        return null;
     }
 }

@@ -1,53 +1,55 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.util;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Container;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
  */
 public class ContainerExpression extends SimpleExpression<Object> {
-	
-	final Expression<? extends Container<?>> expr;
+	private final Expression<? extends Container<?>> expr;
 	private final Class<?> c;
-	
+
 	public ContainerExpression(final Expression<? extends Container<?>> expr, final Class<?> c) {
 		this.expr = expr;
 		this.c = c;
 	}
-	
+
+	@Override
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		throw new UnsupportedOperationException();
+	}
+
 	@Override
 	protected Object[] get(final Event e) {
 		throw new UnsupportedOperationException("ContanerExpression must only be used by Loops");
 	}
-	
+
 	@Override
 	@Nullable
 	public Iterator<Object> iterator(final Event e) {
@@ -57,7 +59,7 @@ public class ContainerExpression extends SimpleExpression<Object> {
 		return new Iterator<Object>() {
 			@Nullable
 			private Iterator<?> current;
-			
+
 			@Override
 			public boolean hasNext() {
 				Iterator<?> c = current;
@@ -66,7 +68,7 @@ public class ContainerExpression extends SimpleExpression<Object> {
 				}
 				return c != null && c.hasNext();
 			}
-			
+
 			@Override
 			public Object next() {
 				if (!hasNext())
@@ -78,32 +80,26 @@ public class ContainerExpression extends SimpleExpression<Object> {
 				assert o != null : current + "; " + expr;
 				return o;
 			}
-			
+
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
-	public Class<? extends Object> getReturnType() {
+	public Class<?> getReturnType() {
 		return c;
 	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		throw new UnsupportedOperationException();
-	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return expr.toString(e, debug);
 	}
-	
 }

@@ -1,27 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions.conditions;
-
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -32,8 +27,10 @@ import ch.njol.skript.hooks.regions.classes.Region;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -41,10 +38,11 @@ import ch.njol.util.Kleenean;
 @Name("Is Member/Owner of Region")
 @Description({"Checks whether a player is a member or owner of a particular region.",
 		"This condition requires a supported regions plugin to be installed."})
-@Examples({"on region enter:",
-		"	player is the owner of the region",
-		"	message \"Welcome back to %region%!\"",
-		"	send \"%player% just entered %region%!\" to all members of the region"})
+@Examples({
+		"on region enter:",
+		"\tplayer is the owner of the region",
+		"\tmessage \"Welcome back to %region%!\"",
+		"\tsend \"%player% just entered %region%!\" to all members of the region"})
 @Since("2.1")
 public class CondIsMember extends Condition {
 	static {
@@ -52,14 +50,14 @@ public class CondIsMember extends Condition {
 				"%offlineplayers% (is|are) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%",
 				"%offlineplayers% (is|are)(n't| not) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<OfflinePlayer> players;
 	@SuppressWarnings("null")
-	Expression<Region> regions;
-	
-	boolean owner;
-	
+	private Expression<Region> regions;
+
+	private boolean owner;
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -69,22 +67,14 @@ public class CondIsMember extends Condition {
 		setNegated(matchedPattern == 1);
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(final Event e) {
-		return players.check(e, new Checker<OfflinePlayer>() {
-			@Override
-			public boolean check(final OfflinePlayer p) {
-				return regions.check(e, new Checker<Region>() {
-					@Override
-					public boolean check(final Region r) {
-						return owner ? r.isOwner(p) : r.isMember(p);
-					}
-				}, isNegated());
-			}
-		});
+		return players.check(e,
+				p -> regions.check(e,
+						r -> owner ? r.isOwner(p) : r.isMember(p), isNegated()));
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return players.toString(e, debug) + " " + (players.isSingle() ? "is" : "are") + (isNegated() ? " not" : "") + " " + (owner ? "owner" : "member") + (players.isSingle() ? "" : "s") + " of " + regions.toString(e, debug);

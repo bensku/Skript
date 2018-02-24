@@ -1,46 +1,43 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.util.coll.iterator;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
+import ch.njol.util.NullableChecker;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.util.NullableChecker;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
  */
 public class StoppableIterator<T> implements Iterator<T> {
-	
 	private final Iterator<T> iter;
 	private final NullableChecker<T> stopper;
-	
+
 	private final boolean returnLast;
 	@Nullable
 	private T current;
-	
+
 	private boolean stopped = false;
 	private boolean calledNext = false;
-	
+
 	/**
 	 * @param iter
 	 * @param stopper Called for every element. If it returns true the iteration is stopped.
@@ -55,7 +52,7 @@ public class StoppableIterator<T> implements Iterator<T> {
 		if (!returnLast && iter.hasNext())
 			current = iter.next();
 	}
-	
+
 	@Override
 	public boolean hasNext() {
 		final boolean cn = calledNext;
@@ -71,7 +68,7 @@ public class StoppableIterator<T> implements Iterator<T> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	public T next() {
@@ -85,14 +82,13 @@ public class StoppableIterator<T> implements Iterator<T> {
 			stop();
 		return t;
 	}
-	
+
 	@Override
 	public void remove() {
 		iter.remove();
 	}
-	
+
 	public void stop() {
 		stopped = true;
 	}
-	
 }

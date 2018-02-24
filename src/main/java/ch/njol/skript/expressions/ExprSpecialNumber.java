@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -40,29 +39,20 @@ public class ExprSpecialNumber extends SimpleExpression<Number> {
 	private int value;
 
 	static {
-		Skript.registerExpression(
-			ExprSpecialNumber.class,
-			Number.class,
-			ExpressionType.SIMPLE, 
-			"(0¦NaN|1¦[(2¦-|2¦minus)](infinity|\u221e)) value",
-			"value of (0¦NaN|1¦[(2¦-|2¦minus)](infinity|\u221e))"
-		);
+		Skript.registerExpression(ExprSpecialNumber.class, Number.class, ExpressionType.SIMPLE,
+				"(0¦NaN|1¦[(2¦-|2¦minus)](infinity|\u221e)) value", // ∞ (infinity sign)
+				"value of (0¦NaN|1¦[(2¦-|2¦minus)](infinity|\u221e))");
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
 		this.value = parseResult.mark;
 		return true;
 	}
 
 	@Override
-	protected Number[] get(Event e) {
+	protected Number[] get(final Event e) {
 		return new Number[]{value == 0 ? Double.NaN : value == 1 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY};
-	}
-
-	@Override
-	public Class<? extends Number> getReturnType() {
-		return Number.class;
 	}
 
 	@Override
@@ -71,7 +61,12 @@ public class ExprSpecialNumber extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
 		return value == 0 ? "NaN value" : value == 1 ? "infinity value" : "-infinity value";
 	}
 }

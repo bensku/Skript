@@ -1,26 +1,25 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
-import java.util.Arrays;
-
+import ch.njol.skript.Skript;
+import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,49 +27,48 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.material.Directional;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.coll.CollectionUtils;
+import java.util.Arrays;
 
 /**
  * TODO !Update with every version [blocks] - also update aliases-*.sk
- * 
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public abstract class BlockUtils {
-	
-	private final static BlockFace[] torch = new BlockFace[] {
+	private final static BlockFace[] torch = new BlockFace[]{
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN
 	};
-	
-	private final static BlockFace[] button = new BlockFace[] {
+
+	private final static BlockFace[] button = new BlockFace[]{
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, null, null, null,
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH
 	};
-	
-	private final static BlockFace[] ladder = new BlockFace[] {
+
+	private final static BlockFace[] ladder = new BlockFace[]{
 			null, null, BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST
 	}, wallSign = ladder;
-	
-	private final static BlockFace[] trapdoor = new BlockFace[] {
+
+	private final static BlockFace[] trapdoor = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST
 	};
-	
-	private final static BlockFace[] lever = new BlockFace[] {
+
+	private final static BlockFace[] lever = new BlockFace[]{
 			BlockFace.UP, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.DOWN, BlockFace.UP,
 			BlockFace.UP, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.DOWN, BlockFace.UP
 	};
-	
-	private final static BlockFace[] cocoa = new BlockFace[] {
+
+	private final static BlockFace[] cocoa = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
 	};
-	
-	private final static BlockFace[] tripwireHook = new BlockFace[] {
+
+	private final static BlockFace[] tripwireHook = new BlockFace[]{
 			BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
 			BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST
 	};
-	
+
 	private final static BlockFace[][] attached = new BlockFace[Skript.MAXBLOCKID + 1][];
+
 	static {
 		attached[Material.TORCH.getId()] = torch;
 		attached[Material.STONE_BUTTON.getId()] = button;
@@ -85,16 +83,16 @@ public abstract class BlockUtils {
 		if (Skript.fieldExists(Material.class, "WOOD_BUTTON"))
 			attached[Material.WOOD_BUTTON.getId()] = button;
 	}
-	
-	private final static BlockFace[] bed = new BlockFace[] {
+
+	private final static BlockFace[] bed = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
 	};
-	
+
 	// not the actual facing, but a direction where fence posts should exist
-	private final static BlockFace[] gate = new BlockFace[] {
+	private final static BlockFace[] gate = new BlockFace[]{
 			BlockFace.WEST, BlockFace.NORTH
 	};
-	
+
 	/**
 	 * @param b
 	 * @param type
@@ -113,7 +111,7 @@ public abstract class BlockUtils {
 			throw new IllegalArgumentException("Invalid block type id " + type);
 		if (dataMin < 0 || dataMin > dataMax || dataMax > 15)
 			throw new IllegalArgumentException("Invalid data range " + dataMin + " to " + dataMax);
-		
+
 		// ATTACHABLES
 		final BlockFace[] attach = attached[type];
 		if (attach != null) {
@@ -168,7 +166,7 @@ public abstract class BlockUtils {
 			b.setTypeIdAndData(type, (byte) Utils.random(dataMin, dataMax + 1), applyPhysics);
 			return true;
 		}
-		
+
 		// DOORS
 		if (type == Material.IRON_DOOR_BLOCK.getId() || type == Material.WOODEN_DOOR.getId()) {
 			final int up = b.getRelative(BlockFace.UP).getTypeId();
@@ -198,7 +196,7 @@ public abstract class BlockUtils {
 			}
 			return false;
 		}
-		
+
 		// BED
 		if (type == Material.BED_BLOCK.getId()) {
 			for (final byte data : CollectionUtils.permutation(dataMin, dataMax)) {
@@ -220,7 +218,7 @@ public abstract class BlockUtils {
 			}
 			return false;
 		}
-		
+
 		// FENCE GATE
 		if (type == Material.FENCE_GATE.getId()) {
 			final boolean[] tried = new boolean[gate.length];
@@ -242,7 +240,7 @@ public abstract class BlockUtils {
 			b.setTypeIdAndData(type, (byte) Utils.random(dataMin, dataMax + 1), applyPhysics);
 			return true;
 		}
-		
+
 		// LARGE FLOWER
 		if (type == 175) {
 			if (b.getRelative(BlockFace.UP).getType() == Material.AIR) {
@@ -252,14 +250,14 @@ public abstract class BlockUtils {
 				return true;
 			}
 		}
-		
+
 		// REMIND rails?
-		
+
 		// DUMMY
 		b.setTypeIdAndData(type, any ? 0 : (byte) Utils.random(dataMin, dataMax + 1), applyPhysics);
 		return true;
 	}
-	
+
 	// Material.isSolid() treats e.g. steps as solid...
 	// TODO !Update with every version [blocks]
 	private final static int[] solid = {
@@ -269,27 +267,28 @@ public abstract class BlockUtils {
 			152, 153, 155, 158, 159, 161, 162, 170, 172, 173, 174
 	};
 	private final static boolean[] isSolid = new boolean[Skript.MAXBLOCKID + 1];
+
 	static {
 		for (final int i : solid)
 			isSolid[i] = true;
 	}
-	
-	public final static boolean isSolid(final int type) {
+
+	public static boolean isSolid(final int type) {
 		if (type < 0 || type >= isSolid.length)
 			throw new IllegalArgumentException(type + " is not a block id");
 		return isSolid[type];
 	}
-	
+
 	@SuppressWarnings("null")
 	public static Iterable<Block> getBlocksAround(final Block b) {
 		return Arrays.asList(b.getRelative(BlockFace.NORTH), b.getRelative(BlockFace.EAST), b.getRelative(BlockFace.SOUTH), b.getRelative(BlockFace.WEST));
 	}
-	
+
 	@SuppressWarnings("null")
 	public static Iterable<BlockFace> getFaces() {
 		return Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 	}
-	
+
 	/**
 	 * @param b A block
 	 * @return Location of the block, including its direction
@@ -307,5 +306,4 @@ public abstract class BlockUtils {
 		}
 		return l;
 	}
-	
 }

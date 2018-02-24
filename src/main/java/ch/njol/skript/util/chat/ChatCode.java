@@ -1,38 +1,33 @@
 /*
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.util.chat;
 
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
+import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
 import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.util.chat.MessageComponent.*;
 
 /**
  * Chat codes; includes color codes (<a href="http://wiki.vg/Chat#Colors">reference</a>)
  * and also, some formatting codes (mostly <a href="http://wiki.vg/Chat">this</a>)
  */
 public enum ChatCode {
-	
 	reset {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -41,7 +36,7 @@ public enum ChatCode {
 	},
 
 	// Colors (Vanilla color code, Skript color code if different)
-	
+
 	black("black", '0'),
 	dark_blue("dark_blue", '1'),
 	dark_green("dark_green", '2'),
@@ -58,46 +53,46 @@ public enum ChatCode {
 	light_purple("light_purple", 'd'),
 	yellow("yellow", 'e'),
 	white("white", 'f'),
-	
+
 	// Formatting
-	
+
 	bold {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.bold = true;
 		}
 	},
-	
+
 	italic {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.italic = true;
 		}
 	},
-	
+
 	underlined(null, "underline") {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.underlined = true;
 		}
 	},
-	
+
 	strikethrough {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.strikethrough = true;
 		}
 	},
-	
+
 	obfuscated(null, "magic") {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.obfuscated = true;
 		}
 	},
-	
+
 	// clickEvent
-	
+
 	open_url(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -105,7 +100,7 @@ public enum ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	run_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -113,7 +108,7 @@ public enum ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	suggest_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -121,7 +116,7 @@ public enum ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	change_page(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -129,9 +124,9 @@ public enum ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	// hoverEvent
-	
+
 	show_text(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -142,56 +137,57 @@ public enum ChatCode {
 
 	// Other
 
-    insertion(true) {
-	    @Override
-        public void updateComponent(MessageComponent component, String param) { component.insertion = param; }
-    };
-	
+	insertion(true) {
+		@Override
+		public void updateComponent(MessageComponent component, String param) { component.insertion = param; }
+	};
+
 	public boolean hasParam;
-	
+
 	@Nullable
 	public String colorCode;
-	
+
 	@Nullable
 	public String langName;
-	
+
 	public char colorChar;
-	
+
 	ChatCode(@Nullable String colorCode, String langName, char colorChar) {
 		this.colorCode = colorCode;
 		this.langName = langName;
 		this.hasParam = false;
 		this.colorChar = colorChar;
 	}
-	
+
 	ChatCode(@Nullable String colorCode, String langName) {
 		this.colorCode = colorCode;
 		this.langName = langName;
 		this.hasParam = false;
 	}
-	
+
 	ChatCode(String colorCode, char colorChar) {
 		this.colorCode = colorCode;
 		this.langName = colorCode;
 		this.hasParam = false;
 		this.colorChar = colorChar;
 	}
-	
+
 	ChatCode(boolean hasParam) {
 		this.hasParam = hasParam;
 		this.langName = this.name(); // Default to enum name
 	}
-	
+
 	ChatCode() {
 		this(false);
 	}
-	
+
 	/**
 	 * Updates the component.
+	 *
 	 * @param component Component to update.
-	 * @param param String parameter.
+	 * @param param     String parameter.
 	 */
 	public void updateComponent(MessageComponent component, String param) {
-		
+
 	}
 }

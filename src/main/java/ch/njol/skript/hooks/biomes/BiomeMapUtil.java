@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.biomes;
 
@@ -26,7 +25,6 @@ import org.eclipse.jdt.annotation.Nullable;
  * Hooks to provide 1.8 support.
  */
 public class BiomeMapUtil {
-	
 	public enum To19Mapping {
 		SWAMPLAND(Biome.SWAMPLAND),
 		FOREST(Biome.FOREST),
@@ -90,25 +88,26 @@ public class BiomeMapUtil {
 		EXTREME_HILLS_PLUS_MOUNTAINS(Biome.MUTATED_EXTREME_HILLS_WITH_TREES),
 		MEGA_SPRUCE_TAIGA_HILLS(Biome.MUTATED_REDWOOD_TAIGA_HILLS),
 		VOID(Biome.VOID);
-		
-		public static @Nullable To19Mapping getMapping(Biome biome) {
+
+		public static @Nullable
+		To19Mapping getMapping(Biome biome) {
 			To19Mapping[] values = values();
-			
+
 			for (To19Mapping value : values) {
 				if (value.getHandle().equals(biome)) {
 					return value;
 				}
 			}
-			
+
 			return null;
 		}
-		
+
 		private Biome handle;
-		
+
 		To19Mapping(Biome handle) {
 			this.handle = handle;
 		}
-		
+
 		public Biome getHandle() {
 			return this.handle;
 		}

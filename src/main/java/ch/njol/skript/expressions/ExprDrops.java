@@ -1,31 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -46,6 +37,13 @@ import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.IteratorIterable;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -60,12 +58,12 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 	static {
 		Skript.registerExpression(ExprDrops.class, ItemStack.class, ExpressionType.SIMPLE, "[the] drops");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Kleenean delayed;
-	
+
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(EntityDeathEvent.class)) {
 			Skript.error("The expression 'drops' can only be used in death events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
@@ -73,7 +71,7 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 		delayed = isDelayed;
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected ItemStack[] get(final Event e) {
@@ -81,7 +79,7 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			return new ItemStack[0];
 		return ((EntityDeathEvent) e).getDrops().toArray(new ItemStack[0]);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -94,7 +92,7 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 		}
 		return CollectionUtils.array(ItemType[].class, Inventory[].class, Experience[].class);
 	}
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public void change(final Event e, final @Nullable Object[] deltas, final ChangeMode mode) {
@@ -103,14 +101,14 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			assert false;
 			return;
 		}
-		
+
 		final List<ItemStack> drops = ((EntityDeathEvent) e).getDrops();
 		if (mode == ChangeMode.DELETE) {
 			drops.clear();
 			return;
 		}
 		boolean cleared = false;
-		
+
 		assert deltas != null;
 		for (final Object delta : deltas) {
 			if (delta instanceof Experience) {
@@ -164,22 +162,21 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			}
 		}
 	}
-	
+
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
 	@Override
 	public Class<? extends ItemStack> getReturnType() {
 		return ItemStack.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the drops";
 		return Classes.getDebugMessage(getAll(e));
 	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
-	}
-	
 }

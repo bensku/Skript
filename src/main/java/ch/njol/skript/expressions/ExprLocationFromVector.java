@@ -1,31 +1,28 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -59,7 +56,40 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 	private Expression<World> world;
 	@SuppressWarnings("null")
 	private Expression<Number> yaw, pitch;
+
 	private boolean yawpitch;
+
+	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] expressions, final int i, final Kleenean kleenean, final SkriptParser.ParseResult parseResult) {
+		if (expressions.length > 3) {
+			yawpitch = true;
+		}
+		vector = (Expression<Vector>) expressions[0];
+		world = (Expression<World>) expressions[1];
+		if (yawpitch) {
+			yaw = (Expression<Number>) expressions[2];
+			pitch = (Expression<Number>) expressions[3];
+		}
+		return true;
+	}
+
+	@SuppressWarnings("null")
+	@Override
+	protected Location[] get(final Event event) {
+		Vector v = vector.getSingle(event);
+		World w = world.getSingle(event);
+		Number y = yaw != null ? yaw.getSingle(event) : null;
+		Number p = pitch != null ? pitch.getSingle(event) : null;
+		if (v == null || w == null) {
+			return null;
+		}
+		if (y == null || p == null) {
+			return new Location[]{v.toLocation(w)};
+		} else {
+			return new Location[]{v.toLocation(w, y.floatValue(), p.floatValue())};
+		}
+	}
 
 	@Override
 	public boolean isSingle() {
@@ -72,40 +102,7 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		if (expressions.length > 3) {
-			yawpitch = true;
-		}
-		vector = (Expression<Vector>)expressions[0];
-		world = (Expression<World>)expressions[1];
-		if (yawpitch) {
-			yaw = (Expression<Number>)expressions[2];
-			pitch = (Expression<Number>)expressions[3];
-		}
-		return true;
-	}
-
-	@SuppressWarnings("null")
-	@Override
-	protected Location[] get(Event event) {
-		Vector v = vector.getSingle(event);
-		World w = world.getSingle(event);
-		Number y = yaw != null ? yaw.getSingle(event) : null;
-		Number p = pitch != null ? pitch.getSingle(event) : null;
-		if (v == null || w == null){
-			return null;
-		}
-		if (y == null || p == null){
-			return new Location[]{ v.toLocation(w)};
-		}
-		else {
-			return new Location[]{v.toLocation(w, y.floatValue(), p.floatValue())};
-		}
-	}
-
-	@Override
-	public String toString(final @Nullable Event event, boolean b) {
+	public String toString(final @Nullable Event event, final boolean debug) {
 		if (yawpitch) {
 			return "location from " + vector.toString() + " with yaw " + yaw.toString() + " and pitch " + pitch.toString();
 		}

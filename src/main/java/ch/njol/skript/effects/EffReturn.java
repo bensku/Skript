@@ -1,26 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
@@ -38,26 +34,28 @@ import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Return")
 @Description("Makes a function return a value")
-@Examples({"function double(i: number) :: number:",
-		"	return 2 * {_i}"})
+@Examples({
+		"function double(i: number) :: number:",
+		"\treturn 2 * {_i}"})
 @Since("2.2")
 public class EffReturn extends Effect {
 	static {
 		Skript.registerEffect(EffReturn.class, "return %objects%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private ScriptFunction<?> function;
-	
 	@SuppressWarnings("null")
 	private Expression<?> value;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -95,7 +93,7 @@ public class EffReturn extends Effect {
 		value = v;
 		return true;
 	}
-	
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	@Nullable
@@ -107,15 +105,14 @@ public class EffReturn extends Effect {
 			assert false : e;
 		return null;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		assert false;
 	}
-	
+
 	@Override
 	public String toString(@Nullable final Event e, final boolean debug) {
 		return "return " + value.toString(e, debug);
 	}
-	
 }

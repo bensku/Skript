@@ -1,20 +1,20 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
@@ -40,14 +40,13 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description("Gets the dot product between two vectors")
 @Examples({"set {_v} to {_v2} dot {_v3}"})
 @Since("2.2-dev28")
-/**
+/*
  * NOTE vector 1, 2, 3 dot vector 1, 2, 3 does NOT work!
  * it returns a new vector: 1, 2, 18. This should not happen
  * and I have no idea why it does. I have also no idea why
  * "z" takes the value 18. There must be some black magic
  * going on.
  */
-
 public class ExprVectorDotProduct extends SimpleExpression<Double> {
 	static {
 		Skript.registerExpression(ExprVectorDotProduct.class, Double.class, ExpressionType.SIMPLE, "%vector% dot %vector%");
@@ -57,13 +56,22 @@ public class ExprVectorDotProduct extends SimpleExpression<Double> {
 	private Expression<Vector> first, second;
 
 	@Override
-	public boolean isSingle() {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		first = (Expression<Vector>) exprs[0];
+		second = (Expression<Vector>) exprs[1];
 		return true;
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return first.toString() + " dot " + second.toString();
+	@SuppressWarnings("null")
+	protected Double[] get(final Event event) {
+		Vector v1 = first.getSingle(event);
+		Vector v2 = second.getSingle(event);
+		if (v1 == null || v2 == null) {
+			return null;
+		}
+		return new Double[]{v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ()};
 	}
 
 	@Override
@@ -72,21 +80,12 @@ public class ExprVectorDotProduct extends SimpleExpression<Double> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		first = (Expression<Vector>)expressions[0];
-		second = (Expression<Vector>)expressions[1];
+	public boolean isSingle() {
 		return true;
 	}
 
 	@Override
-	@SuppressWarnings("null")
-	protected Double[] get(Event event) {
-		Vector v1 = first.getSingle(event);
-		Vector v2 = second.getSingle(event);
-		if (v1 == null || v2 == null) {
-			return null;
-		}
-		return new Double[]{ v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ()};
+	public String toString(final @Nullable Event event, final boolean debug) {
+		return first.toString() + " dot " + second.toString();
 	}
 }

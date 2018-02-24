@@ -1,23 +1,43 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.util.AABB;
+import ch.njol.skript.variables.Variables;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -28,79 +48,55 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
-import ch.njol.skript.variables.Variables;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
-
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
 /**
  * @author Peter Güttinger
  */
 public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
-	
 	public WorldGuardHook() throws IOException {}
-	
-	boolean supportsUUIDs;
-	
+
+	private boolean supportsUUIDs;
+
 	@Override
 	protected boolean init() {
 		supportsUUIDs = Skript.methodExists(DefaultDomain.class, "getUniqueIds");
 		return super.init();
 	}
-	
+
 	@Override
 	public String getName() {
 		return "WorldGuard";
 	}
-	
+
 	@Override
 	public boolean canBuild_i(final Player p, final Location l) {
 		return plugin.canBuild(p, l);
 	}
-	
+
 	static {
 		Variables.yggdrasil.registerSingleClass(WorldGuardRegion.class);
 	}
-	
+
 	@YggdrasilID("WorldGuardRegion")
 	public final class WorldGuardRegion extends Region {
-		
+
 		final World world;
 		private transient ProtectedRegion region;
-		
+
 		@SuppressWarnings({"null", "unused"})
 		private WorldGuardRegion() {
 			world = null;
 		}
-		
+
 		public WorldGuardRegion(final World w, final ProtectedRegion r) {
 			world = w;
 			region = r;
 		}
-		
+
 		@Override
 		public boolean contains(final Location l) {
 			return l.getWorld().equals(world) && region.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ());
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public boolean isMember(final OfflinePlayer p) {
@@ -109,7 +105,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 			else
 				return region.isMember(p.getName());
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public Collection<OfflinePlayer> getMembers() {
@@ -127,7 +123,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 				return r;
 			}
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public boolean isOwner(final OfflinePlayer p) {
@@ -136,7 +132,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 			else
 				return region.isOwner(p.getName());
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public Collection<OfflinePlayer> getOwners() {
@@ -154,7 +150,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 				return r;
 			}
 		}
-		
+
 		@Override
 		public Iterator<Block> getBlocks() {
 			final BlockVector min = region.getMinimumPoint(), max = region.getMaximumPoint();
@@ -192,14 +188,14 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 //				}
 //			};
 		}
-		
+
 		@Override
 		public Fields serialize() throws NotSerializableException {
 			final Fields f = new Fields(this);
 			f.putObject("region", region.getId());
 			return f;
 		}
-		
+
 		@Override
 		public void deserialize(final Fields fields) throws StreamCorruptedException, NotSerializableException {
 			final String r = fields.getAndRemoveObject("region", String.class);
@@ -209,17 +205,17 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 				throw new StreamCorruptedException("Invalid region " + r + " in world " + world);
 			this.region = region;
 		}
-		
+
 		@Override
 		public String toString() {
 			return region.getId() + " in world " + world.getName();
 		}
-		
+
 		@Override
 		public RegionsPlugin<?> getPlugin() {
 			return WorldGuardHook.this;
 		}
-		
+
 		@Override
 		public boolean equals(final @Nullable Object o) {
 			if (o == this)
@@ -230,19 +226,19 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 				return false;
 			return world.equals(((WorldGuardRegion) o).world) && region.equals(((WorldGuardRegion) o).region);
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return world.hashCode() * 31 + region.hashCode();
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public Collection<? extends Region> getRegionsAt_i(@Nullable final Location l) {
 		final ArrayList<Region> r = new ArrayList<>();
-		
+
 		if (l == null) // Working around possible cause of issue #280
 			return Collections.emptyList();
 		if (l.getWorld() == null)
@@ -253,12 +249,12 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 		ApplicableRegionSet applicable = manager.getApplicableRegions(l);
 		if (applicable == null)
 			return r;
-		final Iterator<ProtectedRegion> i = applicable.iterator();
-		while (i.hasNext())
-			r.add(new WorldGuardRegion(l.getWorld(), i.next()));
+		for (ProtectedRegion anApplicable : applicable) {
+			r.add(new WorldGuardRegion(l.getWorld(), anApplicable));
+		}
 		return r;
 	}
-	
+
 	@Override
 	@Nullable
 	public Region getRegion_i(final World world, final String name) {
@@ -267,15 +263,14 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 			return new WorldGuardRegion(world, r);
 		return null;
 	}
-	
+
 	@Override
 	public boolean hasMultipleOwners_i() {
 		return true;
 	}
-	
+
 	@Override
 	protected Class<? extends Region> getRegionClass() {
 		return WorldGuardRegion.class;
 	}
-	
 }

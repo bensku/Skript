@@ -1,37 +1,33 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-
+import ch.njol.skript.localization.Language;
+import ch.njol.util.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.util.StringUtils;
+import java.util.HashMap;
 
 /**
  * @author Peter Güttinger
  */
 public final class EnumUtils<E extends Enum<E>> {
-	
 	private final Class<E> c;
 	private final String languageNode;
 	
@@ -47,18 +43,13 @@ public final class EnumUtils<E extends Enum<E>> {
 		
 		names = new String[c.getEnumConstants().length];
 		
-		Language.addListener(new LanguageChangeListener() {
-			@Override
-			public void onLanguageChange() {
-				validate(true);
-			}
-		});
+		Language.addListener(() -> validate(true));
 	}
 	
 	/**
 	 * Updates the names if the language has changed or the enum was modified (using reflection).
 	 */
-	final void validate(final boolean force) {
+	private final void validate(final boolean force) {
 		boolean update = force;
 		
 		final int newL = c.getEnumConstants().length;
@@ -94,5 +85,4 @@ public final class EnumUtils<E extends Enum<E>> {
 		validate(false);
 		return StringUtils.join(names, ", ");
 	}
-	
 }

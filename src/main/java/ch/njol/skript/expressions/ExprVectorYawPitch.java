@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -31,7 +30,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -51,16 +49,24 @@ import org.eclipse.jdt.annotation.Nullable;
 		"send \"%vector yaw of {_v}%, %vector pitch of {_v}%\"",})
 @Since("2.2-dev28")
 public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number> {
+	private final static String[] type = new String[]{"yyaw", "ppitch"};
+
 	static {
-		Skript.registerExpression(ExprVectorYawPitch.class, Number.class, ExpressionType.PROPERTY,"vector (0¦yaw|1¦pitch) of %vector%");
+		Skript.registerExpression(ExprVectorYawPitch.class, Number.class, ExpressionType.PROPERTY, "vector (0¦yaw|1¦pitch) of %vector%");
 	}
 
 	private int mark;
-	private final static String[] type = new String[] {"yyaw", "ppitch"};
+
+	@Override
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		super.init(exprs, matchedPattern, isDelayed, parseResult);
+		mark = parseResult.mark;
+		return true;
+	}
 
 	@Override
 	@SuppressWarnings("null")
-	public Number convert(Vector vector) {
+	public Number convert(final Vector vector) {
 		if (vector != null) {
 			switch (mark) {
 				case 0:
@@ -75,35 +81,20 @@ public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number>
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return type[mark] + " of vector";
-	}
-
-	@Override
-	public Class<? extends Number> getReturnType() {
-		return Number.class;
-	}
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		super.init(exprs, matchedPattern, isDelayed, parseResult);
-		mark = parseResult.mark;
-		return true;
-	}
-
-	@Override
 	@SuppressWarnings("null")
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if ((mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) && getExpr().isSingle() && Changer.ChangerUtils.acceptsChange(getExpr(), Changer.ChangeMode.SET, Vector.class))
-			return new Class[] { Number.class };
+	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
+		if ((mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE)
+				&& getExpr().isSingle()
+				&& Changer.ChangerUtils.acceptsChange(getExpr(), Changer.ChangeMode.SET, Vector.class))
+			return new Class[]{Number.class};
 		return null;
 	}
 
 	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, final @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) {
 		Vector v = getExpr().getSingle(e);
-		if (v == null){
+		if (v == null) {
 			return;
 		}
 		float n = ((Number) delta[0]).floatValue();
@@ -114,18 +105,18 @@ public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number>
 				n = -n;
 				//$FALL-THROUGH$
 			case ADD:
-				if (mark == 0){
+				if (mark == 0) {
 					yaw += n;
-				} else if (mark == 1){
+				} else if (mark == 1) {
 					pitch -= n; // Negative because of minecraft's / skript's upside down pitch
 				}
 				v = VectorMath.fromYawAndPitch(yaw, pitch);
 				getExpr().change(e, new Vector[]{v}, Changer.ChangeMode.SET);
 				break;
 			case SET:
-				if (mark == 0){
+				if (mark == 0) {
 					yaw = VectorMath.fromSkriptYaw(n);
-				} else if (mark == 1){
+				} else if (mark == 1) {
 					pitch = VectorMath.fromSkriptPitch(n);
 				}
 				v = VectorMath.fromYawAndPitch(yaw, pitch);
@@ -136,5 +127,15 @@ public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number>
 			case RESET:
 				assert false;
 		}
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return type[mark] + " of vector";
+	}
+
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 }

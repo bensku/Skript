@@ -19,13 +19,12 @@
  */
 package ch.njol.yggdrasil;
 
+import ch.njol.yggdrasil.Fields.FieldContext;
+import org.eclipse.jdt.annotation.NonNull;
+
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Field;
-
-import org.eclipse.jdt.annotation.NonNull;
-
-import ch.njol.yggdrasil.Fields.FieldContext;
 
 /**
  * Marks a class as serialisable by Yggdrasil.

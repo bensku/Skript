@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -52,7 +51,6 @@ import java.lang.reflect.Array;
 		"set {_v} to {_v} // 5"})
 @Since("2.2-dev28")
 public class ExprVectorArithmetic extends SimpleExpression<Vector> {
-
 	private static enum Operator {
 		PLUS("++") {
 			@Override
@@ -85,7 +83,7 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 
 		public final String sign;
 
-		private Operator(final String sign) {
+		Operator(final String sign) {
 			this.sign = sign;
 		}
 
@@ -97,8 +95,7 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 		}
 	}
 
-	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][] {
-
+	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][]{
 			{"%vector%[ ]++[ ]%vector%", Operator.PLUS},
 			{"%vector%[ ]--[ ]%vector%", Operator.MINUS},
 
@@ -116,7 +113,16 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 	private Operator op;
 
 	@Override
-	protected Vector[] get(Event event) {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(final Expression<?>[] expressions, final int matchedPattern, final Kleenean kleenean, final SkriptParser.ParseResult parseResult) {
+		first = (Expression<Vector>) expressions[0];
+		second = (Expression<Vector>) expressions[1];
+		op = patterns.getInfo(matchedPattern);
+		return true;
+	}
+
+	@Override
+	protected Vector[] get(final Event event) {
 		final Vector[] vectors = (Vector[]) Array.newInstance(Vector.class, 1);
 		Vector v1 = first.getSingle(event), v2 = second.getSingle(event);
 		if (v1 == null) {
@@ -140,16 +146,7 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return first.toString(event, b) + " " + op +  " " + second.toString(event, b);
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		first = (Expression<Vector>) expressions[0];
-		second = (Expression<Vector>) expressions[1];
-		op = patterns.getInfo(matchedPattern);
-		return true;
+	public String toString(final @Nullable Event event, final boolean debug) {
+		return first.toString(event, debug) + " " + op + " " + second.toString(event, debug);
 	}
 }

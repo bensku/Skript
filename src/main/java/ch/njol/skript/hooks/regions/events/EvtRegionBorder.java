@@ -1,39 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions.events;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.plugin.EventExecutor;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
@@ -45,7 +29,20 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-import ch.njol.util.Checker;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.EventExecutor;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Peter Güttinger
@@ -73,12 +70,12 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 			}
 		}, 0);
 	}
-	
+
 	private boolean enter;
-	
+
 	@Nullable
 	private Literal<Region> regions;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parseResult) {
@@ -86,31 +83,31 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		regions = args.length == 0 ? null : (Literal<Region>) args[0];
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Literal<Region> r = regions;
 		return (enter ? "enter" : "leave") + " of " + (r == null ? "a region" : r.toString(e, debug));
 	}
-	
+
 	private final static Collection<Trigger> triggers = new ArrayList<>();
-	
+
 	@Override
 	public void register(final Trigger t) {
 		triggers.add(t);
 		register();
 	}
-	
+
 	@Override
 	public void unregister(final Trigger t) {
 		triggers.remove(t);
 	}
-	
+
 	@Override
 	public void unregisterAll() {
 		triggers.clear();
 	}
-	
+
 	private boolean applies(final Event e) {
 		assert e instanceof RegionBorderEvent;
 		if (enter != ((RegionBorderEvent) e).isEntering())
@@ -119,15 +116,10 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		if (r == null)
 			return true;
 		final Region re = ((RegionBorderEvent) e).getRegion();
-		return r.check(e, new Checker<Region>() {
-			@Override
-			public boolean check(final Region r) {
-				return r.equals(re);
-			}
-		});
+		return r.check(e, r1 -> r1.equals(re));
 	}
-	
-	final static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
+
+	private static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
 		final Player p = me.getPlayer();
 		assert p != null;
 		final RegionBorderEvent e = new RegionBorderEvent(r, p, enter);
@@ -138,15 +130,15 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		}
 		me.setCancelled(e.isCancelled());
 	}
-	
+
 	// even WorldGuard doesn't have events, and this way all region plugins are supported for sure.
 	private final static EventExecutor ee = new EventExecutor() {
 		@Nullable
 		Event last = null;
-		
+
 		@SuppressWarnings("null")
 		@Override
-		public void execute(final @Nullable Listener listener, final Event event) throws EventException {
+		public void execute(final @Nullable Listener listener, final Event event) {
 			if (event == last)
 				return;
 			last = event;
@@ -167,10 +159,10 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 			}
 		}
 	};
-	
+
 	private static boolean registered = false;
-	
-	private final static void register() {
+
+	private static void register() {
 		if (registered)
 			return;
 		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
@@ -178,5 +170,4 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		Bukkit.getPluginManager().registerEvent(PlayerPortalEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
 		registered = true;
 	}
-	
 }

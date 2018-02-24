@@ -1,34 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -46,6 +34,15 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -54,7 +51,7 @@ import ch.njol.util.Kleenean;
 @Description("The clicked block or entity - only useful in click events")
 @Examples({"message \"You clicked on a %type of clicked entity%!\"",
 		"clicked block is a chest:",
-		"	show the inventory of the clicked block to the player"})
+		"\tshow the inventory of the clicked block to the player"})
 @Since("1.0")
 @Events("click")
 public class ExprClicked extends SimpleExpression<Object> {
@@ -88,17 +85,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 		}
 		return true;
 	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return entityType != null ? entityType.getType() : Block.class;
-	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
@@ -130,10 +117,20 @@ public class ExprClicked extends SimpleExpression<Object> {
 		}
 		return null;
 	}
+
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+	
+	@Override
+	public Class<?> getReturnType() {
+		return entityType != null ? entityType.getType() : Block.class;
+	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the clicked " + (entityType != null ? entityType : itemType != null ? itemType : "block");
 	}
-	
 }

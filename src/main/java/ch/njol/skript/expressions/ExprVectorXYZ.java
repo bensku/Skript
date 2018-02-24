@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -51,11 +50,11 @@ import org.eclipse.jdt.annotation.Nullable;
 		"send \"%x of {_v}%, %y of {_v}%, %z of {_v}%\"",})
 @Since("2.2-dev28")
 public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
+	private final static String[] axes = {"xx", "yy", "zz"};
+
 	static {
 		Skript.registerExpression(ExprVectorXYZ.class, Number.class, ExpressionType.PROPERTY, "(0¦x|1¦y|2¦z) of %vector%");
 	}
-
-	private final static String[] axes = {"xx", "yy", "zz"};
 
 	private int axis;
 
@@ -72,20 +71,10 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "the " + axes[axis] + "-coordinate";
-	}
-
-	@Override
-	public Class<Number> getReturnType() {
-		return Number.class;
-	}
-
-	@Override
 	@SuppressWarnings("null")
 	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
 		if ((mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) && getExpr().isSingle() && Changer.ChangerUtils.acceptsChange(getExpr(), Changer.ChangeMode.SET, Vector.class))
-			return new Class[] { Number.class };
+			return new Class[]{Number.class};
 		return null;
 	}
 
@@ -108,7 +97,7 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
 				} else {
 					v.setZ(v.getZ() + n);
 				}
-				getExpr().change(e, new Vector[] {v}, Changer.ChangeMode.SET);
+				getExpr().change(e, new Vector[]{v}, Changer.ChangeMode.SET);
 				break;
 			case SET:
 				if (axis == 0) {
@@ -118,7 +107,7 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
 				} else {
 					v.setZ(n);
 				}
-				getExpr().change(e, new Vector[] {v}, Changer.ChangeMode.SET);
+				getExpr().change(e, new Vector[]{v}, Changer.ChangeMode.SET);
 				break;
 			case DELETE:
 			case REMOVE_ALL:
@@ -127,4 +116,13 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
 		}
 	}
 
+	@Override
+	protected String getPropertyName() {
+		return "the " + axes[axis] + "-coordinate";
+	}
+
+	@Override
+	public Class<Number> getReturnType() {
+		return Number.class;
+	}
 }

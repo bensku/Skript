@@ -1,28 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.lang.reflect.Array;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
@@ -46,6 +40,10 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -63,34 +61,34 @@ import ch.njol.util.NonNullPair;
 				" e.g. the values will be stored in {parsed::1::*}, not {parsed::1}."})
 @Examples({"set {var} to line 1 parsed as number",
 		"on chat:",
-		"	set {var::*} to message parsed as \"buying %items% for %money%\"",
-		"	if parse error is set:",
-		"		message \"%parse error%\"",
-		"	else if {var::*} is set:",
-		"		cancel event",
-		"		remove {var::2} from the player's balance",
-		"		give {var::1::*} to the player"})
+		"\tset {var::*} to message parsed as \"buying %items% for %money%\"",
+		"\tif parse error is set:",
+		"\t\tmessage \"%parse error%\"",
+		"\telse if {var::*} is set:",
+		"\t\tcancel event",
+		"\t\tremove {var::2} from the player's balance",
+		"\t\tgive {var::1::*} to the player"})
 @Since("2.0")
 public class ExprParse extends SimpleExpression<Object> {
 	static {
 		Skript.registerExpression(ExprParse.class, Object.class, ExpressionType.COMBINED,
 				"%string% parsed as (%-*classinfo%|\"<.*>\")");
 	}
-	
+
 	@Nullable
 	static String lastError = null;
-	
+
 	@SuppressWarnings("null")
 	private Expression<String> text;
-	
+
 	@Nullable
 	private String pattern;
 	@Nullable
 	private boolean[] plurals;
-	
+
 	@Nullable
 	private ClassInfo<?> c;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -131,7 +129,7 @@ public class ExprParse extends SimpleExpression<Object> {
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
@@ -169,20 +167,19 @@ public class ExprParse extends SimpleExpression<Object> {
 			h.printLog();
 		}
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return pattern == null;
 	}
-	
+
 	@Override
-	public Class<? extends Object> getReturnType() {
+	public Class<?> getReturnType() {
 		return c != null ? c.getC() : Object[].class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return text.toString(e, debug) + " parsed as " + (c != null ? c.toString(Language.F_INDEFINITE_ARTICLE) : pattern);
 	}
-	
 }

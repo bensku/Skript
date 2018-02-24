@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes;
 
@@ -32,11 +31,10 @@ import ch.njol.skript.registrations.Comparators;
  * @see DefaultComparators
  */
 public interface Comparator<T1, T2> {
-	
 	/**
 	 * represents a relation between two objects.
 	 */
-	public static enum Relation {
+	enum Relation {
 		EQUAL, NOT_EQUAL, GREATER, GREATER_OR_EQUAL, SMALLER, SMALLER_OR_EQUAL;
 		
 		/**
@@ -195,7 +193,7 @@ public interface Comparator<T1, T2> {
 	 * @param <T1> see {@link Comparator}
 	 * @param <T2> dito
 	 */
-	public static class ComparatorInfo<T1, T2> {
+	class ComparatorInfo<T1, T2> {
 		
 		public Class<T1> c1;
 		public Class<T2> c2;
@@ -232,11 +230,10 @@ public interface Comparator<T1, T2> {
 	 * @param o2 Non-null object
 	 * @return the relation of the objects. Should neither return GREATER_OR_EQUAL nor SMALLER_OR_EQUAL.
 	 */
-	public Relation compare(T1 o1, T2 o2);
+	Relation compare(T1 o1, T2 o2);
 	
 	/**
 	 * @return whether this comparator supports ordering of elements or not.
 	 */
-	public boolean supportsOrdering();
-	
+	boolean supportsOrdering();
 }

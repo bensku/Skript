@@ -19,10 +19,10 @@
  */
 package ch.njol.yggdrasil;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Utility to be able to save and load classes with Yggdrasil that the user has no control of, e.g. classes of an external API.

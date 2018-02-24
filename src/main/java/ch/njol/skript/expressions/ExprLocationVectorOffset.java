@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -52,6 +51,14 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 	@SuppressWarnings("null")
 	private Expression<Vector> vectors;
 
+	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+		location = (Expression<Location>) expressions[0];
+		vectors = (Expression<Vector>) expressions[1];
+		return true;
+	}
+
 	@SuppressWarnings("null")
 	@Override
 	protected Location[] get(Event event) {
@@ -63,7 +70,7 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 		for (Vector v : vectors.getArray(event)) {
 			clone.add(v);
 		}
-		return new Location[] {clone};
+		return new Location[]{clone};
 	}
 
 	@Override
@@ -79,13 +86,5 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 	@Override
 	public String toString(final @Nullable Event event, boolean b) {
 		return location.toString() + " offset by vector " + vectors.toString();
-	}
-
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		location = (Expression<Location>) expressions[0];
-		vectors = (Expression<Vector>) expressions[1];
-		return true;
 	}
 }
