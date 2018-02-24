@@ -16,7 +16,15 @@
  *
  * Copyright 2011-2018 Peter Güttinger and contributors
  */
+
 package ch.njol.skript.expressions;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -27,39 +35,34 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Name("Shuffled List")
 @Description("Shuffles given list randomly. This is done by replacing indices by random numbers in resulting list.")
-@Examples({"set {_list::*} to  shuffled {_list::*"})
+@Examples({"set {_list::*} to shuffled {_list::*}"})
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
 	static {
-		Skript.registerExpression(ExprSortedList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
+		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
-
+	
 	@SuppressWarnings("null")
 	private Expression<Object> list;
-
+	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		list = (Expression<Object>) exprs[0];
 		return true;
 	}
-
+	
 	@Override
 	@Nullable
 	protected Object[] get(final Event e) {
 		Object[] origin = list.getAll(e);
 		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
-
+		
 		try {
 			Collections.shuffle(shuffled);
 		} catch (IllegalArgumentException ex) { // In case elements are not comparable
@@ -67,15 +70,15 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 		}
 		return shuffled.toArray();
 	}
-
+	
+	@Override
+	public Class<? extends Object> getReturnType() {
+		return Object.class;
+	}
+	
 	@Override
 	public boolean isSingle() {
 		return false;
-	}
-
-	@Override
-	public Class<?> getReturnType() {
-		return Object.class;
 	}
 
 	@Override

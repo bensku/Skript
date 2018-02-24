@@ -36,7 +36,7 @@ import java.util.Arrays;
 
 @Name("Sorted List")
 @Description("Sorts given list in natural order. All objects in list must be comparable; usually if you think you can compare it, it can be compared.")
-@Examples({"set {_list::*} to  sorted {_list::*"})
+@Examples({"set {_list::*} to sorted {_list::*}"})
 @Since("2.2-dev19")
 public class ExprSortedList extends SimpleExpression<Object> {
 	static {
