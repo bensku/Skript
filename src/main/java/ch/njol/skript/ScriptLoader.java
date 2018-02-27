@@ -723,9 +723,9 @@ final public class ScriptLoader {
 	 *
 	 * @param f Script file.
 	 */
+	@Nullable
 	@SuppressWarnings("resource") // Stream is closed in Config constructor called in loadStructure
-	public static @Nullable
-	Config loadStructure(final File f) {
+	public static Config loadStructure(final File f) {
 		if (!f.exists()) { // If file does not exist...
 			unloadScript(f); // ... it might be good idea to unload it now
 			return null;
@@ -749,8 +749,8 @@ final public class ScriptLoader {
 	 * @param source Source input stream.
 	 * @param name   Name of source "file".
 	 */
-	public static @Nullable
-	Config loadStructure(final InputStream source, final String name) {
+	@Nullable
+	public static Config loadStructure(final InputStream source, final String name) {
 		try {
 			final Config config = new Config(source, name,
 					Skript.getInstance().getDataFolder().toPath().resolve(Skript.SCRIPTSFOLDER).resolve(name).toFile(), true, false, ":");
@@ -768,9 +768,9 @@ final public class ScriptLoader {
 	 *
 	 * @param config Config object for the script.
 	 */
+	@Nullable
 	@SuppressWarnings("unchecked")
-	public static @Nullable
-	Config loadStructure(final Config config) {
+	public static Config loadStructure(final Config config) {
 		try {
 			//final CountingLogHandler numErrors = SkriptLogger.startLogHandler(new CountingLogHandler(SkriptLogger.SEVERE));
 

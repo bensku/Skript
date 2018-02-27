@@ -36,8 +36,8 @@ public abstract class BiomeMappings {
 
 	private final static boolean mapFor19 = Skript.isRunningMinecraft(1, 9);
 
-	public static @Nullable
-	Biome parse(final String name) {
+	@Nullable
+	public static Biome parse(final String name) {
 		if (!mapFor19) return util.parse(name);
 
 		To19Mapping mapping = BiomeHook.util19.parse(name);
