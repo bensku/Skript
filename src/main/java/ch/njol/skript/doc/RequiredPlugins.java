@@ -25,9 +25,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Other plugin dependencies for a syntax element.
- *
- * @author eyesniper2
+ * Provides a list of plugins other than Skript that the annotated
+ * element requires to be used.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

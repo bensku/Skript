@@ -25,9 +25,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Prevents warnings about missing documentation.
- *
- * @author Peter Güttinger
+ * Annotated element will not appear in documentation, nor will missing
+ * documentation about it cause warnings.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

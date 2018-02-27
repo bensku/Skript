@@ -41,7 +41,7 @@ public class ExprFlightMode extends PropertyExpression<Player, Boolean> {
 		register(ExprFlightMode.class, Boolean.class, "fl(y[ing]|ight) (mode|state)", "players");
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
 		setExpr((Expression<? extends Player>) exprs[0]);
