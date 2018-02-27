@@ -34,8 +34,7 @@ import java.lang.reflect.Method;
 
 @SuppressWarnings("null")
 public abstract class HealthUtils {
-	private HealthUtils() {
-	}
+	private HealthUtils() {}
 
 	private final static boolean supportsDoubles = Skript.methodExists(Damageable.class, "setHealth", double.class);
 	private static Method getHealth, setHealth, getMaxHealth, setMaxHealth, damage;
@@ -51,7 +50,6 @@ public abstract class HealthUtils {
 			} catch (final NoSuchMethodException e) {
 				Skript.outdatedError(e);
 			} catch (final SecurityException e) {
-				//noinspection ThrowableNotThrown
 				Skript.exception(e);
 			}
 		}
@@ -69,7 +67,6 @@ public abstract class HealthUtils {
 		try {
 			return ((Number) getHealth.invoke(e)).doubleValue() / 2;
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -89,7 +86,6 @@ public abstract class HealthUtils {
 		try {
 			setHealth.invoke(e, (int) Math.round(Math2.fit(0, health, getMaxHealth(e)) * 2));
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -107,7 +103,6 @@ public abstract class HealthUtils {
 		try {
 			return ((Number) getMaxHealth.invoke(e)).doubleValue() / 2;
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -128,7 +123,6 @@ public abstract class HealthUtils {
 		try {
 			setMaxHealth.invoke(e, Math.max(1, (int) Math.round(health * 2)));
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -155,7 +149,6 @@ public abstract class HealthUtils {
 		try {
 			damage.invoke(e, (int) Math.round(event.getDamage()));
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -184,7 +177,6 @@ public abstract class HealthUtils {
 			} catch (final NoSuchMethodException e) {
 				Skript.outdatedError(e);
 			} catch (final SecurityException e) {
-				//noinspection ThrowableNotThrown
 				Skript.exception(e);
 			}
 		}
@@ -196,7 +188,6 @@ public abstract class HealthUtils {
 		try {
 			return ((Number) getDamage.invoke(e)).doubleValue() / 2;
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);
@@ -218,7 +209,6 @@ public abstract class HealthUtils {
 		try {
 			setDamage.invoke(e, (int) Math.round(damage * 2));
 		} catch (final IllegalAccessException | InvocationTargetException ex) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
 			Skript.outdatedError(ex);

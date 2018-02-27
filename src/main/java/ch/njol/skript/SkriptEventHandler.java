@@ -247,8 +247,7 @@ public abstract class SkriptEventHandler {
 	 * Stores which events are currently registered with Bukkit
 	 */
 	private final static Set<Class<? extends Event>> registeredEvents = new HashSet<>();
-	private final static Listener listener = new Listener() {
-	};
+	private final static Listener listener = new Listener() {};
 
 	/**
 	 * Registers event handlers for all events which currently loaded

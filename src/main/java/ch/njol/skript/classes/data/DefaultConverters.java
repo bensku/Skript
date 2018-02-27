@@ -44,7 +44,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -247,12 +246,6 @@ public class DefaultConverters {
 //		});
 
 		// Vector - Direction
-		Converters.registerConverter(Vector.class, Direction.class, new Converter<Vector, Direction>() {
-			@Override
-			@Nullable
-			public Direction convert(Vector vector) {
-				return new Direction(vector);
-			}
-		});
+		Converters.registerConverter(Vector.class, Direction.class, (Converter<Vector, Direction>) Direction::new);
 	}
 }

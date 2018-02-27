@@ -223,7 +223,6 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 		};
 	}
 
-	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	@Override
 	public ItemData clone() {
 		return new ItemData(this);

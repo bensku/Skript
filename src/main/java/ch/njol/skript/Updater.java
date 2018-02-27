@@ -164,8 +164,7 @@ public class Updater {
 	public static List<ResponseEntry> deserialize(String str) {
 		assert str != null : "Cannot deserialize null string";
 		@SuppressWarnings("serial")
-		Type listType = new TypeToken<List<ResponseEntry>>() {
-		}.getType();
+		Type listType = new TypeToken<List<ResponseEntry>>() {}.getType();
 		assert gson != null;
 		List<ResponseEntry> responses = gson.fromJson(str, listType);
 		assert responses != null;
@@ -181,7 +180,7 @@ public class Updater {
 
 	public static class CheckerTask extends Task {
 		public CheckerTask(Plugin plugin, long period) {
-			super(plugin, 1, period, true); // This is asyncronous task
+			super(plugin, 1, period, true); // This is asynchronous task
 			CommandSender sender = executor.get();
 			if (sender == null)
 				sender = Bukkit.getConsoleSender();
@@ -303,7 +302,7 @@ public class Updater {
 
 	public static class DownloaderTask extends Task {
 		public DownloaderTask(Plugin plugin) {
-			super(plugin, 0, true); // This is asyncronous task
+			super(plugin, 0, true); // This is asynchronous task
 			CommandSender sender = executor.get();
 			if (sender == null)
 				sender = Bukkit.getConsoleSender();
@@ -313,7 +312,6 @@ public class Updater {
 
 		private CommandSender sender;
 
-		@SuppressWarnings("ThrowableNotThrown")
 		@Override
 		public void run() {
 			ResponseEntry update = latest.get();
@@ -346,7 +344,6 @@ public class Updater {
 					error.set(ExceptionUtils.toString(e));
 					Skript.info(sender, "" + m_check_error);
 				}
-
 
 				tries++;
 				if (tries >= maxTries && ch == null) {

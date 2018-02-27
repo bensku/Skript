@@ -66,7 +66,6 @@ import java.util.regex.Pattern;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("ThrowableNotThrown")
 public abstract class Classes {
 	private Classes() {}
 

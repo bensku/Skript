@@ -32,8 +32,7 @@ import java.util.List;
  * @author Peter Güttinger
  */
 public class EventValues {
-	private EventValues() {
-	}
+	private EventValues() {}
 
 	private final static class EventValueInfo<E extends Event, T> {
 

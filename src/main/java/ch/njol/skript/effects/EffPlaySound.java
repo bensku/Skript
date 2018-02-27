@@ -84,8 +84,7 @@ public class EffPlaySound extends Effect {
 
 			try {
 				soundEnum = Sound.valueOf(s.toUpperCase(Locale.ENGLISH));
-			} catch (IllegalArgumentException ignored) {
-			}
+			} catch (IllegalArgumentException ignored) {}
 
 			if (players != null) {
 				if (soundEnum == null) {

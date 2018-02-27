@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +28,9 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * bStats collects some data for plugin authors.
- * <p>
+ *
  * Check out https://bStats.org/ to learn more about bStats!
- * <p>
+ *
  * Slightly modified for usage in Skript, still under original license though.
  */
 @NonNullByDefault(value = false)
@@ -90,8 +89,7 @@ public class Metrics {
 			).copyDefaults(true);
 			try {
 				config.save(configFile);
-			} catch (IOException ignored) {
-			}
+			} catch (IOException ignored) { }
 		}
 
 		// Load the data
@@ -105,8 +103,7 @@ public class Metrics {
 					service.getField("B_STATS_VERSION"); // Our identifier :)
 					found = true; // We aren't the first
 					break;
-				} catch (NoSuchFieldException ignored) {
-				}
+				} catch (NoSuchFieldException ignored) { }
 			}
 			// Register our service
 			Bukkit.getServicesManager().register(Metrics.class, this, plugin, ServicePriority.Normal);
@@ -151,7 +148,7 @@ public class Metrics {
 					}
 				});
 			}
-		}, 1000 * 60 * 5, 1000 * 60 * 30);
+		}, 1000*60*5, 1000*60*30);
 		// Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
 		// WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
 		// WARNING: Just don't do it!
@@ -241,8 +238,7 @@ public class Metrics {
 			// Found one!
 			try {
 				pluginData.add(service.getMethod("getPluginData").invoke(Bukkit.getServicesManager().load(service)));
-			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-			}
+			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) { }
 		}
 
 		data.put("plugins", pluginData);
@@ -315,7 +311,7 @@ public class Metrics {
 		}
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		GZIPOutputStream gzip = new GZIPOutputStream(outputStream);
-		gzip.write(str.getBytes(StandardCharsets.UTF_8));
+		gzip.write(str.getBytes("UTF-8"));
 		gzip.close();
 		return outputStream.toByteArray();
 	}
@@ -1030,7 +1026,7 @@ public class Metrics {
 		 *
 		 * @param locale The locale.
 		 * @return The country from the giben locale or <code>null</code> if unknown country or
-		 * if the locale does not contain a country.
+		 *         if the locale does not contain a country.
 		 */
 		public static Country byLocale(Locale locale) {
 			return byIsoTag(locale.getCountry());

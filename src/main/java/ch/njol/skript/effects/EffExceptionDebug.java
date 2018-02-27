@@ -41,7 +41,6 @@ public class EffExceptionDebug extends Effect {
 
 	@Override
 	protected void execute(final Event e) {
-		//noinspection ThrowableNotThrown
 		Skript.exception("Created by a script (debugging)...");
 	}
 

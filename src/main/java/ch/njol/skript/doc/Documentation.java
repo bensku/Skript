@@ -361,8 +361,7 @@ public class Documentation {
 						try {
 							Class.forName("ch.njol.skript." + urls[i] + "." + s[1]);
 							continue;
-						} catch (final ClassNotFoundException ignored) {
-						}
+						} catch (final ClassNotFoundException ignored) {}
 					}
 				}
 			}

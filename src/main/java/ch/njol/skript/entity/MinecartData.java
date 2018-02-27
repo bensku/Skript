@@ -85,8 +85,7 @@ public class MinecartData extends EntityData<Minecart> {
 
 	private MinecartType type = MinecartType.ANY;
 
-	public MinecartData() {
-	}
+	public MinecartData() {}
 
 	public MinecartData(final MinecartType type) {
 		this.type = type;
@@ -117,8 +116,7 @@ public class MinecartData extends EntityData<Minecart> {
 	}
 
 	@Override
-	public void set(final Minecart entity) {
-	}
+	public void set(final Minecart entity) {}
 
 	@Override
 	public boolean match(final Minecart entity) {

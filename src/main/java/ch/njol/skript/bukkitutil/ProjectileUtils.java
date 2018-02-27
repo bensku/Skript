@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings({"null", "ThrowableNotThrown"})
+@SuppressWarnings("null")
 public abstract class ProjectileUtils {
 	private ProjectileUtils() {}
 

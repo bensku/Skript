@@ -307,8 +307,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 	}
 
 	@Override
-	public void set(final Entity entity) {
-	}
+	public void set(final Entity entity) {}
 
 	@Override
 	public boolean match(final Entity e) {

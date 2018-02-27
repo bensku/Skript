@@ -26,10 +26,9 @@ import java.lang.reflect.Method;
 /**
  * @author Peter Güttinger and contributors
  */
-@SuppressWarnings({"null", "ThrowableNotThrown"})
+@SuppressWarnings("null")
 public abstract class PassengerUtils {
-	private PassengerUtils() {
-	}
+	private PassengerUtils() {}
 
 	//Using reflection methods cause it will be removed soon in 1.12
 	private static Method getPassenger = null;
@@ -43,7 +42,6 @@ public abstract class PassengerUtils {
 			} catch (final NoSuchMethodException ex) {
 				Skript.outdatedError(ex);
 			} catch (final Exception ex) {
-				//noinspection ThrowableNotThrown
 				Skript.exception(ex);
 			}
 		}

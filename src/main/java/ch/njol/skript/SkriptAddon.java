@@ -83,7 +83,6 @@ public final class SkriptAddon {
 	 * @throws IOException If some error occurred attempting to read the plugin's jar file.
 	 * @return This SkriptAddon
 	 */
-	@SuppressWarnings("ThrowableNotThrown")
 	public SkriptAddon loadClasses(String basePackage, final String... subPackages) throws IOException {
 		assert subPackages != null;
 		final JarFile jar = new JarFile(getFile());
@@ -115,8 +114,7 @@ public final class SkriptAddon {
 		} finally {
 			try {
 				jar.close();
-			} catch (final IOException ignored) {
-			}
+			} catch (final IOException ignored) {}
 		}
 		return this;
 	}

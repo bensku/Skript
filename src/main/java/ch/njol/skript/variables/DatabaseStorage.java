@@ -292,13 +292,11 @@ public class DatabaseStorage extends VariablesStorage {
 							final Database db1 = DatabaseStorage.this.db.get();
 							if (db1 != null)
 								db1.query("SELECT * FROM " + getTableName() + " LIMIT 1");
-						} catch (final SQLException ignored) {
-						}
+						} catch (final SQLException ignored) {}
 					}
 					try {
 						Thread.sleep(1000 * 10);
-					} catch (final InterruptedException ignored) {
-					}
+					} catch (final InterruptedException ignored) {}
 				}
 			}, "Skript database '" + databaseName + "' connection keep-alive thread").start();
 
@@ -326,8 +324,7 @@ public class DatabaseStorage extends VariablesStorage {
 				}
 				try {
 					Thread.sleep(Math.max(0, lastCommit + TRANSACTION_DELAY - System.currentTimeMillis()));
-				} catch (final InterruptedException ignored) {
-				}
+				} catch (final InterruptedException ignored) {}
 			}
 		}, "Skript database '" + databaseName + "' transaction committing thread").start();
 
@@ -335,8 +332,7 @@ public class DatabaseStorage extends VariablesStorage {
 			Skript.newThread(() -> {
 				try { // variables were just downloaded, not need to check for modifications straight away
 					Thread.sleep(monitor_interval);
-				} catch (final InterruptedException ignored) {
-				}
+				} catch (final InterruptedException ignored) {}
 
 				long lastWarning = Long.MIN_VALUE;
 				final int WARING_INTERVAL = 10;
@@ -355,8 +351,7 @@ public class DatabaseStorage extends VariablesStorage {
 					while (System.currentTimeMillis() < next) {
 						try {
 							Thread.sleep(next - System.currentTimeMillis());
-						} catch (final InterruptedException ignored) {
-						}
+						} catch (final InterruptedException ignored) {}
 					}
 				}
 			}, "Skript database '" + databaseName + "' monitor thread").start();
@@ -391,7 +386,6 @@ public class DatabaseStorage extends VariablesStorage {
 				if (first)
 					Skript.error("Cannot connect to the database '" + databaseName + "'! Please make sure that all settings are correct" + (type == Type.MYSQL ? " and that the database software is running" : "") + ".");
 				else
-					//noinspection ThrowableNotThrown
 					Skript.exception("Cannot reconnect to the database '" + databaseName + "'!");
 				return false;
 			}
@@ -418,31 +412,26 @@ public class DatabaseStorage extends VariablesStorage {
 				try {
 					if (writeQuery != null)
 						writeQuery.close();
-				} catch (final SQLException ignored) {
-				}
+				} catch (final SQLException ignored) {}
 				writeQuery = db.prepare("REPLACE INTO " + getTableName() + " (name, type, value, update_guid) VALUES (?, ?, ?, ?)");
 
 				try {
 					if (deleteQuery != null)
 						deleteQuery.close();
-				} catch (final SQLException ignored) {
-				}
+				} catch (final SQLException ignored) {}
 				deleteQuery = db.prepare("DELETE FROM " + getTableName() + " WHERE name = ?");
 
 				try {
 					if (monitorQuery != null)
 						monitorQuery.close();
-				} catch (final SQLException ignored) {
-				}
+				} catch (final SQLException ignored) {}
 				monitorQuery = db.prepare("SELECT " + SELECT_ORDER + " FROM " + getTableName() + " WHERE rowid > ? AND update_guid != ?");
 				try {
 					if (monitorCleanUpQuery != null)
 						monitorCleanUpQuery.close();
-				} catch (final SQLException ignored) {
-				}
+				} catch (final SQLException ignored) {}
 				monitorCleanUpQuery = db.prepare("DELETE FROM " + getTableName() + " WHERE value IS NULL AND rowid < ?");
 			} catch (final SQLException e) {
-				//noinspection ThrowableNotThrown
 				Skript.exception(e, "Could not prepare queries for the database '" + databaseName + "': " + e.getLocalizedMessage());
 				return false;
 			}

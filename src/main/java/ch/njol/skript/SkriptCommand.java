@@ -323,7 +323,7 @@ public class SkriptCommand implements CommandExecutor {
 						// TODO not supported yet
 					}
 				} finally {
-
+					// todo write something here or remove
 				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
@@ -341,7 +341,6 @@ public class SkriptCommand implements CommandExecutor {
 				Skript.info(sender, "Documentation generated!");
 			}
 		} catch (final Exception e) {
-			//noinspection ThrowableNotThrown
 			Skript.exception(e, "Exception occurred in Skript's main command", "Used command: /" + label + " " + StringUtils.join(args, " "));
 		} finally {
 			r.stop();

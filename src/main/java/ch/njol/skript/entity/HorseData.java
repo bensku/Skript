@@ -52,8 +52,7 @@ public class HorseData extends EntityData<Horse> {
 	@Nullable
 	private Style style;
 
-	public HorseData() {
-	}
+	public HorseData() {}
 
 	public HorseData(final @Nullable Variant variant) {
 		this.variant = variant;

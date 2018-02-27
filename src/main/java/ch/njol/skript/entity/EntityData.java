@@ -92,7 +92,6 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 			assert false;
 		}
 
-		@SuppressWarnings("ThrowableNotThrown")
 		@Override
 		protected EntityData deserialize(final Fields fields) throws StreamCorruptedException, NotSerializableException {
 			final String codeName = fields.getAndRemoveObject("codeName", String.class);
@@ -112,7 +111,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		}
 
 		//		return getInfo((Class<? extends EntityData<?>>) d.getClass()).codeName + ":" + d.serialize();
-		@SuppressWarnings({"null", "ThrowableNotThrown"})
+		@SuppressWarnings("null")
 		@Override
 		@Deprecated
 		@Nullable

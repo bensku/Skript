@@ -95,8 +95,7 @@ import java.util.regex.Matcher;
  * @author Peter Güttinger
  */
 final public class ScriptLoader {
-	private ScriptLoader() {
-	}
+	private ScriptLoader() {}
 
 	private final static Message m_no_errors = new Message("skript.no errors"),
 			m_no_scripts = new Message("skript.no scripts");
@@ -159,8 +158,7 @@ final public class ScriptLoader {
 	public static class ScriptInfo {
 		public int files, triggers, commands, functions;
 
-		public ScriptInfo() {
-		}
+		public ScriptInfo() {}
 
 		public ScriptInfo(final int numFiles, final int numTriggers, final int numCommands, final int numFunctions) {
 			files = numFiles;
@@ -210,7 +208,7 @@ final public class ScriptLoader {
 
 	// Load scripts in separate (one) thread
 	static final BlockingQueue<Runnable> loadQueue = new ArrayBlockingQueue<>(20, true);
-	private static final Thread loaderThread;
+	static final Thread loaderThread;
 	static boolean loadAsync; // See below
 
 	/**
@@ -254,7 +252,6 @@ final public class ScriptLoader {
 				try {
 					loadQueue.take().run();
 				} catch (InterruptedException e) {
-					//noinspection ThrowableNotThrown
 					Skript.exception(e); // Bubble it up with instructions on how to report it
 				}
 			}
@@ -676,7 +673,6 @@ final public class ScriptLoader {
 			try {
 				callable.call();
 			} catch (Exception e) {
-				//noinspection ThrowableNotThrown
 				Skript.exception(e);
 			}
 		}

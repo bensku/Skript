@@ -40,13 +40,12 @@ import java.util.Set;
  *
  * @author Peter Güttinger
  */
-@SuppressWarnings({"ThrowableNotThrown", "FinalStaticMethod"})
 public abstract class PlayerUtils {
 	private PlayerUtils() {}
 
 	private final static Set<Player> inviUpdate = new HashSet<>();
 
-	public final static void updateInventory(final @Nullable Player p) {
+	public static void updateInventory(final @Nullable Player p) {
 		if (p != null)
 			inviUpdate.add(p);
 	}

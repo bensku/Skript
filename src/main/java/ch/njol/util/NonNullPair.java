@@ -81,7 +81,6 @@ public class NonNullPair<T1, T2> extends Pair<T1, T2> {
 	/**
 	 * @return a shallow copy of this pair
 	 */
-	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	@Override
 	public NonNullPair<T1, T2> clone() {
 		return new NonNullPair<>(this);

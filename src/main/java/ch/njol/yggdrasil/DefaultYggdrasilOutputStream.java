@@ -196,8 +196,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	}
 
 	@Override
-	protected void writeArrayEnd() throws IOException {
-	}
+	protected void writeArrayEnd() throws IOException {}
 
 	// Class
 
@@ -276,8 +275,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	}
 
 	@Override
-	protected void writeObjectEnd() throws IOException {
-	}
+	protected void writeObjectEnd() throws IOException {}
 
 	// Reference
 
