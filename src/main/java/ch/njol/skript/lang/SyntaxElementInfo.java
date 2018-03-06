@@ -19,13 +19,13 @@
 package ch.njol.skript.lang;
 
 /**
- * @author Peter Güttinger
  * @param <E> the syntax element this info is for
+ * @author Peter Güttinger
  */
 public class SyntaxElementInfo<E extends SyntaxElement> {
 	public final Class<E> c;
 	public final String[] patterns;
-	
+
 	public SyntaxElementInfo(final String[] patterns, final Class<E> c) throws IllegalArgumentException {
 		this.patterns = patterns;
 		this.c = c;

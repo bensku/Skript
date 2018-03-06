@@ -26,20 +26,19 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public class While extends TriggerSection {
-	
 	private final Condition c;
-	
+
 	public While(final Condition c, final SectionNode n) {
 		super(n);
 		this.c = c;
 		super.setNext(this);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "while " + c.toString(e, debug);
 	}
-	
+
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
@@ -50,19 +49,18 @@ public class While extends TriggerSection {
 			return actualNext;
 		}
 	}
-	
+
 	@Nullable
 	private TriggerItem actualNext;
-	
+
 	@Override
 	public While setNext(final @Nullable TriggerItem next) {
 		actualNext = next;
 		return this;
 	}
-	
+
 	@Nullable
 	public TriggerItem getActualNext() {
 		return actualNext;
 	}
-	
 }
