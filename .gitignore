@@ -1,7 +1,19 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+#Gradle
 /target
 /dep
 /build/
 /.gradle/
 /bin/
-/.idea/
-*.iml
