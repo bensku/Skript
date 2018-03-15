@@ -38,7 +38,7 @@ public class HorseData extends EntityData<Horse> {
 			if (!Skript.isRunningMinecraft(1, 11)) // For 1.11+ see SimpleEntityData
 				EntityData.register(HorseData.class, "horse", Horse.class, 0,
 						"horse", "donkey", "mule", "undead horse", "skeleton horse");
-
+			
 			Variables.yggdrasil.registerSingleClass(Variant.class, "Horse.Variant");
 			Variables.yggdrasil.registerSingleClass(Color.class, "Horse.Color");
 			Variables.yggdrasil.registerSingleClass(Style.class, "Horse.Style");
