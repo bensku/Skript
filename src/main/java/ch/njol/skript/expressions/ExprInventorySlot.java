@@ -1,22 +1,31 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -27,25 +36,20 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
 
 @Name("Inventory Slot")
 @Description({"Represents a slot in a inventory. It can be used to change the item in a inventory too."})
-@Examples({
-		"if slot 0 of player is air:",
-		"\tset slot 0 of player to 2 stones",
-		"\tremove 1 stone from slot 0 of player",
-		"\tadd 2 stones to slot 0 of player",
-		"\tclear slot 1 of player"})
+@Examples({"if slot 0 of player is air:",
+	"\tset slot 0 of player to 2 stones",
+	"\tremove 1 stone from slot 0 of player",
+	"\tadd 2 stones to slot 0 of player",
+	"\tclear slot 1 of player"})
 @Since("2.2-dev24")
 public class ExprInventorySlot extends SimpleExpression<Slot> {
+	
 	static {
 		Skript.registerExpression(ExprInventorySlot.class, Slot.class, ExpressionType.COMBINED,
 				"[the] slot[s] %numbers% of %inventory%", "%inventory%'[s] slot[s] %numbers%");
@@ -55,36 +59,35 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 	private Expression<Number> slots;
 	@SuppressWarnings("null")
 	private Expression<Inventory> invis;
-
+	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (matchedPattern == 0) {
-			slots = (Expression<Number>) exprs[0];
-			invis = (Expression<Inventory>) exprs[1];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (matchedPattern == 0){
+			 slots = (Expression<Number>) exprs[0];
+			 invis = (Expression<Inventory>) exprs[1];
 		} else {
-			slots = (Expression<Number>) exprs[1];
-			invis = (Expression<Inventory>) exprs[0];
+			 slots = (Expression<Number>) exprs[1];
+			 invis = (Expression<Inventory>) exprs[0];			
 		}
 		return true;
 	}
 
 	@Override
 	@Nullable
-	protected Slot[] get(final Event event) {
+	protected Slot[] get(Event event) {
 		Inventory inventory = invis.getSingle(event);
-		Number[] inventorySlots = slots.getAll(event);
-		if (inventorySlots == null || inventory == null || inventorySlots.length < 1)
+		if (inventory == null)
 			return null;
-		ArrayList<Slot> slots = new ArrayList<>();
-		for (Number slot : inventorySlots)
+		List<Slot> inventorySlots = new ArrayList<>();
+		for (Number slot : slots.getArray(event))
 			if (slot.intValue() >= 0 && slot.intValue() < inventory.getSize())
-				slots.add(new InventorySlot(inventory, slot.intValue()));
-		if (slots.isEmpty())
+				inventorySlots.add(new InventorySlot(inventory, slot.intValue()));
+		if (inventorySlots.isEmpty())
 			return null;
-		return slots.toArray(new Slot[slots.size()]);
+		return inventorySlots.toArray(new Slot[inventorySlots.size()]);
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return slots.isSingle();
@@ -94,9 +97,27 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 	public Class<? extends Slot> getReturnType() {
 		return Slot.class;
 	}
-
+	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	@Nullable
+	public Object[] beforeChange(@Nullable Object[] delta) {
+		if (delta == null) // Nothing to nothing
+			return null;
+		Object first = delta[0];
+		if (first == null) // ConvertedExpression might cause this
+			return null;
+		
+		// Slots must be transformed to item stacks
+		// Documentation by Njol states so, plus it is convenient
+		if (first instanceof Slot) {
+			return new ItemStack[] {((Slot) first).getItem()};
+		}
+		
+		return delta;
+	}
+	
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
 		return "slots " + slots.toString(e, debug) + " of " + invis.toString(e, debug);
 	}
 }

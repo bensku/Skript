@@ -1,22 +1,31 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Colorable;
+import org.bukkit.material.MaterialData;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -28,23 +37,15 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Colorable;
-import org.bukkit.material.MaterialData;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Colour of")
 @Description("The <a href='../classes/#color'>colour</a> of an item, can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
-@Examples({
-		"on click on wool:",
-		"\tmessage \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
-		"\tset the colour of the block to black"})
+@Examples({"on click on wool:",
+		"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
+		"	set the colour of the block to black"})
 @Since("1.2")
 public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 	static {
@@ -66,9 +67,18 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 		return null;
 	}
 	
-	private boolean changeItemStack = false;
+	@Override
+	protected String getPropertyName() {
+		return "colour";
+	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
+	public Class<Color> getReturnType() {
+		return Color.class;
+	}
+	
+	boolean changeItemStack = false;
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -117,14 +127,5 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 			}
 		}
 	}
-
-	@Override
-	protected String getPropertyName() {
-		return "colour";
-	}
-
-	@Override
-	public Class<Color> getReturnType() {
-		return Color.class;
-	}
+	
 }

@@ -1,34 +1,26 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.command.CommandEvent;
-import ch.njol.skript.events.EvtMoveOn;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.BlockStateBlock;
-import ch.njol.skript.util.BlockUtils;
-import ch.njol.skript.util.DelayedChangeBlock;
-import ch.njol.skript.util.Direction;
-import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
+import java.util.List;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,6 +34,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Vehicle;
@@ -51,6 +44,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -65,6 +59,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
+import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -77,6 +73,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.hanging.HangingEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -91,6 +89,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -105,19 +105,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.List;
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.command.CommandEvent;
+import ch.njol.skript.events.EvtMoveOn;
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.BlockStateBlock;
+import ch.njol.skript.util.BlockUtils;
+import ch.njol.skript.util.DelayedChangeBlock;
+import ch.njol.skript.util.Direction;
+import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings({"unchecked", "deprecation"})
 public final class BukkitEventValues {
+	
 	public BukkitEventValues() {}
-
-	private static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
-
+	
+	protected static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
+	
 	static {
-
+		
 		// === WorldEvents ===
 		EventValues.registerEventValue(WorldEvent.class, World.class, new Getter<World, WorldEvent>() {
 			@Override
@@ -161,7 +173,7 @@ public final class BukkitEventValues {
 				return e.getChunk();
 			}
 		}, 0);
-
+		
 		// === BlockEvents ===
 		EventValues.registerEventValue(BlockEvent.class, Block.class, new Getter<Block, BlockEvent>() {
 			@Override
@@ -341,7 +353,7 @@ public final class BukkitEventValues {
 				return e.getPlayer();
 			}
 		}, 0);
-
+		
 		// === EntityEvents ===
 		EventValues.registerEventValue(EntityEvent.class, Entity.class, new Getter<Entity, EntityEvent>() {
 			@Override
@@ -458,7 +470,7 @@ public final class BukkitEventValues {
 				return e.getEntity().getItemStack();
 			}
 		}, 0);
-
+		
 		// --- PlayerEvents ---
 		EventValues.registerEventValue(PlayerEvent.class, Player.class, new Getter<Player, PlayerEvent>() {
 			@Override
@@ -636,7 +648,7 @@ public final class BukkitEventValues {
 				return EvtMoveOn.getBlock(e);
 			}
 		}, 0);
-
+		
 		// --- HangingEvents ---
 		// 1.4.3
 		if (Skript.classExists("org.bukkit.event.hanging.HangingEvent")) {
@@ -670,7 +682,7 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		} // Finally removed old painting support - Spigot 1.9 removed the events
-
+		
 		// --- VehicleEvents ---
 		EventValues.registerEventValue(VehicleEvent.class, Vehicle.class, new Getter<Vehicle, VehicleEvent>() {
 			@Override
@@ -700,7 +712,7 @@ public final class BukkitEventValues {
 				return e.getVehicle().getPassenger();
 			}
 		}, 0);
-
+		
 		// === CommandEvents ===
 		// PlayerCommandPreprocessEvent is a PlayerEvent
 		EventValues.registerEventValue(ServerCommandEvent.class, CommandSender.class, new Getter<CommandSender, ServerCommandEvent>() {
@@ -723,7 +735,7 @@ public final class BukkitEventValues {
 				return e.getSender() instanceof Player ? ((Player) e.getSender()).getWorld() : null;
 			}
 		}, 0);
-
+		
 		// === InventoryEvents ===
 		// InventoryClickEvent
 		EventValues.registerEventValue(InventoryClickEvent.class, Player.class, new Getter<Player, InventoryClickEvent>() {
@@ -853,6 +865,45 @@ public final class BukkitEventValues {
 				ItemStack book = new ItemStack(e.getPlayer().getItemInHand().getType());
 				book.setItemMeta(e.getNewBookMeta());
 				return book;
+			}
+		}, 0);
+		//ItemDespawnEvent
+		EventValues.registerEventValue(ItemDespawnEvent.class, Item.class, new Getter<Item, ItemDespawnEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemDespawnEvent e) {
+				return e.getEntity();
+			}
+		}, 0);
+		EventValues.registerEventValue(ItemDespawnEvent.class, ItemStack.class, new Getter<ItemStack, ItemDespawnEvent>() {
+			@Override
+			@Nullable
+			public ItemStack get(ItemDespawnEvent e) {
+				return e.getEntity().getItemStack();
+			}
+		}, 0);
+		//ItemMergeEvent
+		//TODO there is also e.getTarget() two entities involved in this event, currently can be worked around currently with `on item merge of (insert target itemtype)`
+		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemMergeEvent e) {
+				return e.getEntity();
+			}
+		}, 0);
+		EventValues.registerEventValue(ItemMergeEvent.class, ItemStack.class, new Getter<ItemStack, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public ItemStack get(ItemMergeEvent e) {
+				return e.getEntity().getItemStack();
+			}
+		}, 0);
+		//PlayerTeleportEvent
+		EventValues.registerEventValue(PlayerTeleportEvent.class, TeleportCause.class, new Getter<TeleportCause, PlayerTeleportEvent>() {
+			@Override
+			@Nullable
+			public TeleportCause get(final PlayerTeleportEvent e) {
+				return e.getCause();
 			}
 		}, 0);
 	}

@@ -406,8 +406,9 @@ public class Variable<T> implements Expression<T> {
 					int i = 1;
 					for (final Object d : delta) {
 						if (d instanceof Object[]) {
-							for (int j = 0; j < ((Object[]) d).length; j++)
+							for (int j = 0; j < ((Object[]) d).length; j++) {
 								setIndex(e, "" + i + SEPARATOR + j, ((Object[]) d)[j]);
+							}
 						} else {
 							setIndex(e, "" + i, d);
 						}

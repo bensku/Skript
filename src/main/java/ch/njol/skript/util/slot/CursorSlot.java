@@ -16,7 +16,7 @@
  *
  * Copyright 2011-2018 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.util.slot;
 
 import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.registrations.Classes;

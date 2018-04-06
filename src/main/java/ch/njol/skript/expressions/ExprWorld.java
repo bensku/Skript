@@ -60,7 +60,6 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 		Expression<?> expr = exprs[0];
 		if (expr == null) {
 			expr = new EventValueExpression<>(World.class);
-			expr.setParserInstance(pi);
 			if (!((EventValueExpression<?>) expr).init())
 				return false;
 		}

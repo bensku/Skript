@@ -48,7 +48,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"set tool of player to the player's tool named \"<gold>Wand\"",
 		"set the name of the player's tool to \"<gold>Wand\"",
 		"open hopper inventory named \"Magic Hopper\" to player"})
-@Since("2.0, 2.2-dev34 (Inventories)")
+@Since("2.0, 2.2-dev34 (inventories)")
 public class ExprNamed extends PropertyExpression<Object, Object> {
 	static {
 		Skript.registerExpression(ExprNamed.class, Object.class, ExpressionType.PROPERTY, "%itemtype/inventorytype% (named|with name[s]) %string%");

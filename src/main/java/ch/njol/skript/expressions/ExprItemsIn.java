@@ -28,8 +28,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -53,8 +53,7 @@ import java.util.NoSuchElementException;
 @Since("2.0")
 public class ExprItemsIn extends SimpleExpression<Slot> {
 	static {
-		Skript.registerExpression(ExprItemsIn.class, Slot.class, ExpressionType.PROPERTY,
-				"[all] items (in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
+		Skript.registerExpression(ExprItemsIn.class, Slot.class, ExpressionType.PROPERTY, "[(all [[of] the]|the)] items ([with]in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
 	}
 
 	@SuppressWarnings("null")

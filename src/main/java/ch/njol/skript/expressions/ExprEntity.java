@@ -91,7 +91,6 @@ public class ExprEntity extends SimpleExpression<Entity> {
 			log.stop();
 		}
 		entity = new EventValueExpression<>(type.getType());
-		entity.setParserInstance(pi);
 		return entity.init();
 	}
 
