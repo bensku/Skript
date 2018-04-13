@@ -102,6 +102,7 @@ import org.bukkit.event.world.WorldEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -217,7 +218,7 @@ public final class BukkitEventValues {
 			public Direction get(final BlockPlaceEvent e) {
 				if (e.getBlock() != null) {
 					BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
-					return new Direction(new double[]{bf.getModX(), bf.getModY(), bf.getModZ()});
+					return new Direction(new double[] {bf.getModX(), bf.getModY(), bf.getModZ()});
 				}
 				return Direction.ZERO;
 			}
@@ -600,9 +601,12 @@ public final class BukkitEventValues {
 			public ItemStack get(final PlayerInteractEntityEvent e) {
 				if (offHandSupport) {
 					EquipmentSlot hand = e.getHand();
-					if (hand == EquipmentSlot.HAND) return e.getPlayer().getInventory().getItemInMainHand();
-					else if (hand == EquipmentSlot.OFF_HAND) return e.getPlayer().getInventory().getItemInOffHand();
-					else return null;
+					if (hand == EquipmentSlot.HAND)
+						return e.getPlayer().getInventory().getItemInMainHand();
+					else if (hand == EquipmentSlot.OFF_HAND)
+						return e.getPlayer().getInventory().getItemInOffHand();
+					else
+						return null;
 				} else {
 					return e.getPlayer().getItemInHand();
 				}
@@ -628,7 +632,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Direction get(final PlayerInteractEvent e) {
 				if (e.getBlockFace() != null)
-					return new Direction(new double[]{e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
+					return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
 				return Direction.ZERO; // Same as 'BlockFace.SELF' or literal 'at'
 			}
 		}, 0);
@@ -766,7 +770,15 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public Slot get(final InventoryClickEvent e) {
-				return new InventorySlot(e.getInventory(), e.getSlot());
+				Inventory invi = e.getClickedInventory(); // getInventory is WRONG and dangerous
+				int slotIndex = e.getSlot();
+				
+				// Not all indices point to inventory slots. Equipment, for example
+				if (invi instanceof PlayerInventory && slotIndex >= 36) {
+					return new ch.njol.skript.util.slot.EquipmentSlot(((PlayerInventory) invi).getHolder(), slotIndex);
+				} else {
+					return new InventorySlot(invi, slotIndex);
+				}
 			}
 		}, 0);
 		EventValues.registerEventValue(InventoryClickEvent.class, InventoryAction.class, new Getter<InventoryAction, InventoryClickEvent>() {

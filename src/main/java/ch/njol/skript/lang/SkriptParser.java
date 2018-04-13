@@ -1,25 +1,45 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.bekvon.bukkit.residence.commands.info;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.ItemType;
@@ -28,8 +48,10 @@ import ch.njol.skript.command.Argument;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.command.ScriptCommand;
 import ch.njol.skript.command.ScriptCommandEvent;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.ExprParse;
 import ch.njol.skript.lang.function.ExprFunctionCall;
+import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.lang.function.FunctionReference;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.util.SimpleLiteral;
@@ -47,55 +69,41 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 
 /**
  * Used for parsing my custom patterns.<br>
  * <br>
  * Note: All parse methods print one error at most xor any amount of warnings and lower level log messages. If the given string doesn't match any pattern then nothing is printed.
- *
+ * 
  * @author Peter Güttinger
  */
 public class SkriptParser {
+	
 	final String expr;
-
+	
 	public final static int PARSE_EXPRESSIONS = 1;
 	public final static int PARSE_LITERALS = 2;
 	public final static int ALL_FLAGS = PARSE_EXPRESSIONS | PARSE_LITERALS;
 	private final int flags;
-
+	
 	public final ParseContext context;
-
+	
 	public SkriptParser(final String expr) {
 		this(expr, ALL_FLAGS);
 	}
-
+	
 	public SkriptParser(final String expr, final int flags) {
 		this(expr, flags, ParseContext.DEFAULT);
 	}
-
+	
 	/**
 	 * Constructs a new SkriptParser object that can be used to parse the given expression.
 	 * <p>
 	 * A SkriptParser can be re-used indefinitely for the given expression, but to parse a new expression a new SkriptParser has to be created.
-	 *
-	 * @param expr    The expression to parse
-	 * @param flags   Some parse flags ({@link #PARSE_EXPRESSIONS}, {@link #PARSE_LITERALS})
+	 * 
+	 * @param expr The expression to parse
+	 * @param flags Some parse flags ({@link #PARSE_EXPRESSIONS}, {@link #PARSE_LITERALS})
 	 * @param context The parse context
 	 */
 	public SkriptParser(final String expr, final int flags, final ParseContext context) {
@@ -105,14 +113,14 @@ public class SkriptParser {
 		this.flags = flags;
 		this.context = context;
 	}
-
+	
 	public SkriptParser(final SkriptParser other, final String expr) {
 		this(expr, other.flags, other.context);
 	}
-
+	
 	public final static String wildcard = "[^\"]*?(?:\"[^\"]*?\"[^\"]*?)*?";
 	public final static String stringMatcher = "\"[^\"]*?(?:\"\"[^\"]*)*?\"";
-
+	
 	public final static class ParseResult {
 		public final Expression<?>[] exprs;
 		public final List<MatchResult> regexes = new ArrayList<>(1);
@@ -122,25 +130,25 @@ public class SkriptParser {
 		 * mark.
 		 */
 		public int mark = 0;
-
+		
 		public ParseResult(final SkriptParser parser, final String pattern) {
 			expr = parser.expr;
 			exprs = new Expression<?>[countUnescaped(pattern, '%') / 2];
 		}
 	}
-
+	
 	private final static class MalformedPatternException extends RuntimeException {
 		private static final long serialVersionUID = -5133477361763823946L;
-
-		MalformedPatternException(final String pattern, final String message) {
+		
+		public MalformedPatternException(final String pattern, final String message) {
 			this(pattern, message, null);
 		}
-
-		MalformedPatternException(final String pattern, final String message, final @Nullable Throwable cause) {
+		
+		public MalformedPatternException(final String pattern, final String message, final @Nullable Throwable cause) {
 			super(message + " [pattern: " + pattern + "]", cause);
 		}
 	}
-
+	
 	/**
 	 * Parses a single literal, i.e. not lists of literals.
 	 * <p>
@@ -148,20 +156,20 @@ public class SkriptParser {
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public static <T> Literal<? extends T> parseLiteral(String expr, final Class<T> c, final ParseContext context) {
+	public final static <T> Literal<? extends T> parseLiteral(String expr, final Class<T> c, final ParseContext context) {
 		expr = "" + expr.trim();
 		if (expr.isEmpty())
 			return null;
 		return new UnparsedLiteral(expr).getConvertedExpression(context, c);
 	}
-
+	
 	/**
 	 * Parses a string as one of the given syntax elements.
 	 * <p>
 	 * Can print an error.
 	 */
 	@Nullable
-	public static <T extends SyntaxElement> T parse(String expr, final Iterator<? extends SyntaxElementInfo<T>> source, final @Nullable String defaultError) {
+	public final static <T extends SyntaxElement> T parse(String expr, final Iterator<? extends SyntaxElementInfo<T>> source, final @Nullable String defaultError) {
 		expr = "" + expr.trim();
 		if (expr.isEmpty()) {
 			Skript.error(defaultError);
@@ -180,9 +188,9 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	@Nullable
-	public static <T extends SyntaxElement> T parseStatic(String expr, final Iterator<? extends SyntaxElementInfo<? extends T>> source, final @Nullable String defaultError) {
+	public final static <T extends SyntaxElement> T parseStatic(String expr, final Iterator<? extends SyntaxElementInfo<? extends T>> source, final @Nullable String defaultError) {
 		expr = "" + expr.trim();
 		if (expr.isEmpty()) {
 			Skript.error(defaultError);
@@ -202,15 +210,14 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	@Nullable
-	private <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) {
+	private final <T extends SyntaxElement> T parse(final Iterator<? extends SyntaxElementInfo<? extends T>> source) {
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
 			while (source.hasNext()) {
 				final SyntaxElementInfo<? extends T> info = source.next();
-				patternsLoop:
-				for (int i = 0; i < info.patterns.length; i++) {
+				patternsLoop: for (int i = 0; i < info.patterns.length; i++) {
 					log.clear();
 					try {
 						final String pattern = info.patterns[i];
@@ -248,7 +255,9 @@ public class SkriptParser {
 								return t;
 							}
 						}
-					} catch (final InstantiationException | IllegalAccessException e) {
+					} catch (final InstantiationException e) {
+						assert false;
+					} catch (final IllegalAccessException e) {
 						assert false;
 					}
 				}
@@ -259,23 +268,23 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	@SuppressWarnings("null")
 	private final static Pattern varPattern = Pattern.compile("((the )?var(iable)? )?\\{([^{}]|%\\{|\\}%)+\\}", Pattern.CASE_INSENSITIVE);
-
+	
 	/**
 	 * Prints errors
 	 */
 	@Nullable
-	private static <T> Variable<T> parseVariable(final String expr, final Class<? extends T>[] returnTypes) {
+	private final static <T> Variable<T> parseVariable(final String expr, final Class<? extends T>[] returnTypes) {
 		if (varPattern.matcher(expr).matches())
 			return Variable.newInstance("" + expr.substring(expr.indexOf('{') + 1, expr.lastIndexOf('}')), returnTypes);
 		return null;
 	}
-
+	
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Nullable
-	private <T> Expression<? extends T> parseSingleExpr(final boolean allowUnparsedLiteral, @Nullable final LogEntry error, final Class<? extends T>... types) {
+	private final <T> Expression<? extends T> parseSingleExpr(final boolean allowUnparsedLiteral, @Nullable final LogEntry error, final Class<? extends T>... types) {
 		assert types.length > 0;
 		assert types.length == 1 || !CollectionUtils.contains(types, Object.class);
 		if (expr.isEmpty())
@@ -323,7 +332,7 @@ public class SkriptParser {
 							return (Expression<? extends T>) e;
 						}
 					}
-
+					
 					// No directly same type found
 					Class<T>[] objTypes = (Class<T>[]) types; // Java generics... ?
 					final Expression<? extends T> r = e.getConvertedExpression(objTypes);
@@ -366,12 +375,12 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	@Nullable
-	private Expression<?> parseSingleExpr(final boolean allowUnparsedLiteral, @Nullable final LogEntry error, final ExprInfo vi) {
+	private final Expression<?> parseSingleExpr(final boolean allowUnparsedLiteral, @Nullable final LogEntry error, final ExprInfo vi) {
 		if (expr.isEmpty()) // Empty expressions return nothing, obviously
 			return null;
-
+		
 		// Command special parsing
 		if (context != ParseContext.COMMAND && expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length())
 			return new SkriptParser(this, "" + expr.substring(1, expr.length() - 1)).parseSingleExpr(allowUnparsedLiteral, error, vi);
@@ -381,39 +390,39 @@ public class SkriptParser {
 			final Class<?>[] types = new Class[vi.classes.length]; // This may contain nulls!
 			boolean hasSingular = false;
 			boolean hasPlural = false;
-
+			
 			// Another array for all potential types, but this time without any nulls
 			// (indexes do not align with other data in ExprInfo)
 			final Class<?>[] nonNullTypes = new Class[vi.classes.length];
-
+			
 			int nonNullIndex = 0;
 			for (int i = 0; i < types.length; i++) {
 				if ((flags & vi.flagMask) == 0) { // Flag mask invalidates this, skip it
 					continue;
 				}
-
+				
 				// Plural/singular checks
 				// TODO move them elsewhere, this method needs to be as fast as possible
 				if (vi.isPlural[i])
 					hasPlural = true;
 				else
 					hasSingular = true;
-
+				
 				// Actually put class to types[i]
 				types[i] = vi.classes[i].getC();
-
+				
 				// Handle nonNullTypes data fill
 				nonNullTypes[nonNullIndex] = types[i];
 				nonNullIndex++;
 			}
-
+			
 			boolean onlyPlural = false;
 			boolean onlySingular = false;
 			if (hasSingular && !hasPlural)
 				onlySingular = true;
 			else if (!hasSingular && hasPlural)
 				onlyPlural = true;
-
+			
 			if (context == ParseContext.DEFAULT || context == ParseContext.EVENT) {
 				// Attempt to parse variable first
 				if (onlySingular || onlyPlural) { // No mixed plurals/singulars possible
@@ -425,13 +434,13 @@ public class SkriptParser {
 							log.printError();
 							return null;
 						}
-
+						
 						// Plural/singular sanity check
 						if (hasSingular && !var.isSingle()) {
 							Skript.error("'" + expr + "' can only accept a single value of any type, not more", ErrorQuality.SEMANTIC_ERROR);
 							return null;
 						}
-
+						
 						log.printLog();
 						return var;
 					} else if (log.hasError()) {
@@ -442,7 +451,8 @@ public class SkriptParser {
 					for (int i = 0; i < types.length; i++) {
 						if (types[i] == null)
 							continue;
-						@SuppressWarnings("unchecked") final Variable<?> var = parseVariable(expr, new Class[]{types[i]});
+						@SuppressWarnings("unchecked")
+						final Variable<?> var = parseVariable(expr, new Class[] {types[i]});
 						if (var != null) { // Parsing succeeded, we have a variable
 							// If variables cannot be used here, it is now allowed
 							if ((flags & PARSE_EXPRESSIONS) == 0) {
@@ -450,13 +460,13 @@ public class SkriptParser {
 								log.printError();
 								return null;
 							}
-
+							
 							// Plural/singular sanity check
 							if (!vi.isPlural[i] && !var.isSingle()) {
 								Skript.error("'" + expr + "' can only accept a single " + vi.classes[i].getName() + ", not more", ErrorQuality.SEMANTIC_ERROR);
 								return null;
 							}
-
+							
 							log.printLog();
 							return var;
 						} else if (log.hasError()) {
@@ -465,7 +475,7 @@ public class SkriptParser {
 						}
 					}
 				}
-
+				
 				// If it wasn't variable, do same for function call
 				final FunctionReference<?> fr = parseFunction(types);
 				if (fr != null) {
@@ -482,7 +492,6 @@ public class SkriptParser {
 				if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
 					e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
 				} else {
-					//noinspection unchecked
 					e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
 				}
 				if (e != null) { // Expression/VariableString parsing success
@@ -492,7 +501,7 @@ public class SkriptParser {
 						final Class<?> t = types[i];
 						if (t == null) // Ignore invalid (null) types
 							continue;
-
+						
 						// Check return type against everything that expression accepts
 						if (t.isAssignableFrom(returnType)) {
 							if (!vi.isPlural[i] && !e.isSingle()) { // Wrong number of arguments
@@ -504,17 +513,17 @@ public class SkriptParser {
 									return null;
 								}
 							}
-
+							
 							log.printLog();
 							return e;
 						}
 					}
-
+					
 					// No directly same type found
 					if (types.length == 1) { // Only one type is accepted here
 						// So, we'll just create converted expression
 						@SuppressWarnings("unchecked") // This is safe... probably
-								Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
 						if (r != null) {
 							log.printLog();
 							return r;
@@ -524,7 +533,6 @@ public class SkriptParser {
 							log.printLog();
 							return e; // Expression will have to deal with it runtime
 						} else {
-							//noinspection unchecked
 							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
 							if (r != null) {
 								log.printLog();
@@ -568,7 +576,7 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	/**
 	 * Matches ',', 'and', 'or', etc. as well as surrounding whitespace.
 	 * <p>
@@ -576,36 +584,36 @@ public class SkriptParser {
 	 */
 	@SuppressWarnings("null")
 	public final static Pattern listSplitPattern = Pattern.compile("\\s*,?\\s+(and|n?or)\\s+|\\s*,\\s*", Pattern.CASE_INSENSITIVE);
-
+	
 	private final static String MULTIPLE_AND_OR = "List has multiple 'and' or 'or', will default to 'and'. Use brackets if you want to define multiple lists.";
 	private final static String MISSING_AND_OR = "List is missing 'and' or 'or', defaulting to 'and'";
-
+	
 	private boolean suppressMissingAndOrWarnings = SkriptConfig.disableMissingAndOrWarnings.value();
-
+	
 	private SkriptParser suppressMissingAndOrWarnings() {
 		suppressMissingAndOrWarnings = true;
 		return this;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public final <T> Expression<? extends T> parseExpression(final Class<? extends T>... types) {
 		if (expr.length() == 0)
 			return null;
-
+		
 		assert types != null && types.length > 0;
 		assert types.length == 1 || !CollectionUtils.contains(types, Object.class);
-
+		
 		final boolean isObject = types.length == 1 && types[0] == Object.class;
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
 			//Mirre
-			if (isObject) {
+			if (isObject){
 				if ((flags & PARSE_LITERALS) != 0) {
 					// Hack as items use '..., ... and ...' for enchantments. Numbers and times are parsed beforehand as they use the same (deprecated) id[:data] syntax.
 					final SkriptParser p = new SkriptParser(expr, PARSE_LITERALS, context);
 					p.suppressMissingAndOrWarnings = suppressMissingAndOrWarnings; // If we suppress warnings here, we suppress them in parser what we created too
-					for (final Class<?> c : new Class[]{Number.class, Time.class, ItemType.class, ItemStack.class}) {
+					for (final Class<?> c : new Class[] {Number.class, Time.class, ItemType.class, ItemStack.class}) {
 						final Expression<?> e = p.parseExpression(c);
 						if (e != null) {
 							log.printLog();
@@ -622,18 +630,18 @@ public class SkriptParser {
 				return r;
 			}
 			log.clear();
-
+			
 			final List<Expression<? extends T>> ts = new ArrayList<>();
 			Kleenean and = Kleenean.UNKNOWN;
 			boolean isLiteralList = true;
-
+			
 			final List<int[]> pieces = new ArrayList<>();
 			{
 				final Matcher m = listSplitPattern.matcher(expr);
 				int i = 0, j = 0;
 				for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) {
 					if (i == expr.length() || m.region(i, expr.length()).lookingAt()) {
-						pieces.add(new int[]{j, i});
+						pieces.add(new int[] {j, i});
 						if (i == expr.length())
 							break;
 						j = i = m.end();
@@ -645,7 +653,7 @@ public class SkriptParser {
 					return null;
 				}
 			}
-
+			
 			if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above
 				if (expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length()) {
 					log.clear();
@@ -662,18 +670,17 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-
-			outer:
-			for (int b = 0; b < pieces.size(); ) {
+			
+			outer: for (int b = 0; b < pieces.size();) {
 				for (int a = pieces.size() - b; a >= 1; a--) {
 					if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above
 						continue;
 					final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
 					final String subExpr = "" + expr.substring(x, y).trim();
 					assert subExpr.length() < expr.length() : subExpr;
-
+					
 					final Expression<? extends T> t;
-
+					
 					if (subExpr.startsWith("(") && subExpr.endsWith(")") && next(subExpr, 0, context) == subExpr.length())
 						t = new SkriptParser(this, subExpr).parseExpression(types); // only parse as possible expression list if its surrounded by brackets
 					else
@@ -701,7 +708,7 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-
+			
 //			String lastExpr = expr;
 //			int end = expr.length();
 //			int expectedEnd = -1;
@@ -749,47 +756,50 @@ public class SkriptParser {
 //				log.printError("'" + lastExpr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
 //				return null;
 //			}
-
+			
 			log.printLog();
-
+			
 			if (ts.size() == 1)
 				return ts.get(0);
-
+			
 			if (and.isUnknown() && !suppressMissingAndOrWarnings)
 				Skript.warning(MISSING_AND_OR + ": " + expr);
-
+			
 			final Class<? extends T>[] exprRetTypes = new Class[ts.size()];
 			for (int i = 0; i < ts.size(); i++)
 				exprRetTypes[i] = ts.get(i).getReturnType();
-
+			
 			if (isLiteralList) {
 				final Literal<T>[] ls = ts.toArray(new Literal[ts.size()]);
+				assert ls != null;
 				return new LiteralList<>(ls, (Class<T>) Utils.getSuperType(exprRetTypes), !and.isFalse());
 			} else {
 				final Expression<T>[] es = ts.toArray(new Expression[ts.size()]);
+				assert es != null;
 				return new ExpressionList<>(es, (Class<T>) Utils.getSuperType(exprRetTypes), !and.isFalse());
 			}
 		} finally {
 			log.stop();
 		}
 	}
-
+	
 	@Nullable
 	public final Expression<?> parseExpression(final ExprInfo vi) {
 		if (expr.length() == 0)
 			return null;
-
+		
 		final boolean isObject = vi.classes.length == 1 && vi.classes[0].getC() == Object.class;
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
 			//Mirre
-			if (isObject) {
+			if (isObject){
 				if ((flags & PARSE_LITERALS) != 0) {
 					// Hack as items use '..., ... and ...' for enchantments. Numbers and times are parsed beforehand as they use the same (deprecated) id[:data] syntax.
 					final SkriptParser p = new SkriptParser(expr, PARSE_LITERALS, context);
 					p.suppressMissingAndOrWarnings = suppressMissingAndOrWarnings; // If we suppress warnings here, we suppress them in parser what we created too
-					for (final Class<?> c : new Class[]{Number.class, Time.class, ItemType.class, ItemStack.class}) {
-						@SuppressWarnings("unchecked") final Expression<?> e = p.parseExpression(c);
+					for (final Class<?> c : new Class[] {Number.class, Time.class, ItemType.class, ItemStack.class}) {
+						@SuppressWarnings("unchecked")
+						final Expression<?> e = p.parseExpression(c);
 						if (e != null) {
 							log.printLog();
 							return e;
@@ -799,24 +809,32 @@ public class SkriptParser {
 				}
 			}
 			//Mirre
+			
+			// Attempt to parse a single expression
 			final Expression<?> r = parseSingleExpr(false, null, vi);
 			if (r != null) {
 				log.printLog();
 				return r;
 			}
 			log.clear();
-
+			
+			// Check if list parsing is allowed (if it isn't, must stop here)
+			if (vi.isPlural[0] == false) {
+				log.printError("List cannot be used in place of a single value here.", ErrorQuality.SEMANTIC_ERROR);
+				return null;
+			}
+			
 			final List<Expression<?>> ts = new ArrayList<>();
 			Kleenean and = Kleenean.UNKNOWN;
 			boolean isLiteralList = true;
-
+			
 			final List<int[]> pieces = new ArrayList<>();
 			{
 				final Matcher m = listSplitPattern.matcher(expr);
 				int i = 0, j = 0;
 				for (; i >= 0 && i <= expr.length(); i = next(expr, i, context)) {
 					if (i == expr.length() || m.region(i, expr.length()).lookingAt()) {
-						pieces.add(new int[]{j, i});
+						pieces.add(new int[] {j, i});
 						if (i == expr.length())
 							break;
 						j = i = m.end();
@@ -828,7 +846,7 @@ public class SkriptParser {
 					return null;
 				}
 			}
-
+			
 			if (pieces.size() == 1) { // not a list of expressions, and a single one has failed to parse above
 				if (expr.startsWith("(") && expr.endsWith(")") && next(expr, 0, context) == expr.length()) {
 					log.clear();
@@ -845,18 +863,17 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-
-			outer:
-			for (int b = 0; b < pieces.size(); ) {
+			
+			outer: for (int b = 0; b < pieces.size();) {
 				for (int a = pieces.size() - b; a >= 1; a--) {
 					if (b == 0 && a == pieces.size()) // i.e. the whole expression - already tried to parse above
 						continue;
 					final int x = pieces.get(b)[0], y = pieces.get(b + a - 1)[1];
 					final String subExpr = "" + expr.substring(x, y).trim();
 					assert subExpr.length() < expr.length() : subExpr;
-
+					
 					final Expression<?> t;
-
+					
 					if (subExpr.startsWith("(") && subExpr.endsWith(")") && next(subExpr, 0, context) == subExpr.length())
 						t = new SkriptParser(this, subExpr).parseExpression(vi); // only parse as possible expression list if its surrounded by brackets
 					else
@@ -884,7 +901,7 @@ public class SkriptParser {
 				log.printError();
 				return null;
 			}
-
+			
 //			String lastExpr = expr;
 //			int end = expr.length();
 //			int expectedEnd = -1;
@@ -932,21 +949,23 @@ public class SkriptParser {
 //				log.printError("'" + lastExpr + "' " + Language.get("is") + " " + notOfType(types), ErrorQuality.NOT_AN_EXPRESSION);
 //				return null;
 //			}
-
+			
 			log.printLog();
-
-			if (ts.size() == 1)
+			
+			if (ts.size() == 1) {
 				return ts.get(0);
-
+			}
+			
 			if (and.isUnknown() && !suppressMissingAndOrWarnings)
 				Skript.warning(MISSING_AND_OR + ": " + expr);
-
+			
 			final Class<?>[] exprRetTypes = new Class[ts.size()];
 			for (int i = 0; i < ts.size(); i++)
 				exprRetTypes[i] = ts.get(i).getReturnType();
-
+			
 			if (isLiteralList) {
 				final Literal<?>[] ls = ts.toArray(new Literal[ts.size()]);
+				assert ls != null;
 				return new LiteralList(ls, Utils.getSuperType(exprRetTypes), !and.isFalse());
 			} else {
 				final Expression<?>[] es = ts.toArray(new Expression[ts.size()]);
@@ -957,7 +976,7 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 //	@SuppressWarnings("unchecked")
 //	@Nullable
 //	private final Expression<?> parseObjectExpression() {
@@ -1062,10 +1081,10 @@ public class SkriptParser {
 //			return new ExpressionList<Object>(es, (Class<Object>) Utils.getSuperType(exprRetTypes), !and.isFalse());
 //		}
 //	}
-
+	
 	@SuppressWarnings("null")
 	private final static Pattern functionCallPattern = Pattern.compile("(" + Functions.functionNamePattern + ")\\((.*)\\)");
-
+	
 	/**
 	 * @param types The required return type or null if it is not used (e.g. when calling a void function)
 	 * @return The parsed function, or null if the given expression is not a function call or is an invalid function call (check for an error to differentiate these two)
@@ -1082,6 +1101,7 @@ public class SkriptParser {
 				log.printLog();
 				return null;
 			}
+			
 			if ((flags & PARSE_EXPRESSIONS) == 0) {
 				Skript.error("Functions cannot be used here.");
 				log.printError();
@@ -1105,12 +1125,12 @@ public class SkriptParser {
 					}
 					params = ((ExpressionList<?>) ps).getExpressions();
 				} else {
-					params = new Expression[]{ps};
+					params = new Expression[] {ps};
 				}
 			} else {
 				params = new Expression[0];
 			}
-
+			
 //			final List<Expression<?>> params = new ArrayList<Expression<?>>();
 //			if (args.length() != 0) {
 //				final int p = 0;
@@ -1128,6 +1148,7 @@ public class SkriptParser {
 //				}
 //			}
 //			@SuppressWarnings("null")
+			
 			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
 			if (!e.validateFunction(true)) {
 				log.printError();
@@ -1139,7 +1160,7 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	/**
 	 * Prints parse errors (i.e. must start a ParseLog before calling this method)
 	 */
@@ -1148,7 +1169,7 @@ public class SkriptParser {
 		final ParseResult res = parser.parse_i(command.getPattern(), 0, 0);
 		if (res == null)
 			return false;
-
+		
 		final List<Argument<?>> as = command.getArguments();
 		assert as.size() == res.exprs.length;
 		for (int i = 0; i < res.exprs.length; i++) {
@@ -1159,7 +1180,7 @@ public class SkriptParser {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Parses the text as the given pattern as {@link ParseContext#COMMAND}.
 	 * <p>
@@ -1169,7 +1190,7 @@ public class SkriptParser {
 	public static ParseResult parse(final String text, final String pattern) {
 		return new SkriptParser(text, PARSE_LITERALS, ParseContext.COMMAND).parse_i(pattern, 0, 0);
 	}
-
+	
 	@Nullable
 	public static NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent(final String event, final String defaultError) {
 		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
@@ -1185,7 +1206,7 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	@Nullable
 	private NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent() {
 		assert context == ParseContext.EVENT;
@@ -1202,6 +1223,7 @@ public class SkriptParser {
 						if (res != null) {
 							final SkriptEvent e = info.c.newInstance();
 							final Literal<?>[] ls = Arrays.copyOf(res.exprs, res.exprs.length, Literal[].class);
+							assert ls != null;
 							if (!e.init(ls, i, res)) {
 								log.printError();
 								return null;
@@ -1209,7 +1231,9 @@ public class SkriptParser {
 							log.printLog();
 							return new NonNullPair<>(info, e);
 						}
-					} catch (final InstantiationException | IllegalAccessException e) {
+					} catch (final InstantiationException e) {
+						assert false;
+					} catch (final IllegalAccessException e) {
 						assert false;
 					}
 				}
@@ -1220,15 +1244,15 @@ public class SkriptParser {
 			log.stop();
 		}
 	}
-
+	
 	/**
 	 * Finds the closing bracket of the group at <tt>start</tt> (i.e. <tt>start</tt> has to be <i>in</i> a group).
-	 *
+	 * 
 	 * @param pattern
 	 * @param closingBracket The bracket to look for, e.g. ')'
 	 * @param openingBracket A bracket that opens another group, e.g. '('
-	 * @param start          This must not be the index of the opening bracket!
-	 * @param isGroup        Whether <tt>start</tt> is assumed to be in a group (will print an error if this is not the case, otherwise it returns <tt>pattern.length()</tt>)
+	 * @param start This must not be the index of the opening bracket!
+	 * @param isGroup Whether <tt>start</tt> is assumed to be in a group (will print an error if this is not the case, otherwise it returns <tt>pattern.length()</tt>)
 	 * @return The index of the next bracket
 	 * @throws MalformedPatternException If the group is not closed
 	 */
@@ -1237,6 +1261,7 @@ public class SkriptParser {
 		for (int i = start; i < pattern.length(); i++) {
 			if (pattern.charAt(i) == '\\') {
 				i++;
+				continue;
 			} else if (pattern.charAt(i) == closingBracket) {
 				if (n == 0) {
 					if (!isGroup)
@@ -1252,13 +1277,13 @@ public class SkriptParser {
 			throw new MalformedPatternException(pattern, "Missing closing bracket '" + closingBracket + "'");
 		return -1;
 	}
-
+	
 	/**
 	 * Gets the next occurrence of a character in a string that is not escaped with a preceding backslash.
-	 *
+	 * 
 	 * @param pattern
-	 * @param c       The character to search for
-	 * @param from    The index to start searching from
+	 * @param c The character to search for
+	 * @param from The index to start searching from
 	 * @return The next index where the character occurs unescaped or -1 if it doesn't occur.
 	 */
 	private static int nextUnescaped(final String pattern, final char c, final int from) {
@@ -1271,18 +1296,18 @@ public class SkriptParser {
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * Counts how often the given character occurs in the given string, ignoring any escaped occurrences of the character.
-	 *
+	 * 
 	 * @param pattern
-	 * @param c       The character to search for
+	 * @param c The character to search for
 	 * @return The number of unescaped occurrences of the given character
 	 */
 	static int countUnescaped(final String pattern, final char c) {
 		return countUnescaped(pattern, c, 0, pattern.length());
 	}
-
+	
 	static int countUnescaped(final String pattern, final char c, final int start, final int end) {
 		assert start >= 0 && start <= end && end <= pattern.length() : start + ", " + end + "; " + pattern.length();
 		int r = 0;
@@ -1296,10 +1321,10 @@ public class SkriptParser {
 		}
 		return r;
 	}
-
+	
 	/**
 	 * Find the next unescaped (i.e. single) double quote in the string.
-	 *
+	 * 
 	 * @param s
 	 * @param from Index after the starting quote
 	 * @return Index of the end quote
@@ -1314,12 +1339,12 @@ public class SkriptParser {
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * @param cs
 	 * @return "not an x" or "neither an x, a y nor a z"
 	 */
-	public static String notOfType(final Class<?>... cs) {
+	public final static String notOfType(final Class<?>... cs) {
 		if (cs.length == 1) {
 			final Class<?> c = cs[0];
 			assert c != null;
@@ -1331,7 +1356,7 @@ public class SkriptParser {
 					if (k != cs.length - 1)
 						b.append(", ");
 					else
-						b.append(" ").append(Language.get("nor")).append(" ");
+						b.append(" " + Language.get("nor") + " ");
 				}
 				final Class<?> c = cs[k];
 				assert c != null;
@@ -1340,8 +1365,8 @@ public class SkriptParser {
 			return "" + b.toString();
 		}
 	}
-
-	public static String notOfType(final ClassInfo<?>... cs) {
+	
+	public final static String notOfType(final ClassInfo<?>... cs) {
 		if (cs.length == 1) {
 			return Language.get("not") + " " + cs[0].getName().withIndefiniteArticle();
 		} else {
@@ -1358,16 +1383,16 @@ public class SkriptParser {
 			return "" + b.toString();
 		}
 	}
-
+	
 	/**
 	 * Returns the next character in the expression, skipping strings, variables and parentheses (unless <tt>context</tt> is {@link ParseContext#COMMAND}).
-	 *
+	 * 
 	 * @param expr The expression
-	 * @param i    The last index
+	 * @param i The last index
 	 * @return The next index (can be expr.length()), or -1 if an invalid string, variable or bracket is found or if <tt>i >= expr.length()</tt>.
 	 * @throws StringIndexOutOfBoundsException if <tt>i < 0</tt>
 	 */
-	public static int next(final String expr, final int i, final ParseContext context) {
+	public final static int next(final String expr, final int i, final ParseContext context) {
 		if (i >= expr.length())
 			return -1;
 		if (i < 0)
@@ -1390,8 +1415,8 @@ public class SkriptParser {
 		}
 		return i + 1;
 	}
-
-	private static int getGroupLevel(final String pattern, final int j) {
+	
+	private final static int getGroupLevel(final String pattern, final int j) {
 		assert j >= 0 && j <= pattern.length() : j + "; " + pattern;
 		int level = 0;
 		for (int i = 0; i < j; i++) {
@@ -1408,20 +1433,20 @@ public class SkriptParser {
 		}
 		return level;
 	}
-
+	
 	/**
 	 * Prints errors
-	 *
+	 * 
 	 * @param pattern
-	 * @param i       Position in the input string
-	 * @param j       Position in the pattern
+	 * @param i Position in the input string
+	 * @param j Position in the pattern
 	 * @return Parsed result or null on error (which does not imply that an error was printed)
 	 */
 	@Nullable
 	private final ParseResult parse_i(final String pattern, int i, int j) {
 		ParseResult res;
 		int end, i2;
-
+		
 		while (j < pattern.length()) {
 			switch (pattern.charAt(j)) {
 				case '[': {
@@ -1458,7 +1483,7 @@ public class SkriptParser {
 										try {
 											mark = Integer.parseInt(pattern.substring(j + 1, j2));
 											j = j2;
-										} catch (final NumberFormatException ignored) {}
+										} catch (final NumberFormatException e) {}
 									}
 								}
 								res = parse_i(pattern, i, j + 1);
@@ -1622,15 +1647,15 @@ public class SkriptParser {
 			return new ParseResult(this, pattern);
 		return null;
 	}
-
+	
 	/**
 	 * Validates a user-defined pattern (used in {@link ExprParse}).
-	 *
+	 * 
 	 * @param pattern
 	 * @return The pattern with %codenames% and a boolean array that contains whetehr the expressions are plural or not
 	 */
 	@Nullable
-	public static NonNullPair<String, boolean[]> validatePattern(final String pattern) {
+	public final static NonNullPair<String, boolean[]> validatePattern(final String pattern) {
 		final List<Boolean> ps = new ArrayList<>();
 		int groupLevel = 0, optionalLevel = 0;
 		final Deque<Character> groups = new LinkedList<>();
@@ -1698,17 +1723,17 @@ public class SkriptParser {
 			plurals[i] = ps.get(i);
 		return new NonNullPair<>("" + b.toString(), plurals);
 	}
-
+	
 	@Nullable
-	private static NonNullPair<String, boolean[]> error(final String error) {
+	private final static NonNullPair<String, boolean[]> error(final String error) {
 		Skript.error("Invalid pattern: " + error);
 		return null;
 	}
-
+	
 	private final static Message m_quotes_error = new Message("skript.quotes error");
 	private final static Message m_brackets_error = new Message("skript.brackets error");
-
-	public static boolean validateLine(final String line) {
+	
+	public final static boolean validateLine(final String line) {
 		if (StringUtils.count(line, '"') % 2 != 0) {
 			Skript.error(m_quotes_error.toString());
 			return false;
@@ -1721,32 +1746,32 @@ public class SkriptParser {
 		}
 		return true;
 	}
-
+	
 	private final static class ExprInfo {
 		public ExprInfo(final int length) {
 			classes = new ClassInfo[length];
 			isPlural = new boolean[length];
 		}
-
+		
 		final ClassInfo<?>[] classes;
 		final boolean[] isPlural;
 		boolean isOptional;
 		int flagMask = ~0;
 		int time = 0;
 	}
-
-	private static final Map<String, ExprInfo> exprInfoCache = new HashMap<>();
-
+	
+	private static final Map<String,ExprInfo> exprInfoCache = new HashMap<>();
+	
 	private static ExprInfo getExprInfo(String s) throws MalformedPatternException, IllegalArgumentException, SkriptAPIException {
 		ExprInfo r = exprInfoCache.get(s);
 		if (r == null) {
 			r = createExprInfo(s);
 			exprInfoCache.put(s, r);
 		}
-
+		
 		return r;
 	}
-
+	
 	private static ExprInfo createExprInfo(String s) throws MalformedPatternException, IllegalArgumentException, SkriptAPIException {
 		final ExprInfo r = new ExprInfo(StringUtils.count(s, '/') + 1);
 		r.isOptional = s.startsWith("-");
@@ -1778,4 +1803,5 @@ public class SkriptParser {
 		}
 		return r;
 	}
+	
 }

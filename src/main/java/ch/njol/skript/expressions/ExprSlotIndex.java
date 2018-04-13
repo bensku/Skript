@@ -19,36 +19,46 @@
  */
 package ch.njol.skript.expressions;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import org.bukkit.block.Block;
+import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.util.slot.SlotWithIndex;
 
-@Name("Temperature")
-@Description("Temperature at given block.")
+@Name("Slot Index")
+@Description("Index of an an inventory slot. Other types of slots may or may "
+		+ "not have indices. Note that comparing slots with numbers is also "
+		+ "possible; if index of slot is same as the number, comparison"
+		+ "succeeds. This expression is mainly for the cases where you must "
+		+ "for some reason save the slot numbers.")
 @Examples("")
 @Since("2.2-dev35")
-public class ExprTemperature extends SimplePropertyExpression<Block, Double> {
+public class ExprSlotIndex extends SimplePropertyExpression<Slot, Integer> {
+	
+	static {
+		register(ExprSlotIndex.class, Integer.class, "(index|indices)", "slots");
+	}
+	
+	@Override
+	@Nullable
+	public Integer convert(Slot f) {
+		if (f instanceof SlotWithIndex)
+			return ((SlotWithIndex) f).getIndex();
+		
+		return 0; // Slot does not have index. At all
+	}
 
-    static {
-        register(ExprTemperature.class, Double.class, "temperature[s]", "blocks");
-    }
-
-    @Override
-    public Double convert(Block block) {
-        return block.getTemperature();
-    }
-
-    @Override
-    protected String getPropertyName() {
-        return "temperature";
-    }
-
-    @Override
-    public Class<? extends Double> getReturnType() {
-        return Double.class;
-    }
-
+	@Override
+	protected String getPropertyName() {
+		return "slot";
+	}
+	
+	@Override
+	public Class<? extends Integer> getReturnType() {
+		return Integer.class;
+	}
 }

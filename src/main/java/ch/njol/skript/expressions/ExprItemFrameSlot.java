@@ -19,36 +19,40 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.ItemFrame;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import org.bukkit.block.Block;
+import ch.njol.skript.util.slot.ItemFrameSlot;
 
-@Name("Temperature")
-@Description("Temperature at given block.")
+@Name("Item in Item Frame")
+@Description("An item inside an item frame entity.")
 @Examples("")
 @Since("2.2-dev35")
-public class ExprTemperature extends SimplePropertyExpression<Block, Double> {
+public class ExprItemFrameSlot extends SimplePropertyExpression<ItemFrame, ItemFrameSlot> {
+	
+	static {
+		register(ExprItemFrameSlot.class, ItemFrameSlot.class, "item", "entities");
+	}
+	
+	@Override
+	@Nullable
+	public ItemFrameSlot convert(ItemFrame f) {
+		return new ItemFrameSlot(f);
+	}
 
-    static {
-        register(ExprTemperature.class, Double.class, "temperature[s]", "blocks");
-    }
-
-    @Override
-    public Double convert(Block block) {
-        return block.getTemperature();
-    }
-
-    @Override
-    protected String getPropertyName() {
-        return "temperature";
-    }
-
-    @Override
-    public Class<? extends Double> getReturnType() {
-        return Double.class;
-    }
-
+	@Override
+	protected String getPropertyName() {
+		return "item frame slot";
+	}
+	
+	@Override
+	public Class<? extends ItemFrameSlot> getReturnType() {
+		return ItemFrameSlot.class;
+	}
 }

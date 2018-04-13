@@ -166,7 +166,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	// TODO return a kleenean (UNKNOWN if 'all' is null or empty)
 	public final static <T> boolean check(final @Nullable T[] all, final Checker<? super T> c, final boolean invert, final boolean and) {
 		if (all == null)
-			return false;
+			return invert;
 		boolean hasElement = false;
 		for (final T t : all) {
 			if (t == null)
@@ -179,7 +179,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 				return invert ^ true;
 		}
 		if (!hasElement)
-			return false;
+			return invert;
 		return invert ^ and;
 	}
 	

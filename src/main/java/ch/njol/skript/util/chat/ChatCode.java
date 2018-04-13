@@ -1,193 +1,86 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.util.chat;
 
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
-import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Chat codes; includes color codes (<a href="http://wiki.vg/Chat#Colors">reference</a>)
  * and also, some formatting codes (mostly <a href="http://wiki.vg/Chat">this</a>)
  */
-public enum ChatCode {
-	reset {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.reset = true;
-		}
-	},
-
-	// Colors (Vanilla color code, Skript color code if different)
-
-	black("black", '0'),
-	dark_blue("dark_blue", '1'),
-	dark_green("dark_green", '2'),
-	dark_aqua("dark_aqua", "dark_cyan", '3'),
-	dark_red("dark_red", '4'),
-	dark_purple("dark_purple", '5'),
-	gold("gold", "orange", '6'),
-	gray("gray", "light_grey", '7'),
-	dark_gray("dark_gray", "dark_grey", '8'),
-	blue("blue", "light_cyan", '9'),
-	green("green", "light_green", 'a'),
-	aqua("aqua", "light_cyan", 'b'),
-	red("red", "light_red", 'c'),
-	light_purple("light_purple", 'd'),
-	yellow("yellow", 'e'),
-	white("white", 'f'),
-
-	// Formatting
-
-	bold {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.bold = true;
-		}
-	},
-
-	italic {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.italic = true;
-		}
-	},
-
-	underlined(null, "underline") {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.underlined = true;
-		}
-	},
-
-	strikethrough {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.strikethrough = true;
-		}
-	},
-
-	obfuscated(null, "magic") {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			component.obfuscated = true;
-		}
-	},
-
-	// clickEvent
-
-	open_url(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.open_url, param);
-			component.clickEvent = e;
-		}
-	},
-
-	run_command(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.run_command, Utils.replaceChatStyles(param));
-			component.clickEvent = e;
-		}
-	},
-
-	suggest_command(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.suggest_command, param);
-			component.clickEvent = e;
-		}
-	},
-
-	change_page(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			ClickEvent e = new ClickEvent(ClickEvent.Action.change_page, param);
-			component.clickEvent = e;
-		}
-	},
-
-	// hoverEvent
-
-	show_text(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			HoverEvent e = new HoverEvent(HoverEvent.Action.show_text, Utils.replaceChatStyles(param));
-			component.hoverEvent = e;
-		}
-	},
-
-	// Other
-
-	insertion(true) {
-		@Override
-		public void updateComponent(MessageComponent component, String param) { component.insertion = param; }
-	};
-
-	public boolean hasParam;
-
-	@Nullable
-	public String colorCode;
-
-	@Nullable
-	public String langName;
-
-	public char colorChar;
-
-	ChatCode(@Nullable String colorCode, String langName, char colorChar) {
-		this.colorCode = colorCode;
-		this.langName = langName;
-		this.hasParam = false;
-		this.colorChar = colorChar;
-	}
-
-	ChatCode(@Nullable String colorCode, String langName) {
-		this.colorCode = colorCode;
-		this.langName = langName;
-		this.hasParam = false;
-	}
-
-	ChatCode(String colorCode, char colorChar) {
-		this.colorCode = colorCode;
-		this.langName = colorCode;
-		this.hasParam = false;
-		this.colorChar = colorChar;
-	}
-
-	ChatCode(boolean hasParam) {
-		this.hasParam = hasParam;
-		this.langName = this.name(); // Default to enum name
-	}
-
-	ChatCode() {
-		this(false);
-	}
-
+public interface ChatCode {
+	
 	/**
-	 * Updates the component.
-	 *
+	 * Applies style of this chat code to given component.
 	 * @param component Component to update.
-	 * @param param     String parameter.
+	 * @param param String parameter. May be empty string.
 	 */
-	public void updateComponent(MessageComponent component, String param) {
-
+	void updateComponent(MessageComponent component, String param);
+	
+	/**
+	 * Checks if this chat code takes a string parameter. If yes, scripters
+	 * will use it like:
+	 * <code>&lt;name:param&gt;</code>
+	 * @return
+	 */
+	boolean hasParam();
+	
+	/**
+	 * Gets color code of this chat code. Skript will apply it automatically.
+	 * Note that setting color code is usually not useful for addon developers,
+	 * because Skript supports all colors that Minecraft client does.
+	 * 
+	 * <p>If null is returned, {@link #updateComponent(MessageComponent, String)}
+	 * is called instead. You probably want that, as it is more versatile.
+	 * @return Color code.
+	 */
+	@Nullable
+	String getColorCode();
+	
+	/**
+	 * Name to be used in scripts. if {@link #isLocalized()} is true, this is
+	 * used as a language file key instead.
+	 * @return Name in language file.
+	 */
+	@Nullable
+	String getLangName();
+	
+	/**
+	 * For internal usage.
+	 * @return True for Skript's color codes.
+	 */
+	default boolean isLocalized() {
+		return false;
 	}
+	
+	/**
+	 * Gets the color char that is an alternative way to use this chat code.
+	 * Return 0 unless you wish to use a color char.
+	 * 
+	 * <p>If not 0, it can be used in scripts in following way:
+	 * <code>&amp;x</code> or <code>§x</code>, if the code is <code>x</code>.
+	 * It is not case sensitive if you return a character from which there is
+	 * upper case character available. If you return the upper case character,
+	 * lower case variant cannot be used in scripts (so don't do that).
+	 * @return Color char.
+	 */
+	char getColorChar();
+	
 }

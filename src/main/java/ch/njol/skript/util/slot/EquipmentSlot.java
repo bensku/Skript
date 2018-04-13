@@ -22,7 +22,9 @@ package ch.njol.skript.util.slot;
 import java.util.Locale;
 
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -147,6 +149,8 @@ public class EquipmentSlot extends SlotWithIndex {
 		
 	}
 	
+	private static final EquipSlot[] values = EquipSlot.values();
+	
 	private final EntityEquipment e;
 	private final EquipSlot slot;
 	
@@ -155,6 +159,13 @@ public class EquipmentSlot extends SlotWithIndex {
 		this.slot = slot;
 	}
 	
+	@SuppressWarnings("null")
+	public EquipmentSlot(HumanEntity holder, int index) {
+		this.e = holder.getEquipment();
+		this.slot = values[41 - index]; // 6 entries in EquipSlot, indices descending
+		// So this math trick gets us the EquipSlot from inventory slot index
+	}
+
 	@Override
 	@Nullable
 	public ItemStack getItem() {
@@ -168,11 +179,6 @@ public class EquipmentSlot extends SlotWithIndex {
 			PlayerUtils.updateInventory((Player) e.getHolder());
 	}
 	
-	@Override
-	public String toString_i() {
-		return "the " + slot.name().toLowerCase(Locale.ENGLISH) + " of " + Classes.toString(e.getHolder()); // TODO localise?
-	}
-	
 	/**
 	 * Gets underlying armor slot enum.
 	 * @return Armor slot.
@@ -184,6 +190,11 @@ public class EquipmentSlot extends SlotWithIndex {
 	@Override
 	public int getIndex() {
 		return slot.slotNumber;
+	}
+
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return "the " + slot.name().toLowerCase(Locale.ENGLISH) + " of " + Classes.toString(e.getHolder()); // TODO localise?
 	}
 	
 }

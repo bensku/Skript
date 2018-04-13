@@ -22,9 +22,12 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -36,6 +39,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -76,13 +80,25 @@ public class ExprInventorySlot extends SimpleExpression<Slot> {
 	@Override
 	@Nullable
 	protected Slot[] get(Event event) {
-		Inventory inventory = invis.getSingle(event);
-		if (inventory == null)
+		Inventory invi = invis.getSingle(event);
+		if (invi == null)
 			return null;
+		
 		List<Slot> inventorySlots = new ArrayList<>();
-		for (Number slot : slots.getArray(event))
-			if (slot.intValue() >= 0 && slot.intValue() < inventory.getSize())
-				inventorySlots.add(new InventorySlot(inventory, slot.intValue()));
+		for (Number slot : slots.getArray(event)) {
+			if (slot.intValue() >= 0 && slot.intValue() < invi.getSize()) {
+				int slotIndex = slot.intValue();
+				// Not all indices point to inventory slots. Equipment, for example
+				if (invi instanceof PlayerInventory && slotIndex >= 36) {
+					HumanEntity holder = ((PlayerInventory) invi).getHolder();
+					assert holder != null;
+					inventorySlots.add(new EquipmentSlot(holder, slotIndex));
+				} else {
+					inventorySlots.add(new InventorySlot(invi, slot.intValue()));
+				}
+			}
+		}
+		
 		if (inventorySlots.isEmpty())
 			return null;
 		return inventorySlots.toArray(new Slot[inventorySlots.size()]);

@@ -1,22 +1,35 @@
-/*
- * This file is part of Skript.
+/**
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2018 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -34,17 +47,6 @@ import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -58,17 +60,16 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("1.0")
 public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	static {
-		Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY,
-				"[the] (tool|held item|weapon) [of %livingentities%]", "%livingentities%'[s] (tool|held item|weapon)");
+		Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (tool|held item|weapon) [of %livingentities%]", "%livingentities%'[s] (tool|held item|weapon)");
 	}
-
+	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		setExpr((Expression<Player>) exprs[0]);
 		return true;
 	}
-
+	
 	@Override
 	protected Slot[] get(final Event e, final LivingEntity[] source) {
 		final boolean delayed = Delay.isDelayed(e);
@@ -90,7 +91,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 							public ItemStack getItem() {
 								return getTime() <= 0 ? super.getItem() : ((PlayerBucketEvent) e).getItemStack();
 							}
-
+							
 							@Override
 							public void setItem(final @Nullable ItemStack item) {
 								if (getTime() >= 0) {
@@ -107,29 +108,30 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 					return null;
 				return new EquipmentSlot(e, EquipmentSlot.EquipSlot.TOOL) {
 					@Override
-					public String toString_i() {
-						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + super.toString_i();
+					public String toString(@Nullable Event event, boolean debug) {
+						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + Classes.toString(getItem());
 					}
 				};
 			}
 		});
 	}
-
+	
 	@Override
 	public Class<Slot> getReturnType() {
 		return Slot.class;
 	}
-
+	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + "tool of " + getExpr().toString(e, debug);
 		return Classes.getDebugMessage(getSingle(e));
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), PlayerItemHeldEvent.class, PlayerBucketFillEvent.class, PlayerBucketEmptyEvent.class);
 	}
+	
 }

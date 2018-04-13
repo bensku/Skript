@@ -36,6 +36,7 @@ import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
@@ -93,8 +94,8 @@ public class ExprOffTool extends ExprTool {
 					return null;
 				return new EquipmentSlot(e, EquipmentSlot.EquipSlot.OFF_HAND) {
 					@Override
-					public String toString_i() {
-						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + super.toString_i();
+					public String toString(@Nullable Event event, boolean debug) {
+						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + Classes.toString(getItem());
 					}
 				};
 			}

@@ -19,36 +19,47 @@
  */
 package ch.njol.skript.util.slot;
 
+import java.util.Locale;
+
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.lang.Debuggable;
 import ch.njol.skript.registrations.Classes;
 
 /**
- * Represents a container for a single item. It could be an ordinary inventory
- * slot or perhaps an item frame.
+ * Represents contents of an item frame.
  */
-public abstract class Slot implements Debuggable {
+public class ItemFrameSlot extends Slot {
 	
-	protected Slot() {}
+	private ItemFrame frame;
 	
-	@Nullable
-	public abstract ItemStack getItem();
-	
-	public abstract void setItem(final @Nullable ItemStack item);
-	
+	public ItemFrameSlot(ItemFrame frame) {
+		this.frame = frame;
+	}
+
 	@Override
-	public final String toString() {
-		return toString(null, false);
+	@Nullable
+	public ItemStack getItem() {
+		return frame.getItem();
+	}
+
+	@Override
+	public void setItem(@Nullable ItemStack item) {
+		frame.setItem(item);
 	}
 	
-	/**
-	 * Checks if given slot is in same position with this.
-	 * Ignores slot contents.
-	 * @param o Another slot
-	 * @return True if positions equal, false otherwise.
-	 */
-	public abstract boolean isSameSlot(Slot o);
+	@Override
+	public boolean isSameSlot(Slot o) {
+		if (o instanceof ItemFrameSlot) // Same item frame
+			return ((ItemFrameSlot) o).frame.equals(frame);
+		return false;
+	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "frame item of " + Classes.toString(frame);
+	}
+	
 }

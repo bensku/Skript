@@ -21,6 +21,8 @@ package ch.njol.skript.util.slot;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -47,6 +49,7 @@ public class InventorySlot extends SlotWithIndex {
 		return invi;
 	}
 	
+	@Override
 	public int getIndex() {
 		return index;
 	}
@@ -65,10 +68,14 @@ public class InventorySlot extends SlotWithIndex {
 	}
 	
 	@Override
-	public String toString_i() {
-		if (invi.getHolder() != null)
-			return "slot " + index + " of inventory of " + Classes.toString(invi.getHolder());
-		return "slot " + index + " of " + Classes.toString(invi);
+	public String toString(@Nullable Event e, boolean debug) {
+		if (invi.getHolder() != null) {
+			if (invi instanceof CraftingInventory) // 4x4 crafting grid is contained in player too!
+				return "crafting slot " + index + " of " + Classes.toString(invi.getHolder());
+			
+			return "inventory slot " + index + " of " + Classes.toString(invi.getHolder());
+		}
+		return "inventory slot " + index + " of " + Classes.toString(invi);
 	}
 	
 }

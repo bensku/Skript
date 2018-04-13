@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 @Name("Time")
-@Description("The <a href='../classes/#time'>time</a> of a world.")
+@Description("The <a href='classes.html#time'>time</a> of a world.")
 @Examples({"time in world is between 18:00 and 6:00:",
 		"	broadcast \"It's night-time, watch out for monsters!\""})
 @Since("1.0")
