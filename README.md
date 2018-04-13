@@ -57,7 +57,7 @@ gradlew clean build # on Windows
 ```
 
 You can get source code from the [releases](https://github.com/bensku/Skript/releases) page. You may also clone this
-repository, but that code may or may not be stable.
+repository, but that code may or may not be stable. If you can't clone or compile code, you can download daily builds from  [Jenkins](https://ci.kacperduras.pl/job/Skript/) (maintainer: [kacperduras](https://github.com/kacperduras)).
 
 ### Importing to Eclipse
 With new Eclipse versions, there is integrated Gradle support, and it actually works now.
