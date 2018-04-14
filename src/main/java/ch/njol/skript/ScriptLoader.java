@@ -41,6 +41,7 @@ import java.util.regex.Matcher;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jdt.annotation.NonNull;
 
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
@@ -54,6 +55,7 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.effects.Delay;
+import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Conditional;
 import ch.njol.skript.lang.Expression;
@@ -90,6 +92,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
+import ch.njol.util.Validate;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -105,6 +108,50 @@ final public class ScriptLoader {
 
 	@Nullable
 	public static Config currentScript = null;
+
+	/**
+	 * If true, a {@link PreScriptLoadEvent} will be called
+	 * right before a script starts parsing, but after
+	 * {@link ScriptLoader#currentScript} has been set
+	 * to a non-null {@link Config}.
+	 */
+	private static boolean callPreLoadEvent;
+
+	/**
+	 * A set of all the SkriptAddons that have called
+	 * {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
+	 * with true.
+	 */
+	private static Set<SkriptAddon> preloadListeners = new HashSet<>();
+
+	/**
+	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean,
+	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#preloadListeners}
+	 * depending on the provided boolean (true adds, false removes).
+	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
+	 * @param addon A non-null SkriptAddon
+	 */
+	public static void setCallPreloadEvent(boolean state, @NonNull SkriptAddon addon) {
+		Validate.notNull(addon);
+		callPreLoadEvent = state;
+		if (state)
+			preloadListeners.add(addon);
+		else
+			preloadListeners.remove(addon);
+	}
+
+	public static boolean getCallPreloadEvent() {
+		return callPreLoadEvent;
+	}
+
+	/**
+	 * Returns an unmodifiable list of all the addons
+	 * that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
+	 * with true.
+	 */
+	public static Set<SkriptAddon> getPreloadListeners() {
+		return Collections.unmodifiableSet(preloadListeners);
+	}
 
 	/**
 	 * use {@link #setCurrentEvent(String, Class...)}
@@ -440,6 +487,14 @@ final public class ScriptLoader {
 			currentAliases.clear();
 			currentOptions.clear();
 			currentScript = config;
+
+			/*
+			 * If editing this class, please remember to call this event
+			 * after currentScript has already been set to the provided Config,
+			 * but before the script actually starts parsing
+			 */
+			if (callPreLoadEvent)
+				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(config));
 
 //			final SerializedScript script = new SerializedScript();
 
@@ -801,7 +856,6 @@ final public class ScriptLoader {
 
 						deleteCurrentEvent();
 
-						continue;
 					}
 				}
 

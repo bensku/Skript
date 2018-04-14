@@ -97,7 +97,6 @@ public class VariableString implements Expression<String> {
 	private VariableString(final String s) {
 		isSimple = true;
 		simpleUnformatted = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
-		assert simpleUnformatted != null;
 		simple = Utils.replaceChatStyles(simpleUnformatted);
 
 		orig = simple;
@@ -302,6 +301,12 @@ public class VariableString implements Expression<String> {
 			return new VariableString(s);
 
 		final Object[] sa = string.toArray();
+		if (string.size() == 1 && string.get(0) instanceof ExpressionInfo &&
+				((ExpressionInfo) string.get(0)).expr.getReturnType() == String.class &&
+				((ExpressionInfo) string.get(0)).expr.isSingle()) {
+			String expr = ((ExpressionInfo) string.get(0)).expr.toString(null, false);
+			Skript.warning(expr + " is already a text, so you should not put it in one (e.g. " + expr + " instead of " + "\"%" + expr.replace("\"", "\"\"") + "%\")");
+		}
 		return new VariableString(orig, sa, mode);
 	}
 
