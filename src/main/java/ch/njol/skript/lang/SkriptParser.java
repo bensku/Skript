@@ -1253,7 +1253,6 @@ public class SkriptParser {
 		for (int i = start; i < pattern.length(); i++) {
 			if (pattern.charAt(i) == '\\') {
 				i++;
-				continue;
 			} else if (pattern.charAt(i) == closingBracket) {
 				if (n == 0) {
 					if (!isGroup)

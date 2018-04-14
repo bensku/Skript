@@ -96,7 +96,8 @@ public class VariableString implements Expression<String> {
 	 */
 	private VariableString(final String s) {
 		isSimple = true;
-		simpleUnformatted = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
+		String simpleUnformatted = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
+		this.simpleUnformatted = simpleUnformatted;
 		simple = Utils.replaceChatStyles(simpleUnformatted);
 
 		orig = simple;
