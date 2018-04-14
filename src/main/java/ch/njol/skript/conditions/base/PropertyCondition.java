@@ -18,14 +18,15 @@
  */
 package ch.njol.skript.conditions.base;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -36,9 +37,9 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	private Expression<? extends T> expr;
 
 	/**
-	 * @param c the class of the condition to register
+	 * @param c        the class of the condition to register
 	 * @param property the name of the property
-	 * @param type must be plural
+	 * @param type     must be plural
 	 */
 	public static void register(final Class<? extends Condition> c, final String property, final String type) {
 		Skript.registerCondition(c, "%" + type + "% (is|are) " + property, "%" + type + "% (isn't|is not|aren't|are not) " + property);

@@ -25,6 +25,7 @@ import org.bukkit.event.HandlerList;
  * @author Peter Güttinger
  */
 public class ScriptEvent extends Event {
+
 	public ScriptEvent() {}
 
 	// Bukkit stuff

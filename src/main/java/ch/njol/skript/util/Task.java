@@ -18,21 +18,23 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.Closeable;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.util.Closeable;
+
 /**
  * @author Peter Güttinger
  */
 public abstract class Task implements Runnable, Closeable {
+
 	private final Plugin plugin;
 	private final boolean async;
 	private long period = -1;
@@ -111,7 +113,8 @@ public abstract class Task implements Runnable, Closeable {
 	}
 
 	/**
-	 * Re-schedules the task to run next after the given delay. If this task was repeating it will continue so using the same period as before.
+	 * Re-schedules the task to run next after the given delay. If this task was repeating it will continue so using the
+	 * same period as before.
 	 *
 	 * @param delay
 	 */
@@ -122,7 +125,8 @@ public abstract class Task implements Runnable, Closeable {
 	}
 
 	/**
-	 * Sets the period of this task. This will re-schedule the task to be run next after the given period if the task is still running.
+	 * Sets the period of this task. This will re-schedule the task to be run next after the given period if the task is
+	 * still running.
 	 *
 	 * @param period Period in ticks or -1 to cancel the task and make it non-repeating
 	 */
@@ -153,7 +157,8 @@ public abstract class Task implements Runnable, Closeable {
 	 *
 	 * @param c The method
 	 * @param p The plugin that owns the task. Must be enabled.
-	 * @return What the method returned or null if it threw an error or was stopped (usually due to the server shutting down)
+	 * @return What the method returned or null if it threw an error or was stopped (usually due to the server shutting
+	 * down)
 	 */
 	@Nullable
 	public static <T> T callSync(final Callable<T> c, final Plugin p) {

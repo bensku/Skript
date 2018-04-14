@@ -18,6 +18,36 @@
  */
 package ch.njol.skript.command;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.help.GenericCommandHelpTopic;
+import org.bukkit.help.HelpMap;
+import org.bukkit.help.HelpTopic;
+import org.bukkit.help.HelpTopicComparator;
+import org.bukkit.help.IndexHelpTopic;
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.command.Commands.CommandAliasHelpTopic;
@@ -41,35 +71,6 @@ import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.StringUtils;
 import ch.njol.util.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.help.GenericCommandHelpTopic;
-import org.bukkit.help.HelpMap;
-import org.bukkit.help.HelpTopic;
-import org.bukkit.help.HelpTopicComparator;
-import org.bukkit.help.IndexHelpTopic;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * This class is used for user-defined commands.
@@ -77,6 +78,7 @@ import java.util.UUID;
  * @author Peter Güttinger
  */
 public class ScriptCommand implements CommandExecutor {
+
 	public final static Message m_executable_by_players = new Message("commands.executable by players");
 	public final static Message m_executable_by_console = new Message("commands.executable by console");
 

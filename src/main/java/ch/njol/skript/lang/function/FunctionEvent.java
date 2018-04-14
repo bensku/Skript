@@ -22,6 +22,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public final class FunctionEvent<T> extends Event {
+
 	// Bukkit stuff
 	private final static HandlerList handlers = new HandlerList();
 

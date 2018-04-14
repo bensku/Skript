@@ -18,15 +18,17 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser;
+
 public class EvtBookEdit extends SkriptEvent {
+
 	static {
 		Skript.registerEvent("Book Edit", EvtBookEdit.class, PlayerEditBookEvent.class, "book (edit|change|write)")
 				.description("Called when a player edits a book")

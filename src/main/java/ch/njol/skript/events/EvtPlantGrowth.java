@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.events;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 
 public class EvtPlantGrowth extends SkriptEvent {
+
 	static {
 		Skript.registerEvent("Block Growth", EvtPlantGrowth.class, BlockGrowEvent.class, "(plant|crop|block) grow[(th|ing)] [[of] %itemtypes%]")
 				.description("Called when a crop grows. Alternative to new form of generic grow event.")

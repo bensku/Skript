@@ -19,8 +19,7 @@
 package ch.njol.skript.lang.parser;
 
 /**
- * Several utils, mostly copy-pasted from old parser.
- * Do not ask what they do - as long they work.
+ * Several utils, mostly copy-pasted from old parser. Do not ask what they do - as long they work.
  */
 public class ParserUtils {
 

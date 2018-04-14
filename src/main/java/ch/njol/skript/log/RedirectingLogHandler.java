@@ -18,11 +18,11 @@
  */
 package ch.njol.skript.log;
 
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.logging.Level;
 
 /**
  * Redirects the log to a {@link CommandSender}.
@@ -30,6 +30,7 @@ import java.util.logging.Level;
  * @author Peter Güttinger
  */
 public class RedirectingLogHandler extends LogHandler {
+
 	@Nullable
 	private final CommandSender recipient;
 

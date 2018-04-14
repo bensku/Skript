@@ -18,14 +18,15 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 public class ListRangeIterator<T> implements Iterator<T> {
+
 	private final ListIterator<T> iter;
 	private int end;
 

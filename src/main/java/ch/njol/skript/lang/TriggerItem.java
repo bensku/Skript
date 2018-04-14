@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.StringUtils;
+import java.io.File;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.File;
+import ch.njol.skript.Skript;
+import ch.njol.util.StringUtils;
 
 /**
  * Represents a trigger item, i.e. a trigger section, a condition or an effect.
@@ -34,6 +35,7 @@ import java.io.File;
  * @see Statement
  */
 public abstract class TriggerItem implements Debuggable {
+
 	@Nullable
 	protected TriggerSection parent = null;
 	@Nullable
@@ -48,7 +50,8 @@ public abstract class TriggerItem implements Debuggable {
 	/**
 	 * Executes this item and returns the next item to run.
 	 * <p>
-	 * Overriding classes must call {@link #debug(Event, boolean)}. If this method is overridden, {@link #run(Event)} is not used anymore and can be ignored.
+	 * Overriding classes must call {@link #debug(Event, boolean)}. If this method is overridden, {@link #run(Event)} is
+	 * not used anymore and can be ignored.
 	 *
 	 * @param e
 	 * @return The next item to run or null to stop execution
@@ -141,7 +144,8 @@ public abstract class TriggerItem implements Debuggable {
 	}
 
 	/**
-	 * @return The trigger this item belongs to, or null if this is a stand-alone item (e.g. the effect of an effect command)
+	 * @return The trigger this item belongs to, or null if this is a stand-alone item (e.g. the effect of an effect
+	 * command)
 	 */
 	@Nullable
 	public final Trigger getTrigger() {

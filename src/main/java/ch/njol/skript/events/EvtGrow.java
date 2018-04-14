@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.events;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
@@ -25,13 +31,9 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.StructureType;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 public class EvtGrow extends SkriptEvent {
+
 	/**
 	 * Growth event restriction.
 	 * <p>

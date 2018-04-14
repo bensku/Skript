@@ -18,13 +18,15 @@
  */
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Rabbit;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import org.bukkit.entity.Rabbit;
 
 
 public class RabbitData extends EntityData<Rabbit> {
+
 	static {
 		if (Skript.classExists("org.bukkit.entity.Rabbit")) {
 			EntityData.register(RabbitData.class, "rabbit", Rabbit.class, 0, "rabbit", "black rabbit", "black and white rabbit",

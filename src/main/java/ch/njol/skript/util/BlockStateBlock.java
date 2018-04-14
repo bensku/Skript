@@ -18,7 +18,10 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -34,18 +37,18 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import ch.njol.skript.Skript;
 
 /**
- * A block that gets all data from a BlockState, and either reflects changes on the BlockState or delays them to the real block by 1 tick depending on which constructor is used.
+ * A block that gets all data from a BlockState, and either reflects changes on the BlockState or delays them to the
+ * real block by 1 tick depending on which constructor is used.
  *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 @NonNullByDefault(false)
 public class BlockStateBlock implements Block {
+
 	final BlockState state;
 	private final boolean delayChanges;
 

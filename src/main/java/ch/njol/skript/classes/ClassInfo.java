@@ -18,25 +18,26 @@
  */
 package ch.njol.skript.classes;
 
-import ch.njol.skript.expressions.base.EventValueExpression;
-import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.lang.DefaultExpression;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.localization.Noun;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.expressions.base.EventValueExpression;
+import ch.njol.skript.lang.Debuggable;
+import ch.njol.skript.lang.DefaultExpression;
+import ch.njol.skript.lang.util.SimpleLiteral;
+import ch.njol.skript.localization.Noun;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
- * @author Peter Güttinger
  * @param <T> The class this info is for
+ * @author Peter Güttinger
  */
 @SuppressFBWarnings("DM_STRING_VOID_CTOR")
 public class ClassInfo<T> implements Debuggable {
@@ -79,7 +80,7 @@ public class ClassInfo<T> implements Debuggable {
 	private String since = null;
 
 	/**
-	 * @param c The class
+	 * @param c        The class
 	 * @param codeName The name used in patterns
 	 */
 	public ClassInfo(final Class<T> c, final String codeName) {
@@ -106,8 +107,9 @@ public class ClassInfo<T> implements Debuggable {
 	}
 
 	/**
-	 * @param userInputPatterns <u>Regex</u> patterns to match this class, e.g. in the expressions loop-[type], random [type] out of ..., or as command arguments. These patterns
-	 *            must be english and match singular and plural.
+	 * @param userInputPatterns <u>Regex</u> patterns to match this class, e.g. in the expressions loop-[type], random
+	 *                          [type] out of ..., or as command arguments. These patterns must be english and match
+	 *                          singular and plural.
 	 * @throws PatternSyntaxException If any of the patterns' syntaxes is invalid
 	 */
 	public ClassInfo<T> user(final String... userInputPatterns) throws PatternSyntaxException {
@@ -319,10 +321,11 @@ public class ClassInfo<T> implements Debuggable {
 	private final Set<String> after = new HashSet<>();
 
 	/**
-	 * Sets one or more classes that this class should occur before in the class info list. This only affects the order in which classes are parsed if it's unknown of which type
-	 * the parsed string is.
+	 * Sets one or more classes that this class should occur before in the class info list. This only affects the order
+	 * in which classes are parsed if it's unknown of which type the parsed string is.
 	 * <p>
-	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in {@link #after(String...)}.
+	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in
+	 * {@link #after(String...)}.
 	 * <p>
 	 * This list can safely contain classes that may not exist.
 	 *
@@ -336,10 +339,11 @@ public class ClassInfo<T> implements Debuggable {
 	}
 
 	/**
-	 * Sets one or more classes that this class should occur after in the class info list. This only affects the order in which classes are parsed if it's unknown of which type
-	 * the parsed string is.
+	 * Sets one or more classes that this class should occur after in the class info list. This only affects the order
+	 * in which classes are parsed if it's unknown of which type the parsed string is.
 	 * <p>
-	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in {@link #before(String...)}.
+	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in
+	 * {@link #before(String...)}.
 	 * <p>
 	 * This list can safely contain classes that may not exist.
 	 *

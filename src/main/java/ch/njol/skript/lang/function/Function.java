@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.lang.function;
 
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.util.coll.CollectionUtils;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Arrays;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Function<T> {
+
 	final String name;
 	final Parameter<?>[] parameters;
 
@@ -81,7 +83,8 @@ public abstract class Function<T> {
 	// FIXME what happens with a delay in a function?
 
 	/**
-	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()} elements.
+	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()}
+	 *               elements.
 	 * @return The result of the function
 	 */
 	@SuppressWarnings("null")
@@ -111,8 +114,8 @@ public abstract class Function<T> {
 
 	/**
 	 * @param e
-	 * @param params An array containing as many arrays as this function has parameters. The contained arrays are neither null nor empty, and are of type Object[] (i.e. not of the
-	 *            actual parameters' types).
+	 * @param params An array containing as many arrays as this function has parameters. The contained arrays are
+	 *               neither null nor empty, and are of type Object[] (i.e. not of the actual parameters' types).
 	 * @return Whatever this function is supposed to return. May be null or empty, but must not contain null elements.
 	 */
 	@Nullable
@@ -124,8 +127,8 @@ public abstract class Function<T> {
 	}
 
 	/**
-	 * Generates a signature for this function. Should only be used to validate
-	 * (Java) function references.
+	 * Generates a signature for this function. Should only be used to validate (Java) function references.
+	 *
 	 * @return Signature.
 	 */
 	@SuppressWarnings("null")

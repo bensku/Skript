@@ -18,16 +18,17 @@
  */
 package ch.njol.skript.variables;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Güttinger
  */
 public class FlatFileStorageTest {
+
 	@Test
 	public void testHexCoding() {
 		final byte[] bytes = {-0x80, -0x50, -0x01, 0x00, 0x01, 0x44, 0x7F};

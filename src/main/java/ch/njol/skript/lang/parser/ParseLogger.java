@@ -18,25 +18,27 @@
  */
 package ch.njol.skript.lang.parser;
 
+import java.util.Collection;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.ParseLogHandler;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Collection;
 
 /**
  * Interface for logging during parsing.
  */
 public interface ParseLogger {
+
 	/**
-	 * Submits a parse log handler. Errors will be displayed
-	 * when enabling scripts, which allows them to be ordered.
-	 *
+	 * Submits a parse log handler. Errors will be displayed when enabling scripts, which allows them to be ordered.
+	 * <p>
 	 * It is not recommended to write anything to log after submitting it.
+	 *
 	 * @param log Log handler.
 	 */
 	void submitErrorLog(ParseLogHandler log);
@@ -64,12 +66,14 @@ public interface ParseLogger {
 
 	/**
 	 * Sets node for this parser instance.
+	 *
 	 * @param node Node.
 	 */
 	void setNode(@Nullable Node node);
 
 	/**
 	 * Gets node from this parser instance.
+	 *
 	 * @return Node or null, if there is no node.
 	 */
 	@Nullable

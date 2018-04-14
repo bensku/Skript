@@ -18,19 +18,6 @@
  */
 package ch.njol.skript.variables;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.skript.util.FileUtils;
-import ch.njol.skript.util.Task;
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.Version;
-import ch.njol.util.NotifyingReference;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,16 +35,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.ExceptionUtils;
+import ch.njol.skript.util.FileUtils;
+import ch.njol.skript.util.Task;
+import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.Version;
+import ch.njol.util.NotifyingReference;
+
 /**
- * TODO use a database (SQLite) instead and only load a limited amount of variables into RAM - e.g. 2 GB (configurable). If more variables are available they will be loaded when
- * accessed. (rem: print a warning when Skript starts)
- * rem: store null variables (in memory) to prevent looking up the same variables over and over again
+ * TODO use a database (SQLite) instead and only load a limited amount of variables into RAM - e.g. 2 GB (configurable).
+ * If more variables are available they will be loaded when accessed. (rem: print a warning when Skript starts) rem:
+ * store null variables (in memory) to prevent looking up the same variables over and over again
  *
  * @author Peter Güttinger
  */
 public class FlatFileStorage extends VariablesStorage {
+
 	/**
-	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link Variables#getReadLock()}).
+	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link
+	 * Variables#getReadLock()}).
 	 */
 	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<>();
 
@@ -257,7 +260,7 @@ public class FlatFileStorage extends VariablesStorage {
 		}
 		if (lastEnd != line.length())
 			return null;
-		return r.toArray(new String[r.size()]);
+		return r.toArray(new String[0]);
 	}
 
 	@SuppressWarnings("resource")

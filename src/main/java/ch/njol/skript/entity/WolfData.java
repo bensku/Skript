@@ -18,15 +18,17 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.entity.Wolf;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 /**
  * @author Peter Güttinger
  */
 public class WolfData extends EntityData<Wolf> {
+
 	static {
 		EntityData.register(WolfData.class, "wolf", Wolf.class, 1,
 				"angry wolf", "wolf", "peaceful wolf",

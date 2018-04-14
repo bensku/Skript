@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.events;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.events.bukkit.ScheduledEvent;
@@ -27,15 +32,12 @@ import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.util.Timespan;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EvtPeriodical extends SelfRegisteringSkriptEvent {
+
 	static {
 		Skript.registerEvent("*Periodical", EvtPeriodical.class, ScheduledNoWorldEvent.class, "every %timespan%")
 				.description("An event that is called periodically.")

@@ -18,10 +18,11 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.yggdrasil.Fields;
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.AreaEffectCloud;
@@ -92,16 +93,18 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieHorse;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.List;
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.yggdrasil.Fields;
 
 /**
  * @author Peter Güttinger
  */
 public class SimpleEntityData extends EntityData<Entity> {
+
 	public final static class SimpleEntityDataInfo {
+
 		final String codeName;
 		final Class<? extends Entity> c;
 		final boolean isSupertype;

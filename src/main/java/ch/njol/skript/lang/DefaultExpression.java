@@ -24,10 +24,12 @@ package ch.njol.skript.lang;
  * @author Peter Güttinger
  */
 public interface DefaultExpression<T> extends Expression<T> {
+
 	boolean init();
 
 	/**
-	 * @return Usually true, though this is not required, as e.g. SimpleLiteral implements DefaultExpression but is usually not the default of an event.
+	 * @return Usually true, though this is not required, as e.g. SimpleLiteral implements DefaultExpression but is
+	 * usually not the default of an event.
 	 */
 	@Override
 	boolean isDefault();

@@ -18,7 +18,9 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.localization.Language;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
@@ -26,14 +28,14 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import ch.njol.skript.localization.Language;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public abstract class PotionEffectUtils {
+
 	private PotionEffectUtils() {}
 
 	private final static Map<String, PotionEffectType> types = new HashMap<>();
@@ -81,7 +83,7 @@ public abstract class PotionEffectUtils {
 		return names[t.getId()];
 	}
 
-	public final static String[] getNames() {
+	public static String[] getNames() {
 		return names;
 	}
 
@@ -95,8 +97,8 @@ public abstract class PotionEffectUtils {
 	}
 
 	/**
-	 * Checks if given string represents a known potion type and returns that type.
-	 * Unused currently, will be used soon (TM).
+	 * Checks if given string represents a known potion type and returns that type. Unused currently, will be used soon
+	 * (TM).
 	 *
 	 * @param name Name of potion type
 	 * @return
@@ -154,8 +156,8 @@ public abstract class PotionEffectUtils {
 	}
 
 	/**
-	 * Wrapper around deprecated API function, in case it gets removed.
-	 * Changing one method is easier that changing loads of them from different expressions.
+	 * Wrapper around deprecated API function, in case it gets removed. Changing one method is easier that changing
+	 * loads of them from different expressions.
 	 *
 	 * @param effect Type.
 	 * @return Potion type.

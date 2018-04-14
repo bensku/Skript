@@ -18,16 +18,18 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 /**
  * @author Peter Güttinger
  */
 public class PlayerData extends EntityData<Player> {
+
 	static {
 		EntityData.register(PlayerData.class, "player", Player.class, 1, "non-op", "player", "op");
 	}

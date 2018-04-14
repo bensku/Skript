@@ -18,13 +18,14 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffectType;
+
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  * @author Peter Güttinger
@@ -37,6 +38,7 @@ import org.bukkit.potion.PotionEffectType;
 		"\tmessage \"You have been cured!\""})
 @Since("1.4.4")
 public class CondIsPoisoned extends PropertyCondition<LivingEntity> {
+
 	static {
 		register(CondIsPoisoned.class, "poisoned", "livingentities");
 	}

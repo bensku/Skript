@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,11 +35,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Predicate;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -45,6 +46,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\"127.0.0.1\" is banned"})
 @Since("1.4")
 public class CondIsBanned extends Condition {
+
 	static {
 		Skript.registerCondition(CondIsBanned.class,
 				"%offlineplayers/strings% (is|are) banned", "%players/strings% (is|are) IP(-| |)banned",
@@ -79,7 +81,7 @@ public class CondIsBanned extends Condition {
 			} else if (o instanceof String) {
 				return Bukkit.getIPBans().contains(o) || !ipBanned &&
 						CollectionUtils.contains(Bukkit.getBannedPlayers().toArray(
-								new OfflinePlayer[Bukkit.getBannedPlayers().size()]),
+								new OfflinePlayer[0]),
 								(Predicate<OfflinePlayer>) offPlayer -> offPlayer != null && o.equals(offPlayer.getName()));
 			}
 			assert false;

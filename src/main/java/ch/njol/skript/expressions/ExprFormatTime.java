@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.text.SimpleDateFormat;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,10 +36,6 @@ import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.text.SimpleDateFormat;
 
 @Name("Formatted time")
 @Description("Converts date to human-readable text format. By default, yyyy-MM-dd HH:mm:ss z will be used. For reference, see this "
@@ -42,6 +43,7 @@ import java.text.SimpleDateFormat;
 @Examples("now formatted human-readable")
 @Since("2.2-dev31")
 public class ExprFormatTime extends SimpleExpression<String> {
+
 	private static final String defaultFormat = "yyyy-MM-dd HH:mm:ss z";
 
 	static {

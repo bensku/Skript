@@ -18,6 +18,27 @@
  */
 package ch.njol.skript.registrations;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.NotSerializableException;
+import java.io.SequenceInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -42,31 +63,12 @@ import ch.njol.yggdrasil.Yggdrasil;
 import ch.njol.yggdrasil.YggdrasilInputStream;
 import ch.njol.yggdrasil.YggdrasilOutputStream;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.SequenceInputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Classes {
+
 	private Classes() {}
 
 	@Nullable
@@ -124,7 +126,8 @@ public abstract class Classes {
 	}
 
 	/**
-	 * Sorts the class infos according to sub/superclasses and relations set with {@link ClassInfo#before(String...)} and {@link ClassInfo#after(String...)}.
+	 * Sorts the class infos according to sub/superclasses and relations set with {@link ClassInfo#before(String...)}
+	 * and {@link ClassInfo#after(String...)}.
 	 */
 	@SuppressFBWarnings("LI_LAZY_INIT_STATIC")
 	private static void sortClassInfos() {
@@ -196,7 +199,7 @@ public abstract class Classes {
 			}
 		}
 
-		Classes.classInfos = classInfos.toArray(new ClassInfo[classInfos.size()]);
+		Classes.classInfos = classInfos.toArray(new ClassInfo[0]);
 
 		// check for circular dependencies
 		if (!tempClassInfos.isEmpty()) {
@@ -259,7 +262,8 @@ public abstract class Classes {
 	 * This method can be called even while Skript is loading.
 	 *
 	 * @param codeName
-	 * @return The class info registered with the given code name or null if the code name is invalid or not yet registered
+	 * @return The class info registered with the given code name or null if the code name is invalid or not yet
+	 * registered
 	 */
 	@Nullable
 	public static ClassInfo<?> getClassInfoNoError(final @Nullable String codeName) {
@@ -281,7 +285,8 @@ public abstract class Classes {
 	}
 
 	/**
-	 * Gets the class info of the given class or its closest registered superclass. This method will never return null unless <tt>c</tt> is null.
+	 * Gets the class info of the given class or its closest registered superclass. This method will never return null
+	 * unless <tt>c</tt> is null.
 	 *
 	 * @param c
 	 * @return The closest superclass's info
@@ -424,7 +429,8 @@ public abstract class Classes {
 	/**
 	 * Parses a string to get an object of the desired type.
 	 * <p>
-	 * Instead of repeatedly calling this with the same class argument, you should get a parser with {@link #getParser(Class)} and use it for parsing.
+	 * Instead of repeatedly calling this with the same class argument, you should get a parser with {@link
+	 * #getParser(Class)} and use it for parsing.
 	 * <p>
 	 * Can log an error if it returned null.
 	 *
@@ -465,7 +471,8 @@ public abstract class Classes {
 	}
 
 	/**
-	 * Gets a parser for parsing instances of the desired type from strings. The returned parser may only be used for parsing, i.e. you must not use its toString methods.
+	 * Gets a parser for parsing instances of the desired type from strings. The returned parser may only be used for
+	 * parsing, i.e. you must not use its toString methods.
 	 *
 	 * @param to
 	 * @return A parser to parse object of the desired type
@@ -496,9 +503,11 @@ public abstract class Classes {
 	}
 
 	/**
-	 * Gets a parser for an exactly known class. You should usually use {@link #getParser(Class)} instead of this method.
+	 * Gets a parser for an exactly known class. You should usually use {@link #getParser(Class)} instead of this
+	 * method.
 	 * <p>
-	 * The main benefit of this method is that it's the only class info method of Skript that can be used while Skript is initializing and thus useful for parsing configs.
+	 * The main benefit of this method is that it's the only class info method of Skript that can be used while Skript
+	 * is initializing and thus useful for parsing configs.
 	 *
 	 * @param c
 	 * @return A parser to parse object of the desired type
@@ -549,7 +558,8 @@ public abstract class Classes {
 
 	/**
 	 * @param o Any object, preferably not an array: use {@link Classes#toString(Object[], boolean)} instead.
-	 * @return String representation of the object (using a parser if found or {@link String#valueOf(Object)} otherwise).
+	 * @return String representation of the object (using a parser if found or {@link String#valueOf(Object)}
+	 * otherwise).
 	 * @see #toString(Object, StringMode)
 	 * @see #toString(Object[], boolean)
 	 * @see #toString(Object[], boolean, StringMode)
@@ -737,8 +747,8 @@ public abstract class Classes {
 
 	@Nullable
 	public static Object deserialize(final ClassInfo<?> type, InputStream value) {
-		Serializer<?> s;
-		assert (s = type.getSerializer()) != null && (!s.mustSyncDeserialization() || Bukkit.isPrimaryThread()) : type + "; " + s + "; " + Bukkit.isPrimaryThread();
+		Serializer<?> s = type.getSerializer();
+		assert s != null && (!s.mustSyncDeserialization() || Bukkit.isPrimaryThread()) : type + "; " + s + "; " + Bukkit.isPrimaryThread();
 		YggdrasilInputStream in = null;
 		try {
 			value = new SequenceInputStream(new ByteArrayInputStream(getYggdrasilStart(type)), value);
@@ -761,13 +771,13 @@ public abstract class Classes {
 	}
 
 	/**
-	 * Deserialises an object.
+	 * Deserializes an object.
 	 * <p>
-	 * This method must only be called from Bukkits main thread!
+	 * This method must only be called from Bukkit's main thread!
 	 *
 	 * @param type
 	 * @param value
-	 * @return Deserialised value or null if the input is invalid
+	 * @return Deserialized value or null if the input is invalid
 	 */
 	@Deprecated
 	@Nullable

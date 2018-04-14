@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
@@ -35,9 +39,6 @@ import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -51,6 +52,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"projectile is an arrow"})
 @Since("1.0")
 public class ExprEntity extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprEntity.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "[the] [event-]<.+>");
 	}

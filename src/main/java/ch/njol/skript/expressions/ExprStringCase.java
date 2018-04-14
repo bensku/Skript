@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,8 +32,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bensku
@@ -40,11 +41,11 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples("\"oops!\" in upper case # OOPS!")
 @Since("2.2-dev16")
 public class ExprStringCase extends SimpleExpression<String> {
+
 	private final static int UPPER = 0, LOWER = 1;
 
 	/**
-	 * Helper function which takes nullable string and
-	 * uses given mode to it.
+	 * Helper function which takes nullable string and uses given mode to it.
 	 *
 	 * @param str  Original string.
 	 * @param mode See above, UPPER or LOWER.

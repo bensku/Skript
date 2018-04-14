@@ -18,19 +18,20 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.command.Commands;
-import ch.njol.util.Callback;
-import ch.njol.util.Closeable;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.LinkedBlockingQueue;
+import ch.njol.skript.Skript;
+import ch.njol.skript.command.Commands;
+import ch.njol.util.Callback;
+import ch.njol.util.Closeable;
 
 /**
  * An {@link OfflinePlayer} that has only a name but no UUID set.
@@ -43,6 +44,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 @SuppressWarnings("null")
 public class UnresolvedOfflinePlayer implements OfflinePlayer {
+
 	private static LinkedBlockingQueue<UnresolvedOfflinePlayer> toResolve;
 	private final static Thread resolverThread;
 
@@ -82,7 +84,8 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 
 	/**
 	 * @param name     The player's name
-	 * @param callback A callback that will be run when the player has been resolved. It will be called on the resolver thread which should not be blocked.
+	 * @param callback A callback that will be run when the player has been resolved. It will be called on the resolver
+	 *                 thread which should not be blocked.
 	 */
 	public UnresolvedOfflinePlayer(final String name, final Callback<Void, OfflinePlayer> callback) {
 		this.name = name;

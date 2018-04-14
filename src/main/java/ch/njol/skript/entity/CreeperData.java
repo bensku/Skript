@@ -18,15 +18,17 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.entity.Creeper;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 /**
  * @author Peter Güttinger
  */
 public class CreeperData extends EntityData<Creeper> {
+
 	static {
 		EntityData.register(CreeperData.class, "creeper", Creeper.class, 1, "unpowered creeper", "creeper", "powered creeper");
 	}

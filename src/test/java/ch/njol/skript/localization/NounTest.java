@@ -18,16 +18,16 @@
  */
 package ch.njol.skript.localization;
 
-import static org.junit.Assert.*;
-
+import ch.njol.util.NonNullPair;
 import org.junit.Test;
 
-import ch.njol.util.NonNullPair;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Güttinger
  */
 public class NounTest {
+
 	@Test
 	public void testGetPlural() {
 		final String[][] tests = {

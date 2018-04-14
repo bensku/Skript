@@ -18,13 +18,15 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.SkriptAPIException;
+import java.util.Locale;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Locale;
+import ch.njol.skript.SkriptAPIException;
 
 public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementInfo<E> {
+
 	public Class<? extends Event>[] events;
 	public final String name;
 
@@ -42,10 +44,11 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	private String[] requiredPlugins;
 
 	/**
-	 * @param name Capitalised name of the event without leading "On" which is added automatically (Start the name with an asterisk to prevent this).
+	 * @param name     Capitalised name of the event without leading "On" which is added automatically (Start the name
+	 *                 with an asterisk to prevent this).
 	 * @param patterns
-	 * @param c The SkriptEvent's class
-	 * @param events The Bukkit-Events this SkriptEvent listens to
+	 * @param c        The SkriptEvent's class
+	 * @param events   The Bukkit-Events this SkriptEvent listens to
 	 */
 	public SkriptEventInfo(String name, final String[] patterns, final Class<E> c, final Class<? extends Event>[] events) {
 		super(patterns, c);
@@ -115,7 +118,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 
 	/**
 	 * A non critical ID remapping for syntax elements register using the a class multiple times.
-	 *
+	 * <p>
 	 * Only used for Skript's documentation.
 	 *
 	 * @param id
@@ -129,7 +132,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 
 	/**
 	 * Other plugin dependencies for a syntax element
-	 *
+	 * <p>
 	 * Only used for Skript's documentation.
 	 *
 	 * @param pluginNames

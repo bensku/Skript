@@ -18,14 +18,9 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.SkriptEventHandler;
-import ch.njol.skript.events.bukkit.ExperienceSpawnEvent;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -36,13 +31,20 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
+import ch.njol.skript.SkriptEventHandler;
+import ch.njol.skript.events.bukkit.ExperienceSpawnEvent;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Trigger;
 
 /**
  * @author Peter Güttinger
  */
 public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
+
 	static {
 		Skript.registerEvent("Experience Spawn", EvtExperienceSpawn.class, ExperienceSpawnEvent.class, "[e]xp[erience] [orb] spawn", "spawn of [a[n]] [e]xp[erience] [orb]")
 				.description("Called whenever experience is about to spawn. This is a helper event for easily being able to stop xp from spawning, as all you can currently do is cancel the event.",

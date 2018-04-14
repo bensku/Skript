@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,10 +33,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * FIXME doesn't parse - update documentation when fixed
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"distance between the player and the location (0, 0, 0) is less than 200"})
 @Since("2.0")
 public class ExprLocationAt extends SimpleExpression<Location> {
+
 	static {
 		Skript.registerExpression(ExprLocationAt.class, Location.class, ExpressionType.COMBINED,
 				"[the] (location|position) [at] [\\(][x[ ][=[ ]]]%number%, [y[ ][=[ ]]]%number%, [and] [z[ ][=[ ]]]%number%[\\)] [[(in|of) [[the] world]] %world%]");

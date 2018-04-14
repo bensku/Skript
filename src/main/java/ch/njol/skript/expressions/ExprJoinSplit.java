@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.regex.Pattern;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,10 +34,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
 		"set {_s::} to the string argument split at \",\""})
 @Since("2.1")
 public class ExprJoinSplit extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprJoinSplit.class, String.class, ExpressionType.COMBINED,
 				"(concat[enate]|join) %strings% [(with|using|by) [[the] delimiter] %-string%]",

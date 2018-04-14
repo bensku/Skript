@@ -18,13 +18,15 @@
  */
 package ch.njol.skript.lang.function;
 
-import ch.njol.skript.classes.ClassInfo;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.classes.ClassInfo;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class JavaFunction<T> extends Function<T> {
+
 	public JavaFunction(final String name, final Parameter<?>[] parameters, final ClassInfo<T> returnType, final boolean single) {
 		super(name, parameters, returnType, single);
 	}

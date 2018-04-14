@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,9 +32,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
@@ -40,6 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"rotate {_v} around vector 1, 0, 0 by 90"})
 @Since("2.2-dev28")
 public class EffVectorRotateAroundAnother extends Effect {
+
 	static {
 		Skript.registerEffect(EffVectorRotateAroundAnother.class, "rotate %vectors% around %vector% by %number% [degrees]");
 	}

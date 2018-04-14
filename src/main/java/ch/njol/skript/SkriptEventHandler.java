@@ -18,12 +18,16 @@
  */
 package ch.njol.skript;
 
-import ch.njol.skript.ScriptLoader.ScriptInfo;
-import ch.njol.skript.command.Commands;
-import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.timings.SkriptTimings;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -35,20 +39,18 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import ch.njol.skript.ScriptLoader.ScriptInfo;
+import ch.njol.skript.command.Commands;
+import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
+import ch.njol.skript.lang.Trigger;
+import ch.njol.skript.lang.function.Functions;
+import ch.njol.skript.timings.SkriptTimings;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class SkriptEventHandler {
+
 	private SkriptEventHandler() {
 	}
 
@@ -250,8 +252,7 @@ public abstract class SkriptEventHandler {
 	private final static Listener listener = new Listener() {};
 
 	/**
-	 * Registers event handlers for all events which currently loaded
-	 * triggers are using.
+	 * Registers event handlers for all events which currently loaded triggers are using.
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	static void registerBukkitEvents() {

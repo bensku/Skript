@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
@@ -34,14 +43,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.SingleItemIterator;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
@@ -51,6 +52,7 @@ import java.util.NoSuchElementException;
 @Examples({"message \"the ID of %type of the clicked block% is %id of the clicked block%.\""})
 @Since("1.0")
 public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
+
 	static {
 		Skript.registerExpression(ExprIdOf.class, Integer.class, ExpressionType.PROPERTY, "[the] id(1¦s|) of %itemtype%", "%itemtype%'[s] id(1¦s|)");
 	}
@@ -86,7 +88,7 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 				r.add(d.getId());
 			}
 		}
-		return r.toArray(new Integer[r.size()]);
+		return r.toArray(new Integer[0]);
 	}
 
 	private boolean changeItemStack;

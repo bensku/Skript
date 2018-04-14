@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @NoDoc
 public class EffExceptionDebug extends Effect {
+
 	static {
 		Skript.registerEffect(EffExceptionDebug.class, "cause [an] exception");
 	}

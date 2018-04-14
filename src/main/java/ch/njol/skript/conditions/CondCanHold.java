@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -30,10 +35,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"player has enough space for 64 feathers"})
 @Since("1.0")
 public class CondCanHold extends Condition {
+
 	static {
 		Skript.registerCondition(CondCanHold.class,
 				"%inventories% (can hold|ha(s|ve) [enough] space (for|to hold)) %itemtypes%",

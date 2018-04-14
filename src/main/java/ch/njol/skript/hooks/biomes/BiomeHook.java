@@ -18,17 +18,18 @@
  */
 package ch.njol.skript.hooks.biomes;
 
+import java.io.IOException;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.Hook;
 import ch.njol.skript.hooks.biomes.BiomeMapUtil.To19Mapping;
 import ch.njol.skript.util.EnumUtils;
 
-import java.io.IOException;
-
 /**
  * Hook for multi version biomes.
  */
 public class BiomeHook extends Hook<Skript> {
+
 	@SuppressWarnings("null")
 	public static BiomeHook instance;
 	@SuppressWarnings("null")

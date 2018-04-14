@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.bukkit.event.weather.WeatherEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,10 +34,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.util.Kleenean;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.bukkit.event.weather.WeatherEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"is raining in \"world\" or \"world2\""})
 @Since("1.0")
 public class CondWeather extends Condition {
+
 	static {
 		Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
 	}

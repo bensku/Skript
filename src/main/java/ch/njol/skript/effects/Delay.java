@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,13 +40,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 /**
  * @author Peter Güttinger
@@ -50,6 +51,7 @@ import java.util.WeakHashMap;
 		"wait a tick"})
 @Since("1.4")
 public class Delay extends Effect {
+
 	static {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}

@@ -18,13 +18,6 @@
  */
 package ch.njol.skript;
 
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.Version;
-import ch.njol.util.coll.iterator.EnumerationIterable;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -34,12 +27,22 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.Version;
+import ch.njol.util.coll.iterator.EnumerationIterable;
+
 /**
- * Utility class for Skript addons. Use {@link Skript#registerAddon(JavaPlugin)} to create a SkriptAddon instance for your plugin.
+ * Utility class for Skript addons. Use {@link Skript#registerAddon(JavaPlugin)} to create a SkriptAddon instance for
+ * your plugin.
  *
  * @author Peter Güttinger
  */
 public final class SkriptAddon {
+
 	public final JavaPlugin plugin;
 	public final Version version;
 	private final String name;
@@ -78,18 +81,18 @@ public final class SkriptAddon {
 	 * Loads classes of the plugin by package. Useful for registering many syntax elements like Skript does it.
 	 *
 	 * @param basePackage The base package to add to all sub packages, e.g. <tt>"ch.njol.skript"</tt>.
-	 * @param subPackages Which subpackages of the base package should be loaded, e.g. <tt>"expressions", "conditions", "effects"</tt>. Subpackages of these packages will be loaded
-	 *            as well. Use an empty array to load all subpackages of the base package.
-	 * @throws IOException If some error occurred attempting to read the plugin's jar file.
+	 * @param subPackages Which subpackages of the base package should be loaded, e.g. <tt>"expressions", "conditions",
+	 *                    "effects"</tt>. Subpackages of these packages will be loaded as well. Use an empty array to
+	 *                    load all subpackages of the base package.
 	 * @return This SkriptAddon
+	 * @throws IOException If some error occurred attempting to read the plugin's jar file.
 	 */
 	public SkriptAddon loadClasses(String basePackage, final String... subPackages) throws IOException {
 		assert subPackages != null;
-		final JarFile jar = new JarFile(getFile());
 		for (int i = 0; i < subPackages.length; i++)
 			subPackages[i] = subPackages[i].replace('.', '/') + "/";
 		basePackage = basePackage.replace('.', '/') + "/";
-		try {
+		try (JarFile jar = new JarFile(getFile())) {
 			for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
 				if (e.getName().startsWith(basePackage) && e.getName().endsWith(".class")) {
 					boolean load = subPackages.length == 0;
@@ -111,10 +114,6 @@ public final class SkriptAddon {
 					}
 				}
 			}
-		} finally {
-			try {
-				jar.close();
-			} catch (final IOException ignored) {}
 		}
 		return this;
 	}
@@ -123,8 +122,9 @@ public final class SkriptAddon {
 	private String languageFileDirectory = null;
 
 	/**
-	 * Makes Skript load language files from the specified directory, e.g. "lang" or "skript lang" if you have a lang folder yourself. Localised files will be read from the
-	 * plugin's jar and the plugin's data folder, but the default English file is only taken from the jar and <b>must</b> exist!
+	 * Makes Skript load language files from the specified directory, e.g. "lang" or "skript lang" if you have a lang
+	 * folder yourself. Localised files will be read from the plugin's jar and the plugin's data folder, but the default
+	 * English file is only taken from the jar and <b>must</b> exist!
 	 *
 	 * @param directory Directory name
 	 * @return This SkriptAddon
@@ -149,8 +149,9 @@ public final class SkriptAddon {
 	private File file = null;
 
 	/**
-	 * @return The jar file of the plugin. The first invocation of this method uses reflection to invoke the protected method {@link JavaPlugin#getFile()} to get the plugin's jar
-	 *         file. The file is then cached and returned upon subsequent calls to this method to reduce usage of reflection.
+	 * @return The jar file of the plugin. The first invocation of this method uses reflection to invoke the protected
+	 * method {@link JavaPlugin#getFile()} to get the plugin's jar file. The file is then cached and returned upon
+	 * subsequent calls to this method to reduce usage of reflection.
 	 */
 	@Nullable
 	public File getFile() {

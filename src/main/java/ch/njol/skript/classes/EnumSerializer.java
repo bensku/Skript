@@ -18,9 +18,10 @@
  */
 package ch.njol.skript.classes;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.yggdrasil.ClassResolver;
 import ch.njol.yggdrasil.Fields;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Mainly kept for backwards compatibility, but also serves as {@link ClassResolver} for enums.
@@ -28,6 +29,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public class EnumSerializer<T extends Enum<T>> extends Serializer<T> {
+
 	private final Class<T> c;
 
 	public EnumSerializer(final Class<T> c) {

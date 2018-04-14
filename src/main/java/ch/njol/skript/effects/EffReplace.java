@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.regex.Matcher;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -31,12 +38,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.regex.Matcher;
 
 /**
  * @author Peter Güttinger
@@ -48,11 +49,12 @@ import java.util.regex.Matcher;
 		"replace every \"&\" with \"§\" in line 1",
 		"# The following acts as a simple chat censor, but it will e.g. censor mass, hassle, assassin, etc. as well:",
 		"on chat:",
-		"	replace all \"fuck\", \"bitch\" and \"ass\" with \"****\" in the message",
-		" ",
+		"\treplace all \"fuck\", \"bitch\" and \"ass\" with \"****\" in the message",
+		"",
 		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
 @Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory)")
 public class EffReplace extends Effect {
+
 	static {
 		Skript.registerEffect(EffReplace.class,
 				"replace (all|every|) %strings% in %strings% with %string%",

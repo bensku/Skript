@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public abstract class SoundUtils {
+
 	private SoundUtils() {}
 
 	static {

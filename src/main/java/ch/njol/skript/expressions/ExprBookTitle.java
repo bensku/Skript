@@ -18,17 +18,18 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Book Title")
 @Description("The title of a book")
@@ -37,6 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tmessage \"Book Title: %title of event-item%\""})
 @Since("2.2-dev31")
 public class ExprBookTitle extends SimplePropertyExpression<ItemStack, String> {
+
 	static {
 		register(ExprBookTitle.class, String.class, "(book name|title)", "itemstack");
 	}

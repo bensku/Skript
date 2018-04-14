@@ -18,14 +18,16 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.bukkitutil.BiomeMappings;
 import org.bukkit.block.Biome;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.bukkitutil.BiomeMappings;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class BiomeUtils {
+
 	private BiomeUtils() {}
 
 	@Nullable

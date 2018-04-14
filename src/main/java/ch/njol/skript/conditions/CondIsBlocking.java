@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.Player;
+
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.entity.Player;
 
 /**
  * @author Peter Güttinger
@@ -36,6 +37,7 @@ import org.bukkit.entity.Player;
 		"\tdamage attacker by 0.5 hearts"})
 @Since("<i>unknown</i> (before 2.1)")
 public class CondIsBlocking extends PropertyCondition<Player> {
+
 	static {
 		register(CondIsBlocking.class, "(blocking|defending)", "players");
 	}

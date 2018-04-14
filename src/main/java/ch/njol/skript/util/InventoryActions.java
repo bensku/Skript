@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * Inventory action utils...
  */
 public class InventoryActions {
+
 	private final static EnumUtils<InventoryAction> util = new EnumUtils<>(InventoryAction.class, "inventory actions");
 
 	@Nullable

@@ -18,27 +18,29 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
+import java.util.HashMap;
+
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
+import ch.njol.skript.Skript;
 
 /**
  * @author Peter Güttinger
  */
 public class Adjective extends Message {
+
 	// at least in German adjectives behave differently with a definite article. Cases are still not supported though and will likely never be.
 	private final static int DEFINITE_ARTICLE = -100;
 	private final static String DEFINITE_ARTICLE_TOKEN = "+";
-	
+
 	private final HashMap<Integer, String> genders = new HashMap<>();
 	@Nullable
 	private String def;
-	
+
 	public Adjective(final String key) {
 		super(key);
 	}
-	
+
 	@Override
 	protected void onValueChange() {
 		genders.clear();
@@ -69,7 +71,7 @@ public class Adjective extends Message {
 			c = c2;
 		} while (c < e);
 	}
-	
+
 	@Override
 	public String toString() {
 		validate();
@@ -77,7 +79,7 @@ public class Adjective extends Message {
 			Skript.warning("Invalid use of Adjective.toString()");
 		return "" + def;
 	}
-	
+
 	public String toString(int gender, final int flags) {
 		validate();
 		if ((flags & Language.F_DEFINITE_ARTICLE) != 0 && genders.containsKey(DEFINITE_ARTICLE))
@@ -89,7 +91,7 @@ public class Adjective extends Message {
 			return a;
 		return "" + def;
 	}
-	
+
 	public static String toString(final Adjective[] adjectives, final int gender, final int flags, final boolean and) {
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0; i < adjectives.length; i++) {
@@ -103,7 +105,7 @@ public class Adjective extends Message {
 		}
 		return "" + b.toString();
 	}
-	
+
 	public String toString(final Noun n, final int flags) {
 		return n.toString(this, flags);
 	}

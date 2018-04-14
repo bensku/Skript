@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
+import java.util.Random;
+
 import org.bukkit.TreeSpecies;
 import org.bukkit.entity.Boat;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Random;
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 public class BoatData extends EntityData<Boat> {
+
 	static {
 		// It will only register for 1.10+,
 		// See SimpleEntityData if 1.9 or lower.

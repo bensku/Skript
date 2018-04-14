@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -33,10 +38,6 @@ import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -46,6 +47,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set the player's food level to 10"})
 @Since("1.0")
 public class ExprFoodLevel extends PropertyExpression<Player, Float> {
+
 	static {
 		Skript.registerExpression(ExprFoodLevel.class, Float.class, ExpressionType.PROPERTY,
 				"[the] (food|hunger)[[ ](level|met(er|re)|bar)] [of %player%]",

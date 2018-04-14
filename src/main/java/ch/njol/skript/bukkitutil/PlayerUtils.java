@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.util.Task;
-import com.google.common.collect.ImmutableList;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -35,12 +26,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.google.common.collect.ImmutableList;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.util.Task;
+
 /**
  * TODO check all updates and find out which ones are not required
  *
  * @author Peter Güttinger
  */
 public abstract class PlayerUtils {
+
 	private PlayerUtils() {}
 
 	private final static Set<Player> inviUpdate = new HashSet<>();

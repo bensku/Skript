@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.localization.ArgsMessage;
 import org.bukkit.Location;
 import org.bukkit.entity.ExperienceOrb;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.localization.ArgsMessage;
 
 /**
  * @author Peter Güttinger
  */
 public class XpOrbData extends EntityData<ExperienceOrb> {
+
 	static {
 		EntityData.register(XpOrbData.class, "xporb", ExperienceOrb.class, "xp-orb");
 	}

@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.classes.data;
 
+import java.util.Calendar;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.function.FunctionEvent;
@@ -29,13 +37,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Calendar;
 
 /**
  * FIXME generate/write documentation
@@ -44,6 +45,7 @@ import java.util.Calendar;
  */
 @SuppressWarnings("null")
 public class DefaultFunctions {
+
 	private static String s(final double n) {
 		return StringUtils.toString(n, 4);
 	}

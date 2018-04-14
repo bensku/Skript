@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,8 +32,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -46,6 +47,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\t\t# ... actual command trigger here ..."})
 @Since("2.0")
 public class CondDate extends Condition {
+
 	static {
 		Skript.registerCondition(CondDate.class,
 				"%date% (was|were)( more|(n't| not) less) than %timespan% [ago]",

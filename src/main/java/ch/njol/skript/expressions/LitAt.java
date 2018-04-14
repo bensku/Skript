@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
@@ -26,14 +29,13 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @NoDoc
 public class LitAt extends SimpleLiteral<Direction> {
+
 	static {
 		Skript.registerExpression(LitAt.class, Direction.class, ExpressionType.SIMPLE, "at");
 	}

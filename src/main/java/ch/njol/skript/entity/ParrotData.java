@@ -18,16 +18,18 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Parrot.Variant;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.concurrent.ThreadLocalRandom;
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 public class ParrotData extends EntityData<Parrot> {
+
 	// Cached variants, values() copies array each time it is called
 	@SuppressWarnings("null") // If null, ParrotData is not registered
 	private static Object[] variants;
@@ -41,8 +43,7 @@ public class ParrotData extends EntityData<Parrot> {
 	}
 
 	/**
-	 * Parrot variant. To avoid literally crashing on MC<1.12,
-	 * we just map enum values to int.
+	 * Parrot variant. To avoid literally crashing on MC<1.12, we just map enum values to int.
 	 */
 	private int variant;
 

@@ -18,19 +18,6 @@
  */
 package ch.njol.skript;
 
-import ch.njol.skript.localization.FormattedMessage;
-import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.skript.util.Task;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
-
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
@@ -47,10 +34,27 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.xml.bind.DatatypeConverter;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import ch.njol.skript.localization.FormattedMessage;
+import ch.njol.skript.localization.Message;
+import ch.njol.skript.util.ExceptionUtils;
+import ch.njol.skript.util.Task;
+
 /**
  * Skript's new updater, which uses Github API.
  */
 public class Updater {
+
 	public static final String RELEASES_URL = "https://api.github.com/repos/bensku/Skript/releases";
 
 	@Nullable
@@ -107,6 +111,7 @@ public class Updater {
 	 */
 	@NonNullByDefault(value = false)
 	public class ResponseEntry {
+
 		public String url;
 		public String assets_url;
 		public String upload_url;
@@ -122,6 +127,7 @@ public class Updater {
 		public String published_at;
 
 		public class AssetsEntry {
+
 			public int size;
 			public int download_count;
 			public String browser_download_url;
@@ -136,6 +142,7 @@ public class Updater {
 		}
 
 		public class Author {
+
 			public String login;
 			public int id;
 		}
@@ -179,6 +186,7 @@ public class Updater {
 	}
 
 	public static class CheckerTask extends Task {
+
 		public CheckerTask(Plugin plugin, long period) {
 			super(plugin, 1, period, true); // This is asynchronous task
 			CommandSender sender = executor.get();
@@ -301,6 +309,7 @@ public class Updater {
 	}
 
 	public static class DownloaderTask extends Task {
+
 		public DownloaderTask(Plugin plugin) {
 			super(plugin, 0, true); // This is asynchronous task
 			CommandSender sender = executor.get();

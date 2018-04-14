@@ -18,8 +18,8 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.coll.CollectionUtils;
+import java.util.Arrays;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +27,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.material.Directional;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Arrays;
+import ch.njol.skript.Skript;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * TODO !Update with every version [blocks] - also update aliases-*.sk
@@ -36,6 +37,7 @@ import java.util.Arrays;
  */
 @SuppressWarnings("deprecation")
 public abstract class BlockUtils {
+
 	private final static BlockFace[] torch = new BlockFace[]{
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN
 	};
@@ -94,13 +96,14 @@ public abstract class BlockUtils {
 	};
 
 	/**
-	 * @param b
-	 * @param type
-	 * @param dataMin The minimum data value from 0 to 15, can be -1
-	 * @param dataMax The maximum data value from 0 to 15, can be -1
-	 * @param applyPhysics TODO add effect that sets block without physics checks
+	 * @param b            The block
+	 * @param type         The target block type
+	 * @param dataMin      The minimum data value from 0 to 15, can be -1
+	 * @param dataMax      The maximum data value from 0 to 15, can be -1
+	 * @param applyPhysics False to cancel physics on the changed block
 	 * @return Whether the block could be set successfully
 	 */
+	// TODO add effect that sets block without physics checks
 	public static boolean set(final Block b, final int type, byte dataMin, byte dataMax, final boolean applyPhysics) {
 		final boolean any = dataMin == -1 && dataMax == -1;
 		if (dataMin == -1)

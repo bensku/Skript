@@ -18,18 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Testable;
-import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.ChestedHorse;
@@ -43,6 +31,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Testable;
+import ch.njol.util.Kleenean;
+
 /**
  * @author Peter Güttinger
  */
@@ -52,6 +53,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"equip player with all diamond armor"})
 @Since("1.0")
 public class EffEquip extends Effect implements Testable {
+
 	static {
 		Skript.registerEffect(EffEquip.class,
 				"equip [%livingentity%] with %itemtypes%",

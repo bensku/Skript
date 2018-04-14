@@ -18,17 +18,18 @@
  */
 package ch.njol.skript.util;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 /**
  * @author Peter Güttinger
  */
 public class Version implements Serializable, Comparable<Version> {
+
 	private final static long serialVersionUID = 8687040355286333293L;
 
 	private final int[] version = new int[3];
@@ -114,7 +115,8 @@ public class Version implements Serializable, Comparable<Version> {
 	}
 
 	/**
-	 * @return Whether this is a stable version, i.e. a simple version number without any additional details (like alpha/beta/etc.)
+	 * @return Whether this is a stable version, i.e. a simple version number without any additional details (like
+	 * alpha/beta/etc.)
 	 */
 	public boolean isStable() {
 		return postfix == null;

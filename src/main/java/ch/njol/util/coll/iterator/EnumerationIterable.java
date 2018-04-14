@@ -18,10 +18,10 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Enumeration;
 import java.util.Iterator;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * TODO this should actually only be an Iterator
@@ -29,6 +29,7 @@ import java.util.Iterator;
  * @author Peter Güttinger
  */
 public class EnumerationIterable<T> implements Iterable<T> {
+
 	@Nullable
 	private final Enumeration<? extends T> e;
 

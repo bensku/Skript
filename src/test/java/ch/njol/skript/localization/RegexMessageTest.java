@@ -24,6 +24,7 @@ import org.junit.Test;
  * @author Peter Güttinger
  */
 public class RegexMessageTest {
+
 	@Test
 	public void test() {
 		final String[] tests = {"", "!", "a", "()", "^$", "$^", "\n", "\r\n"};

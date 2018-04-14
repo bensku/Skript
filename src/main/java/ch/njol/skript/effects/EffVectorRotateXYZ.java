@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,9 +32,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
@@ -42,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"rotate {_v} around z-axis by 90"})
 @Since("2.2-dev28")
 public class EffVectorRotateXYZ extends Effect {
+
 	static {
 		Skript.registerEffect(EffVectorRotateXYZ.class, "rotate %vectors% around (1¦x|2¦y|3¦z)(-| )axis by %number% [degrees]");
 	}

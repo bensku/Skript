@@ -18,20 +18,21 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.CollectionUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.variables.Variables;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -39,8 +40,7 @@ import java.util.List;
 public class VillagerData extends EntityData<Villager> {
 
 	/**
-	 * Professions can be for zombies also. These are the ones which are only
-	 * for villagers.
+	 * Professions can be for zombies also. These are the ones which are only for villagers.
 	 */
 	private static List<Profession> professions;
 

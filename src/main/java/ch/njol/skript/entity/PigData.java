@@ -18,15 +18,17 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.entity.Pig;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 /**
  * @author Peter Güttinger
  */
 public class PigData extends EntityData<Pig> {
+
 	static {
 		EntityData.register(PigData.class, "pig", Pig.class, 1, "unsaddled pig", "pig", "saddled pig");
 	}

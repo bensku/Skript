@@ -18,32 +18,6 @@
  */
 package ch.njol.skript.registrations;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assume.*;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Server;
-import org.bukkit.block.Biome;
-import org.bukkit.entity.Horse.Variant;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Snowball;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.junit.Before;
-import org.junit.Test;
-import org.objenesis.ObjenesisHelper;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.data.BukkitClasses;
 import ch.njol.skript.classes.data.BukkitEventValues;
@@ -65,11 +39,37 @@ import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.WeatherType;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Server;
+import org.bukkit.block.Biome;
+import org.bukkit.entity.Horse.Variant;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Snowball;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.junit.Before;
+import org.junit.Test;
+import org.objenesis.ObjenesisHelper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * @author Peter Güttinger
  */
 public class ClassesTest {
+
 	@SuppressWarnings({"resource", "deprecation"})
 	@Before
 	public void before() throws Exception {

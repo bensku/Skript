@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.effects.mirre;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -31,9 +35,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.ScriptOptions;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Loop Version")
 @Description("Changes loops to emulate given Skript version's behaviour.")
@@ -41,13 +42,14 @@ import org.eclipse.jdt.annotation.Nullable;
 		"use new loops"})
 @Since("<i>unknown</i> (2.2)")
 public class EffScriptOptionLoops extends Effect {
+
 	static {
 		Skript.registerEffect(EffScriptOptionLoops.class, "use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
 	}
 
 	@SuppressWarnings("null")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE) {
 			Skript.error("Current event is not Script Event or you have a delay before the script option. Defaulting to 2.2 loops.", ErrorQuality.SEMANTIC_ERROR);
 			ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), true);
@@ -57,14 +59,12 @@ public class EffScriptOptionLoops extends Effect {
 		return true;
 	}
 
+	@Override
+	protected void execute(final @NonNull Event e) {}
+
 	@NonNull
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(final @Nullable Event e, final boolean debug) {
 		return "Script Option Loops";
-	}
-
-	@Override
-	protected void execute(final @NonNull Event e) {
-
 	}
 }

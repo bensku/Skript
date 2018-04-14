@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -30,10 +35,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -43,13 +44,14 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples("add the chunk at the player to {protected chunks::*}")
 @Since("2.0")
 public class ExprChunk extends PropertyExpression<Location, Chunk> {
+
 	static {
 		Skript.registerExpression(ExprChunk.class, Chunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<Location> locations;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -63,12 +65,12 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 		setExpr(locations);
 		return true;
 	}
-	
+
 	@Override
 	protected Chunk[] get(final Event e, final Location[] source) {
 		return get(source, Location::getChunk);
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -76,11 +78,11 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 			return new Class[0];
 		return null;
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.RESET;
-		
+
 		final Chunk[] cs = getArray(e);
 		for (final Chunk c : cs)
 			c.getWorld().regenerateChunk(c.getX(), c.getZ());

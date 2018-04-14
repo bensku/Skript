@@ -25,6 +25,7 @@ import org.bukkit.event.HandlerList;
  * @author Peter Güttinger
  */
 public class EffectCommandEvent extends CommandEvent {
+
 	public EffectCommandEvent(final CommandSender sender, final String command) {
 		super(sender, command, new String[0]);
 	}

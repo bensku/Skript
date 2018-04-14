@@ -18,22 +18,6 @@
  */
 package ch.njol.skript.hooks.regions;
 
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
-import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
-import net.sacredlabyrinth.Phaed.PreciousStones.field.Field;
-import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldFlag;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -45,7 +29,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.util.AABB;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
+import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
+import net.sacredlabyrinth.Phaed.PreciousStones.field.Field;
+import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldFlag;
+
 public class PreciousStonesHook extends RegionsPlugin<PreciousStones> {
+
 	public PreciousStonesHook() throws IOException {}
 
 	@Override
@@ -90,6 +92,7 @@ public class PreciousStonesHook extends RegionsPlugin<PreciousStones> {
 
 	@YggdrasilID("PreciousStonesRegion")
 	public final class PreciousStonesRegion extends Region {
+
 		private transient Field field;
 
 		public PreciousStonesRegion(final Field field) {

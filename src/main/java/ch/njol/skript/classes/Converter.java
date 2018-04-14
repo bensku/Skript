@@ -18,9 +18,10 @@
  */
 package ch.njol.skript.classes;
 
-import ch.njol.skript.registrations.Converters;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.registrations.Converters;
 
 /**
  * used to convert data from one type to another.
@@ -31,6 +32,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @see Converters#registerConverter(Class, Class, Converter)
  */
 public interface Converter<F, T> {
+
 	int NO_LEFT_CHAINING = 1;
 	int NO_RIGHT_CHAINING = 2;
 	int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
@@ -46,6 +48,7 @@ public interface Converter<F, T> {
 	@SuppressWarnings("null")
 	@NonNullByDefault
 	final class ConverterInfo<F, T> {
+
 		public final Class<F> from;
 		public final Class<T> to;
 		public final Converter<F, T> converter;
@@ -69,6 +72,7 @@ public interface Converter<F, T> {
 	T convert(F f);
 
 	final class ConverterUtils {
+
 		public static <F, T> Converter<?, T> createInstanceofConverter(final ConverterInfo<F, T> conv) {
 			return createInstanceofConverter(conv.from, conv.converter);
 		}

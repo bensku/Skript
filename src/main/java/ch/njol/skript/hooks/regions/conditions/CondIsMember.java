@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.hooks.regions.conditions;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,9 +32,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -45,6 +46,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tsend \"%player% just entered %region%!\" to all members of the region"})
 @Since("2.1")
 public class CondIsMember extends Condition {
+
 	static {
 		Skript.registerCondition(CondIsMember.class,
 				"%offlineplayers% (is|are) (0¦[a] member|1¦[(the|an)] owner) of [[the] region] %regions%",

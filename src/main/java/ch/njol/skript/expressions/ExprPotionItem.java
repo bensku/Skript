@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -30,14 +39,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Simple interface for creating vanilla potions (if supported by server).
@@ -49,6 +50,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples("strong splash potion of instant damage")
 @Since("unknown (2.2)")
 public class ExprPotionItem extends SimpleExpression<ItemType> {
+
 	private static final String POTION_MODS = "[(0¦(regular|normal)|1¦(strong|upgraded|level 2)|2¦(extended|long)) ][(20¦(splash|exploding)|40¦lingering) ]";
 
 	static {

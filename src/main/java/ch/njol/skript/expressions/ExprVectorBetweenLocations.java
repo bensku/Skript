@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,10 +33,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
@@ -41,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set {_v} to vector between {_loc1} and {_loc2}"})
 @Since("2.2-dev28")
 public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
+
 	static {
 		Skript.registerExpression(ExprVectorBetweenLocations.class, Vector.class, ExpressionType.SIMPLE, "vector (from|between) %location% (to|and) %location%");
 	}

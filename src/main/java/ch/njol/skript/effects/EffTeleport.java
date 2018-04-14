@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,14 +38,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -47,6 +48,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"teleport the attacker to the victim"})
 @Since("1.0")
 public class EffTeleport extends Effect {
+
 	static {
 		Skript.registerEffect(EffTeleport.class, "teleport %entities% (to|%direction%) %location%");
 	}
@@ -96,7 +98,7 @@ public class EffTeleport extends Effect {
 	}
 
 	/**
-	 * @param yaw Notch-yaw
+	 * @param yaw   Notch-yaw
 	 * @param pitch Notch-pitch
 	 * @return Whether the given pitch and yaw represent a cartesian coordinate direction
 	 */

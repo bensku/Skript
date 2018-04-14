@@ -18,16 +18,17 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -40,6 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\t\tset the loop-player's compass target to location of {compass target.%loop-player%}"})
 @Since("2.0")
 public class ExprCompassTarget extends SimplePropertyExpression<Player, Location> {
+
 	static {
 		register(ExprCompassTarget.class, Location.class, "compass target", "players");
 	}

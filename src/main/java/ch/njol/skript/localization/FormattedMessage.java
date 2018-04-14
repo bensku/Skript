@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
-
 import java.util.IllegalFormatException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import ch.njol.skript.Skript;
+
 public final class FormattedMessage extends Message {
+
 	private final Object[] args;
 
 	/**

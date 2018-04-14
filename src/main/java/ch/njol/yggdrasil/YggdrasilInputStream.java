@@ -18,8 +18,7 @@
  */
 package ch.njol.yggdrasil;
 
-import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
-import org.eclipse.jdt.annotation.Nullable;
+import static ch.njol.yggdrasil.Tag.*;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,37 +27,39 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.njol.yggdrasil.Tag.*;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
 public abstract class YggdrasilInputStream implements Closeable {
-	
+
 	protected final Yggdrasil yggdrasil;
-	
+
 	protected YggdrasilInputStream(final Yggdrasil yggdrasil) {
 		this.yggdrasil = yggdrasil;
 	}
-	
+
 	// Tag
-	
+
 	protected abstract Tag readTag() throws IOException;
-	
+
 	// Primitives
-	
+
 	protected abstract Object readPrimitive(Tag type) throws IOException;
-	
+
 	protected abstract Object readPrimitive_(Tag type) throws IOException;
-	
+
 	// String
-	
+
 	protected abstract String readString() throws IOException;
-	
+
 	// Array
-	
+
 	protected abstract Class<?> readArrayComponentType() throws IOException;
-	
+
 	protected abstract int readArrayLength() throws IOException;
-	
-	private final void readArrayContents(final Object array) throws IOException {
+
+	private void readArrayContents(final Object array) throws IOException {
 		if (array.getClass().getComponentType().isPrimitive()) {
 			final int length = Array.getLength(array);
 			final Tag type = getType(array.getClass().getComponentType());
@@ -71,15 +72,15 @@ public abstract class YggdrasilInputStream implements Closeable {
 			}
 		}
 	}
-	
+
 	// Enum
-	
+
 	protected abstract Class<?> readEnumType() throws IOException;
-	
+
 	protected abstract String readEnumID() throws IOException;
-	
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private final Object readEnum() throws IOException {
+	private Object readEnum() throws IOException {
 		final Class<?> c = readEnumType();
 		final String id = readEnumID();
 		if (Enum.class.isAssignableFrom(c)) {
@@ -96,24 +97,24 @@ public abstract class YggdrasilInputStream implements Closeable {
 			throw new StreamCorruptedException(c + " is not an enum type");
 		}
 	}
-	
+
 	// Class
-	
+
 	protected abstract Class<?> readClass() throws IOException;
-	
+
 	// Reference
-	
+
 	protected abstract int readReference() throws IOException;
-	
+
 	// generic Object
-	
+
 	protected abstract Class<?> readObjectType() throws IOException;
-	
+
 	protected abstract short readNumFields() throws IOException;
-	
+
 	protected abstract String readFieldID() throws IOException;
-	
-	private final Fields readFields() throws IOException {
+
+	private Fields readFields() throws IOException {
 		final Fields fields = new Fields(yggdrasil);
 		final short numFields = readNumFields();
 		for (int i = 0; i < numFields; i++) {
@@ -126,17 +127,17 @@ public abstract class YggdrasilInputStream implements Closeable {
 		}
 		return fields;
 	}
-	
+
 	// any Objects
-	
+
 	private final List<Object> readObjects = new ArrayList<>();
-	
+
 	@Nullable
 	public final Object readObject() throws IOException {
 		final Tag t = readTag();
 		return readObject(t);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public final <T> T readObject(final Class<T> expectedType) throws IOException {
@@ -146,10 +147,10 @@ public abstract class YggdrasilInputStream implements Closeable {
 			throw new StreamCorruptedException("Object " + o + " is of " + o.getClass() + " but expected " + expectedType);
 		return (T) o;
 	}
-	
+
 	@SuppressWarnings({"rawtypes", "unchecked", "null", "unused"})
 	@Nullable
-	private final Object readObject(final Tag t) throws IOException {
+	private Object readObject(final Tag t) throws IOException {
 		if (t == T_NULL)
 			return null;
 		if (t == T_REFERENCE) {
@@ -237,7 +238,7 @@ public abstract class YggdrasilInputStream implements Closeable {
 		readObjects.add(o);
 		return o;
 	}
-	
+
 //	private final static class Validation implements Comparable<Validation> {
 //		private final ObjectInputValidation v;
 //		private final int prio;
@@ -272,5 +273,5 @@ public abstract class YggdrasilInputStream implements Closeable {
 //			v.validate();
 //		validations.clear(); // if multiple objects are written to the stream this method will be called multiple times
 //	}
-	
+
 }

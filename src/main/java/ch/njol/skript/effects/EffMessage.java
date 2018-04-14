@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -49,10 +48,10 @@ import ch.njol.util.Kleenean;
 		"message \"This message is a distraction. Mwahaha!\"",
 		"send \"Your kill streak is %{kill streak.%player%}%.\" to player",
 		"if the targeted entity exists:",
-		"	message \"You're currently looking at a %type of the targeted entity%!\""})
+		"\tmessage \"You're currently looking at a %type of the targeted entity%!\""})
 @Since("1.0, 2.2-dev26 (advanced features)")
 public class EffMessage extends Effect {
-	
+
 	static {
 		Skript.registerEffect(EffMessage.class, "(message|send [message[s]]) %strings% [to %commandsenders%]");
 	}
@@ -68,11 +67,11 @@ public class EffMessage extends Effect {
 
 	@SuppressWarnings("null")
 	private Expression<CommandSender> recipients;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		messages = (Expression<String>[]) (exprs[0] instanceof ExpressionList ? ((ExpressionList) exprs[0]).getExpressions() : new Expression[] {exprs[0]});
+		messages = (Expression<String>[]) (exprs[0] instanceof ExpressionList ? ((ExpressionList) exprs[0]).getExpressions() : new Expression[]{exprs[0]});
 		messageExpr = (Expression<String>) exprs[0];
 		recipients = (Expression<CommandSender>) exprs[1];
 		return true;
@@ -85,7 +84,7 @@ public class EffMessage extends Effect {
 			for (CommandSender sender : recipients.getArray(e)) {
 				if (message instanceof VariableString && sender instanceof Player) { // this could contain json formatting
 					List<MessageComponent> components = ((VariableString) message).getMessageComponents(e);
-					((Player) sender).spigot().sendMessage(BungeeConverter.convert(components.toArray(new MessageComponent[components.size()])));
+					((Player) sender).spigot().sendMessage(BungeeConverter.convert(components.toArray(new MessageComponent[0])));
 				} else {
 					String string = message.getSingle(e);
 					if (string != null)

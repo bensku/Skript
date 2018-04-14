@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.hooks.chat.expressions;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,9 +32,6 @@ import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"set the player's prefix to \"[<red>Admin<reset>] \""})
 @Since("2.0")
 public class ExprPrefixSuffix extends SimplePropertyExpression<Player, String> {
+
 	static {
 		register(ExprPrefixSuffix.class, String.class, "[chat] (1¦prefix|2¦suffix)", "players");
 	}

@@ -18,14 +18,15 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.Iterator;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.function.EffFunctionCall;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Iterator;
 
 /**
  * Supertype of conditions and effects
@@ -35,6 +36,7 @@ import java.util.Iterator;
  * @see Effect
  */
 public abstract class Statement extends TriggerItem implements SyntaxElement {
+
 	@SuppressWarnings({"rawtypes", "unchecked", "null"})
 	@Nullable
 	public static Statement parse(final String s, final String defaultError) {
@@ -57,8 +59,8 @@ public abstract class Statement extends TriggerItem implements SyntaxElement {
 	}
 
 	/**
-	 * Parser instance which is being used or was used to parse this element.
-	 * Note that this variable is naturally not used for static methods.
+	 * Parser instance which is being used or was used to parse this element. Note that this variable is naturally not
+	 * used for static methods.
 	 */
 	@SuppressWarnings("null")
 	protected ParserInstance pi;

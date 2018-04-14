@@ -18,18 +18,19 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Noun;
-import ch.njol.util.coll.CollectionUtils;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.localization.Noun;
+import ch.njol.util.coll.CollectionUtils;
 
 public enum StructureType {
 	TREE(TreeType.TREE, TreeType.BIG_TREE, TreeType.REDWOOD, TreeType.TALL_REDWOOD, TreeType.MEGA_REDWOOD,

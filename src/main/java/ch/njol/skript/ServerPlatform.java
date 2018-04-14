@@ -19,8 +19,7 @@
 package ch.njol.skript;
 
 /**
- * Represents all server platforms that Skript runs on. Only some of the
- * platforms are "officially" supported, though.
+ * Represents all server platforms that Skript runs on. Only some of the platforms are "officially" supported, though.
  */
 public enum ServerPlatform {
 	/**
@@ -39,14 +38,12 @@ public enum ServerPlatform {
 	BUKKIT_SPIGOT("Spigot", true, true),
 
 	/**
-	 * Paper Minecraft server, which is a Spigot fork with additional features.
-	 * Officially supported.
+	 * Paper Minecraft server, which is a Spigot fork with additional features. Officially supported.
 	 */
 	BUKKIT_PAPER("Paper", true, true),
 
 	/**
-	 * Glowstone (or similar) fully open source Minecraft server, which
-	 * supports Spigot API.
+	 * Glowstone (or similar) fully open source Minecraft server, which supports Spigot API.
 	 */
 	BUKKIT_GLOWSTONE("Glowstone", true, false),
 
@@ -60,9 +57,8 @@ public enum ServerPlatform {
 	public boolean supported;
 
 	/**
-	 *
-	 * @param name Display name for platform.
-	 * @param works If the platform usually works.
+	 * @param name      Display name for platform.
+	 * @param works     If the platform usually works.
 	 * @param supported If the platform is supported.
 	 */
 	ServerPlatform(String name, boolean works, boolean supported) {

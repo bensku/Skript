@@ -18,14 +18,11 @@
  */
 package ch.njol.skript.aliases;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import java.util.logging.Filter;
-import java.util.logging.LogRecord;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Test;
 
 import ch.njol.skript.log.BukkitLoggerFilter;
@@ -34,6 +31,7 @@ import ch.njol.skript.log.BukkitLoggerFilter;
  * @author Peter Güttinger
  */
 public class AliasesTest {
+
 	static {
 		BukkitLoggerFilter.addFilter(record -> {
 			if (record == null)

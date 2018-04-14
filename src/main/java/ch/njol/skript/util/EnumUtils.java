@@ -18,46 +18,48 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.localization.Language;
-import ch.njol.util.StringUtils;
+import java.util.HashMap;
+
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
+import ch.njol.skript.localization.Language;
+import ch.njol.util.StringUtils;
 
 /**
  * @author Peter Güttinger
  */
 public final class EnumUtils<E extends Enum<E>> {
+
 	private final Class<E> c;
 	private final String languageNode;
-	
+
 	private String[] names;
 	private final HashMap<String, E> parseMap = new HashMap<>();
-	
+
 	public EnumUtils(final Class<E> c, final String languageNode) {
 		assert c != null && c.isEnum() : c;
 		assert languageNode != null && !languageNode.isEmpty() && !languageNode.endsWith(".") : languageNode;
-		
+
 		this.c = c;
 		this.languageNode = languageNode;
-		
+
 		names = new String[c.getEnumConstants().length];
-		
+
 		Language.addListener(() -> validate(true));
 	}
-	
+
 	/**
 	 * Updates the names if the language has changed or the enum was modified (using reflection).
 	 */
-	private final void validate(final boolean force) {
+	private void validate(final boolean force) {
 		boolean update = force;
-		
+
 		final int newL = c.getEnumConstants().length;
 		if (newL > names.length) {
 			names = new String[newL];
 			update = true;
 		}
-		
+
 		if (update) {
 			parseMap.clear();
 			for (final E e : c.getEnumConstants()) {
@@ -68,19 +70,19 @@ public final class EnumUtils<E extends Enum<E>> {
 			}
 		}
 	}
-	
+
 	@Nullable
 	public final E parse(final String s) {
 		validate(false);
 		return parseMap.get(s.toLowerCase());
 	}
-	
+
 	@SuppressWarnings("null")
 	public final String toString(final E e, final int flags) {
 		validate(false);
 		return names[e.ordinal()];
 	}
-	
+
 	public final String getAllNames() {
 		validate(false);
 		return StringUtils.join(names, ", ");

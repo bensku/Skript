@@ -18,23 +18,25 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.Aliases;
-import ch.njol.skript.localization.Language.LanguageListenerPriority;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.StringUtils;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.localization.Language.LanguageListenerPriority;
+import ch.njol.util.NonNullPair;
+import ch.njol.util.StringUtils;
+
 /**
  * @author Peter Güttinger
  */
 public class Noun extends Message {
+
 	public final static String GENDERS_SECTION = "genders.";
 
 	// TODO remove NO_GENDER and add boolean/flag uncountable (e.g. Luft: 'die Luft', aber nicht 'eine Luft')
@@ -236,7 +238,8 @@ public class Noun extends Message {
 	}
 
 	/**
-	 * Normalizes plural markers, i.e. increases the total number of markers to a multiple of 3 without changing the string's meaning.
+	 * Normalizes plural markers, i.e. increases the total number of markers to a multiple of 3 without changing the
+	 * string's meaning.
 	 * <p>
 	 * A @gender at the end of the string will be treated correctly.
 	 *
@@ -264,7 +267,7 @@ public class Noun extends Message {
 
 	/**
 	 * @param gender Gender id as defined in [language].lang (i.e. without the leading @)
-	 * @param key Key to use in error messages§
+	 * @param key    Key to use in error messages§
 	 * @return The gender's id
 	 */
 	public static int getGender(final String gender, final String key) {
@@ -291,7 +294,7 @@ public class Noun extends Message {
 	/**
 	 * For use by {@link Aliases}
 	 *
-	 * @param s String
+	 * @param s   String
 	 * @param key Key to report in case of error
 	 * @return (stripped string, gender or - 1 if none)
 	 */

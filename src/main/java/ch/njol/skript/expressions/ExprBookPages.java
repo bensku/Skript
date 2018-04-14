@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,13 +36,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.List;
 
 @Name("Book Pages")
 @Description("The pages of a book")
@@ -44,6 +45,7 @@ import java.util.List;
 		"\tmessage \"Book Page 1: %page 1 of event-item%\""})
 @Since("2.2-dev31")
 public class ExprBookPages extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprBookPages.class, String.class, ExpressionType.PROPERTY, "[all] [the] [book] (pages|content) of %itemstack%", "%itemstack%'s [book] (pages|content)", "[book] page %number% of %itemstack%", "%itemstack%'s [book] page %number%");
 	}
@@ -89,7 +91,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 			}
 			return new String[]{pages.get(page - 1)};
 		} else {
-			return pages.toArray(new String[pages.size()]);
+			return pages.toArray(new String[0]);
 		}
 	}
 

@@ -22,6 +22,7 @@ package ch.njol.skript.localization;
  * @author Peter Güttinger
  */
 public abstract class GeneralWords {
+
 	private GeneralWords() {}
 
 	public final static Message and = new Message("and");

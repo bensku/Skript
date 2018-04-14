@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.expressions;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,12 +35,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Name("Hash")
 @Description({"Hashes the given text using the MD5 or SHA-256 algorithms. Each algorithm is suitable for different use cases.<p>",
@@ -54,6 +55,7 @@ import java.security.NoSuchAlgorithmException;
 		"\t\t\tmessage \"Wrong password!\""})
 @Since("2.0, 2.2-dev32 (SHA-256 algorithm)")
 public class ExprHash extends PropertyExpression<String, String> {
+
 	static {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
 				"%strings% hash[ed] with (0¦MD5|1¦SHA-256)");

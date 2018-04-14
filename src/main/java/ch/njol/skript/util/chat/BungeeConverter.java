@@ -25,8 +25,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 /**
- * Converts Skript's chat components into Bungee's BaseComponents which Spigot
- * supports, too.
+ * Converts Skript's chat components into Bungee's BaseComponents which Spigot supports, too.
  */
 public class BungeeConverter {
 

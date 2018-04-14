@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -29,10 +34,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -42,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples("message \"You have %number of ores in the player's inventory% ores in your inventory.\"")
 @Since("2.0")
 public class ExprAmountOfItems extends SimpleExpression<Integer> {
+
 	static {
 		Skript.registerExpression(ExprAmountOfItems.class, Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
 	}
@@ -64,7 +66,8 @@ public class ExprAmountOfItems extends SimpleExpression<Integer> {
 		int r = 0;
 		final ItemType[] types = items.getArray(e);
 		for (final Inventory inv : invis.getArray(e)) {
-			itemsLoop: for (final ItemStack i : inv.getContents()) {
+			itemsLoop:
+			for (final ItemStack i : inv.getContents()) {
 				for (final ItemType t : types) {
 					if (t.isOfType(i)) {
 						r += i == null ? 1 : i.getAmount();

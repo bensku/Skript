@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -29,11 +28,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.registrations.Classes;
@@ -44,16 +39,23 @@ import ch.njol.skript.util.slot.Slot;
 
 @NoDoc
 public class ExprOffTool extends ExprTool {
+
 	static {
 		if (Skript.isRunningMinecraft(1, 9)) {
-			Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
+			Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY,
+					"[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]",
+					"%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
+					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]",
+					"%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
 		} else { // Don't break scripts if running older Minecraft
-			Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
+			Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY,
+					"[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]",
+					"%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
+					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]",
+					"%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
 		}
 	}
-	
+
 	@Override
 	protected Slot[] get(final Event e, final LivingEntity[] source) {
 		final boolean delayed = Delay.isDelayed(e);
@@ -77,7 +79,7 @@ public class ExprOffTool extends ExprTool {
 							public ItemStack getItem() {
 								return getTime() <= 0 ? super.getItem() : ((PlayerBucketEvent) e).getItemStack();
 							}
-							
+
 							@Override
 							public void setItem(final @Nullable ItemStack item) {
 								if (getTime() >= 0) {

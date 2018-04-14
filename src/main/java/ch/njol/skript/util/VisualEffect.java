@@ -18,6 +18,23 @@
  */
 package ch.njol.skript.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Expression;
@@ -33,27 +50,12 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.bukkit.Effect;
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public final class VisualEffect implements SyntaxElement, YggdrasilSerializable {
+
 	public static boolean EFFECT_LIB = false;
 	private final static String LANGUAGE_NODE = "visual effects";
 
@@ -295,7 +297,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 					if (names[i] == null)
 						names[i] = new Noun(node + ".name");
 				}
-				final String[] ps = patterns.toArray(new String[patterns.size()]);
+				final String[] ps = patterns.toArray(new String[0]);
 				info = new SyntaxElementInfo<>(ps, VisualEffect.class);
 			}
 		});

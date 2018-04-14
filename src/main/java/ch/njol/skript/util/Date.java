@@ -18,16 +18,18 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.SkriptConfig;
-import ch.njol.yggdrasil.YggdrasilSerializable;
+import java.util.TimeZone;
+
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.TimeZone;
+import ch.njol.skript.SkriptConfig;
+import ch.njol.yggdrasil.YggdrasilSerializable;
 
 /**
  * @author Peter Güttinger
  */
 public class Date implements Comparable<Date>, YggdrasilSerializable {
+
 	/**
 	 * Timestamp. Should always be in computer time/UTC/GMT+0.
 	 */

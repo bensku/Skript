@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.logging.Level;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -30,18 +35,16 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.logging.Level;
 
 /**
- * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression matches.
+ * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression
+ * matches.
  *
  * @author Peter Güttinger
  * @see SimpleLiteral
  */
 public class UnparsedLiteral implements Literal<Object> {
+
 	private final String data;
 	@Nullable
 	private final LogEntry error;

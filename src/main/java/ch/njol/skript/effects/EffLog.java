@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.effects;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.logging.Level;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
@@ -31,16 +42,6 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.logging.Level;
 
 /**
  * @author Peter Güttinger
@@ -49,10 +50,12 @@ import java.util.logging.Level;
 @Description({"Writes text into a .log file. Skript will write these files to /plugins/Skript/logs.",
 		"NB: Using 'server.log' as the log file will write to the default server log. " +
 				"Omitting the log file altogether will log the message as '[Skript] [&lt;script&gt;.sk] &lt;message&gt;' in the server log."})
-@Examples({"on place of TNT:",
-		"	log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
+@Examples({
+		"on place of TNT:",
+		"\tlog \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
 @Since("2.0")
 public class EffLog extends Effect {
+
 	static {
 		Skript.registerEffect(EffLog.class, "log %strings% [(to|in) [file[s]] %-strings%]");
 	}

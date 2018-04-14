@@ -18,11 +18,12 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Iterator;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 public class ImprovedIterator<T> implements Iterator<T> {
+
 	private final Iterator<T> iter;
 
 	@Nullable

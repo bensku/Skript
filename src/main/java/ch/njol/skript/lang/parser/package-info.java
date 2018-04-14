@@ -16,10 +16,6 @@
  *
  * Copyright 2011-2018 Peter Güttinger and contributors
  */
-
-/**
- * Copyright 2011-2017 Peter Güttinger and contributors
- */
 @NonNullByDefault
 package ch.njol.skript.lang.parser;
 

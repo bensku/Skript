@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.config.Config;
-import ch.njol.skript.util.ExceptionUtils;
-import ch.njol.skript.util.Version;
-import ch.njol.util.StringUtils;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,10 +31,21 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAddon;
+import ch.njol.skript.config.Config;
+import ch.njol.skript.util.ExceptionUtils;
+import ch.njol.skript.util.Version;
+import ch.njol.util.StringUtils;
+
 /**
  * @author Peter Güttinger
  */
 public class Language {
+
 	/**
 	 * Some flags
 	 */
@@ -87,8 +89,8 @@ public class Language {
 	}
 
 	/**
-	 * Gets a string from the language file with the given key, or the english variant if the string is missing from the chosen language's file, or the key itself if the key does
-	 * not exist.
+	 * Gets a string from the language file with the given key, or the english variant if the string is missing from the
+	 * chosen language's file, or the key itself if the key does not exist.
 	 *
 	 * @param key The message's key (case-insensitive)
 	 * @return The requested message if it exists or the key otherwise
@@ -305,9 +307,11 @@ public class Language {
 	/**
 	 * Registers a listener. The listener will immediately be called if a language has already been loaded.
 	 * <p>
-	 * The first call to a listener is guaranteed to be (pseudo-*)English even if another language is active, in which case the listener is called twice when registered.
+	 * The first call to a listener is guaranteed to be (pseudo-*)English even if another language is active, in which
+	 * case the listener is called twice when registered.
 	 * <p>
-	 * * Only this class will be English (i.e. no language listeners are notified) if the current language is not English.
+	 * * Only this class will be English (i.e. no language listeners are notified) if the current language is not
+	 * English.
 	 *
 	 * @param l
 	 */
@@ -332,7 +336,7 @@ public class Language {
 
 	/**
 	 * Use this preferably like this:
-	 * <p>
+	 *
 	 * <pre>
 	 * final boolean wasLocal = Language.setUseLocal(true / false);
 	 * try {

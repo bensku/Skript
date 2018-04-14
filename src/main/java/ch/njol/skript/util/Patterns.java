@@ -29,6 +29,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 public class Patterns<T> {
+
 	private final String[] patterns;
 	private final Object[] ts;
 
@@ -51,7 +52,8 @@ public class Patterns<T> {
 	}
 
 	/**
-	 * @param matchedPattern The pattern to get the data to as given in {@link SyntaxElement#init(Expression[], int, Kleenean, ParseResult)}
+	 * @param matchedPattern The pattern to get the data to as given in {@link SyntaxElement#init(Expression[], int,
+	 *                       Kleenean, ParseResult)}
 	 * @return The info associated with the matched pattern
 	 * @throws ClassCastException If the item in the source array is not of the requested type
 	 */

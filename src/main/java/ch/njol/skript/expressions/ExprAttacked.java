@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -49,16 +48,18 @@ import ch.njol.util.Kleenean;
  */
 @Name("Attacked")
 @Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie.")
-@Examples({"on damage:",
-		"	victim is a creeper",
-		"	damage the attacked by 1 heart"})
+@Examples({
+		"on damage:",
+		"\tvictim is a creeper",
+		"\tdamage the attacked by 1 heart"})
 @Since("1.3")
 @Events({"damage", "death"})
 public class ExprAttacked extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private EntityData<?> type;
 
@@ -81,7 +82,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
@@ -93,22 +94,21 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+
 	@Override
 	public Class<? extends Entity> getReturnType() {
 		return type.getType();
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the attacked " + type;
 		return Classes.getDebugMessage(getSingle(e));
 	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
 }

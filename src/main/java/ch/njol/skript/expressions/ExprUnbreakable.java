@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Arrays;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -29,12 +36,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
 
 /**
  * @author bensku
@@ -44,6 +45,7 @@ import java.util.Arrays;
 @Examples("unbreakable iron sword #Creates unbreakable iron sword")
 @Since("2.2-dev13b")
 public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
+
 	static {
 		Skript.registerExpression(ExprUnbreakable.class, ItemType.class, ExpressionType.PROPERTY, "unbreakable %itemtypes%");
 	}

@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -33,14 +42,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.IteratorIterable;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
@@ -54,6 +55,7 @@ import java.util.NoSuchElementException;
 		"drop all blocks at the player # drops one of every block at the player"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprItems extends SimpleExpression<ItemStack> {
+
 	static {
 		Skript.registerExpression(ExprItems.class, ItemStack.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the|every)] item(s|[ ]types)", "[(all [[of] the]|the)] items of type[s] %itemtypes%",
@@ -91,8 +93,8 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 		for (final ItemStack is : new IteratorIterable<>(iterator(e)))
 			r.add(is);
 		if (types instanceof Literal)
-			return buffer = r.toArray(new ItemStack[r.size()]);
-		return r.toArray(new ItemStack[r.size()]);
+			return buffer = r.toArray(new ItemStack[0]);
+		return r.toArray(new ItemStack[0]);
 	}
 
 	@Override

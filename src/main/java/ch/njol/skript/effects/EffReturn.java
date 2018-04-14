@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.Description;
@@ -34,8 +37,6 @@ import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -47,6 +48,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\treturn 2 * {_i}"})
 @Since("2.2")
 public class EffReturn extends Effect {
+
 	static {
 		Skript.registerEffect(EffReturn.class, "return %objects%");
 	}

@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.Locale;
+
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -27,20 +36,13 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Locale;
 
 @Name("Play Sound")
 @Description("Plays a sound at given location for everyone or just for given players. Playing sounds from resource packs is supported.")
 @Examples("")
 @Since("2.2-dev28")
 public class EffPlaySound extends Effect {
+
 	static {
 		Skript.registerEffect(EffPlaySound.class, "play sound %string% [with volume %number%] [(and|with) pitch %number%] at %location% [for %players%]");
 	}

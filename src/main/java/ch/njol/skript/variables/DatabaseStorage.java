@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.variables;
 
+import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Serializer;
@@ -32,24 +43,16 @@ import lib.PatPeter.SQLibrary.DatabaseException;
 import lib.PatPeter.SQLibrary.MySQL;
 import lib.PatPeter.SQLibrary.SQLibrary;
 import lib.PatPeter.SQLibrary.SQLite;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map.Entry;
-import java.util.UUID;
 
 /**
- * TODO create a metadata table to store some properties (e.g. Skript version, Yggdrasil version) -- but what if some variables cannot be converted? move them to a different table?
- * TODO create my own database connector or find a better one
+ * TODO create a metadata table to store some properties (e.g. Skript version, Yggdrasil version) -- but what if some
+ * variables cannot be converted? move them to a different table? TODO create my own database connector or find a better
+ * one
  *
  * @author Peter Güttinger
  */
 public class DatabaseStorage extends VariablesStorage {
+
 	public final static int MAX_VARIABLE_NAME_LENGTH = 380, // MySQL: 767 bytes max; cannot set max bytes, only max characters
 			MAX_CLASS_CODENAME_LENGTH = 50, // checked when registering a class
 			MAX_VALUE_SIZE = 10000;
@@ -157,8 +160,8 @@ public class DatabaseStorage extends VariablesStorage {
 	}
 
 	/**
-	 * Doesn't lock the database for reading (it's not used anywhere else, and locking while loading will interfere with loaded variables being deleted by
-	 * {@link Variables#variableLoaded(String, Object, VariablesStorage)}).
+	 * Doesn't lock the database for reading (it's not used anywhere else, and locking while loading will interfere with
+	 * loaded variables being deleted by {@link Variables#variableLoaded(String, Object, VariablesStorage)}).
 	 */
 	@Override
 	protected boolean load_i(final SectionNode n) {

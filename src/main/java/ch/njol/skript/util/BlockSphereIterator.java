@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.NullableChecker;
-import ch.njol.util.coll.iterator.CheckedIterator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.util.NullableChecker;
+import ch.njol.util.coll.iterator.CheckedIterator;
 
 /**
  * @author Peter Güttinger
  */
 public class BlockSphereIterator extends CheckedIterator<Block> {
+
 	public BlockSphereIterator(final Location center, final double radius) {
 		super(new AABB(center, radius + 0.5001, radius + 0.5001, radius + 0.5001).iterator(), new NullableChecker<Block>() {
 			private final double rSquared = radius * radius * Skript.EPSILON_MULT;

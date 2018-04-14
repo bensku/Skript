@@ -19,9 +19,8 @@
 package ch.njol.skript.util;
 
 /**
- * This class is a dummy class for {@link VisualEffect} that
- * is used to register the "visualeffect" type on Bukkit builds
- * without org.bukkit.Particle
+ * This class is a dummy class for {@link VisualEffect} that is used to register the "visualeffect" type on Bukkit
+ * builds without org.bukkit.Particle
  */
 public class VisualEffectDummy {
 

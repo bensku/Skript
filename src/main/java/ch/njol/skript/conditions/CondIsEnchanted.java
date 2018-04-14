@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.conditions;
 
+import java.util.Map;
+
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -29,11 +35,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Map;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import java.util.Map;
 		"helm, chestplate, leggings or boots are enchanted"})
 @Since("1.4.6")
 public class CondIsEnchanted extends Condition {
+
 	static {
 		Skript.registerCondition(CondIsEnchanted.class,
 				"%itemtypes% (is|are) enchanted [with %-enchantmenttype%]",

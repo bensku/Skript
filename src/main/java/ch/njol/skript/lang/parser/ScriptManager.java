@@ -20,7 +20,7 @@ package ch.njol.skript.lang.parser;
 
 /**
  * Manages loading of ALL scripts.
- *
+ * <p>
  * There should never be more than one instance of this in use at same time.
  */
 public class ScriptManager {

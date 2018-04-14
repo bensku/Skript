@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,10 +33,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 
 /**
@@ -42,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set {_loc} to {_loc} ~ {_v}"})
 @Since("2.2-dev28")
 public class ExprLocationVectorOffset extends SimpleExpression<Location> {
+
 	static {
 		Skript.registerExpression(ExprLocationVectorOffset.class, Location.class, ExpressionType.SIMPLE, "%location%[ ]~[~][ ]%vectors%");
 	}
@@ -53,15 +55,15 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		location = (Expression<Location>) expressions[0];
-		vectors = (Expression<Vector>) expressions[1];
+	public boolean init(final Expression<?>[] exprs, final int i, final Kleenean kleenean, final SkriptParser.ParseResult parseResult) {
+		location = (Expression<Location>) exprs[0];
+		vectors = (Expression<Vector>) exprs[1];
 		return true;
 	}
 
 	@SuppressWarnings("null")
 	@Override
-	protected Location[] get(Event event) {
+	protected Location[] get(final Event event) {
 		Location l = location.getSingle(event);
 		if (l == null) {
 			return null;

@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -28,9 +32,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -52,6 +53,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tclear drops"})
 @Since("2.0")
 public class CondDamageCause extends Condition {
+
 	static {
 		Skript.registerCondition(CondDamageCause.class, "[the] damage (was|is|has)(0¦|1¦n('|o)t) [been] (caused|done|made) by %damagecause%");
 	}

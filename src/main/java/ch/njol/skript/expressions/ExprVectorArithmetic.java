@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,11 +35,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author bi0qaw
@@ -51,6 +52,7 @@ import java.lang.reflect.Array;
 		"set {_v} to {_v} // 5"})
 @Since("2.2-dev28")
 public class ExprVectorArithmetic extends SimpleExpression<Vector> {
+
 	private static enum Operator {
 		PLUS("++") {
 			@Override

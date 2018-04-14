@@ -18,19 +18,21 @@
  */
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Skeleton.SkeletonType;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation") // Until 1.12: use deprecated methods for compatibility
 public class SkeletonData extends EntityData<Skeleton> {
+
 	private final static boolean hasWither = Skript.methodExists(Skeleton.class, "getSkeletonType");
 	private final static boolean hasStray = Skript.isRunningMinecraft(1, 10);
 	private final static boolean separateClasses = Skript.isRunningMinecraft(1, 11);

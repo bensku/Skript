@@ -18,17 +18,20 @@
  */
 package ch.njol.skript.log;
 
-import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.logging.Level;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+
 /**
- * Does nothing but print messages before the first error encountered and/or a message at the end if no error were encountered.
+ * Does nothing but print messages before the first error encountered and/or a message at the end if no error were
+ * encountered.
  *
  * @author Peter Güttinger
  */
 public class ErrorDescLogHandler extends LogHandler {
+
 	@Nullable
 	private final String before, after, success;
 

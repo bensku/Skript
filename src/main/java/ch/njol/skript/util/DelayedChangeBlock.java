@@ -18,7 +18,9 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
+import java.util.Collection;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -35,17 +37,18 @@ import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.List;
+import ch.njol.skript.Skript;
 
 /**
- * A block that gets all data from the world, but either delays any changes by 1 tick of reflects them on a given BlockState depending on which constructor is used.
+ * A block that gets all data from the world, but either delays any changes by 1 tick of reflects them on a given
+ * BlockState depending on which constructor is used.
  *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 @NonNullByDefault(false)
 public class DelayedChangeBlock implements Block {
+
 	final Block b;
 	@Nullable
 	private final BlockState newState;

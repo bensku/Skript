@@ -18,19 +18,21 @@
  */
 package ch.njol.skript.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Message;
 import ch.njol.util.Math2;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 public class Time implements YggdrasilSerializable {
+
 	private final static int TICKS_PER_HOUR = 1000, TICKS_PER_DAY = 24 * TICKS_PER_HOUR;
 	private final static double TICKS_PER_MINUTE = 1000. / 60;
 	/**

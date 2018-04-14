@@ -18,20 +18,20 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.config.SectionNode;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.config.SectionNode;
+
 /**
- * Represents a conditional trigger section.
- * <p>
- * TODO: make this an expression
+ * Represents a conditional trigger section. TODO: make this an expression
  *
  * @author Peter Güttinger
  * @see TriggerSection
  * @see Condition
  */
 public class Conditional extends TriggerSection {
+
 	private final Condition cond;
 
 	@Nullable

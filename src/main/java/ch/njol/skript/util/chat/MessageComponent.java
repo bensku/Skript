@@ -18,19 +18,20 @@
  */
 package ch.njol.skript.util.chat;
 
+import java.lang.reflect.Type;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Type;
 
 /**
- * Component for chat messages. This can be serialized with GSON and then
- * sent to client.
+ * Component for chat messages. This can be serialized with GSON and then sent to client.
  */
 public class MessageComponent {
+
 	public String text = "";
 
 	/**
@@ -59,8 +60,7 @@ public class MessageComponent {
 	public boolean strikethrough = false;
 
 	/**
-	 * Makes text obfuscated, i.e. each tick the client will scramble
-	 * all letters with random ones.
+	 * Makes text obfuscated, i.e. each tick the client will scramble all letters with random ones.
 	 */
 	public boolean obfuscated = false;
 
@@ -71,8 +71,7 @@ public class MessageComponent {
 	String color;
 
 	/**
-	 * Value of this, if present, will appended on what player is currently
-	 * writing to chat.
+	 * Value of this, if present, will appended on what player is currently writing to chat.
 	 */
 	@Nullable
 	public String insertion;
@@ -81,6 +80,7 @@ public class MessageComponent {
 	public ClickEvent clickEvent;
 
 	public static class ClickEvent {
+
 		public ClickEvent(ClickEvent.Action action, String value) {
 			this.action = action;
 			this.value = value;
@@ -110,6 +110,7 @@ public class MessageComponent {
 	}
 
 	public static class HoverEvent {
+
 		public HoverEvent(HoverEvent.Action action, String value) {
 			this.action = action;
 			this.value = value;
@@ -138,6 +139,7 @@ public class MessageComponent {
 	public HoverEvent hoverEvent;
 
 	public static class BooleanSerializer implements JsonSerializer<Boolean> {
+
 		@Override
 		public @Nullable
 		JsonElement serialize(@Nullable Boolean src, @Nullable Type typeOfSrc, @Nullable JsonSerializationContext context) {

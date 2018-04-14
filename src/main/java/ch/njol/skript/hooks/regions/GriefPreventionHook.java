@@ -18,24 +18,6 @@
  */
 package ch.njol.skript.hooks.regions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
-import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.iterator.EmptyIterator;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.DataStore;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Field;
@@ -47,10 +29,30 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.util.AABB;
+import ch.njol.skript.variables.Variables;
+import ch.njol.util.coll.iterator.EmptyIterator;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.DataStore;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+
 /**
  * @author Peter Güttinger
  */
 public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
+
 	public GriefPreventionHook() throws IOException {}
 
 	private boolean supportsUUIDs;
@@ -127,6 +129,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 
 	@YggdrasilID("GriefPreventionRegion")
 	public final class GriefPreventionRegion extends Region {
+
 		private transient Claim claim;
 
 		@SuppressWarnings({"null", "unused"})

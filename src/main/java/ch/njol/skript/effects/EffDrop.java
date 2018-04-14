@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -30,16 +41,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -51,6 +52,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tdrop 1 TNT"})
 @Since("1.0")
 public class EffDrop extends Effect {
+
 	static {
 		Skript.registerEffect(EffDrop.class, "drop %itemtypes/experience% [%directions% %locations%]",
 				"drop %itemtypes/experience% [%directions% %locations%] without velocity");

@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,10 +36,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -47,6 +48,7 @@ import java.lang.reflect.Array;
 		"message \"You have %health of player * 2% half hearts of HP!\""})
 @Since("1.4.2")
 public class ExprArithmetic extends SimpleExpression<Number> {
+
 	private enum Operator {
 		PLUS('+') {
 			@SuppressWarnings("null")

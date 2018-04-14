@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
@@ -33,13 +41,6 @@ import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.ArrayIterator;
 import ch.njol.util.coll.iterator.IteratorIterable;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * @author Peter Güttinger
@@ -51,6 +52,7 @@ import java.util.Iterator;
 		"set the blocks below the player, the victim and the targeted block to air"})
 @Since("1.0")
 public class ExprBlocks extends SimpleExpression<Block> {
+
 	static {
 		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
@@ -112,7 +114,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			return new Block[0];
 		for (final Block b : new IteratorIterable<>(iter))
 			r.add(b);
-		return r.toArray(new Block[r.size()]);
+		return r.toArray(new Block[0]);
 	}
 
 	@Override

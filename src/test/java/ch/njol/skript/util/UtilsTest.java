@@ -18,7 +18,7 @@
  */
 package ch.njol.skript.util;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,12 +33,13 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Güttinger
  */
 public class UtilsTest {
+
 	@Test
 	@SuppressWarnings("null")
 	public void testPlural() {

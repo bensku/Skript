@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.conditions;
 
+import java.io.File;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptCommand;
@@ -29,16 +34,13 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
 
 @Name("Is Script Loaded")
 @Description("Check if the current script or another script, is current loaded")
 @Examples({"script is loaded", "script \"example.sk\" is loaded"})
 @Since("2.2-dev31")
 public class CondScriptLoaded extends Condition {
+
 	static {
 		Skript.registerCondition(CondScriptLoaded.class,
 				"script[s] [%-strings%] (is|are) loaded",

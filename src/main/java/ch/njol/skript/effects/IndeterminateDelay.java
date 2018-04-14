@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.util.Timespan;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.util.Timespan;
 
 /**
  * @author Peter Güttinger

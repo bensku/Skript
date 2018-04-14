@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.NoDoc;
@@ -28,16 +31,16 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * Provided for convenience: one can write 'event-world' instead of only 'world' to distinguish between the event-world and the loop-world.
+ * Provided for convenience: one can write 'event-world' instead of only 'world' to distinguish between the event-world
+ * and the loop-world.
  *
  * @author Peter Güttinger
  */
 @NoDoc
 public class ExprEventExpression extends WrapperExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprEventExpression.class, Object.class, ExpressionType.PROPERTY, "[the] event-%*classinfo%"); // property so that it is parsed after most other expressions
 	}

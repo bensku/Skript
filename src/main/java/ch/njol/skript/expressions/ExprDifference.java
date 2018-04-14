@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Arithmetic;
 import ch.njol.skript.classes.ClassInfo;
@@ -36,21 +41,19 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Difference")
 @Description("The difference between two values, e.g. <a href='../classes/#number'>numbers</a>, <a href='../classes/#date'>dates</a> or <a href='../classes/#time'>times</a>.")
-@Examples({"difference between {command.%player%.lastuse} and now is smaller than a minute:",
-		"  message \"You have to wait a minute before using this command again!\"",
-		"  stop"})
+@Examples({
+		"difference between {command.%player%.lastuse} and now is smaller than a minute:",
+		"\tmessage \"You have to wait a minute before using this command again!\"",
+		"\tstop"})
 @Since("1.4")
 public class ExprDifference extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprDifference.class, Object.class, ExpressionType.COMBINED, "difference (between|of) %object% and %object%");
 	}

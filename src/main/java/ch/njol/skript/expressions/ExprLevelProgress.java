@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -41,41 +40,42 @@ import ch.njol.util.Math2;
 				"<code>increase the player's level progress by 0.5</code> will make the player gain a level if his progress was more than 50%."})
 @Examples({"# use the exp bar as mana",
 		"on rightclick with a blaze rod:",
-		"	player's level progress is larger than 0.2",
-		"	shoot a fireball from the player",
-		"	reduce the player's level progress by 0.2",
+		"\tplayer's level progress is larger than 0.2",
+		"\tshoot a fireball from the player",
+		"\treduce the player's level progress by 0.2",
 		"every 2 seconds:",
-		"	loop all players:",
-		"		level progress of loop-player is smaller than 0.9:",
-		"			increase level progress of the loop-player by 0.1",
-		"		else:",
-		"			set level progress of the loop-player to 0.99",
+		"\tloop all players:",
+		"\t\tlevel progress of loop-player is smaller than 0.9:",
+		"\t\t\tincrease level progress of the loop-player by 0.1",
+		"\t\telse:",
+		"\t\t\tset level progress of the loop-player to 0.99",
 		"on xp spawn:",
-		"	cancel event"})
+		"\tcancel event"})
 @Since("2.0")
 @Events("level change")
 public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
+
 	static {
 		register(ExprLevelProgress.class, Float.class, "level progress", "players");
 	}
-	
+
 	@Override
 	public Float convert(final Player p) {
 		return p.getExp();
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.REMOVE_ALL)
 			return null;
-		return new Class[] {Number.class};
+		return new Class[]{Number.class};
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode != ChangeMode.REMOVE_ALL;
-		
+
 		final float d = delta == null ? 0 : ((Number) delta[0]).floatValue();
 		for (final Player p : getExpr().getArray(e)) {
 			final float c;
@@ -102,15 +102,14 @@ public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
 			p.setExp(Math2.mod(c, 1));
 		}
 	}
-	
-	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
-	}
-	
+
 	@Override
 	protected String getPropertyName() {
 		return "level progress";
 	}
-	
+
+	@Override
+	public Class<? extends Float> getReturnType() {
+		return Float.class;
+	}
 }

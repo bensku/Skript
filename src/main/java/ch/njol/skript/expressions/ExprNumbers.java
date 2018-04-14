@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,11 +35,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
@@ -47,6 +48,7 @@ import java.util.NoSuchElementException;
 		"loop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5"})
 @Since("1.4.6")
 public class ExprNumbers extends SimpleExpression<Number> {
+
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%",

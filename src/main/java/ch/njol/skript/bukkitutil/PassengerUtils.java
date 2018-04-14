@@ -18,16 +18,18 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import ch.njol.skript.Skript;
+import java.lang.reflect.Method;
+
 import org.bukkit.entity.Entity;
 
-import java.lang.reflect.Method;
+import ch.njol.skript.Skript;
 
 /**
  * @author Peter Güttinger and contributors
  */
 @SuppressWarnings("null")
 public abstract class PassengerUtils {
+
 	private PassengerUtils() {}
 
 	//Using reflection methods cause it will be removed soon in 1.12

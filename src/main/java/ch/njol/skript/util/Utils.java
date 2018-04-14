@@ -18,14 +18,12 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.effects.EffTeleport;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.Pair;
-import ch.njol.util.StringUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.regex.Pattern;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -34,11 +32,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.effects.EffTeleport;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.util.NonNullPair;
+import ch.njol.util.Pair;
+import ch.njol.util.StringUtils;
 
 /**
  * Utility class.
@@ -46,6 +47,7 @@ import java.util.regex.Pattern;
  * @author Peter Güttinger
  */
 public abstract class Utils {
+
 	private Utils() {}
 
 	public final static Random random = new Random();
@@ -307,13 +309,14 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Gets the collision height of solid or partially-solid blocks at the center of the block. This is mostly for use in the {@link EffTeleport teleport effect}.
-	 * <p>
-	 * TODO !Update with every version [blocks]
+	 * Gets the collision height of solid or partially-solid blocks at the center of the block. This is mostly for use
+	 * in the {@link EffTeleport teleport effect}.
 	 *
-	 * @param type
+	 * @param type The block type
+	 * @param data The block data
 	 * @return The block's height at the center
 	 */
+	// TODO !Update with every version [blocks]
 	public static double getBlockHeight(final int type, final byte data) {
 		switch (type) {
 			case 26: // bed
@@ -393,8 +396,8 @@ public abstract class Utils {
 	/**
 	 * Replaces &lt;chat styles&gt; in the message
 	 *
-	 * @param message
-	 * @return message with localised chat styles converted to Minecraft's format
+	 * @param message The message to convert
+	 * @return Message with localized chat styles converted to Minecraft's format
 	 */
 	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
@@ -414,11 +417,11 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the language of colour codes is not well defined while the language is
-	 * changing, and for some hardcoded messages.
+	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the
+	 * language of colour codes is not well defined while the language is changing, and for some hardcoded messages.
 	 *
-	 * @param message
-	 * @return message with english chat styles converted to Minecraft's format
+	 * @param message The message to convert
+	 * @return Message with english chat styles converted to Minecraft's format
 	 */
 	public static String replaceEnglishChatStyles(final String message) {
 		if (message.isEmpty())
@@ -440,8 +443,8 @@ public abstract class Utils {
 	/**
 	 * Gets a random value between <tt>start</tt> (inclusive) and <tt>end</tt> (exclusive)
 	 *
-	 * @param start
-	 * @param end
+	 * @param start The inclusive start value
+	 * @param end   The exclusive end value
 	 * @return <tt>start + random.nextInt(end - start)</tt>
 	 */
 	public static int random(final int start, final int end) {
@@ -484,9 +487,9 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Integer#parseInt(String)} due to
-	 * overflow.
-	 * This method will return {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively if that happens.
+	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException}
+	 * when parsed with {@link Integer#parseInt(String)} due to overflow. This method will return {@link
+	 * Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively if that happens.
 	 *
 	 * @param s
 	 * @return The parsed integer, {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively
@@ -501,9 +504,9 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Long#parseLong(String)} due to
-	 * overflow.
-	 * This method will return {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively if that happens.
+	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException}
+	 * when parsed with {@link Long#parseLong(String)} due to overflow. This method will return {@link Long#MIN_VALUE}
+	 * or {@link Long#MAX_VALUE} respectively if that happens.
 	 *
 	 * @param s
 	 * @return The parsed long, {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively
@@ -518,8 +521,7 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Gets class for name. Throws RuntimeException instead of checked one.
-	 * Use this only when absolutely necessary.
+	 * Gets class for name. Throws RuntimeException instead of checked one. Use this only when absolutely necessary.
 	 *
 	 * @param name Class name.
 	 * @return The class.

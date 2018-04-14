@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Locale;
+
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.EntityEquipment;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -26,14 +32,9 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.EquipmentSlot;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.util.slot.EquipmentSlot.EquipSlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.EntityEquipment;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Locale;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import java.util.Locale;
 		"helmet of player is neither a helmet nor air # player is wearing a block, e.g. from another plugin"})
 @Since("1.0")
 public class ExprArmorSlot extends SimplePropertyExpression<LivingEntity, Slot> {
+
 	static {
 		register(ExprArmorSlot.class, Slot.class, "(0¦boot[s]|0¦shoe[s]|1¦leg[ging][s]|2¦chestplate[s]|3¦helm[et][s]) [slot]", "livingentities");
 	}

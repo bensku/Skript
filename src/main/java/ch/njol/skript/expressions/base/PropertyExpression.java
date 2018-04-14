@@ -18,8 +18,9 @@
  */
 package ch.njol.skript.expressions.base;
 
+import org.bukkit.event.Event;
+
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -28,19 +29,20 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 
 /**
- * Represents an expression which represents a property of another one. Remember to set the expression with {@link #setExpr(Expression)} in
- * {@link SyntaxElement#init(Expression[], int, Kleenean, ParseResult) init()}.
+ * Represents an expression which represents a property of another one. Remember to set the expression with {@link
+ * #setExpr(Expression)} in {@link SyntaxElement#init(Expression[], int, Kleenean, ParseResult) init()}.
  *
  * @author Peter Güttinger
  * @see SimplePropertyExpression
  * @see #register(Class, Class, String, String)
  */
 public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
+
 	/**
-	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property of %types%" and "%types%'[s] property"
+	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property of
+	 * %types%" and "%types%'[s] property"
 	 *
 	 * @param c
 	 * @param type
@@ -84,7 +86,8 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	 *
 	 * @param e
 	 * @param source
-	 * @return An array of the converted objects, which may contain less elements than the source array, but must not be null.
+	 * @return An array of the converted objects, which may contain less elements than the source array, but must not be
+	 * null.
 	 * @see Converters#convert(Object[], Class, Converter)
 	 */
 	protected abstract T[] get(Event e, F[] source);

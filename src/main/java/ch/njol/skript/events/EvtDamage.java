@@ -18,12 +18,6 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.bukkitutil.HealthUtils;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -32,11 +26,19 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.HealthUtils;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class EvtDamage extends SkriptEvent {
+
 	static {
 		Skript.registerEvent("Damage", EvtDamage.class, EntityDamageEvent.class, "damag(e|ing) [of %entitydata%]")
 				.description("Called when an entity receives damage, e.g. by an attack from another entity, lava, fire, drowning, fall, suffocation, etc.")

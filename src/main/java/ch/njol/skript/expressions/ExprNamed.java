@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -30,13 +38,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -50,6 +51,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"open hopper inventory named \"Magic Hopper\" to player"})
 @Since("2.0, 2.2-dev34 (inventories)")
 public class ExprNamed extends PropertyExpression<Object, Object> {
+
 	static {
 		Skript.registerExpression(ExprNamed.class, Object.class, ExpressionType.PROPERTY, "%itemtype/inventorytype% (named|with name[s]) %string%");
 	}

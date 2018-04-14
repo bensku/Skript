@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.bukkitutil.HealthUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -31,9 +35,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("1.0")
 @Events("damage")
 public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
+
 	static {
 		register(ExprHealth.class, Double.class, "health", "livingentities");
 	}

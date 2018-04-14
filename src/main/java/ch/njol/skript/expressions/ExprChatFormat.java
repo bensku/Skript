@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
@@ -30,10 +35,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Chat Format")
 @Description("Can be used to get/retrieve the chat format. The sender of a message is " +
@@ -41,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set the chat format to \"<yellow>[player]<light gray>: <green>[message]\""})
 @Since("2.2-dev31")
 public class ExprChatFormat extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprChatFormat.class, String.class, ExpressionType.SIMPLE, "[the] (message|chat) format[ting]");
 	}

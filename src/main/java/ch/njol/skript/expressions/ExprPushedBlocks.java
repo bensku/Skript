@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.block.Block;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -30,21 +36,17 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import org.bukkit.block.Block;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Moved blocks")
 @Description("Blocks which are moved in piston event. Cannot be used outside of piston events.")
 @Examples("the moved blocks")
 @Since("2.2-dev27")
 public class ExprPushedBlocks extends SimpleExpression<Block> {
+
 	static {
 		Skript.registerExpression(ExprPushedBlocks.class, Block.class, ExpressionType.SIMPLE, "[the] moved blocks");
 	}
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(BlockPistonExtendEvent.class, BlockPistonRetractEvent.class)) {
@@ -53,19 +55,19 @@ public class ExprPushedBlocks extends SimpleExpression<Block> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Block[] get(final Event e) {
 		return (e instanceof BlockPistonExtendEvent) ? ((BlockPistonExtendEvent) e).getBlocks().toArray(new Block[0])
 				: ((BlockPistonRetractEvent) e).getBlocks().toArray(new Block[0]);
 	}
-	
+
 	@Override
 	public Class<? extends Block> getReturnType() {
 		return Block.class;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;

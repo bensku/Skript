@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -40,10 +45,6 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -70,6 +71,7 @@ import java.lang.reflect.Array;
 		"\t\tgive {var::1::*} to the player"})
 @Since("2.0")
 public class ExprParse extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprParse.class, Object.class, ExpressionType.COMBINED,
 				"%string% parsed as (%-*classinfo%|\"<.*>\")");

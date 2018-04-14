@@ -18,6 +18,19 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.ItemType;
@@ -34,21 +47,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * TODO make a 'line %number% of %text%' expression and figure out how to deal with signs (4 lines, delete = empty, etc...)
+ * TODO make a 'line %number% of %text%' expression and figure out how to deal with signs (4 lines, delete = empty,
+ * etc...)
  *
  * @author joeuguce99
  */
@@ -57,6 +59,7 @@ import java.util.regex.Pattern;
 @Examples("set the 1st line of the item's lore to \"<orange>Excalibur 2.0\"")
 @Since("2.1")
 public class ExprLore extends SimpleExpression<String> {
+
 	static {
 		if (Skript.classExists("org.bukkit.inventory.meta.ItemMeta")) {
 			Skript.registerExpression(ExprLore.class, String.class, ExpressionType.PROPERTY,

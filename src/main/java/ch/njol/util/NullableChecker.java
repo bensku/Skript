@@ -18,11 +18,12 @@
  */
 package ch.njol.util;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Objects;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 public interface NullableChecker<T> extends Checker<T> {
+
 	@Override
 	boolean check(@Nullable T o);
 

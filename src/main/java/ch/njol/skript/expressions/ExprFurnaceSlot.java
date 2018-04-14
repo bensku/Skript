@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
@@ -33,16 +44,6 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Furnace;
-import org.bukkit.event.Event;
-import org.bukkit.event.inventory.FurnaceBurnEvent;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -57,10 +58,12 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("1.0")
 @Events({"smelt", "fuel burn"})
 public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
+
 	private final static int ORE = 0, FUEL = 1, RESULT = 2;
 	private final static String[] slotNames = {"ore", "fuel", "result"};
 
 	private final class FurnaceEventSlot extends InventorySlot {
+
 		private final Event e;
 
 		FurnaceEventSlot(final Event e, final FurnaceInventory inv) {

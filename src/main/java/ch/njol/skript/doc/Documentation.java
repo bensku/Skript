@@ -18,6 +18,18 @@
  */
 package ch.njol.skript.doc;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.conditions.CondCompare;
@@ -34,26 +46,16 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.IteratorIterable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * TODO list special expressions for events and event values
- * TODO compare doc in code with changed one of the webserver and warn about differences?
+ * TODO list special expressions for events and event values TODO compare doc in code with changed one of the webserver
+ * and warn about differences?
  *
  * @author Peter Güttinger
  */
 @SuppressFBWarnings("ES_COMPARING_STRINGS_WITH_EQ")
 public class Documentation {
+
 	public static void generate() {
 		if (!generate)
 			return;

@@ -18,8 +18,6 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.classes.Converter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,10 +28,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import ch.njol.skript.classes.Converter;
+
 /**
  * @author Peter Güttinger
  */
 public abstract class FileUtils {
+
 	private FileUtils() {}
 
 	private final static SimpleDateFormat backupFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
@@ -81,7 +82,8 @@ public abstract class FileUtils {
 	 * @param directory
 	 * @param renamer   Renames files. Return null to leave a file as-is.
 	 * @return A collection of all changed files (with their new names)
-	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed already.
+	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed
+	 *                     already.
 	 */
 	public static Collection<File> renameAll(final File directory, final Converter<String, String> renamer) throws IOException {
 		final Collection<File> changed = new ArrayList<>();

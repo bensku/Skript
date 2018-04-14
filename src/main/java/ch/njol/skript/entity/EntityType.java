@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.entity;
 
+import org.bukkit.entity.Entity;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.YggdrasilSerializer;
@@ -27,13 +30,12 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.bukkit.entity.Entity;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EntityType implements Cloneable, YggdrasilSerializable {
+
 	static {
 		Classes.registerClass(new ClassInfo<>(EntityType.class, "entitytype")
 				.name("Entity Type with Amount")

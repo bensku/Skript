@@ -18,22 +18,24 @@
  */
 package ch.njol.skript.events;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.weather.ThunderChangeEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.bukkit.event.weather.ThunderChangeEvent;
-import org.bukkit.event.weather.WeatherChangeEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class EvtWeatherChange extends SkriptEvent {
+
 	static {
 		Skript.registerEvent("Weather Change", EvtWeatherChange.class, CollectionUtils.array(WeatherChangeEvent.class, ThunderChangeEvent.class), "weather change [to %weathertypes%]")
 				.description("Called when a world's weather changes.")

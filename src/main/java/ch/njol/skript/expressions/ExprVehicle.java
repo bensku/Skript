@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.eclipse.jdt.annotation.Nullable;
+import org.spigotmc.event.entity.EntityDismountEvent;
+import org.spigotmc.event.entity.EntityMountEvent;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -28,13 +36,6 @@ import ch.njol.skript.effects.Delay;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.eclipse.jdt.annotation.Nullable;
-import org.spigotmc.event.entity.EntityDismountEvent;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 /**
  * @author Peter Güttinger
@@ -45,6 +46,7 @@ import org.spigotmc.event.entity.EntityMountEvent;
 @Examples({"vehicle of the player is a minecart"})
 @Since("2.0")
 public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
+
 	private static final boolean hasMountEvents = Skript.classExists("org.spigotmc.event.entity.EntityMountEvent");
 
 	static {

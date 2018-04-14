@@ -18,12 +18,6 @@
  */
 package ch.njol.skript.classes.data;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.util.Experience;
-import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -38,10 +32,18 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.classes.Changer;
+import ch.njol.skript.util.Experience;
+import ch.njol.util.coll.CollectionUtils;
+
 /**
  * @author Peter Güttinger
  */
 public class DefaultChangers {
+
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
 		@SuppressWarnings("unchecked")
 		@Override

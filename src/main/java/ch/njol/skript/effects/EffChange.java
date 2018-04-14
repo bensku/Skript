@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.Arrays;
+import java.util.logging.Level;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer;
@@ -40,11 +46,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.logging.Level;
 
 /**
  * @author Peter Güttinger
@@ -74,6 +75,7 @@ import java.util.logging.Level;
 		"reset chunk at the targeted block"})
 @Since("1.0 (set, add, remove, delete), 2.0 (remove all)")
 public class EffChange extends Effect {
+
 	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][]{
 			{"(add|give) %objects% to %~objects%", ChangeMode.ADD},
 			{"increase %~objects% by %objects%", ChangeMode.ADD},

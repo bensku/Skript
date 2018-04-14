@@ -18,17 +18,18 @@
  */
 package ch.njol.skript.classes;
 
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
-
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
 
 /**
  * @author Peter Güttinger
  */
 public class YggdrasilSerializer<T extends YggdrasilSerializable> extends Serializer<T> {
+
 	@Override
 	public Fields serialize(final T o) throws NotSerializableException {
 		if (o instanceof YggdrasilExtendedSerializable)

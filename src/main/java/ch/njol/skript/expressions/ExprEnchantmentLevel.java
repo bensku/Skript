@@ -18,6 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Map;
+
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -29,11 +35,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Map;
 
 /**
  * @author Peter Güttinger
@@ -45,6 +46,7 @@ import java.util.Map;
 		"\tmessage \"You have a sword of sharpness %level of sharpness of the player's tool% equipped\""})
 @Since("2.0")
 public class ExprEnchantmentLevel extends PropertyExpression<ItemType, Integer> {
+
 	static {
 		Skript.registerExpression(ExprEnchantmentLevel.class, Integer.class, ExpressionType.PROPERTY,
 				"[the] (%-enchantment% level|level of [[the] enchant[ment]] %-enchantment%) o(f|n) %itemtypes%",

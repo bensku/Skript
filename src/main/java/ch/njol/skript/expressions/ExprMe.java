@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.command.EffectCommandEvent;
@@ -30,9 +34,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -42,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"!heal me", "!kick myself", "!give a diamond axe to me"})
 @Since("2.1.1")
 public class ExprMe extends SimpleExpression<CommandSender> {
+
 	static {
 		Skript.registerExpression(ExprMe.class, CommandSender.class, ExpressionType.SIMPLE, "me", "my[self]");
 	}

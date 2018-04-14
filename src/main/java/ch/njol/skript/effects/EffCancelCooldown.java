@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.command.ScriptCommandEvent;
@@ -30,8 +33,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Cancel Command Cooldown")
 @Description({"Only usable in command events. Makes it so the current command usage isn't counted towards the cooldown."})
@@ -49,6 +50,7 @@ import org.eclipse.jdt.annotation.Nullable;
 })
 @Since("2.2-dev34")
 public class EffCancelCooldown extends Effect {
+
 	static {
 		Skript.registerEffect(EffCancelCooldown.class,
 				"(cancel|ignore) [the] [current] [command] cooldown",

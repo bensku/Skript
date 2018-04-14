@@ -18,11 +18,11 @@
  */
 package ch.njol.skript.config;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Map for fast access of entry nodes and section nodes within section nodes.
@@ -30,6 +30,7 @@ import java.util.Map;
  * @author Peter Güttinger
  */
 public class NodeMap {
+
 	private final Map<String, Node> map = new HashMap<>();
 
 	public static boolean inMap(final Node n) {

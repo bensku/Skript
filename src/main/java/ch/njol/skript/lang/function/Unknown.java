@@ -19,9 +19,9 @@
 package ch.njol.skript.lang.function;
 
 /**
- * Function reference, which is impossible to validate has
- * unknown return types. Can not be instantiated.
+ * Function reference, which is impossible to validate has unknown return types. Can not be instantiated.
  */
 public class Unknown {
+
 	private Unknown() {}
 }

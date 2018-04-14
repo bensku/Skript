@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Comparator.Relation;
@@ -32,9 +36,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -45,6 +46,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"victim is of type {villager type}"})
 @Since("1.4")
 public class CondIsOfType extends Condition {
+
 	static {
 		Skript.registerCondition(CondIsOfType.class,
 				"%itemstacks/entities% (is|are) of type[s] %itemtypes/entitydatas%", "%itemstacks/entities% (isn't|is not|aren't|are not) of type[s] %itemtypes/entitydatas%");

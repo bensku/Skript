@@ -18,27 +18,29 @@
  */
 package ch.njol.skript.entity;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.variables.Variables;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.variables.Variables;
+
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation") // Until 1.12: use old deprecated methods for backwards compatibility
 public class HorseData extends EntityData<Horse> {
+
 	static {
 		if (Skript.classExists("org.bukkit.entity.Horse")) {
 			if (!Skript.isRunningMinecraft(1, 11)) // For 1.11+ see SimpleEntityData
 				EntityData.register(HorseData.class, "horse", Horse.class, 0,
 						"horse", "donkey", "mule", "undead horse", "skeleton horse");
-			
+
 			Variables.yggdrasil.registerSingleClass(Variant.class, "Horse.Variant");
 			Variables.yggdrasil.registerSingleClass(Color.class, "Horse.Color");
 			Variables.yggdrasil.registerSingleClass(Style.class, "Horse.Style");

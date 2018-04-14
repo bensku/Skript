@@ -18,14 +18,6 @@
  */
 package ch.njol.skript.registrations;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.ChainedConverter;
-import ch.njol.skript.classes.Converter;
-import ch.njol.skript.classes.Converter.ConverterInfo;
-import ch.njol.skript.classes.Converter.ConverterUtils;
-import ch.njol.util.Pair;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +26,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ChainedConverter;
+import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
+import ch.njol.skript.classes.Converter.ConverterUtils;
+import ch.njol.util.Pair;
+
 /**
  * @author Peter Güttinger
  */
 public abstract class Converters {
+
 	private Converters() {}
 
 	private static List<ConverterInfo<?, ?>> converters = new ArrayList<>(50);
@@ -113,8 +115,8 @@ public abstract class Converters {
 	}
 
 	/**
-	 * Converts the given value to the desired type. If you want to convert multiple values of the same type you should use {@link #getConverter(Class, Class)} to get a
-	 * converter to convert the values.
+	 * Converts the given value to the desired type. If you want to convert multiple values of the same type you should
+	 * use {@link #getConverter(Class, Class)} to get a converter to convert the values.
 	 *
 	 * @param o
 	 * @param to
@@ -160,8 +162,9 @@ public abstract class Converters {
 	}
 
 	/**
-	 * Converts all entries in the given array to the desired type, using {@link #convert(Object, Class)} to convert every single value. If you want to convert an array of values
-	 * of a known type, consider using {@link #convert(Object[], Class, Converter)} for much better performance.
+	 * Converts all entries in the given array to the desired type, using {@link #convert(Object, Class)} to convert
+	 * every single value. If you want to convert an array of values of a known type, consider using {@link
+	 * #convert(Object[], Class, Converter)} for much better performance.
 	 *
 	 * @param o
 	 * @param to

@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.classes.data;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.NumberArithmetic;
@@ -32,12 +34,12 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class JavaClasses {
+
 	public JavaClasses() {}
 
 	public final static int VARIABLENAME_NUMBERACCURACY = 8;

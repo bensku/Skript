@@ -18,13 +18,15 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.yggdrasil.YggdrasilSerializable;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.yggdrasil.YggdrasilSerializable;
 
 /**
  * @author Peter Güttinger
  */
 public class Experience implements YggdrasilSerializable {
+
 	private final int xp;
 
 	public Experience() {

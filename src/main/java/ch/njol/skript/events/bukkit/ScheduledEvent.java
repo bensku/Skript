@@ -18,18 +18,20 @@
  */
 package ch.njol.skript.events.bukkit;
 
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.Getter;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class ScheduledEvent extends Event {
+
 	static {
 		EventValues.registerEventValue(ScheduledEvent.class, World.class, new Getter<World, ScheduledEvent>() {
 			@Override

@@ -18,14 +18,15 @@
  */
 package ch.njol.util;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Collection;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Validate {
+
 	public static void notNull(final Object... objects) {
 		for (int i = 0; i < objects.length; i++) {
 			if (objects[i] == null)

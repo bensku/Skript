@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -53,6 +52,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.0")
 @Events("weather change")
 public class ExprWeather extends PropertyExpression<World, WeatherType> {
+
 	static {
 		Skript.registerExpression(ExprWeather.class, WeatherType.class, ExpressionType.PROPERTY, "[the] weather [(in|of) %worlds%]", "%worlds%'[s] weather");
 	}
@@ -76,12 +76,7 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 			}
 		});
 	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the weather in " + getExpr().toString(e, debug);
-	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -89,7 +84,7 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 			return CollectionUtils.array(WeatherType.class);
 		return null;
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		final WeatherType t = delta == null ? WeatherType.CLEAR : (WeatherType) delta[0];
@@ -112,16 +107,20 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 			}
 		}
 	}
-	
-	@Override
-	public Class<WeatherType> getReturnType() {
-		return WeatherType.class;
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), WeatherChangeEvent.class, ThunderChangeEvent.class);
 	}
-	
+
+	@Override
+	public Class<WeatherType> getReturnType() {
+		return WeatherType.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "the weather in " + getExpr().toString(e, debug);
+	}
 }

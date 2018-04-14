@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.hooks.economy.expressions;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,9 +30,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.hooks.economy.classes.Money;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -40,6 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"add 200 to the player's account # or omit the currency alltogether"})
 @Since("2.0")
 public class ExprBalance extends SimplePropertyExpression<OfflinePlayer, Money> {
+
 	static {
 		register(ExprBalance.class, Money.class, "(money|balance|[bank] account)", "players");
 	}

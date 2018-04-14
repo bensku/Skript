@@ -18,15 +18,16 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public final class EmptyIterator<T> implements Iterator<T> {
+
 	public final static EmptyIterator<Object> instance = new EmptyIterator<>();
 
 	@SuppressWarnings("unchecked")

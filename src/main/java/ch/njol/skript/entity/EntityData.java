@@ -18,6 +18,23 @@
  */
 package ch.njol.skript.entity;
 
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.bukkitutil.PlayerUtils;
@@ -43,22 +60,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -176,6 +177,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	}
 
 	private final static class EntityDataInfo<T extends EntityData<?>> extends SyntaxElementInfo<T> implements LanguageChangeListener {
+
 		final String codeName;
 		final String[] codeNames;
 		final int defaultName;
@@ -468,7 +470,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 					}
 				}
 			}
-			return (E[]) list.toArray(new Player[list.size()]);
+			return (E[]) list.toArray(new Player[0]);
 		}
 		final List<E> list = new ArrayList<>();
 		if (worlds == null)

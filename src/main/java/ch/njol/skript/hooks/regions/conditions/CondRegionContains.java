@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.hooks.regions.conditions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,9 +33,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -41,10 +42,11 @@ import org.eclipse.jdt.annotation.Nullable;
 		"This condition requires a supported regions plugin to be installed."})
 @Examples({"player is in the region {regions::3}",
 		"on region enter:",
-		"	region contains {flags.%world%.red}",
-		"	message \"The red flag is near!\""})
+		"\tregion contains {flags.%world%.red}",
+		"\tmessage \"The red flag is near!\""})
 @Since("2.1")
 public class CondRegionContains extends Condition {
+
 	static {
 		Skript.registerCondition(CondRegionContains.class,
 				"[[the] region] %regions% contain[s] %directions% %locations%", "%locations% (is|are) ([contained] in|part of) [[the] region] %regions%",
@@ -54,7 +56,7 @@ public class CondRegionContains extends Condition {
 	@SuppressWarnings("null")
 	private Expression<Region> regions;
 	@SuppressWarnings("null")
-	private	Expression<Location> locs;
+	private Expression<Location> locs;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override

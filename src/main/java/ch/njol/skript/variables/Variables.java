@@ -18,6 +18,29 @@
  */
 package ch.njol.skript.variables;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.WeakHashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -35,33 +58,12 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.SynchronizedReference;
 import ch.njol.yggdrasil.Yggdrasil;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Variables {
+
 	private Variables() {}
 
 	public final static short YGGDRASIL_VERSION = 1;
@@ -260,11 +262,12 @@ public abstract class Variables {
 
 	/**
 	 * Returns the internal value of the requested variable.
-	 * <p>
+	 *
 	 * <b>Do not modify the returned value!</b>
 	 *
 	 * @param name
-	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
+	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is
+	 * not set.
 	 */
 	@Nullable
 	public static Object getVariable(final String name, final @Nullable Event e, final boolean local) {
@@ -290,7 +293,8 @@ public abstract class Variables {
 	/**
 	 * Sets a variable.
 	 *
-	 * @param name  The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
+	 * @param name  The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this
+	 *              case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
 	public static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
@@ -339,11 +343,13 @@ public abstract class Variables {
 	private static int loadConflicts = 0;
 
 	/**
-	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while variables are loaded when Skript is starting.
+	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while
+	 * variables are loaded when Skript is starting.
 	 * <p>
 	 * Must be called on Bukkit's main thread.
 	 * <p>
-	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be holding any database locks or such when calling this!
+	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be
+	 * holding any database locks or such when calling this!
 	 *
 	 * @param name
 	 * @param value

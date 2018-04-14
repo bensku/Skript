@@ -18,20 +18,22 @@
  */
 package ch.njol.skript.registrations;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.util.Getter;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class EventValues {
+
 	private EventValues() {}
 
 	private final static class EventValueInfo<E extends Event, T> {
@@ -60,7 +62,7 @@ public class EventValues {
 	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
 	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
 
-	private final static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
+	private static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
 		if (time == -1)
 			return pastEventValues;
 		if (time == 0)
@@ -73,12 +75,14 @@ public class EventValues {
 	/**
 	 * Registers an event value.
 	 *
-	 * @param e the event type
-	 * @param c the type of the default value
-	 * @param g the getter to get the value
-	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
-	 *            <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only register a default and a past state. The future state will
-	 *            default to the default state in this case.
+	 * @param e    the event type
+	 * @param c    the type of the default value
+	 * @param g    the getter to get the value
+	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't
+	 *             have distinct states.
+	 *             <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only
+	 *             register a default and a past state. The future state will default to the default state in this
+	 *             case.
 	 */
 	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time) {
 		registerEventValue(e, c, g, time, null, (Class<? extends E>[]) null);
@@ -122,10 +126,11 @@ public class EventValues {
 	}
 
 	/**
-	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to try and get the desired value).
+	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to
+	 * try and get the desired value).
 	 * <p>
-	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link EventValueExpression#EventValueExpression(Class)} instead of invoking this
-	 * method repeatedly.
+	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link
+	 * EventValueExpression#EventValueExpression(Class)} instead of invoking this method repeatedly.
 	 *
 	 * @param e
 	 * @param c

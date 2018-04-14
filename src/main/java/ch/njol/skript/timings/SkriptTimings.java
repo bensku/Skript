@@ -18,15 +18,17 @@
  */
 package ch.njol.skript.timings;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Static utils for Skript timings.
  */
 public class SkriptTimings {
+
 	private static volatile boolean enabled;
 	@SuppressWarnings("null")
 	private static Skript skript; // Initialized on Skript load, before any timings would be used anyway

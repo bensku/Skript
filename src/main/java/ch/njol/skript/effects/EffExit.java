@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -34,23 +37,23 @@ import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.While;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Exit")
 @Description("Exits a given amount of loops and conditionals, or the entire trigger.")
-@Examples({"if player has any ore:",
-		"	stop",
+@Examples({
+		"if player has any ore:",
+		"\tstop",
 		"message \"%player% has no ores!\"",
 		"loop blocks above the player:",
-		"	loop-block is not air:",
-		"		exit 2 sections",
-		"	set loop-block to water"})
+		"\tloop-block is not air:",
+		"\t\texit 2 sections",
+		"\tset loop-block to water"})
 @Since("<i>unknown</i> (before 2.1)")
 public class EffExit extends Effect { // TODO [code style] warn user about code after a stop effect
+
 	static {
 		Skript.registerEffect(EffExit.class,
 				"(exit|stop) [trigger]",
@@ -133,5 +136,4 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "stop " + breakLevels + " " + names[type];
 	}
-
 }

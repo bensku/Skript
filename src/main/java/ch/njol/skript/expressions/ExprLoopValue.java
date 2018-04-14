@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -37,13 +45,6 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.ScriptOptions;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Used to access a loop's current value.
@@ -64,6 +65,7 @@ import java.util.regex.Pattern;
 		"\t\tset loop-block-2 to any wool"})
 @Since("1.0")
 public class ExprLoopValue extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprLoopValue.class, Object.class, ExpressionType.SIMPLE, "[the] loop-<.+>");
 	}

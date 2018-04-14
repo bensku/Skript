@@ -18,6 +18,20 @@
  */
 package ch.njol.skript.aliases;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
@@ -35,19 +49,6 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * FIXME rename
@@ -56,6 +57,7 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("deprecation")
 public abstract class Aliases {
+
 	private final static boolean newPotions = Skript.isRunningMinecraft(1, 9);
 
 	/**
@@ -122,6 +124,7 @@ public abstract class Aliases {
 	private final static ArgsMessage m_loaded_x_aliases = new ArgsMessage("aliases.loaded x aliases");
 
 	final static class Variations extends HashMap<String, HashMap<String, ItemType>> {
+
 		private final static long serialVersionUID = -139481665727386819L;
 	}
 
@@ -144,8 +147,8 @@ public abstract class Aliases {
 	}
 
 	/**
-	 * Concatenates parts of an alias's name. This currently 'lowercases' the first character of any part if there's no space in front of it. It also replaces double spaces with a
-	 * single one and trims the resulting string.
+	 * Concatenates parts of an alias's name. This currently 'lowercases' the first character of any part if there's no
+	 * space in front of it. It also replaces double spaces with a single one and trims the resulting string.
 	 *
 	 * @param parts
 	 */
@@ -586,7 +589,8 @@ public abstract class Aliases {
 	/**
 	 * Prints errors.
 	 *
-	 * @param s       The string holding the type, can be either a number or an alias, plus an optional data part. Case does not matter.
+	 * @param s       The string holding the type, can be either a number or an alias, plus an optional data part. Case
+	 *                does not matter.
 	 * @param t       The ItemType to add the parsed ItemData(s) to (i.e. this ItemType will be modified)
 	 * @param isAlias Whether this type is parsed for an alias.
 	 * @return The given item type or null if the input couldn't be parsed.

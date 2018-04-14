@@ -22,6 +22,7 @@ package ch.njol.skript.lang;
  * @author Peter Güttinger
  */
 public interface Unit extends Cloneable {
+
 	int getAmount();
 
 	void setAmount(double amount);

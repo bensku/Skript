@@ -25,6 +25,7 @@ import org.bukkit.event.HandlerList;
  * @author Peter Güttinger
  */
 public class ScriptCommandEvent extends CommandEvent {
+
 	private final ScriptCommand skriptCommand;
 	private boolean cooldownCancelled = false;
 

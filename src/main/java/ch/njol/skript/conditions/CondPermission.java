@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -27,9 +31,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -41,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tsend \"You're attacking an admin!\" to attacker"})
 @Since("1.0")
 public class CondPermission extends Condition {
+
 	static {
 		Skript.registerCondition(CondPermission.class,
 				"[%commandsenders%] (do[es]n't|don't|do[es] not) have [the] permission[s] %strings%",

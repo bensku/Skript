@@ -18,6 +18,15 @@
  */
 package ch.njol.skript.entity;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
@@ -30,19 +39,12 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * @author Peter Güttinger
  */
 public class FallingBlockData extends EntityData<FallingBlock> {
+
 	static {
 		EntityData.register(FallingBlockData.class, "falling block", FallingBlock.class, "falling block");
 	}

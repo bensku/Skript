@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.Entity;
+
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.entity.Entity;
 
 /**
  * @author Peter Güttinger
@@ -35,6 +36,7 @@ import org.bukkit.entity.Entity;
 		"\tincrease damage by 2"})
 @Since("1.4.4")
 public class CondIsBurning extends PropertyCondition<Entity> {
+
 	static {
 		register(CondIsBurning.class, "(burning|ignited|on fire)", "entities");
 	}

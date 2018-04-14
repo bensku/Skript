@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,13 +39,6 @@ import ch.njol.skript.util.BlockSphereIterator;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.EmptyIterator;
 import ch.njol.util.coll.iterator.IteratorIterable;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * @author Peter Güttinger
@@ -47,6 +48,7 @@ import java.util.Iterator;
 @Examples("loop blocks in radius 5 around the player:")
 @Since("1.0")
 public class ExprBlockSphere extends SimpleExpression<Block> {
+
 	static {
 		Skript.registerExpression(ExprBlockSphere.class, Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks in radius %number% [(of|around) %location%]",
@@ -84,7 +86,7 @@ public class ExprBlockSphere extends SimpleExpression<Block> {
 		final ArrayList<Block> list = new ArrayList<>((int) (1.1 * 4 / 3. * Math.PI * Math.pow(r.doubleValue(), 3)));
 		for (final Block b : new IteratorIterable<>(iterator(e)))
 			list.add(b);
-		return list.toArray(new Block[list.size()]);
+		return list.toArray(new Block[0]);
 	}
 
 	@Override

@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.config.SectionNode;
+import java.util.List;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.List;
+import ch.njol.skript.ScriptLoader;
+import ch.njol.skript.config.SectionNode;
 
 /**
  * Represents a section of a trigger, e.g. a conditional or a loop
@@ -33,6 +34,7 @@ import java.util.List;
  * @see Loop
  */
 public abstract class TriggerSection extends TriggerItem {
+
 	@Nullable
 	private TriggerItem first = null;
 	@Nullable
@@ -61,7 +63,7 @@ public abstract class TriggerSection extends TriggerItem {
 
 	/**
 	 * Remember to add this section to {@link ScriptLoader#currentSections} before parsing child elements!
-	 * <p>
+	 *
 	 * <pre>
 	 * ScriptLoader.currentSections.add(this);
 	 * setTriggerItems(ScriptLoader.loadItems(node));

@@ -25,12 +25,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Provides a list of examples to be used in documentation for annotated
- * element.
+ * Provides a list of examples to be used in documentation for annotated element.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Examples {
+
 	String[] value();
 }

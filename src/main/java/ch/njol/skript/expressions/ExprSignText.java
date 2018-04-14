@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.SignChangeEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -31,12 +38,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.SignChangeEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -50,6 +51,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tset line 3 to \"%player%\""})
 @Since("1.3")
 public class ExprSignText extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprSignText.class, String.class, ExpressionType.PROPERTY,
 				"[the] line %number% [of %block%]", "[the] (1¦1st|1¦first|2¦2nd|2¦second|3¦3rd|3¦third|4¦4th|4¦fourth) line [of %block%]");

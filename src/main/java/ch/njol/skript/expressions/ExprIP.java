@@ -18,6 +18,14 @@
  */
 package ch.njol.skript.expressions;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -29,13 +37,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
 @Name("IP")
 @Description("The IP address of a player.")
@@ -44,6 +45,7 @@ import java.net.InetSocketAddress;
 		"broadcast \"Banned the IP %IP of player%\""})
 @Since("1.4, 2.2-dev26 (when used in connect event)")
 public class ExprIP extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprIP.class, String.class, ExpressionType.PROPERTY, "IP[s][( |-)address[es]] of %players%",
 				"%players%'[s] IP[s][( |-)address[es]]");

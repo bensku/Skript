@@ -18,24 +18,26 @@
  */
 package ch.njol.skript.aliases;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilSerializable {
+
 	static {
 		Variables.yggdrasil.registerSingleClass(ItemData.class, "ItemData");
 	}
@@ -95,7 +97,8 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	 * Tests whether the given item is of this type.
 	 *
 	 * @param item
-	 * @return Whether the given item is of this type. If <tt>item</tt> is <tt>null</tt> this returns <tt>getId() == 0</tt>.
+	 * @return Whether the given item is of this type. If <tt>item</tt> is <tt>null</tt> this returns <tt>getId() ==
+	 * 0</tt>.
 	 */
 	public boolean isOfType(final @Nullable ItemStack item) {
 		if (item == null)
@@ -112,7 +115,8 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	}
 
 	/**
-	 * Returns <code>Aliases.{@link Aliases#getMaterialName(int, short, short, boolean) getMaterialName}(typeid, dataMin, dataMax, false)</code>
+	 * Returns <code>Aliases.{@link Aliases#getMaterialName(int, short, short, boolean) getMaterialName}(typeid,
+	 * dataMin, dataMax, false)</code>
 	 */
 	@Override
 	public String toString() {
@@ -146,12 +150,12 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	}
 
 	/**
-	 * Computes the intersection of two ItemDatas. The data range of the returned item data will be the real intersection of the two data ranges, and the type id will be the one
-	 * set if any.
+	 * Computes the intersection of two ItemDatas. The data range of the returned item data will be the real
+	 * intersection of the two data ranges, and the type id will be the one set if any.
 	 *
 	 * @param other
-	 * @return A new ItemData which is the intersection of the given types, or null if the intersection of the data ranges is empty or both datas have an id != -1 which are not the
-	 * same.
+	 * @return A new ItemData which is the intersection of the given types, or null if the intersection of the data
+	 * ranges is empty or both datas have an id != -1 which are not the same.
 	 */
 	@Nullable
 	public ItemData intersection(final ItemData other) {

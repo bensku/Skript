@@ -18,23 +18,6 @@
  */
 package ch.njol.skript.hooks.regions;
 
-import ch.njol.skript.hooks.regions.WorldGuardHook.WorldGuardRegion;
-import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.variables.Variables;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilID;
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.containers.Flags;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.ResidencePermissions;
-import com.google.common.base.Objects;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -44,13 +27,32 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.ResidencePermissions;
+import com.google.common.base.Objects;
+
+import ch.njol.skript.hooks.regions.WorldGuardHook.WorldGuardRegion;
+import ch.njol.skript.hooks.regions.classes.Region;
+import ch.njol.skript.variables.Variables;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilID;
+
 /**
- * Hook for Residence protection plugin. Currently supports
- * only basic operations.
+ * Hook for Residence protection plugin. Currently supports only basic operations.
  *
  * @author bensku
  */
 public class ResidenceHook extends RegionsPlugin<Residence> {
+
 	public ResidenceHook() throws IOException {}
 
 	@Override
@@ -108,6 +110,7 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 
 	@YggdrasilID("ResidenceRegion")
 	public class ResidenceRegion extends Region {
+
 		private transient ClaimedResidence res;
 		final World world;
 

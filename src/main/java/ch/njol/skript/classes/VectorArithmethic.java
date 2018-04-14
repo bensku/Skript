@@ -24,6 +24,7 @@ import org.bukkit.util.Vector;
  * @author bi0qaw
  */
 public class VectorArithmethic implements Arithmetic<Vector, Vector> {
+
 	@Override
 	public Vector difference(final Vector first, final Vector second) {
 		return new Vector(Math.abs(first.getX() - second.getX()), Math.abs(first.getY() - second.getY()), Math.abs(first.getZ() - second.getZ()));

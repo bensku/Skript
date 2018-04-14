@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.events.util;
 
-import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,11 +25,14 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.plugin.EventExecutor;
 
+import ch.njol.skript.Skript;
+
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public abstract class PlayerChatEventHandler {
+
 	private PlayerChatEventHandler() {}
 
 	public final static boolean usesAsyncEvent = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent");

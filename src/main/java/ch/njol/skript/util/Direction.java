@@ -18,17 +18,11 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.localization.GeneralWords;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Message;
-import ch.njol.skript.localization.Noun;
-import ch.njol.util.Kleenean;
-import ch.njol.yggdrasil.Fields.FieldContext;
-import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
+import java.io.StreamCorruptedException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Locale;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -40,15 +34,23 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Locale;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.localization.GeneralWords;
+import ch.njol.skript.localization.Language;
+import ch.njol.skript.localization.Message;
+import ch.njol.skript.localization.Noun;
+import ch.njol.util.Kleenean;
+import ch.njol.yggdrasil.Fields.FieldContext;
+import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
 
 /**
  * @author Peter Güttinger
  */
 public class Direction implements YggdrasilRobustSerializable {
+
 	/**
 	 * A direction that doesn't point anywhere, i.e. equal to 'at'.
 	 */

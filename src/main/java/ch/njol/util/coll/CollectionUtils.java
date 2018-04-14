@@ -18,10 +18,6 @@
  */
 package ch.njol.util.coll;
 
-import ch.njol.util.Pair;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,19 +28,26 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.util.Pair;
+
 /**
- * Utils for collections and arrays. All methods will not print any errors for <tt>null</tt> collections/arrays, but will return false/-1/etc.
+ * Utils for collections and arrays. All methods will not print any errors for <tt>null</tt> collections/arrays, but
+ * will return false/-1/etc.
  *
  * @author Peter Güttinger
  */
 public abstract class CollectionUtils {
+
 	private CollectionUtils() {}
 
 	/**
 	 * Finds an object in an array using {@link Object#equals(Object)} (can find null elements).
 	 *
 	 * @param array The array to search in
-	 * @param o The object to search for
+	 * @param o     The object to search for
 	 * @return The index of the first occurrence of the given object or -1 if not found
 	 */
 	public static <T> int indexOf(final @Nullable T[] array, final @Nullable T t) {
@@ -131,7 +134,7 @@ public abstract class CollectionUtils {
 	 * finds a string in an array of strings (ignoring case).
 	 *
 	 * @param array the array to search in
-	 * @param s the string to search for
+	 * @param s     the string to search for
 	 * @return the index of the first occurrence of the given string or -1 if not found
 	 */
 	public static int indexOfIgnoreCase(final @Nullable String[] array, final @Nullable String s) {
@@ -154,7 +157,7 @@ public abstract class CollectionUtils {
 	 * Finds an object in an iterable using {@link Object#equals(Object)}.
 	 *
 	 * @param iter The iterable to search in
-	 * @param o The object to search for
+	 * @param o    The object to search for
 	 * @return The index of the first occurrence of the given object or -1 if not found
 	 */
 	public static <T> int indexOf(final @Nullable Iterable<T> iter, final @Nullable T o) {
@@ -173,7 +176,7 @@ public abstract class CollectionUtils {
 	 * Finds a string in a collection of strings (ignoring case).
 	 *
 	 * @param iter The iterable to search in
-	 * @param s The string to search for
+	 * @param s    The string to search for
 	 * @return The index of the first occurrence of the given string or -1 if not found
 	 */
 	public static int indexOfIgnoreCase(final @Nullable Iterable<String> iter, final @Nullable String s) {
@@ -217,7 +220,7 @@ public abstract class CollectionUtils {
 
 	/**
 	 * @param classes Array of classes
-	 * @param c The class to look for
+	 * @param c       The class to look for
 	 * @return Whether the class or any of its superclasses are contained in the array
 	 */
 	public static boolean containsSuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?> c) {
@@ -234,7 +237,7 @@ public abstract class CollectionUtils {
 
 	/**
 	 * @param classes Array of classes
-	 * @param cs The classes to look for
+	 * @param cs      The classes to look for
 	 * @return Whether the classes or any of their superclasses are contained in the array
 	 */
 	public static boolean containsAnySuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?>... cs) {
@@ -348,7 +351,7 @@ public abstract class CollectionUtils {
 	 * Creates a permutation of all integers in the interval [start, end]
 	 *
 	 * @param start The lowest number which will be included in the permutation
-	 * @param end The highest number which will be included in the permutation
+	 * @param end   The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
 	public static int[] permutation(final int start, final int end) {
@@ -371,7 +374,7 @@ public abstract class CollectionUtils {
 	 * Creates a permutation of all bytes in the interval [start, end]
 	 *
 	 * @param start The lowest number which will be included in the permutation
-	 * @param end The highest number which will be included in the permutation
+	 * @param end   The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
 	public static byte[] permutation(final byte start, final byte end) {
@@ -401,7 +404,8 @@ public abstract class CollectionUtils {
 	 * Converts a collection of integers into a primitive int array.
 	 *
 	 * @param ints The collection
-	 * @return An int[] containing the elements of the given collection in the order they were returned by the collection's iterator.
+	 * @return An int[] containing the elements of the given collection in the order they were returned by the
+	 * collection's iterator.
 	 */
 	@SuppressWarnings("null")
 	public static int[] toArray(final @Nullable Collection<Integer> ints) {

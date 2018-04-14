@@ -18,14 +18,15 @@
  */
 package ch.njol.skript.config;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Map.Entry;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class EntryNode extends Node implements Entry<String, String> {
+
 	private String value;
 
 	public EntryNode(final String key, final String value, final String comment, final SectionNode parent, final int lineNum) {

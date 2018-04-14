@@ -18,23 +18,26 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.Iterator;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.function.EffFunctionCall;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Iterator;
 
 /**
- * An effect which is unconditionally executed when reached, and execution will usually continue with the next item of the trigger after this effect is executed (the stop effect
- * for example stops the trigger, i.e. nothing else will be executed after it)
+ * An effect which is unconditionally executed when reached, and execution will usually continue with the next item of
+ * the trigger after this effect is executed (the stop effect for example stops the trigger, i.e. nothing else will be
+ * executed after it)
  *
  * @author Peter Güttinger
  * @see Skript#registerEffect(Class, String...)
  */
 public abstract class Effect extends Statement {
+
 	protected Effect() {}
 
 	/**

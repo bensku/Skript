@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.PassengerUtils;
 import ch.njol.skript.doc.Description;
@@ -29,9 +33,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -42,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"make the attacker ride the victim"})
 @Since("2.0")
 public class EffVehicle extends Effect {
+
 	static {
 		Skript.registerEffect(EffVehicle.class,
 				"(make|let|force) %entities% [to] (ride|mount) [(in|on)] %" + (PassengerUtils.hasMultiplePassenger() ? "entities" : "entity") + "/entitydatas%",

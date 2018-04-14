@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.entity;
 
+import java.util.Arrays;
+
+import org.bukkit.Material;
+import org.bukkit.entity.ThrownPotion;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
@@ -28,17 +35,12 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
  */
 public class ThrownPotionData extends EntityData<ThrownPotion> {
+
 	static {
 		EntityData.register(ThrownPotionData.class, "thrown potion", ThrownPotion.class, "thrown potion");
 	}

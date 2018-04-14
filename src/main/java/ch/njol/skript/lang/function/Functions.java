@@ -18,6 +18,20 @@
  */
 package ch.njol.skript.lang.function;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
@@ -31,27 +45,16 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Functions {
+
 	private Functions() {}
 
 	final static class FunctionData {
+
 		final Function<?> function;
 
 		public FunctionData(final Function<?> function) {
@@ -129,7 +132,7 @@ public abstract class Functions {
 		if (Skript.debug() || node.debug())
 			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")" + (c != null && p != null ? " :: " + Utils.toEnglishPlural(c.getCodeName(), p.getSecond()) : "") + ":");
 
-		@SuppressWarnings("null") final Function<?> f = new ScriptFunction<>(name, params.toArray(new Parameter[params.size()]), node, (ClassInfo<Object>) c, p != null && !p.getSecond());
+		@SuppressWarnings("null") final Function<?> f = new ScriptFunction<>(name, params.toArray(new Parameter[0]), node, (ClassInfo<Object>) c, p != null && !p.getSecond());
 //		functions.put(name, new FunctionData(f)); // in constructor
 		return f;
 	}
@@ -238,9 +241,8 @@ public abstract class Functions {
 	}
 
 	/**
-	 * Gets a function, if it exists. Note that even if function exists in scripts,
-	 * it might not have been parsed yet. If you want to check for existance,
-	 * then use {@link #getSignature(String)}.
+	 * Gets a function, if it exists. Note that even if function exists in scripts, it might not have been parsed yet.
+	 * If you want to check for existance, then use {@link #getSignature(String)}.
 	 *
 	 * @param name Name of function.
 	 * @return Function, or null if it does not exist.
@@ -344,13 +346,11 @@ public abstract class Functions {
 	}
 
 	/**
-	 * Normally, function calls do not cause actual Bukkit events to be
-	 * called. If an addon requires such functionality, it should call this
-	 * method. After doing so, the events will be called. Calling this method
-	 * many times will not cause any additional changes.
+	 * Normally, function calls do not cause actual Bukkit events to be called. If an addon requires such functionality,
+	 * it should call this method. After doing so, the events will be called. Calling this method many times will not
+	 * cause any additional changes.
 	 * <p>
-	 * Note that calling events is not free; performance might vary
-	 * once you have enabled that.
+	 * Note that calling events is not free; performance might vary once you have enabled that.
 	 *
 	 * @param addon Addon instance. Nullness is checked runtime.
 	 */

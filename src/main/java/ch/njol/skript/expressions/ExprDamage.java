@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.HealthUtils;
@@ -34,9 +38,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -47,13 +48,14 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("1.3.5")
 @Events("damage")
 public class ExprDamage extends SimpleExpression<Double> {
+
 	static {
 		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Kleenean delay;
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class)) {
@@ -63,15 +65,15 @@ public class ExprDamage extends SimpleExpression<Double> {
 		delay = isDelayed;
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Double[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
 			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+		return new Double[]{HealthUtils.getDamage((EntityDamageEvent) e)};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -84,7 +86,7 @@ public class ExprDamage extends SimpleExpression<Double> {
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		if (!(e instanceof EntityDamageEvent))
@@ -106,17 +108,17 @@ public class ExprDamage extends SimpleExpression<Double> {
 				assert false;
 		}
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends Double> getReturnType() {
 		return Double.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the damage";

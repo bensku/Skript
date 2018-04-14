@@ -18,24 +18,24 @@
  */
 package ch.njol.skript;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
+import ch.njol.skript.config.Config;
+import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import ch.njol.skript.config.Config;
-import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.Trigger;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Peter Güttinger
  */
 public class SkriptTest {
+
 	@SuppressWarnings("null")
 	private static Player njol = createMock(Player.class);
 

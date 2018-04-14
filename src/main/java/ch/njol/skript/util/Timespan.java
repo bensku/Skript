@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.util;
 
+import java.util.HashMap;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
@@ -25,15 +29,13 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.HashMap;
 
 /**
  * @author Peter Güttinger
  * @edited by Mirreducki. Increased maximum timespan.
  */
 public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { // REMIND unit
+
 	private final static Noun m_tick = new Noun("time.tick");
 	private final static Noun m_second = new Noun("time.second");
 	private final static Noun m_minute = new Noun("time.minute");
@@ -53,7 +55,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 
 	@Nullable
-	public final static Timespan parse(final String s) {
+	public static Timespan parse(final String s) {
 		if (s.isEmpty())
 			return null;
 		long t = 0;
@@ -133,8 +135,8 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 
 	/**
-	 * @deprecated Use fromTicks_i(long ticks) instead. Since this method limits timespan to 50 * Integer.MAX_VALUE.
 	 * @addon I only keep this to allow for older addons to still work. / Mirre
+	 * @deprecated Use fromTicks_i(long ticks) instead. Since this method limits timespan to 50 * Integer.MAX_VALUE.
 	 */
 	@Deprecated
 	public static Timespan fromTicks(final int ticks) {
@@ -154,9 +156,9 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 
 	/**
-	 * @deprecated Use getTicks_i() instead. Since this method limits timespan to Integer.MAX_VALUE.
 	 * @addon I only keep this to allow for older addons to still work. / Mirre
 	 * @Well if need the ticks because of a method that takes a int input it doesn't really matter.
+	 * @deprecated Use getTicks_i() instead. Since this method limits timespan to Integer.MAX_VALUE.
 	 */
 	@Deprecated
 	public int getTicks() {

@@ -28,6 +28,7 @@ import ch.njol.util.Setter;
  * @author Peter Güttinger
  */
 public class ParsedEntryValidator<T> extends EntryValidator {
+
 	private final Parser<? extends T> parser;
 	private final Setter<T> setter;
 

@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
@@ -26,9 +30,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ExpressionType;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -41,14 +42,15 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("2.0")
 @Events("command")
 public class ExprCommandSender extends EventValueExpression<CommandSender> {
+
 	static {
 		Skript.registerExpression(ExprCommandSender.class, CommandSender.class, ExpressionType.SIMPLE, "[the] [command['s]] (sender|executor)");
 	}
-	
+
 	public ExprCommandSender() {
 		super(CommandSender.class);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the command sender";

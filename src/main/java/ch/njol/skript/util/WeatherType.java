@@ -18,7 +18,9 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.localization.Language;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.weather.ThunderChangeEvent;
@@ -26,8 +28,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import ch.njol.skript.localization.Language;
 
 /**
  * @author Peter Güttinger

@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.lang.util;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
@@ -34,10 +39,6 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * Represents a literal, i.e. a static value like a number or a string.
@@ -46,6 +47,7 @@ import java.lang.reflect.Array;
  * @see UnparsedLiteral
  */
 public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
+
 	protected final Class<T> c;
 
 	private final boolean isDefault;

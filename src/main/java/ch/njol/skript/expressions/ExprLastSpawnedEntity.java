@@ -18,6 +18,13 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,12 +40,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -55,6 +56,7 @@ import java.lang.reflect.Array;
 		"push last dropped item upwards"})
 @Since("1.3 (spawned entity), 2.0 (shot entity), 2.2-dev26 (dropped item)")
 public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprLastSpawnedEntity.class, Entity.class, ExpressionType.SIMPLE, "[the] [last[ly]] (0¦spawned|1¦shot) %*entitydata%", "[the] [last[ly]] dropped (2¦item)");
 	}

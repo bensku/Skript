@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.Player;
+
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.entity.Player;
 
 /**
  * @author Peter Güttinger
@@ -37,6 +38,7 @@ import org.bukkit.entity.Player;
 		"\tincrease the damage by 1000"})
 @Since("1.4.4")
 public class CondIsSleeping extends PropertyCondition<Player> {
+
 	static {
 		register(CondIsSleeping.class, "sleeping", "players");
 	}

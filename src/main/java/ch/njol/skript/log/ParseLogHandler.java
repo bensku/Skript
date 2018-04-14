@@ -18,22 +18,24 @@
  */
 package ch.njol.skript.log;
 
-import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
 
 /**
  * @author Peter Güttinger
  */
 public class ParseLogHandler extends LogHandler {
+
 	@Nullable
 	private LogEntry error = null;
-	
+
 	private final List<LogEntry> log = new ArrayList<LogEntry>();
-	
+
 	@Override
 	public LogResult log(final LogEntry entry) {
 		if (entry.getLevel().intValue() >= Level.SEVERE.intValue()) {
@@ -48,19 +50,19 @@ public class ParseLogHandler extends LogHandler {
 		}
 		return LogResult.CACHED;
 	}
-	
+
 	private boolean printedErrorOrLog = false;
-	
+
 	@Override
 	public void onStop() {
 		if (!printedErrorOrLog && Skript.testing())
 			SkriptLogger.LOGGER.warning("Parse log wasn't instructed to print anything at " + SkriptLogger.getCaller());
 	}
-	
+
 	public void error(final String error, final ErrorQuality quality) {
 		log(new LogEntry(SkriptLogger.SEVERE, quality, error));
 	}
-	
+
 	/**
 	 * Clears all log messages except for the error
 	 */
@@ -69,7 +71,7 @@ public class ParseLogHandler extends LogHandler {
 			e.discarded("cleared");
 		log.clear();
 	}
-	
+
 	/**
 	 * Prints the retained log, but no errors
 	 */
@@ -80,14 +82,14 @@ public class ParseLogHandler extends LogHandler {
 		if (error != null)
 			error.discarded("not printed");
 	}
-	
+
 	public void printError() {
 		printError(null);
 	}
-	
+
 	/**
 	 * Prints the best error or the given error if no error has been logged.
-	 * 
+	 *
 	 * @param def Error to log if no error has been logged so far, can be null
 	 */
 	public void printError(final @Nullable String def) {
@@ -101,7 +103,7 @@ public class ParseLogHandler extends LogHandler {
 		for (final LogEntry e : log)
 			e.discarded("not printed");
 	}
-	
+
 	public void printError(final String def, final ErrorQuality quality) {
 		printedErrorOrLog = true;
 		stop();
@@ -113,18 +115,18 @@ public class ParseLogHandler extends LogHandler {
 		for (final LogEntry e : log)
 			e.discarded("not printed");
 	}
-	
+
 	public int getNumErrors() {
 		return error == null ? 0 : 1;
 	}
-	
+
 	public boolean hasError() {
 		return error != null;
 	}
-	
+
 	@Nullable
 	public LogEntry getError() {
 		return error;
 	}
-	
+
 }

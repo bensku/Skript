@@ -18,6 +18,30 @@
  */
 package ch.njol.skript;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.ClassInfo;
@@ -67,34 +91,12 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.regex.Matcher;
 
 /**
  * @author Peter Güttinger
  */
 final public class ScriptLoader {
+
 	private ScriptLoader() {}
 
 	private final static Message m_no_errors = new Message("skript.no errors"),
@@ -156,6 +158,7 @@ final public class ScriptLoader {
 	public static Kleenean hasDelayBefore = Kleenean.FALSE;
 
 	public static class ScriptInfo {
+
 		public int files, triggers, commands, functions;
 
 		public ScriptInfo() {}
@@ -212,8 +215,7 @@ final public class ScriptLoader {
 	static boolean loadAsync; // See below
 
 	/**
-	 * Checks if scripts are loaded in separate thread. If true,
-	 * following behavior should be expected:
+	 * Checks if scripts are loaded in separate thread. If true, following behavior should be expected:
 	 * <ul>
 	 * <li>Scripts are still unloaded and enabled in server thread
 	 * <li>When reloading a script, old version is unloaded <i>after</i> it has
@@ -246,6 +248,7 @@ final public class ScriptLoader {
 	}
 
 	private static class AsyncLoaderThread extends Thread {
+
 		@Override
 		public void run() {
 			while (true) {
@@ -394,6 +397,7 @@ final public class ScriptLoader {
 	 * Represents data for event which is waiting to be loaded.
 	 */
 	private static class ParsedEventData {
+
 		ParsedEventData(NonNullPair<SkriptEventInfo<?>, SkriptEvent> info, String event, SectionNode node, List<TriggerItem> items) {
 			this.info = info;
 			this.event = event;
@@ -408,8 +412,7 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Loads one script. Only for internal use, as this doesn't register/update
-	 * event handlers.
+	 * Loads one script. Only for internal use, as this doesn't register/update event handlers.
 	 *
 	 * @param config Config for script to be loaded.
 	 * @return Info about script that is loaded
@@ -718,8 +721,8 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Loads structure of given script, currently only for functions. Must be called before
-	 * actually loading that script.
+	 * Loads structure of given script, currently only for functions. Must be called before actually loading that
+	 * script.
 	 *
 	 * @param f Script file.
 	 */
@@ -743,8 +746,8 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Loads structure of given script, currently only for functions. Must be called before
-	 * actually loading that script.
+	 * Loads structure of given script, currently only for functions. Must be called before actually loading that
+	 * script.
 	 *
 	 * @param source Source input stream.
 	 * @param name   Name of source "file".
@@ -763,8 +766,8 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Loads structure of given script, currently only for functions. Must be called before
-	 * actually loading that script.
+	 * Loads structure of given script, currently only for functions. Must be called before actually loading that
+	 * script.
 	 *
 	 * @param config Config object for the script.
 	 */
@@ -1065,7 +1068,8 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Use this sparingly; {@link #isCurrentEvent(Class)} or {@link #isCurrentEvent(Class...)} should be used in most cases.
+	 * Use this sparingly; {@link #isCurrentEvent(Class)} or {@link #isCurrentEvent(Class...)} should be used in most
+	 * cases.
 	 */
 	@Nullable
 	public static Class<? extends Event>[] getCurrentEvents() {

@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Comparator.Relation;
-import ch.njol.skript.classes.data.DefaultComparators;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -43,11 +34,22 @@ import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.classes.data.DefaultComparators;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
+
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings({"deprecation", "unchecked"})
 public class EvtBlock extends SkriptEvent {
+
 	static {
 		// TODO 'block destroy' event for any kind of block destruction (player, water, trampling, fall (sand, toches, ...), etc) -> BlockPhysicsEvent?
 		// REMIND attacking an item frame first removes its item; include this in on block damage?

@@ -18,18 +18,6 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.classes.Comparator.Relation;
-import ch.njol.skript.classes.data.DefaultComparators;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.log.ErrorQuality;
-import ch.njol.util.Checker;
-import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -46,11 +34,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.classes.data.DefaultComparators;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.log.ErrorQuality;
+import ch.njol.util.Checker;
+import ch.njol.util.coll.CollectionUtils;
+
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class EvtClick extends SkriptEvent {
+
 	private final static boolean twoHanded = Skript.isRunningMinecraft(1, 9);
 
 	/**
@@ -59,8 +61,7 @@ public class EvtClick extends SkriptEvent {
 	private final static int RIGHT = 1, LEFT = 2, ANY = RIGHT | LEFT;
 
 	/**
-	 * If we used "holding" somewhere there, we must check if either hand
-	 * contains the tool.
+	 * If we used "holding" somewhere there, we must check if either hand contains the tool.
 	 */
 	private final static int HOLDING = 4;
 

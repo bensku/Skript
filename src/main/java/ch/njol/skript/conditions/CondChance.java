@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -27,8 +30,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -43,6 +44,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"chance of {var} # {var} between 0 and 1"})
 @Since("1.0")
 public class CondChance extends Condition {
+
 	static {
 		Skript.registerCondition(CondChance.class, "chance of %number%(1¦\\%|)");
 	}

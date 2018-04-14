@@ -18,6 +18,31 @@
  */
 package ch.njol.skript.aliases;
 
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.RandomAccess;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Unit;
 import ch.njol.skript.localization.Adjective;
@@ -35,34 +60,11 @@ import ch.njol.util.coll.iterator.EmptyIterable;
 import ch.njol.util.coll.iterator.SingleItemIterable;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Random;
-import java.util.RandomAccess;
 
 @ContainerType(ItemStack.class)
 @SuppressWarnings("deprecation")
 public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>, YggdrasilExtendedSerializable {
+
 	private final static Message m_named = new Message("aliases.named");
 
 	// 1.4.5
@@ -386,7 +388,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	/**
 	 * Sets the given block to this ItemType
 	 *
-	 * @param block The block to set
+	 * @param block        The block to set
 	 * @param applyPhysics Whether to run a physics check just after setting the block
 	 * @return Whether the block was successfully set
 	 */
@@ -401,12 +403,12 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * Intersects all ItemDatas with all ItemDatas of the given ItemType, returning an ItemType with at most n*m ItemDatas, where n = #ItemDatas of this ItemType, and m =
-	 * #ItemDatas of the argument.
+	 * Intersects all ItemDatas with all ItemDatas of the given ItemType, returning an ItemType with at most n*m
+	 * ItemDatas, where n = #ItemDatas of this ItemType, and m = #ItemDatas of the argument.
 	 *
-	 * @see ItemData#intersection(ItemData)
 	 * @param other
 	 * @return A new item type which is the intersection of the two item types or null if the intersection is empty.
+	 * @see ItemData#intersection(ItemData)
 	 */
 	@Nullable
 	public ItemType intersection(final ItemType other) {
@@ -533,7 +535,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * Gets all ItemStacks this ItemType represents. Only use this if you know what you're doing, as it returns only one element if this is not an 'every' alias.
+	 * Gets all ItemStacks this ItemType represents. Only use this if you know what you're doing, as it returns only one
+	 * element if this is not an 'every' alias.
 	 *
 	 * @return An Iterable whose iterator will always return the same item(s)
 	 */
@@ -610,7 +613,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	private final static Random random = new Random();
 
 	/**
-	 * @return One random ItemStack that this ItemType represents. If you have a List or an Inventory, use {@link #addTo(Inventory)} or {@link #addTo(List)} respectively.
+	 * @return One random ItemStack that this ItemType represents. If you have a List or an Inventory, use {@link
+	 * #addTo(Inventory)} or {@link #addTo(List)} respectively.
 	 * @see #addTo(Inventory)
 	 * @see #addTo(ItemStack)
 	 * @see #addTo(ItemStack[])
@@ -653,7 +657,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		return addTo(getStorageContents(invi));
 	}
 
-	public final static ItemStack[] getCopiedContents(final Inventory invi) {
+	public static ItemStack[] getCopiedContents(final Inventory invi) {
 		final ItemStack[] buf = invi.getContents();
 		for (int i = 0; i < buf.length; i++)
 			if (buf[i] != null)
@@ -662,12 +666,13 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * Gets copy of storage contents, i.e. ignores armor and off hand. This is due to Spigot 1.9
-	 * added armor slots, and off hand to default inventory index.
+	 * Gets copy of storage contents, i.e. ignores armor and off hand. This is due to Spigot 1.9 added armor slots, and
+	 * off hand to default inventory index.
+	 *
 	 * @param invi Inventory
 	 * @return Copied storage contents
 	 */
-	public final static ItemStack[] getStorageContents(final Inventory invi) {
+	public static ItemStack[] getStorageContents(final Inventory invi) {
 		if (invi instanceof PlayerInventory) {
 			final ItemStack[] buf = invi.getContents();
 			final ItemStack[] tBuf = new ItemStack[36];
@@ -679,8 +684,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * @return List of ItemDatas. The returned list is not modifiable, use {@link #add(ItemData)} and {@link #remove(ItemData)} if you need to change the list, or use the
-	 *         {@link #iterator()}.
+	 * @return List of ItemDatas. The returned list is not modifiable, use {@link #add(ItemData)} and {@link
+	 * #remove(ItemData)} if you need to change the list, or use the {@link #iterator()}.
 	 */
 	@SuppressWarnings("null")
 	public List<ItemData> getTypes() {
@@ -812,8 +817,10 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * @param lists The lists to remove this type from. Each list should implement {@link RandomAccess} or this method will be slow.
-	 * @return Whether this whole item type could be removed (i.e. returns false if the lists didn't contain this item type completely)
+	 * @param lists The lists to remove this type from. Each list should implement {@link RandomAccess} or this method
+	 *              will be slow.
+	 * @return Whether this whole item type could be removed (i.e. returns false if the lists didn't contain this item
+	 * type completely)
 	 */
 	public boolean removeFrom(final List<ItemStack>... lists) {
 		int removed = 0;
@@ -957,7 +964,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 *
 	 * @param set
 	 * @param sub
-	 * @return Whether all item types in <tt>sub</tt> have at least one {@link #isSupertypeOf(ItemType) super type} in <tt>set</tt>
+	 * @return Whether all item types in <tt>sub</tt> have at least one {@link #isSupertypeOf(ItemType) super type} in
+	 * <tt>set</tt>
 	 */
 	public static boolean isSubset(final ItemType[] set, final ItemType[] sub) {
 		outer:
@@ -1157,8 +1165,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 
 	/**
-	 * Gets raw item names ("minecraft:some_item"). Works even if server doesn't support them,
-	 * since Bukkit API doesn't in any case.
+	 * Gets raw item names ("minecraft:some_item"). Works even if server doesn't support them, since Bukkit API doesn't
+	 * in any case.
+	 *
 	 * @return names
 	 */
 	public List<String> getRawNames() {

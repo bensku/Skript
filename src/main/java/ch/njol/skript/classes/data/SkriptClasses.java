@@ -18,6 +18,18 @@
  */
 package ch.njol.skript.classes.data;
 
+import java.io.StreamCorruptedException;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemData;
@@ -51,23 +63,13 @@ import ch.njol.skript.util.VisualEffectDummy;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.yggdrasil.Fields;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.StreamCorruptedException;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("rawtypes")
 public class SkriptClasses {
+
 	public SkriptClasses() {}
 
 	static {
@@ -339,8 +341,8 @@ public class SkriptClasses {
 				.usage("<code>##:##</code>",
 						"<code>##[:##][ ]am/pm</code>")
 				.examples("at 20:00:",
-						"	time is 8 pm",
-						"	broadcast \"It's %time%\"")
+						"\ttime is 8 pm",
+						"\tbroadcast \"It's %time%\"")
 				.since("1.0")
 				.defaultExpression(new EventValueExpression<>(Time.class))
 				.parser(new Parser<Time>() {
@@ -365,7 +367,7 @@ public class SkriptClasses {
 						return "time:\\d+";
 					}
 				}).serializer(new YggdrasilSerializer<Time>() {
-					//						return "" + t.getTicks();
+					// return "" + t.getTicks();
 					@Override
 					@Nullable
 					public Time deserialize(final String s) {
@@ -389,10 +391,11 @@ public class SkriptClasses {
 						"See <a href='#date'>date</a> and <a href='#time'>time</a> for the other time types of Skript.")
 				.usage("<code>&lt;number&gt; [minecraft/mc/real/rl/irl] ticks/seconds/minutes/hours/days [[,/and] &lt;more...&gt;</code>]",
 						"<code>[###:]##:##[.####]</code> ([hours:]minutes:seconds[.milliseconds])")
-				.examples("every 5 minecraft days:",
-						"	wait a minecraft second and 5 ticks",
+				.examples(
+						"every 5 minecraft days:",
+						"\twait a minecraft second and 5 ticks",
 						"every 10 mc days and 12 hours:",
-						"	halt for 12.7 irl minutes, 12 hours and 120.5 seconds")
+						"\thalt for 12.7 irl minutes, 12 hours and 120.5 seconds")
 				.since("1.0")
 				.parser(new Parser<Timespan>() {
 					@Override
@@ -416,7 +419,7 @@ public class SkriptClasses {
 						return "timespan:\\d+";
 					}
 				}).serializer(new YggdrasilSerializer<Timespan>() {
-					//						return "" + t.getMilliSeconds();
+					// return "" + t.getMilliSeconds();
 					@Override
 					@Nullable
 					public Timespan deserialize(final String s) {
@@ -595,7 +598,7 @@ public class SkriptClasses {
 				.usage("see <a href='../expressions/#ExprDirection'>direction (expression)</a>")
 				.examples("set the block below the victim to a chest",
 						"loop blocks from the block infront of the player to the block 10 below the player:",
-						"	set the block behind the loop-block to water")
+						"\tset the block behind the loop-block to water")
 				.since("2.0")
 				.defaultExpression(new SimpleLiteral<>(new Direction(new double[]{0, 0, 0}), true))
 				.parser(new Parser<Direction>() {

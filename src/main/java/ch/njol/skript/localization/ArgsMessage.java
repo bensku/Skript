@@ -18,11 +18,12 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
-
 import java.util.IllegalFormatException;
 
+import ch.njol.skript.Skript;
+
 public final class ArgsMessage extends Message {
+
 	public ArgsMessage(final String key) {
 		super(key);
 	}

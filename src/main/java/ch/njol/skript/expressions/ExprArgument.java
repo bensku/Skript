@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.command.Argument;
@@ -37,10 +42,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -56,6 +57,7 @@ import java.util.List;
 		"heal the last argument"})
 @Since("1.0")
 public class ExprArgument extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprArgument.class, Object.class, ExpressionType.SIMPLE,
 				"[the] last arg[ument][s]",

@@ -18,11 +18,6 @@
  */
 package ch.njol.skript.config;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.config.validate.SectionValidator;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,12 +29,19 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.config.validate.SectionValidator;
+
 /**
  * Represents a config file.
  *
  * @author Peter Güttinger
  */
 public class Config implements Comparable<Config> {
+
 	boolean simple = false;
 
 	/**
@@ -163,7 +165,8 @@ public class Config implements Comparable<Config> {
 	/**
 	 * Sets this config's values to those in the given config.
 	 * <p>
-	 * Used by Skript to import old settings into the updated config. The return value is used to not modify the config if no new options were added.
+	 * Used by Skript to import old settings into the updated config. The return value is used to not modify the config
+	 * if no new options were added.
 	 *
 	 * @param other
 	 * @return Whether the configs' keys differ, i.e. false == configs only differ in values, not keys.
@@ -215,7 +218,8 @@ public class Config implements Comparable<Config> {
 	 * Gets an entry node's value at the designated path
 	 *
 	 * @param path
-	 * @return The entry node's value at the location defined by path or null if it either doesn't exist or is not an entry.
+	 * @return The entry node's value at the location defined by path or null if it either doesn't exist or is not an
+	 * entry.
 	 */
 	@Nullable
 	public String get(final String... path) {

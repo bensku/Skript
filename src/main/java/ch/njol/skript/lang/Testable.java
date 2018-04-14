@@ -28,5 +28,6 @@ import org.bukkit.event.Event;
  * @author Peter Güttinger
  */
 public interface Testable {
+
 	boolean test(Event e);
 }

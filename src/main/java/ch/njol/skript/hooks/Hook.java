@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.hooks;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.localization.ArgsMessage;
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import java.io.IOException;
+import ch.njol.skript.Skript;
+import ch.njol.skript.localization.ArgsMessage;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class Hook<P extends Plugin> {
+
 	private final static ArgsMessage m_hooked = new ArgsMessage("hooks.hooked"),
 			m_hook_error = new ArgsMessage("hooks.error");
 

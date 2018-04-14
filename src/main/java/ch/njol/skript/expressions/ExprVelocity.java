@@ -18,16 +18,17 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Sashie
@@ -37,6 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set player's velocity to {_v}"})
 @Since("2.2-dev31")
 public class ExprVelocity extends SimplePropertyExpression<Entity, Vector> {
+
 	static {
 		register(ExprVelocity.class, Vector.class, "velocity", "entities");
 	}

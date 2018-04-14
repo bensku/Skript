@@ -18,21 +18,23 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.localization.Language;
-import ch.njol.yggdrasil.YggdrasilSerializable;
-import org.bukkit.enchantments.Enchantment;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.bukkit.enchantments.Enchantment;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.localization.Language;
+import ch.njol.yggdrasil.YggdrasilSerializable;
+
 /**
  * @author Peter Güttinger
  */
 public class EnchantmentType implements YggdrasilSerializable {
+
 	private final static String LANGUAGE_NODE = "enchantments";
 
 	private final Enchantment type;
@@ -139,7 +141,7 @@ public class EnchantmentType implements YggdrasilSerializable {
 	}
 
 	@SuppressWarnings("null")
-	public final static Collection<String> getNames() {
+	public static Collection<String> getNames() {
 		return enchantmentNames.values();
 	}
 

@@ -18,18 +18,20 @@
  */
 package ch.njol.skript.variables;
 
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.util.Utils;
-import ch.njol.util.StringUtils;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.util.Utils;
+import ch.njol.util.StringUtils;
+
 final class VariablesMap {
+
 	private final static Comparator<String> variableNameComparator = (first, second) -> {
 		if (first == null)
 			return second == null ? 0 : -1;
@@ -68,11 +70,12 @@ final class VariablesMap {
 
 	/**
 	 * Returns the internal value of the requested variable.
-	 * <p>
+	 *
 	 * <b>Do not modify the returned value!</b>
 	 *
 	 * @param name
-	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
+	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is
+	 * not set.
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -105,7 +108,8 @@ final class VariablesMap {
 	/**
 	 * Sets a variable.
 	 *
-	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
+	 * @param name  The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this
+	 *              case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
 	@SuppressWarnings("unchecked")

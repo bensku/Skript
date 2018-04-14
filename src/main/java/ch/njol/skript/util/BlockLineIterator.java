@@ -18,20 +18,22 @@
  */
 package ch.njol.skript.util;
 
-import ch.njol.skript.Skript;
-import ch.njol.util.Math2;
-import ch.njol.util.NullableChecker;
-import ch.njol.util.coll.iterator.StoppableIterator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.util.Math2;
+import ch.njol.util.NullableChecker;
+import ch.njol.util.coll.iterator.StoppableIterator;
+
 /**
  * @author Peter Güttinger
  */
 public class BlockLineIterator extends StoppableIterator<Block> {
+
 	/**
 	 * @param start
 	 * @param end
@@ -83,7 +85,7 @@ public class BlockLineIterator extends StoppableIterator<Block> {
 	}
 
 	@SuppressWarnings("null")
-	private final static Vector fitInWorld(final Location l, final Vector dir) {
+	private static Vector fitInWorld(final Location l, final Vector dir) {
 		if (0 <= l.getBlockY() && l.getBlockY() < l.getWorld().getMaxHeight())
 			return l.toVector();
 		final double y = Math2.fit(0, l.getY(), l.getWorld().getMaxHeight());

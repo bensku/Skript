@@ -18,6 +18,16 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.PassengerUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -33,15 +43,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -62,6 +63,7 @@ import java.util.List;
 		"clear passengers of boat"})
 @Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
 public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create 'vehicle' and 'passenger' expressions for vehicle enter/exit events?
+
 	static { // It was necessary to convert to SimpleExpression due to the method 'isSingle()'.
 		Skript.registerExpression(ExprPassenger.class, Entity.class, ExpressionType.PROPERTY, "[the] passenger[s] of %entities%", "%entities%'[s] passenger[s]");
 	}
@@ -98,7 +100,7 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 			if (array != null && array.length > 0)
 				entities.addAll(Arrays.asList(array));
 		}
-		return entities.toArray(new Entity[entities.size()]);
+		return entities.toArray(new Entity[0]);
 	}
 
 	@Override

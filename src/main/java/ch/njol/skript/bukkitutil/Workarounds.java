@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.Event.Result;
@@ -27,12 +26,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import ch.njol.skript.Skript;
+
 /**
  * Workarounds for Minecraft & Bukkit quirks
  *
  * @author Peter Güttinger
  */
 public abstract class Workarounds {
+
 	private Workarounds() {}
 
 	public static void init() {}

@@ -22,6 +22,7 @@ package ch.njol.skript.lang.parser;
  * Loads script from disk to memory and registers function signatures.
  */
 public class LoaderInstance implements Runnable {
+
 	@Override
 	public void run() {
 

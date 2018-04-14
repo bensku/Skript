@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Arrays;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,16 +34,13 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
 
 @Name("Sorted List")
 @Description("Sorts given list in natural order. All objects in list must be comparable; usually if you think you can compare it, it can be compared.")
 @Examples({"set {_list::*} to sorted {_list::*}"})
 @Since("2.2-dev19")
 public class ExprSortedList extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprSortedList.class, Object.class, ExpressionType.COMBINED, "sorted %objects%");
 	}

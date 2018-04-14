@@ -18,7 +18,8 @@
  */
 package ch.njol.yggdrasil;
 
-import org.eclipse.jdt.annotation.NonNull;
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -29,14 +30,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.njol.yggdrasil.Tag.T_ARRAY;
-import static ch.njol.yggdrasil.Tag.T_REFERENCE;
+import org.eclipse.jdt.annotation.NonNull;
 
 //Naming conventions:
 // x(): read info & data (e.g. content type, contents) [i.e. no tag]
 // _x(): read data only (e.g. contents)
 
 public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
+
 	private final short version;
 
 	final InputStream in;

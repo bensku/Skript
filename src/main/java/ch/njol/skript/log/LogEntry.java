@@ -18,17 +18,19 @@
  */
 package ch.njol.skript.log;
 
+import java.util.logging.Level;
+
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.logging.Level;
 
 /**
  * @author Peter Güttinger
  */
 public class LogEntry {
+
 	public final Level level;
 	public final int quality;
 

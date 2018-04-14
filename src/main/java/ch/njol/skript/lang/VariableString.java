@@ -18,6 +18,19 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+
+import org.bukkit.ChatColor;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
@@ -42,18 +55,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
-import org.bukkit.ChatColor;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 /**
  * Represents a string that may contain expressions, and is thus "variable".
@@ -61,7 +62,9 @@ import java.util.regex.Pattern;
  * @author Peter Güttinger
  */
 public class VariableString implements Expression<String> {
+
 	private final static class ExpressionInfo {
+
 		ExpressionInfo(final Expression<?> expr) {
 			this.expr = expr;
 		}
@@ -117,8 +120,10 @@ public class VariableString implements Expression<String> {
 		for (int i = 0; i < string.length; i++) {
 			Object o = string[i];
 			if (o instanceof String) {
+				assert this.string != null;
 				this.string[i] = Utils.replaceChatStyles((String) o);
 			} else {
+				assert this.string != null;
 				this.string[i] = o;
 			}
 
@@ -181,8 +186,8 @@ public class VariableString implements Expression<String> {
 	}
 
 	/**
-	 * Creates an instance of VariableString by parsing given string.
-	 * Prints errors and returns null if it is somehow invalid.
+	 * Creates an instance of VariableString by parsing given string. Prints errors and returns null if it is somehow
+	 * invalid.
 	 *
 	 * @param orig Unquoted string to parse.
 	 * @param mode
@@ -346,7 +351,8 @@ public class VariableString implements Expression<String> {
 	}
 
 	/**
-	 * Copied from {@link SkriptParser#nextBracket(String, char, char, int, boolean)}, but removed escaping & returns -1 on error.
+	 * Copied from {@link SkriptParser#nextBracket(String, char, char, int, boolean)}, but removed escaping & returns -1
+	 * on error.
 	 *
 	 * @param s
 	 * @param start Index after the opening bracket
@@ -435,8 +441,7 @@ public class VariableString implements Expression<String> {
 	}
 
 	/**
-	 * Parses all expressions in the string and returns it.
-	 * Does not parse formatting codes!
+	 * Parses all expressions in the string and returns it. Does not parse formatting codes!
 	 *
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.

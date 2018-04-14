@@ -18,25 +18,27 @@
  */
 package ch.njol.skript.classes;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptAPIException;
-import ch.njol.skript.util.Task;
-import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.util.Task;
+import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilSerializer;
+
 /**
  * @author Peter Güttinger
  */
 public abstract class Serializer<T> extends YggdrasilSerializer<T> {
+
 	@Nullable
 	protected ClassInfo<? extends T> info = null;
 
@@ -72,7 +74,8 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 			constr.setAccessible(true);
 			return constr.newInstance();
 		} catch (final InstantiationException | NoSuchMethodException e) {
-			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
+			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), " +
+					"canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
 		} catch (final SecurityException e) {
 			throw Skript.exception("Security manager present");
 		} catch (final IllegalArgumentException | IllegalAccessException e) {
@@ -85,8 +88,9 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
-	 * <b>This method must be thread-safe</b>. Use {@link Task#callSync(Callable)} if you need to serialise on Bukkit's main thread.
+	 *
+	 * <b>This method must be thread-safe</b>. Use {@link Task#callSync(Callable)} if you need to serialise on Bukkit's
+	 * main thread.
 	 */
 	@Override
 	public abstract Fields serialize(T o) throws NotSerializableException;
@@ -97,7 +101,7 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	/**
 	 * Not currently used (everything happens on Bukkit's main thread).
 	 *
-	 * @return Whether deserialisation must be done on Bukkit's main thread.
+	 * @return Whether deserialization must be done on Bukkit's main thread.
 	 */
 	public abstract boolean mustSyncDeserialization();
 
@@ -108,10 +112,12 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	}
 
 	/**
-	 * Returns whether the class should be instantiated using its nullary constructor or not. Return false if the class has no nullary constructor or if you do not have control
-	 * over the source of the class (e.g. if it's from an API).
+	 * Returns whether the class should be instantiated using its nullary constructor or not. Return false if the class
+	 * has no nullary constructor or if you do not have control over the source of the class (e.g. if it's from an
+	 * API).
 	 * <p>
-	 * You must override and use {@link #deserialize(Fields)} if this method returns false ({@link #deserialize(Object, Fields)} will no be used anymore in this case).
+	 * You must override and use {@link #deserialize(Fields)} if this method returns false ({@link #deserialize(Object,
+	 * Fields)} will no be used anymore in this case).
 	 */
 	protected abstract boolean canBeInstantiated();
 
@@ -125,11 +131,11 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	}
 
 	/**
-	 * Used to deserialise Bukkit objects and other stuff that cannot be instantiated, e.g. a plugin may and should not create a new instance of {@link World}, but use
-	 * {@link Bukkit#getWorld(String)} to get an existing world object.
+	 * Used to deserialize Bukkit objects and other stuff that cannot be instantiated, e.g. a plugin may and should not
+	 * create a new instance of {@link World}, but use {@link Bukkit#getWorld(String)} to get an existing world object.
 	 *
 	 * @param fields The Fields object that holds the information about the serialised object
-	 * @return The deserialised object. Must not be null (throw an exception instead).
+	 * @return The deserialized object. Must not be null (throw an exception instead).
 	 * @throws StreamCorruptedException If the given data is invalid or incomplete
 	 * @throws NotSerializableException
 	 */
@@ -139,14 +145,16 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 	}
 
 	/**
-	 * Deserialises an object from a string returned by this serializer or an earlier version thereof.
+	 * Deserializes an object from a string returned by this serializer or an earlier version thereof.
 	 * <p>
-	 * This method should only return null if the input is invalid (i.e. not produced by {@link #serialize(Object)} or an older version of that method)
+	 * This method should only return null if the input is invalid (i.e. not produced by {@link #serialize(Object)} or
+	 * an older version of that method)
 	 * <p>
 	 * This method must only be called from Bukkit's main thread if {@link #mustSyncDeserialization()} returned true.
 	 *
 	 * @param s
-	 * @return The deserialised object or null if the input is invalid. An error message may be logged to specify the cause.
+	 * @return The deserialized object or null if the input is invalid. An error message may be logged to specify the
+	 * cause.
 	 */
 	@Deprecated
 	@Nullable

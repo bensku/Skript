@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.NonNullByDefault;
  */
 @NonNullByDefault(false)
 public abstract class Math2 {
+
 	public static int min(final int a, final int b, final int c) {
 		return a <= b ? (a <= c ? a : c) : (b <= c ? b : c);
 	}
@@ -211,7 +212,8 @@ public abstract class Math2 {
 	/**
 	 * Floors the given double and returns the result as a long.
 	 * <p>
-	 * This method can be up to 20 times faster than the default {@link Math#floor(double)} (both with and without casting to long).
+	 * This method can be up to 20 times faster than the default {@link Math#floor(double)} (both with and without
+	 * casting to long).
 	 */
 	public static long floor(final double d) {
 		final long l = (long) d;
@@ -225,7 +227,8 @@ public abstract class Math2 {
 	/**
 	 * Ceils the given double and returns the result as a long.
 	 * <p>
-	 * This method can be up to 20 times faster than the default {@link Math#ceil(double)} (both with and without casting to long).
+	 * This method can be up to 20 times faster than the default {@link Math#ceil(double)} (both with and without
+	 * casting to long).
 	 */
 	public static long ceil(final double d) {
 		final long l = (long) d;
@@ -435,14 +438,15 @@ public abstract class Math2 {
 	}
 
 	/**
-	 * Performs a hermite interpolation between the given values, or returns 0 or 1 respectively if the value is out of range.
+	 * Performs a hermite interpolation between the given values, or returns 0 or 1 respectively if the value is out of
+	 * range.
 	 * <p>
-	 * Specifically this method returns <tt>d * d * (3 - 2 * d)</tt>, where <tt>d = {@link #fit(double, double, double) fit}(0, (x - x1) / (x2 - x1), 1)</tt>. This is very similar
-	 * to <tt>0.5 - 0.5 * cos(PI * d)</tt>.
+	 * Specifically this method returns <tt>d * d * (3 - 2 * d)</tt>, where <tt>d = {@link #fit(double, double, double)
+	 * fit}(0, (x - x1) / (x2 - x1), 1)</tt>. This is very similar to <tt>0.5 - 0.5 * cos(PI * d)</tt>.
 	 * <p>
 	 * This function is essentially equal to GLSL's smoothstep, but with a different argument order.
 	 *
-	 * @param x The value to get the step at
+	 * @param x  The value to get the step at
 	 * @param x1 The lower end of the step
 	 * @param x2 The upper end of the step
 	 * @return The step's value at <tt>x</tt>

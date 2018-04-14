@@ -18,10 +18,10 @@
  */
 package ch.njol.util.coll.iterator;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A simple iterator to iterate over an array.
@@ -29,6 +29,7 @@ import java.util.NoSuchElementException;
  * @author Peter Güttinger
  */
 public class ArrayIterator<T> implements Iterator<T> {
+
 	@Nullable
 	private final T[] array;
 

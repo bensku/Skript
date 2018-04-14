@@ -25,6 +25,7 @@ import java.util.HashMap;
  * @author Mirreducki
  */
 public class ScriptOptions {
+
 	private HashMap<File, Boolean> usesNewLoops = new HashMap<>();
 
 	@SuppressWarnings("null")

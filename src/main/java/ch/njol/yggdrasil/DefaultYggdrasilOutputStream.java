@@ -18,14 +18,15 @@
  */
 package ch.njol.yggdrasil;
 
+import static ch.njol.yggdrasil.Tag.*;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static ch.njol.yggdrasil.Tag.*;
-
 public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
+
 	private final OutputStream out;
 
 	private final short version;

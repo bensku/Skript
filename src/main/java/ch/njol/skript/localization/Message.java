@@ -18,12 +18,13 @@
  */
 package ch.njol.skript.localization;
 
-import ch.njol.skript.Skript;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
 
 /**
  * Basic class to get text from the language file(s).
@@ -31,6 +32,7 @@ import java.util.Locale;
  * @author Peter Güttinger
  */
 public class Message {
+
 	// this is most likely faster than registering a listener for each Message
 	private final static Collection<Message> messages = new ArrayList<>(50);
 	private static boolean firstChange = true;
@@ -106,8 +108,8 @@ public class Message {
 	}
 
 	/**
-	 * Called when this Message's value changes. This is not neccessarily called for every language change, but only when the value is actually accessed and the language has
-	 * changed since the last call of this method.
+	 * Called when this Message's value changes. This is not neccessarily called for every language change, but only
+	 * when the value is actually accessed and the language has changed since the last call of this method.
 	 */
 	protected void onValueChange() {}
 }

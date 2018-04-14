@@ -1,28 +1,26 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -43,7 +41,6 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PigZapEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -53,7 +50,6 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -61,7 +57,6 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -74,7 +69,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
@@ -95,19 +89,20 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
-import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("unchecked")
 public class SimpleEvents {
+
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
-				.description("Called when a player rightclicks on a block while holding a block or a placeable item. You can either cancel the event to prevent the block from being built, or uncancel it to allow it.",
-						"Please note that the <a href='../expressions/#ExprDurability'>data value</a> of the block to be placed is not available in this event, only its <a href='../expressions/#ExprIdOf'>ID</a>.")
+				.description("Called when a player rightclicks on a block while holding a block or a placeable item. " +
+								"You can either cancel the event to prevent the block from being built, or uncancel it to allow it.",
+						"Please note that the <a href='../expressions/#ExprDurability'>data value</a> of the block to be placed is not " +
+								"available in this event, only its <a href='../expressions/#ExprIdOf'>ID</a>.")
 				.examples("")
 				.since("1.0 (basic), 2.0 ([un]cancellable)");
 		Skript.registerEvent("Block Damage", SimpleEvent.class, BlockDamageEvent.class, "block damag(ing|e)")
@@ -129,8 +124,8 @@ public class SimpleEvents {
 						"Please note that using this event might cause quite some lag since it gets called extremely often.")
 				.examples("# prevents sand from falling",
 						"on block physics:",
-						"	block is sand",
-						"	cancel event")
+						"\tblock is sand",
+						"\tcancel event")
 				.since("1.4.6");
 		Skript.registerEvent("Piston Extend", SimpleEvent.class, BlockPistonExtendEvent.class, "piston extend[ing]")
 				.description("Called when a piston is about to extend.")
@@ -204,7 +199,7 @@ public class SimpleEvents {
 				.examples("")
 				.since("1.0");
 		Skript.registerEvent("Smelt", SimpleEvent.class, FurnaceSmeltEvent.class, "[ore] smelt[ing]", "smelt[ing] of ore") //TODO SkriptEvent for "smelt[ing] of %itemtype%"
-		.description("Called when a furnace smelts an item in its <a href='../expressions/#ExprFurnaceSlot'>ore slot</a>.")
+				.description("Called when a furnace smelts an item in its <a href='../expressions/#ExprFurnaceSlot'>ore slot</a>.")
 				.examples("")
 				.since("1.0");
 		Skript.registerEvent("Leaves Decay", SimpleEvent.class, LeavesDecayEvent.class, "leaves decay[ing]")
@@ -228,11 +223,11 @@ public class SimpleEvents {
 				.examples("")
 				.since("1.0");
 		Skript.registerEvent("Bucket Empty", SimpleEvent.class, PlayerBucketEmptyEvent.class, "bucket empty[ing]", "[player] empty[ing] [a] bucket")//TODO , "emptying bucket [of %itemtype%]", "emptying %itemtype% bucket") -> place of water/lava)
-		.description("Called when a player empties a bucket. You can also use the <a href='#place'>place event</a> with a check for water or lava.")
+				.description("Called when a player empties a bucket. You can also use the <a href='#place'>place event</a> with a check for water or lava.")
 				.examples("")
 				.since("1.0");
 		Skript.registerEvent("Bucket fill", SimpleEvent.class, PlayerBucketFillEvent.class, "bucket fill[ing]", "[player] fill[ing] [a] bucket")//TODO , "filling bucket [(with|of) %itemtype%]", "filling %itemtype% bucket");)
-		.description("Called when a player fills a bucket.")
+				.description("Called when a player fills a bucket.")
 				.examples("")
 				.since("1.0");
 		Skript.registerEvent("Throwing of an Egg", SimpleEvent.class, PlayerEggThrowEvent.class, "throw[ing] [of] [an] egg", "[player] egg throw")
@@ -260,15 +255,15 @@ public class SimpleEvents {
 		Skript.registerEvent("Join", SimpleEvent.class, PlayerJoinEvent.class, "[player] (login|logging in|join[ing])")
 				.description("Called when the player joins the server. The player is already in a world when this event is called, so if you want to prevent players from joining you should prefer <a href='#connect'>on connect</a> over this event.")
 				.examples("on join:",
-						"	message \"Welcome on our awesome server!\"",
-						"	broadcast \"%player% just joined the server!\"")
+						"\tmessage \"Welcome on our awesome server!\"",
+						"\tbroadcast \"%player% just joined the server!\"")
 				.since("1.0");
 		Skript.registerEvent("Connect", SimpleEvent.class, PlayerLoginEvent.class, "[player] connect[ing]")
 				.description("Called when the player connects to the server. This event is called before the player actually joins the server, so if you want to prevent players from joining you should prefer this event over <a href='#join'>on join</a>.")
 				.examples("on connect:",
-						"	player doesn't have permission \"VIP\"",
-						"	number of players is larger than 20," +
-								"	kick the player due to \"The last 5 slots are reserved for VIP players.\"")
+						"\tplayer doesn't have permission \"VIP\"",
+						"\tnumber of players is larger than 20",
+						"\tkick the player due to \"The last 5 slots are reserved for VIP players.\"")
 				.since("2.0");
 		Skript.registerEvent("Kick", SimpleEvent.class, PlayerKickEvent.class, "[player] (kick|being kicked)")
 				.description("Called when a player is kicked from the server. You can change the <a href='../expressions/#ExprMessage'>kick message</a> or <a href='../effects/#EffCancelEvent'>cancel the event</a> entirely.")
@@ -283,7 +278,7 @@ public class SimpleEvents {
 				.description("Called when a player uses a nether or end portal. <a href='../effects/#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
 				.examples("")
 				.since("1.0");
-		Skript.registerEvent("Quit", SimpleEvent.class, new Class[] {PlayerQuitEvent.class, PlayerKickEvent.class}, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
+		Skript.registerEvent("Quit", SimpleEvent.class, new Class[]{PlayerQuitEvent.class, PlayerKickEvent.class}, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
 				.description("Called when a player leaves the server. Starting with Skript 2.0 this also includes kicked players.")
 				.examples("")
 				.since("1.0");
@@ -299,14 +294,14 @@ public class SimpleEvents {
 				.description("Called when a player starts or stops sneaking. Use <a href='../conditions/#CondIsSneaking'>is sneaking</a> to get whether the player was sneaking before the event was called.")
 				.examples("# make players that stop sneaking jump",
 						"on sneak toggle:",
-						"	player was sneaking",
-						"	push the player upwards at speed 0.5")
+						"\tplayer was sneaking",
+						"\tpush the player upwards at speed 0.5")
 				.since("1.0");
 		Skript.registerEvent("Sprint Toggle", SimpleEvent.class, PlayerToggleSprintEvent.class, "[player] toggl(e|ing) sprint", "[player] sprint toggl(e|ing)")
 				.description("Called when a player starts or stops sprinting. Use <a href='../conditions/#CondIsSprinting'>is sprinting</a> to get whether the player was sprinting before the event was called.")
 				.examples("on sprint toggle:",
-						"	player is not sprinting",
-						"	send \"Run!\"")
+						"\tplayer is not sprinting",
+						"\tsend \"Run!\"")
 				.since("1.0");
 		Skript.registerEvent("Portal Create", SimpleEvent.class, PortalCreateEvent.class, "portal creat(e|ion)")
 				.description("Called when a portal is created, either by a player or mob lighting an obsidian frame on fire, or by a nether portal creating its teleportation target in the nether/overworld.",
@@ -327,8 +322,8 @@ public class SimpleEvents {
 		Skript.registerEvent("Sign Change", SimpleEvent.class, SignChangeEvent.class, "sign (chang[e]|edit)[ing]", "[player] (chang[e]|edit)[ing] [a] sign")
 				.description("As signs are placed empty, this event is called when a player is done editing a sign.")
 				.examples("on sign change:",
-						"	line 2 is empty",
-						"	set line 1 to \"<red>%line 1%\"")
+						"\tline 2 is empty",
+						"\tset line 1 to \"<red>%line 1%\"")
 				.since("1.0");
 		Skript.registerEvent("Spawn Change", SimpleEvent.class, SpawnChangeEvent.class, "[world] spawn change")
 				.description("Called when the spawn point of a world changes.")
@@ -385,7 +380,7 @@ public class SimpleEvents {
 			Skript.registerEvent("Gliding State Change", SimpleEvent.class, EntityToggleGlideEvent.class, "(gliding state change|toggl(e|ing) gliding)")
 					.description("Called when an entity toggles glider on or off, or when server toggles gliding state of an entity forcibly.")
 					.examples("on toggling gliding:",
-							"	cancel the event # bad idea, but you CAN do it!")
+							"\tcancel the event # bad idea, but you CAN do it!")
 					.since("2.2-dev21");
 			Skript.registerEvent("AoE Cloud Effect", SimpleEvent.class, AreaEffectCloudApplyEvent.class, "(area|AoE) [cloud] effect")
 					.description("Called when area effect cloud applies it's potion effect. This happens every 5 ticks by default.")
@@ -411,18 +406,19 @@ public class SimpleEvents {
 		if (Skript.classExists("org.bukkit.event.entity.EntityResurrectEvent")) {
 			Skript.registerEvent("Resurrect Attempt", SimpleEvent.class, EntityResurrectEvent.class, "[entity] resurrect[ion] [attempt]")
 					.description("Called when an entity dies, always. If they are not holding a totem, this is calcelled - you can, however, uncancel it.")
-					.examples("on resurrect attempt:",
-							"	entity is player",
-							"	entity has permission \"admin.undying\"",
-							"	uncancel the event")
+					.examples(
+							"on resurrect attempt:",
+							"\tentity is player",
+							"\tentity has permission \"admin.undying\"",
+							"\tuncancel the event")
 					.since("2.2-dev28");
 			SkriptEventHandler.listenCancelled.add(EntityResurrectEvent.class); // Listen this even when cancelled
 		}
 		Skript.registerEvent("Player World Change", SimpleEvent.class, PlayerChangedWorldEvent.class, "[player] world chang(ing|e[d])")
 				.description("Called when a player enters a world. Does not work with other entities!")
 				.examples("on player world change:",
-						"	world is \"city\"",
-					 	"	send \"Welcome to the City!\"")
+						"\tworld is \"city\"",
+						"\tsend \"Welcome to the City!\"")
 				.since("2.2-dev28");
 	}
 }

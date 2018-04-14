@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public abstract class DamageCauseUtils {
+
 	private DamageCauseUtils() {}
 
 	private final static EnumUtils<DamageCause> util = new EnumUtils<>(DamageCause.class, "damage causes");

@@ -26,6 +26,7 @@ import java.util.logging.Level;
  * @author Peter Güttinger
  */
 public class CountingLogHandler extends LogHandler {
+
 	private final int minimum;
 
 	private int count;

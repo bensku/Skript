@@ -18,16 +18,17 @@
  */
 package ch.njol.skript.lang;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.io.File;
 import java.util.List;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 public class Trigger extends TriggerSection {
+
 	private final String name;
 	private final SkriptEvent event;
 
@@ -84,8 +85,7 @@ public class Trigger extends TriggerSection {
 	}
 
 	/**
-	 * Sets line number for this trigger's start.
-	 * Only used for debugging.
+	 * Sets line number for this trigger's start. Only used for debugging.
 	 *
 	 * @param line Line number
 	 */
@@ -94,8 +94,7 @@ public class Trigger extends TriggerSection {
 	}
 
 	/**
-	 * Gets line number for this trigger's start.
-	 * Only use it for debugging!
+	 * Gets line number for this trigger's start. Only use it for debugging!
 	 *
 	 * @return Line number.
 	 */

@@ -1,23 +1,33 @@
-/**
+/*
  * This file is part of Skript.
- * <p>
+ *
  * Skript is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * Skript is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU General Public License
  * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * <p>
- * <p>
- * Copyright 2011-2017 Peter Güttinger and contributors
+ *
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.bukkit.event.EventPriority;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.EnumParser;
@@ -35,16 +45,6 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
 import ch.njol.skript.variables.Variables;
-import org.bukkit.event.EventPriority;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Important: don't save values from the config, a '/skript reload config/configs/all' won't work correctly otherwise!
@@ -53,6 +53,7 @@ import java.util.Collection;
  */
 @SuppressWarnings("unused")
 public abstract class SkriptConfig {
+
 	private SkriptConfig() {}
 
 	@Nullable
@@ -100,7 +101,8 @@ public abstract class SkriptConfig {
 				return null;
 			return new SimpleDateFormat(s);
 		} catch (final IllegalArgumentException e) {
-			Skript.error("'" + s + "' is not a valid date format. Please refer to http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
+			Skript.error("'" + s + "' is not a valid date format. " +
+					"Please refer to http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
 		}
 		return null;
 	});

@@ -24,6 +24,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public class NotifyingReference<V> {
+
 	@Nullable
 	private volatile V value;
 	private final boolean notifyAll;

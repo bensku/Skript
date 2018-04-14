@@ -18,6 +18,16 @@
  */
 package ch.njol.skript;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader.ScriptInfo;
 import ch.njol.skript.Updater.UpdateState;
 import ch.njol.skript.command.CommandHelp;
@@ -33,20 +43,12 @@ import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class SkriptCommand implements CommandExecutor {
+
 	private final static String NODE = "skript command";
 
 	// TODO /skript scripts show/list - lists all enabled and/or disabled scripts in the scripts folder and/or subfolders (maybe add a pattern [using * and **])
@@ -225,7 +227,7 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						}
 						info(sender, "enable.folder.enabling", f.getName(), scripts.size());
-						final File[] ss = scripts.toArray(new File[scripts.size()]);
+						final File[] ss = scripts.toArray(new File[0]);
 
 						List<Config> configs = ScriptLoader.loadStructures(ss);
 						final ScriptInfo i = ScriptLoader.loadScripts(configs);

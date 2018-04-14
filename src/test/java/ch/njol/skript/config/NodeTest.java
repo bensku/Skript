@@ -18,17 +18,17 @@
  */
 package ch.njol.skript.config;
 
-import static org.junit.Assert.*;
-
+import ch.njol.util.NonNullPair;
 import org.junit.Test;
 
-import ch.njol.util.NonNullPair;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("null")
 public class NodeTest {
+
 	@Test
 	public void splitLineTest() {
 		final String[][] data = {

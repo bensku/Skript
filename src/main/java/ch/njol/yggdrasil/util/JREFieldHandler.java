@@ -18,10 +18,6 @@
  */
 package ch.njol.yggdrasil.util;
 
-import ch.njol.yggdrasil.FieldHandler;
-import ch.njol.yggdrasil.Fields.FieldContext;
-import ch.njol.yggdrasil.YggdrasilException;
-
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -29,13 +25,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+import ch.njol.yggdrasil.FieldHandler;
+import ch.njol.yggdrasil.Fields.FieldContext;
+import ch.njol.yggdrasil.YggdrasilException;
+
 /**
  * Handles common JRE-related incompatible field types. This handler is not added by default and is merely a utility.
- * 
+ *
  * @author Peter Güttinger
  */
 public class JREFieldHandler implements FieldHandler {
-	
+
 	/**
 	 * Not used
 	 */
@@ -43,7 +43,7 @@ public class JREFieldHandler implements FieldHandler {
 	public boolean excessiveField(final Object o, final FieldContext field) {
 		return false;
 	}
-	
+
 	/**
 	 * Not used
 	 */
@@ -51,10 +51,10 @@ public class JREFieldHandler implements FieldHandler {
 	public boolean missingField(final Object o, final Field field) throws StreamCorruptedException {
 		return false;
 	}
-	
+
 	/**
 	 * Converts collection types and non-primitive arrays
-	 * 
+	 *
 	 * @throws StreamCorruptedException
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -94,17 +94,7 @@ public class JREFieldHandler implements FieldHandler {
 					while (i < l)
 						array[i++] = null;
 				}
-			} catch (final IllegalArgumentException e) {
-				throw new YggdrasilException(e);
-			} catch (final IllegalAccessException e) {
-				throw new YggdrasilException(e);
-			} catch (final UnsupportedOperationException e) {
-				throw new YggdrasilException(e);
-			} catch (final ClassCastException e) {
-				throw new YggdrasilException(e);
-			} catch (final NullPointerException e) {
-				throw new YggdrasilException(e);
-			} catch (final IllegalStateException e) {
+			} catch (final IllegalArgumentException | IllegalStateException | NullPointerException | ClassCastException | UnsupportedOperationException | IllegalAccessException e) {
 				throw new YggdrasilException(e);
 			}
 		} else if (value instanceof Map) {
@@ -117,19 +107,11 @@ public class JREFieldHandler implements FieldHandler {
 					m.putAll((Map) value);
 					return true;
 				}
-			} catch (final IllegalArgumentException e) {
-				throw new YggdrasilException(e);
-			} catch (final IllegalAccessException e) {
-				throw new YggdrasilException(e);
-			} catch (final UnsupportedOperationException e) {
-				throw new YggdrasilException(e);
-			} catch (final ClassCastException e) {
-				throw new YggdrasilException(e);
-			} catch (final NullPointerException e) {
+			} catch (final IllegalArgumentException | NullPointerException | ClassCastException | UnsupportedOperationException | IllegalAccessException e) {
 				throw new YggdrasilException(e);
 			}
 		}
 		return false;
 	}
-	
+
 }

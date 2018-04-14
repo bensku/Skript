@@ -18,11 +18,6 @@
  */
 package ch.njol.skript.events;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Sheep;
@@ -31,10 +26,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.util.Checker;
+
 /**
  * @author Peter Güttinger
  */
 public class EvtEntityBlockChange extends SkriptEvent {
+
 	static {
 		Skript.registerEvent("Enderman/Sheep/Silverfish", EvtEntityBlockChange.class, EntityChangeBlockEvent.class, ChangeEvent.patterns)
 				.description("Called when an enderman places or picks up a block, a sheep eats grass or a silverfish boops into/out of a block respectively.")

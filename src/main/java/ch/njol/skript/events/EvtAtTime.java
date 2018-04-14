@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.events;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.events.bukkit.ScheduledEvent;
@@ -29,22 +40,13 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Time;
 import ch.njol.util.Math2;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressFBWarnings("EQ_COMPARETO_USE_OBJECT_EQUALS")
 public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<EvtAtTime> {
+
 	static {
 		Skript.registerEvent("*At Time", EvtAtTime.class, ScheduledEvent.class, "at %time% [in %worlds%]")
 				.description("An event that occurs at a given <a href='../classes/#time'>minecraft time</a> in every world or only in specific worlds.")
@@ -55,6 +57,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 	private final static int CHECKPERIOD = 10;
 
 	private final static class EvtAtInfo {
+
 		public EvtAtInfo() {}
 
 		int lastTick; // as Bukkit's scheduler is inconsistent this saves the exact tick when the events were last checked

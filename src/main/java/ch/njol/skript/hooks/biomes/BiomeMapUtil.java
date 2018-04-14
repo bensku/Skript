@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * Hooks to provide 1.8 support.
  */
 public class BiomeMapUtil {
+
 	public enum To19Mapping {
 		SWAMPLAND(Biome.SWAMPLAND),
 		FOREST(Biome.FOREST),

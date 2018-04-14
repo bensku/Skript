@@ -18,15 +18,18 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.config.Config;
 import org.bukkit.event.Event;
+
+import ch.njol.skript.config.Config;
 
 /**
  * @author Peter Güttinger
  */
 public abstract class SelfRegisteringSkriptEvent extends SkriptEvent {
+
 	/**
-	 * This method is called after the whole trigger is loaded for events that fire themselves. This is also called when the script is deserialised.
+	 * This method is called after the whole trigger is loaded for events that fire themselves. This is also called when
+	 * the script is deserialized.
 	 *
 	 * @param t the trigger to register to this event
 	 */
@@ -40,8 +43,8 @@ public abstract class SelfRegisteringSkriptEvent extends SkriptEvent {
 	public abstract void unregister(final Trigger t);
 
 	/**
-	 * This method is called to unregister all events registered through {@link #register(Trigger)}. This is called on all registered events, thus it can also only unregister the
-	 * event it is called on.
+	 * This method is called to unregister all events registered through {@link #register(Trigger)}. This is called on
+	 * all registered events, thus it can also only unregister the event it is called on.
 	 */
 	public abstract void unregisterAll();
 
@@ -51,8 +54,7 @@ public abstract class SelfRegisteringSkriptEvent extends SkriptEvent {
 	}
 
 	/**
-	 * This method is called when this event is parsed. Overriding this is
-	 * optional, and usually not needed.
+	 * This method is called when this event is parsed. Overriding this is optional, and usually not needed.
 	 *
 	 * @param config Script that is being parsed
 	 */

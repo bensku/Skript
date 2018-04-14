@@ -18,6 +18,11 @@
  */
 package ch.njol.skript.entity;
 
+import java.util.Arrays;
+
+import org.bukkit.entity.Sheep;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -26,15 +31,12 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.util.Color;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Sheep;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
  */
 public class SheepData extends EntityData<Sheep> {
+
 	static {
 		EntityData.register(SheepData.class, "sheep", Sheep.class, 1, "unsheared sheep", "sheep", "sheared sheep");
 	}

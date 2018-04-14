@@ -22,5 +22,6 @@ package ch.njol.util;
  * @author Peter Güttinger
  */
 public interface Setter<T> {
+
 	void set(T t);
 }

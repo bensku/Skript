@@ -18,6 +18,9 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,14 +32,13 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Now")
 @Description("The current <a href='classes.html#date'>system time</a> of the server. Use <a href='#ExprTime'>time</a> to get the <a href='classes.html#time'>Minecraft time</a> of a world.")
 @Examples({"broadcast \"Current server time: %now%\""})
 @Since("1.4")
 public class ExprNow extends SimpleExpression<Date> {
+
 	static {
 		Skript.registerExpression(ExprNow.class, Date.class, ExpressionType.SIMPLE, "now");
 	}
