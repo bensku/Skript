@@ -1,23 +1,26 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -29,9 +32,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
@@ -41,13 +41,19 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set {_v} to random vector"})
 @Since("2.2-dev28")
 public class ExprVectorRandom extends SimpleExpression<Vector> {
+
 	static {
 		Skript.registerExpression(ExprVectorRandom.class, Vector.class, ExpressionType.SIMPLE, "random vector");
 	}
 
 	@Override
-	protected Vector[] get(Event event) {
-		return new Vector[] {Vector.getRandom()};
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+		return true;
+	}
+
+	@Override
+	protected Vector[] get(final Event event) {
+		return new Vector[]{Vector.getRandom()};
 	}
 
 	@Override
@@ -61,12 +67,7 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
+	public String toString(final @Nullable Event event, final boolean debug) {
 		return "random vector";
-	}
-
-	@Override
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		return true;
 	}
 }

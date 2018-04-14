@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -48,27 +47,28 @@ import ch.njol.util.Kleenean;
  */
 @Name("Difference")
 @Description("The difference between two values, e.g. <a href='../classes/#number'>numbers</a>, <a href='../classes/#date'>dates</a> or <a href='../classes/#time'>times</a>.")
-@Examples({"difference between {command.%player%.lastuse} and now is smaller than a minute:",
-		"  message \"You have to wait a minute before using this command again!\"",
-		"  stop"})
+@Examples({
+		"difference between {command.%player%.lastuse} and now is smaller than a minute:",
+		"\tmessage \"You have to wait a minute before using this command again!\"",
+		"\tstop"})
 @Since("1.4")
 public class ExprDifference extends SimpleExpression<Object> {
-	
+
 	static {
 		Skript.registerExpression(ExprDifference.class, Object.class, ExpressionType.COMBINED, "difference (between|of) %object% and %object%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> first, second;
-	
+
 	@SuppressWarnings("rawtypes")
 	@Nullable
 	private Arithmetic math;
 	@SuppressWarnings("null")
 	private Class<?> relativeType;
-	
+
 	private boolean bothVariables;
-	
+
 	@SuppressWarnings({"unchecked", "null", "unused"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -116,7 +116,7 @@ public class ExprDifference extends SimpleExpression<Object> {
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -125,7 +125,7 @@ public class ExprDifference extends SimpleExpression<Object> {
 		if (f == null || s == null)
 			return null;
 		final Object[] one = (Object[]) Array.newInstance(relativeType, 1);
-		
+
 		// If we're comparing variables, math is null right now
 		if (bothVariables) {
 			ClassInfo<?> info = Classes.getSuperClassInfo(f.getClass());
@@ -134,26 +134,25 @@ public class ExprDifference extends SimpleExpression<Object> {
 				return one;
 			}
 		}
-		
+
 		assert math != null; // NOW it cannot be null
 		one[0] = math.difference(f, s);
-		
+
 		return one;
 	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return relativeType;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "difference between " + first.toString(e, debug) + " and " + second.toString(e, debug);
-	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
+	@Override
+	public Class<?> getReturnType() {
+		return relativeType;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "difference between " + first.toString(e, debug) + " and " + second.toString(e, debug);
+	}
 }

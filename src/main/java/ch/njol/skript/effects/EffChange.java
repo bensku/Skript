@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -76,44 +75,43 @@ import ch.njol.util.Kleenean;
 		"reset chunk at the targeted block"})
 @Since("1.0 (set, add, remove, delete), 2.0 (remove all)")
 public class EffChange extends Effect {
-	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][] {
+
+	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][]{
 			{"(add|give) %objects% to %~objects%", ChangeMode.ADD},
 			{"increase %~objects% by %objects%", ChangeMode.ADD},
 			{"give %~objects% %objects%", ChangeMode.ADD},
-			
+
 			{"set %~objects% to %objects%", ChangeMode.SET},
-			
+
 			{"remove (all|every) %objects% from %~objects%", ChangeMode.REMOVE_ALL},
-			
+
 			{"(remove|subtract) %objects% from %~objects%", ChangeMode.REMOVE},
 			{"reduce %~objects% by %objects%", ChangeMode.REMOVE},
-			
+
 			{"(delete|clear) %~objects%", ChangeMode.DELETE},
-			
+
 			{"reset %~objects%", ChangeMode.RESET}
 	});
-	
+
 	static {
 		Skript.registerEffect(EffChange.class, patterns.getPatterns());
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> changed;
 	@Nullable
 	private Expression<?> changer = null;
-	
+
 	@SuppressWarnings("null")
 	private ChangeMode mode;
-	
-	private boolean single;
-	
+
 //	private Changer<?, ?> c = null;
-	
-	@SuppressWarnings({"unchecked", "null"})
+
+	@SuppressWarnings({"unchecked", "null", "ConstantConditions"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		mode = patterns.getInfo(matchedPattern);
-		
+
 		switch (mode) {
 			case ADD:
 				if (matchedPattern == 0) {
@@ -147,7 +145,7 @@ public class EffChange extends Effect {
 			case RESET:
 				changed = exprs[0];
 		}
-		
+
 		final CountingLogHandler h = SkriptLogger.startLogHandler(new CountingLogHandler(Level.SEVERE));
 		final Class<?>[] rs;
 		final String what;
@@ -190,12 +188,12 @@ public class EffChange extends Effect {
 			}
 			return false;
 		}
-		
+
 		final Class<?>[] rs2 = new Class<?>[rs.length];
 		for (int i = 0; i < rs.length; i++)
 			rs2[i] = rs[i].isArray() ? rs[i].getComponentType() : rs[i];
 		final boolean allSingle = Arrays.equals(rs, rs2);
-		
+
 		Expression<?> ch = changer;
 		if (ch != null) {
 			Expression<?> v = null;
@@ -232,9 +230,9 @@ public class EffChange extends Effect {
 			} finally {
 				log.stop();
 			}
-			
+
 			Class<?> x = Utils.getSuperType(rs2);
-			single = allSingle;
+			boolean single = allSingle;
 			for (int i = 0; i < rs.length; i++) {
 				if (rs2[i].isAssignableFrom(v.getReturnType())) {
 					single = !rs[i].isArray();
@@ -244,7 +242,7 @@ public class EffChange extends Effect {
 			}
 			assert x != null;
 			changer = ch = v;
-			
+
 			if (!ch.isSingle() && single) {
 				if (mode == ChangeMode.SET)
 					Skript.error(changed + " can only be set to one " + Classes.getSuperClassInfo(x).getName() + ", not more", ErrorQuality.SEMANTIC_ERROR);
@@ -252,7 +250,7 @@ public class EffChange extends Effect {
 					Skript.error("only one " + Classes.getSuperClassInfo(x).getName() + " can be " + (mode == ChangeMode.ADD ? "added to" : "removed from") + " " + changed + ", not more", ErrorQuality.SEMANTIC_ERROR);
 				return false;
 			}
-			
+
 			if (changed instanceof Variable && !((Variable<?>) changed).isLocal() && (mode == ChangeMode.SET || ((Variable<?>) changed).isList() && mode == ChangeMode.ADD)) {
 				final ClassInfo<?> ci = Classes.getSuperClassInfo(ch.getReturnType());
 				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value())
@@ -261,7 +259,7 @@ public class EffChange extends Effect {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final Expression<?> changer = this.changer;
@@ -277,7 +275,7 @@ public class EffChange extends Effect {
 //			}
 //		}, mode);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<?> changer = this.changer;
@@ -302,5 +300,4 @@ public class EffChange extends Effect {
 		assert false;
 		return "";
 	}
-	
 }

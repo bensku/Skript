@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions.expressions;
 
@@ -37,22 +36,24 @@ import ch.njol.skript.lang.ExpressionType;
 @Name("Region")
 @Description({"The <a href='classes.html#region'>region</a> involved in an event.",
 		"This expression requires a supported regions plugin to be installed."})
-@Examples({"on region enter:",
-		"	region is {forbidden region}",
-		"	cancel the event"})
+@Examples({
+		"on region enter:",
+		"\tregion is {forbidden region}",
+		"\tcancel the event"})
 @Since("2.1")
 public class ExprRegion extends EventValueExpression<Region> {
+
 	static {
 		Skript.registerExpression(ExprRegion.class, Region.class, ExpressionType.SIMPLE, "[the] [event-]region");
 	}
-	
+
 	public ExprRegion() {
 		super(Region.class);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the region";
 	}
-	
+
 }

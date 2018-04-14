@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -53,6 +52,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 		"set the blocks below the player, the victim and the targeted block to air"})
 @Since("1.0")
 public class ExprBlocks extends SimpleExpression<Block> {
+
 	static {
 		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
@@ -60,14 +60,14 @@ public class ExprBlocks extends SimpleExpression<Block> {
 				"[(all [[of] the]|the)] blocks from %block% to %block%",
 				"[(all [[of] the]|the)] blocks (within|between) %block% and %block%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> from;
 	@Nullable
 	private Expression<Block> end;
 	@Nullable
 	private Expression<Direction> direction;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -91,7 +91,7 @@ public class ExprBlocks extends SimpleExpression<Block> {
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
@@ -114,9 +114,9 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			return new Block[0];
 		for (final Block b : new IteratorIterable<>(iter))
 			r.add(b);
-		return r.toArray(new Block[r.size()]);
+		return r.toArray(new Block[0]);
 	}
-	
+
 	@Override
 	@Nullable
 	public Iterator<Block> iterator(final Event e) {
@@ -152,17 +152,17 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			throw ex;
 		}
 	}
-	
+
 	@Override
 	public Class<? extends Block> getReturnType() {
 		return Block.class;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<Block> end = this.end;
@@ -174,5 +174,4 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			return "block" + (isSingle() ? "" : "s") + " " + direction.toString(e, debug) + " " + from.toString(e, debug);
 		}
 	}
-	
 }

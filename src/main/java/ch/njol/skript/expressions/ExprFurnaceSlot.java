@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -59,32 +58,19 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 @Events({"smelt", "fuel burn"})
 public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
+
 	private final static int ORE = 0, FUEL = 1, RESULT = 2;
 	private final static String[] slotNames = {"ore", "fuel", "result"};
-	
-	static {
-		register(ExprFurnaceSlot.class, Slot.class, "(" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]", "blocks");
-	}
-	
-	int slot;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		setExpr((Expression<Block>) exprs[0]);
-		slot = parser.mark;
-		return true;
-	}
-	
+
 	private final class FurnaceEventSlot extends InventorySlot {
-		
+
 		private final Event e;
-		
-		public FurnaceEventSlot(final Event e, final FurnaceInventory invi) {
-			super(invi, slot);
+
+		FurnaceEventSlot(final Event e, final FurnaceInventory inv) {
+			super(inv, slot);
 			this.e = e;
 		}
-		
+
 		@Override
 		@Nullable
 		public ItemStack getItem() {
@@ -123,48 +109,50 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				}
 			}
 		}
-		
+
 		@SuppressWarnings("synthetic-access")
 		@Override
 		public void setItem(final @Nullable ItemStack item) {
 			if (e instanceof FurnaceSmeltEvent) {
 				if (slot == RESULT && getTime() >= 0) {
 					if (item == null || item.getType() == Material.AIR) { // null/air crashes the server on account of a NPE if using event.setResult(...)
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-							@Override
-							public void run() {
-								FurnaceEventSlot.super.setItem(null);
-							}
-						});
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(),
+								() -> FurnaceEventSlot.super.setItem(null));
 					} else {
 						((FurnaceSmeltEvent) e).setResult(item);
 					}
 				} else if (slot == ORE && getTime() >= 0) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() {
-							FurnaceEventSlot.super.setItem(item);
-						}
-					});
+					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(),
+							() -> FurnaceEventSlot.super.setItem(item));
 				} else {
 					super.setItem(item);
 				}
 			} else {
 				if (slot == FUEL && getTime() >= 0) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() {
-							FurnaceEventSlot.super.setItem(item);
-						}
-					});
+					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(),
+							() -> FurnaceEventSlot.super.setItem(item));
 				} else {
 					super.setItem(item);
 				}
 			}
 		}
-		
+
 	}
-	
+
+	static {
+		register(ExprFurnaceSlot.class, Slot.class, "(" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]", "blocks");
+	}
+
+	private int slot;
+
+	@SuppressWarnings({"unchecked", "null"})
+	@Override
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		setExpr((Expression<Block>) exprs[0]);
+		slot = parseResult.mark;
+		return true;
+	}
+
 	@Override
 	protected Slot[] get(final Event e, final Block[] source) {
 		return get(source, new Getter<Slot, Block>() {
@@ -182,23 +170,22 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 			}
 		});
 	}
-	
+
 	@Override
 	public Class<Slot> getReturnType() {
 		return Slot.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the " + (getTime() == -1 ? "past " : getTime() == 1 ? "future " : "") + slotNames[slot] + " slot of " + getExpr().toString(e, debug);
 		return Classes.getDebugMessage(getSingle(e));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), FurnaceSmeltEvent.class, FurnaceBurnEvent.class);
 	}
-	
 }

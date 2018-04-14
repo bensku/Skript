@@ -3,5 +3,8 @@
 /build/
 /.gradle/
 /bin/
-/.idea/
 *.iml
+
+!/.idea/
+/.idea/*
+!/.idea/codeStyles/

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -33,7 +32,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -45,47 +43,42 @@ import ch.njol.util.Kleenean;
 		"player is wearing all diamond armour"})
 @Since("1.0")
 public class CondIsWearing extends Condition {
-	
+
 	static {
 		Skript.registerCondition(CondIsWearing.class, "%livingentities% (is|are) wearing %itemtypes%", "%livingentities% (isn't|is not|aren't|are not) wearing %itemtypes%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
 	@SuppressWarnings("null")
-	Expression<ItemType> types;
-	
+	private Expression<ItemType> types;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		entities = (Expression<LivingEntity>) vars[0];
-		types = (Expression<ItemType>) vars[1];
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		entities = (Expression<LivingEntity>) exprs[0];
+		types = (Expression<ItemType>) exprs[1];
 		setNegated(matchedPattern == 1);
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(final Event e) {
-		return entities.check(e, new Checker<LivingEntity>() {
-			@Override
-			public boolean check(final LivingEntity en) {
-				return types.check(e, new Checker<ItemType>() {
-					@Override
-					public boolean check(final ItemType t) {
-						for (final ItemStack is : en.getEquipment().getArmorContents()) {
-							if (t.isOfType(is) ^ t.isAll())
-								return !t.isAll();
-						}
-						return t.isAll();
-					}
-				}, isNegated());
-			}
-		});
+		return entities.check(e,
+				en -> types.check(e,
+						t -> {
+							for (final ItemStack is : en.getEquipment().getArmorContents()) {
+								if (t.isOfType(is) ^ t.isAll())
+									return !t.isAll();
+							}
+							return t.isAll();
+						}, isNegated()
+				)
+		);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return entities.toString(e, debug) + (entities.isSingle() ? " is" : " are") + (isNegated() ? "not " : "") + " wearing " + types;
 	}
-	
 }

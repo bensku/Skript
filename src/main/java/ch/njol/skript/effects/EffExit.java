@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -36,7 +35,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.While;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
@@ -45,15 +43,17 @@ import ch.njol.util.Kleenean;
  */
 @Name("Exit")
 @Description("Exits a given amount of loops and conditionals, or the entire trigger.")
-@Examples({"if player has any ore:",
-		"	stop",
+@Examples({
+		"if player has any ore:",
+		"\tstop",
 		"message \"%player% has no ores!\"",
 		"loop blocks above the player:",
-		"	loop-block is not air:",
-		"		exit 2 sections",
-		"	set loop-block to water"})
+		"\tloop-block is not air:",
+		"\t\texit 2 sections",
+		"\tset loop-block to water"})
 @Since("<i>unknown</i> (before 2.1)")
 public class EffExit extends Effect { // TODO [code style] warn user about code after a stop effect
+
 	static {
 		Skript.registerEffect(EffExit.class,
 				"(exit|stop) [trigger]",
@@ -61,13 +61,13 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 				"(exit|stop) <\\d+> (0¦section|1¦loop|2¦conditional)s",
 				"(exit|stop) all (0¦section|1¦loop|2¦conditional)s");
 	}
-	
+
 	private int breakLevels;
-	
+
 	private final static int EVERYTHING = 0, LOOPS = 1, CONDITIONALS = 2;
 	private final static String[] names = {"sections", "loops", "conditionals"};
 	private int type;
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		switch (matchedPattern) {
@@ -98,8 +98,8 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		}
 		return true;
 	}
-	
-	private final static int numLevels(final int type) {
+
+	private static int numLevels(final int type) {
 		if (type == EVERYTHING)
 			return ScriptLoader.currentSections.size();
 		int r = 0;
@@ -109,13 +109,13 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		}
 		return r;
 	}
-	
+
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
 		debug(e, false);
 		TriggerItem n = this;
-		for (int i = breakLevels; i > 0;) {
+		for (int i = breakLevels; i > 0; ) {
 			n = n.getParent();
 			if (n == null) {
 				assert false : this;
@@ -126,15 +126,14 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		}
 		return n instanceof Loop ? ((Loop) n).getActualNext() : n instanceof While ? ((While) n).getActualNext() : n.getNext();
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		assert false;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "stop " + breakLevels + " " + names[type];
 	}
-	
 }

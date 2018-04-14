@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -44,11 +43,11 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"add 1 to the data value of the clicked block"})
 @Since("1.2")
 public class ExprDurability extends SimplePropertyExpression<Object, Short> {
-	
+
 	static {
 		register(ExprDurability.class, Short.class, "((data|damage)[s] [value[s]]|durabilit(y|ies))", "itemstacks/slots");
 	}
-	
+
 	@Override
 	@Nullable
 	public Short convert(final Object o) {
@@ -59,17 +58,7 @@ public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 			return ((ItemStack) o).getDurability();
 		}
 	}
-	
-	@Override
-	public String getPropertyName() {
-		return "data";
-	}
-	
-	@Override
-	public Class<Short> getReturnType() {
-		return Short.class;
-	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -79,7 +68,7 @@ public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 			return CollectionUtils.array(Number.class);
 		return null;
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		int a = delta == null ? 0 : ((Number) delta[0]).intValue();
@@ -109,10 +98,19 @@ public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 			if (o instanceof Slot)
 				((Slot) o).setItem(i);
 			else if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class))
-				getExpr().change(e, new ItemStack[] {i}, ChangeMode.SET);
+				getExpr().change(e, new ItemStack[]{i}, ChangeMode.SET);
 			else
-				getExpr().change(e, new ItemType[] {new ItemType(i)}, ChangeMode.SET);
+				getExpr().change(e, new ItemType[]{new ItemType(i)}, ChangeMode.SET);
 		}
 	}
-	
+
+	@Override
+	public String getPropertyName() {
+		return "data";
+	}
+
+	@Override
+	public Class<Short> getReturnType() {
+		return Short.class;
+	}
 }

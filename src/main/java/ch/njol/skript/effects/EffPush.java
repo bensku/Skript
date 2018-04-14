@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -44,17 +43,18 @@ import ch.njol.util.Kleenean;
 		"push the victim downwards at speed 0.5"})
 @Since("1.4.6")
 public class EffPush extends Effect {
+
 	static {
 		Skript.registerEffect(EffPush.class, "(push|thrust) %entities% %direction% [(at|with) (speed|velocity|force) %-number%]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	@SuppressWarnings("null")
 	private Expression<Direction> direction;
 	@Nullable
 	private Expression<Number> speed = null;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -63,7 +63,7 @@ public class EffPush extends Effect {
 		speed = (Expression<Number>) exprs[2];
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final Direction d = direction.getSingle(e);
@@ -73,18 +73,17 @@ public class EffPush extends Effect {
 		if (speed != null && v == null)
 			return;
 		final Entity[] ents = entities.getArray(e);
-		for (final Entity en : ents) {
-			assert en != null;
-			final Vector mod = d.getDirection(en);
+		for (final Entity ent : ents) {
+			assert ent != null;
+			final Vector mod = d.getDirection(ent);
 			if (v != null)
 				mod.normalize().multiply(v.doubleValue());
-			en.setVelocity(en.getVelocity().add(mod)); // REMIND add NoCheatPlus exception to players
+			ent.setVelocity(ent.getVelocity().add(mod)); // REMIND add NoCheatPlus exception to players
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "push " + entities.toString(e, debug) + " " + direction.toString(e, debug) + (speed != null ? " at speed " + speed.toString(e, debug) : "");
 	}
-	
 }

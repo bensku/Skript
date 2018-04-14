@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -32,7 +31,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -41,25 +39,26 @@ import ch.njol.util.Kleenean;
 @Name("Time")
 @Description("Tests whether a given <a href='../classes/#date'>real time</a> was more or less than some <a href='../classes/#timespan'>time span</a> ago.")
 @Examples({"command /command_with_cooldown:",
-		"	trigger:",
-		"		{command.%player%.lastused} was less than a minute ago:",
-		"			message \"Please wait a minute between uses of this command.\"",
-		"			stop",
-		"		set {command.%player%.lastused} to now",
-		"		# ... actual command trigger here ..."})
+		"\ttrigger:",
+		"\t\t{command.%player%.lastused} was less than a minute ago:",
+		"\t\t\tmessage \"Please wait a minute between uses of this command.\"",
+		"\t\t\tstop",
+		"\t\tset {command.%player%.lastused} to now",
+		"\t\t# ... actual command trigger here ..."})
 @Since("2.0")
 public class CondDate extends Condition {
+
 	static {
 		Skript.registerCondition(CondDate.class,
 				"%date% (was|were)( more|(n't| not) less) than %timespan% [ago]",
 				"%date% (was|were)((n't| not) more| less) than %timespan% [ago]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<Date> date;
 	@SuppressWarnings("null")
-	Expression<Timespan> delta;
-	
+	private Expression<Timespan> delta;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -68,26 +67,19 @@ public class CondDate extends Condition {
 		setNegated(matchedPattern == 1);
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(final Event e) {
 		final long now = System.currentTimeMillis();
-		return date.check(e, new Checker<Date>() {
-			@Override
-			public boolean check(final Date d) {
-				return delta.check(e, new Checker<Timespan>() {
-					@Override
-					public boolean check(final Timespan t) {
-						return now - d.getTimestamp() >= t.getMilliSeconds();
-					}
-				}, isNegated());
-			}
-		});
+		return date.check(e, d ->
+				delta.check(e, t ->
+						now - d.getTimestamp() >= t.getMilliSeconds(), isNegated()
+				)
+		);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return date.toString(e, debug) + " was " + (isNegated() ? "less" : "more") + " than " + delta.toString(e, debug) + " ago";
 	}
-	
 }

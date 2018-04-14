@@ -1,32 +1,28 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.aliases;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import java.util.logging.Filter;
-import java.util.logging.LogRecord;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Test;
 
 import ch.njol.skript.log.BukkitLoggerFilter;
@@ -35,22 +31,20 @@ import ch.njol.skript.log.BukkitLoggerFilter;
  * @author Peter Güttinger
  */
 public class AliasesTest {
+
 	static {
-		BukkitLoggerFilter.addFilter(new Filter() {
-			@Override
-			public boolean isLoggable(final @Nullable LogRecord record) {
-				if (record == null)
-					return false;
-				return record.getMessage() == null || !record.getMessage().startsWith("[Skript] Missing entry");
-			}
+		BukkitLoggerFilter.addFilter(record -> {
+			if (record == null)
+				return false;
+			return record.getMessage() == null || !record.getMessage().startsWith("[Skript] Missing entry");
 		});
 	}
-	
+
 	@Test
 	public void testNames() {
 		final ItemType t = new ItemType();
 		t.add(new ItemData(0));
-		
+
 		final Aliases.Variations v = new Aliases.Variations();
 		final LinkedHashMap<String, ItemType> var1 = new LinkedHashMap<>();
 		var1.put("{default}", t);
@@ -70,7 +64,7 @@ public class AliasesTest {
 		varL.put("normales ", t);
 		varL.put("Birken", t);
 		v.put("varL", varL);
-		
+
 		final String[][] tests = {
 				{"a", "a"},
 				{"a[b]c", "abc", "ac"},
@@ -85,15 +79,13 @@ public class AliasesTest {
 				{"[Holz]Block", "Holzblock", "Block"},
 				{"{varL}Holz", "Holz", "normales Holz", "Birkenholz"}
 		};
-		
+
 		for (final String[] test : tests) {
-			@SuppressWarnings("null")
-			final Set<String> names = Aliases.getAliases(test[0], t, v).keySet();
+			@SuppressWarnings("null") final Set<String> names = Aliases.getAliases(test[0], t, v).keySet();
 			assertEquals(test[0], test.length - 1, names.size());
 			int i = 1;
 			for (final String name : names)
 				assertEquals(test[0], test[i++], name);
 		}
 	}
-	
 }

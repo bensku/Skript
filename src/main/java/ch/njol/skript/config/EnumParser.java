@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config;
 
@@ -30,12 +29,12 @@ import ch.njol.skript.classes.Converter;
  * @author Peter Güttinger
  */
 public class EnumParser<E extends Enum<E>> implements Converter<String, E> {
-	
+
 	private final Class<E> enumType;
 	@Nullable
 	private final String allowedValues;
 	private final String type;
-	
+
 	public EnumParser(final Class<E> enumType, final String type) {
 		assert enumType != null;
 		this.enumType = enumType;
@@ -52,7 +51,7 @@ public class EnumParser<E extends Enum<E>> implements Converter<String, E> {
 			allowedValues = null;
 		}
 	}
-	
+
 	@Override
 	@Nullable
 	public E convert(final String s) {
@@ -63,5 +62,4 @@ public class EnumParser<E extends Enum<E>> implements Converter<String, E> {
 			return null;
 		}
 	}
-	
 }

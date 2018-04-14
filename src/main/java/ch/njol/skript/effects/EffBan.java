@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -49,22 +48,22 @@ import ch.njol.util.Kleenean;
 		"IP-ban the player because \"he is an idiot\""})
 @Since("1.4, 2.1.1 (ban reason)")
 public class EffBan extends Effect {
-	
+
 	static {
 		Skript.registerEffect(EffBan.class,
 				"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%]", "unban %strings/offlineplayers%",
 				"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%]", "unban %players% by IP",
 				"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> players;
 	@Nullable
 	private Expression<String> reason;
-	
+
 	private boolean ban;
 	private boolean ipBan;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -74,7 +73,7 @@ public class EffBan extends Effect {
 		ipBan = matchedPattern >= 2;
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
@@ -113,10 +112,9 @@ public class EffBan extends Effect {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return (ipBan ? "IP-" : "") + (ban ? "" : "un") + "ban " + players.toString(e, debug) + (reason != null ? " on account of " + reason.toString(e, debug) : "");
 	}
-	
 }

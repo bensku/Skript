@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -53,22 +52,23 @@ import ch.njol.util.StringUtils;
 		"projectile is an arrow"})
 @Since("1.0")
 public class ExprEntity extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprEntity.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "[the] [event-]<.+>");
 	}
-	
+
 	@SuppressWarnings("null")
 	private EntityData<?> type;
-	
+
 	@SuppressWarnings("null")
 	private EventValueExpression<Entity> entity;
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 		try {
 			if (!StringUtils.startsWithIgnoreCase(parseResult.expr, "the ") && !StringUtils.startsWithIgnoreCase(parseResult.expr, "event-")) {
-				
+
 				String s = parseResult.regexes.get(0).group();
 				final ItemType item = Aliases.parseItemType("" + s);
 				log.clear();
@@ -76,13 +76,13 @@ public class ExprEntity extends SimpleExpression<Entity> {
 					log.printLog();
 					return false;
 				}
-				
+
 				//if(!StringUtils.startsWithIgnoreCase(parseResult.expr, "the event-") && !s.equalsIgnoreCase("player") && !s.equalsIgnoreCase("entity")){
 				//	return false;
 				//}
-				
+
 			}
-			
+
 			final EntityData<?> type = EntityData.parseWithoutIndefiniteArticle("" + parseResult.regexes.get(0).group());
 			log.clear();
 			log.printLog();
@@ -95,17 +95,7 @@ public class ExprEntity extends SimpleExpression<Entity> {
 		entity = new EventValueExpression<>(type.getType());
 		return entity.init();
 	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public Class<? extends Entity> getReturnType() {
-		return type.getType();
-	}
-	
+
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
@@ -114,10 +104,19 @@ public class ExprEntity extends SimpleExpression<Entity> {
 			return es;
 		return null;
 	}
-	
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+
+	@Override
+	public Class<? extends Entity> getReturnType() {
+		return type.getType();
+	}
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the " + type;
 	}
-	
 }

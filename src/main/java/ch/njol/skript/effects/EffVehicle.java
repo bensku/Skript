@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -34,7 +33,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -45,18 +43,19 @@ import ch.njol.util.coll.CollectionUtils;
 		"make the attacker ride the victim"})
 @Since("2.0")
 public class EffVehicle extends Effect {
+
 	static {
 		Skript.registerEffect(EffVehicle.class,
-				"(make|let|force) %entities% [to] (ride|mount) [(in|on)] %"+ (PassengerUtils.hasMultiplePassenger() ? "entities" : "entity") +"/entitydatas%",
+				"(make|let|force) %entities% [to] (ride|mount) [(in|on)] %" + (PassengerUtils.hasMultiplePassenger() ? "entities" : "entity") + "/entitydatas%",
 				"(make|let|force) %entities% [to] (dismount|(dismount|leave) (from|of|) (any|the[ir]|his|her|) vehicle[s])",
 				"(eject|dismount) (any|the|) passenger[s] (of|from) %entities%");
 	}
-	
+
 	@Nullable
 	private Expression<Entity> passengers;
 	@Nullable
 	private Expression<?> vehicles;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -66,7 +65,7 @@ public class EffVehicle extends Effect {
 			Skript.warning("An entity can only have one passenger");
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final Expression<?> vehicles = this.vehicles;
@@ -78,7 +77,6 @@ public class EffVehicle extends Effect {
 			return;
 		}
 		if (passengers == null) {
-			assert vehicles != null;
 			for (final Object v : vehicles.getArray(e))
 				((Entity) v).eject();
 			return;
@@ -92,16 +90,15 @@ public class EffVehicle extends Effect {
 		for (final Object v : vs) {
 			if (v instanceof Entity) {
 				((Entity) v).eject();
-				for (Entity p : ps){
+				for (Entity p : ps) {
 					assert p != null;
 					p.leaveVehicle();
-					PassengerUtils.addPassenger((Entity)v, p); //For 1.9 and lower, it will only set the last one.
+					PassengerUtils.addPassenger((Entity) v, p); //For 1.9 and lower, it will only set the last one.
 				}
 			} else {
 				for (final Entity p : ps) {
 					assert p != null : passengers;
-					@SuppressWarnings("null")
-					final Entity en = ((EntityData<?>) v).spawn(p.getLocation());
+					@SuppressWarnings("null") final Entity en = ((EntityData<?>) v).spawn(p.getLocation());
 					if (en == null)
 						return;
 					PassengerUtils.addPassenger(en, p);
@@ -109,7 +106,7 @@ public class EffVehicle extends Effect {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<?> vehicles = this.vehicles;
@@ -119,10 +116,8 @@ public class EffVehicle extends Effect {
 			return "make " + passengers.toString(e, debug) + " dismount";
 		}
 		if (passengers == null) {
-			assert vehicles != null;
 			return "eject passenger" + (vehicles.isSingle() ? "" : "s") + " of " + vehicles.toString(e, debug);
 		}
 		return "make " + passengers.toString(e, debug) + " ride " + vehicles.toString(e, debug);
 	}
-	
 }

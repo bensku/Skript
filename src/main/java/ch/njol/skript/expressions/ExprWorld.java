@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -57,9 +56,9 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	static {
 		Skript.registerExpression(ExprWorld.class, World.class, ExpressionType.PROPERTY, "[the] world [of %locations/entities%]", "%locations/entities%'[s] world");
 	}
-	
+
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		Expression<?> expr = exprs[0];
 		if (expr == null) {
 			expr = new EventValueExpression<>(World.class);
@@ -69,12 +68,12 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 		setExpr(expr);
 		return true;
 	}
-	
+
 	@Override
 	public Class<World> getReturnType() {
 		return World.class;
 	}
-	
+
 	@Override
 	protected World[] get(final Event e, final Object[] source) {
 		if (source instanceof World[]) // event value (see init)
@@ -96,27 +95,27 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 			}
 		});
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the world" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(e, debug));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), PlayerTeleportEvent.class);
 	}
-	
+
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (!(getExpr().getAll(e) instanceof Location[] && delta != null)) return;
 
 		for (final Location loc : (Location[]) getExpr().getAll(e)) {
-				loc.setWorld((World) delta[0]);
-		}	
+			loc.setWorld((World) delta[0]);
+		}
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {

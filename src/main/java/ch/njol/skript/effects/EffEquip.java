@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -54,28 +53,29 @@ import ch.njol.util.Kleenean;
 		"equip player with all diamond armor"})
 @Since("1.0")
 public class EffEquip extends Effect implements Testable {
+
 	static {
 		Skript.registerEffect(EffEquip.class,
 				"equip [%livingentity%] with %itemtypes%",
 				"make %livingentity% wear %itemtypes%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
 	@SuppressWarnings("null")
 	private Expression<ItemType> types;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		entities = (Expression<LivingEntity>) vars[0];
-		types = (Expression<ItemType>) vars[1];
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		entities = (Expression<LivingEntity>) exprs[0];
+		types = (Expression<ItemType>) exprs[1];
 		return true;
 	}
-	
+
 	private final static boolean supportsHorses = Skript.classExists("org.bukkit.entity.Horse");
 	private final static boolean newHorses = Skript.classExists("org.bukkit.entity.AbstractHorse");
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void execute(final Event e) {
@@ -91,13 +91,13 @@ public class EffEquip extends Effect implements Testable {
 				continue;
 			} else if (newHorses && en instanceof AbstractHorse) {
 				// Spigot's API is bad, just bad... Abstract horse doesn't have horse inventory!
-				final Inventory invi = ((AbstractHorse) en).getInventory();
+				final Inventory inv = ((AbstractHorse) en).getInventory();
 				for (final ItemType t : ts) {
 					for (final ItemStack item : t.getAll()) {
 						if (item.getType() == Material.SADDLE) {
-							invi.setItem(0, item); // Slot 0=saddle
+							inv.setItem(0, item); // Slot 0=saddle
 						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
-							invi.setItem(1, item); // Slot 1=armor
+							inv.setItem(1, item); // Slot 1=armor
 						} else if (item.getType() == Material.CHEST && en instanceof ChestedHorse) {
 							((ChestedHorse) en).setCarryingChest(true);
 						}
@@ -105,13 +105,13 @@ public class EffEquip extends Effect implements Testable {
 				}
 				continue;
 			} else if (supportsHorses && en instanceof Horse) {
-				final HorseInventory invi = ((Horse) en).getInventory();
+				final HorseInventory inv = ((Horse) en).getInventory();
 				for (final ItemType t : ts) {
 					for (final ItemStack item : t.getAll()) {
 						if (item.getType() == Material.SADDLE) {
-							invi.setSaddle(item);
+							inv.setSaddle(item);
 						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
-							invi.setArmor(item);
+							inv.setArmor(item);
 						} else if (item.getType() == Material.CHEST) {
 							((Horse) en).setCarryingChest(true);
 						}
@@ -163,7 +163,7 @@ public class EffEquip extends Effect implements Testable {
 				PlayerUtils.updateInventory((Player) en);
 		}
 	}
-	
+
 	@Override
 	public boolean test(final Event e) {
 //		final Iterable<Player> ps = players.getArray(e);
@@ -174,10 +174,9 @@ public class EffEquip extends Effect implements Testable {
 //		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "equip " + entities.toString(e, debug) + " with " + types.toString(e, debug);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.log;
 
@@ -31,12 +30,12 @@ import ch.njol.skript.Skript;
  * @author Peter Güttinger
  */
 public class ParseLogHandler extends LogHandler {
-	
+
 	@Nullable
 	private LogEntry error = null;
-	
+
 	private final List<LogEntry> log = new ArrayList<LogEntry>();
-	
+
 	@Override
 	public LogResult log(final LogEntry entry) {
 		if (entry.getLevel().intValue() >= Level.SEVERE.intValue()) {
@@ -51,19 +50,19 @@ public class ParseLogHandler extends LogHandler {
 		}
 		return LogResult.CACHED;
 	}
-	
-	boolean printedErrorOrLog = false;
-	
+
+	private boolean printedErrorOrLog = false;
+
 	@Override
 	public void onStop() {
 		if (!printedErrorOrLog && Skript.testing())
 			SkriptLogger.LOGGER.warning("Parse log wasn't instructed to print anything at " + SkriptLogger.getCaller());
 	}
-	
+
 	public void error(final String error, final ErrorQuality quality) {
 		log(new LogEntry(SkriptLogger.SEVERE, quality, error));
 	}
-	
+
 	/**
 	 * Clears all log messages except for the error
 	 */
@@ -72,7 +71,7 @@ public class ParseLogHandler extends LogHandler {
 			e.discarded("cleared");
 		log.clear();
 	}
-	
+
 	/**
 	 * Prints the retained log, but no errors
 	 */
@@ -83,14 +82,14 @@ public class ParseLogHandler extends LogHandler {
 		if (error != null)
 			error.discarded("not printed");
 	}
-	
+
 	public void printError() {
 		printError(null);
 	}
-	
+
 	/**
 	 * Prints the best error or the given error if no error has been logged.
-	 * 
+	 *
 	 * @param def Error to log if no error has been logged so far, can be null
 	 */
 	public void printError(final @Nullable String def) {
@@ -104,7 +103,7 @@ public class ParseLogHandler extends LogHandler {
 		for (final LogEntry e : log)
 			e.discarded("not printed");
 	}
-	
+
 	public void printError(final String def, final ErrorQuality quality) {
 		printedErrorOrLog = true;
 		stop();
@@ -116,18 +115,18 @@ public class ParseLogHandler extends LogHandler {
 		for (final LogEntry e : log)
 			e.discarded("not printed");
 	}
-	
+
 	public int getNumErrors() {
 		return error == null ? 0 : 1;
 	}
-	
+
 	public boolean hasError() {
 		return error != null;
 	}
-	
+
 	@Nullable
 	public LogEntry getError() {
 		return error;
 	}
-	
+
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.function;
 
@@ -41,26 +40,26 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 public class FunctionReference<T> {
-	
+
 	final String functionName;
-	
+
 	@Nullable
 	private Function<? extends T> function;
 	@Nullable
 	private Signature<? extends T> signature;
-	
+
 	private boolean singleUberParam;
 	private final Expression<?>[] parameters;
-	
+
 	private boolean single;
 	@Nullable
 	private final Class<? extends T>[] returnTypes;
-	
+
 	@Nullable
 	private final Node node;
 	@Nullable
 	public final File script;
-	
+
 	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
 		this.functionName = functionName;
 		this.node = node;
@@ -68,7 +67,7 @@ public class FunctionReference<T> {
 		this.returnTypes = returnTypes;
 		parameters = params;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean validateFunction(final boolean first) {
 		Skript.debug("Validating function " + functionName);
@@ -83,7 +82,7 @@ public class FunctionReference<T> {
 						+ " These will continue to use the old version of the function until Skript restarts.");
 			return false;
 		}
-		
+
 		final Class<? extends T>[] returnTypes = this.returnTypes;
 		if (returnTypes != null) {
 			final ClassInfo<?> rt = sign.returnType;
@@ -111,7 +110,7 @@ public class FunctionReference<T> {
 				return false;
 			}
 		}
-		
+
 		// check number of parameters only if the function does not have a single parameter that accepts multiple values
 		singleUberParam = sign.getMaxParameters() == 1 && !sign.getParameter(0).single;
 		if (!singleUberParam) {
@@ -140,7 +139,7 @@ public class FunctionReference<T> {
 						+ " These will continue to use the old version of the function until Skript restarts.");
 			return false;
 		}
-		
+
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter<?> p = sign.parameters.get(singleUberParam ? 0 : i);
 			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
@@ -161,14 +160,14 @@ public class FunctionReference<T> {
 				log.printLog();
 			}
 		}
-		
+
 		signature = (Signature<? extends T>) sign;
 		function = (Function<? extends T>) newFunc; // Try this, in case it exists
 		Functions.registerCaller(this);
-		
+
 		return true;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected T[] execute(final Event e) {
@@ -178,12 +177,12 @@ public class FunctionReference<T> {
 			Skript.error("Invalid function call to function that does not exist yet. Be careful when using functions in 'script load' events!");
 			return null; // Return nothing and hope it works
 		}
-		
+
 		final Object[][] params = new Object[singleUberParam ? 1 : parameters.length][];
 		if (singleUberParam && parameters.length > 1) {
 			final ArrayList<Object> l = new ArrayList<>();
-			for (int i = 0; i < parameters.length; i++)
-				l.addAll(Arrays.asList(parameters[i].getArray(e))); // TODO what if an argument is not available? pass null or abort?
+			for (Expression<?> parameter : parameters)
+				l.addAll(Arrays.asList(parameter.getArray(e))); // TODO what if an argument is not available? pass null or abort?
 			params[0] = l.toArray();
 		} else {
 			for (int i = 0; i < params.length; i++)
@@ -192,22 +191,21 @@ public class FunctionReference<T> {
 		assert function != null;
 		return function.execute(params);
 	}
-	
+
 	public boolean isSingle() {
 		return single;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Class<? extends T> getReturnType() {
 		if (signature == null) {
 			throw new SkriptAPIException("Signature of function is null when return type is asked!");
 		}
-		assert signature != null;
 		@SuppressWarnings("null") // Wait what, Eclipse? Already asserted this...
-		ClassInfo<? extends T> ret = signature.returnType;
+				ClassInfo<? extends T> ret = signature.returnType;
 		return (Class<? extends T>) (ret == null ? Unknown.class : ret.getC());
 	}
-	
+
 	public String toString(@Nullable final Event e, final boolean debug) {
 		final StringBuilder b = new StringBuilder(functionName + "(");
 		for (int i = 0; i < parameters.length; i++) {
@@ -217,5 +215,4 @@ public class FunctionReference<T> {
 		}
 		return "" + b.append(")");
 	}
-	
 }

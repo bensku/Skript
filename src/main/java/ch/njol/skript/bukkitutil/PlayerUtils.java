@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -40,19 +39,20 @@ import ch.njol.skript.util.Task;
 
 /**
  * TODO check all updates and find out which ones are not required
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class PlayerUtils {
+
 	private PlayerUtils() {}
-	
-	final static Set<Player> inviUpdate = new HashSet<>();
-	
-	public final static void updateInventory(final @Nullable Player p) {
+
+	private final static Set<Player> inviUpdate = new HashSet<>();
+
+	public static void updateInventory(final @Nullable Player p) {
 		if (p != null)
 			inviUpdate.add(p);
 	}
-	
+
 	// created when first used
 	final static Task task = new Task(Skript.getInstance(), 1, 1) {
 		@Override
@@ -67,13 +67,13 @@ public abstract class PlayerUtils {
 			inviUpdate.clear();
 		}
 	};
-	
+
 	private final static boolean hasCollecionGetOnlinePlayers = Skript.methodExists(Bukkit.class, "getOnlinePlayers", new Class[0], Collection.class);
 	@Nullable
 	private static Method getOnlinePlayers = null;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
-	public final static Collection<? extends Player> getOnlinePlayers() {
+	public static Collection<? extends Player> getOnlinePlayers() {
 		if (hasCollecionGetOnlinePlayers) {
 			return ImmutableList.copyOf(Bukkit.getOnlinePlayers());
 		} else {
@@ -92,9 +92,7 @@ public abstract class PlayerUtils {
 					return ImmutableList.copyOf((Collection<? extends Player>) o);
 				else
 					return Arrays.asList(((Player[]) o).clone());
-			} catch (final IllegalAccessException e) {
-				Skript.outdatedError(e);
-			} catch (final IllegalArgumentException e) {
+			} catch (final IllegalAccessException | IllegalArgumentException e) {
 				Skript.outdatedError(e);
 			} catch (final InvocationTargetException e) {
 				Skript.exception(e);
@@ -102,13 +100,12 @@ public abstract class PlayerUtils {
 			return Collections.emptyList();
 		}
 	}
-	
-	
-	public final static boolean canEat(Player p, Material food) {
+
+	public static boolean canEat(Player p, Material food) {
 		GameMode gm = p.getGameMode();
 		if (gm == GameMode.CREATIVE || gm == GameMode.SPECTATOR)
-			return false; // Can't eat anything in those gamemodes
-		
+			return false; // Can't eat anything in those game modes
+
 		boolean edible = food.isEdible();
 		if (!edible)
 			return false;
@@ -118,13 +115,10 @@ public abstract class PlayerUtils {
 			case CHORUS_FRUIT:
 				special = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				special = false;
 		}
-		if (p.getFoodLevel() < 20 || special)
-			return true;
-		
-		return false;
+		return p.getFoodLevel() < 20 || special;
 	}
 }

@@ -1,22 +1,20 @@
 /*
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 
 package ch.njol.skript.expressions;
@@ -37,7 +35,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 
 @Name("Shuffled List")
@@ -45,27 +42,27 @@ import ch.njol.util.Kleenean;
 @Examples({"set {_list::*} to shuffled {_list::*}"})
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
-	
-	static{
+
+	static {
 		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<Object> list;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		list = (Expression<Object>) exprs[0];
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
+	protected Object[] get(final Event e) {
 		Object[] origin = list.getAll(e);
 		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
-		
+
 		try {
 			Collections.shuffle(shuffled);
 		} catch (IllegalArgumentException ex) { // In case elements are not comparable
@@ -73,19 +70,19 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 		}
 		return shuffled.toArray();
 	}
-	
+
 	@Override
 	public Class<? extends Object> getReturnType() {
 		return Object.class;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(final @Nullable Event e, final boolean debug) {
 		return "shuffled list";
 	}
 }

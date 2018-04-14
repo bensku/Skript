@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
@@ -47,29 +46,31 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings("EQ_COMPARETO_USE_OBJECT_EQUALS")
 public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<EvtAtTime> {
+
 	static {
 		Skript.registerEvent("*At Time", EvtAtTime.class, ScheduledEvent.class, "at %time% [in %worlds%]")
 				.description("An event that occurs at a given <a href='../classes/#time'>minecraft time</a> in every world or only in specific worlds.")
 				.examples("at 18:00", "at 7am in \"world\"")
 				.since("1.3.4");
 	}
-	
+
 	private final static int CHECKPERIOD = 10;
-	
+
 	private final static class EvtAtInfo {
+
 		public EvtAtInfo() {}
-		
+
 		int lastTick; // as Bukkit's scheduler is inconsistent this saves the exact tick when the events were last checked
 		int currentIndex;
 		ArrayList<EvtAtTime> list = new ArrayList<>();
 	}
-	
-	final static HashMap<World, EvtAtInfo> triggers = new HashMap<>();
-	
+
+	private final static HashMap<World, EvtAtInfo> triggers = new HashMap<>();
+
 	@Nullable
 	private Trigger t;
-	int tick;
-	
+	private int tick;
+
 	@SuppressWarnings("null")
 	private transient World[] worlds;
 	/**
@@ -77,7 +78,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 	 */
 	@Nullable
 	private String[] worldNames = null;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
@@ -90,49 +91,45 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		}
 		return true;
 	}
-	
+
 	private static int taskID = -1;
-	
+
 	private static void registerListener() {
 		if (taskID != -1)
 			return;
-		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Skript.getInstance(), new Runnable() {
-			@SuppressWarnings("null")
-			@Override
-			public void run() {
-				for (final Entry<World, EvtAtInfo> e : triggers.entrySet()) {
-					final EvtAtInfo i = e.getValue();
-					final int tick = (int) e.getKey().getTime();
-					if (i.lastTick == tick) // stupid Bukkit scheduler
-						continue;
-					if (i.lastTick + CHECKPERIOD * 2 < tick || i.lastTick > tick && i.lastTick - 24000 + CHECKPERIOD * 2 < tick) { // time changed, e.g. by a command or plugin
-						i.lastTick = Math2.mod(tick - CHECKPERIOD, 24000);
-					}
-					final boolean midnight = i.lastTick > tick; // actually 6:00
-					if (midnight)
-						i.lastTick -= 24000;
-					final int startIndex = i.currentIndex;
-					while (true) {
-						final EvtAtTime next = i.list.get(i.currentIndex);
-						final int nextTick = midnight && next.tick > 12000 ? next.tick - 24000 : next.tick;
-						if (i.lastTick < nextTick && nextTick <= tick) {
-							next.execute(e.getKey());
-							i.currentIndex++;
-							if (i.currentIndex == i.list.size())
-								i.currentIndex = 0;
-							if (i.currentIndex == startIndex) // all events executed at once
-								break;
-						} else {
-							break;
-						}
-					}
-					i.lastTick = tick;
+		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Skript.getInstance(), () -> {
+			for (final Entry<World, EvtAtInfo> e : triggers.entrySet()) {
+				final EvtAtInfo i = e.getValue();
+				final int tick = (int) e.getKey().getTime();
+				if (i.lastTick == tick) // stupid Bukkit scheduler
+					continue;
+				if (i.lastTick + CHECKPERIOD * 2 < tick || i.lastTick > tick && i.lastTick - 24000 + CHECKPERIOD * 2 < tick) { // time changed, e.g. by a command or plugin
+					i.lastTick = Math2.mod(tick - CHECKPERIOD, 24000);
 				}
+				final boolean midnight = i.lastTick > tick; // actually 6:00
+				if (midnight)
+					i.lastTick -= 24000;
+				final int startIndex = i.currentIndex;
+				while (true) {
+					final EvtAtTime next = i.list.get(i.currentIndex);
+					final int nextTick = midnight && next.tick > 12000 ? next.tick - 24000 : next.tick;
+					if (i.lastTick < nextTick && nextTick <= tick) {
+						next.execute(e.getKey());
+						i.currentIndex++;
+						if (i.currentIndex == i.list.size())
+							i.currentIndex = 0;
+						if (i.currentIndex == startIndex) // all events executed at once
+							break;
+					} else {
+						break;
+					}
+				}
+				i.lastTick = tick;
 			}
 		}, 0, CHECKPERIOD);
 	}
-	
-	void execute(final World w) {
+
+	private void execute(final World w) {
 		final Trigger t = this.t;
 		if (t == null) {
 			assert false;
@@ -145,7 +142,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		SkriptEventHandler.logTriggerEnd(t);
 		SkriptEventHandler.logEventEnd();
 	}
-	
+
 	@Override
 	public void register(final Trigger t) {
 		this.t = t;
@@ -160,7 +157,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		}
 		registerListener();
 	}
-	
+
 	@Override
 	public void unregister(final Trigger t) {
 		assert t == this.t;
@@ -177,7 +174,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		if (triggers.isEmpty())
 			unregisterAll();
 	}
-	
+
 	@Override
 	public void unregisterAll() {
 		if (taskID != -1)
@@ -186,15 +183,14 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		taskID = -1;
 		triggers.clear();
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "at " + Time.toString(tick) + " in worlds " + Classes.toString(worlds, true);
 	}
-	
+
 	@Override
 	public int compareTo(final @Nullable EvtAtTime e) {
 		return e == null ? tick : tick - e.tick;
 	}
-	
 }

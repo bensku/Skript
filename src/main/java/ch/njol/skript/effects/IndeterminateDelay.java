@@ -1,25 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import static ch.njol.skript.effects.Delay.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -33,7 +30,7 @@ import ch.njol.skript.util.Timespan;
  * @author Peter Güttinger
  */
 public class IndeterminateDelay extends Delay {
-	
+
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
@@ -45,21 +42,17 @@ public class IndeterminateDelay extends Delay {
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
 				return null;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					if (Skript.debug())
-						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
-					TriggerItem.walk(next, e);
-				}
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
+				if (Skript.debug())
+					Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+				TriggerItem.walk(next, e);
 			}, d.getTicks_i());
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
+	public String toString(final @Nullable Event e, final boolean debug) {
 		return "wait for operation to finish";
 	}
-	
 }

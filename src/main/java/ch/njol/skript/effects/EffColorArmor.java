@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -51,22 +50,22 @@ import ch.njol.util.Math2;
 		"colour the player's tool red"})
 @Since("2.0, 2.2-dev26 (maps and potions)")
 public class EffColorArmor extends Effect {
-	
+
 	private static final boolean potionColors = Skript.isRunningMinecraft(1, 11);
-	
+
 	static {
 		Skript.registerEffect(EffColorArmor.class,
 				"(dye|colo[u]r|paint) %slots/itemstack% %color%",
 				"(dye|colo[u]r|paint) %slots/itemstack% \\(%number%, %number%, %number%\\)");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> items;
 	@Nullable
 	private Expression<Color> color;
 	@Nullable
 	private Expression<Number>[] rgb;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -78,11 +77,11 @@ public class EffColorArmor extends Effect {
 		if (matchedPattern == 0) {
 			color = (Expression<Color>) exprs[1];
 		} else {
-			rgb = new Expression[] {(Expression<Number>) exprs[1], (Expression<Number>) exprs[2], (Expression<Number>) exprs[3]};
+			rgb = new Expression[]{exprs[1], exprs[2], exprs[3]};
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<Color> color = this.color;
@@ -94,7 +93,7 @@ public class EffColorArmor extends Effect {
 			return "dye " + items.toString(e, debug) + " (" + rgb[0].toString(e, debug) + "," + rgb[1].toString(e, debug) + "," + rgb[2].toString(e, debug) + ")";
 		}
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final org.bukkit.Color c;
@@ -111,7 +110,7 @@ public class EffColorArmor extends Effect {
 				return;
 			c = org.bukkit.Color.fromRGB(Math2.fit(0, r.intValue(), 255), Math2.fit(0, g.intValue(), 255), Math2.fit(0, b.intValue(), 255));
 		}
-		
+
 		for (final Object o : items.getArray(e)) {
 			final ItemStack i = o instanceof Slot ? ((Slot) o).getItem() : (ItemStack) o;
 			if (i == null)
@@ -134,7 +133,7 @@ public class EffColorArmor extends Effect {
 			if (o instanceof Slot) {
 				((Slot) o).setItem(i);
 			} else {
-				items.change(e, new ItemStack[] {i}, ChangeMode.SET);
+				items.change(e, new ItemStack[]{i}, ChangeMode.SET);
 				return;
 			}
 		}

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -34,9 +33,11 @@ import ch.njol.skript.Skript;
  */
 @SuppressWarnings("null")
 public abstract class ProjectileUtils {
+
 	private ProjectileUtils() {}
-	
+
 	private static Method getShooter, setShooter;
+
 	static {
 		try {
 			getShooter = Projectile.class.getMethod("getShooter");
@@ -51,17 +52,14 @@ public abstract class ProjectileUtils {
 			Skript.exception(e, "security manager present");
 		}
 	}
-	
+
 	@Nullable
-	public final static Object getShooter(final @Nullable Projectile p) {
+	public static Object getShooter(final @Nullable Projectile p) {
 		if (p == null)
 			return null;
 		try {
 			return getShooter.invoke(p);
-		} catch (final IllegalAccessException e) {
-			assert false;
-			return null;
-		} catch (final IllegalArgumentException e) {
+		} catch (final IllegalAccessException | IllegalArgumentException e) {
 			assert false;
 			return null;
 		} catch (final InvocationTargetException e) {
@@ -69,8 +67,8 @@ public abstract class ProjectileUtils {
 			return null;
 		}
 	}
-	
-	public final static void setShooter(final Projectile p, final @Nullable Object shooter) {
+
+	public static void setShooter(final Projectile p, final @Nullable Object shooter) {
 		try {
 			setShooter.invoke(p, shooter);
 		} catch (final IllegalAccessException e) {
@@ -81,5 +79,4 @@ public abstract class ProjectileUtils {
 			Skript.exception(e);
 		}
 	}
-	
 }

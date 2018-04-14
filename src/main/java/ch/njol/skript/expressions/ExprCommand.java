@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -44,21 +43,22 @@ import ch.njol.util.Kleenean;
 @Description("The command that caused an 'on command' event (excluding the leading slash and all arguments)")
 @Examples({"# prevent any commands except for the /exit command during some game",
 		"on command:",
-		"{game.%player%.is playing} is true",
-		"command is not \"exit\"",
-		"message \"You're not allowed to use commands during the game\"",
-		"cancel the event"})
+		"\t{game.%player%.is playing} is true",
+		"\tcommand is not \"exit\"",
+		"\tmessage \"You're not allowed to use commands during the game\"",
+		"\tcancel the event"})
 @Since("2.0")
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
 				"[the] (full|complete|whole) command", "[the] command [label]", "[the] arguments");
 	}
-	
+
 	private final static int FULL = 0, LABEL = 1, ARGS = 2;
 	private int what;
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		what = matchedPattern;
@@ -69,7 +69,7 @@ public class ExprCommand extends SimpleExpression<String> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
@@ -82,30 +82,29 @@ public class ExprCommand extends SimpleExpression<String> {
 			return new String[0];
 		}
 		if (what == FULL)
-			return new String[] {s};
+			return new String[]{s};
 		final int c = s.indexOf(' ');
 		if (what == ARGS) {
 			if (c == -1)
 				return new String[0];
-			return new String[] {s.substring(c + 1).trim()};
+			return new String[]{s.substring(c + 1).trim()};
 		}
 		assert what == LABEL;
-		return new String[] {c == -1 ? s : s.substring(0, c)};
+		return new String[]{c == -1 ? s : s.substring(0, c)};
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return what == 0 ? "the full command" : what == 1 ? "the command" : "the arguments";
 	}
-	
 }

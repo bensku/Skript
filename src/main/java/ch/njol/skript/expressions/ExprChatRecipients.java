@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -52,22 +51,7 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public boolean isSingle() {
-		return false;
-	}
-
-	@Override
-	public Class<Player> getReturnType() {
-		return Player.class;
-	}
-
-	@Override
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		return CollectionUtils.array(Player[].class);
-	}
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (!(ScriptLoader.isCurrentEvent(AsyncPlayerChatEvent.class))) {
 			Skript.error("Cannot use chat recipients expression outside of a chat event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
@@ -76,20 +60,20 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
-		return "chat recipients";
-	}
-
-	@Override
 	@Nullable
-	protected Player[] get(Event event) {
+	protected Player[] get(final Event event) {
 		AsyncPlayerChatEvent ae = (AsyncPlayerChatEvent) event;
 		Set<Player> playerSet = ae.getRecipients();
-		return playerSet.toArray(new Player[playerSet.size()]);
+		return playerSet.toArray(new Player[0]);
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		return CollectionUtils.array(Player[].class);
+	}
+
+	@Override
+	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
 		final Player[] recipients = (Player[]) delta;
 		switch (mode) {
 			case REMOVE:
@@ -112,5 +96,20 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 				((AsyncPlayerChatEvent) event).getRecipients().clear();
 				break;
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
+	@Override
+	public Class<Player> getReturnType() {
+		return Player.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event event, final boolean debug) {
+		return "chat recipients";
 	}
 }

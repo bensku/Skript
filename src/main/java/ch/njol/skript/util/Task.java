@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -35,37 +34,37 @@ import ch.njol.util.Closeable;
  * @author Peter Güttinger
  */
 public abstract class Task implements Runnable, Closeable {
-	
+
 	private final Plugin plugin;
 	private final boolean async;
 	private long period = -1;
-	
+
 	private int taskID = -1;
-	
+
 	public Task(final Plugin plugin, final long delay, final long period) {
 		this(plugin, delay, period, false);
 	}
-	
+
 	public Task(final Plugin plugin, final long delay, final long period, final boolean async) {
 		this.plugin = plugin;
 		this.period = period;
 		this.async = async;
 		schedule(delay);
 	}
-	
+
 	public Task(final Plugin plugin, final long delay) {
 		this(plugin, delay, false);
 	}
-	
+
 	public Task(final Plugin plugin, final long delay, final boolean async) {
 		this.plugin = plugin;
 		this.async = async;
 		schedule(delay);
 	}
-	
+
 	/**
 	 * Only call this if the task is not alive.
-	 * 
+	 *
 	 * @param delay
 	 */
 	@SuppressWarnings("deprecation")
@@ -90,16 +89,14 @@ public abstract class Task implements Runnable, Closeable {
 		}
 		assert taskID != -1;
 	}
-	
+
 	/**
 	 * @return Whether this task is still running, i.e. whether it will run later or is currently running.
 	 */
 	public final boolean isAlive() {
-		if (taskID == -1)
-			return false;
-		return Bukkit.getScheduler().isQueued(taskID) || Bukkit.getScheduler().isCurrentlyRunning(taskID);
+		return taskID != -1 && (Bukkit.getScheduler().isQueued(taskID) || Bukkit.getScheduler().isCurrentlyRunning(taskID));
 	}
-	
+
 	/**
 	 * Cancels this task.
 	 */
@@ -109,15 +106,16 @@ public abstract class Task implements Runnable, Closeable {
 			taskID = -1;
 		}
 	}
-	
+
 	@Override
 	public void close() {
 		cancel();
 	}
-	
+
 	/**
-	 * Re-schedules the task to run next after the given delay. If this task was repeating it will continue so using the same period as before.
-	 * 
+	 * Re-schedules the task to run next after the given delay. If this task was repeating it will continue so using the
+	 * same period as before.
+	 *
 	 * @param delay
 	 */
 	public void setNextExecution(final long delay) {
@@ -125,10 +123,11 @@ public abstract class Task implements Runnable, Closeable {
 		cancel();
 		schedule(delay);
 	}
-	
+
 	/**
-	 * Sets the period of this task. This will re-schedule the task to be run next after the given period if the task is still running.
-	 * 
+	 * Sets the period of this task. This will re-schedule the task to be run next after the given period if the task is
+	 * still running.
+	 *
 	 * @param period Period in ticks or -1 to cancel the task and make it non-repeating
 	 */
 	public void setPeriod(final long period) {
@@ -142,26 +141,27 @@ public abstract class Task implements Runnable, Closeable {
 				schedule(period);
 		}
 	}
-	
+
 	/**
 	 * Equivalent to <tt>{@link #callSync(Callable, Plugin) callSync}(c, {@link Skript#getInstance()})</tt>
 	 */
 	@Nullable
-	public final static <T> T callSync(final Callable<T> c) {
+	public static <T> T callSync(final Callable<T> c) {
 		return callSync(c, Skript.getInstance());
 	}
-	
+
 	/**
 	 * Calls a method on Bukkit's main thread.
 	 * <p>
 	 * Hint: Use a Callable&lt;Void&gt; to make a task which blocks your current thread until it is completed.
-	 * 
+	 *
 	 * @param c The method
 	 * @param p The plugin that owns the task. Must be enabled.
-	 * @return What the method returned or null if it threw an error or was stopped (usually due to the server shutting down)
+	 * @return What the method returned or null if it threw an error or was stopped (usually due to the server shutting
+	 * down)
 	 */
 	@Nullable
-	public final static <T> T callSync(final Callable<T> c, final Plugin p) {
+	public static <T> T callSync(final Callable<T> c, final Plugin p) {
 		if (Bukkit.isPrimaryThread()) {
 			try {
 				return c.call();
@@ -174,12 +174,11 @@ public abstract class Task implements Runnable, Closeable {
 			while (true) {
 				try {
 					return f.get();
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException ignored) {}
 			}
 		} catch (final ExecutionException e) {
 			Skript.exception(e);
-		} catch (final CancellationException e) {} catch (final ThreadDeath e) {}// server shutting down
+		} catch (final CancellationException | ThreadDeath ignored) {} // server shutting down
 		return null;
 	}
-	
 }

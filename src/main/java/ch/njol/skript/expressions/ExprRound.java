@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -23,7 +22,6 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -46,15 +44,16 @@ import ch.njol.util.Math2;
 		"add rounded down argument to the player's health"})
 @Since("2.0")
 public class ExprRound extends PropertyExpression<Number, Long> {
+
 	static {
 		Skript.registerExpression(ExprRound.class, Long.class, ExpressionType.PROPERTY,
 				"(a|the|) round[ed] down %number%",
 				"(a|the|) round[ed] %number%",
 				"(a|the|) round[ed] up %number%");
 	}
-	
-	int action;
-	
+
+	private int action;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -62,30 +61,25 @@ public class ExprRound extends PropertyExpression<Number, Long> {
 		action = matchedPattern - 1;
 		return true;
 	}
-	
+
 	@Override
 	protected Long[] get(final Event e, final Number[] source) {
-		return get(source, new Converter<Number, Long>() {
-			@SuppressWarnings("null")
-			@Override
-			public Long convert(final Number n) {
-				if (n instanceof Integer)
-					return Long.valueOf(n.longValue());
-				else if (n instanceof Long)
-					return (Long) n;
-				return Long.valueOf(action == -1 ? Math2.floor(n.doubleValue()) : action == 0 ? Math2.round(n.doubleValue()) : Math2.ceil(n.doubleValue()));
-			}
+		return get(source, n -> {
+			if (n instanceof Integer)
+				return n.longValue();
+			else if (n instanceof Long)
+				return (Long) n;
+			return action == -1 ? Math2.floor(n.doubleValue()) : action == 0 ? Math2.round(n.doubleValue()) : Math2.ceil(n.doubleValue());
 		});
 	}
-	
+
 	@Override
 	public Class<? extends Long> getReturnType() {
 		return Long.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return (action == -1 ? "floor" : action == 0 ? "round" : "ceil") + "(" + getExpr().toString(e, debug) + ")";
 	}
-	
 }

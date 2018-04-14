@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.function;
 
@@ -30,21 +29,22 @@ import ch.njol.skript.lang.function.Functions.FunctionData;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.variables.Variables;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * @author Peter Güttinger
  */
 public class ScriptFunction<T> extends Function<T> {
-	
+
 	@Nullable
 	final Trigger trigger;
-	
+
 	@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 	public ScriptFunction(final String name, final Parameter<?>[] parameters, final SectionNode node, @Nullable final ClassInfo<T> returnType, final boolean single) {
 		super(name, parameters, returnType, single);
-		
+
 		// here to allow recursion
 		Functions.functions.put(name, new FunctionData(this));
-		
+
 		Functions.currentFunction = this;
 		try {
 			trigger = new Trigger(node.getConfig().getFile(), "function " + name, new SimpleEvent(), ScriptLoader.loadItems(node));
@@ -52,14 +52,14 @@ public class ScriptFunction<T> extends Function<T> {
 			Functions.currentFunction = null;
 		}
 	}
-	
+
 	private boolean returnValueSet = false;
 	@Nullable
 	private T[] returnValue = null;
-	
+
 	/**
 	 * Should only be called by {@link EffReturn}.
-	 * 
+	 *
 	 * @param e
 	 * @param value
 	 */
@@ -68,15 +68,16 @@ public class ScriptFunction<T> extends Function<T> {
 		returnValueSet = true;
 		returnValue = value;
 	}
-	
+
 	// REMIND track possible types of local variables (including undefined variables) (consider functions, commands, and EffChange) - maybe make a general interface for this purpose
 	// REM: use patterns, e.g. {_a%b%} is like "a.*", and thus subsequent {_axyz} may be set and of that type.
 	@Override
 	@Nullable
 	public T[] execute(final FunctionEvent e, final Object[][] params) {
+		Trigger trigger = this.trigger;
 		if (trigger == null)
 			throw new IllegalStateException("trigger for function is not available");
-		
+
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter<?> p = parameters[i];
 			final Object[] val = params[i];
@@ -89,12 +90,10 @@ public class ScriptFunction<T> extends Function<T> {
 			}
 		}
 		
-		assert trigger != null;
 		trigger.execute(e);
 		returnValueSet = false;
 		T[] returnedValue = returnValue;
 		returnValue = null;
 		return returnedValue;
 	}
-	
 }

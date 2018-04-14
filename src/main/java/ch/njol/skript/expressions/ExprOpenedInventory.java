@@ -1,25 +1,23 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -31,23 +29,22 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.Time;
 import ch.njol.util.Kleenean;
 
 @Name("Opened Inventory")
 @Description({"Return the currently opened inventory of a player.",
-	"If no inventory is open, it returns the own player's crafting inventory."})
+		"If no inventory is open, it returns the own player's crafting inventory."})
 @Examples({"set slot 1 of player's current inventory to diamond sword"})
 @Since("2.2-dev24, 2.2-dev35 (Just 'current inventory' works in player events)")
 public class ExprOpenedInventory extends PropertyExpression<Player, Inventory> {
 
 	static {
-		Skript.registerExpression(ExprOpenedInventory.class, Inventory.class, ExpressionType.PROPERTY, "[the] (current|open|top) inventory [of %players%]", "%players%'[s] (current|open|top) inventory");
+		Skript.registerExpression(ExprOpenedInventory.class, Inventory.class, ExpressionType.PROPERTY,
+				"[the] (current|open|top) inventory [of %players%]", "%players%'[s] (current|open|top) inventory");
 	}
 
 	@Override
@@ -77,5 +74,4 @@ public class ExprOpenedInventory extends PropertyExpression<Player, Inventory> {
 	public String toString(@Nullable Event event, boolean debug) {
 		return "current inventory" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(event, debug));
 	}
-	
 }

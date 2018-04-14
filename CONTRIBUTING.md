@@ -7,10 +7,10 @@ guidelines are posted below to save time from everyone.
 Issues are usually used to report bugs and request improvements or new features.
 
 Script writers should **not** use issue tracker to ask why their code is broken,
-*unless* theyt think it might be a bug. Correct places for getting scripting advise
-are SkUnity forums and Discord (see README again). That being said, this is
-mostly to save your time - if you're not sure if something is a bug, report it
-anyway.
+*unless* they think it might be a bug. Correct places for getting scripting 
+advise are SkUnity forums and Discord (see README again). That being said, this
+is mostly to save your time - if you're not sure if something is a bug, report 
+it anyway.
 
 ### Reporting Bugs
 So, you have found out a potential Skript bug. By reporting it correctly, you
@@ -18,13 +18,13 @@ can ensure that it will be correctly categorized as a bug and hopefully, fixed.
 
 First, please make sure you have **latest** Skript version available. If there
 are no stable (no pre-release tag) versions, this means latest dev build.
-If you can find non-prerelease in downloads page of this repository, you may
+If you can find non-pre-release in downloads page of this repository, you may
 also use that one. Do **not** use 2.2, 2.1 or older, since while they are
 technically stable, they tend to not work reliably with Minecraft 1.9+.
 
 If you are running latest Skript and the error still persists, search the
-issue tracker for similar errors. Check if your issue might be already reported.
-If it has been reported, leave a comment, otherwise open a new issue.
+issue tracker for similar errors. Check if your issue might be already 
+reported. If it has been reported, leave a comment, otherwise open a new issue.
 
 Now, what would you fill to the issue report?
 * Description of the issue, aka what does *not* work
@@ -32,8 +32,9 @@ Now, what would you fill to the issue report?
 * Any addons that you have - this is **very** important
 * Any additional information you think would be helpful
 
-Do not use offensive language or insult *anyone*. Distruptive behaviour in issue
-tracker will be dealt with harshly and in the end, will leave your issue unresolved.
+Do not use offensive language or insult *anyone*. Disruptive behaviour in issue
+tracker will be dealt with harshly and in the end, will leave your issue 
+unresolved.
 
 ## Pull Requests
 Pull requests are a great way to contribute code, but there are still a few
@@ -45,19 +46,19 @@ documentation. For that kind of pull requests, just use common sense.
 ### What to Contribute?
 You can find issues tagged with "help wanted" on tracker to see if there is
 something for you. If you want to take over one of these, just leave a comment
-so other contributors don't accidentally pick same issue to work on. You can also
-offer your help to any other issue, but for "help wanted" tasks, help is really
-*needed*.
+so other contributors don't accidentally pick same issue to work on. You can 
+also offer your help to any other issue, but for "help wanted" tasks, help is 
+really *needed*.
 
 ### Before Programming...
-If you did not pick an existing issue to work on, you should perhaps ask if your
-change is wanted. This can be done by opening an issue or contacting developer
-directly via Discord.
+If you did not pick an existing issue to work on, you should perhaps ask if 
+your change is wanted. This can be done by opening an issue or contacting 
+developer directly via Discord.
 
 Then, a few words of warning: Skript codebase will not be pleasant, easy or
-that sane to work around with. You will need some Java skills to create anything
-useful in sane amount of time. Skript is not a good programming/Java learning
-project!
+that sane to work around with. You will need some Java skills to create 
+anything useful in sane amount of time. Skript is not a good programming/Java 
+learning project!
 
 Still here? Good luck. If you did not learn how to use Git, now might be a good
 time to [learn](https://help.github.com/categories/bootcamp/).

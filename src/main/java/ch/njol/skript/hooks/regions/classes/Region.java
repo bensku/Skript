@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions.classes;
 
@@ -43,6 +42,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
  * @author Peter Güttinger
  */
 public abstract class Region implements YggdrasilExtendedSerializable {
+
 	static {
 		Classes.registerClass(new ClassInfo<>(Region.class, "region")
 				.name("Region")
@@ -78,8 +78,7 @@ public abstract class Region implements YggdrasilExtendedSerializable {
 						s = VariableString.unquote(s, quoted);
 						Region r = null;
 						for (final World w : Bukkit.getWorlds()) {
-							@SuppressWarnings("null")
-							final Region r2 = RegionsPlugin.getRegion(w, s);
+							@SuppressWarnings("null") final Region r2 = RegionsPlugin.getRegion(w, s);
 							if (r2 == null)
 								continue;
 							if (r != null) {
@@ -90,17 +89,17 @@ public abstract class Region implements YggdrasilExtendedSerializable {
 						}
 						return r;
 					}
-					
+
 					@Override
 					public String toString(final Region r, final int flags) {
 						return r.toString();
 					}
-					
+
 					@Override
 					public String toVariableNameString(final Region r) {
 						return r.toString();
 					}
-					
+
 					@Override
 					public String getVariableNamePattern() {
 						return ".*";
@@ -113,28 +112,27 @@ public abstract class Region implements YggdrasilExtendedSerializable {
 					}
 				}));
 	}
-	
+
 	public abstract boolean contains(Location l);
-	
+
 	public abstract boolean isMember(OfflinePlayer p);
-	
+
 	public abstract Collection<OfflinePlayer> getMembers();
-	
+
 	public abstract boolean isOwner(OfflinePlayer p);
-	
+
 	public abstract Collection<OfflinePlayer> getOwners();
-	
+
 	public abstract Iterator<Block> getBlocks();
-	
+
 	@Override
 	public abstract String toString();
-	
+
 	public abstract RegionsPlugin<?> getPlugin();
-	
+
 	@Override
 	public abstract boolean equals(@Nullable Object o);
-	
+
 	@Override
 	public abstract int hashCode();
-	
 }

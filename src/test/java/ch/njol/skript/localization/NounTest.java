@@ -1,35 +1,33 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.localization;
 
-import static org.junit.Assert.*;
-
+import ch.njol.util.NonNullPair;
 import org.junit.Test;
 
-import ch.njol.util.NonNullPair;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Peter Güttinger
  */
 public class NounTest {
-	
+
 	@Test
 	public void testGetPlural() {
 		final String[][] tests = {
@@ -42,13 +40,12 @@ public class NounTest {
 				{"a¦b¦c¦d¦e¦f¦g", "abdeg", "acdfg"},
 		};
 		for (final String[] test : tests) {
-			@SuppressWarnings("null")
-			final NonNullPair<String, String> p = Noun.getPlural(test[0]);
+			@SuppressWarnings("null") final NonNullPair<String, String> p = Noun.getPlural(test[0]);
 			assertEquals(test[1], p.getFirst());
 			assertEquals(test[2], p.getSecond());
 		}
 	}
-	
+
 	@SuppressWarnings("null")
 	@Test
 	public void testNormalizePluralMarkers() {
@@ -66,5 +63,4 @@ public class NounTest {
 			assertEquals(test[1] + "@x", Noun.normalizePluralMarkers(test[0] + "@x"));
 		}
 	}
-	
 }

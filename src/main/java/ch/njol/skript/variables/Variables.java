@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
 
@@ -55,7 +54,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.variables.DatabaseStorage.Type;
 import ch.njol.skript.variables.SerializedVariable.Value;
-import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.SynchronizedReference;
@@ -65,28 +63,30 @@ import ch.njol.yggdrasil.Yggdrasil;
  * @author Peter Güttinger
  */
 public abstract class Variables {
+
 	private Variables() {}
-	
+
 	public final static short YGGDRASIL_VERSION = 1;
-	
+
 	public final static Yggdrasil yggdrasil = new Yggdrasil(YGGDRASIL_VERSION);
 
 	public static boolean caseInsensitiveVariables = true;
-	
+
 	private final static String configurationSerializablePrefix = "ConfigurationSerializable_";
+
 	static {
 		yggdrasil.registerSingleClass(Kleenean.class, "Kleenean");
 		yggdrasil.registerClassResolver(new ConfigurationSerializer<ConfigurationSerializable>() {
 			{
 				init(); // separate method for the annotation
 			}
-			
+
 			@SuppressWarnings("unchecked")
-			private final void init() {
+			private void init() {
 				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo<?>) Classes.getExactClassInfo(Object.class);
 			}
-			
+
 			@SuppressWarnings({"unchecked"})
 			@Override
 			@Nullable
@@ -95,7 +95,7 @@ public abstract class Variables {
 					return configurationSerializablePrefix + ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) c);
 				return null;
 			}
-			
+
 			@Override
 			@Nullable
 			public Class<? extends ConfigurationSerializable> getClass(final @NonNull String id) {
@@ -105,14 +105,14 @@ public abstract class Variables {
 			}
 		});
 	}
-	
-	static List<VariablesStorage> storages = new ArrayList<VariablesStorage>();
-	
+
+	static List<VariablesStorage> storages = new ArrayList<>();
+
 	public static boolean load() {
 		assert variables.treeMap.isEmpty();
 		assert variables.hashMap.isEmpty();
 		assert storages.isEmpty();
-		
+
 		final Config c = SkriptConfig.getConfig();
 		if (c == null)
 			throw new SkriptAPIException("Cannot load variables before the config");
@@ -121,14 +121,9 @@ public abstract class Variables {
 			Skript.error("The config is missing the required 'databases' section that defines where the variables are saved");
 			return false;
 		}
-		
-		Skript.closeOnDisable(new Closeable() {
-			@Override
-			public void close() {
-				Variables.close();
-			}
-		});
-		
+
+		Skript.closeOnDisable(Variables::close);
+
 		// reports once per second how many variables were loaded. Useful to make clear that Skript is still doing something if it's loading many variables
 		final Thread loadingLoggerThread = new Thread() {
 			@Override
@@ -136,7 +131,7 @@ public abstract class Variables {
 				while (true) {
 					try {
 						Thread.sleep(Skript.logNormal() ? 1000 : 5000); // low verbosity won't disable these messages, but makes them more rare
-					} catch (final InterruptedException e) {}
+					} catch (final InterruptedException ignored) {}
 					synchronized (tempVars) {
 						final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
 						if (tvs != null)
@@ -148,7 +143,7 @@ public abstract class Variables {
 			}
 		};
 		loadingLoggerThread.start();
-		
+
 		try {
 			boolean successful = true;
 			for (final Node node : (SectionNode) databases) {
@@ -160,7 +155,7 @@ public abstract class Variables {
 						successful = false;
 						continue;
 					}
-					
+
 					final String name = n.getKey();
 					assert name != null;
 					final VariablesStorage s;
@@ -177,7 +172,7 @@ public abstract class Variables {
 						}
 						continue;
 					}
-					
+
 					final int x;
 					synchronized (tempVars) {
 						final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
@@ -187,12 +182,12 @@ public abstract class Variables {
 					final long start = System.currentTimeMillis();
 					if (Skript.logVeryHigh())
 						Skript.info("Loading database '" + node.getKey() + "'...");
-					
+
 					if (s.load(n))
 						storages.add(s);
 					else
 						successful = false;
-					
+
 					final int d;
 					synchronized (tempVars) {
 						final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
@@ -208,7 +203,7 @@ public abstract class Variables {
 			}
 			if (!successful)
 				return false;
-			
+
 			if (storages.isEmpty()) {
 				Skript.error("No databases to store variables are defined. Please enable at least the default database, even if you don't use variables at all.");
 				return false;
@@ -219,22 +214,22 @@ public abstract class Variables {
 			if (n != 0) {
 				Skript.warning(n + " variables were possibly discarded due to not belonging to any database (SQL databases keep such variables and will continue to generate this warning, while CSV discards them).");
 			}
-			
+
 			loadingLoggerThread.interrupt();
-			
+
 			saveThread.start();
 		}
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	private final static Pattern variableNameSplitPattern = Pattern.compile(Pattern.quote(Variable.SEPARATOR));
-	
+
 	@SuppressWarnings("null")
-	public final static String[] splitVariableName(final String name) {
+	public static String[] splitVariableName(final String name) {
 		return variableNameSplitPattern.split(name);
 	}
-	
+
 	private final static ReadWriteLock variablesLock = new ReentrantReadWriteLock(true);
 	/**
 	 * must be locked with {@link #variablesLock}.
@@ -243,15 +238,15 @@ public abstract class Variables {
 	/**
 	 * Not accessed concurrently
 	 */
-	private final static WeakHashMap<Event, VariablesMap> localVariables = new WeakHashMap<Event, VariablesMap>();
-	
+	private final static WeakHashMap<Event, VariablesMap> localVariables = new WeakHashMap<>();
+
 	/**
 	 * Remember to lock with {@link #getReadLock()} and to not make any changes!
 	 */
 	static TreeMap<String, Object> getVariables() {
 		return variables.treeMap;
 	}
-	
+
 	/**
 	 * Remember to lock with {@link #getReadLock()}!
 	 */
@@ -259,27 +254,28 @@ public abstract class Variables {
 	static Map<String, Object> getVariablesHashMap() {
 		return Collections.unmodifiableMap(variables.hashMap);
 	}
-	
+
 	@SuppressWarnings("null")
 	static Lock getReadLock() {
 		return variablesLock.readLock();
 	}
-	
+
 	/**
 	 * Returns the internal value of the requested variable.
-	 * <p>
+	 *
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
-	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
+	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is
+	 * not set.
 	 */
 	@Nullable
-	public final static Object getVariable(final String name, final @Nullable Event e, final boolean local) {
+	public static Object getVariable(final String name, final @Nullable Event e, final boolean local) {
 		String n = name;
-        if (caseInsensitiveVariables) {
-            n = name.toLowerCase(Locale.ENGLISH);
-        }
-	    if (local) {
+		if (caseInsensitiveVariables) {
+			n = name.toLowerCase(Locale.ENGLISH);
+		}
+		if (local) {
 			final VariablesMap map = localVariables.get(e);
 			if (map == null)
 				return null;
@@ -293,22 +289,22 @@ public abstract class Variables {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets a variable.
-	 * 
-	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
+	 *
+	 * @param name  The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this
+	 *              case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
-	public final static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
-        String n = name;
-        if (caseInsensitiveVariables) {
-            n = name.toLowerCase(Locale.ENGLISH);
-        }
-	    if (value != null) {
+	public static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
+		String n = name;
+		if (caseInsensitiveVariables) {
+			n = name.toLowerCase(Locale.ENGLISH);
+		}
+		if (value != null) {
 			assert !n.endsWith("::*");
-			@SuppressWarnings("null")
-			final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
+			@SuppressWarnings("null") final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
 			final Class<?> sas = ci.getSerializeAs();
 			if (sas != null) {
 				value = Converters.convert(value, sas);
@@ -325,8 +321,8 @@ public abstract class Variables {
 			setVariable(n, value);
 		}
 	}
-	
-	final static void setVariable(final String name, @Nullable final Object value) {
+
+	private static void setVariable(final String name, @Nullable final Object value) {
 		try {
 			variablesLock.writeLock().lock();
 			variables.setVariable(name, value);
@@ -335,32 +331,34 @@ public abstract class Variables {
 		}
 		saveVariableChange(name, value);
 	}
-	
+
 	/**
 	 * Stores loaded variables while variable storages are loaded.
 	 * <p>
 	 * Access must be synchronised.
 	 */
-	final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>>(new HashMap<String, NonNullPair<Object, VariablesStorage>>());
-	
+	private final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<>(new HashMap<>());
+
 	private static final int MAX_CONFLICT_WARNINGS = 50;
 	private static int loadConflicts = 0;
-	
+
 	/**
-	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while variables are loaded when Skript is starting.
+	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while
+	 * variables are loaded when Skript is starting.
 	 * <p>
 	 * Must be called on Bukkit's main thread.
 	 * <p>
-	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be holding any database locks or such when calling this!
-	 * 
+	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be
+	 * holding any database locks or such when calling this!
+	 *
 	 * @param name
 	 * @param value
 	 * @param source
 	 * @return Whether the variable was stored somewhere. Not valid while storages are loading.
 	 */
-	final static boolean variableLoaded(final String name, final @Nullable Object value, final VariablesStorage source) {
+	static boolean variableLoaded(final String name, final @Nullable Object value, final VariablesStorage source) {
 		assert Bukkit.isPrimaryThread(); // required by serialisation
-		
+
 		synchronized (tempVars) {
 			final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
 			if (tvs != null) {
@@ -375,18 +373,18 @@ public abstract class Variables {
 						Skript.warning("[!] More than " + MAX_CONFLICT_WARNINGS + " variables were loaded more than once from different databases, no more warnings will be printed.");
 					v.getSecond().save(name, null, null);
 				}
-				tvs.put(name, new NonNullPair<Object, VariablesStorage>(value, source));
+				tvs.put(name, new NonNullPair<>(value, source));
 				return false;
 			}
 		}
-		
+
 		variablesLock.writeLock().lock();
 		try {
 			variables.setVariable(name, value);
 		} finally {
 			variablesLock.writeLock().unlock();
 		}
-		
+
 		for (final VariablesStorage s : storages) {
 			if (s.accept(name)) {
 				if (s != source) {
@@ -400,10 +398,10 @@ public abstract class Variables {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Stores loaded variables into the variables map and the appropriate databases.
-	 * 
+	 *
 	 * @return How many variables were not stored anywhere
 	 */
 	@SuppressWarnings("null")
@@ -411,7 +409,7 @@ public abstract class Variables {
 		if (loadConflicts > MAX_CONFLICT_WARNINGS)
 			Skript.warning("A total of " + loadConflicts + " variables were loaded more than once from different databases");
 		Skript.debug("Databases loaded, setting variables...");
-		
+
 		synchronized (tempVars) {
 			final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
 			tempVars.set(null);
@@ -423,66 +421,63 @@ public abstract class Variables {
 					if (!variableLoaded(tv.getKey(), tv.getValue().getFirst(), tv.getValue().getSecond()))
 						n++;
 				}
-				
+
 				for (final VariablesStorage s : storages)
 					s.allLoaded();
-				
+
 				Skript.debug("Variables set. Queue size = " + queue.size());
-				
+
 				return n;
 			} finally {
 				variablesLock.writeLock().unlock();
 			}
 		}
 	}
-	
-	public final static SerializedVariable serialize(final String name, final @Nullable Object value) {
+
+	public static SerializedVariable serialize(final String name, final @Nullable Object value) {
 		assert Bukkit.isPrimaryThread();
 		final SerializedVariable.Value var = serialize(value);
 		return new SerializedVariable(name, var);
 	}
-	
+
 	@Nullable
-	public final static SerializedVariable.Value serialize(final @Nullable Object value) {
+	public static SerializedVariable.Value serialize(final @Nullable Object value) {
 		assert Bukkit.isPrimaryThread();
 		return Classes.serialize(value);
 	}
-	
-	private final static void saveVariableChange(final String name, final @Nullable Object value) {
+
+	private static void saveVariableChange(final String name, final @Nullable Object value) {
 		queue.add(serialize(name, value));
 	}
-	
-	final static BlockingQueue<SerializedVariable> queue = new LinkedBlockingQueue<SerializedVariable>();
-	
-	static volatile boolean closed = false;
-	
-	private final static Thread saveThread = Skript.newThread(new Runnable() {
-		@Override
-		public void run() {
-			while (!closed) {
-				try {
-					final SerializedVariable v = queue.take();
-					for (final VariablesStorage s : storages) {
-						if (s.accept(v.name)) {
-							s.save(v);
-							break;
-						}
+
+	private final static BlockingQueue<SerializedVariable> queue = new LinkedBlockingQueue<>();
+
+	private static volatile boolean closed = false;
+
+	private final static Thread saveThread = Skript.newThread(() -> {
+		while (!closed) {
+			try {
+				final SerializedVariable v = queue.take();
+				for (final VariablesStorage s : storages) {
+					if (s.accept(v.name)) {
+						s.save(v);
+						break;
 					}
-				} catch (final InterruptedException e) {}
-			}
+				}
+			} catch (final InterruptedException ignored) {}
 		}
 	}, "Skript variable save thread");
-	
+
 	public static void close() {
 		while (queue.size() > 0) {
 			try {
 				Thread.sleep(10);
-			} catch (final InterruptedException e) {}
+			} catch (final InterruptedException ignored) {}
 		}
 		closed = true;
 		saveThread.interrupt();
 	}
-	
+
 	public static int numVariables() {
 		try {
 			variablesLock.readLock().lock();
@@ -491,5 +486,4 @@ public abstract class Variables {
 			variablesLock.readLock().unlock();
 		}
 	}
-	
 }

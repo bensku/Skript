@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config.validate;
 
@@ -35,50 +34,51 @@ import ch.njol.util.Setter;
  * @author Peter Güttinger
  */
 public class SectionValidator implements NodeValidator {
-	
+
 	private final static class NodeInfo {
+
 		public NodeValidator v;
 		public boolean optional;
-		
+
 		public NodeInfo(final NodeValidator v, final boolean optional) {
 			this.v = v;
 			this.optional = optional;
 		}
 	}
-	
+
 	private final HashMap<String, NodeInfo> nodes = new HashMap<>();
 	private boolean allowUndefinedSections = false;
 	private boolean allowUndefinedEntries = false;
-	
+
 	public SectionValidator() {}
-	
+
 	public SectionValidator addNode(final String name, final NodeValidator v, final boolean optional) {
 		assert name != null;
 		assert v != null;
 		nodes.put(name.toLowerCase(Locale.ENGLISH), new NodeInfo(v, optional));
 		return this;
 	}
-	
+
 	public SectionValidator addEntry(final String name, final boolean optional) {
 		addNode(name, new EntryValidator(), optional);
 		return this;
 	}
-	
+
 	public SectionValidator addEntry(final String name, final Setter<String> setter, final boolean optional) {
 		addNode(name, new EntryValidator(setter), optional);
 		return this;
 	}
-	
+
 	public <T> SectionValidator addEntry(final String name, final Parser<? extends T> parser, final Setter<T> setter, final boolean optional) {
 		addNode(name, new ParsedEntryValidator<>(parser, setter), optional);
 		return this;
 	}
-	
+
 	public SectionValidator addSection(final String name, final boolean optional) {
 		addNode(name, new SectionValidator().setAllowUndefinedEntries(true).setAllowUndefinedSections(true), optional);
 		return this;
 	}
-	
+
 	@Override
 	public boolean validate(final Node node) {
 		if (!(node instanceof SectionNode)) {
@@ -112,20 +112,19 @@ public class SectionValidator implements NodeValidator {
 		SkriptLogger.setNode(null);
 		return ok;
 	}
-	
-	public final static void notASectionError(final Node node) {
+
+	public static void notASectionError(final Node node) {
 		SkriptLogger.setNode(node);
 		Skript.error("'" + node.getKey() + "' is not a section (like 'name:', followed by one or more indented lines)");
 	}
-	
+
 	public SectionValidator setAllowUndefinedSections(final boolean b) {
 		allowUndefinedSections = b;
 		return this;
 	}
-	
+
 	public SectionValidator setAllowUndefinedEntries(final boolean b) {
 		allowUndefinedEntries = b;
 		return this;
 	}
-	
 }

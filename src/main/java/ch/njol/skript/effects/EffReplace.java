@@ -1,29 +1,25 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
-import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -53,11 +49,12 @@ import ch.njol.util.StringUtils;
 		"replace every \"&\" with \"§\" in line 1",
 		"# The following acts as a simple chat censor, but it will e.g. censor mass, hassle, assassin, etc. as well:",
 		"on chat:",
-		"	replace all \"fuck\", \"bitch\" and \"ass\" with \"****\" in the message",
-		" ",
+		"\treplace all \"fuck\", \"bitch\" and \"ass\" with \"****\" in the message",
+		"",
 		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
 @Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory)")
 public class EffReplace extends Effect {
+
 	static {
 		Skript.registerEffect(EffReplace.class,
 				"replace (all|every|) %strings% in %strings% with %string%",
@@ -65,14 +62,15 @@ public class EffReplace extends Effect {
 				"replace (all|every|) %itemstacks% in %inventories% with %itemstack%",
 				"replace (all|every|) %itemstacks% with %itemstack% in %inventories%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> haystack, needles, replacement;
 	private boolean replaceString = true;
+
 	@SuppressWarnings({"null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		haystack =  exprs[1 + matchedPattern % 2];
+		haystack = exprs[1 + matchedPattern % 2];
 		replaceString = matchedPattern < 2;
 		if (replaceString && !ChangerUtils.acceptsChange(haystack, ChangeMode.SET, String.class)) {
 			Skript.error(haystack + " cannot be changed and can thus not have parts replaced.");
@@ -82,7 +80,7 @@ public class EffReplace extends Effect {
 		replacement = exprs[2 - matchedPattern % 2];
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected void execute(final Event e) {
@@ -95,21 +93,20 @@ public class EffReplace extends Effect {
 			for (int x = 0; x < haystack.length; x++)
 				for (final Object n : needles) {
 					assert n != null;
-					haystack[x] = StringUtils.replace((String)haystack[x], (String)n, Matcher.quoteReplacement((String)replacement), SkriptConfig.caseSensitive.value());
+					haystack[x] = StringUtils.replace((String) haystack[x], (String) n, Matcher.quoteReplacement((String) replacement), SkriptConfig.caseSensitive.value());
 				}
 			this.haystack.change(e, haystack, ChangeMode.SET);
 		} else {
-			for (Inventory inv : (Inventory[])haystack)
+			for (Inventory inv : (Inventory[]) haystack)
 				for (ItemStack item : (ItemStack[]) needles)
-					for (Integer slot : inv.all(item).keySet()){
-						inv.setItem(slot.intValue(), (ItemStack)replacement);
+					for (Integer slot : inv.all(item).keySet()) {
+						inv.setItem(slot, (ItemStack) replacement);
 					}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "replace " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug);
 	}
-	
 }

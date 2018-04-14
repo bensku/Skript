@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -51,6 +50,7 @@ import ch.njol.util.StringUtils;
 		"player has 4 flint and 2 iron ingots"})
 @Since("1.0")
 public class CondContains extends Condition {
+
 	static {
 		Skript.registerCondition(CondContains.class,
 				"%inventories% ha(s|ve) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
@@ -58,12 +58,12 @@ public class CondContains extends Condition {
 				"%inventories% do[es](n't| not) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
 				"%inventories/strings/objects% do[es](n't| not) contain %itemtypes/strings/objects%");
 	}
-	
+
 	@SuppressWarnings("null")
-	Expression<?> containers;
+	private Expression<?> containers;
 	@SuppressWarnings("null")
-	Expression<?> items;
-	
+	private Expression<?> items;
+
 	@SuppressWarnings({"unchecked", "null", "unused"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -93,38 +93,43 @@ public class CondContains extends Condition {
 		setNegated(matchedPattern >= 2);
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(final Event e) {
 		boolean caseSensitive = SkriptConfig.caseSensitive.value();
-		
-		return containers.check(e, new Checker<Object>() {
-			@Override
-			public boolean check(final Object container) {
-				if (containers instanceof Variable && !containers.isSingle()) { // List variable
-					Object[] all = containers.getAll(e); // Compare all items to all entries in list
-					return items.check(e, new Checker<Object>() {
-						@Override
-						public boolean check(final Object item) {
-							for (Object o : all) {
-								if (Relation.EQUAL.is(Comparators.compare(o, item)))
-									return true; // Found equal, success!
-							}
-							return false; // Not found
+
+		return containers.check(e, (Checker<Object>) container -> {
+			if (containers instanceof Variable && !containers.isSingle()) { // List variable
+				Object[] all = containers.getAll(e); // Compare all items to all entries in list
+				return items.check(e, (Checker<Object>) item -> {
+					for (Object o : all) {
+						if (Relation.EQUAL.is(Comparators.compare(o, item)))
+							return true; // Found equal, success!
+					}
+					return false; // Not found
+				}, isNegated());
+			} else {
+				if (container instanceof Inventory) {
+					final Inventory invi = (Inventory) container;
+					return items.check(e, (Checker<Object>) type ->
+							type instanceof ItemType && ((ItemType) type).isContainedIn(invi), isNegated());
+				} else if (container instanceof String) {
+					final String s = (String) container;
+					return items.check(e, (Checker<Object>) type -> {
+						if (type instanceof Variable) {
+							@SuppressWarnings("unchecked")
+							String toFind = ((Variable<String>) type).getSingle(e);
+							if (toFind != null)
+								return StringUtils.contains(s, toFind, caseSensitive);
 						}
+						return type instanceof String && StringUtils.contains(s, (String) type, caseSensitive);
 					}, isNegated());
-				} else {
-					if (container instanceof Inventory) {
-						final Inventory invi = (Inventory) container;
+				} else if (container instanceof Variable) { // Ok, so we have a variable...
+					Object val = ((Variable<?>) container).getSingle(e);
+					if (val instanceof String) {
+						final String s = (String) val;
 						return items.check(e, new Checker<Object>() {
-							@Override
-							public boolean check(final Object type) {
-								return type instanceof ItemType && ((ItemType) type).isContainedIn(invi);
-							}
-						}, isNegated());
-					} else if (container instanceof String) {
-						final String s = (String) container;
-						return items.check(e, new Checker<Object>() {
+
 							@Override
 							public boolean check(final Object type) {
 								if (type instanceof Variable) {
@@ -135,37 +140,18 @@ public class CondContains extends Condition {
 								}
 								return type instanceof String && StringUtils.contains(s, (String) type, caseSensitive);
 							}
-						}, isNegated());
-					} else if (container instanceof Variable) { // Ok, so we have a variable...
-						Object val = ((Variable<?>) container).getSingle(e);
-						if (val instanceof String) {
-							final String s = (String) val;
-							return items.check(e, new Checker<Object>() {
-	
-								@Override
-								public boolean check(final Object type) {
-									if (type instanceof Variable) {
-										@SuppressWarnings("unchecked")
-										String toFind = ((Variable<String>) type).getSingle(e);
-										if (toFind != null)
-											return StringUtils.contains(s, toFind, caseSensitive);
-									}
-									return type instanceof String && StringUtils.contains(s, (String) type, caseSensitive);
-								}
-								
-							});
-						}
-						// TODO support similar odd contains checks for inventories
+
+						});
 					}
+					// TODO support similar odd contains checks for inventories
 				}
-				return false;
 			}
+			return false;
 		});
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return containers.toString(e, debug) + (isNegated() ? " doesn't contain " : " contains ") + items.toString(e, debug);
 	}
-	
 }

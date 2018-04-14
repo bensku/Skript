@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.util.coll;
 
@@ -35,18 +34,20 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.util.Pair;
 
 /**
- * Utils for collections and arrays. All methods will not print any errors for <tt>null</tt> collections/arrays, but will return false/-1/etc.
- * 
+ * Utils for collections and arrays. All methods will not print any errors for <tt>null</tt> collections/arrays, but
+ * will return false/-1/etc.
+ *
  * @author Peter Güttinger
  */
 public abstract class CollectionUtils {
+
 	private CollectionUtils() {}
-	
+
 	/**
 	 * Finds an object in an array using {@link Object#equals(Object)} (can find null elements).
-	 * 
+	 *
 	 * @param array The array to search in
-	 * @param o The object to search for
+	 * @param o     The object to search for
 	 * @return The index of the first occurrence of the given object or -1 if not found
 	 */
 	public static <T> int indexOf(final @Nullable T[] array, final @Nullable T t) {
@@ -58,7 +59,7 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	public static <T> int lastIndexOf(final @Nullable T[] array, final @Nullable T t) {
 		if (array == null)
 			return -1;
@@ -68,7 +69,7 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	public static <T> int indexOf(final @Nullable T[] array, final @Nullable T t, final int start, final int end) {
 		if (array == null)
 			return -1;
@@ -78,11 +79,11 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	public static <T> boolean contains(final @Nullable T[] array, final @Nullable T o) {
 		return indexOf(array, o) != -1;
 	}
-	
+
 	public static <T> boolean containsAny(final @Nullable T[] array, final @Nullable T... os) {
 		if (array == null || os == null)
 			return false;
@@ -92,7 +93,7 @@ public abstract class CollectionUtils {
 		}
 		return false;
 	}
-	
+
 	public static <T> boolean containsAll(final @Nullable T[] array, final @Nullable T... os) {
 		if (array == null || os == null)
 			return false;
@@ -102,19 +103,19 @@ public abstract class CollectionUtils {
 		}
 		return true;
 	}
-	
+
 	public static int indexOf(final @Nullable int[] array, final int num) {
 		if (array == null)
 			return -1;
 		return indexOf(array, num, 0, array.length);
 	}
-	
+
 	public static int indexOf(final @Nullable int[] array, final int num, final int start) {
 		if (array == null)
 			return -1;
 		return indexOf(array, num, start, array.length);
 	}
-	
+
 	public static int indexOf(final @Nullable int[] array, final int num, final int start, final int end) {
 		if (array == null)
 			return -1;
@@ -124,16 +125,16 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
-	public final static boolean contains(final @Nullable int[] array, final int num) {
+
+	public static boolean contains(final @Nullable int[] array, final int num) {
 		return indexOf(array, num) != -1;
 	}
-	
+
 	/**
 	 * finds a string in an array of strings (ignoring case).
-	 * 
+	 *
 	 * @param array the array to search in
-	 * @param s the string to search for
+	 * @param s     the string to search for
 	 * @return the index of the first occurrence of the given string or -1 if not found
 	 */
 	public static int indexOfIgnoreCase(final @Nullable String[] array, final @Nullable String s) {
@@ -147,16 +148,16 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	public static boolean containsIgnoreCase(final @Nullable String[] array, final @Nullable String s) {
 		return indexOfIgnoreCase(array, s) != -1;
 	}
-	
+
 	/**
 	 * Finds an object in an iterable using {@link Object#equals(Object)}.
-	 * 
+	 *
 	 * @param iter The iterable to search in
-	 * @param o The object to search for
+	 * @param o    The object to search for
 	 * @return The index of the first occurrence of the given object or -1 if not found
 	 */
 	public static <T> int indexOf(final @Nullable Iterable<T> iter, final @Nullable T o) {
@@ -170,12 +171,12 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Finds a string in a collection of strings (ignoring case).
-	 * 
+	 *
 	 * @param iter The iterable to search in
-	 * @param s The string to search for
+	 * @param s    The string to search for
 	 * @return The index of the first occurrence of the given string or -1 if not found
 	 */
 	public static int indexOfIgnoreCase(final @Nullable Iterable<String> iter, final @Nullable String s) {
@@ -189,7 +190,7 @@ public abstract class CollectionUtils {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * @param map
 	 * @param key
@@ -203,7 +204,7 @@ public abstract class CollectionUtils {
 			return new Pair<>(key, map.get(key));
 		return null;
 	}
-	
+
 	@Nullable
 	public static <U> Entry<String, U> containsKeyIgnoreCase(final @Nullable Map<String, U> map, final @Nullable String key) {
 		if (key == null)
@@ -216,13 +217,13 @@ public abstract class CollectionUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param classes Array of classes
-	 * @param c The class to look for
+	 * @param c       The class to look for
 	 * @return Whether the class or any of its superclasses are contained in the array
 	 */
-	public final static boolean containsSuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?> c) {
+	public static boolean containsSuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?> c) {
 		if (classes == null || c == null)
 			return false;
 		for (final Class<?> cl : classes) {
@@ -233,13 +234,13 @@ public abstract class CollectionUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param classes Array of classes
-	 * @param cs The classes to look for
+	 * @param cs      The classes to look for
 	 * @return Whether the classes or any of their superclasses are contained in the array
 	 */
-	public final static boolean containsAnySuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?>... cs) {
+	public static boolean containsAnySuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?>... cs) {
 		if (classes == null || cs == null)
 			return false;
 		for (final Class<?> cl : classes) {
@@ -252,30 +253,30 @@ public abstract class CollectionUtils {
 		}
 		return false;
 	}
-	
+
 	private final static Random random = new Random();
-	
+
 	@Nullable
 	public static <T> T getRandom(final @Nullable T[] os) {
 		if (os == null || os.length == 0)
 			return null;
 		return os[random.nextInt(os.length)];
 	}
-	
+
 	@Nullable
 	public static <T> T getRandom(final @Nullable T[] os, final int start) {
 		if (os == null || os.length == 0)
 			return null;
 		return os[random.nextInt(os.length - start) + start];
 	}
-	
+
 	@Nullable
 	public static <T> T getRandom(final @Nullable List<T> os) {
 		if (os == null || os.isEmpty())
 			return null;
 		return os.get(random.nextInt(os.size()));
 	}
-	
+
 	/**
 	 * @param set The set of elements
 	 * @param sub The set to test for being a subset of <tt>set</tt>
@@ -290,15 +291,15 @@ public abstract class CollectionUtils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Gets the intersection of the given sets, i.e. a set that only contains elements that occur in all given sets.
-	 * 
+	 *
 	 * @param sets
 	 * @return
 	 */
 	@SuppressWarnings("null")
-	public final static <E> Set<E> intersection(final @Nullable Set<E>... sets) {
+	public static <E> Set<E> intersection(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
@@ -311,15 +312,15 @@ public abstract class CollectionUtils {
 		}
 		return l;
 	}
-	
+
 	/**
 	 * Gets the union of the given sets, i.e. a set that contains all elements of the given sets.
-	 * 
+	 *
 	 * @param sets
 	 * @return
 	 */
 	@SuppressWarnings("null")
-	public final static <E> Set<E> union(final @Nullable Set<E>... sets) {
+	public static <E> Set<E> union(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
@@ -332,12 +333,12 @@ public abstract class CollectionUtils {
 		}
 		return l;
 	}
-	
+
 	/**
 	 * Creates an array from the given objects. Useful for creating arrays of generic types.
 	 * <p>
 	 * The method is annotated {@link NonNull}, but will simply return null if null is passed.
-	 * 
+	 *
 	 * @param array Some objects
 	 * @return The passed array
 	 */
@@ -345,15 +346,15 @@ public abstract class CollectionUtils {
 	public static <T> T[] array(final T... array) {
 		return array;
 	}
-	
+
 	/**
 	 * Creates a permutation of all integers in the interval [start, end]
-	 * 
+	 *
 	 * @param start The lowest number which will be included in the permutation
-	 * @param end The highest number which will be included in the permutation
+	 * @param end   The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
-	public final static int[] permutation(final int start, final int end) {
+	public static int[] permutation(final int start, final int end) {
 		if (start > end)
 			return new int[0];
 		final int length = end - start + 1;
@@ -368,15 +369,15 @@ public abstract class CollectionUtils {
 		}
 		return r;
 	}
-	
+
 	/**
 	 * Creates a permutation of all bytes in the interval [start, end]
-	 * 
+	 *
 	 * @param start The lowest number which will be included in the permutation
-	 * @param end The highest number which will be included in the permutation
+	 * @param end   The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
-	public final static byte[] permutation(final byte start, final byte end) {
+	public static byte[] permutation(final byte start, final byte end) {
 		if (start > end)
 			return new byte[0];
 		final int length = end - start + 1;
@@ -391,22 +392,23 @@ public abstract class CollectionUtils {
 		}
 		return r;
 	}
-	
+
 	/**
 	 * Shorthand for <code>{@link permutation permutation}(0, length - 1)</code>
 	 */
-	public final static int[] permutation(final int length) {
+	public static int[] permutation(final int length) {
 		return permutation(0, length - 1);
 	}
-	
+
 	/**
 	 * Converts a collection of integers into a primitive int array.
-	 * 
+	 *
 	 * @param ints The collection
-	 * @return An int[] containing the elements of the given collection in the order they were returned by the collection's iterator.
+	 * @return An int[] containing the elements of the given collection in the order they were returned by the
+	 * collection's iterator.
 	 */
 	@SuppressWarnings("null")
-	public final static int[] toArray(final @Nullable Collection<Integer> ints) {
+	public static int[] toArray(final @Nullable Collection<Integer> ints) {
 		if (ints == null)
 			return new int[0];
 		final int[] r = new int[ints.size()];
@@ -419,8 +421,8 @@ public abstract class CollectionUtils {
 		}
 		return r;
 	}
-	
-	public final static float[] toFloats(final @Nullable double[] doubles) {
+
+	public static float[] toFloats(final @Nullable double[] doubles) {
 		if (doubles == null)
 			return new float[0];
 		final float[] floats = new float[doubles.length];
@@ -428,5 +430,4 @@ public abstract class CollectionUtils {
 			floats[i] = (float) doubles[i];
 		return floats;
 	}
-	
 }

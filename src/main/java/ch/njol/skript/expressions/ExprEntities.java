@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -29,7 +28,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -44,13 +42,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import ch.njol.util.NullableChecker;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.NonNullIterator;
@@ -61,11 +57,12 @@ import ch.njol.util.coll.iterator.NonNullIterator;
 @Name("Entities")
 @Description("all entities in all world, in a specific world or in a radius around a certain location, e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.")
 @Examples({"kill all creepers in the player's world",
-		"send \"Psst!\" to all players witin 100 meters of the player",
+		"send \"Psst!\" to all players within 100 meters of the player",
 		"give a diamond to all ops",
 		"heal all tamed wolves in radius 2000 around {town center}"})
 @Since("1.2.1")
 public class ExprEntities extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprEntities.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
 				"[(all [[of] the]|the)] %*entitydatas% [(in|of) [world[s]] %-worlds%]",
@@ -73,24 +70,23 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				"[(all [[of] the]|the)] %*entitydatas% (within|[with]in radius) %number% [(block[s]|met(er|re)[s])] (of|around) %location%",
 				"[(all [[of] the]|the)] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
 	}
-	
+
 	@SuppressWarnings("null")
-	Expression<? extends EntityData<?>> types;
-	
+	private Expression<? extends EntityData<?>> types;
+
 	@Nullable
-	Expression<World> worlds;
-	
+	private Expression<World> worlds;
+
 	@Nullable
 	private Expression<Number> radius;
 	@Nullable
 	private Expression<Location> center;
 	@Nullable
 	private Expression<? extends Entity> centerEntity;
-	
-	Class<? extends Entity> returnType = Entity.class;
-	
+
+	private Class<? extends Entity> returnType = Entity.class;
 	private int matchedPattern;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -120,17 +116,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		}
 		return true;
 	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
-	}
-	
-	@Override
-	public Class<? extends Entity> getReturnType() {
-		return returnType;
-	}
-	
+
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
@@ -146,7 +132,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isLoopOf(final String s) {
@@ -168,7 +154,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	@Nullable
@@ -194,31 +180,28 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			final Collection<Entity> es = l.getWorld().getNearbyEntities(l, d, d, d);
 			final double radiusSquared = d * d * Skript.EPSILON_MULT;
 			final EntityData<?>[] ts = types.getAll(e);
-			return new CheckedIterator<>(es.iterator(), new NullableChecker<Entity>() {
-				@Override
-				public boolean check(final @Nullable Entity e) {
-					if (e == null || e.getLocation().distanceSquared(l) > radiusSquared)
-						return false;
-					for (final EntityData<?> t : ts) {
-						if (t.isInstance(e))
-							return true;
-					}
+			return new CheckedIterator<>(es.iterator(), e1 -> {
+				if (e1 == null || e1.getLocation().distanceSquared(l) > radiusSquared)
 					return false;
+				for (final EntityData<?> t : ts) {
+					if (t.isInstance(e1))
+						return true;
 				}
+				return false;
 			});
 		} else {
 			if (worlds == null && returnType == Player.class)
 				return super.iterator(e);
 			return new NonNullIterator<Entity>() {
-				
+
 				private final World[] ws = worlds == null ? Bukkit.getWorlds().toArray(new World[0]) : worlds.getArray(e);
 				private int w = -1;
-				
+
 				private final EntityData<?>[] ts = types.getAll(e);
-				
+
 				@Nullable
 				private Iterator<? extends Entity> curIter = null;
-				
+
 				@Override
 				@Nullable
 				protected Entity getNext() {
@@ -241,7 +224,17 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			};
 		}
 	}
-	
+
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
+	@Override
+	public Class<? extends Entity> getReturnType() {
+		return returnType;
+	}
+
 	@SuppressWarnings("null")
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
@@ -249,5 +242,4 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				(worlds != null ? " in " + worlds.toString(e, debug) :
 						radius != null && center != null ? " in radius " + radius.toString(e, debug) + " around " + center.toString(e, debug) : "");
 	}
-	
 }

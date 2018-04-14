@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -26,7 +25,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -38,7 +36,7 @@ import ch.njol.skript.registrations.Classes;
  * Represents equipment slot of an entity.
  */
 public class EquipmentSlot extends SlotWithIndex {
-	
+
 	public static enum EquipSlot {
 		TOOL {
 			@SuppressWarnings("deprecation")
@@ -50,7 +48,7 @@ public class EquipmentSlot extends SlotWithIndex {
 				}
 				return e.getItemInHand();
 			}
-			
+
 			@SuppressWarnings("deprecation")
 			@Override
 			public void set(final EntityEquipment e, final @Nullable ItemStack item) {
@@ -81,7 +79,7 @@ public class EquipmentSlot extends SlotWithIndex {
 					Skript.warning("No off hand support, but a skript would need that!");
 				}
 			}
-			
+
 		},
 		HELMET(39) {
 			@Override
@@ -89,7 +87,7 @@ public class EquipmentSlot extends SlotWithIndex {
 			public ItemStack get(final EntityEquipment e) {
 				return e.getHelmet();
 			}
-			
+
 			@Override
 			public void set(final EntityEquipment e, final @Nullable ItemStack item) {
 				e.setHelmet(item);
@@ -101,7 +99,7 @@ public class EquipmentSlot extends SlotWithIndex {
 			public ItemStack get(final EntityEquipment e) {
 				return e.getChestplate();
 			}
-			
+
 			@Override
 			public void set(final EntityEquipment e, final @Nullable ItemStack item) {
 				e.setChestplate(item);
@@ -113,7 +111,7 @@ public class EquipmentSlot extends SlotWithIndex {
 			public ItemStack get(final EntityEquipment e) {
 				return e.getLeggings();
 			}
-			
+
 			@Override
 			public void set(final EntityEquipment e, final @Nullable ItemStack item) {
 				e.setLeggings(item);
@@ -125,40 +123,39 @@ public class EquipmentSlot extends SlotWithIndex {
 			public ItemStack get(final EntityEquipment e) {
 				return e.getBoots();
 			}
-			
+
 			@Override
 			public void set(final EntityEquipment e, final @Nullable ItemStack item) {
 				e.setBoots(item);
 			}
 		};
-		
+
 		public final int slotNumber;
-		
+
 		EquipSlot() {
 			slotNumber = -1;
 		}
-		
+
 		EquipSlot(int number) {
 			slotNumber = number;
 		}
-		
+
 		@Nullable
 		public abstract ItemStack get(EntityEquipment e);
-		
+
 		public abstract void set(EntityEquipment e, @Nullable ItemStack item);
-		
 	}
-	
+
 	private static final EquipSlot[] values = EquipSlot.values();
-	
+
 	private final EntityEquipment e;
 	private final EquipSlot slot;
-	
+
 	public EquipmentSlot(final EntityEquipment e, final EquipSlot slot) {
 		this.e = e;
 		this.slot = slot;
 	}
-	
+
 	@SuppressWarnings("null")
 	public EquipmentSlot(HumanEntity holder, int index) {
 		this.e = holder.getEquipment();
@@ -171,16 +168,17 @@ public class EquipmentSlot extends SlotWithIndex {
 	public ItemStack getItem() {
 		return slot.get(e);
 	}
-	
+
 	@Override
 	public void setItem(final @Nullable ItemStack item) {
 		slot.set(e, item);
 		if (e.getHolder() instanceof Player)
 			PlayerUtils.updateInventory((Player) e.getHolder());
 	}
-	
+
 	/**
 	 * Gets underlying armor slot enum.
+	 *
 	 * @return Armor slot.
 	 */
 	public EquipSlot getEquipSlot() {
@@ -196,5 +194,4 @@ public class EquipmentSlot extends SlotWithIndex {
 	public String toString(@Nullable Event event, boolean debug) {
 		return "the " + slot.name().toLowerCase(Locale.ENGLISH) + " of " + Classes.toString(e.getHolder()); // TODO localise?
 	}
-	
 }

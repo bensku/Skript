@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
 
@@ -45,51 +44,45 @@ import ch.njol.util.Closeable;
  * @author Peter Güttinger
  */
 public abstract class VariablesStorage implements Closeable {
-	
+
 	private final static int QUEUE_SIZE = 1000, FIRST_WARNING = 300;
-	
-	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<SerializedVariable>(QUEUE_SIZE);
-	
+	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<>(QUEUE_SIZE);
 	protected volatile boolean closed = false;
-	
 	protected final String databaseName;
-	
+
 	@Nullable
 	protected File file;
-	
+
 	/**
 	 * null for '.*' or '.+'
 	 */
 	@Nullable
 	private Pattern variablePattern;
-	
+
 	// created in the constructor, started in load()
 	private final Thread writeThread;
-	
+
 	protected VariablesStorage(final String name) {
 		databaseName = name;
-		writeThread = Skript.newThread(new Runnable() {
-			@Override
-			public void run() {
-				while (!closed) {
-					try {
-						final SerializedVariable var = changesQueue.take();
-						final Value d = var.value;
-						if (d != null)
-							save(var.name, d.type, d.data);
-						else
-							save(var.name, null, null);
-					} catch (final InterruptedException e) {}
-				}
+		writeThread = Skript.newThread(() -> {
+			while (!closed) {
+				try {
+					final SerializedVariable var = changesQueue.take();
+					final Value d = var.value;
+					if (d != null)
+						save(var.name, d.type, d.data);
+					else
+						save(var.name, null, null);
+				} catch (final InterruptedException ignored) {}
 			}
 		}, "Skript variable save thread for database '" + name + "'");
 	}
-	
+
 	@Nullable
 	protected String getValue(final SectionNode n, final String key) {
 		return getValue(n, key, String.class);
 	}
-	
+
 	@Nullable
 	protected <T> T getValue(final SectionNode n, final String key, final Class<T> type) {
 		final String v = n.getValue(key);
@@ -109,7 +102,7 @@ public abstract class VariablesStorage implements Closeable {
 			log.stop();
 		}
 	}
-	
+
 	public final boolean load(final SectionNode n) {
 		final String pattern = getValue(n, "pattern");
 		if (pattern == null)
@@ -120,7 +113,7 @@ public abstract class VariablesStorage implements Closeable {
 			Skript.error("Invalid pattern '" + pattern + "': " + e.getLocalizedMessage());
 			return false;
 		}
-		
+
 		if (requiresFile()) {
 			final String f = getValue(n, "file");
 			if (f == null)
@@ -154,60 +147,63 @@ public abstract class VariablesStorage implements Closeable {
 //				}
 				return false;
 			}
-			
+
 			if (!"0".equals(getValue(n, "backup interval"))) {
 				final Timespan backupInterval = getValue(n, "backup interval", Timespan.class);
 				if (backupInterval != null)
 					startBackupTask(backupInterval);
 			}
 		}
-		
+
 		if (!load_i(n))
 			return false;
-		
+
 		writeThread.start();
 		Skript.closeOnDisable(this);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Loads variables stored here.
-	 * 
-	 * @return Whether the database could be loaded successfully, i.e. whether the config is correct and all variables could be loaded
+	 *
+	 * @return Whether the database could be loaded successfully, i.e. whether the config is correct and all variables
+	 * could be loaded
 	 */
 	protected abstract boolean load_i(SectionNode n);
-	
+
 	/**
-	 * Called after all storages have been loaded, and variables have been redistributed if settings have changed. This should commit the first transaction (which is not empty if
-	 * variables have been moved from another database to this one or vice versa), and start repeating transactions if applicable.
+	 * Called after all storages have been loaded, and variables have been redistributed if settings have changed. This
+	 * should commit the first transaction (which is not empty if variables have been moved from another database to
+	 * this one or vice versa), and start repeating transactions if applicable.
 	 */
 	protected abstract void allLoaded();
-	
+
 	protected abstract boolean requiresFile();
-	
+
 	protected abstract File getFile(String file);
-	
+
 	/**
 	 * Must be locked after {@link Variables#getReadLock()} (if that lock is used at all)
 	 */
 	protected final Object connectionLock = new Object();
-	
+
 	/**
 	 * (Re)connects to the database (not called on the first connect - do this in {@link #load_i(SectionNode)}).
-	 * 
-	 * @return Whether the connection could be re-established. An error should be printed by this method prior to returning false.
+	 *
+	 * @return Whether the connection could be re-established. An error should be printed by this method prior to
+	 * returning false.
 	 */
 	protected abstract boolean connect();
-	
+
 	/**
 	 * Disconnects from the database.
 	 */
 	protected abstract void disconnect();
-	
+
 	@Nullable
 	protected Task backupTask = null;
-	
+
 	public void startBackupTask(final Timespan t) {
 		final File file = this.file;
 		if (file == null || t.getTicks_i() == 0)
@@ -228,18 +224,17 @@ public abstract class VariablesStorage implements Closeable {
 			}
 		};
 	}
-	
+
 	boolean accept(final @Nullable String var) {
-		if (var == null)
-			return false;
-		return variablePattern != null ? variablePattern.matcher(var).matches() : true;
+		Pattern variablePattern = this.variablePattern;
+		return var != null && (variablePattern == null || variablePattern.matcher(var).matches());
 	}
-	
+
 	private long lastWarning = Long.MIN_VALUE;
 	private final static int WARNING_INTERVAL = 10;
 	private long lastError = Long.MIN_VALUE;
 	private final static int ERROR_INTERVAL = 10;
-	
+
 	/**
 	 * May be called from a different thread than Bukkit's main thread.
 	 */
@@ -258,41 +253,43 @@ public abstract class VariablesStorage implements Closeable {
 					// REMIND add repetitive error and/or stop saving variables altogether?
 					changesQueue.put(var);
 					break;
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException ignored) {}
 			}
 		}
 	}
-	
+
 	/**
-	 * Called when Skript gets disabled. The default implementation will wait for all variables to be saved before setting {@link #closed} to true and stopping the write thread,
-	 * thus <tt>super.close()</tt> must be called if this method is overridden!
+	 * Called when Skript gets disabled. The default implementation will wait for all variables to be saved before
+	 * setting {@link #closed} to true and stopping the write thread, thus <tt>super.close()</tt> must be called if this
+	 * method is overridden!
 	 */
 	@Override
 	public void close() {
 		while (changesQueue.size() > 0) {
 			try {
 				Thread.sleep(10);
-			} catch (final InterruptedException e) {}
+			} catch (final InterruptedException ignored) {}
 		}
 		closed = true;
 		writeThread.interrupt();
 	}
-	
+
 	/**
-	 * Clears the queue of unsaved variables. Only used if all variables are saved immediately after calling this method.
+	 * Clears the queue of unsaved variables. Only used if all variables are saved immediately after calling this
+	 * method.
 	 */
 	protected void clearChangesQueue() {
 		changesQueue.clear();
 	}
-	
+
 	/**
-	 * Saves a variable. This is called from the main thread while variables are transferred between databases, and from the {@link #writeThread} afterwards.
-	 * 
+	 * Saves a variable. This is called from the main thread while variables are transferred between databases, and from
+	 * the {@link #writeThread} afterwards.
+	 *
 	 * @param name
 	 * @param type
 	 * @param value
 	 * @return Whether the variable was saved
 	 */
 	protected abstract boolean save(String name, @Nullable String type, @Nullable byte[] value);
-	
 }

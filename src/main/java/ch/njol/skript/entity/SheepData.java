@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
@@ -31,21 +30,21 @@ import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.util.Color;
-import ch.njol.util.Checker;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
  */
 public class SheepData extends EntityData<Sheep> {
+
 	static {
 		EntityData.register(SheepData.class, "sheep", Sheep.class, 1, "unsheared sheep", "sheep", "sheared sheep");
 	}
-	
+
 	@Nullable
 	private Color[] colors = null;
 	private int sheared = 0;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -54,15 +53,15 @@ public class SheepData extends EntityData<Sheep> {
 			colors = ((Literal<Color>) exprs[0]).getAll();
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected boolean init(final @Nullable Class<? extends Sheep> c, final @Nullable Sheep e) {
 		sheared = e == null ? 0 : e.isSheared() ? 1 : -1;
-		colors = e == null ? null : new Color[] {Color.byWoolColor(e.getColor())};
+		colors = e == null ? null : new Color[]{Color.byWoolColor(e.getColor())};
 		return true;
 	}
-	
+
 	@Override
 	public void set(final Sheep entity) {
 		if (colors != null) {
@@ -71,26 +70,23 @@ public class SheepData extends EntityData<Sheep> {
 			entity.setColor(c.getWoolColor());
 		}
 	}
-	
+
 	@Override
 	public boolean match(final Sheep entity) {
 		return (sheared == 0 || entity.isSheared() == (sheared == 1))
-				&& (colors == null || SimpleExpression.check(colors, new Checker<Color>() {
-					@Override
-					public boolean check(final @Nullable Color c) {
-						return c != null && entity.getColor() == c.getWoolColor();
-					}
-				}, false, false));
+				&& (colors == null ||
+				SimpleExpression.check(colors,
+						c -> c != null && entity.getColor() == c.getWoolColor(), false, false));
 	}
-	
+
 	@Override
 	public Class<Sheep> getType() {
 		return Sheep.class;
 	}
-	
+
 	@Nullable
 	private Adjective[] adjectives = null;
-	
+
 	@Override
 	public String toString(final int flags) {
 		final Color[] colors = this.colors;
@@ -107,7 +103,7 @@ public class SheepData extends EntityData<Sheep> {
 		return name.getArticleWithSpace(flags) + (age == null ? "" : age.toString(name.getGender(), flags) + " ")
 				+ Adjective.toString(adjectives, name.getGender(), flags, false) + " " + name.toString(flags & Language.NO_ARTICLE_MASK);
 	}
-	
+
 	@Override
 	protected int hashCode_i() {
 		final int prime = 31;
@@ -116,20 +112,17 @@ public class SheepData extends EntityData<Sheep> {
 		result = prime * result + sheared;
 		return result;
 	}
-	
+
 	@Override
 	protected boolean equals_i(final EntityData<?> obj) {
 		if (!(obj instanceof SheepData))
 			return false;
 		final SheepData other = (SheepData) obj;
-		if (!Arrays.equals(colors, other.colors))
-			return false;
-		if (sheared != other.sheared)
-			return false;
-		return true;
+		return Arrays.equals(colors, other.colors)
+				&& sheared == other.sheared;
 	}
-	
-//		if (colors != null) {
+
+	//		if (colors != null) {
 //			final StringBuilder b = new StringBuilder();
 //			b.append(sheared);
 //			b.append("|");
@@ -172,17 +165,14 @@ public class SheepData extends EntityData<Sheep> {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public boolean isSupertypeOf(final EntityData<?> e) {
-		if (e instanceof SheepData)
-			return colors == null || CollectionUtils.isSubset(colors, ((SheepData) e).colors);
-		return false;
+		return e instanceof SheepData && (colors == null || CollectionUtils.isSubset(colors, ((SheepData) e).colors));
 	}
-	
+
 	@Override
 	public EntityData getSuperType() {
 		return new SheepData();
 	}
-	
 }

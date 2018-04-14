@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -46,20 +45,21 @@ import ch.njol.util.Kleenean;
 		"extinguish the player"})
 @Since("1.4")
 public class EffIgnite extends Effect {
+
 	static {
 		Skript.registerEffect(EffIgnite.class,
 				"(ignite|set fire to) %entities% [for %-timespan%]", "(set|light) %entities% on fire [for %-timespan%]",
 				"extinguish %entities%");
 	}
-	
+
 	private final static int DEFAULT_DURATION = 8 * 20; // default is 8 seconds for lava and fire, I didn't test other sources
-	
+
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	private boolean ignite;
 	@Nullable
 	private Expression<Timespan> duration = null;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -69,7 +69,7 @@ public class EffIgnite extends Effect {
 			duration = (Expression<Timespan>) exprs[1];
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final int d;
@@ -96,7 +96,7 @@ public class EffIgnite extends Effect {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (ignite)
@@ -104,5 +104,4 @@ public class EffIgnite extends Effect {
 		else
 			return "extinguish " + entities.toString(e, debug);
 	}
-	
 }
