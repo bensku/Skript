@@ -40,8 +40,8 @@ import java.util.regex.Matcher;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
@@ -110,24 +110,21 @@ final public class ScriptLoader {
 	public static Config currentScript = null;
 
 	/**
-	 * If true, a {@link PreScriptLoadEvent} will be called
-	 * right before a script starts parsing, but after
-	 * {@link ScriptLoader#currentScript} has been set
-	 * to a non-null {@link Config}.
+	 * If true, a {@link PreScriptLoadEvent} will be called right before a script starts parsing, but after {@link
+	 * ScriptLoader#currentScript} has been set to a non-null {@link Config}.
 	 */
 	private static boolean callPreLoadEvent;
 
 	/**
-	 * A set of all the SkriptAddons that have called
-	 * {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
+	 * A set of all the SkriptAddons that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
 	 * with true.
 	 */
 	private static Set<SkriptAddon> preloadListeners = new HashSet<>();
 
 	/**
-	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean,
-	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#preloadListeners}
-	 * depending on the provided boolean (true adds, false removes).
+	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean, and adds/removes the provided SkriptAddon
+	 * from {@link ScriptLoader#preloadListeners} depending on the provided boolean (true adds, false removes).
+	 *
 	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
 	 * @param addon A non-null SkriptAddon
 	 */
@@ -145,9 +142,8 @@ final public class ScriptLoader {
 	}
 
 	/**
-	 * Returns an unmodifiable list of all the addons
-	 * that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
+	 * Returns an unmodifiable list of all the addons that have called {@link ScriptLoader#setCallPreloadEvent(boolean,
+	 * SkriptAddon)} with true.
 	 */
 	public static Set<SkriptAddon> getPreloadListeners() {
 		return Collections.unmodifiableSet(preloadListeners);
