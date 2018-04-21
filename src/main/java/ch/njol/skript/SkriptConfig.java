@@ -270,7 +270,7 @@ public abstract class SkriptConfig {
 			})
 			.optional(true);
 	
-	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
+	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", true)
 			.optional(true);
 
 	public final static Option<Boolean> keepLastUsageDates = new Option<Boolean>("keep command last usage dates", false)
