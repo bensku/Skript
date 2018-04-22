@@ -8,10 +8,10 @@ command /sethome <text>:
 	permission: skript.home
 	executable by: players
 	trigger:
-		if {homes.%player%::%arg-1%} is set:
+		if {homes::%uuid of player%::%arg-1%} is set:
 			send "A home with that name is already set, please specify a new name."
 		else:
-			set {homes.%player%::%arg-1%} to location of player
+			set {homes::%uuid of player%::%arg-1%} to location of player
 			message "Set your home '%arg-1%' to %location of player%"
 
 command /deletehome <text>:
@@ -20,8 +20,8 @@ command /deletehome <text>:
 	aliases: delhome
 	executable by: players
 	trigger:
-		if {homes.%player%::%arg-1%} is set:
-			delete {homes.%player%::%arg-1%}
+		if {homes::%uuid of player%::%arg-1%} is set:
+			delete {homes::%uuid of player%::%arg-1%}
 			send "Successfully deleted your home '%arg-1%'."
 		else:
 			send "You don't have a home with that name."
@@ -31,10 +31,10 @@ command /home <text>:
 	permission: skript.home
 	executable by: players
 	trigger:
-		if {homes.%player%::%arg-1%} is set:
-			teleport player to {homes.%player%::%arg-1%}
+		if {homes::%uuid of player%::%arg-1%} is set:
+			teleport player to {homes::%uuid of player%::%arg-1%}
 			send "Successfully teleported you to your home '%arg-1%'."
 		else:
 			send "You don't have a home with that name, here is a list of your homes."
-			loop {homes.%player%::*}:
+			loop {homes::%uuid of player%::*}:
 				send "- %loop-index%"

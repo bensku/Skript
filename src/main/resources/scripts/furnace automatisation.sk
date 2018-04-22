@@ -12,29 +12,33 @@ options:
 	#   1: only chests direcly next to the furnace are affected
 	#   1.5: chests diaginally adjacent (i.e. which touch the furnace with one edge) are affected as well
 	#   1.75: all surrounding chests in a 3x3x3 cube are affected
-	radius: 2
+	radius: 1
 
 on fuel burn:
-	if fuel slot of block will be empty:
-		loop blocks in radius {@radius}:
-			if loop-block is a chest:
-				loop items of type fuel:
-					if loop-block contains loop-item:
-						remove loop-item from loop-block
-						set fuel of event-block to loop-item
+	fuel slot of event-block will be empty
+	wait 1 second
+	loop blocks in radius {@radius}:
+		loop-block is a chest
+		loop items in inventory of loop-block:
+			loop-value-2 is any fuel
+			remove loop-value-2 from inventory of loop-value-1
+			set fuel of event-block to loop-value-2
+			stop loop
 
 on smelt:
-	if ore slot of block will be empty:
-		loop blocks in radius {@radius}:
-			if loop-block is a chest:
-				loop items of types ore and log:
-					if loop-block contains loop-item:
-						remove loop-item from loop-block
-						set ore of event-block to loop-item
+	ore slot of block will be empty
+	loop blocks in radius {@radius}:
+		loop-block is chest
+		loop items of types ore and log:
+			loop-block contains loop-item
+			remove loop-item from loop-block
+			set ore of event-block to loop-item
+			stop
 
 on smelt:
 	loop blocks in radius {@radius}:
-		if loop-block is a chest:
-			if loop-block can hold result of event-block:
-				add result of event-block to loop-block
-				clear result of event-block
+		loop-block is chest
+		loop-block can hold result of event-block
+		add result of event-block to loop-block
+		clear result of event-block
+		stop
