@@ -258,4 +258,18 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 */
 	public void change(Event e, final @Nullable Object[] delta, final ChangeMode mode);
 	
+	/**
+	 * This method is called before this expression is set to another one.
+	 * The return value is what will be used for change. You can use modified
+	 * version of initial delta array or create a new one altogether
+	 * <p>
+	 * Default implementation will just return the parameter array.
+	 * @param delta Initial delta array.
+	 * @return Delta array to use for change.
+	 */
+	@Nullable
+	default Object[] beforeChange(@Nullable Object[] delta) {
+		return delta;
+	}
+	
 }

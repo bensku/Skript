@@ -42,10 +42,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.EquipmentSlot;
 import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.EquipmentSlot;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 
 /**
@@ -108,8 +108,8 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 					return null;
 				return new EquipmentSlot(e, EquipmentSlot.EquipSlot.TOOL) {
 					@Override
-					public String toString_i() {
-						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + super.toString_i();
+					public String toString(@Nullable Event event, boolean debug) {
+						return "the " + (getTime() == 1 ? "future " : getTime() == -1 ? "former " : "") + Classes.toString(getItem());
 					}
 				};
 			}

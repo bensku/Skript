@@ -30,7 +30,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
  */
 public class PigData extends EntityData<Pig> {
 	static {
-		register(PigData.class, "pig", Pig.class, 1, "unsaddled pig", "pig", "saddled pig");
+		EntityData.register(PigData.class, "pig", Pig.class, 1, "unsaddled pig", "pig", "saddled pig");
 	}
 	
 	private int saddled = 0;

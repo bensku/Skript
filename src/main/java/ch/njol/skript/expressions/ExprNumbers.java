@@ -51,7 +51,7 @@ import ch.njol.util.Kleenean;
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
-				"[(all|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%",
+				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%",
 				"%number% times");
 	}
 	

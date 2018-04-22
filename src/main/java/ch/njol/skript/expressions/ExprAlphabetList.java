@@ -79,7 +79,7 @@ public class ExprAlphabetList extends SimpleExpression<String>{
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "alphabetically sorted strings";
+		return "alphabetically sorted strings: " + texts.toString(e, debug);
 	}
 	
 }

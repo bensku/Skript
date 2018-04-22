@@ -27,12 +27,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.xml.soap.Text;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
@@ -43,6 +44,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.classes.Serializer;
@@ -55,7 +57,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Color;
 import ch.njol.yggdrasil.Fields;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
 /**
  * Handles parsing chat messages.
@@ -73,12 +74,23 @@ public class ChatMessages {
 	public static boolean colorResetCodes = false;
 	
 	/**
-	 * Chat codes, see {@link ChatCode}.
+	 * Chat codes, see {@link SkriptChatCode}.
 	 */
-	static final Map<String,ChatCode> codes = new HashMap<>();
+	static final Map<String, ChatCode> codes = new HashMap<>();
 	
+	/**
+	 * Chat codes registered by addons, as backup for language changes.
+	 */
+	static final Set<ChatCode> addonCodes = new HashSet<>();
+	
+	/**
+	 * Color chars, as used by Mojang's legacy chat colors.
+	 */
 	static final ChatCode[] colorChars = new ChatCode[256];
 	
+	/**
+	 * Used to detect links when strict link parsing is enabled.
+	 */
 	@SuppressWarnings("null")
 	static final Pattern linkPattern = Pattern.compile("[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)");
 	
@@ -87,6 +99,10 @@ public class ChatMessages {
 	 */
 	static final Gson gson;
 	
+	/**
+	 * Registers language change listener for chat system.
+	 * Called once by Skript, please don't call this addon developers.
+	 */
 	public static void registerListeners() {
 		// When language changes or server is loaded loop through all chatcodes
 		Language.addListener(new LanguageChangeListener() {
@@ -96,32 +112,54 @@ public class ChatMessages {
 				codes.clear();
 				
 				Skript.debug("Parsing message style lang files");
-				for (ChatCode code : ChatCode.values()) {
-					if (code.colorCode != null) { // Color code!
-						for (String name : Language.getList(Color.LANGUAGE_NODE + "." + code.langName + ".names")) {
-							codes.put(name, code);
-						}
-					} else { // Not color code
-						for (String name : Language.getList("chat styles." + code.langName)) {
-							codes.put(name, code);
-						}
-					}
-					
-					// Register color char
-					if (code.colorChar != 0) {
-						colorChars[code.colorChar] = code;
-					}
+				for (SkriptChatCode code : SkriptChatCode.values()) {
+					assert code != null;
+					registerChatCode(code);
+				}
+				
+				// Re-register any missing addon chat codes
+				for (ChatCode code : addonCodes) {
+					assert code != null;
+					registerChatCode(code);
 				}
 				
 				// Add formatting chars
-				colorChars['k'] = ChatCode.obfuscated;
-				colorChars['l'] = ChatCode.bold;
-				colorChars['m'] = ChatCode.strikethrough;
-				colorChars['n'] = ChatCode.underlined;
-				colorChars['o'] = ChatCode.italic;
-				colorChars['r'] = ChatCode.reset;
+				addColorChar('k', SkriptChatCode.obfuscated);
+				addColorChar('l', SkriptChatCode.bold);
+				addColorChar('m', SkriptChatCode.strikethrough);
+				addColorChar('n', SkriptChatCode.underlined);
+				addColorChar('o', SkriptChatCode.italic);
+				addColorChar('r', SkriptChatCode.reset);
 			}
 		});
+	}
+	
+	static void registerChatCode(ChatCode code) {
+		String langName = code.getLangName();
+		
+		if (code.isLocalized()) {
+			if (code.getColorCode() != null) { // Color code!
+				for (String name : Language.getList(Color.LANGUAGE_NODE + "." + langName + ".names")) {
+					codes.put(name, code);
+				}
+			} else { // Not color code
+				for (String name : Language.getList("chat styles." + langName)) {
+					codes.put(name, code);
+				}
+			}
+		} else { // Not localized, lang name is as-is
+			codes.put(langName, code);
+		}
+		
+		// Register color char
+		if (code.getColorChar() != 0) {
+			addColorChar(code.getColorChar(), code);
+		}
+	}
+	
+	static void addColorChar(char code, ChatCode data) {
+		colorChars[code] = data;
+		colorChars[Character.toUpperCase(code)] = data;
 	}
 	
 	static {
@@ -217,10 +255,12 @@ public class ChatMessages {
 						
 						components.add(current);
 						
-						if (code.colorCode != null) // Just update color code
-							current.color = code.colorCode;
-						else
-							code.updateComponent(current, param); // Call ChatCode update
+						if (code.getColorCode() != null) { // Just update color code
+							current.color = code.getColorCode();
+						} else {
+							assert param != null;
+							code.updateComponent(current, param); // Call SkriptChatCode update
+						}
 						
 						// Copy styles from old to current if needed
 						copyStyles(old, current);
@@ -254,10 +294,10 @@ public class ChatMessages {
 					
 					components.add(current);
 					
-					if (code.colorCode != null) // Just update color code
-						current.color = code.colorCode;
+					if (code.getColorCode() != null) // Just update color code
+						current.color = code.getColorCode();
 					else
-						code.updateComponent(current, param); // Call ChatCode update
+						code.updateComponent(current, param); // Call SkriptChatCode update
 					
 					// Copy styles from old to current if needed
 					copyStyles(old, current);
@@ -291,7 +331,7 @@ public class ChatMessages {
 					components.add(current);
 					
 					// Make new component a link
-					ChatCode.open_url.updateComponent(current, link); // URL for client...
+					SkriptChatCode.open_url.updateComponent(current, link); // URL for client...
 					current.text = link; // ... and for player
 					
 					i += link.length() - 1; // Skip link for all other parsing
@@ -334,7 +374,7 @@ public class ChatMessages {
 					components.add(current);
 					
 					// Make new component a link
-					ChatCode.open_url.updateComponent(current, url); // URL for client...
+					SkriptChatCode.open_url.updateComponent(current, url); // URL for client...
 					current.text = link; // ... and for player
 					
 					i += link.length() - 1; // Skip link for all other parsing
@@ -430,5 +470,18 @@ public class ChatMessages {
 		MessageComponent component = new MessageComponent();
 		component.text = str;
 		return component;
+	}
+	
+	/**
+	 * Registers a chat code. This is for addon developers.
+	 * @param code Something that implements {@link ChatCode}.
+	 * For inspiration, check {@link SkriptChatCode} source code.
+	 */
+	public static void registerAddonCode(@Nullable SkriptAddon addon, @Nullable ChatCode code) {
+		Objects.requireNonNull(addon);
+		Objects.requireNonNull(code);
+		
+		addonCodes.add(code); // So that language reloads don't break everything
+		registerChatCode(code);
 	}
 }

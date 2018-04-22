@@ -49,7 +49,7 @@ import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.Slot;
 
 /**
  * @author Peter Güttinger

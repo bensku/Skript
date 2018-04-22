@@ -26,6 +26,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
+import ch.njol.util.coll.CollectionUtils;
+
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +39,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on book sign:",
 			"	message \"Book Title: %author of event-item%\""})
 @Since("2.2-dev31")
-public class ExprBookAuthor extends SimplePropertyExpression<ItemStack,String> {
+public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> {
 	
 	static {
 		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemstack");
@@ -65,9 +67,8 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack,String> {
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET || mode == Changer.ChangeMode.DELETE){
-			return new Class<?>[]{String.class};
-		}
+		if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET || mode == Changer.ChangeMode.DELETE)
+			return CollectionUtils.array(String.class);
 		return null;
 	}
 	

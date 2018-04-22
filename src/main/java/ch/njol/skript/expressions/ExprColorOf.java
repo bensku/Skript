@@ -78,8 +78,7 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 	}
 	
 	boolean changeItemStack = false;
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

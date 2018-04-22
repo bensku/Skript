@@ -41,15 +41,10 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-/**
-* @author Mirreducki, Eugenio GuzmÃ¡n
-* 
-*/
-
 @Name("Chat Recipients")
 @Description("Recipients of chat events where this is called.")
 @Examples("chat recipients")
-@Since("2.2 (unknown)")
+@Since("2.2-Fixes-v7, 2.2-dev35 (clearing recipients)")
 public class ExprChatRecipients extends SimpleExpression<Player> {
 
 	static {
@@ -62,16 +57,13 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public Class<? extends Player> getReturnType() {
+	public Class<Player> getReturnType() {
 		return Player.class;
 	}
 
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.ADD || mode == ChangeMode.SET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE)
-			return CollectionUtils.array(Player.class, Player[].class);
-		return null;
+		return CollectionUtils.array(Player[].class);
 	}
 
 	@Override
@@ -84,39 +76,40 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable Event event, boolean debug) {
 		return "chat recipients";
 	}
 
 	@Override
 	@Nullable
-	protected Player[] get(Event e) {
-		AsyncPlayerChatEvent ae = (AsyncPlayerChatEvent) e;
+	protected Player[] get(Event event) {
+		AsyncPlayerChatEvent ae = (AsyncPlayerChatEvent) event;
 		Set<Player> playerSet = ae.getRecipients();
 		return playerSet.toArray(new Player[playerSet.size()]);
 	}
 
-	@SuppressWarnings({ "incomplete-switch", "null" })
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		final Player[] playerArray = (Player[]) delta;
-		AsyncPlayerChatEvent a = (AsyncPlayerChatEvent) e;
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		final Player[] recipients = (Player[]) delta;
 		switch (mode) {
 			case REMOVE:
-				for (Player p : playerArray)
-					a.getRecipients().remove(p);
-				break;
-			case DELETE:
-				a.getRecipients().clear();
+				assert recipients != null;
+				for (Player player : recipients)
+					((AsyncPlayerChatEvent) event).getRecipients().remove(player);
 				break;
 			case ADD:
-				for (Player p : playerArray)
-					a.getRecipients().add(p);
+				assert recipients != null;
+				for (Player player : recipients)
+					((AsyncPlayerChatEvent) event).getRecipients().add(player);
 				break;
 			case SET:
-				a.getRecipients().clear();
-				for (Player p : playerArray)
-					a.getRecipients().add(p);
+				change(event, delta, ChangeMode.DELETE);
+				change(event, delta, ChangeMode.ADD);
+				break;
+			case REMOVE_ALL:
+			case RESET:
+			case DELETE:
+				((AsyncPlayerChatEvent) event).getRecipients().clear();
 				break;
 		}
 	}

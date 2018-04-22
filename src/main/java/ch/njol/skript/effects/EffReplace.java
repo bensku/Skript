@@ -21,6 +21,7 @@ package ch.njol.skript.effects;
 
 import java.util.Map.Entry;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -94,7 +95,7 @@ public class EffReplace extends Effect {
 			for (int x = 0; x < haystack.length; x++)
 				for (final Object n : needles) {
 					assert n != null;
-					haystack[x] = StringUtils.replace((String)haystack[x], (String)n, (String)replacement, SkriptConfig.caseSensitive.value());
+					haystack[x] = StringUtils.replace((String)haystack[x], (String)n, Matcher.quoteReplacement((String)replacement), SkriptConfig.caseSensitive.value());
 				}
 			this.haystack.change(e, haystack, ChangeMode.SET);
 		} else {

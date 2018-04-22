@@ -587,14 +587,14 @@ public class BukkitClasses {
 					
 				}));
 		
-		final EnumUtils<ClickType> invClicks = new EnumUtils<>(ClickType.class, "click actions"); // Less boilerplate code!
-		Classes.registerClass(new ClassInfo<>(ClickType.class, "clickaction")
-				.user("click actions?")
-				.name("Click Action")
-				.description("Click action, mostly for inventory events. Tells exactly which keys/buttons player pressed, assuming that default keybindings are used in client side.")
+		final EnumUtils<ClickType> invClicks = new EnumUtils<>(ClickType.class, "click types"); // Less boilerplate code!
+		Classes.registerClass(new ClassInfo<>(ClickType.class, "clicktype")
+				.user("click types?")
+				.name("Click Type")
+				.description("Click type, mostly for inventory events. Tells exactly which keys/buttons player pressed, assuming that default keybindings are used in client side.")
 				.usage(invClicks.getAllNames())
 				.examples("")
-				.since("2.2-dev16b")
+				.since("2.2-dev16b, 2.2-dev35 (renamed to click type)")
 				.defaultExpression(new EventValueExpression<>(ClickType.class))
 				.parser(new Parser<ClickType>() {
 					@Override
@@ -884,7 +884,8 @@ public class BukkitClasses {
 		
 		Classes.registerClass(new ClassInfo<>(InventoryHolder.class, "inventoryholder")
 				.name(ClassInfo.NO_DOC)
-				.defaultExpression(new EventValueExpression<>(InventoryHolder.class)));
+				.defaultExpression(new EventValueExpression<>(InventoryHolder.class))
+				.after("entity"));
 		
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")

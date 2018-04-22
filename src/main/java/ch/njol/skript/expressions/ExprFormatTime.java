@@ -29,40 +29,36 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Date;
-import ch.njol.skript.util.Time;
+import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
 @Name("Formatted time")
 @Description("Converts date to human-readable text format. By default, yyyy-MM-dd HH:mm:ss z will be used. For reference, see this "
 		+ "<a href=\"https://en.wikipedia.org/wiki/ISO_8601\">Wikipedia article</a>.")
 @Examples("now formatted human-readable")
 @Since("2.2-dev31")
-public class ExprFormatTime extends SimpleExpression<String> {
+public class ExprFormatTime extends PropertyExpression<Date, String> {
 	
 	private static final String defaultFormat = "yyyy-MM-dd HH:mm:ss z";
 	
 	static {
-		Skript.registerExpression(ExprFormatTime.class, String.class, ExpressionType.PROPERTY, "%date% formatted human-readable [with %-string%]");
+		Skript.registerExpression(ExprFormatTime.class, String.class, ExpressionType.PROPERTY, "%dates% formatted [human-readable] [(with|as) %-string%]");
 	}
-	
-	@SuppressWarnings("null")
-	private Expression<Date> date;
+
 	@SuppressWarnings("null")
 	private SimpleDateFormat format;
-	
-	@SuppressWarnings({"null", "unchecked"})
+
 	@Override
+	@SuppressWarnings("null")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		date = (Expression<Date>) exprs[0];
+		setExpr((Expression<? extends Date>) exprs[0]);
 		if (exprs[1] != null) {
 			if (!(exprs[1] instanceof Literal)) {
 				VariableString str = (VariableString) exprs[1];
@@ -78,20 +74,16 @@ public class ExprFormatTime extends SimpleExpression<String> {
 		
 		return true;
 	}
-	
-	@Override
-	@Nullable
-	protected String[] get(Event e) {
-		Date d = date.getSingle(e);
-		if (d == null) // None from none input
-			return null;
-		
-		return new String[] {format.format(new java.util.Date(d.getTimestamp()))};
-	}
+
 
 	@Override
-	public boolean isSingle() {
-		return true;
+	protected String[] get(Event e, Date[] source) {
+		return get(source, new Getter<String, Date>() {
+			@Override
+			public String get(Date date) {
+				return format.format(new java.util.Date(date.getTimestamp()));
+			}
+		});
 	}
 
 	@Override
@@ -101,7 +93,7 @@ public class ExprFormatTime extends SimpleExpression<String> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "formatted time";
+		return getExpr().toString(e, debug) + " formatted as " + format.toPattern();
 	}
-	
+
 }

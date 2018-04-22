@@ -78,7 +78,6 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		this(c, null);
 	}
 	
-	@SuppressWarnings("null")
 	public EventValueExpression(final Class<? extends T> c, final @Nullable Changer<? super T> changer) {
 		assert c != null;
 		this.c = c;

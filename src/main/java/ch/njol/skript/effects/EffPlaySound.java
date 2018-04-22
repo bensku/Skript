@@ -20,6 +20,7 @@
 package ch.njol.skript.effects;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -35,28 +36,32 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+import java.util.Locale;
+
 @Name("Play Sound")
 @Description("Plays a sound at given location for everyone or just for given players. Playing sounds from resource packs is supported.")
 @Examples("")
 @Since("2.2-dev28")
 public class EffPlaySound extends Effect {
-	
+
 	static {
 		Skript.registerEffect(EffPlaySound.class, "play sound %string% [with volume %number%] [(and|with) pitch %number%] at %location% [for %players%]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<String> sound;
 	@Nullable
 	private Expression<Number> volume;
 	@Nullable
 	private Expression<Number> pitch;
-	
+
 	@SuppressWarnings("null")
 	private Expression<Location> location;
 	@Nullable
 	private Expression<Player> players;
-	
+
+	private boolean useCategory;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -65,7 +70,8 @@ public class EffPlaySound extends Effect {
 		pitch = (Expression<Number>) exprs[2];
 		location = (Expression<Location>) exprs[3];
 		players = (Expression<Player>) exprs[4];
-		
+		useCategory = Skript.classExists("org.bukkit.SoundCategory");
+
 		return true;
 	}
 
@@ -73,18 +79,44 @@ public class EffPlaySound extends Effect {
 	@Override
 	protected void execute(Event e) {
 		Location l = location.getSingle(e);
-		
+		Sound soundEnum = null;
 		String s = sound.getSingle(e);
-		float vol = volume != null ? volume.getSingle(e).floatValue() : 0;
-		float pi = pitch != null ? pitch.getSingle(e).floatValue() : 0;
-		
-		if (players != null) {
-			for (Player p : players.getAll(e)) {
-				p.playSound(l, s, SoundCategory.MASTER, vol, pi);
+
+		if (s != null) {
+			float vol = volume != null ? volume.getSingle(e).floatValue() : 0;
+			float pi = pitch != null ? pitch.getSingle(e).floatValue() : 0;
+
+			try {
+				soundEnum = Sound.valueOf(s.toUpperCase(Locale.ENGLISH));
+			} catch(IllegalArgumentException e1) {}
+
+			if (players != null) {
+				if (soundEnum == null) {
+					for (Player p : players.getAll(e)) {
+						if (useCategory) {
+							p.playSound(l, s, SoundCategory.MASTER, vol, pi);
+						} else {
+							p.playSound(l, s, vol, pi);
+						}
+					}
+				} else {
+					for (Player p : players.getAll(e)) {
+						if (useCategory) {
+							p.playSound(l, soundEnum, SoundCategory.MASTER, vol, pi);
+						} else {
+							p.playSound(l, soundEnum, vol, pi);
+						}
+					}
+				}
+			} else {
+				if (soundEnum == null) {
+					l.getWorld().playSound(l, s, vol, pi);
+				} else {
+					l.getWorld().playSound(l, soundEnum, vol, pi);
+				}
 			}
-		} else {
-			l.getWorld().playSound(l, s, vol, pi);
 		}
+
 	}
 	
 	@Override

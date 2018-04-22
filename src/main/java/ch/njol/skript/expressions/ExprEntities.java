@@ -68,10 +68,10 @@ import ch.njol.util.coll.iterator.NonNullIterator;
 public class ExprEntities extends SimpleExpression<Entity> {
 	static {
 		Skript.registerExpression(ExprEntities.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
-				"[all] %*entitydatas% [(in|of) [world[s]] %-worlds%]",
-				"[all] entities of type[s] %entitydatas% [(in|of) [world[s]] %-worlds%]",
-				"[all] %*entitydatas% (within|[with]in radius) %number% [(block[s]|met(er|re)[s])] (of|around) %location%",
-				"[all] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
+				"[(all [[of] the]|the)] %*entitydatas% [(in|of) [world[s]] %-worlds%]",
+				"[(all [[of] the]|the)] entities of type[s] %entitydatas% [(in|of) [world[s]] %-worlds%]",
+				"[(all [[of] the]|the)] %*entitydatas% (within|[with]in radius) %number% [(block[s]|met(er|re)[s])] (of|around) %location%",
+				"[(all [[of] the]|the)] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
 	}
 	
 	@SuppressWarnings("null")

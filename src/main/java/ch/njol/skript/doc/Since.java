@@ -26,11 +26,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Peter Güttinger
+ * Provides the version of plugin when was the annotated element added.
+ * 
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Since {
+	
 	public String value();
 }

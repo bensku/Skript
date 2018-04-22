@@ -39,6 +39,10 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	private String[] examples;
 	@Nullable
 	private String since;
+	@Nullable
+	private String documentationID;
+	@Nullable
+	private String[] requiredPlugins;
 	
 	/**
 	 * @param name Capitalised name of the event without leading "On" which is added automatically (Start the name with an asterisk to prevent this).
@@ -112,6 +116,34 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 		this.since = since;
 		return this;
 	}
+
+	/**
+	 * A non critical ID remapping for syntax elements register using the a class multiple times.
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param id
+	 * @return This SkriptEventInfo object
+	 */
+	public SkriptEventInfo<E> documentationID(final String id) {
+		assert this.documentationID == null;
+		this.documentationID = id;
+		return this;
+	}
+
+	/**
+	 * Other plugin dependencies for a syntax element
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param pluginNames
+	 * @return This SkriptEventInfo object
+	 */
+	public SkriptEventInfo<E> requiredPlugins(final String... pluginNames) {
+		assert this.requiredPlugins == null;
+		this.requiredPlugins = pluginNames;
+		return this;
+	}
 	
 	public String getId() {
 		return id;
@@ -134,5 +166,15 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	@Nullable
 	public String getSince() {
 		return since;
+	}
+
+	@Nullable
+	public String[] getRequiredPlugins() {
+		return requiredPlugins;
+	}
+
+	@Nullable
+	public String getDocumentationID() {
+		return documentationID;
 	}
 }

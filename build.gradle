@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "com.github.hierynomus.license" version "0.13.1"
+    id "com.github.hierynomus.license" version "0.14.0"
 }
 
 apply plugin: 'java'
@@ -90,7 +90,9 @@ jar {
 
 license {
     header file('licenseheader.txt')
-    exclude('**/Metrics.java')
+    exclude('**/Metrics.java') // Not under GPLv3
+    exclude('**/*.sk') // Sample scripts and maybe aliases
+    exclude('**/*.lang') // Language files
 }
 
 configurations {
@@ -98,9 +100,10 @@ configurations {
 }
 
 dependencies {
-	ecj 'org.eclipse.jdt.core.compiler:ecj:4.6.1'
+	ecj 'org.eclipse.jdt:ecj:3.13.100'
 }
 
+sourceCompatibility = 1.8
 compileJava {
 	options.fork = true
 	options.encoding = 'UTF-8'

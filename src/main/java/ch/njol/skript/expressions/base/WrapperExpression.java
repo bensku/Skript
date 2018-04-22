@@ -59,7 +59,6 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	 * @param expr Wrapped expression.
 	 */
 	protected void setExpr(final Expression<? extends T> expr) {
-		expr.setParserInstance(pi);
 		this.expr = expr;
 	}
 	
@@ -143,6 +142,12 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 	@Override
 	public Expression<? extends T> simplify() {
 		return expr;
+	}
+	
+	@Override
+	@Nullable
+	public Object[] beforeChange(@Nullable Object[] delta) {
+		return expr.beforeChange(delta); // Forward to what we're wrapping
 	}
 	
 }

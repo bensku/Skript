@@ -33,7 +33,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.Slot;
 
 /**
  * @author Peter Güttinger

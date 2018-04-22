@@ -74,6 +74,7 @@ public class ExprIP extends SimpleExpression<String> {
 			Player p = ps[i];
 			InetAddress addr;
 			// Connect event: player has no ip yet, but event has it
+			// It is a "feature" of Spigot, apparently
 			if (connectEvent && ((PlayerLoginEvent) e).getPlayer().equals(p)) {
 				addr = ((PlayerLoginEvent) e).getAddress();
 			} else {

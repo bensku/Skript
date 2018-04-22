@@ -41,38 +41,37 @@ import java.util.concurrent.Executors;
  */
 public abstract class AsyncEffect extends Effect {
 	
-    @Override
-    @Nullable
-    protected TriggerItem walk(Event e) {
+	@Override
+	@Nullable
+	protected TriggerItem walk(Event e) {
 		debug(e, true);
 		TriggerItem next = getNext();
-    	
-		if (next != null) {
-	        Delay.addDelayedEvent(e);
-	        Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
-	            @SuppressWarnings("synthetic-access")
-				@Override
-	            public void run() {
-	                execute(e); // Execute this effect
-	                Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
-	                    @Override
-	                    public void run() { // Walk to next item synchronously
-	    					Object timing = null;
-	    					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
-	    						Trigger trigger = getTrigger();
-	    						if (trigger != null) {
-	    							timing = SkriptTimings.start(trigger.getDebugLabel());
-	    						}
-	    					}
-	    					
-	    					TriggerItem.walk(next, e);
-	    					
-	    					SkriptTimings.stop(timing); // Stop timing if it was even started
-	                    }
-	                });
-	            }
+		Delay.addDelayedEvent(e);
+		Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
+	        	@SuppressWarnings("synthetic-access")
+			@Override
+	            	public void run() {
+				execute(e); // Execute this effect
+	                	if (next != null) {
+					Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
+						@Override
+						public void run() { // Walk to next item synchronously
+							Object timing = null;
+							if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
+								Trigger trigger = getTrigger();
+								if (trigger != null) {
+									timing = SkriptTimings.start(trigger.getDebugLabel());
+								}
+							}
+
+							TriggerItem.walk(next, e);
+
+							SkriptTimings.stop(timing); // Stop timing if it was even started
+						}
+					});	
+				}
+	            	}
 	        });
-		}
         return null;
     }
 }

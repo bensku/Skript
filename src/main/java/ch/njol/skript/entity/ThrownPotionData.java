@@ -43,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
  */
 public class ThrownPotionData extends EntityData<ThrownPotion> {
 	static {
-		register(ThrownPotionData.class, "thrown potion", ThrownPotion.class, "thrown potion");
+		EntityData.register(ThrownPotionData.class, "thrown potion", ThrownPotion.class, "thrown potion");
 	}
 	
 	private final static Adjective m_adjective = new Adjective("entities.thrown potion.adjective");

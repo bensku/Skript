@@ -50,7 +50,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprLastDamageCause extends PropertyExpression<LivingEntity, DamageCause>{
 	
 	static {
-		register(ExprLastDamageCause.class, DamageCause.class, "last damage cause", "livingentities");
+		register(ExprLastDamageCause.class, DamageCause.class, "last damage (cause|reason|type)", "livingentities");
 	}
 	
 	
@@ -64,6 +64,7 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	@Override
 	protected DamageCause[] get(final Event e, final LivingEntity[] source) {
 		return get(source, new Getter<DamageCause, LivingEntity>() {
+			@SuppressWarnings("null")
 			@Override
 			public DamageCause get(final LivingEntity entity) {
 				EntityDamageEvent dmgEvt = entity.getLastDamageCause();
@@ -78,7 +79,6 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 		return "the damage cause " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

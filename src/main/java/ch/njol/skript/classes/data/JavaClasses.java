@@ -74,7 +74,11 @@ public class JavaClasses {
 							return Long.valueOf(s);
 						} catch (final NumberFormatException e) {}
 						try {
-							return s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
+							Double d = s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
+							if (d.isNaN() || d.isInfinite()) {
+								return null;
+							}
+							return d;
 						} catch (final NumberFormatException e) {
 							return null;
 						}
@@ -264,7 +268,11 @@ public class JavaClasses {
 					@Nullable
 					public Double parse(final String s, final ParseContext context) {
 						try {
-							return s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
+							Double d = s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
+							if (d.isNaN() || d.isInfinite()) {
+								return null;
+							}
+							return d;
 						} catch (final NumberFormatException e) {
 							return null;
 						}
@@ -277,7 +285,7 @@ public class JavaClasses {
 					
 					@Override
 					public String toVariableNameString(final Double d) {
-						return StringUtils.toString(d.doubleValue(), VARIABLENAME_NUMBERACCURACY);
+						return StringUtils.toString(d, VARIABLENAME_NUMBERACCURACY);
 					}
 					
 					@Override
@@ -325,7 +333,11 @@ public class JavaClasses {
 					@Nullable
 					public Float parse(final String s, final ParseContext context) {
 						try {
-							return s.endsWith("%") ? Float.parseFloat(s.substring(0, s.length() - 1)) / 100 : Float.parseFloat(s);
+							Float f = s.endsWith("%") ? Float.parseFloat(s.substring(0, s.length() - 1)) / 100 : Float.parseFloat(s);
+							if (f.isNaN() || f.isInfinite()) {
+								return null;
+							}
+							return f;
 						} catch (final NumberFormatException e) {
 							return null;
 						}

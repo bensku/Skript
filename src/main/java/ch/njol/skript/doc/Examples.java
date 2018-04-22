@@ -26,11 +26,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Peter Güttinger
+ * Provides a list of examples to be used in documentation for annotated
+ * element.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Examples {
+	
 	public String[] value();
 }

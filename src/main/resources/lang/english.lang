@@ -155,6 +155,7 @@ updater:
 # -- Commands --
 commands:
 	no permission message: You don't have the required permission to use this command
+	cooldown message: You are using this command too often, please try again later
 	executable by players: This command can only be used by players
 	executable by console: This command can only be used by the console
 	usage: Usage:
@@ -238,7 +239,9 @@ enchantments:
 		frost_walker: Frost Walker
 		vanishing_curse: Curse of Vanishing
 		binding_curse: Curse of Binding
+		# It's sweeping on 1.10 and below for some reason.
 		sweeping: Sweeping Edge
+		sweeping_edge: Sweeping Edge
 
 # -- Potion Effects --
 potions:
@@ -491,6 +494,7 @@ chat styles:
 	suggest_command: suggest command, sgt
 	change_page: change page
 	show_text: tooltip, show text, ttp
+	insertion: insertion, insert, ins
 
 # -- Directions --
 directions:
@@ -953,6 +957,7 @@ entities:
 damage causes:
 	contact: contact
 	entity_attack: attack, entity attack, an attack, an entity attack
+	entity_sweep_attack: sweep attack, sweeping
 	projectile: projectile, a projectile
 	suffocation: suffocation, suffocate
 	fall: fall, a fall
@@ -977,6 +982,18 @@ damage causes:
 	hot_floor: magma, hot floor
 	cramming: cramming
 	custom: unknown, custom, plugin, a plugin
+
+# -- Teleport Causes --
+teleport causes:
+	chorus_fruit: chorus, chorus fruit
+	command: command
+	end_gateway: gateway, end gateway, ender gateway
+	end_portal: end portal, ender portal
+	ender_pearl: ender pearl
+	nether_portal: nether portal
+	plugin: plugin
+	spectate: spectate, spectator
+	unknown: unknown
 
 # -- Game Modes --
 game modes:
@@ -1150,7 +1167,7 @@ inventory actions:
 	unknown: unknown, unsupported, custom
 	
 # -- Inventory Click Types --
-click actions:
+click types:
 	left: left mouse button, left mouse, LMB
 	shift_left: left mouse button with shift, left mouse with shift, Shift+RMB
 	right: right mouse button, right mouse, RMB
@@ -1178,7 +1195,7 @@ inventory types:
 	player: player inventory
 	creative: creative inventory
 	merchant: merchant inventory, villager inventory
-	endher_chest: ender chest inventory
+	ender_chest: ender chest inventory
 	anvil: anvil inventory
 	beacon: beacon inventory
 	hopper: hopper inventory
@@ -1227,8 +1244,10 @@ types:
 	potioneffecttype: potion¦s @a
 	enchantment: enchantment¦s @an
 	damagecause: damage cause¦s @a
+	teleportcause: teleport cause¦s @a
 	inventoryaction: inventory action¦s @a
 	clickaction: click actions¦s @a
+	vector: vector¦s @a
 	
 	# Skript
 	weathertype: weather type¦s @a
@@ -1248,6 +1267,7 @@ types:
 	experience.pattern: (e?xp|experience( points?)?)
 	classinfo: type¦s @a
 	visualeffect: visual effect¦s @a
+
 	
 	# Hooks
 	money: money

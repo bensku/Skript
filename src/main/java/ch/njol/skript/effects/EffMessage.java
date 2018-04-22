@@ -19,12 +19,9 @@
  */
 package ch.njol.skript.effects;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -36,14 +33,12 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.chat.BungeeConverter;
-import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.MessageComponent;
 import ch.njol.util.Kleenean;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 
 /**
  * @author Peter Güttinger
@@ -59,54 +54,50 @@ import net.md_5.bungee.chat.ComponentSerializer;
 public class EffMessage extends Effect {
 	
 	static {
-		Skript.registerEffect(EffMessage.class, "(message|send [message]) %strings% [to %commandsenders%]");
+		Skript.registerEffect(EffMessage.class, "(message|send [message[s]]) %strings% [to %commandsenders%]");
 	}
-	
+
 	@Nullable
-	private Expression<String> messages;
-	private boolean canSendRaw;
-	
+	private Expression<String>[] messages;
+
+	/**
+	 * Used for {@link EffMessage#toString(Event, boolean)}
+	 */
+	@Nullable
+	private Expression<String> messageExpr;
+
 	@SuppressWarnings("null")
 	private Expression<CommandSender> recipients;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		messages = (Expression<String>) exprs[0];
-		canSendRaw = messages instanceof VariableString;
+		messages = (Expression<String>[]) (exprs[0] instanceof ExpressionList ? ((ExpressionList) exprs[0]).getExpressions() : new Expression[] {exprs[0]});
+		messageExpr = (Expression<String>) exprs[0];
 		recipients = (Expression<CommandSender>) exprs[1];
 		return true;
 	}
-	
+
+	@SuppressWarnings("null")
 	@Override
 	protected void execute(final Event e) {
-		assert messages != null;
-		if (canSendRaw) {
-			assert messages != null;
-			List<MessageComponent> componentList = ((VariableString) messages).getMessageComponents(e);
-			@SuppressWarnings("null") // Most certainly safe, but I guess not...
-			BaseComponent[] components = BungeeConverter.convert(componentList.toArray(new MessageComponent[componentList.size()]));
-			for (final CommandSender s : recipients.getArray(e)) {
-				if (s instanceof Player) { // Use JSON chat
-					((Player) s).spigot().sendMessage(components);
-				} else { // Fall back to non-JSON chat
-					assert messages != null;
-					s.sendMessage(messages.getSingle(e));
-				}
-			}
-		} else {
-			assert messages != null;
-			for (final String message : messages.getArray(e)) {
-				for (final CommandSender s : recipients.getArray(e)) {
-					s.sendMessage(message);
+		for (Expression<String> message : messages) {
+			for (CommandSender sender : recipients.getArray(e)) {
+				if (message instanceof VariableString && sender instanceof Player) { // this could contain json formatting
+					List<MessageComponent> components = ((VariableString) message).getMessageComponents(e);
+					((Player) sender).spigot().sendMessage(BungeeConverter.convert(components.toArray(new MessageComponent[components.size()])));
+				} else {
+					String string = message.getSingle(e);
+					if (string != null)
+						sender.sendMessage(string);
 				}
 			}
 		}
 	}
-	
+
+	@SuppressWarnings("null")
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		assert messages != null;
-		return "send " + messages.toString(e, debug) + " to " + recipients.toString(e, debug);
+		return "send " + messageExpr.toString(e, debug) + " to " + recipients.toString(e, debug);
 	}
 }

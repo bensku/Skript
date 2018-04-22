@@ -48,7 +48,7 @@ import ch.njol.util.Kleenean;
 public class ExprWorlds extends SimpleExpression<World> {
 	
 	static {
-		Skript.registerExpression(ExprWorlds.class, World.class, ExpressionType.SIMPLE, "[(the|all)] worlds");
+		Skript.registerExpression(ExprWorlds.class, World.class, ExpressionType.SIMPLE, "[(all [[of] the]|the)] worlds");
 	}
 	
 	@Override

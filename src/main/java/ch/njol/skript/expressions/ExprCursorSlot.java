@@ -31,15 +31,14 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.CursorSlot;
-import ch.njol.skript.util.EquipmentSlot;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.CursorSlot;
+import ch.njol.skript.util.slot.EquipmentSlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 
 /**
- * Cursor item slot is not actually an inventory slot, but an item which player
- * has in cursor when any inventory is open.
- * @author bensku
+ * Cursor item slot is not actually an inventory slot, but an item which the player
+ * has in their cursor when any inventory is open for them.
  */
 @Name("Cursor Slot")
 @Description("The item which player has on their cursor. This slot is always empty if player has no inventories open.")
@@ -51,26 +50,21 @@ public class ExprCursorSlot extends SimplePropertyExpression<Player, Slot> {
 	static {
 		register(ExprCursorSlot.class, Slot.class, "cursor slot", "players");
 	}
-	
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		super.init(exprs, matchedPattern, isDelayed, parseResult);
-		return true;
-	}
-	
-	@Override
-	@Nullable
-	public Slot convert(final Player p) {
-		return new CursorSlot(p);
-	}
 
-	@Override
-	protected String getPropertyName() {
-		return "cursor";
-	}
-	
 	@Override
 	public Class<? extends Slot> getReturnType() {
 		return Slot.class;
 	}
+	
+	@Override
+	protected String getPropertyName() {
+		return "cursor slot";
+	}
+	
+	@Override
+	@Nullable
+	public Slot convert(final Player player) {
+		return new CursorSlot(player);
+	}
+
 }

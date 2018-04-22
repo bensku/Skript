@@ -32,7 +32,7 @@ import ch.njol.skript.localization.ArgsMessage;
  */
 public class XpOrbData extends EntityData<ExperienceOrb> {
 	static {
-		register(XpOrbData.class, "xporb", ExperienceOrb.class, "xp-orb");
+		EntityData.register(XpOrbData.class, "xporb", ExperienceOrb.class, "xp-orb");
 	}
 	
 	private int xp = -1;

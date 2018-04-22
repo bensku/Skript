@@ -17,10 +17,12 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.util.slot;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -31,9 +33,9 @@ import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.registrations.Classes;
 
 /**
- * @author Peter Güttinger
+ * Represents a slot in some inventory.
  */
-public class InventorySlot extends Slot {
+public class InventorySlot extends SlotWithIndex {
 	
 	private final Inventory invi;
 	private final int index;
@@ -47,6 +49,7 @@ public class InventorySlot extends Slot {
 		return invi;
 	}
 	
+	@Override
 	public int getIndex() {
 		return index;
 	}
@@ -65,17 +68,14 @@ public class InventorySlot extends Slot {
 	}
 	
 	@Override
-	public String toString_i() {
-		if (invi.getHolder() != null)
-			return "slot " + index + " of inventory of " + Classes.toString(invi.getHolder());
-		return "slot " + index + " of " + Classes.toString(invi);
-	}
-
-	@Override
-	public boolean isSameSlot(Slot o) {
-		if (o instanceof EquipmentSlot)
-			return o.isSameSlot(this); // Reverse call to avoid code copy-paste
-		return this.index == ((InventorySlot) o).getIndex();
+	public String toString(@Nullable Event e, boolean debug) {
+		if (invi.getHolder() != null) {
+			if (invi instanceof CraftingInventory) // 4x4 crafting grid is contained in player too!
+				return "crafting slot " + index + " of " + Classes.toString(invi.getHolder());
+			
+			return "inventory slot " + index + " of " + Classes.toString(invi.getHolder());
+		}
+		return "inventory slot " + index + " of " + Classes.toString(invi);
 	}
 	
 }

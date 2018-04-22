@@ -59,8 +59,8 @@ public final class Parameter<T> {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def) {
-		if (!Variable.isValidVariableName(name, false, false)) {
-			Skript.error("An argument's name must be a valid variable name, and cannot be a list variable.");
+		if (!Variable.isValidVariableName(name, true, false)) {
+			Skript.error("An argument's name must be a valid variable name.");
 			return null;
 		}
 		Expression<? extends T> d = null;

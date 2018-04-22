@@ -24,6 +24,7 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -32,6 +33,12 @@ import ch.njol.util.coll.CollectionUtils;
  */
 public abstract class Function<T> {
 	
+	/**
+	 * Execute functions even when some parameters are not present.
+	 * Field is updated by SkriptConfig in case of reloads.
+	 */
+	public static boolean executeWithNulls = SkriptConfig.executeFunctionsWithMissingParams.value();
+
 	final String name;
 	
 	final Parameter<?>[] parameters;
@@ -105,7 +112,7 @@ public abstract class Function<T> {
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter<?> p = parameters[i];
 			final Object[] val = i < params.length ? params[i] : p.def != null ? p.def.getArray(e) : null;
-			if (val == null || val.length == 0)
+			if (!executeWithNulls && (val == null || val.length == 0))
 				return null;
 			ps[i] = val;
 		}
@@ -121,7 +128,7 @@ public abstract class Function<T> {
 	 * @return Whatever this function is supposed to return. May be null or empty, but must not contain null elements.
 	 */
 	@Nullable
-	public abstract T[] execute(FunctionEvent e, final Object[][] params);
+	public abstract T[] execute(FunctionEvent<?> e, final Object[][] params);
 	
 	@Override
 	public String toString() {

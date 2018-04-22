@@ -17,52 +17,38 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.util.slot;
 
-import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.lang.Debuggable;
 import ch.njol.skript.registrations.Classes;
 
 /**
- * Item that is in player's cursor.
+ * Represents a container for a single item. It could be an ordinary inventory
+ * slot or perhaps an item frame.
  */
-public class CursorSlot extends Slot {
+public abstract class Slot implements Debuggable {
 	
-	private final Player player;
+	protected Slot() {}
 	
-	public CursorSlot(Player p) {
-		this.player = p;
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-	
-	@Override
 	@Nullable
-	public ItemStack getItem() {
-		return player.getItemOnCursor();
-	}
-
+	public abstract ItemStack getItem();
+	
+	public abstract void setItem(final @Nullable ItemStack item);
+	
 	@Override
-	public void setItem(@Nullable ItemStack item) {
-		player.setItemOnCursor(item);
-		PlayerUtils.updateInventory(player);
-	}
-
-	@Override
-	protected String toString_i() {
-		return "cursor slot of inventory of " + Classes.toString(player);
-	}
-
-	@Override
-	public boolean isSameSlot(Slot o) {
-		if (!(o instanceof CursorSlot))
-			return false;
-		return ((CursorSlot) o).getPlayer().equals(this.player);
+	public final String toString() {
+		return toString(null, false);
 	}
 	
+	/**
+	 * Checks if given slot is in same position with this.
+	 * Ignores slot contents.
+	 * @param o Another slot
+	 * @return True if positions equal, false otherwise.
+	 */
+	public abstract boolean isSameSlot(Slot o);
 }

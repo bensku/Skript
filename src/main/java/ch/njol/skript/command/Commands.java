@@ -36,6 +36,9 @@ import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.util.StringMode;
+import ch.njol.skript.util.Timespan;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -72,7 +75,6 @@ import ch.njol.skript.localization.Message;
 import ch.njol.skript.log.BukkitLoggerFilter;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.mirre.FilterPrintStream;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Utils;
@@ -137,6 +139,10 @@ public abstract class Commands {
 			.addEntry("description", true)
 			.addEntry("permission", true)
 			.addEntry("permission message", true)
+			.addEntry("cooldown", true)
+			.addEntry("cooldown message", true)
+			.addEntry("cooldown bypass", true)
+			.addEntry("cooldown storage", true)
 			.addEntry("aliases", true)
 			.addEntry("executable by", true)
 			.addSection("trigger", false);
@@ -172,33 +178,13 @@ public abstract class Commands {
 				return;
 			if (SkriptConfig.enableEffectCommands.value() && e.getCommand().startsWith(SkriptConfig.effectCommandToken.value())) {
 				if (handleEffectCommand(e.getSender(), e.getCommand())) {
-					e.setCommand("");
-					suppressUnknownCommandMessage = true;
+					e.setCancelled(true);
 				}
 				return;
-			}
-			if (handleCommand(e.getSender(), e.getCommand())) {
-				e.setCommand("");
-				suppressUnknownCommandMessage = true;
 			}
 		}
 	};
 	
-	public static boolean suppressUnknownCommandMessage = false;
-	static {
-		BukkitLoggerFilter.addFilter(new Filter() {
-			@Override
-			public boolean isLoggable(final @Nullable LogRecord record) {
-				if (record == null)
-					return false;
-				if (suppressUnknownCommandMessage && record.getMessage() != null && record.getMessage().startsWith("Unknown command. Type")) {
-					suppressUnknownCommandMessage = false;
-					return false;
-				}
-				return true;
-			}
-		});
-	}
 	
 	@Nullable
 	private final static Listener pre1_3chatListener = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
@@ -314,7 +300,7 @@ public abstract class Commands {
 	}
 	
 	@SuppressWarnings("null")
-	private final static Pattern commandPattern = Pattern.compile("(?i)^command /?(\\S+)(\\s+(.+))?$"),
+	private final static Pattern commandPattern = Pattern.compile("(?i)^command /?(\\S+)\\s*(\\s+(.+))?$"),
 			argumentPattern = Pattern.compile("<\\s*(?:(.+?)\\s*:\\s*)?(.+?)\\s*(?:=\\s*(" + SkriptParser.wildcard + "))?\\s*>");
 	
 	@Nullable
@@ -349,7 +335,7 @@ public abstract class Commands {
 		Matcher m = commandPattern.matcher(s);
 		final boolean a = m.matches();
 		assert a;
-		
+
 		final String command = "" + m.group(1).toLowerCase();
 		final ScriptCommand existingCommand = commands.get(command);
 		if (alsoRegister && existingCommand != null && existingCommand.getLabel().equals(command)) {
@@ -451,11 +437,40 @@ public abstract class Commands {
 				Skript.warning("'executable by' should be either be 'players', 'console', or both, but found '" + b + "'");
 			}
 		}
-		
+
+		final String cooldownString = ScriptLoader.replaceOptions(node.get("cooldown", ""));
+		Timespan cooldown = null;
+		if (!cooldownString.isEmpty()) {
+			// ParseContext doesn't matter for Timespan's parser
+			cooldown = Classes.parse(cooldownString, Timespan.class, ParseContext.DEFAULT);
+			if (cooldown == null) {
+				Skript.warning("'" + cooldownString + "' is an invalid timespan for the cooldown");
+			}
+		}
+
+		final String cooldownMessageString = ScriptLoader.replaceOptions(node.get("cooldown message", ""));
+		boolean usingCooldownMessage = !cooldownMessageString.isEmpty();
+		VariableString cooldownMessage = null;
+		if (usingCooldownMessage) {
+			cooldownMessage = VariableString.newInstance(cooldownMessageString);
+		}
+
+		String cooldownBypass = ScriptLoader.replaceOptions(node.get("cooldown bypass", ""));
+
 		if (!permissionMessage.isEmpty() && permission.isEmpty()) {
 			Skript.warning("command /" + command + " has a permission message set, but not a permission");
 		}
-		
+
+		if (usingCooldownMessage && cooldownString.isEmpty()) {
+			Skript.warning("command /" + command + " has a cooldown message set, but not a cooldown");
+		}
+
+		String cooldownStorageString = ScriptLoader.replaceOptions(node.get("cooldown storage", ""));
+		VariableString cooldownStorage = null;
+		if (!cooldownStorageString.isEmpty()) {
+			cooldownStorage = VariableString.newInstance(cooldownStorageString, StringMode.VARIABLE_NAME);
+		}
+
 		if (Skript.debug() || node.debug())
 			Skript.debug("command " + desc + ":");
 		
@@ -468,7 +483,9 @@ public abstract class Commands {
 		Commands.currentArguments = currentArguments;
 		final ScriptCommand c;
 		try {
-			c = new ScriptCommand(config, command, "" + pattern.toString(), currentArguments, description, usage, aliases, permission, permissionMessage, executableBy, ScriptLoader.loadItems(trigger));
+			c = new ScriptCommand(config, command, "" + pattern.toString(), currentArguments, description, usage,
+					aliases, permission, permissionMessage, cooldown, cooldownMessage, cooldownBypass, cooldownStorage,
+					executableBy, ScriptLoader.loadItems(trigger));
 		} finally {
 			Commands.currentArguments = null;
 		}

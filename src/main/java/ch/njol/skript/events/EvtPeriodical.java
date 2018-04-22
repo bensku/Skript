@@ -53,7 +53,8 @@ public class EvtPeriodical extends SelfRegisteringSkriptEvent {
 						"every minecraft hour in \"flatworld\"",
 						"every ticks in \"world\" #can cause lag (depends on the code in this trigger)",
 						"every minecraft days in \"plots\"")
-				.since("1.0");
+				.since("1.0")
+				.documentationID("eventperiodical");
 	}
 	
 	@SuppressWarnings("null")

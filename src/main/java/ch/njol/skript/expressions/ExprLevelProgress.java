@@ -59,7 +59,6 @@ public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
 		register(ExprLevelProgress.class, Float.class, "level progress", "players");
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Float convert(final Player p) {
 		return p.getExp();

@@ -435,12 +435,15 @@ public class FlatFileStorage extends VariablesStorage {
 			} else {
 				final String name = (e.getKey() == null ? parent.substring(0, parent.length() - Variable.SEPARATOR.length()) : parent + e.getKey());
 				for (final VariablesStorage s : Variables.storages) {
-					if (s != this && s.accept(name))
+					if (s.accept(name)) {
+						if (s == this) {
+							final SerializedVariable.Value value = Classes.serialize(val);
+							if (value != null)
+								writeCSV(pw, name, value.type, encode(value.data));
+						}
 						continue outer;
+					}
 				}
-				final SerializedVariable.Value value = Classes.serialize(val);
-				if (value != null)
-					writeCSV(pw, name, value.type, encode(value.data));
 			}
 		}
 	}

@@ -39,6 +39,7 @@ import com.bekvon.bukkit.residence.commands.info;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.ItemType;
@@ -68,6 +69,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+
 
 /**
  * Used for parsing my custom patterns.<br>
@@ -436,6 +438,7 @@ public class SkriptParser {
 						// Plural/singular sanity check
 						if (hasSingular && !var.isSingle()) {
 							Skript.error("'" + expr + "' can only accept a single value of any type, not more", ErrorQuality.SEMANTIC_ERROR);
+							return null;
 						}
 						
 						log.printLog();
@@ -461,6 +464,7 @@ public class SkriptParser {
 							// Plural/singular sanity check
 							if (!vi.isPlural[i] && !var.isSingle()) {
 								Skript.error("'" + expr + "' can only accept a single " + vi.classes[i].getName() + ", not more", ErrorQuality.SEMANTIC_ERROR);
+								return null;
 							}
 							
 							log.printLog();
@@ -584,7 +588,7 @@ public class SkriptParser {
 	private final static String MULTIPLE_AND_OR = "List has multiple 'and' or 'or', will default to 'and'. Use brackets if you want to define multiple lists.";
 	private final static String MISSING_AND_OR = "List is missing 'and' or 'or', defaulting to 'and'";
 	
-	private boolean suppressMissingAndOrWarnings = false;
+	private boolean suppressMissingAndOrWarnings = SkriptConfig.disableMissingAndOrWarnings.value();
 	
 	private SkriptParser suppressMissingAndOrWarnings() {
 		suppressMissingAndOrWarnings = true;
@@ -805,12 +809,21 @@ public class SkriptParser {
 				}
 			}
 			//Mirre
+			
+			// Attempt to parse a single expression
 			final Expression<?> r = parseSingleExpr(false, null, vi);
 			if (r != null) {
 				log.printLog();
 				return r;
 			}
 			log.clear();
+			
+			// Check if list parsing is allowed (if it isn't, must stop here)
+			if (vi.isPlural[0] == false) {
+				// List cannot be used in place of a single value here
+				log.printError();
+				return null;
+			}
 			
 			final List<Expression<?>> ts = new ArrayList<>();
 			Kleenean and = Kleenean.UNKNOWN;
@@ -940,8 +953,9 @@ public class SkriptParser {
 			
 			log.printLog();
 			
-			if (ts.size() == 1)
+			if (ts.size() == 1) {
 				return ts.get(0);
+			}
 			
 			if (and.isUnknown() && !suppressMissingAndOrWarnings)
 				Skript.warning(MISSING_AND_OR + ": " + expr);
@@ -1088,6 +1102,7 @@ public class SkriptParser {
 				log.printLog();
 				return null;
 			}
+			
 			if ((flags & PARSE_EXPRESSIONS) == 0) {
 				Skript.error("Functions cannot be used here.");
 				log.printError();
@@ -1134,6 +1149,7 @@ public class SkriptParser {
 //				}
 //			}
 //			@SuppressWarnings("null")
+			
 			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
 			if (!e.validateFunction(true)) {
 				log.printError();

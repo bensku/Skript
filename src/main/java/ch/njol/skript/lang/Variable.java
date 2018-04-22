@@ -199,12 +199,12 @@ public class Variable<T> implements Expression<T> {
 	 */
 	@Nullable
 	private Object getRaw(final Event e) {
-		final String n = name.toString(e).toLowerCase(Locale.ENGLISH);
+		final String n = name.toString(e);
 		if (n.endsWith(Variable.SEPARATOR + "*") != list) // prevents e.g. {%expr%} where "%expr%" ends with "::*" from returning a Map
 			return null;
 		final Object val = !list ? convertIfOldPlayer(n, e, Variables.getVariable(n, e, local)) : Variables.getVariable(n, e, local);
 		if (val == null)
-			return Variables.getVariable((local ? LOCAL_VARIABLE_TOKEN : "") + name.getDefaultVariableName().toLowerCase(Locale.ENGLISH), e, false);
+			return Variables.getVariable((local ? LOCAL_VARIABLE_TOKEN : "") + name.getDefaultVariableName(), e, false);
 		return val;
 	}
 	
@@ -217,7 +217,7 @@ public class Variable<T> implements Expression<T> {
 		if (val == null)
 			return Array.newInstance(types[0], 0);
 		final List<Object> l = new ArrayList<>();
-		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
+		final String name = StringUtils.substring(this.name.toString(e), 0, -1);
 		for (final Entry<String, ?> v : ((Map<String, ?>) val).entrySet()) {
 			if (v.getKey() != null && v.getValue() != null) {
 				Object o;
@@ -254,7 +254,7 @@ public class Variable<T> implements Expression<T> {
 	public Iterator<Pair<String, Object>> variablesIterator(final Event e) {
 		if (!list)
 			throw new SkriptAPIException("Looping a non-list variable");
-		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
+		final String name = StringUtils.substring(this.name.toString(e), 0, -1);
 		final Object val = Variables.getVariable(name + "*", e, local);
 		if (val == null)
 			return new EmptyIterator<>();
@@ -304,7 +304,7 @@ public class Variable<T> implements Expression<T> {
 	public Iterator<T> iterator(final Event e) {
 		if (!list)
 			throw new SkriptAPIException("");
-		final String name = StringUtils.substring(this.name.toString(e), 0, -1).toLowerCase(Locale.ENGLISH);
+		final String name = StringUtils.substring(this.name.toString(e), 0, -1);
 		final Object val = Variables.getVariable(name + "*", e, local);
 		if (val == null)
 			return new EmptyIterator<>();
@@ -365,14 +365,14 @@ public class Variable<T> implements Expression<T> {
 	}
 	
 	private final void set(final Event e, final @Nullable Object value) {
-		Variables.setVariable("" + name.toString(e).toLowerCase(Locale.ENGLISH), value, e, local);
+		Variables.setVariable("" + name.toString(e), value, e, local);
 	}
 	
 	private final void setIndex(final Event e, final String index, final @Nullable Object value) {
 		assert list;
-		final String s = name.toString(e).toLowerCase(Locale.ENGLISH);
+		final String s = name.toString(e);
 		assert s.endsWith("::*") : s + "; " + name;
-		Variables.setVariable(s.substring(0, s.length() - 1) + index.toLowerCase(Locale.ENGLISH), value, e, local);
+		Variables.setVariable(s.substring(0, s.length() - 1) + index, value, e, local);
 	}
 	
 	@Override
@@ -412,8 +412,9 @@ public class Variable<T> implements Expression<T> {
 					int i = 1;
 					for (final Object d : delta) {
 						if (d instanceof Object[]) {
-							for (int j = 0; j < ((Object[]) d).length; j++)
+							for (int j = 0; j < ((Object[]) d).length; j++) {
 								setIndex(e, "" + i + SEPARATOR + j, ((Object[]) d)[j]);
+							}
 						} else {
 							setIndex(e, "" + i, d);
 						}
@@ -603,7 +604,11 @@ public class Variable<T> implements Expression<T> {
 	public boolean check(final Event e, final Checker<? super T> c) {
 		return SimpleExpression.check(getAll(e), c, false, getAnd());
 	}
-	
+
+	public VariableString getName() {
+		return name;
+	}
+
 	@Override
 	public boolean getAnd() {
 		return true;

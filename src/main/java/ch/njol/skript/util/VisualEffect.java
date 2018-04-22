@@ -77,7 +77,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		HURT(EntityEffect.HURT),
-		SHEEP_EAT(EntityEffect.SHEEP_EAT),
+		SHEEP_EAT("SHEEP_EAT", true), // Seriously, Spigot?
 		WOLF_HEARTS(EntityEffect.WOLF_HEARTS),
 		WOLF_SHAKE(EntityEffect.WOLF_SHAKE),
 		WOLF_SMOKE(EntityEffect.WOLF_SMOKE),
@@ -207,14 +207,28 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		}
 		
 		private Type(final String name) {
-			Particle real = null;
-			try {
-				real = Particle.valueOf(name);
-			} catch (IllegalArgumentException e) {
-				// This MC version does not support this particle...
-			}
-			this.effect = real;
+			this(name, false);
+		}
+		
+		private Type(final String name, boolean entityEffect) {
 			this.name = null;
+			if (entityEffect) {
+				EntityEffect real = null;
+				try {
+					real = EntityEffect.valueOf(name);
+				} catch (IllegalArgumentException e) {
+					// This Spigot version is idiotic
+				}
+				this.effect = real;
+			} else {
+				Particle real = null;
+				try {
+					real = Particle.valueOf(name);
+				} catch (IllegalArgumentException e) {
+					// This MC version does not support this particle...
+				}
+				this.effect = real;
+			}
 		}
 		
 		/**

@@ -3,3 +3,5 @@
 /build/
 /.gradle/
 /bin/
+/.idea/
+*.iml

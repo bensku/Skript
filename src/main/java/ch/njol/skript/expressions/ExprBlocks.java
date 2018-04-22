@@ -55,10 +55,10 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 public class ExprBlocks extends SimpleExpression<Block> {
 	static {
 		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,
-				"[the] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
-				"[the] blocks from %location% [on] %direction%",
-				"[the] blocks from %block% to %block%",
-				"[the] blocks between %block% and %block%");
+				"[(all [[of] the]|the)] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
+				"[(all [[of] the]|the)] blocks from %location% [on] %direction%",
+				"[(all [[of] the]|the)] blocks from %block% to %block%",
+				"[(all [[of] the]|the)] blocks (within|between) %block% and %block%");
 	}
 	
 	@SuppressWarnings("null")

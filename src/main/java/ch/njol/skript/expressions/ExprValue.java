@@ -70,7 +70,6 @@ public class ExprValue extends SimpleExpression<Unit> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Class<? extends Unit> getReturnType() {
 		return unit.getClass();

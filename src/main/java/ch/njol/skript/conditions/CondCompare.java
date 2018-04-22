@@ -272,9 +272,9 @@ public class CondCompare extends Condition {
 							}
 						});
 					}
-				}, isNegated());
+				});
 			}
-		});
+		}, isNegated());
 	}
 	
 	@Override

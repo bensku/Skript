@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -65,18 +66,16 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.PotionEffectUtils;
-import ch.njol.skript.util.Slot;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.util.slot.SlotWithIndex;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 
-/**
- * @author Peter Güttinger
- */
-@SuppressWarnings({"rawtypes", "deprecation"})
+@SuppressWarnings({"rawtypes"})
 public class DefaultComparators {
 	
 	public DefaultComparators() {}
@@ -89,10 +88,18 @@ public class DefaultComparators {
 			public Relation compare(final Number n1, final Number n2) {
 				if (n1 instanceof Long && n2 instanceof Long)
 					return Relation.get(n1.longValue() - n2.longValue());
-				final double diff = n1.doubleValue() - n2.doubleValue();
-				if (Math.abs(diff) < Skript.EPSILON)
-					return Relation.EQUAL;
-				return Relation.get(diff);
+				Double d1 = n1.doubleValue(),
+					   d2 = n2.doubleValue();
+				if (d1.isNaN() || d2.isNaN()) {
+					return Relation.SMALLER;
+				} else if (d1.isInfinite() || d2.isInfinite()) {
+					return d1 > d2 ? Relation.GREATER : d1 < d2 ? Relation.SMALLER : Relation.EQUAL;
+				} else {
+					final double diff = d1 - d2;
+					if (Math.abs(diff) < Skript.EPSILON)
+						return Relation.EQUAL;
+					return Relation.get(diff);
+				}
 			}
 			
 			@Override
@@ -106,9 +113,28 @@ public class DefaultComparators {
 
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
-				//Skript.info("Comparing " + o1.getClass() + " and " + o2.getClass());
 				if (o1.isSameSlot(o2))
 					return Relation.EQUAL;
+				return Relation.NOT_EQUAL;
+			}
+
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+			
+		});
+		
+		// Slot - Integer
+		Comparators.registerComparator(Slot.class, Integer.class, new Comparator<Slot, Integer>() {
+
+			@Override
+			public Relation compare(Slot o1, Integer o2) {
+				if (o1 instanceof SlotWithIndex) {
+					boolean same = ((SlotWithIndex) o1).getIndex() == o2;
+					if (same) // Slot has index and the index is same with number
+						return Relation.EQUAL;
+				}
 				return Relation.NOT_EQUAL;
 			}
 

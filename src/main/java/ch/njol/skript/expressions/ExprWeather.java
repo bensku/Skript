@@ -56,14 +56,14 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 	static {
 		Skript.registerExpression(ExprWeather.class, WeatherType.class, ExpressionType.PROPERTY, "[the] weather [(in|of) %worlds%]", "%worlds%'[s] weather");
 	}
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		setExpr((Expression<World>) exprs[0]);
 		return true;
 	}
-	
+
 	@Override
 	protected WeatherType[] get(final Event e, final World[] source) {
 		return get(source, new Getter<WeatherType, World>() {
@@ -82,7 +82,6 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 		return "the weather in " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -105,7 +104,7 @@ public class ExprWeather extends PropertyExpression<World, WeatherType> {
 				} else if (e instanceof ThunderChangeEvent) {
 					if (((ThunderChangeEvent) e).toThunderState() && t != WeatherType.THUNDER)
 						((ThunderChangeEvent) e).setCancelled(true);
-					if (((ThunderChangeEvent) e).getWorld().hasStorm() != (t != WeatherType.CLEAR))
+					if (((ThunderChangeEvent) e).getWorld().hasStorm() == (t == WeatherType.CLEAR))
 						((ThunderChangeEvent) e).getWorld().setStorm(t != WeatherType.CLEAR);
 				}
 			} else {

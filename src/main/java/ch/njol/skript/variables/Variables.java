@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -69,6 +70,8 @@ public abstract class Variables {
 	public final static short YGGDRASIL_VERSION = 1;
 	
 	public final static Yggdrasil yggdrasil = new Yggdrasil(YGGDRASIL_VERSION);
+
+	public static boolean caseInsensitiveVariables = true;
 	
 	private final static String configurationSerializablePrefix = "ConfigurationSerializable_";
 	static {
@@ -272,15 +275,19 @@ public abstract class Variables {
 	 */
 	@Nullable
 	public final static Object getVariable(final String name, final @Nullable Event e, final boolean local) {
-		if (local) {
+		String n = name;
+        if (caseInsensitiveVariables) {
+            n = name.toLowerCase(Locale.ENGLISH);
+        }
+	    if (local) {
 			final VariablesMap map = localVariables.get(e);
 			if (map == null)
 				return null;
-			return map.getVariable(name);
+			return map.getVariable(n);
 		} else {
 			try {
 				variablesLock.readLock().lock();
-				return variables.getVariable(name);
+				return variables.getVariable(n);
 			} finally {
 				variablesLock.readLock().unlock();
 			}
@@ -294,8 +301,12 @@ public abstract class Variables {
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
 	public final static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
-		if (value != null) {
-			assert !name.endsWith("::*");
+        String n = name;
+        if (caseInsensitiveVariables) {
+            n = name.toLowerCase(Locale.ENGLISH);
+        }
+	    if (value != null) {
+			assert !n.endsWith("::*");
 			@SuppressWarnings("null")
 			final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
 			final Class<?> sas = ci.getSerializeAs();
@@ -305,13 +316,13 @@ public abstract class Variables {
 			}
 		}
 		if (local) {
-			assert e != null : name;
+			assert e != null : n;
 			VariablesMap map = localVariables.get(e);
 			if (map == null)
 				localVariables.put(e, map = new VariablesMap());
-			map.setVariable(name, value);
+			map.setVariable(n, value);
 		} else {
-			setVariable(name, value);
+			setVariable(n, value);
 		}
 	}
 	

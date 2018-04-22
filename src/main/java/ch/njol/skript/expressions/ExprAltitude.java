@@ -40,8 +40,7 @@ public class ExprAltitude extends SimplePropertyExpression<Location, Double> {
 	static {
 		register(ExprAltitude.class, Double.class, "altitude[s]", "locations");
 	}
-	
-	@SuppressWarnings("null")
+
 	@Override
 	public Double convert(final Location l) {
 		return l.getY();

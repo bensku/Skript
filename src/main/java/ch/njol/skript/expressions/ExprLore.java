@@ -102,10 +102,10 @@ public class ExprLore extends SimpleExpression<String> {
 		final ItemMeta meta = i instanceof ItemStack ? ((ItemStack) i).getItemMeta() : (ItemMeta) ((ItemType) i).getItemMeta();
 		if (meta == null || !meta.hasLore())
 			return new String[0];
-		if (n == null)
-			return new String[] {};
-		final int l = n.intValue() - 1;
 		final List<String> lore = meta.getLore();
+		if (n == null)
+			return lore.toArray(new String[0]);
+		final int l = n.intValue() - 1;
 		if (l < 0 || l >= lore.size())
 			return new String[0];
 		return new String[] {lore.get(l)};

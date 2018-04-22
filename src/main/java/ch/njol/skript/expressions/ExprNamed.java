@@ -19,9 +19,13 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,54 +44,58 @@ import ch.njol.util.Kleenean;
 /**
  * @author Peter Güttinger
  */
-@Name("Named Item")
-@Description("Directly names an item, useful for defining a named item in a script. " +
-		"If you want to (re)name existing items you can either use this expression or use <code>set <a href='#ExprName'>name of &lt;item&gt;</a> to &lt;text&gt;</code>.")
+@Name("Named Item/Inventory")
+@Description("Directly names an item/inventory, useful for defining a named item/inventory in a script. " +
+		"If you want to (re)name existing items/inventories you can either use this expression or use <code>set <a href='#ExprName'>name of &lt;item/inventory&gt;</a> to &lt;text&gt;</code>.")
 @Examples({"give a diamond sword of sharpness 100 named \"<gold>Excalibur\" to the player",
 		"set tool of player to the player's tool named \"<gold>Wand\"",
-		"set the name of the player's tool to \"<gold>Wand\""})
-@Since("2.0")
-public class ExprNamed extends PropertyExpression<ItemType, ItemType> {
+		"set the name of the player's tool to \"<gold>Wand\"",
+		"open hopper inventory named \"Magic Hopper\" to player"})
+@Since("2.0, 2.2-dev34 (inventories)")
+public class ExprNamed extends PropertyExpression<Object, Object> {
 	static {
-		Skript.registerExpression(ExprNamed.class, ItemType.class, ExpressionType.PROPERTY, "%itemtypes% (named|with name[s]) %string%");
+		Skript.registerExpression(ExprNamed.class, Object.class, ExpressionType.PROPERTY, "%itemtype/inventorytype% (named|with name[s]) %string%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<String> name;
-	
+	private boolean inventory;
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (!Skript.isRunningMinecraft(1, 4, 5)) {
-			Skript.error("Item names are only available in Minecraft 1.4.5+");
-			return false;
-		}
-		setExpr((Expression<? extends ItemType>) exprs[0]);
+		setExpr(exprs[0]);
 		name = (Expression<String>) exprs[1];
+		inventory = getExpr().getReturnType().isAssignableFrom(InventoryType.class);
 		return true;
 	}
 	
 	@Override
-	protected ItemType[] get(final Event e, final ItemType[] source) {
-		final String n = name.getSingle(e);
-		if (n == null)
-			return new ItemType[0];
-		final ItemType[] r = source.clone();
-		for (int i = 0; i < r.length; i++) {
-			r[i] = source[i].clone();
-			ItemMeta m = (ItemMeta) r[i].getItemMeta();
-			if (m == null)
-				m = Bukkit.getItemFactory().getItemMeta(Material.STONE); // AIR results in null
-			assert m != null : r[i];
-			m.setDisplayName(n);
-			r[i].setItemMeta(m);
-		}
-		return r;
+	protected Object[] get(final Event e, final Object[] source) {
+		String name = this.name.getSingle(e);
+		if (name == null)
+			return inventory ? new Inventory[0] : new ItemType[0];
+
+		return get(source, new Getter<Object, Object>() {
+			@Override
+			@Nullable
+			public Object get(Object obj) {
+				if (obj instanceof InventoryType)
+					return Bukkit.createInventory(null, (InventoryType) obj, name);
+				ItemType item = (ItemType) obj;
+				ItemMeta meta = (ItemMeta) item.getItemMeta();
+				if (meta == null)
+					meta = Bukkit.getItemFactory().getItemMeta(Material.STONE); // Meta is null if the item is air
+				meta.setDisplayName(name);
+				item.setItemMeta(meta);
+				return item;
+			}
+		});
+
 	}
 	
 	@Override
-	public Class<? extends ItemType> getReturnType() {
-		return ItemType.class;
+	public Class<? extends Object> getReturnType() {
+		return inventory ? Inventory.class : ItemType.class;
 	}
 	
 	@Override

@@ -42,7 +42,6 @@ import ch.njol.skript.config.Config;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -87,6 +86,8 @@ public class VariableString implements Expression<String> {
 	@Nullable
 	private final String simpleUnformatted;
 	private final StringMode mode;
+
+	public static boolean disableVariableStartingWithExpressionWarnings = false;
 	
 	/**
 	 * Creates a new VariableString which does not contain variables.
@@ -301,6 +302,12 @@ public class VariableString implements Expression<String> {
 		
 		final Object[] sa = string.toArray();
 		assert sa != null;
+		if (string.size() == 1 && string.get(0) instanceof ExpressionInfo &&
+				((ExpressionInfo) string.get(0)).expr.getReturnType() == String.class &&
+				((ExpressionInfo) string.get(0)).expr.isSingle()) {
+			String expr = ((ExpressionInfo) string.get(0)).expr.toString(null, false);
+			Skript.warning(expr + " is already a text, so you should not put it in one (e.g. " + expr + " instead of " + "\"%" + expr.replace("\"", "\"\"") + "%\")");
+		}
 		return new VariableString(orig, sa, mode);
 	}
 	
@@ -309,8 +316,11 @@ public class VariableString implements Expression<String> {
 			return;
 		if (name.startsWith("%")) {// inside the if to only print this message once per variable
 			final Config script = ScriptLoader.currentScript;
-			if (script != null)
-				Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). You could prefix it with the script's name: {" + StringUtils.substring(script.getFileName(), 0, -3) + "." + name + "}");
+			if (script != null) {
+				if (disableVariableStartingWithExpressionWarnings) {
+					Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). You could prefix it with the script's name: {" + StringUtils.substring(script.getFileName(), 0, -3) + "." + name + "}");
+				}
+			}
 		}
 		
 		final Pattern pattern;

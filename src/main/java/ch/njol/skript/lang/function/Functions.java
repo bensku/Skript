@@ -103,7 +103,7 @@ public abstract class Functions {
 	
 	@SuppressWarnings("null")
 	private final static Pattern functionPattern = Pattern.compile("function (" + functionNamePattern + ")\\((.*)\\)(?: :: (.+))?", Pattern.CASE_INSENSITIVE),
-			paramPattern = Pattern.compile("\\s*(.+?)\\s*:\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
+			paramPattern = Pattern.compile("\\s*(.+?)\\s*:(?=[^:]*$)\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
 	
 	/**
 	 * Loads a function from given node.
@@ -180,7 +180,9 @@ public abstract class Functions {
 					c = Classes.getClassInfoFromUserInput(pl.getFirst());
 				if (c == null)
 					return signError("Cannot recognise the type '" + n.group(2) + "'");
-				final Parameter<?> p = Parameter.newInstance(paramName, c, !pl.getSecond(), n.group(3));
+				String rParamName = paramName.endsWith("*") ? paramName.substring(0, paramName.length() - 3) +
+									(!pl.getSecond() ? "::1" : "") : paramName;
+				final Parameter<?> p = Parameter.newInstance(rParamName, c, !pl.getSecond(), n.group(3));
 				if (p == null)
 					return null;
 				params.add(p);

@@ -116,7 +116,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 					return null;
 				
 				if (minecraftTime && d != times[0]) // times[0] == tick
-					amount *= 72f;
+					amount /= 72f;
 				
 				t += Math.round(amount * d);
 				

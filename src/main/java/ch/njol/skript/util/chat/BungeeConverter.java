@@ -41,7 +41,7 @@ public class BungeeConverter {
 		base.setStrikethrough(origin.strikethrough);
 		base.setObfuscated(origin.obfuscated);
 		if (origin.color != null) // TODO this is crappy way to copy *color* over...
-			base.setColor(ChatColor.getByChar(ChatCode.valueOf(origin.color).colorChar));
+			base.setColor(ChatColor.getByChar(SkriptChatCode.valueOf(origin.color).getColorChar()));
 		base.setInsertion(origin.insertion);
 		
 		if (origin.clickEvent != null)

@@ -20,49 +20,30 @@
 package ch.njol.skript.conditions;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 
 @Name("Is on Ground")
 @Description("Checks if entities are on ground or not.")
 @Examples("player is not on ground")
 @Since("2.2-dev26")
-public class CondIsOnGround extends Condition {
-	
+public class CondIsOnGround extends PropertyCondition<Entity> {
+
 	static {
-		Skript.registerCondition(CondIsOnGround.class, "%entities% (is|are) on ground");
-	}
-	
-	@SuppressWarnings("null")
-	private Expression<Entity> entities;
-
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		entities = (Expression<Entity>) exprs[0];
-		return true;
-	}
-	
-	@Override
-	public boolean check(Event e) {
-		return entities.check(e, (en -> {
-			return en.isOnGround();
-		}));
+		PropertyCondition.register(CondIsOnGround.class, "on ground", "entities");
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "is " + (e != null ? entities.getAll(e) : "") + " on ground";
+	public boolean check(Entity entity) {
+		return entity.isOnGround();
 	}
-	
+
+	@Override
+	protected String getPropertyName() {
+		return "on ground";
+	}
 }

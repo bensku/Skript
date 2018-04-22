@@ -59,6 +59,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
+import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -87,6 +89,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -98,6 +102,7 @@ import org.bukkit.event.world.WorldEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -111,8 +116,8 @@ import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.DelayedChangeBlock;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.InventorySlot;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 
 /**
  * @author Peter Güttinger
@@ -213,7 +218,7 @@ public final class BukkitEventValues {
 			public Direction get(final BlockPlaceEvent e) {
 				if (e.getBlock() != null) {
 					BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
-					return new Direction(new double[]{bf.getModX(), bf.getModY(), bf.getModZ()});
+					return new Direction(new double[] {bf.getModX(), bf.getModY(), bf.getModZ()});
 				}
 				return Direction.ZERO;
 			}
@@ -596,9 +601,12 @@ public final class BukkitEventValues {
 			public ItemStack get(final PlayerInteractEntityEvent e) {
 				if (offHandSupport) {
 					EquipmentSlot hand = e.getHand();
-					if (hand == EquipmentSlot.HAND) return e.getPlayer().getInventory().getItemInMainHand();
-					else if (hand == EquipmentSlot.OFF_HAND) return e.getPlayer().getInventory().getItemInOffHand();
-					else return null;
+					if (hand == EquipmentSlot.HAND)
+						return e.getPlayer().getInventory().getItemInMainHand();
+					else if (hand == EquipmentSlot.OFF_HAND)
+						return e.getPlayer().getInventory().getItemInOffHand();
+					else
+						return null;
 				} else {
 					return e.getPlayer().getItemInHand();
 				}
@@ -624,7 +632,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Direction get(final PlayerInteractEvent e) {
 				if (e.getBlockFace() != null)
-					return new Direction(new double[]{e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
+					return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
 				return Direction.ZERO; // Same as 'BlockFace.SELF' or literal 'at'
 			}
 		}, 0);
@@ -762,7 +770,15 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public Slot get(final InventoryClickEvent e) {
-				return new InventorySlot(e.getInventory(), e.getSlot());
+				Inventory invi = e.getClickedInventory(); // getInventory is WRONG and dangerous
+				int slotIndex = e.getSlot();
+				
+				// Not all indices point to inventory slots. Equipment, for example
+				if (invi instanceof PlayerInventory && slotIndex >= 36) {
+					return new ch.njol.skript.util.slot.EquipmentSlot(((PlayerInventory) invi).getHolder(), slotIndex);
+				} else {
+					return new InventorySlot(invi, slotIndex);
+				}
 			}
 		}, 0);
 		EventValues.registerEventValue(InventoryClickEvent.class, InventoryAction.class, new Getter<InventoryAction, InventoryClickEvent>() {
@@ -777,6 +793,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public ClickType get(final InventoryClickEvent e) {
 				return e.getClick();
+			}
+		}, 0);
+		EventValues.registerEventValue(InventoryClickEvent.class, Inventory.class, new Getter<Inventory, InventoryClickEvent>() {
+			@Override
+			@Nullable
+			public Inventory get(final InventoryClickEvent e) {
+				return e.getClickedInventory();
 			}
 		}, 0);
 		// CraftItemEvent REMIND maybe re-add this when Skript parser is reworked?
@@ -856,6 +879,44 @@ public final class BukkitEventValues {
 				return book;
 			}
 		}, 0);
-		
+		//ItemDespawnEvent
+		EventValues.registerEventValue(ItemDespawnEvent.class, Item.class, new Getter<Item, ItemDespawnEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemDespawnEvent e) {
+				return e.getEntity();
+			}
+		}, 0);
+		EventValues.registerEventValue(ItemDespawnEvent.class, ItemStack.class, new Getter<ItemStack, ItemDespawnEvent>() {
+			@Override
+			@Nullable
+			public ItemStack get(ItemDespawnEvent e) {
+				return e.getEntity().getItemStack();
+			}
+		}, 0);
+		//ItemMergeEvent
+		//TODO there is also e.getTarget() two entities involved in this event, currently can be worked around currently with `on item merge of (insert target itemtype)`
+		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemMergeEvent e) {
+				return e.getEntity();
+			}
+		}, 0);
+		EventValues.registerEventValue(ItemMergeEvent.class, ItemStack.class, new Getter<ItemStack, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public ItemStack get(ItemMergeEvent e) {
+				return e.getEntity().getItemStack();
+			}
+		}, 0);
+		//PlayerTeleportEvent
+		EventValues.registerEventValue(PlayerTeleportEvent.class, TeleportCause.class, new Getter<TeleportCause, PlayerTeleportEvent>() {
+			@Override
+			@Nullable
+			public TeleportCause get(final PlayerTeleportEvent e) {
+				return e.getCause();
+			}
+		}, 0);
 	}
 }

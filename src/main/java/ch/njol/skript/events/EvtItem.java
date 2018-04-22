@@ -21,6 +21,8 @@ package ch.njol.skript.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
+import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,12 +39,12 @@ import ch.njol.skript.effects.EffSpawn;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.util.Checker;
 
-/**
- * @author Peter Güttinger
- */
+@SuppressWarnings("deprecation")
 public class EvtItem extends SkriptEvent {
+	
 	private final static boolean hasConsumeEvent = Skript.classExists("org.bukkit.event.player.PlayerItemConsumeEvent");
 	private final static boolean hasPrepareCraftEvent = Skript.classExists("org.bukkit.event.inventory.PrepareItemCraftEvent");
 	
@@ -90,6 +92,17 @@ public class EvtItem extends SkriptEvent {
 				.description("Called when clicking on inventory slot.")
 				.examples("")
 				.since("2.2-Fixes-V10");
+		Skript.registerEvent("Item Despawn", EvtItem.class, ItemDespawnEvent.class, "(item[ ][stack]|[item] %-itemtypes%) despawn[ing]", "[item[ ][stack]] despawn[ing] [[of] %-itemtypes%]")
+				.description("Called when an item is about to be despawned from the world, usually 5 minutes after it was dropped.")
+				.examples("on item despawn of diamond:",
+					 	"	send \"Not my precious!\"",
+					 	"	cancel event")
+				.since("2.2-dev35");
+		Skript.registerEvent("Item Merge", EvtItem.class, ItemMergeEvent.class, "(item[ ][stack]|[item] %-itemtypes%) merg(e|ing)", "item[ ][stack] merg(e|ing) [[of] %-itemtypes%]")
+				.description("Called when dropped items merge into a single stack.")
+				.examples("on item merge of gold blocks:",
+					 	"	cancel event")
+				.since("2.2-dev35");
 	}
 	
 	@Nullable
@@ -128,6 +141,10 @@ public class EvtItem extends SkriptEvent {
 //			is = ((BrewEvent) e).getContents().getContents()
 		} else if (e instanceof InventoryClickEvent) {
 			is = ((InventoryClickEvent) e).getCurrentItem();
+		} else if (e instanceof ItemDespawnEvent) {
+			is = ((ItemDespawnEvent) e).getEntity().getItemStack();
+		} else if (e instanceof ItemMergeEvent) {
+			is = ((ItemMergeEvent) e).getTarget().getItemStack();
 		} else {
 			assert false;
 			return false;
@@ -142,7 +159,7 @@ public class EvtItem extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "dispense/spawn/drop/craft/pickup/consume/break" + (types == null ? "" : " of " + types);
+		return "dispense/spawn/drop/craft/pickup/consume/break/despawn/merge" + (types == null ? "" : " of " + types);
 	}
 	
 }

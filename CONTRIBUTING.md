@@ -91,8 +91,8 @@ So please test your code beforehand, the review is last safeguard.
 Reviewers:
 
 * @bensku - Skript developer, repo owner
+* @Snow-Pyon Skript developer
 * @xXAndrew28Xx - addon developer
-* @Syst3ms - addon developer
 
 Review also includes checking code style. That is usually something that @bensku
 does, since it requires relatively little time.

@@ -71,7 +71,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 		return yaw ? "yaw" : "pitch";
 	}
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings({"null"})
 		@Override
 		public Class<?>[] acceptChange(final ChangeMode mode) {
 			if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
@@ -113,7 +113,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 	
 		//Some random method decided to use for converting to positive values.
 		public float convertToPositive(float f) {
-			if (f * -1 == Math.abs(f))
+			if (f != 0 && f * -1 == Math.abs(f))
 				return 360 + f;
 			return f;
 		}	

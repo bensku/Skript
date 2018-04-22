@@ -22,6 +22,7 @@ package ch.njol.skript.bukkitutil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -146,12 +147,16 @@ public abstract class HealthUtils {
 			heal(e, -d);
 			return;
 		}
+		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d*2);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled()) return;
+
 		if (supportsDoubles) {
-			e.damage(d * 2);
+			e.damage(event.getDamage());
 			return;
 		}
 		try {
-			damage.invoke(e, (int) Math.round(d * 2));
+			damage.invoke(e, (int) Math.round(event.getDamage()));
 		} catch (final IllegalAccessException ex) {
 			Skript.exception(ex);
 		} catch (final IllegalArgumentException ex) {
@@ -160,7 +165,6 @@ public abstract class HealthUtils {
 			Skript.exception(ex);
 		}
 	}
-	
 	/**
 	 * @param e
 	 * @param h Amount of hearts to heal

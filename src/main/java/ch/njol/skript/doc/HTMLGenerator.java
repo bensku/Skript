@@ -42,6 +42,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Effect;
@@ -58,7 +59,9 @@ import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 
 /**
- * Generates HTML based Skript documentation.
+ * Template engine, primarily used for generating Skript documentation
+ * pages by combining data from annotations and templates.
+ * 
  */
 public class HTMLGenerator {
 	
@@ -85,6 +88,9 @@ public class HTMLGenerator {
 		return list.iterator();
 	}
 	
+	/**
+	 * Sorts annotated documentation entries alphabetically.
+	 */
 	private static class AnnotatedComparator implements Comparator<SyntaxElementInfo<?>> {
 
 		public AnnotatedComparator() {}
@@ -102,15 +108,23 @@ public class HTMLGenerator {
 			else if (o2.c.getAnnotation(NoDoc.class) != null)
 				return -1;
 			
-			String name1 = o1.c.getAnnotation(Name.class).value();
-			String name2 = o2.c.getAnnotation(Name.class).value();
+			Name name1 = o1.c.getAnnotation(Name.class);
+			Name name2 = o2.c.getAnnotation(Name.class);
+			if (name1 == null)
+				throw new SkriptAPIException("Name annotation expected: " + o1.c);
+			if (name2 == null)
+				throw new SkriptAPIException("Name annotation expected: " + o2.c);
 			
-			return name1.compareTo(name2);
+			return name1.value().compareTo(name2.value());
 		}
 		
 	}
+	
 	private static final AnnotatedComparator annotatedComparator = new AnnotatedComparator();
 	
+	/**
+	 * Sorts events alphabetically.
+	 */
 	private static class EventComparator implements Comparator<SkriptEventInfo<?>> {
 
 		public EventComparator() {}
@@ -132,8 +146,12 @@ public class HTMLGenerator {
 		}
 		
 	}
+	
 	private static final EventComparator eventComparator = new EventComparator();
 	
+	/**
+	 * Sorts class infos alphabetically.
+	 */
 	private static class ClassInfoComparator implements Comparator<ClassInfo<?>> {
 
 		public ClassInfoComparator() {}
@@ -146,11 +164,6 @@ public class HTMLGenerator {
 				throw new NullPointerException();
 			}
 			
-			if (ClassInfo.NO_DOC.equals(o1.getDocName()))
-				return 1;
-			if (ClassInfo.NO_DOC.equals(o2.getDocName()))
-				return -1;
-			
 			String name1 = o1.getDocName();
 			if (name1 == null)
 				name1 = o1.getCodeName();
@@ -162,8 +175,12 @@ public class HTMLGenerator {
 		}
 		
 	}
+	
 	private static final ClassInfoComparator classInfoComparator = new ClassInfoComparator();
 	
+	/**
+	 * Sorts functions by their names, alphabetically.
+	 */
 	private static class FunctionComparator implements Comparator<JavaFunction<?>> {
 
 		public FunctionComparator() {}
@@ -180,8 +197,13 @@ public class HTMLGenerator {
 		}
 		
 	}
+	
 	private static final FunctionComparator functionComparator = new FunctionComparator();
 	
+	/**
+	 * Generates documentation using template and output directories
+	 * given in the constructor.
+	 */
 	public void generate() {
 		for (File f : template.listFiles()) {			
 			if (f.getName().equals("css")) { // Copy CSS files
@@ -301,7 +323,7 @@ public class HTMLGenerator {
 	 * @param info Syntax element info.
 	 * @return Generated HTML entry.
 	 */
-	String generateAnnotated(String descTemp, SyntaxElementInfo<?> info) {
+	private String generateAnnotated(String descTemp, SyntaxElementInfo<?> info) {
 		Class<?> c = info.c;
 		String desc = "";
 		
@@ -355,7 +377,7 @@ public class HTMLGenerator {
 		return desc;
 	}
 	
-	String generateEvent(String descTemp, SkriptEventInfo<?> info) {
+	private String generateEvent(String descTemp, SkriptEventInfo<?> info) {
 		String desc = "";
 		
 		String docName = info.getName();
@@ -402,7 +424,7 @@ public class HTMLGenerator {
 		return desc;
 	}
 	
-	String generateClass(String descTemp, ClassInfo<?> info) {
+	private String generateClass(String descTemp, ClassInfo<?> info) {
 		String desc = "";
 		
 		String docName = info.getDocName();
@@ -452,7 +474,7 @@ public class HTMLGenerator {
 		return desc;
 	}
 	
-	String generateFunction(String descTemp, JavaFunction<?> info) {
+	private String generateFunction(String descTemp, JavaFunction<?> info) {
 		String desc = "";
 		
 		String docName = info.getName();
@@ -501,7 +523,7 @@ public class HTMLGenerator {
 	}
 	
 	@SuppressWarnings("null")
-	String readFile(File f) {
+	private static String readFile(File f) {
 		try {
 			return Files.toString(f, Charset.forName("UTF-8"));
 		} catch (IOException e) {
@@ -510,7 +532,7 @@ public class HTMLGenerator {
 		}
 	}
 	
-	void writeFile(File f, String data) {
+	private static void writeFile(File f, String data) {
 		try {
 			Files.write(data, f, Charset.forName("UTF-8"));
 		} catch (IOException e) {

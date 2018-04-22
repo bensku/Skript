@@ -101,11 +101,16 @@ public class CondContains extends Condition {
 		return containers.check(e, new Checker<Object>() {
 			@Override
 			public boolean check(final Object container) {
-				if (containers instanceof Variable && !containers.isSingle()) {
+				if (containers instanceof Variable && !containers.isSingle()) { // List variable
+					Object[] all = containers.getAll(e); // Compare all items to all entries in list
 					return items.check(e, new Checker<Object>() {
 						@Override
 						public boolean check(final Object item) {
-							return Relation.EQUAL.is(Comparators.compare(container, item));
+							for (Object o : all) {
+								if (Relation.EQUAL.is(Comparators.compare(o, item)))
+									return true; // Found equal, success!
+							}
+							return false; // Not found
 						}
 					}, isNegated());
 				} else {

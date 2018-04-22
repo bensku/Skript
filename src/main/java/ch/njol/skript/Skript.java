@@ -51,6 +51,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -106,7 +107,6 @@ import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
-import ch.njol.skript.mirre.FilterPrintStream;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
@@ -192,6 +192,75 @@ public final class Skript extends JavaPlugin implements Listener {
 	public final static Message m_invalid_reload = new Message("skript.invalid reload"),
 			m_finished_loading = new Message("skript.finished loading");
 	
+	public static ServerPlatform getServerPlatform() {
+		if (classExists("net.glowstone.GlowServer")) {
+			return ServerPlatform.BUKKIT_GLOWSTONE; // Glowstone has timings too, so must check for it first
+		} else if (classExists("co.aikar.timings.Timings")) {
+			return ServerPlatform.BUKKIT_PAPER; // Could be Sponge, but it doesn't work at all at the moment
+		} else if (classExists("org.spigotmc.SpigotConfig")) {
+			return ServerPlatform.BUKKIT_SPIGOT;
+		} else if (classExists("org.bukkit.craftbukkit.CraftServer") || classExists("org.bukkit.craftbukkit.Main")) {
+			// At some point, CraftServer got removed or moved
+			return ServerPlatform.BUKKIT_CRAFTBUKKIT;
+		} else { // Probably some ancient Bukkit implementation
+			return ServerPlatform.BUKKIT_UNKNOWN;
+		}
+	}
+	
+	/**
+	 * Checks if server software and Minecraft version are supported.
+	 * Prints errors or warnings to console if something is wrong.
+	 * @return Whether Skript can continue loading at all.
+	 */
+	private static boolean checkServerPlatform() {
+		String bukkitV = Bukkit.getBukkitVersion();
+		Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
+		if (!m.find()) {
+			Skript.error("The Bukkit version '" + bukkitV + "' does not contain a version number which is required for Skript to enable or disable certain features. " +
+					"Skript will still work, but you might get random errors if you use features that are not available in your version of Bukkit.");
+			minecraftVersion = new Version(666, 0, 0);
+		} else {
+			minecraftVersion = new Version("" + m.group());
+		}
+		Skript.debug("Loading for Minecraft " + minecraftVersion);
+		
+		// Check that MC version is supported
+		if (!isRunningMinecraft(1, 9)) {
+			if (isRunningMinecraft(1, 8)) { // 1.8 probably works, but let's spit a warning
+				Skript.warning("Using this version of Skript on 1.8 is highly discouraged.");
+				Skript.warning("Some features have been disabled; use older Skript to restore them.");
+				Skript.warning("Also, there are probably bugs. And since 1.8 is not supported, they will not be fixed");
+			} else { // Older versions definitely do not work
+				Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion);
+				Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
+				Skript.error("Note that those versions are, of course, completely unsupported!");
+				return false;
+			}
+		}
+		
+		// Check that current server platform is somewhat supported
+		serverPlatform = getServerPlatform();
+		Skript.debug("Server platform: " + serverPlatform);
+		if (!serverPlatform.works) {
+			Skript.error("It seems that this server platform (" + serverPlatform.name + ") does not work with Skript.");
+			if (SkriptConfig.allowUnsafePlatforms.value()) {
+				Skript.error("However, you have chosen to ignore this. Skript will probably still not work.");
+			} else {
+				Skript.error("To prevent potentially unsafe behaviour, Skript has been disabled.");
+				Skript.error("You may re-enable it by adding a configuration option 'allow unsafe platforms: true'");
+				Skript.error("Note that it is unlikely that Skript works correctly even if you do so.");
+				Skript.error("A better idea would be to install Paper or Spigot in place of your current server.");
+				return false;
+			}
+		} else if (!serverPlatform.supported) {
+			Skript.warning("This server platform (" + serverPlatform.name + ") is not supported by Skript.");
+			Skript.warning("It will still probably work, but if it does not, you are on your own.");
+			Skript.warning("Skript officially supports Paper and Spigot.");
+		}
+		// If nothing got triggered, everything is probably ok
+		return true;
+	}
+	
 	@Override
 	public void onEnable() {
 		if (disabled) {
@@ -200,26 +269,11 @@ public final class Skript extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		//System.setOut(new FilterPrintStream(System.out));
+		version = new Version("" + getDescription().getVersion()); // Skript version
 		
-		ChatMessages.registerListeners();
 		Language.loadDefault(getAddonInstance());
 		
 		Workarounds.init();
-		
-		version = new Version("" + getDescription().getVersion());
-		runningCraftBukkit = Bukkit.getServer().getClass().getName().equals("org.bukkit.craftbukkit.CraftServer");
-		runningSpigot = classExists("net.md_5.bungee.api.chat.TextComponent"); // Check for Bungee's chat
-		runningPaper = classExists("co.aikar.timings.Timings"); // Check for Paper timings
-		final String bukkitV = Bukkit.getBukkitVersion();
-		final Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
-		if (!m.find()) {
-			Skript.error("The Bukkit version '" + bukkitV + "' does not contain a version number which is required for Skript to enable or disable certain features. " +
-					"Skript will still work, but you might get random errors if you use features that are not available in your version of Bukkit.");
-			minecraftVersion = new Version(666, 0, 0);
-		} else {
-			minecraftVersion = new Version("" + m.group());
-		}
 		
 		if (!getDataFolder().isDirectory())
 			getDataFolder().mkdirs();
@@ -273,18 +327,46 @@ public final class Skript extends JavaPlugin implements Listener {
 			}
 		}
 		
+		// Load classes which are always safe to use
+		new JavaClasses(); // These may be needed in configuration
+		
+		// And then not-so-safe classes
+		Throwable classLoadError = null;
+		try {
+			new SkriptClasses();
+		} catch (Throwable e) {
+			classLoadError = e;
+		}
+		
+		// Config must be loaded after Java and Skript classes are parseable
+		// ... but also before platform check, because there is a config option to ignore some errors
+		SkriptConfig.load();
+		
+		// Check server software, Minecraft version, etc.
+		if (!checkServerPlatform()) {
+			disabled = true; // Nothing was loaded, nothing needs to be unloaded
+			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
+			return;
+		}
+		
+		// If loading can continue (platform ok), check for potentially thrown error
+		if (classLoadError != null) {
+			exception(classLoadError);
+			setEnabled(false);
+			return;
+		}
 		
 		getCommand("skript").setExecutor(new SkriptCommand());
 		
-		new JavaClasses();
+		// Load Bukkit stuff. It is done after platform check, because something might be missing!
 		new BukkitClasses();
 		new BukkitEventValues();
-		new SkriptClasses();
 		
 		new DefaultComparators();
 		new DefaultConverters();
 		new DefaultFunctions();
 		
+		ChatMessages.registerListeners();
 		
 		try {
 			getAddonInstance().loadClasses("ch.njol.skript", "conditions", "effects", "events", "expressions", "entity");
@@ -294,7 +376,6 @@ public final class Skript extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		SkriptConfig.load();
 		Language.setUseLocal(true);
 		
 		if (SkriptConfig.checkForNewVersion.value()) // We only start updater automatically if it was asked
@@ -501,6 +582,13 @@ public final class Skript extends JavaPlugin implements Listener {
 						return "" + SkriptConfig.colorResetCodes.value();
 					}
 				});
+				metrics.addCustomChart(new Metrics.SimplePie("functionsWithNulls") {
+					
+					@Override
+					public String getValue() {
+						return "" + SkriptConfig.executeFunctionsWithMissingParams.value();
+					}
+				});
 				
 				Skript.metrics = metrics;
 				
@@ -555,9 +643,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	private static Version minecraftVersion = new Version(666);
-	private static boolean runningCraftBukkit = false;
-	private static boolean runningSpigot = false;
-	private static boolean runningPaper = false;
+	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
 	
 	public static Version getMinecraftVersion() {
 		return minecraftVersion;
@@ -567,7 +653,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @return Whether this server is running CraftBukkit
 	 */
 	public static boolean isRunningCraftBukkit() {
-		return runningCraftBukkit;
+		return serverPlatform == ServerPlatform.BUKKIT_CRAFTBUKKIT;
 	}
 	
 	/**
@@ -1260,7 +1346,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 		
 		// Check if server platform is supported
-		if (!isRunningMinecraft(1, 9) || !runningSpigot) {
+		if (!isRunningMinecraft(1, 9) || !serverPlatform.supported) {
 			logEx("Your Minecraft version or server software appears to be unsupported by Skript (bensku's version).");
 			logEx("Currently only supported servers are Spigot and its forks for Minecraft 1.9 or newer.");
 			logEx("Other versions might work, but since you're getting this error message something is NOT working,");
@@ -1336,12 +1422,18 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("  Java: " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version") + ")");
 		logEx("  OS: " + System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version"));
 		logEx();
-		logEx("Running CraftBukkit: " + runningCraftBukkit);
-		logEx("Running Spigot (or compatible): " + runningSpigot);
-		logEx("Running Paper (or compatible): " + runningPaper);
+		logEx("Server platform: " + serverPlatform.name + (serverPlatform.supported ? "" : " (unsupported)"));
 		logEx();
 		logEx("Current node: " + SkriptLogger.getNode());
 		logEx("Current item: " + (item == null ? "null" : item.toString(null, true)));
+		if (item != null && item.getTrigger() != null) {
+			Trigger trigger = item.getTrigger();
+			if (trigger != null) { // always true, but won't compile without this check
+				File script = trigger.getScript();
+				logEx("Current trigger: " + trigger.toString(null, true) + " (" + (script == null ? "null" : script.getName()) + ", line " + trigger.getLineNumber() + ")");
+			}
+		}
+		logEx();
 		logEx("Thread: " + (thread == null ? Thread.currentThread() : thread).getName());
 		logEx();
 		logEx("Language: " + Language.getName());

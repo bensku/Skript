@@ -47,7 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
  */
 public class FallingBlockData extends EntityData<FallingBlock> {
 	static {
-		register(FallingBlockData.class, "falling block", FallingBlock.class, "falling block");
+		EntityData.register(FallingBlockData.class, "falling block", FallingBlock.class, "falling block");
 	}
 	
 	private final static Message m_not_a_block_error = new Message("entities.falling block.not a block error");

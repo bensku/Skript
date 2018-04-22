@@ -19,40 +19,41 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.eclipse.jdt.annotation.Nullable;
-
+import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.ExpressionType;
 
-@Name("Open Inventory")
-@Description({"Return the open inventory of a player.",
-	"If no inventory is open, it returns the own player's crafting inventory."})
-@Examples({"set slot 1 of open inventory of player to diamond sword"})
-@Since("2.2-dev24")
-public class ExprOpenInventory extends SimplePropertyExpression<Player, Inventory>{
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.eclipse.jdt.annotation.Nullable;
+
+@Name("Highest Solid Block")
+@Description("Returns the highest solid block at the x and z coordinates of the world of given location")
+@Examples("highest block at location of arg-player")
+@Since("2.2-dev34")
+public class ExprHighestSolidBlock extends SimplePropertyExpression<Location, Block> {
+
 	static {
-		register(ExprOpenInventory.class, Inventory.class, "(current|open|top) inventory", "player");
-	}
-
-	@Override
-	public Class<? extends Inventory> getReturnType() {
-		return Inventory.class;
+		Skript.registerExpression(ExprHighestSolidBlock.class, Block.class, ExpressionType.PROPERTY, "highest [(solid|non-air)] block at %locations%");
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "open inventory";
+		return "highest [(solid|non-air)] block";
+	}
+
+	@Nullable
+	@Override
+	public Block convert(Location location) {
+		return location.getWorld().getHighestBlockAt(location);
 	}
 
 	@Override
-	@Nullable
-	public Inventory convert(Player p) {
-		return p.getOpenInventory() != null ? p.getOpenInventory().getTopInventory() : null;
+	public Class<? extends Block> getReturnType() {
+		return Block.class;
 	}
-	
 }

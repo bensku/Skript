@@ -28,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.locks.LockSupport;
 
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.function.Function;
+
 import org.bukkit.event.EventPriority;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -47,6 +51,7 @@ import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Setter;
 
 /**
@@ -161,7 +166,15 @@ public abstract class SkriptConfig {
 	
 	public final static Option<Boolean> disableVariableConflictWarnings = new Option<Boolean>("disable variable conflict warnings", false);
 	public final static Option<Boolean> disableObjectCannotBeSavedWarnings = new Option<Boolean>("disable variable will not be saved warnings", false);
-	
+	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<Boolean>("disable variable missing and/or warnings", false);
+	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings = new Option<Boolean>("disable starting a variable's name with an expression warnings", false)
+			.setter(new Setter<Boolean>() {
+
+				@Override
+				public void set(Boolean t) {
+					VariableString.disableVariableStartingWithExpressionWarnings = t;
+				}
+			});
 	
 	public final static Option<Boolean> enableScriptCaching = new Option<Boolean>("enable script caching", false)
 			.optional(true);
@@ -197,36 +210,55 @@ public abstract class SkriptConfig {
 
 				@Override
 				public void set(String t) {
-					switch (t) {
-						case "false":
-						case "disabled":
-							ChatMessages.linkParseMode = LinkParseMode.DISABLED;
-							break;
-						case "true":
-						case "lenient":
-							ChatMessages.linkParseMode = LinkParseMode.LENIENT;
-							break;
-						case "strict":
-							ChatMessages.linkParseMode = LinkParseMode.STRICT;
-							break;
-						default:
-							ChatMessages.linkParseMode = LinkParseMode.DISABLED;
-							Skript.warning("Unknown link parse mode: " + t + ", please use disabled, strict or lenient");
+					try {
+						switch (t) {
+							case "false":
+							case "disabled":
+								ChatMessages.linkParseMode = LinkParseMode.DISABLED;
+								break;
+							case "true":
+							case "lenient":
+								ChatMessages.linkParseMode = LinkParseMode.LENIENT;
+								break;
+							case "strict":
+								ChatMessages.linkParseMode = LinkParseMode.STRICT;
+								break;
+							default:
+								ChatMessages.linkParseMode = LinkParseMode.DISABLED;
+								Skript.warning("Unknown link parse mode: " + t + ", please use disabled, strict or lenient");
+						}
+					} catch (Error e) {
+						// Ignore it, we're on unsupported server platform and class loading failed
 					}
 				}
 				
 			});
+
+	public final static Option<Boolean> caseInsensitiveVariables = new Option<Boolean>("case-insensitive variables", true)
+			.setter(new Setter<Boolean>() {
+
+				@Override
+				public void set(Boolean t) {
+					Variables.caseInsensitiveVariables = t;
+				}
+				
+			})
+			.optional(true);
 	
 	public final static Option<Boolean> colorResetCodes = new Option<Boolean>("color codes reset formatting", true)
 			.setter(new Setter<Boolean>() {
 
 				@Override
 				public void set(Boolean t) {
-					ChatMessages.colorResetCodes = t;
+					try {
+						ChatMessages.colorResetCodes = t;
+					} catch (Error e) {
+						// Ignore it, we're on unsupported server platform and class loading failed
+					}
 				}
 				
 			});
-	
+
 	public final static Option<Boolean> asyncLoaderEnabled = new Option<Boolean>("asynchronous script loading", false)
 			.setter(new Setter<Boolean>() {
 
@@ -238,6 +270,23 @@ public abstract class SkriptConfig {
 			})
 			.optional(true);
 	
+	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
+			.optional(true);
+
+	public final static Option<Boolean> keepLastUsageDates = new Option<Boolean>("keep command last usage dates", false)
+			.optional(true);
+	
+	public final static Option<Boolean> executeFunctionsWithMissingParams = new Option<Boolean>("execute functions with missing parameters", true)
+			.optional(true)
+			.setter(new Setter<Boolean>() {
+
+				@Override
+				public void set(Boolean t) {
+					Function.executeWithNulls = t;
+				}
+				
+			});
+
 	/**
 	 * This should only be used in special cases
 	 */

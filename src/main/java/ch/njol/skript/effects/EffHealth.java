@@ -36,7 +36,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Slot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 
 /**

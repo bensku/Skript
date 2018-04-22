@@ -61,8 +61,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 	
 	@SuppressWarnings("null")
 	private EntityData<?> type;
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class)) {
