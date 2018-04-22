@@ -20,4 +20,5 @@ command /showmotd:
 on join:
 	# uncomment the following line to make the MOTD appear after other messages
 	# wait a tick
-	message {motd}
+	if {motd} is set:
+		message {motd}

@@ -2,13 +2,12 @@
 # these triggers fix some drops.
 #
 
-on break of glass:
-	drop glass
-
-on break of glass pane:
-	drop glass pane
-
-on break of bookshelf:
-	cancel event
-	set block to air
-	drop bookshelf
+on break:
+	if event-block is glass:
+		drop glass
+	else if event-block is glass pane:
+		drop glass pane
+	else if event-block is bookshelf:
+		cancel event
+		set event-block to air
+		drop bookshelf

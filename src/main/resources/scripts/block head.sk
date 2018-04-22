@@ -9,16 +9,13 @@ command /head <material>:
 	usage: /head <material>
 	permission: skript.hat
 	trigger:
-		id of argument 1 is greater than 255:
+		if id of arg-1 is greater than 255:
 			message "You cannot wear an item, only blocks"
-			stop trigger
-		player doesn't have argument 1:
-			player doesn't have the permission "skript.hat.free":
+		else if player doesn't have arg-1:
+			if player doesn't have the permission "skript.hat.free":
 				message "You do not have a %argument 1% you could wear!"
-				stop trigger
-		helmet slot of player is not empty:
+		else if helmet slot of player is not empty:
 			message "You're already wearing a helmet"
-			stop trigger
-		player doesn't have the permission "skript.hat.free":
+		if player doesn't have the permission "skript.hat.free":
 			remove argument 1 from player
 		equip player with argument 1

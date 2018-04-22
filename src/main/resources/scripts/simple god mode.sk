@@ -3,6 +3,6 @@
 #
 
 on damage:
-	victim is a player
-	victim has permission "skript.god"
-	cancel event
+	if victim is a player:
+		if victim has permission "skript.god":
+			cancel event
