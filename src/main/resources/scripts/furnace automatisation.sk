@@ -15,15 +15,14 @@ options:
 	radius: 1
 
 on fuel burn:
-	fuel slot of event-block will be empty
-	wait 1 second
+	fuel slot of block will be empty
 	loop blocks in radius {@radius}:
-		loop-block is a chest
-		loop items in inventory of loop-block:
-			loop-value-2 is any fuel
-			remove loop-value-2 from inventory of loop-value-1
-			set fuel of event-block to loop-value-2
-			stop loop
+		loop-block is chest
+		loop items of type fuel:
+			loop-block contains loop-item
+			remove loop-item from loop-block
+			set fuel of event-block to loop-item
+			stop trigger
 
 on smelt:
 	ore slot of block will be empty
@@ -33,7 +32,7 @@ on smelt:
 			loop-block contains loop-item
 			remove loop-item from loop-block
 			set ore of event-block to loop-item
-			stop
+			stop trigger
 
 on smelt:
 	loop blocks in radius {@radius}:
@@ -41,4 +40,4 @@ on smelt:
 		loop-block can hold result of event-block
 		add result of event-block to loop-block
 		clear result of event-block
-		stop
+		stop trigger

@@ -6,8 +6,8 @@ aliases:
 	custom helmets = iron block, gold block, diamond block # Change this to anything you'd like
 
 on right click:
-	if player's tool is custom helmets:
-		if player's helmet is air:
-			cancel the event
-			set helmet of player to tool of player
-			set tool of player to air
+	player's tool is custom helmets
+	player's helmet is air
+	cancel the event
+	set helmet of player to tool of player
+	set tool of player to air

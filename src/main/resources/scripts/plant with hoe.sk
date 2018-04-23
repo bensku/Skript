@@ -9,15 +9,13 @@ aliases:
 	# please note that changing this list won't affect which blocks actually break a cactus.
 	allowed next to cactus = 0, 6, 9, 10, 11, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 65, 66, 75, 76, 77, 78, 83, 90, 93, 94, 104, 105, 106, 111, 115, 119
 
-on right click:
-	if player's tool is any hoe:
-		if event-block is grass, dirt or soil:
-			if block above is air:
-				if player has seeds:
-					set block above to crops
-					remove seeds from player
-					damage player's tool by 1
+on right click on grass, dirt or soil with any hoe:
+	if block above is air:
+		if player has seeds:
+			set block above to crops
+			remove seeds from player
+			damage player's tool by 1
 					
-					if event-block is not soil:
-						set event-block to soil
-						damage tool by 1 # damages the hoe a second time if the ground was not soil before
+			if event-block is not soil:
+				set event-block to soil
+				damage tool by 1 # damages the hoe a second time if the ground was not soil before

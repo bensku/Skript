@@ -2,24 +2,25 @@
 # Counts kills per life, in total, and the highest kill streak.
 #
 
+variables:
+	{kill counter::%player%::kills this life} = 0
+	{kill counter::%player%::kill streak} = 0
+	{kill counter::%player%::kills} = 0
+
 on death:
-	if {killcounter::%attacker%::*} doesn't exist:
-		set {killcounter::%attacker%::kills-this-life} to 0
-		set {killcounter::%attacker%::kill-streak} to 0
-		set {killcounter::%attacker%::kills} to 0
 	if attacker is a player:
-		add 1 to {killcounter::%attacker%::kills}
-		add 1 to {killcounter::%attacker%::kills-this-life}
-		if {killcounter::%attacker%::kills-this-life} is greater than {killcounter::%attacker%::kill-streak}:
-			set {killcounter::%attacker%::kill-streak} to {killcounter::%attacker%::kills-this-life}
+		add 1 to {kill counter::%attacker%::kills}
+		add 1 to {kill counter::%attacker%::kills this life}
+		if {kill counter::%attacker%::kills this life} is greater than {kill counter::%attacker%::kill streak}:
+			set {kill counter::%attacker%::kill streak} to {kill counter::%attacker%::kills this life}
 
 on death of player:
-	set {killcounter::%victim%::kills-this-life} to 0
+	set {kill counter::%attacker%::kills this life} to 0
 
 command /kills:
 	description: Shows you your kill stats.
 	permission: skript.kills
 	executable by: players
 	trigger:
-		message "You have killed %{killcounter::%player%::kills-this-life}% mobs and players in this life out of %{killcounter::%player%::kills}% kills in total."
-		message "Your maximum kill streak is %{killcounter::%player%::kill-streak}% kills in one life."
+		message "You have killed %{kill counter::%player%::kills this life}% mobs and players in this life out of %{kill counter::%player%::kills}% kills in total."
+		message "Your maximum kill streak is %{kill counter::%player%::kill streak}% kills in one life."
