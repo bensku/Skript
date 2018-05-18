@@ -590,7 +590,7 @@ public class SkriptParser {
 		return this;
 	}
 	
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Nullable
 	public final <T> Expression<? extends T> parseExpression(final Class<? extends T>... types) {
 		if (expr.length() == 0)
@@ -788,7 +788,6 @@ public class SkriptParser {
 		}
 	}
 
-	@SuppressWarnings("null")
 	@Nullable
 	public final Expression<?> parseExpression(final ExprInfo vi) {
 		if (expr.length() == 0)
