@@ -39,7 +39,6 @@ import org.bukkit.event.Event;
 @Examples({"locally suppress conflict warnings",
 			"suppress variable save warnings"})
 @Since("INSERT VERSION")
-@SuppressWarnings("null")
 public class EffSuppressWarnings extends Effect {
 
 	static {
