@@ -312,7 +312,6 @@ public class VariableString implements Expression<String> {
 		return new VariableString(orig, sa, mode);
 	}
 
-	@SuppressWarnings("null")
 	private static void checkVariableConflicts(final String name, final StringMode mode, final @Nullable Iterable<Object> string) {
 		if (mode != StringMode.VARIABLE_NAME || variableNames.containsKey(name))
 			return;
