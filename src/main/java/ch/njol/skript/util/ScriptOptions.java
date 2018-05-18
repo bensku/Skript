@@ -28,19 +28,20 @@ import java.util.List;
  * @author Mirreducki
  * 
  */
-@SuppressWarnings("null")
 public class ScriptOptions {
 
 	private HashMap<File, List<String>> localWarningSuppression = new HashMap<>();
 
 	private HashMap<File, Boolean> usesNewLoops = new HashMap<>();
 
+	@SuppressWarnings("null")
 	private static ScriptOptions instance = null;
 	
 	private ScriptOptions(){
 		ScriptOptions.instance = this;
 	}
 
+	@SuppressWarnings("null")
 	public static ScriptOptions getInstance(){
 		return instance != null ? instance : new ScriptOptions();
 	}
