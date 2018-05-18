@@ -42,8 +42,6 @@ import org.bukkit.event.Event;
 @SuppressWarnings("null")
 public class EffSuppressWarnings extends Effect {
 
-	//[local[ly]] suppress (1¦conflict|2¦variable save|3¦[missing] conjunction[s]|4¦starting [with] expression[s]) warning[s]
-
 	static {
 		Skript.registerEffect(EffSuppressWarnings.class, "[local[ly]] suppress (1¦conflict|2¦variable save|3¦[missing] conjunction[s]|4¦starting [with] expression[s]) warning[s]");
 	}
