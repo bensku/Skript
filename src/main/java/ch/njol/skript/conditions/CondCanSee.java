@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-
 import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -38,7 +37,7 @@ import org.bukkit.Bukkit;
 @Name("Can See")
 @Description("Checks whether or not a player can see another player.")
 @Examples({"if the player can't see the player-argument:",
-		"\tmessage \"<light red>The player %player-argument% is not online!\""})
+		"	message \"<light red>The player %player-argument% is not online!\""})
 @Since("INSERT VERSION")
 public class CondCanSee extends Condition {
 
