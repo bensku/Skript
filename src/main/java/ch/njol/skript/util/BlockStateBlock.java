@@ -263,7 +263,12 @@ public class BlockStateBlock implements Block {
 	public BlockState getState() {
 		return state;
 	}
-	
+
+	@Override
+	public BlockState getState(boolean b) {
+		return state;
+	}
+
 	@Override
 	public Biome getBiome() {
 		return state.getBlock().getBiome();
