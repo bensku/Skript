@@ -36,7 +36,7 @@ import org.bukkit.event.Event;
 import org.bukkit.Bukkit;
 
 @Name("Can See")
-@Description("Checks whether or not a player can see another player.")
+@Description("Checks whether the given players can see another players.")
 @Examples({"if the player can't see the player-argument:",
 		"\tmessage \"<light red>The player %player-argument% is not online!\""})
 @Since("INSERT VERSION")
@@ -45,9 +45,9 @@ public class CondCanSee extends Condition {
 	static {
 		Skript.registerCondition(CondCanSee.class,
 				"%players% (is|are) [(1¦in)]visible [for %players%]",
-				"[%players%] can see %players%",
-				"%players% (is|are)(n't| not) [(2¦in)]visible [for %players%]",
-				"[%players%] can('t| not) see %players%");
+				"%players% can see %players%",
+				"%players% (is|are)(n't| not) [(1¦in)]visible [for %players%]",
+				"%players% can('t| not) see %players%");
 	}
 	
 	@SuppressWarnings("null")
@@ -55,7 +55,7 @@ public class CondCanSee extends Condition {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		setNegated(((matchedPattern == 2 || matchedPattern == 3) && parseResult.mark != 2) || parseResult.mark == 1);
+		setNegated(matchedPattern > 1 ^ parseResult.mark == 1);
 		if (matchedPattern == 1 || matchedPattern == 3) {
 			players = (Expression<Player>) exprs[0];
 			targetPlayers = (Expression<Player>) exprs[1];

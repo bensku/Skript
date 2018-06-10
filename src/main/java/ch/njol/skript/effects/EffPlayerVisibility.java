@@ -37,8 +37,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
 @Name("Player Visibility")
-@Description({"Change visibility of a player for the given players. If a player was hidden and relogs, it will be visible again.",
-		"When reveal is used in combination of the <a href='expressions.html#ExprHiddenPlayers'>hidden players</a> expression and the viewers are not specified, this will default it to the given player in the hidden players expression.",
+@Description({"Change visibility of a player for the given players.",
+		"When reveal is used in combination of the <a href='expressions.html#ExprHiddenPlayers'>hidden players</a> expression and the viewers are not specified, " +
+		"this will default it to the given player in the hidden players expression.",
 		"",
 		"Note: if a player was hidden and relogs, this player will be visible again."})
 @Examples({"on join:",
@@ -67,11 +68,10 @@ public class EffPlayerVisibility extends Effect {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		reveal = matchedPattern > 0;
 		players = (Expression<Player>) exprs[0];
-		if (reveal && players instanceof ExprHiddenPlayers) {
+		if (reveal && players instanceof ExprHiddenPlayers)
 			targetPlayers = (exprs.length > 1 && !exprs[1].isDefault()) ? (Expression<Player>) exprs[1] : ((ExprHiddenPlayers) players).getPlayers();
-		} else {
+		else
 			targetPlayers = exprs.length > 1 ? (Expression<Player>) exprs[1] : null;
-		}
 		return true;
 	}
 
@@ -80,17 +80,15 @@ public class EffPlayerVisibility extends Effect {
 		for (Player targetPlayer : targetPlayers.getArray(e)) {
 			for (Player player : players.getArray(e)) {
 				if (reveal) {
-					if (USE_DEPRECATED_METHOD) {
+					if (USE_DEPRECATED_METHOD)
 						targetPlayer.showPlayer(player);
-				    } else {
+				    else
 						targetPlayer.showPlayer(Skript.getInstance(), player);
-					}
 				} else {
-					if (USE_DEPRECATED_METHOD) {
+					if (USE_DEPRECATED_METHOD)
 						targetPlayer.hidePlayer(player);
-					} else {
+					else
 						targetPlayer.hidePlayer(Skript.getInstance(), player);
-					}
 				}
 			}
 		}
