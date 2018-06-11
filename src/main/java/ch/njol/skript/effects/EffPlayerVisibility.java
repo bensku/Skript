@@ -54,9 +54,9 @@ public class EffPlayerVisibility extends Effect {
 	
 	static {
 		Skript.registerEffect(EffPlayerVisibility.class,
-				"hide %players% [(from|for) %players%]",
-				"show %players% [to %players%]",
-				"reveal %players% [(to|for|from) %players%]");
+				"hide %players% [(from|for) %-players%]",
+				"show %players% [to %-players%]",
+				"reveal %players% [(to|for|from) %-players%]");
 	}
 
 	@SuppressWarnings("null")
@@ -69,30 +69,31 @@ public class EffPlayerVisibility extends Effect {
 		reveal = matchedPattern > 0;
 		players = (Expression<Player>) exprs[0];
 		if (reveal && players instanceof ExprHiddenPlayers)
-			targetPlayers = (exprs.length > 1 && !exprs[1].isDefault()) ? (Expression<Player>) exprs[1] : ((ExprHiddenPlayers) players).getPlayers();
+			targetPlayers = exprs.length > 1 ? (Expression<Player>) exprs[1] : ((ExprHiddenPlayers) players).getPlayers();
 		else
 			targetPlayers = exprs.length > 1 ? (Expression<Player>) exprs[1] : null;
 		return true;
 	}
 
-	@Override
-	protected void execute(Event e) {
-		for (Player targetPlayer : targetPlayers.getArray(e)) {
-			for (Player player : players.getArray(e)) {
-				if (reveal) {
-					if (USE_DEPRECATED_METHOD)
-						targetPlayer.showPlayer(player);
-				    else
-						targetPlayer.showPlayer(Skript.getInstance(), player);
-				} else {
-					if (USE_DEPRECATED_METHOD)
-						targetPlayer.hidePlayer(player);
-					else
-						targetPlayer.hidePlayer(Skript.getInstance(), player);
-				}
-			}
-		}
-	}
+    @Override
+    protected void execute(Event e) {
+        Player[] targets = targetPlayers == null ? Bukkit.getOnlinePlayers().toArray(new Player[0]) : targetPlayers.getArray(e);
+        for (Player targetPlayer : targets) {
+            for (Player player : players.getArray(e)) {
+                if (reveal) {
+                    if (USE_DEPRECATED_METHOD)
+                        targetPlayer.showPlayer(player);
+                    else
+                        targetPlayer.showPlayer(Skript.getInstance(), player);
+                } else {
+                    if (USE_DEPRECATED_METHOD)
+                        targetPlayer.hidePlayer(player);
+                    else
+                        targetPlayer.hidePlayer(Skript.getInstance(), player);
+                }
+            }
+        }
+    }
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {

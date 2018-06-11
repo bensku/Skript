@@ -265,7 +265,7 @@ public class BlockStateBlock implements Block {
 	}
 
 	@Override
-	public BlockState getState(boolean b) {
+	public BlockState getState(boolean useSnapshot) {
 		return state;
 	}
 

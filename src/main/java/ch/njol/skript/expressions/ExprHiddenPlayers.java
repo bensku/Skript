@@ -47,9 +47,8 @@ public class ExprHiddenPlayers extends SimpleExpression<Player> {
 
 	static {
 		Skript.registerExpression(ExprHiddenPlayers.class, Player.class, ExpressionType.PROPERTY,
-				"[(all [[of] the]|the)] hidden players [(of|for) %players%]",
-				"[(all [[of] the]|the)] players hidden [(from|for) %players%]",
-				"%players%'[s] [all] hidden players");
+				"[(all [[of] the]|the)] hidden players (of|for) %players%",
+				"[(all [[of] the]|the)] players hidden (from|for|by) %players%");
 	}
 
 	@SuppressWarnings("null")
