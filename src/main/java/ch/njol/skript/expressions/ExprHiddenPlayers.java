@@ -88,7 +88,7 @@ public class ExprHiddenPlayers extends SimpleExpression<Player> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "hidden players of " + players.toString(e, debug);
+		return "hidden players for " + players.toString(e, debug);
 	}
 
 }

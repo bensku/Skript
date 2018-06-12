@@ -55,7 +55,6 @@ public class EffPlayerVisibility extends Effect {
 	static {
 		Skript.registerEffect(EffPlayerVisibility.class,
 				"hide %players% [(from|for) %-players%]",
-				"show %players% [to %-players%]",
 				"reveal %players% [(to|for|from) %-players%]");
 	}
 
@@ -66,7 +65,7 @@ public class EffPlayerVisibility extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		reveal = matchedPattern > 0;
+		reveal = matchedPattern == 1;
 		players = (Expression<Player>) exprs[0];
 		if (reveal && players instanceof ExprHiddenPlayers)
 			targetPlayers = exprs.length > 1 ? (Expression<Player>) exprs[1] : ((ExprHiddenPlayers) players).getPlayers();
