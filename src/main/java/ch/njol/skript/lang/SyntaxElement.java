@@ -47,7 +47,7 @@ public interface SyntaxElement {
 	 * to specify the cause.
 	 * @see ScriptLoader#isCurrentEvent(Class...)
 	 */
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult);
+	boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult);
 	
 	/**
 	 * Sets parser instance for this syntax element. Make sure to override this, if it is needed. If this method is not
@@ -58,7 +58,7 @@ public interface SyntaxElement {
 	 *
 	 * @param pi Parser instance.
 	 */
-	public default void setParserInstance(ParserInstance pi) {
+	default void setParserInstance(ParserInstance pi) {
 		
 	}
 	

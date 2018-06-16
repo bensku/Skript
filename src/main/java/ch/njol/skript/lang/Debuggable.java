@@ -32,11 +32,11 @@ public interface Debuggable {
 	 *              user
 	 * @return String representation of this object
 	 */
-	public String toString(@Nullable Event e, boolean debug);
+	String toString(@Nullable Event e, boolean debug);
 	
 	/**
 	 * Should return <tt>{@link #toString(Event, boolean) toString}(null, false)</tt>
 	 */
 	@Override
-	public String toString();
+	String toString();
 }

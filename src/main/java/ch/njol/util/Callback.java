@@ -23,5 +23,5 @@ import org.eclipse.jdt.annotation.Nullable;
 public interface Callback<R, A> {
 	
 	@Nullable
-	public R run(A arg);
+	R run(A arg);
 }

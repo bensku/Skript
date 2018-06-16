@@ -41,7 +41,7 @@ public interface Container<T> {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	@NonNullByDefault
-	public static @interface ContainerType {
+	@interface ContainerType {
 		
 		Class<?> value();
 	}
@@ -49,5 +49,5 @@ public interface Container<T> {
 	/**
 	 * @return All element within this container in no particular order
 	 */
-	public Iterator<T> containerIterator();
+	Iterator<T> containerIterator();
 }

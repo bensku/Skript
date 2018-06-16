@@ -32,5 +32,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Since {
 	
-	public String value();
+	String value();
 }

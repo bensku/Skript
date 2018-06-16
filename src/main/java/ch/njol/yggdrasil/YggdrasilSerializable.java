@@ -41,7 +41,7 @@ public interface YggdrasilSerializable {
 	 *
 	 * @author Peter Güttinger
 	 */
-	public static interface YggdrasilRobustSerializable extends YggdrasilSerializable {
+	interface YggdrasilRobustSerializable extends YggdrasilSerializable {
 		
 		/**
 		 * Called if a field that was read from stream is of an incompatible type to the existing field in this class.
@@ -53,7 +53,7 @@ public interface YggdrasilSerializable {
 		 * value)</tt> will be called.
 		 */
 		@SuppressWarnings("null")
-		public boolean incompatibleField(@NonNull Field field, @NonNull FieldContext value) throws StreamCorruptedException;
+		boolean incompatibleField(@NonNull Field field, @NonNull FieldContext value) throws StreamCorruptedException;
 		
 		/**
 		 * Called if a field was read from stream which does not exist in this class.
@@ -63,7 +63,7 @@ public interface YggdrasilSerializable {
 		 * FieldContext) excessiveField}(this, field)</tt> will be called.
 		 */
 		@SuppressWarnings("null")
-		public boolean excessiveField(@NonNull FieldContext field) throws StreamCorruptedException;
+		boolean excessiveField(@NonNull FieldContext field) throws StreamCorruptedException;
 		
 		/**
 		 * Called if a field was not found in the stream.
@@ -73,7 +73,7 @@ public interface YggdrasilSerializable {
 		 * <tt>yggdrasil.{@link Yggdrasil#missingField(Object, Field) missingField}(this, field)</tt> will be called.
 		 */
 		@SuppressWarnings("null")
-		public boolean missingField(@NonNull Field field) throws StreamCorruptedException;
+		boolean missingField(@NonNull Field field) throws StreamCorruptedException;
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public interface YggdrasilSerializable {
 	 *
 	 * @author Peter Güttinger
 	 */
-	public static interface YggdrasilRobustEnum {
+	interface YggdrasilRobustEnum {
 		
 		/**
 		 * Called when an enum constant is read from stream that does not exist in this enum.
@@ -93,7 +93,7 @@ public interface YggdrasilSerializable {
 		 * @return The renamed enum constant or null if the read string is invalid. If the returned Enum is not an
 		 * instance of this enum type an exception will be thrown.
 		 */
-		public Enum<?> excessiveConstant(String name);
+		Enum<?> excessiveConstant(String name);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public interface YggdrasilSerializable {
 	 *
 	 * @author Peter Güttinger
 	 */
-	public static interface YggdrasilExtendedSerializable extends YggdrasilSerializable {
+	interface YggdrasilExtendedSerializable extends YggdrasilSerializable {
 		
 		/**
 		 * Serialises this object. Only fields contained in the returned Fields object will be written to stream.
@@ -117,7 +117,7 @@ public interface YggdrasilSerializable {
 		 * @return A Fields object containing all fields that should be written to stream
 		 * @throws NotSerializableException If this object or one of its fields is not serialisable
 		 */
-		public Fields serialize() throws NotSerializableException;
+		Fields serialize() throws NotSerializableException;
 		
 		/**
 		 * Deserialises this object. No fields have been set when this method is called, use <tt>fields.{@link
@@ -134,6 +134,6 @@ public interface YggdrasilSerializable {
 		 * @throws NotSerializableException
 		 */
 		@SuppressWarnings("null")
-		public void deserialize(@NonNull Fields fields) throws StreamCorruptedException, NotSerializableException;
+		void deserialize(@NonNull Fields fields) throws StreamCorruptedException, NotSerializableException;
 	}
 }

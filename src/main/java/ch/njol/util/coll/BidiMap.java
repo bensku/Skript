@@ -26,11 +26,11 @@ import java.util.Set;
  */
 public interface BidiMap<T1, T2> extends Map<T1, T2> {
 	
-	public BidiMap<T2, T1> getReverseView();
+	BidiMap<T2, T1> getReverseView();
 	
-	public T1 getKey(final T2 value);
+	T1 getKey(final T2 value);
 	
-	public T2 getValue(final T1 key);
+	T2 getValue(final T1 key);
 	
-	public Set<T2> valueSet();
+	Set<T2> valueSet();
 }

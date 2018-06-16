@@ -23,5 +23,5 @@ package ch.njol.util;
  */
 public interface Setter<T> {
 	
-	public void set(T t);
+	void set(T t);
 }

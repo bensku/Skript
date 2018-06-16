@@ -33,10 +33,10 @@ import ch.njol.skript.registrations.Converters;
  */
 public interface Converter<F, T> {
 	
-	public final static int NO_LEFT_CHAINING = 1;
-	public final static int NO_RIGHT_CHAINING = 2;
-	public final static int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
-	public final static int NO_COMMAND_ARGUMENTS = 4;
+	int NO_LEFT_CHAINING = 1;
+	int NO_RIGHT_CHAINING = 2;
+	int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
+	int NO_COMMAND_ARGUMENTS = 4;
 	
 	/**
 	 * holds information about a converter
@@ -47,7 +47,7 @@ public interface Converter<F, T> {
 	 */
 	@SuppressWarnings("null")
 	@NonNullByDefault
-	public final static class ConverterInfo<F, T> {
+	final class ConverterInfo<F, T> {
 		
 		public final Class<F> from;
 		public final Class<T> to;
@@ -69,9 +69,9 @@ public interface Converter<F, T> {
 	 * @return the converted object
 	 */
 	@Nullable
-	public T convert(F f);
+	T convert(F f);
 	
-	public final static class ConverterUtils {
+	final class ConverterUtils {
 		
 		public static <F, T> Converter<?, T> createInstanceofConverter(final ConverterInfo<F, T> conv) {
 			return createInstanceofConverter(conv.from, conv.converter);
