@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -51,6 +50,7 @@ import ch.njol.util.Kleenean;
 		"	set line 3 to \"%player%\""})
 @Since("1.3")
 public class ExprSignText extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprSignText.class, String.class, ExpressionType.PROPERTY,
 				"[the] line %number% [of %block%]", "[the] (1¦1st|1¦first|2¦2nd|2¦second|3¦3rd|3¦third|4¦4th|4¦fourth) line [of %block%]");
@@ -92,14 +92,14 @@ public class ExprSignText extends SimpleExpression<String> {
 		if (line < 0 || line > 3)
 			return new String[0];
 		if (getTime() >= 0 && block.isDefault() && e instanceof SignChangeEvent && !Delay.isDelayed(e)) {
-			return new String[] {((SignChangeEvent) e).getLine(line)};
+			return new String[]{((SignChangeEvent) e).getLine(line)};
 		}
 		final Block b = block.getSingle(e);
 		if (b == null)
 			return new String[0];
 		if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN)
 			return new String[0];
-		return new String[] {((Sign) b.getState()).getLine(line)};
+		return new String[]{((Sign) b.getState()).getLine(line)};
 	}
 	
 	@Override
@@ -112,7 +112,7 @@ public class ExprSignText extends SimpleExpression<String> {
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.DELETE || mode == ChangeMode.SET)
-			return new Class[] {String.class};
+			return new Class[]{String.class};
 		return null;
 	}
 	
@@ -170,5 +170,4 @@ public class ExprSignText extends SimpleExpression<String> {
 	public boolean setTime(final int time) {
 		return super.setTime(time, SignChangeEvent.class, block);
 	}
-	
 }

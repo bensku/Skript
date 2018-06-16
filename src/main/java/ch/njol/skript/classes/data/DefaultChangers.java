@@ -1,25 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
-
-import java.util.Arrays;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -47,7 +44,8 @@ import ch.njol.util.coll.CollectionUtils;
  */
 public class DefaultChangers {
 	
-	public DefaultChangers() {}
+	public DefaultChangers() {
+	}
 	
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
 		@SuppressWarnings("unchecked")
@@ -218,9 +216,9 @@ public class DefaultChangers {
 					case ADD:
 						assert delta != null;
 						
-						if(delta instanceof ItemStack[]) { // Old behavior - legacy code (is it used? no idea)
+						if (delta instanceof ItemStack[]) { // Old behavior - legacy code (is it used? no idea)
 							ItemStack[] items = (ItemStack[]) delta;
-							if(items.length > 36) {
+							if (items.length > 36) {
 								return;
 							}
 							for (final Object d : delta) {
@@ -339,5 +337,4 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
 }

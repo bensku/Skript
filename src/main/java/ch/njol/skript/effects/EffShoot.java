@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -51,6 +50,7 @@ import ch.njol.util.Kleenean;
 		"shoot a pig from the creeper"})
 @Since("1.4")
 public class EffShoot extends Effect {
+	
 	static {
 		Skript.registerEffect(EffShoot.class,
 				"shoot %entitydatas% [from %livingentities/locations%] [(at|with) (speed|velocity) %-number%] [%-direction%]",
@@ -102,8 +102,7 @@ public class EffShoot extends Effect {
 						projectile.setVelocity(vel);
 						lastSpawned = projectile;
 					} else if (Projectile.class.isAssignableFrom(type)) {
-						@SuppressWarnings("unchecked")
-						final Projectile projectile = ((LivingEntity) shooter).launchProjectile((Class<? extends Projectile>) type);
+						@SuppressWarnings("unchecked") final Projectile projectile = ((LivingEntity) shooter).launchProjectile((Class<? extends Projectile>) type);
 						set(projectile, d);
 						projectile.setVelocity(vel);
 						lastSpawned = projectile;
@@ -127,7 +126,7 @@ public class EffShoot extends Effect {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private final static <E extends Entity> void set(final Entity e, final EntityData<E> d) {
+	private static <E extends Entity> void set(final Entity e, final EntityData<E> d) {
 		d.set((E) e);
 	}
 	
@@ -135,5 +134,4 @@ public class EffShoot extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "shoot " + types.toString(e, debug) + " from " + shooters.toString(e, debug) + (velocity != null ? " at speed " + velocity.toString(e, debug) : "") + (direction != null ? " " + direction.toString(e, debug) : "");
 	}
-	
 }

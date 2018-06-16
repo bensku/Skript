@@ -1,62 +1,42 @@
 /*
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.util.chat;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Converter;
-import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.skript.localization.Message;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Color;
-import ch.njol.yggdrasil.Fields;
 
 /**
  * Handles parsing chat messages.
@@ -100,8 +80,8 @@ public class ChatMessages {
 	static final Gson gson;
 	
 	/**
-	 * Registers language change listener for chat system.
-	 * Called once by Skript, please don't call this addon developers.
+	 * Registers language change listener for chat system. Called once by Skript, please don't call this addon
+	 * developers.
 	 */
 	public static void registerListeners() {
 		// When language changes or server is loaded loop through all chatcodes
@@ -181,7 +161,7 @@ public class ChatMessages {
 		public ComponentList(MessageComponent[] components) {
 			this.extra = Arrays.asList(components);
 		}
-
+		
 		/**
 		 * DO NOT USE!
 		 */
@@ -199,6 +179,7 @@ public class ChatMessages {
 	
 	/**
 	 * Parses a string to list of chat message components.
+	 *
 	 * @param msg Input string.
 	 * @return List with components.
 	 */
@@ -385,7 +366,7 @@ public class ChatMessages {
 					continue;
 				}
 			}
-				
+			
 			curStr.append(c); // Append this char to curStr
 		}
 		
@@ -416,8 +397,9 @@ public class ChatMessages {
 	}
 	
 	/**
-	 * Copies styles from component to another. Note that this only copies
-	 * additional styling, i.e. if text was not bold and is bold, it will remain bold.
+	 * Copies styles from component to another. Note that this only copies additional styling, i.e. if text was not bold
+	 * and is bold, it will remain bold.
+	 *
 	 * @param from
 	 * @param to
 	 */
@@ -449,8 +431,8 @@ public class ChatMessages {
 		if (to.hoverEvent == null)
 			to.hoverEvent = from.hoverEvent;
 	}
-
-
+	
+	
 	public static void shareStyles(MessageComponent[] components) {
 		MessageComponent previous = null;
 		for (MessageComponent c : components) {
@@ -461,9 +443,10 @@ public class ChatMessages {
 			previous = c;
 		}
 	}
-
+	
 	/**
 	 * Constructs plain text only message component.
+	 *
 	 * @param str
 	 */
 	public static MessageComponent plainText(String str) {
@@ -474,8 +457,9 @@ public class ChatMessages {
 	
 	/**
 	 * Registers a chat code. This is for addon developers.
-	 * @param code Something that implements {@link ChatCode}.
-	 * For inspiration, check {@link SkriptChatCode} source code.
+	 *
+	 * @param code Something that implements {@link ChatCode}. For inspiration, check {@link SkriptChatCode} source
+	 *             code.
 	 */
 	public static void registerAddonCode(@Nullable SkriptAddon addon, @Nullable ChatCode code) {
 		Objects.requireNonNull(addon);

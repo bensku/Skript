@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -38,6 +37,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
  */
 @SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilSerializable {
+	
 	static {
 		Variables.yggdrasil.registerSingleClass(ItemData.class, "ItemData");
 	}
@@ -95,9 +95,10 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	
 	/**
 	 * Tests whether the given item is of this type.
-	 * 
+	 *
 	 * @param item
-	 * @return Whether the given item is of this type. If <tt>item</tt> is <tt>null</tt> this returns <tt>getId() == 0</tt>.
+	 * @return Whether the given item is of this type. If <tt>item</tt> is <tt>null</tt> this returns <tt>getId() ==
+	 * 0</tt>.
 	 */
 	public boolean isOfType(final @Nullable ItemStack item) {
 		if (item == null)
@@ -114,7 +115,8 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	}
 	
 	/**
-	 * Returns <code>Aliases.{@link Aliases#getMaterialName(int, short, short, boolean) getMaterialName}(typeid, dataMin, dataMax, false)</code>
+	 * Returns <code>Aliases.{@link Aliases#getMaterialName(int, short, short, boolean) getMaterialName}(typeid,
+	 * dataMin, dataMax, false)</code>
 	 */
 	@Override
 	public String toString() {
@@ -148,12 +150,12 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	}
 	
 	/**
-	 * Computes the intersection of two ItemDatas. The data range of the returned item data will be the real intersection of the two data ranges, and the type id will be the one
-	 * set if any.
-	 * 
+	 * Computes the intersection of two ItemDatas. The data range of the returned item data will be the real
+	 * intersection of the two data ranges, and the type id will be the one set if any.
+	 *
 	 * @param other
-	 * @return A new ItemData which is the intersection of the given types, or null if the intersection of the data ranges is empty or both datas have an id != -1 which are not the
-	 *         same.
+	 * @return A new ItemData which is the intersection of the given types, or null if the intersection of the data
+	 * ranges is empty or both datas have an id != -1 which are not the same.
 	 */
 	@Nullable
 	public ItemData intersection(final ItemData other) {
@@ -200,11 +202,10 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 				public void remove() {
 					throw new UnsupportedOperationException();
 				}
-				
 			};
 		}
 		if (dataMin == dataMax)
-			return new SingleItemIterator<ItemStack>(new ItemStack(typeid, 1, dataMin == -1 ? 0 : dataMin));
+			return new SingleItemIterator<>(new ItemStack(typeid, 1, dataMin == -1 ? 0 : dataMin));
 		return new Iterator<ItemStack>() {
 			
 			private short data = dataMin;
@@ -225,7 +226,6 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
-			
 		};
 	}
 	
@@ -241,5 +241,4 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 	public int numItems() {
 		return dataMax - dataMin + 1;
 	}
-	
 }

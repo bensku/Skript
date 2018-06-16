@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -78,7 +77,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	/**
 	 * Note to self: use {@link #add_(ItemData)} to add item datas, don't add them directly to this list.
 	 */
-	final ArrayList<ItemData> types = new ArrayList<ItemData>();
+	final ArrayList<ItemData> types = new ArrayList<>();
 	
 	private boolean all = false;
 	
@@ -142,7 +141,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		}
 	}
 	
-	public ItemType() {}
+	public ItemType() {
+	}
 	
 	public ItemType(final int id) {
 		add_(new ItemData(id));
@@ -160,7 +160,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		amount = i.getAmount();
 		add_(new ItemData(i));
 		if (!i.getEnchantments().isEmpty())
-			enchantments = new HashMap<Enchantment, Integer>(i.getEnchantments());
+			enchantments = new HashMap<>(i.getEnchantments());
 		if (itemMetaSupported) {
 			meta = i.getItemMeta();
 			unsetItemMetaEnchs((ItemMeta) meta);
@@ -186,7 +186,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			types.add(d.clone());
 		}
 		if (i.enchantments != null)
-			enchantments = new HashMap<Enchantment, Integer>(i.enchantments);
+			enchantments = new HashMap<>(i.enchantments);
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Only use this method if you know what you're doing.
-	 * 
+	 *
 	 * @return the internal amount, i.e. -1 or the same as {@link #getAmount()}.
 	 */
 	public int getInternalAmount() {
@@ -254,7 +254,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		}
 	}
 	
-	private final static void unsetItemMetaEnchs(final @Nullable ItemMeta meta) {
+	private static void unsetItemMetaEnchs(final @Nullable ItemMeta meta) {
 		if (meta == null)
 			return;
 		for (final Enchantment e : meta.getEnchants().keySet())
@@ -281,7 +281,6 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 				return false;
 			final ItemMeta m = item.getItemMeta();
 			unsetItemMetaEnchs(m);
-			
 			
 			
 			if (!meta.equals(m))
@@ -333,7 +332,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		}
 		if (meta != null && !meta.equals(other.meta))
 			return false;
-		outer: for (final ItemData o : other.types) {
+		outer:
+		for (final ItemData o : other.types) {
 			assert o != null;
 			for (final ItemData t : types) {
 				if (t.isSupertypeOf(o))
@@ -391,8 +391,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Sets the given block to this ItemType
-	 * 
-	 * @param block The block to set
+	 *
+	 * @param block        The block to set
 	 * @param applyPhysics Whether to run a physics check just after setting the block
 	 * @return Whether the block was successfully set
 	 */
@@ -407,12 +407,12 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * Intersects all ItemDatas with all ItemDatas of the given ItemType, returning an ItemType with at most n*m ItemDatas, where n = #ItemDatas of this ItemType, and m =
-	 * #ItemDatas of the argument.
-	 * 
-	 * @see ItemData#intersection(ItemData)
+	 * Intersects all ItemDatas with all ItemDatas of the given ItemType, returning an ItemType with at most n*m
+	 * ItemDatas, where n = #ItemDatas of this ItemType, and m = #ItemDatas of the argument.
+	 *
 	 * @param other
 	 * @return A new item type which is the intersection of the two item types or null if the intersection is empty.
+	 * @see ItemData#intersection(ItemData)
 	 */
 	@Nullable
 	public ItemType intersection(final ItemType other) {
@@ -476,14 +476,14 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	public void addEnchantment(final Enchantment e, final int level) {
 		Map<Enchantment, Integer> enchs = enchantments;
 		if (enchs == null)
-			enchantments = enchs = new HashMap<Enchantment, Integer>();
+			enchantments = enchs = new HashMap<>();
 		enchs.put(e, level);
 	}
 	
 	@SuppressWarnings("null") // New Eclipse didn't like this, even if it IS very safe
 	public void addEnchantments(final Map<Enchantment, Integer> enchantments) {
 		if (this.enchantments == null)
-			this.enchantments = new HashMap<Enchantment, Integer>(enchantments);
+			this.enchantments = new HashMap<>(enchantments);
 		else
 			this.enchantments.putAll(enchantments);
 	}
@@ -539,8 +539,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * Gets all ItemStacks this ItemType represents. Only use this if you know what you're doing, as it returns only one element if this is not an 'every' alias.
-	 * 
+	 * Gets all ItemStacks this ItemType represents. Only use this if you know what you're doing, as it returns only one
+	 * element if this is not an 'every' alias.
+	 *
 	 * @return An Iterable whose iterator will always return the same item(s)
 	 */
 	public Iterable<ItemStack> getAll() {
@@ -548,7 +549,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			final ItemStack i = getRandom();
 			if (i == null)
 				return EmptyIterable.get();
-			return new SingleItemIterable<ItemStack>(i);
+			return new SingleItemIterable<>(i);
 		}
 		return new Iterable<ItemStack>() {
 			@Override
@@ -574,7 +575,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Removes this type from the item stack if appropriate
-	 * 
+	 *
 	 * @param item
 	 * @return The passed ItemStack or null if the resulting amount is <= 0
 	 */
@@ -595,7 +596,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Adds this ItemType to the given item stack
-	 * 
+	 *
 	 * @param item
 	 * @return The passed ItemStack or a new one if the passed is null or air
 	 */
@@ -616,7 +617,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	private final static Random random = new Random();
 	
 	/**
-	 * @return One random ItemStack that this ItemType represents. If you have a List or an Inventory, use {@link #addTo(Inventory)} or {@link #addTo(List)} respectively.
+	 * @return One random ItemStack that this ItemType represents. If you have a List or an Inventory, use {@link
+	 * #addTo(Inventory)} or {@link #addTo(List)} respectively.
 	 * @see #addTo(Inventory)
 	 * @see #addTo(ItemStack)
 	 * @see #addTo(ItemStack[])
@@ -647,7 +649,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * <p>
 	 * REMIND If this ItemType represents multiple items with OR, this function will immediately return false.<br/>
 	 * CondCanHold currently blocks aliases without 'every'/'all' as temporary solution.
-	 * 
+	 *
 	 * @param invi
 	 * @return Whether this item type can be added to the given inventory
 	 */
@@ -659,7 +661,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		return addTo(getStorageContents(invi));
 	}
 	
-	public final static ItemStack[] getCopiedContents(final Inventory invi) {
+	public static ItemStack[] getCopiedContents(final Inventory invi) {
 		final ItemStack[] buf = invi.getContents();
 		for (int i = 0; i < buf.length; i++)
 			if (buf[i] != null)
@@ -668,12 +670,13 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * Gets copy of storage contents, i.e. ignores armor and off hand. This is due to Spigot 1.9
-	 * added armor slots, and off hand to default inventory index.
+	 * Gets copy of storage contents, i.e. ignores armor and off hand. This is due to Spigot 1.9 added armor slots, and
+	 * off hand to default inventory index.
+	 *
 	 * @param invi Inventory
 	 * @return Copied storage contents
 	 */
-	public final static ItemStack[] getStorageContents(final Inventory invi) {
+	public static ItemStack[] getStorageContents(final Inventory invi) {
 		if (invi instanceof PlayerInventory) {
 			final ItemStack[] buf = invi.getContents();
 			final ItemStack[] tBuf = new ItemStack[36];
@@ -685,8 +688,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * @return List of ItemDatas. The returned list is not modifiable, use {@link #add(ItemData)} and {@link #remove(ItemData)} if you need to change the list, or use the
-	 *         {@link #iterator()}.
+	 * @return List of ItemDatas. The returned list is not modifiable, use {@link #add(ItemData)} and {@link
+	 * #remove(ItemData)} if you need to change the list, or use the {@link #iterator()}.
 	 */
 	@SuppressWarnings("null")
 	public List<ItemData> getTypes() {
@@ -788,7 +791,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Removes this type from the given inventory. Does not call updateInventory for players.
-	 * 
+	 *
 	 * @param invi
 	 * @return Whether everything could be removed from the inventory
 	 */
@@ -796,8 +799,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		final ItemStack[] buf = oldInvSize ? getStorageContents(invi) : getCopiedContents(invi);
 		final ItemStack[] armour = invi instanceof PlayerInventory && !oldInvSize ? ((PlayerInventory) invi).getArmorContents() : null;
 		
-		@SuppressWarnings("unchecked")
-		final boolean ok = removeFrom(Arrays.asList(buf), armour == null ? null : Arrays.asList(armour));
+		@SuppressWarnings("unchecked") final boolean ok = removeFrom(Arrays.asList(buf), armour == null ? null : Arrays.asList(armour));
 		
 		invi.setContents(buf);
 		if (armour != null)
@@ -819,8 +821,10 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * @param lists The lists to remove this type from. Each list should implement {@link RandomAccess} or this method will be slow.
-	 * @return Whether this whole item type could be removed (i.e. returns false if the lists didn't contain this item type completely)
+	 * @param lists The lists to remove this type from. Each list should implement {@link RandomAccess} or this method
+	 *              will be slow.
+	 * @return Whether this whole item type could be removed (i.e. returns false if the lists didn't contain this item
+	 * type completely)
 	 */
 	public boolean removeFrom(final List<ItemStack>... lists) {
 		int removed = 0;
@@ -867,7 +871,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Adds this ItemType to the given list, without filling existing stacks.
-	 * 
+	 *
 	 * @param list
 	 */
 	public void addTo(final List<ItemStack> list) {
@@ -881,7 +885,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Tries to add this ItemType to the given inventory. Does not call updateInventory for players.
-	 * 
+	 *
 	 * @param invi
 	 * @return Whether everything could be added to the inventory
 	 */
@@ -889,7 +893,6 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	/*public boolean addTo(final Inventory invi) {
 
 	}*/
-
 	public boolean addTo(final Inventory invi) {
 		// important: don't use inventory.add() - it ignores max stack sizes
 		ItemStack[] buf = invi.getContents();
@@ -901,14 +904,14 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		if (oldInvSize) { // MC < 1.9
 			if (buf.length > 36) {
 				buf = new ItemStack[35];
-				for(int i = 0; i < 35; ++i) {
+				for (int i = 0; i < 35; ++i) {
 					buf[i] = tBuf[i];
 				}
 			}
 		} else {
 			if (invi instanceof PlayerInventory) {
 				buf = new ItemStack[36];
-				for(int i = 0; i < 36; ++i) {
+				for (int i = 0; i < 36; ++i) {
 					buf[i] = tBuf[i];
 				}
 			}
@@ -970,13 +973,15 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * Tests whether a given set of ItemTypes is a subset of another set of ItemTypes.
 	 * <p>
 	 * This method works differently that normal set operations, as is e.g. returns true if set == {everything}.
-	 * 
+	 *
 	 * @param set
 	 * @param sub
-	 * @return Whether all item types in <tt>sub</tt> have at least one {@link #isSupertypeOf(ItemType) super type} in <tt>set</tt>
+	 * @return Whether all item types in <tt>sub</tt> have at least one {@link #isSupertypeOf(ItemType) super type} in
+	 * <tt>set</tt>
 	 */
-	public final static boolean isSubset(final ItemType[] set, final ItemType[] sub) {
-		outer: for (final ItemType i : sub) {
+	public static boolean isSubset(final ItemType[] set, final ItemType[] sub) {
+		outer:
+		for (final ItemType i : sub) {
 			assert i != null;
 			for (final ItemType t : set) {
 				if (t.isSupertypeOf(i))
@@ -986,7 +991,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		}
 		return true;
 	}
-	
+
 //	/**
 //	 * Saves an array of ItemTypes, separated by '|'
 //	 */
@@ -1173,17 +1178,18 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
-	 * Gets raw item names ("minecraft:some_item"). Works even if server doesn't support them,
-	 * since Bukkit API doesn't in any case.
+	 * Gets raw item names ("minecraft:some_item"). Works even if server doesn't support them, since Bukkit API doesn't
+	 * in any case.
+	 *
 	 * @return names
 	 */
 	public List<String> getRawNames() {
-		List<String> rawNames = new ArrayList<String>();
+		List<String> rawNames = new ArrayList<>();
 		for (ItemData data : types) {
 			rawNames.add("minecraft:" + Material.getMaterial(data.typeid).toString().toLowerCase()
 					.replace("leash", "lead") // Add hacky code here :)
 					.replace("wood", "planks")
-					);
+			);
 		}
 		
 		return rawNames;

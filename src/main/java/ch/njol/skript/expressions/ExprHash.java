@@ -1,25 +1,24 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -57,13 +56,11 @@ import ch.njol.util.Kleenean;
 		"			message \"Wrong password!\""})
 @Since("2.0, 2.2-dev32 (SHA-256 algorithm)")
 public class ExprHash extends PropertyExpression<String, String> {
+	
 	static {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
 				"%strings% hash[ed] with (0¦MD5|1¦SHA-256)");
 	}
-	
-	@SuppressWarnings("null")
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	@Nullable
 	static MessageDigest md5;
@@ -104,11 +101,11 @@ public class ExprHash extends PropertyExpression<String, String> {
 			digest = sha256;
 		else
 			assert false;
-
+		
 		// Apply it to all strings
 		final String[] r = new String[source.length];
 		for (int i = 0; i < r.length; i++)
-			r[i] = toHex(digest.digest(source[i].getBytes(UTF_8)));
+			r[i] = toHex(digest.digest(source[i].getBytes(StandardCharsets.UTF_8)));
 		
 		
 		return r;
@@ -132,5 +129,4 @@ public class ExprHash extends PropertyExpression<String, String> {
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-	
 }

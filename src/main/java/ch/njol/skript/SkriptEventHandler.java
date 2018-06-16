@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
 
@@ -51,13 +50,15 @@ import ch.njol.skript.timings.SkriptTimings;
  * @author Peter Güttinger
  */
 public abstract class SkriptEventHandler {
-	private SkriptEventHandler() {}
+	
+	private SkriptEventHandler() {
+	}
 	
 	final static Map<Class<? extends Event>, List<Trigger>> triggers = new HashMap<>();
 	
 	private final static List<Trigger> selfRegisteredTriggers = new ArrayList<>();
 	
-	private final static Iterator<Trigger> getTriggers(final Class<? extends Event> event) {
+	private static Iterator<Trigger> getTriggers(final Class<? extends Event> event) {
 		return new Iterator<Trigger>() {
 			@Nullable
 			private Class<?> e = event;
@@ -187,7 +188,7 @@ public abstract class SkriptEventHandler {
 			return;
 		Skript.info("# " + t.getName() + " took " + 1. * (System.nanoTime() - startTrigger) / 1000000. + " milliseconds");
 	}
-
+	
 	public static void addTrigger(final Class<? extends Event>[] events, final Trigger trigger) {
 		for (final Class<? extends Event> e : events) {
 			List<Trigger> ts = triggers.get(e);
@@ -199,7 +200,7 @@ public abstract class SkriptEventHandler {
 	
 	/**
 	 * Stores a self registered trigger to allow for it to be unloaded later on.
-	 * 
+	 *
 	 * @param t Trigger that has already been registered to its event
 	 */
 	public static void addSelfRegisteringTrigger(final Trigger t) {
@@ -254,14 +255,14 @@ public abstract class SkriptEventHandler {
 	 * Stores which events are currently registered with Bukkit
 	 */
 	private final static Set<Class<? extends Event>> registeredEvents = new HashSet<>();
-	private final static Listener listener = new Listener() {};
+	private final static Listener listener = new Listener() {
+	};
 	
 	/**
-	 * Registers event handlers for all events which currently loaded
-	 * triggers are using.
+	 * Registers event handlers for all events which currently loaded triggers are using.
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	final static void registerBukkitEvents() {
+	static void registerBukkitEvents() {
 		for (final Class<? extends Event> e : triggers.keySet()) {
 			assert e != null;
 			if (!containsSuperclass((Set) registeredEvents, e)) { // I just love Java's generics
@@ -278,7 +279,7 @@ public abstract class SkriptEventHandler {
 		}
 	}
 	
-	public final static boolean containsSuperclass(final Set<Class<?>> classes, final Class<?> c) {
+	public static boolean containsSuperclass(final Set<Class<?>> classes, final Class<?> c) {
 		if (classes.contains(c))
 			return true;
 		for (final Class<?> cl : classes) {
@@ -287,7 +288,7 @@ public abstract class SkriptEventHandler {
 		}
 		return false;
 	}
-	
+
 //	private final static void unregisterEvents() {
 //		for (final Iterator<Class<? extends Event>> i = registeredEvents.iterator(); i.hasNext();) {
 //			if (unregisterEvent(i.next()))
@@ -324,5 +325,4 @@ public abstract class SkriptEventHandler {
 	 * Events which are listened even if they are cancelled.
 	 */
 	public final static Set<Class<? extends Event>> listenCancelled = new HashSet<>();
-	
 }

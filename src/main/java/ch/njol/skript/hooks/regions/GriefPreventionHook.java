@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions;
 
@@ -29,10 +28,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.DataStore;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -49,13 +44,17 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.iterator.EmptyIterator;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilID;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.DataStore;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 /**
  * @author Peter Güttinger
  */
 public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 	
-	public GriefPreventionHook() throws IOException {}
+	public GriefPreventionHook() throws IOException {
+	}
 	
 	boolean supportsUUIDs;
 	@Nullable
@@ -73,13 +72,15 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 			getClaim.setAccessible(true);
 			if (!Claim.class.isAssignableFrom(getClaim.getReturnType()))
 				getClaim = null;
-		} catch (final NoSuchMethodException e) {} catch (final SecurityException e) {}
+		} catch (final NoSuchMethodException | SecurityException e) {
+		}
 		try {
 			claimsField = DataStore.class.getDeclaredField("claims");
 			claimsField.setAccessible(true);
 			if (!List.class.isAssignableFrom(claimsField.getType()))
 				claimsField = null;
-		} catch (final NoSuchFieldException e) {} catch (final SecurityException e) {}
+		} catch (final NoSuchFieldException | SecurityException e) {
+		}
 		if (getClaim == null && claimsField == null) {
 			Skript.error("Skript " + Skript.getVersion() + " is not compatible with GriefPrevention " + plugin.getDescription().getVersion() + "."
 					+ " Please report this at http://dev.bukkit.org/bukkit-plugins/skript/tickets/ if this error occurred after you updated GriefPrevention.");
@@ -93,9 +94,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		if (getClaim != null) {
 			try {
 				return (Claim) getClaim.invoke(plugin.dataStore, id);
-			} catch (final IllegalAccessException e) {
-				assert false : e;
-			} catch (final IllegalArgumentException e) {
+			} catch (final IllegalAccessException | IllegalArgumentException e) {
 				assert false : e;
 			} catch (final InvocationTargetException e) {
 				throw new RuntimeException(e.getCause());
@@ -110,9 +109,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 					if (((Claim) claim).getID() == id)
 						return (Claim) claim;
 				}
-			} catch (final IllegalArgumentException e) {
-				assert false : e;
-			} catch (final IllegalAccessException e) {
+			} catch (final IllegalArgumentException | IllegalAccessException e) {
 				assert false : e;
 			}
 		}
@@ -139,7 +136,8 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		private transient Claim claim;
 		
 		@SuppressWarnings({"null", "unused"})
-		private GriefPreventionRegion() {}
+		private GriefPreventionRegion() {
+		}
 		
 		public GriefPreventionRegion(final Claim c) {
 			claim = c;
@@ -229,7 +227,6 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		public int hashCode() {
 			return claim.hashCode();
 		}
-		
 	}
 	
 	@SuppressWarnings("null")

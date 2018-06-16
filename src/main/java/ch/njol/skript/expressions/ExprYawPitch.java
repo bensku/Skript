@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -72,50 +71,49 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 	}
 	
 	@SuppressWarnings({"null"})
-		@Override
-		public Class<?>[] acceptChange(final ChangeMode mode) {
-			if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
-				return CollectionUtils.array(Number.class);
-			return null;
-		}
+	@Override
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
+			return CollectionUtils.array(Number.class);
+		return null;
+	}
 	
-		@SuppressWarnings({"incomplete-switch", "null"})
-		@Override
-		public void change(Event e, Object[] delta, ChangeMode mode) {
-			Location l = getExpr().getSingle(e);
-			if(delta[0] == null || l == null)
-				return;
-			float f = ((Number) delta[0]).floatValue();
-			switch (mode) {
-				case SET:
-					if (yaw)
-						l.setYaw(convertToPositive(f));
-					else
-						l.setPitch(f);
-					break;
-				case ADD:
-					if (yaw)
-						l.setYaw(convertToPositive(l.getYaw()) + f);
-					else
-						l.setPitch(l.getPitch() + f);
-					break;
-				case REMOVE:
-					if (yaw)
-						l.setYaw(convertToPositive(l.getYaw()) - f);
-					else
-						l.setPitch(l.getPitch() - f);
-					break;
+	@SuppressWarnings({"incomplete-switch", "null"})
+	@Override
+	public void change(Event e, Object[] delta, ChangeMode mode) {
+		Location l = getExpr().getSingle(e);
+		if (delta[0] == null || l == null)
+			return;
+		float f = ((Number) delta[0]).floatValue();
+		switch (mode) {
+			case SET:
+				if (yaw)
+					l.setYaw(convertToPositive(f));
+				else
+					l.setPitch(f);
+				break;
+			case ADD:
+				if (yaw)
+					l.setYaw(convertToPositive(l.getYaw()) + f);
+				else
+					l.setPitch(l.getPitch() + f);
+				break;
+			case REMOVE:
+				if (yaw)
+					l.setYaw(convertToPositive(l.getYaw()) - f);
+				else
+					l.setPitch(l.getPitch() - f);
+				break;
 			default:
 				break;
-			}
 		}
+	}
 	
 	
-		//Some random method decided to use for converting to positive values.
-		public float convertToPositive(float f) {
-			if (f != 0 && f * -1 == Math.abs(f))
-				return 360 + f;
-			return f;
-		}	
-	
+	//Some random method decided to use for converting to positive values.
+	public float convertToPositive(float f) {
+		if (f != 0 && f * -1 == Math.abs(f))
+			return 360 + f;
+		return f;
+	}
 }

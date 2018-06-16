@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -27,8 +26,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
-import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -101,7 +100,7 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.SET) {
-			return new Class[] {Entity.class, EntityData.class};
+			return new Class[]{Entity.class, EntityData.class};
 		}
 		return super.acceptChange(mode);
 	}
@@ -122,8 +121,7 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 				((Entity) o).setPassenger(p);
 			} else if (o instanceof EntityData) {
 				for (final Entity p : ps) {
-					@SuppressWarnings("null")
-					final Entity v = ((EntityData<?>) o).spawn(p.getLocation());
+					@SuppressWarnings("null") final Entity v = ((EntityData<?>) o).spawn(p.getLocation());
 					if (v == null)
 						continue;
 					v.setPassenger(p);
@@ -141,5 +139,4 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), VehicleEnterEvent.class, VehicleExitEvent.class);
 	}
-	
 }

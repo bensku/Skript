@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
@@ -31,8 +30,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger
@@ -68,6 +67,7 @@ public class MinecartData extends EntityData<Minecart> {
 		}
 		
 		public static String[] codeNames;
+		
 		static {
 			final ArrayList<String> cn = new ArrayList<>();
 			for (final MinecartType t : values()) {
@@ -86,7 +86,8 @@ public class MinecartData extends EntityData<Minecart> {
 	
 	private MinecartType type = MinecartType.ANY;
 	
-	public MinecartData() {}
+	public MinecartData() {
+	}
 	
 	public MinecartData(final MinecartType type) {
 		this.type = type;
@@ -117,7 +118,8 @@ public class MinecartData extends EntityData<Minecart> {
 	}
 	
 	@Override
-	public void set(final Minecart entity) {}
+	public void set(final Minecart entity) {
+	}
 	
 	@Override
 	public boolean match(final Minecart entity) {
@@ -145,7 +147,7 @@ public class MinecartData extends EntityData<Minecart> {
 		return type == other.type;
 	}
 	
-//		return type.name();
+	//		return type.name();
 	@Override
 	protected boolean deserialize(final String s) {
 		try {
@@ -167,5 +169,4 @@ public class MinecartData extends EntityData<Minecart> {
 	public EntityData getSuperType() {
 		return new MinecartData(type);
 	}
-	
 }

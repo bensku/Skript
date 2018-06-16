@@ -1,23 +1,27 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -32,11 +36,6 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 @Name("Default Value")
 @Description("A shorthand expression for giving things a default value. If the first thing isn't set, the second thing will be returned.")
@@ -44,24 +43,24 @@ import java.lang.reflect.Array;
 @Since("INSERT VERSION")
 @SuppressWarnings("null")
 public class ExprDefaultValue<T> extends SimpleExpression<T> {
-
+	
 	static {
 		Skript.registerExpression(ExprDefaultValue.class, Object.class, ExpressionType.COMBINED,
 				"%objects% (otherwise|?) %objects%");
 	}
-
+	
 	private final ExprDefaultValue<?> source;
 	private final Class<T> superType;
 	@Nullable
 	private Expression<Object> first;
 	@Nullable
 	private Expression<Object> second;
-
+	
 	@SuppressWarnings("unchecked")
 	public ExprDefaultValue() {
 		this(null, (Class<? extends T>) Object.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private ExprDefaultValue(ExprDefaultValue<?> source, Class<? extends T>... types) {
 		this.source = source;
@@ -71,7 +70,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 		}
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -79,7 +78,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 		second = LiteralUtils.defendExpression(exprs[1]);
 		return LiteralUtils.canInitSafely(first, second);
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	protected T[] get(Event e) {
@@ -91,30 +90,29 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 			return (T[]) Array.newInstance(superType, 0);
 		}
 	}
-
+	
 	@Override
 	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		return new ExprDefaultValue<>(this, to);
 	}
-
+	
 	@Override
 	public Expression<?> getSource() {
 		return source == null ? this : source;
 	}
-
+	
 	@Override
 	public Class<? extends T> getReturnType() {
 		return superType;
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return first.isSingle() && second.isSingle();
 	}
-
+	
 	@Override
 	public String toString(Event e, boolean debug) {
 		return first.toString(e, debug) + " or else " + second.toString(e, debug);
 	}
-
 }

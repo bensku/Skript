@@ -1,28 +1,26 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -58,6 +56,7 @@ import ch.njol.util.Kleenean;
 		"push last dropped item upwards"})
 @Since("1.3 (spawned entity), 2.0 (shot entity), 2.2-dev26 (dropped item)")
 public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
+	
 	static {
 		Skript.registerExpression(ExprLastSpawnedEntity.class, Entity.class, ExpressionType.SIMPLE, "[the] [last[ly]] (0¦spawned|1¦shot) %*entitydata%", "[the] [last[ly]] dropped (2¦item)");
 	}
@@ -71,7 +70,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (parseResult.mark == 2) // It's just to make an extra expression for item only
 			type = EntityData.fromClass(Item.class);
-		else 
+		else
 			type = ((Literal<EntityData<?>>) exprs[0]).getSingle();
 		from = parseResult.mark;
 		return true;
@@ -80,7 +79,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
-		final Entity en = from == 0 ? EffSpawn.lastSpawned :  from == 1 ? EffShoot.lastSpawned : EffDrop.lastSpawned;
+		final Entity en = from == 0 ? EffSpawn.lastSpawned : from == 1 ? EffShoot.lastSpawned : EffDrop.lastSpawned;
 		if (en == null)
 			return null;
 		if (!type.isInstance(en))
@@ -104,5 +103,4 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the last " + (from == 1 ? "spawned" : from == 1 ? "shot" : "dropped") + " " + type;
 	}
-	
 }

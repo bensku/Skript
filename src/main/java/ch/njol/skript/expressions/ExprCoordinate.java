@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -43,6 +42,7 @@ import ch.njol.util.Kleenean;
 		"	message \"Watch out for lava!\""})
 @Since("1.4.3")
 public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
+	
 	static {
 		register(ExprCoordinate.class, Double.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
 	}
@@ -78,7 +78,7 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if ((mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) && getExpr().isSingle() && ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Location.class))
-			return new Class[] {Number.class};
+			return new Class[]{Number.class};
 		return null;
 	}
 	
@@ -101,7 +101,7 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 				} else {
 					l.setZ(l.getZ() + n);
 				}
-				getExpr().change(e, new Location[] {l}, ChangeMode.SET);
+				getExpr().change(e, new Location[]{l}, ChangeMode.SET);
 				break;
 			case SET:
 				if (axis == 0) {
@@ -111,7 +111,7 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 				} else {
 					l.setZ(n);
 				}
-				getExpr().change(e, new Location[] {l}, ChangeMode.SET);
+				getExpr().change(e, new Location[]{l}, ChangeMode.SET);
 				break;
 			case DELETE:
 			case REMOVE_ALL:
@@ -119,5 +119,4 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 				assert false;
 		}
 	}
-	
 }

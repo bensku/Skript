@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config;
 
@@ -80,7 +79,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Adds the given node at the end of this section.
-	 * 
+	 *
 	 * @param n
 	 */
 	public void add(final Node n) {
@@ -93,7 +92,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Inserts the given node into this section at the specified position.
-	 * 
+	 *
 	 * @param n
 	 * @param index between 0 and {@link #size()}, inclusive
 	 */
@@ -106,7 +105,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Removes the given node from this section.
-	 * 
+	 *
 	 * @param n
 	 */
 	public void remove(final Node n) {
@@ -117,7 +116,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Removes an entry with the given key.
-	 * 
+	 *
 	 * @param key
 	 * @return The removed node, or null if the key didn't match any node.
 	 */
@@ -137,8 +136,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	@Override
 	public Iterator<Node> iterator() {
 		@SuppressWarnings("null")
-		@NonNull
-		final Iterator<Node> iter = nodes.iterator();
+		@NonNull final Iterator<Node> iter = nodes.iterator();
 		return new CheckedIterator<Node>(iter, new NullableChecker<Node>() {
 			@Override
 			public boolean check(final @Nullable Node n) {
@@ -170,7 +168,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Gets a subnode (EntryNode or SectionNode) with the specified name.
-	 * 
+	 *
 	 * @param key
 	 * @return The node with the given name
 	 */
@@ -189,9 +187,9 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Gets an entry's value or the default value if it doesn't exist or is not an EntryNode.
-	 * 
+	 *
 	 * @param name The name of the node (case insensitive)
-	 * @param def The default value
+	 * @param def  The default value
 	 * @return The value of the entry node with the give node, or <tt>def</tt> if there's no entry with the given name.
 	 */
 	public String get(final String name, final String def) {
@@ -247,11 +245,11 @@ public class SectionNode extends Node implements Iterable<Node> {
 		return true;
 	}
 	
-	final static SectionNode load(final Config c, final ConfigReader r) throws IOException {
+	static SectionNode load(final Config c, final ConfigReader r) throws IOException {
 		return new SectionNode(c).load_i(r);
 	}
 	
-	final static SectionNode load(final String name, final String comment, final SectionNode parent, final ConfigReader r) throws IOException {
+	static SectionNode load(final String name, final String comment, final SectionNode parent, final ConfigReader r) throws IOException {
 		parent.config.level++;
 		final SectionNode node = new SectionNode(name, comment, parent, r.getLineNum()).load_i(r);
 		SkriptLogger.setNode(parent);
@@ -259,7 +257,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 		return node;
 	}
 	
-	private final static String readableWhitespace(final String s) {
+	private static String readableWhitespace(final String s) {
 		if (s.matches(" +"))
 			return s.length() + " space" + (s.length() == 1 ? "" : "s");
 		if (s.matches("\t+"))
@@ -312,7 +310,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 				nodes.add(new VoidNode(value, comment, this, r.getLineNum()));
 				continue;
 			}
-			
+
 //			if (line.startsWith("!") && line.indexOf('[') != -1 && line.endsWith("]")) {
 //				final String option = line.substring(1, line.indexOf('['));
 //				final String value = line.substring(line.indexOf('[') + 1, line.length() - 1);
@@ -340,7 +338,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 			if (value.endsWith(":") && (config.simple
 					|| value.indexOf(config.separator) == -1
 					|| config.separator.endsWith(":") && value.indexOf(config.separator) == value.length() - config.separator.length()
-					) && !fullLine.matches("([^#]|##)*#-#(\\s.*)?")) {
+			) && !fullLine.matches("([^#]|##)*#-#(\\s.*)?")) {
 				nodes.add(SectionNode.load("" + value.substring(0, value.length() - 1), comment, this, r));
 				continue;
 			}
@@ -350,7 +348,6 @@ public class SectionNode extends Node implements Iterable<Node> {
 			} else {
 				nodes.add(getEntry(value, comment, r.getLineNum(), config.separator));
 			}
-			
 		}
 		
 		SkriptLogger.setNode(parent);
@@ -373,8 +370,9 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * Converts all SimpleNodes in this section to EntryNodes.
-	 * 
-	 * @param levels Amount of levels to go down, e.g. 0 to only convert direct subnodes of this section or -1 for all subnodes including subnodes of subnodes etc.
+	 *
+	 * @param levels Amount of levels to go down, e.g. 0 to only convert direct subnodes of this section or -1 for all
+	 *               subnodes including subnodes of subnodes etc.
 	 */
 	public void convertToEntries(final int levels) {
 		convertToEntries(levels, config.separator);
@@ -382,8 +380,8 @@ public class SectionNode extends Node implements Iterable<Node> {
 	
 	/**
 	 * REMIND breaks saving - separator argument can be different from config.sepator
-	 * 
-	 * @param levels Maximum depth of recursion, <tt>-1</tt> for no limit.
+	 *
+	 * @param levels    Maximum depth of recursion, <tt>-1</tt> for no limit.
 	 * @param separator Some separator, e.g. ":" or "=".
 	 */
 	public void convertToEntries(final int levels, final String separator) {
@@ -475,5 +473,4 @@ public class SectionNode extends Node implements Iterable<Node> {
 		}
 		return r;
 	}
-	
 }

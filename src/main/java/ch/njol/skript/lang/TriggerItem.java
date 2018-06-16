@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -29,7 +28,7 @@ import ch.njol.util.StringUtils;
 
 /**
  * Represents a trigger item, i.e. a trigger section, a condition or an effect.
- * 
+ *
  * @author Peter Güttinger
  * @see TriggerSection
  * @see Trigger
@@ -42,7 +41,8 @@ public abstract class TriggerItem implements Debuggable {
 	@Nullable
 	private TriggerItem next = null;
 	
-	protected TriggerItem() {}
+	protected TriggerItem() {
+	}
 	
 	protected TriggerItem(final TriggerSection parent) {
 		this.parent = parent;
@@ -51,8 +51,9 @@ public abstract class TriggerItem implements Debuggable {
 	/**
 	 * Executes this item and returns the next item to run.
 	 * <p>
-	 * Overriding classes must call {@link #debug(Event, boolean)}. If this method is overridden, {@link #run(Event)} is not used anymore and can be ignored.
-	 * 
+	 * Overriding classes must call {@link #debug(Event, boolean)}. If this method is overridden, {@link #run(Event)} is
+	 * not used anymore and can be ignored.
+	 *
 	 * @param e
 	 * @return The next item to run or null to stop execution
 	 */
@@ -70,7 +71,7 @@ public abstract class TriggerItem implements Debuggable {
 	
 	/**
 	 * Executes this item.
-	 * 
+	 *
 	 * @param e
 	 * @return True if the next item should be run, or false for the item following this item's parent.
 	 */
@@ -81,7 +82,7 @@ public abstract class TriggerItem implements Debuggable {
 	 * @param e
 	 * @return false iff an exception occurred
 	 */
-	public final static boolean walk(final TriggerItem start, final Event e) {
+	public static boolean walk(final TriggerItem start, final Event e) {
 		assert start != null && e != null;
 		TriggerItem i = start;
 		try {
@@ -144,7 +145,8 @@ public abstract class TriggerItem implements Debuggable {
 	}
 	
 	/**
-	 * @return The trigger this item belongs to, or null if this is a stand-alone item (e.g. the effect of an effect command)
+	 * @return The trigger this item belongs to, or null if this is a stand-alone item (e.g. the effect of an effect
+	 * command)
 	 */
 	@Nullable
 	public final Trigger getTrigger() {
@@ -165,5 +167,4 @@ public abstract class TriggerItem implements Debuggable {
 	public TriggerItem getNext() {
 		return next;
 	}
-	
 }

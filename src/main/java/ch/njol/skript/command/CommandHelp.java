@@ -1,26 +1,25 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.command;
 
-import static org.bukkit.ChatColor.*;
-
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RESET;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -50,7 +49,7 @@ public class CommandHelp {
 	@Nullable
 	private String langNode = null;
 	
-	private final LinkedHashMap<String, Object> arguments = new LinkedHashMap<String, Object>();
+	private final LinkedHashMap<String, Object> arguments = new LinkedHashMap<>();
 	
 	@Nullable
 	private Message wildcardArg = null;
@@ -145,5 +144,4 @@ public class CommandHelp {
 	public String toString() {
 		return "" + description;
 	}
-	
 }

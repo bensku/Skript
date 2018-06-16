@@ -1,34 +1,33 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
-
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
-	
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private final OutputStream out;
 	
@@ -69,7 +68,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 		} else {
 			if (nextShortStringID < 0)
 				throw new YggdrasilException("Too many field names/class IDs (max: " + Integer.MAX_VALUE + ")");
-			final byte[] d = s.getBytes(UTF_8);
+			final byte[] d = s.getBytes(StandardCharsets.UTF_8);
 			if (d.length >= (T_REFERENCE.tag & 0xFF))
 				throw new YggdrasilException("Field name or Class ID too long: " + s);
 			write(d.length);
@@ -182,7 +181,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writeStringValue(final String s) throws IOException {
-		final byte[] d = s.getBytes(UTF_8);
+		final byte[] d = s.getBytes(StandardCharsets.UTF_8);
 		writeUnsignedInt(d.length);
 		out.write(d);
 	}
@@ -200,7 +199,8 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	}
 	
 	@Override
-	protected void writeArrayEnd() throws IOException {}
+	protected void writeArrayEnd() throws IOException {
+	}
 	
 	// Class
 	
@@ -279,7 +279,8 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	}
 	
 	@Override
-	protected void writeObjectEnd() throws IOException {}
+	protected void writeObjectEnd() throws IOException {
+	}
 	
 	// Reference
 	
@@ -299,5 +300,4 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	public void close() throws IOException {
 		out.close();
 	}
-	
 }

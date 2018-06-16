@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions.events;
 
@@ -51,6 +50,7 @@ import ch.njol.util.Checker;
  * @author Peter Güttinger
  */
 public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
+	
 	static {
 		Skript.registerEvent("Region Enter/Leave", EvtRegionBorder.class, RegionBorderEvent.class,
 				"(0¦enter[ing]|1¦leav(e|ing)|1¦exit[ing]) [of] ([a] region|[[the] region] %-regions%)",
@@ -127,7 +127,7 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		});
 	}
 	
-	final static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
+	static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
 		final Player p = me.getPlayer();
 		assert p != null;
 		final RegionBorderEvent e = new RegionBorderEvent(r, p, enter);
@@ -170,13 +170,15 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 	
 	private static boolean registered = false;
 	
-	private final static void register() {
+	private static void register() {
 		if (registered)
 			return;
-		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
-		Bukkit.getPluginManager().registerEvent(PlayerTeleportEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
-		Bukkit.getPluginManager().registerEvent(PlayerPortalEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
+		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {
+		}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
+		Bukkit.getPluginManager().registerEvent(PlayerTeleportEvent.class, new Listener() {
+		}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
+		Bukkit.getPluginManager().registerEvent(PlayerPortalEvent.class, new Listener() {
+		}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);
 		registered = true;
 	}
-	
 }

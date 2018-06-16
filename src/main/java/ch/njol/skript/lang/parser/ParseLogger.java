@@ -1,26 +1,24 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.parser;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -37,10 +35,10 @@ import ch.njol.skript.log.ParseLogHandler;
 public interface ParseLogger {
 	
 	/**
-	 * Submits a parse log handler. Errors will be displayed
-	 * when enabling scripts, which allows them to be ordered.
-	 * 
+	 * Submits a parse log handler. Errors will be displayed when enabling scripts, which allows them to be ordered.
+	 *
 	 * It is not recommended to write anything to log after submitting it.
+	 *
 	 * @param log Log handler.
 	 */
 	void submitErrorLog(ParseLogHandler log);
@@ -68,12 +66,14 @@ public interface ParseLogger {
 	
 	/**
 	 * Sets node for this parser instance.
+	 *
 	 * @param node Node.
 	 */
 	void setNode(@Nullable Node node);
 	
 	/**
 	 * Gets node from this parser instance.
+	 *
 	 * @return Node or null, if there is no node.
 	 */
 	@Nullable

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
@@ -39,7 +38,6 @@ import ch.njol.skript.effects.EffSpawn;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.util.Checker;
 
 @SuppressWarnings("deprecation")
@@ -95,13 +93,13 @@ public class EvtItem extends SkriptEvent {
 		Skript.registerEvent("Item Despawn", EvtItem.class, ItemDespawnEvent.class, "(item[ ][stack]|[item] %-itemtypes%) despawn[ing]", "[item[ ][stack]] despawn[ing] [[of] %-itemtypes%]")
 				.description("Called when an item is about to be despawned from the world, usually 5 minutes after it was dropped.")
 				.examples("on item despawn of diamond:",
-					 	"	send \"Not my precious!\"",
-					 	"	cancel event")
+						"	send \"Not my precious!\"",
+						"	cancel event")
 				.since("2.2-dev35");
 		Skript.registerEvent("Item Merge", EvtItem.class, ItemMergeEvent.class, "(item[ ][stack]|[item] %-itemtypes%) merg(e|ing)", "item[ ][stack] merg(e|ing) [[of] %-itemtypes%]")
 				.description("Called when dropped items merge into a single stack.")
 				.examples("on item merge of gold blocks:",
-					 	"	cancel event")
+						"	cancel event")
 				.since("2.2-dev35");
 	}
 	
@@ -161,5 +159,4 @@ public class EvtItem extends SkriptEvent {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "dispense/spawn/drop/craft/pickup/consume/break/despawn/merge" + (types == null ? "" : " of " + types);
 	}
-	
 }

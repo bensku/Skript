@@ -1,25 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
-
-import java.util.Collection;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +36,6 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
@@ -57,7 +53,8 @@ import ch.njol.skript.util.slot.Slot;
 @SuppressWarnings("rawtypes")
 public class DefaultConverters {
 	
-	public DefaultConverters() {}
+	public DefaultConverters() {
+	}
 	
 	static {
 		
@@ -221,7 +218,7 @@ public class DefaultConverters {
 				return new Experience(e.getExperience());
 			}
 		});
-		
+
 //		// Item - ItemStack
 //		Converters.registerConverter(Item.class, ItemStack.class, new Converter<Item, ItemStack>() {
 //			@Override
@@ -273,7 +270,7 @@ public class DefaultConverters {
 //				return null;
 //			}
 //		});
-		
+
 //		// World - Time
 //		Skript.registerConverter(World.class, Time.class, new Converter<World, Time>() {
 //			@Override
@@ -291,7 +288,7 @@ public class DefaultConverters {
 				return new EnchantmentType(e, -1);
 			}
 		});
-		
+
 //		// Entity - String (UUID) // Very slow, thus disabled for now
 //		Converters.registerConverter(String.class, Entity.class, new Converter<String, Entity>() {
 //
@@ -317,7 +314,7 @@ public class DefaultConverters {
 //				return new Vector(number.doubleValue(), number.doubleValue(), number.doubleValue());
 //			}
 //		});
-
+		
 		// Vector - Direction
 		Converters.registerConverter(Vector.class, Direction.class, new Converter<Vector, Direction>() {
 			@Override
@@ -325,6 +322,6 @@ public class DefaultConverters {
 			public Direction convert(Vector vector) {
 				return new Direction(vector);
 			}
-});
+		});
 	}
 }

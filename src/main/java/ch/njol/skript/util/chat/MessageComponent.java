@@ -1,45 +1,34 @@
 /*
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
-
 package ch.njol.skript.util.chat;
 
 import java.lang.reflect.Type;
 
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.VariableString;
-
 /**
- * Component for chat messages. This can be serialized with GSON and then
- * sent to client.
+ * Component for chat messages. This can be serialized with GSON and then sent to client.
  */
 public class MessageComponent {
 	
@@ -71,19 +60,18 @@ public class MessageComponent {
 	public boolean strikethrough = false;
 	
 	/**
-	 * Makes text obfuscated, i.e. each tick the client will scramble
-	 * all letters with random ones.
+	 * Makes text obfuscated, i.e. each tick the client will scramble all letters with random ones.
 	 */
 	public boolean obfuscated = false;
 	
 	/**
 	 * Color of this text. Defaults to reseting it.
 	 */
-	public @Nullable String color;
+	public @Nullable
+	String color;
 	
 	/**
-	 * Value of this, if present, will appended on what player is currently
-	 * writing to chat.
+	 * Value of this, if present, will appended on what player is currently writing to chat.
 	 */
 	@Nullable
 	public String insertion;
@@ -98,7 +86,7 @@ public class MessageComponent {
 			this.value = value;
 		}
 		
-		public static enum Action  {
+		public static enum Action {
 			
 			open_url,
 			
@@ -155,9 +143,10 @@ public class MessageComponent {
 	public HoverEvent hoverEvent;
 	
 	public static class BooleanSerializer implements JsonSerializer<Boolean> {
-
+		
 		@Override
-		public @Nullable JsonElement serialize(@Nullable Boolean src, @Nullable Type typeOfSrc, @Nullable JsonSerializationContext context) {
+		public @Nullable
+		JsonElement serialize(@Nullable Boolean src, @Nullable Type typeOfSrc, @Nullable JsonSerializationContext context) {
 			return src ? new JsonPrimitive(true) : null;
 		}
 	}

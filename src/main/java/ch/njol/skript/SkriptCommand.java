@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
 
@@ -61,16 +60,17 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * Copyright 2011-2014 Peter Güttinger
- * 
+ *
  */
 
 /**
  * @author Peter Güttinger
  */
 public class SkriptCommand implements CommandExecutor {
+	
 	private final static String NODE = "skript command";
 	
 	// TODO /skript scripts show/list - lists all enabled and/or disabled scripts in the scripts folder and/or subfolders (maybe add a pattern [using * and **])
@@ -89,10 +89,10 @@ public class SkriptCommand implements CommandExecutor {
 					.add("all")
 					.add("<script>")
 			).add(new CommandHelp("update", Color.DARK_RED)
-					.add("check")
-					.add("changes")
-					.add("download")
-			//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
+							.add("check")
+							.add("changes")
+							.add("download")
+					//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
 //					.add("find", "Find variables")
@@ -106,7 +106,7 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private final static ArgsMessage m_reloading = new ArgsMessage(NODE + ".reload.reloading");
 	
-	private final static void reloading(final CommandSender sender, String what, final Object... args) {
+	private static void reloading(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : Language.format(NODE + ".reload." + what, args);
 		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what)));
 	}
@@ -116,7 +116,7 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private final static ArgsMessage m_changes_title = new ArgsMessage(NODE + ".update.changes.title");
 	
-	private final static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
+	private static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
 			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what))));
@@ -124,17 +124,17 @@ public class SkriptCommand implements CommandExecutor {
 			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors()))));
 	}
 	
-	private final static void info(final CommandSender sender, String what, final Object... args) {
+	private static void info(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.info(sender, StringUtils.fixCapitalization(what));
 	}
 	
-	private final static void message(final CommandSender sender, String what, final Object... args) {
+	private static void message(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.message(sender, StringUtils.fixCapitalization(what));
 	}
 	
-	private final static void error(final CommandSender sender, String what, final Object... args) {
+	private static void error(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.error(sender, StringUtils.fixCapitalization(what));
 	}
@@ -378,7 +378,7 @@ public class SkriptCommand implements CommandExecutor {
 	private static File getScriptFromArgs(final CommandSender sender, final String[] args, final int start) {
 		String script = StringUtils.join(args, " ", start, args.length);
 		File f = getScriptFromName(script);
-		if (f == null){
+		if (f == null) {
 			Skript.error(sender, (script.endsWith("/") || script.endsWith("\\") ? m_invalid_folder : m_invalid_script).toString(script));
 			return null;
 		}
@@ -386,7 +386,7 @@ public class SkriptCommand implements CommandExecutor {
 	}
 	
 	@Nullable
-	public static File getScriptFromName(String script){
+	public static File getScriptFromName(String script) {
 		final boolean isFolder = script.endsWith("/") || script.endsWith("\\");
 		if (isFolder) {
 			script = script.replace('/', File.separatorChar).replace('\\', File.separatorChar);
@@ -405,7 +405,7 @@ public class SkriptCommand implements CommandExecutor {
 		return f;
 	}
 	
-	private final static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
+	private static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
 		return FileUtils.renameAll(folder, new Converter<String, String>() {
 			@Override
 			@Nullable
@@ -416,5 +416,4 @@ public class SkriptCommand implements CommandExecutor {
 			}
 		});
 	}
-	
 }

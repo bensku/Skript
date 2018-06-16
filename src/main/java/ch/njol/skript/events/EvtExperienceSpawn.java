@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
@@ -46,6 +45,7 @@ import ch.njol.skript.lang.Trigger;
  * @author Peter Güttinger
  */
 public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
+	
 	static {
 		Skript.registerEvent("Experience Spawn", EvtExperienceSpawn.class, ExperienceSpawnEvent.class, "[e]xp[erience] [orb] spawn", "spawn of [a[n]] [e]xp[erience] [orb]")
 				.description("Called whenever experience is about to spawn. This is a helper event for easily being able to stop xp from spawning, as all you can currently do is cancel the event.",
@@ -87,11 +87,12 @@ public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
 	private static boolean registeredExecutor = false;
 	
 	@SuppressWarnings("unchecked")
-	private final static void registerExecutor() {
+	private static void registerExecutor() {
 		if (registeredExecutor)
 			return;
-		for (final Class<? extends Event> c : new Class[] {BlockExpEvent.class, EntityDeathEvent.class, ExpBottleEvent.class, PlayerFishEvent.class})
-			Bukkit.getPluginManager().registerEvent(c, new Listener() {}, SkriptConfig.defaultEventPriority.value(), executor, Skript.getInstance(), true);
+		for (final Class<? extends Event> c : new Class[]{BlockExpEvent.class, EntityDeathEvent.class, ExpBottleEvent.class, PlayerFishEvent.class})
+			Bukkit.getPluginManager().registerEvent(c, new Listener() {
+			}, SkriptConfig.defaultEventPriority.value(), executor, Skript.getInstance(), true);
 	}
 	
 	private final static EventExecutor executor = new EventExecutor() {
@@ -141,5 +142,4 @@ public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "experience spawn";
 	}
-	
 }

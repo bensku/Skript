@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -30,6 +29,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public class Version implements Serializable, Comparable<Version> {
+	
 	private final static long serialVersionUID = 8687040355286333293L;
 	
 	private final int[] version = new int[3];
@@ -119,7 +119,8 @@ public class Version implements Serializable, Comparable<Version> {
 	}
 	
 	/**
-	 * @return Whether this is a stable version, i.e. a simple version number without any additional details (like alpha/beta/etc.)
+	 * @return Whether this is a stable version, i.e. a simple version number without any additional details (like
+	 * alpha/beta/etc.)
 	 */
 	public boolean isStable() {
 		return postfix == null;
@@ -143,7 +144,7 @@ public class Version implements Serializable, Comparable<Version> {
 		return version[0] + "." + version[1] + (version[2] == 0 ? "" : "." + version[2]) + (pf == null ? "" : pf.startsWith("-") ? pf : " " + pf);
 	}
 	
-	public final static int compare(final String v1, final String v2) {
+	public static int compare(final String v1, final String v2) {
 		return new Version(v1).compareTo(new Version(v2));
 	}
 }

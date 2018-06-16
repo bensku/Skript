@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
 
@@ -35,7 +34,8 @@ import ch.njol.skript.util.Getter;
  */
 public class EventValues {
 	
-	private EventValues() {}
+	private EventValues() {
+	}
 	
 	private final static class EventValueInfo<E extends Event, T> {
 		
@@ -59,11 +59,11 @@ public class EventValues {
 		}
 	}
 	
-	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<EventValueInfo<?, ?>>(30);
-	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<EventValueInfo<?, ?>>();
-	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<EventValueInfo<?, ?>>();
+	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
+	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
+	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
 	
-	private final static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
+	private static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
 		if (time == -1)
 			return pastEventValues;
 		if (time == 0)
@@ -75,13 +75,15 @@ public class EventValues {
 	
 	/**
 	 * Registers an event value.
-	 * 
-	 * @param e the event type
-	 * @param c the type of the default value
-	 * @param g the getter to get the value
-	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
-	 *            <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only register a default and a past state. The future state will
-	 *            default to the default state in this case.
+	 *
+	 * @param e    the event type
+	 * @param c    the type of the default value
+	 * @param g    the getter to get the value
+	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't
+	 *             have distinct states.
+	 *             <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only
+	 *             register a default and a past state. The future state will
+	 *             default to the default state in this case.
 	 */
 	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time) {
 		registerEventValue(e, c, g, time, null, (Class<? extends E>[]) null);
@@ -94,7 +96,7 @@ public class EventValues {
 	
 	/**
 	 * Same as {@link #registerEventValue(Class, Class, Getter, int)}
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param g
@@ -107,11 +109,11 @@ public class EventValues {
 		for (int i = 0; i < eventValues.size(); i++) {
 			final EventValueInfo<?, ?> info = eventValues.get(i);
 			if (info.event != e ? info.event.isAssignableFrom(e) : info.c.isAssignableFrom(c)) {
-				eventValues.add(i, new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+				eventValues.add(i, new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 				return;
 			}
 		}
-		eventValues.add(new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+		eventValues.add(new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 	}
 	
 	@Deprecated
@@ -120,11 +122,12 @@ public class EventValues {
 	}
 	
 	/**
-	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to try and get the desired value).
+	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to
+	 * try and get the desired value).
 	 * <p>
-	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link EventValueExpression#EventValueExpression(Class)} instead of invoking this
-	 * method repeatedly.
-	 * 
+	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link
+	 * EventValueExpression#EventValueExpression(Class)} instead of invoking this method repeatedly.
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -133,8 +136,7 @@ public class EventValues {
 	 */
 	@Nullable
 	public static <T, E extends Event> T getEventValue(final E e, final Class<T> c, final int time) {
-		@SuppressWarnings({"null", "unchecked"})
-		final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
+		@SuppressWarnings({"null", "unchecked"}) final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
 		if (g == null)
 			return null;
 		return g.get(e);
@@ -144,7 +146,7 @@ public class EventValues {
 	 * Returns a getter to get a value from an event.
 	 * <p>
 	 * Can print an error if the event value is blocked for the given event.
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -153,13 +155,13 @@ public class EventValues {
 	 * @see EventValueExpression#EventValueExpression(Class)
 	 */
 	@Nullable
-	public final static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time) {
+	public static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time) {
 		return EventValues.getEventValueGetter(e, c, time, true);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Nullable
-	private final static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time, final boolean allowDefault) {
+	private static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(final Class<E> e, final Class<T> c, final int time, final boolean allowDefault) {
 		final List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
 		boolean b;
 		for (final EventValueInfo<?, ?> ev : eventValues) {
@@ -212,7 +214,7 @@ public class EventValues {
 		return null;
 	}
 	
-	private final static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
+	private static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
 		final Class<? extends Event>[] excl = ev.exculdes;
 		if (excl == null)
 			return true;
@@ -226,7 +228,7 @@ public class EventValues {
 	}
 	
 	@Nullable
-	private final static <E extends Event, F, T> Getter<? extends T, ? super E> getConvertedGetter(final EventValueInfo<E, F> i, final Class<T> to, final boolean checkInstanceOf) {
+	private static <E extends Event, F, T> Getter<? extends T, ? super E> getConvertedGetter(final EventValueInfo<E, F> i, final Class<T> to, final boolean checkInstanceOf) {
 		final Converter<? super F, ? extends T> c = Converters.getConverter(i.c, to);
 		if (c == null)
 			return null;
@@ -244,8 +246,7 @@ public class EventValues {
 		};
 	}
 	
-	public final static boolean doesEventValueHaveTimeStates(final Class<? extends Event> e, final Class<?> c) {
+	public static boolean doesEventValueHaveTimeStates(final Class<? extends Event> e, final Class<?> c) {
 		return getEventValueGetter(e, c, -1, false) != null || getEventValueGetter(e, c, 1, false) != null;
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
 
@@ -48,7 +47,7 @@ public abstract class VariablesStorage implements Closeable {
 	
 	private final static int QUEUE_SIZE = 1000, FIRST_WARNING = 300;
 	
-	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<SerializedVariable>(QUEUE_SIZE);
+	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<>(QUEUE_SIZE);
 	
 	protected volatile boolean closed = false;
 	
@@ -79,7 +78,8 @@ public abstract class VariablesStorage implements Closeable {
 							save(var.name, d.type, d.data);
 						else
 							save(var.name, null, null);
-					} catch (final InterruptedException e) {}
+					} catch (final InterruptedException e) {
+					}
 				}
 			}
 		}, "Skript variable save thread for database '" + name + "'");
@@ -173,14 +173,16 @@ public abstract class VariablesStorage implements Closeable {
 	
 	/**
 	 * Loads variables stored here.
-	 * 
-	 * @return Whether the database could be loaded successfully, i.e. whether the config is correct and all variables could be loaded
+	 *
+	 * @return Whether the database could be loaded successfully, i.e. whether the config is correct and all variables
+	 * could be loaded
 	 */
 	protected abstract boolean load_i(SectionNode n);
 	
 	/**
-	 * Called after all storages have been loaded, and variables have been redistributed if settings have changed. This should commit the first transaction (which is not empty if
-	 * variables have been moved from another database to this one or vice versa), and start repeating transactions if applicable.
+	 * Called after all storages have been loaded, and variables have been redistributed if settings have changed. This
+	 * should commit the first transaction (which is not empty if variables have been moved from another database to
+	 * this one or vice versa), and start repeating transactions if applicable.
 	 */
 	protected abstract void allLoaded();
 	
@@ -195,8 +197,9 @@ public abstract class VariablesStorage implements Closeable {
 	
 	/**
 	 * (Re)connects to the database (not called on the first connect - do this in {@link #load_i(SectionNode)}).
-	 * 
-	 * @return Whether the connection could be re-established. An error should be printed by this method prior to returning false.
+	 *
+	 * @return Whether the connection could be re-established. An error should be printed by this method prior to
+	 * returning false.
 	 */
 	protected abstract boolean connect();
 	
@@ -258,41 +261,45 @@ public abstract class VariablesStorage implements Closeable {
 					// REMIND add repetitive error and/or stop saving variables altogether?
 					changesQueue.put(var);
 					break;
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException e) {
+				}
 			}
 		}
 	}
 	
 	/**
-	 * Called when Skript gets disabled. The default implementation will wait for all variables to be saved before setting {@link #closed} to true and stopping the write thread,
-	 * thus <tt>super.close()</tt> must be called if this method is overridden!
+	 * Called when Skript gets disabled. The default implementation will wait for all variables to be saved before
+	 * setting {@link #closed} to true and stopping the write thread, thus <tt>super.close()</tt> must be called if this
+	 * method is overridden!
 	 */
 	@Override
 	public void close() {
 		while (changesQueue.size() > 0) {
 			try {
 				Thread.sleep(10);
-			} catch (final InterruptedException e) {}
+			} catch (final InterruptedException e) {
+			}
 		}
 		closed = true;
 		writeThread.interrupt();
 	}
 	
 	/**
-	 * Clears the queue of unsaved variables. Only used if all variables are saved immediately after calling this method.
+	 * Clears the queue of unsaved variables. Only used if all variables are saved immediately after calling this
+	 * method.
 	 */
 	protected void clearChangesQueue() {
 		changesQueue.clear();
 	}
 	
 	/**
-	 * Saves a variable. This is called from the main thread while variables are transferred between databases, and from the {@link #writeThread} afterwards.
-	 * 
+	 * Saves a variable. This is called from the main thread while variables are transferred between databases, and from
+	 * the {@link #writeThread} afterwards.
+	 *
 	 * @param name
 	 * @param type
 	 * @param value
 	 * @return Whether the variable was saved
 	 */
 	protected abstract boolean save(String name, @Nullable String type, @Nullable byte[] value);
-	
 }

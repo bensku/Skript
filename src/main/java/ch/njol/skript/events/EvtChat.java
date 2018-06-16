@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
@@ -46,16 +45,17 @@ import ch.njol.skript.util.Task;
  */
 @SuppressWarnings("deprecation")
 public class EvtChat extends SelfRegisteringSkriptEvent {
+	
 	static {
 		Skript.registerEvent("Chat", EvtChat.class, PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class, "chat")
 				.description("Called whenever a player chats. Use <a href='../expressions.html#ExprChatFormat'>chat format</a> to change message format, use <a href='../expressions.html#ExprChatRecipients'>chat recipients</a> to edit chat recipients.")
 				.examples("on chat:",
-					 	"	if player has permission \"owner\":",
-					 	"		set chat format to \"<red>[player]<light gray>: <light red>[message]\"",
-					 	"	else if player has permission \"admin\":",
-					 	"		set chat format to \"<light red>[player]<light gray>: <orange>[message]\"",
-					 	"	else: #default message format",
-					 	"		set chat format to \"<orange>[player]<light gray>: <white>[message]\"")
+						"	if player has permission \"owner\":",
+						"		set chat format to \"<red>[player]<light gray>: <light red>[message]\"",
+						"	else if player has permission \"admin\":",
+						"		set chat format to \"<light red>[player]<light gray>: <orange>[message]\"",
+						"	else: #default message format",
+						"		set chat format to \"<orange>[player]<light gray>: <white>[message]\"")
 				.since("1.4.1");
 	}
 	
@@ -124,5 +124,4 @@ public class EvtChat extends SelfRegisteringSkriptEvent {
 	public void unregisterAll() {
 		triggers.clear();
 	}
-	
 }

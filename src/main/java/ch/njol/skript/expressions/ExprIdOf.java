@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -53,6 +52,7 @@ import ch.njol.util.coll.iterator.SingleItemIterator;
 @Examples({"message \"the ID of %type of the clicked block% is %id of the clicked block%.\""})
 @Since("1.0")
 public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
+	
 	static {
 		Skript.registerExpression(ExprIdOf.class, Integer.class, ExpressionType.PROPERTY, "[the] id(1¦s|) of %itemtype%", "%itemtype%'[s] id(1¦s|)");
 	}
@@ -80,7 +80,7 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 			final ItemType t = getExpr().getSingle(e);
 			if (t == null)
 				return new Integer[0];
-			return new Integer[] {t.getTypes().get(0).getId()};
+			return new Integer[]{t.getTypes().get(0).getId()};
 		}
 		final ArrayList<Integer> r = new ArrayList<>();
 		for (final ItemType t : source) {
@@ -110,7 +110,7 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 			case ADD:
 			case REMOVE:
 			case SET:
-				return new Class[] {Number.class};
+				return new Class[]{Number.class};
 			case RESET:
 			case DELETE:
 			case REMOVE_ALL:
@@ -152,9 +152,9 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 		if (m != null) {
 			is.setType(m);
 			if (changeItemStack)
-				getExpr().change(e, new ItemStack[] {is}, ChangeMode.SET);
+				getExpr().change(e, new ItemStack[]{is}, ChangeMode.SET);
 			else
-				getExpr().change(e, new ItemType[] {new ItemType(is)}, ChangeMode.SET);
+				getExpr().change(e, new ItemType[]{new ItemType(is)}, ChangeMode.SET);
 		}
 	}
 	
@@ -207,5 +207,4 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 	public boolean isLoopOf(final String s) {
 		return s.equalsIgnoreCase("id");
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -37,7 +36,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
  * @edited by Mirreducki. Increased maximum timespan.
  */
 public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { // REMIND unit
-
+	
 	private final static Noun m_tick = new Noun("time.tick");
 	private final static Noun m_second = new Noun("time.second");
 	private final static Noun m_minute = new Noun("time.minute");
@@ -46,6 +45,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	final static Noun[] names = {m_tick, m_second, m_minute, m_hour, m_day};
 	final static long[] times = {50L, 1000L, 1000L * 60L, 1000L * 60L * 60L, 1000L * 60L * 60L * 24L};
 	final static HashMap<String, Long> parseValues = new HashMap<>();
+	
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -59,7 +59,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	@Nullable
-	public final static Timespan parse(final String s) {
+	public static Timespan parse(final String s) {
 		if (s.isEmpty())
 			return null;
 		long t = 0;
@@ -71,7 +71,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 			
 			final int offset = ss.length == 3 && !s.contains(".") || ss.length == 4 ? 0 : 1;
 			for (int i = 0; i < ss.length; i++) {
-				t += times[offset + i] * Utils.parseLong("" + ss[i]);	
+				t += times[offset + i] * Utils.parseLong("" + ss[i]);
 			}
 		} else {
 			final String[] subs = s.toLowerCase().split("\\s+");
@@ -121,7 +121,6 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 				t += Math.round(amount * d);
 				
 				isMinecraftTimeSet = true;
-				
 			}
 		}
 		return new Timespan(t);
@@ -140,8 +139,8 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	/**
-	 * @deprecated Use fromTicks_i(long ticks) instead. Since this method limits timespan to 50 * Integer.MAX_VALUE.
 	 * @addon I only keep this to allow for older addons to still work. / Mirre
+	 * @deprecated Use fromTicks_i(long ticks) instead. Since this method limits timespan to 50 * Integer.MAX_VALUE.
 	 */
 	@Deprecated
 	public static Timespan fromTicks(final int ticks) {
@@ -161,9 +160,9 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	/**
-	 * @deprecated Use getTicks_i() instead. Since this method limits timespan to Integer.MAX_VALUE.
 	 * @addon I only keep this to allow for older addons to still work. / Mirre
 	 * @Well if need the ticks because of a method that takes a int input it doesn't really matter.
+	 * @deprecated Use getTicks_i() instead. Since this method limits timespan to Integer.MAX_VALUE.
 	 */
 	@Deprecated
 	public int getTicks() {
@@ -180,8 +179,8 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	@SuppressWarnings("unchecked")
-	final static NonNullPair<Noun, Long>[] simpleValues = new NonNullPair[] {
-			new NonNullPair<>(m_day,  1000L * 60 * 60 * 24),
+	final static NonNullPair<Noun, Long>[] simpleValues = new NonNullPair[]{
+			new NonNullPair<>(m_day, 1000L * 60 * 60 * 24),
 			new NonNullPair<>(m_hour, 1000L * 60 * 60),
 			new NonNullPair<>(m_minute, 1000L * 60),
 			new NonNullPair<>(m_second, 1000L)
@@ -220,7 +219,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (millis/Integer.MAX_VALUE);
+		result = prime * result + (int) (millis / Integer.MAX_VALUE);
 		return result;
 	}
 	
@@ -237,5 +236,4 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 			return false;
 		return true;
 	}
-	
 }

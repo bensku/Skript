@@ -1,25 +1,22 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
-
-import java.util.Arrays;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -39,9 +36,9 @@ public class EvtGrow extends SkriptEvent {
 	
 	/**
 	 * Growth event restriction.
-	 * 
+	 *
 	 * ANY means any grow event goes.
-	 * 
+	 *
 	 * Structure/block restrict for structure/block grow events only.
 	 */
 	public static final int ANY = 0, STRUCTURE = 1, BLOCK = 2;
@@ -83,7 +80,7 @@ public class EvtGrow extends SkriptEvent {
 	
 	@Override
 	public boolean check(final Event e) {
-		if (evtType == STRUCTURE  && types != null && e instanceof StructureGrowEvent) {
+		if (evtType == STRUCTURE && types != null && e instanceof StructureGrowEvent) {
 			return types.check(e, new Checker<StructureType>() {
 				@SuppressWarnings("null")
 				@Override
@@ -102,5 +99,4 @@ public class EvtGrow extends SkriptEvent {
 		}
 		return true;
 	}
-	
 }

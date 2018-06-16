@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.function;
 
@@ -34,11 +33,11 @@ import ch.njol.util.coll.CollectionUtils;
 public abstract class Function<T> {
 	
 	/**
-	 * Execute functions even when some parameters are not present.
-	 * Field is updated by SkriptConfig in case of reloads.
+	 * Execute functions even when some parameters are not present. Field is updated by SkriptConfig in case of
+	 * reloads.
 	 */
 	public static boolean executeWithNulls = SkriptConfig.executeFunctionsWithMissingParams.value();
-
+	
 	final String name;
 	
 	final Parameter<?>[] parameters;
@@ -92,7 +91,8 @@ public abstract class Function<T> {
 	// FIXME what happens with a delay in a function?
 	
 	/**
-	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()} elements.
+	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()}
+	 *               elements.
 	 * @return The result of the function
 	 */
 	@SuppressWarnings("null")
@@ -123,34 +123,32 @@ public abstract class Function<T> {
 	
 	/**
 	 * @param e
-	 * @param params An array containing as many arrays as this function has parameters. The contained arrays are neither null nor empty, and are of type Object[] (i.e. not of the
-	 *            actual parameters' types).
+	 * @param params An array containing as many arrays as this function has parameters. The contained arrays are
+	 *               neither null nor empty, and are of type Object[] (i.e. not of the actual parameters' types).
 	 * @return Whatever this function is supposed to return. May be null or empty, but must not contain null elements.
 	 */
 	@Nullable
 	public abstract T[] execute(FunctionEvent<?> e, final Object[][] params);
-
+	
 	/**
-	 * Resets the return value of the {@code Function}.
-	 * Should be called right after execution.
+	 * Resets the return value of the {@code Function}. Should be called right after execution.
 	 *
 	 * @return Whether or not the return value was successfully reset
 	 */
 	public abstract boolean resetReturnValue();
-
+	
 	@Override
 	public String toString() {
 		return "function " + name;
 	}
 	
 	/**
-	 * Generates a signature for this function. Should only be used to validate
-	 * (Java) function references.
+	 * Generates a signature for this function. Should only be used to validate (Java) function references.
+	 *
 	 * @return Signature.
 	 */
 	@SuppressWarnings("null")
 	public Signature<T> getSignature() {
 		return new Signature<>("unknown", name, Arrays.asList(parameters), returnType, null, single);
 	}
-	
 }

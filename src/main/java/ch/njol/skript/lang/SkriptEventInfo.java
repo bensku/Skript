@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -46,10 +45,11 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	private String[] requiredPlugins;
 	
 	/**
-	 * @param name Capitalised name of the event without leading "On" which is added automatically (Start the name with an asterisk to prevent this).
+	 * @param name     Capitalised name of the event without leading "On" which is added automatically (Start the name
+	 *                 with an asterisk to prevent this).
 	 * @param patterns
-	 * @param c The SkriptEvent's class
-	 * @param events The Bukkit-Events this SkriptEvent listens to
+	 * @param c        The SkriptEvent's class
+	 * @param events   The Bukkit-Events this SkriptEvent listens to
 	 */
 	public SkriptEventInfo(String name, final String[] patterns, final Class<E> c, final Class<? extends Event>[] events) {
 		super(patterns, c);
@@ -89,7 +89,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param description
 	 * @return This SkriptEventInfo object
 	 */
@@ -101,7 +101,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param examples
 	 * @return This SkriptEventInfo object
 	 */
@@ -113,7 +113,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param since
 	 * @return This SkriptEventInfo object
 	 */
@@ -122,7 +122,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 		this.since = since;
 		return this;
 	}
-
+	
 	/**
 	 * A non critical ID remapping for syntax elements register using the a class multiple times.
 	 *
@@ -136,7 +136,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 		this.documentationID = id;
 		return this;
 	}
-
+	
 	/**
 	 * Other plugin dependencies for a syntax element
 	 *
@@ -173,12 +173,12 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	public String getSince() {
 		return since;
 	}
-
+	
 	@Nullable
 	public String[] getRequiredPlugins() {
 		return requiredPlugins;
 	}
-
+	
 	@Nullable
 	public String getDocumentationID() {
 		return documentationID;

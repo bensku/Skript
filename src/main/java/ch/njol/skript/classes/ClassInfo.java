@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes;
 
@@ -37,8 +36,8 @@ import ch.njol.skript.localization.Noun;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * @author Peter Güttinger
  * @param <T> The class this info is for
+ * @author Peter Güttinger
  */
 @SuppressFBWarnings("DM_STRING_VOID_CTOR")
 public class ClassInfo<T> implements Debuggable {
@@ -81,7 +80,7 @@ public class ClassInfo<T> implements Debuggable {
 	private String since = null;
 	
 	/**
-	 * @param c The class
+	 * @param c        The class
 	 * @param codeName The name used in patterns
 	 */
 	public ClassInfo(final Class<T> c, final String codeName) {
@@ -92,7 +91,7 @@ public class ClassInfo<T> implements Debuggable {
 		name = new Noun("types." + codeName);
 	}
 	
-	public final static boolean isVaildCodeName(final String name) {
+	public static boolean isVaildCodeName(final String name) {
 		return name.matches("[a-z0-9]+");
 	}
 	
@@ -108,8 +107,9 @@ public class ClassInfo<T> implements Debuggable {
 	}
 	
 	/**
-	 * @param userInputPatterns <u>Regex</u> patterns to match this class, e.g. in the expressions loop-[type], random [type] out of ..., or as command arguments. These patterns
-	 *            must be english and match singular and plural.
+	 * @param userInputPatterns <u>Regex</u> patterns to match this class, e.g. in the expressions loop-[type], random
+	 *                          [type] out of ..., or as command arguments. These patterns
+	 *                          must be english and match singular and plural.
 	 * @throws PatternSyntaxException If any of the patterns' syntaxes is invalid
 	 */
 	public ClassInfo<T> user(final String... userInputPatterns) throws PatternSyntaxException {
@@ -177,7 +177,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param name
 	 * @return This ClassInfo object
 	 */
@@ -189,7 +189,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param description
 	 * @return This ClassInfo object
 	 */
@@ -201,7 +201,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param usage
 	 * @return This ClassInfo object
 	 */
@@ -213,7 +213,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param examples
 	 * @return This ClassInfo object
 	 */
@@ -225,7 +225,7 @@ public class ClassInfo<T> implements Debuggable {
 	
 	/**
 	 * Only used for Skript's documentation.
-	 * 
+	 *
 	 * @param since
 	 * @return This ClassInfo object
 	 */
@@ -283,7 +283,7 @@ public class ClassInfo<T> implements Debuggable {
 	public Arithmetic<? super T, ?> getMath() {
 		return math;
 	}
-
+	
 	@Nullable
 	public <R> Arithmetic<T, R> getRelativeMath() {
 		return (Arithmetic<T, R>) math;
@@ -326,13 +326,14 @@ public class ClassInfo<T> implements Debuggable {
 	private final Set<String> after = new HashSet<>();
 	
 	/**
-	 * Sets one or more classes that this class should occur before in the class info list. This only affects the order in which classes are parsed if it's unknown of which type
-	 * the parsed string is.
+	 * Sets one or more classes that this class should occur before in the class info list. This only affects the order
+	 * in which classes are parsed if it's unknown of which type the parsed string is.
 	 * <p>
-	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in {@link #after(String...)}.
+	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in
+	 * {@link #after(String...)}.
 	 * <p>
 	 * This list can safely contain classes that may not exist.
-	 * 
+	 *
 	 * @param before
 	 * @return this ClassInfo
 	 */
@@ -343,13 +344,14 @@ public class ClassInfo<T> implements Debuggable {
 	}
 	
 	/**
-	 * Sets one or more classes that this class should occur after in the class info list. This only affects the order in which classes are parsed if it's unknown of which type
-	 * the parsed string is.
+	 * Sets one or more classes that this class should occur after in the class info list. This only affects the order
+	 * in which classes are parsed if it's unknown of which type the parsed string is.
 	 * <p>
-	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in {@link #before(String...)}.
+	 * Please note that subclasses will always be registered before superclasses, no matter what is defined here or in
+	 * {@link #before(String...)}.
 	 * <p>
 	 * This list can safely contain classes that may not exist.
-	 * 
+	 *
 	 * @param after
 	 * @return this ClassInfo
 	 */
@@ -392,5 +394,4 @@ public class ClassInfo<T> implements Debuggable {
 			return codeName + " (" + c.getCanonicalName() + ")";
 		return getName().getSingular();
 	}
-	
 }

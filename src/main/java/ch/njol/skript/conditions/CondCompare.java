@@ -1,27 +1,23 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
 
-import java.util.Arrays;
-
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -32,12 +28,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
-import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -64,7 +57,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class CondCompare extends Condition {
 	
-	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][] {
+	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][]{
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above)|\\>) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\>=) %objects%", Relation.GREATER_OR_EQUAL},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((less|smaller) than|below)|\\<) %objects%", Relation.SMALLER},
@@ -137,8 +130,7 @@ public class CondCompare extends Condition {
 				return false;
 			}
 		}
-		@SuppressWarnings("rawtypes")
-		final Comparator comp = this.comp;
+		@SuppressWarnings("rawtypes") final Comparator comp = this.comp;
 		if (comp != null) {
 			if (third == null) {
 				if (!relation.isEqualOrInverse() && !comp.supportsOrdering()) {
@@ -156,7 +148,7 @@ public class CondCompare extends Condition {
 		return true;
 	}
 	
-	public final static String f(final Expression<?> e) {
+	public static String f(final Expression<?> e) {
 		if (e.getReturnType() == Object.class)
 			return e.toString(null, false);
 		return Classes.getSuperClassInfo(e.getReturnType()).getName().withIndefiniteArticle();
@@ -221,7 +213,7 @@ public class CondCompare extends Condition {
 	/*
 	 * # := condition (e.g. is, is less than, contains, is enchanted with, has permission, etc.)
 	 * !# := not #
-	 * 
+	 *
 	 * a and b # x === a # x && b # x
 	 * a or b # x === a # x || b # x
 	 * a # x and y === a # x && a # y
@@ -230,25 +222,25 @@ public class CondCompare extends Condition {
 	 * a and b # x or y === a # x or y && b # x or y
 	 * a or b # x and y === a # x and y || b # x and y
 	 * a or b # x or y === a # x or y || b # x or y
-	 * 
-	 * 
+	 *
+	 *
 	 * a and b !# x === a !# x && b !# x
 	 * neither a nor b # x === a !# x && b !# x		// nor = and
 	 * a or b !# x === a !# x || b !# x
-	 * 
+	 *
 	 * a !# x and y === a !# x || a !# y							// e.g. "player doesn't have 2 emeralds and 5 gold ingots" == "NOT(player has 2 emeralds and 5 gold ingots)" == "player doesn't have 2 emeralds OR player doesn't have 5 gold ingots"
 	 * a # neither x nor y === a !# x && a !# y		// nor = or 	// e.g. "player has neither 2 emeralds nor 5 gold ingots" == "player doesn't have 2 emeralds AND player doesn't have 5 gold ingots"
 	 * a # neither x nor y === a !# x && a !# y		// nor = or 	// e.g. "player is neither the attacker nor the victim" == "player is not the attacker AND player is not the victim"
 	 * a !# x or y === a !# x && a !# y								// e.g. "player doesn't have 2 emeralds or 5 gold ingots" == "NOT(player has 2 emeralds or 5 gold ingots)" == "player doesn't have 2 emeralds AND player doesn't have 5 gold ingots"
-	 * 
+	 *
 	 * a and b !# x and y === a !# x and y && b !# x and y === (a !# x || a !# y) && (b !# x || b !# y)
 	 * a and b !# x or y === a !# x or y && b !# x or y
 	 * a and b # neither x nor y === a # neither x nor y && b # neither x nor y
-	 * 
+	 *
 	 * a or b !# x and y === a !# x and y || b !# x and y
 	 * a or b !# x or y === a !# x or y || b !# x or y
 	 * a or b # neither x nor y === a # neither x nor y || b # neither x nor y
-	 * 
+	 *
 	 * neither a nor b # x and y === a !# x and y && b !# x and y		// nor = and
 	 * neither a nor b # x or y === a !# x or y && b !# x or y			// nor = and
 	 */
@@ -268,7 +260,7 @@ public class CondCompare extends Condition {
 							public boolean check(final Object o3) {
 								return relation == Relation.NOT_EQUAL ^
 										(Relation.GREATER_OR_EQUAL.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2))
-										&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3)));
+												&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3)));
 							}
 						});
 					}
@@ -289,5 +281,4 @@ public class CondCompare extends Condition {
 			s += " (comparator: " + comp + ")";
 		return s;
 	}
-	
 }

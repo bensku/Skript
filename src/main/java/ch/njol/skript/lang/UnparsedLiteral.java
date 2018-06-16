@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -38,8 +37,9 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.NonNullIterator;
 
 /**
- * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression matches.
- * 
+ * A literal which has yet to be parsed. This is returned if %object(s)% is used within patterns and no expression
+ * matches.
+ *
  * @author Peter Güttinger
  * @see SimpleLiteral
  */
@@ -59,7 +59,7 @@ public class UnparsedLiteral implements Literal<Object> {
 	}
 	
 	/**
-	 * @param data non-null, non-empty & trimmed string
+	 * @param data  non-null, non-empty & trimmed string
 	 * @param error Error to log if this literal cannot be parsed
 	 */
 	public UnparsedLiteral(final String data, final @Nullable LogEntry error) {
@@ -95,7 +95,7 @@ public class UnparsedLiteral implements Literal<Object> {
 				final R r = Classes.parse(data, t, context);
 				if (r != null) {
 					log.printLog();
-					return new SimpleLiteral<R>(r, false);
+					return new SimpleLiteral<>(r, false);
 				}
 				log.clear();
 			}
@@ -171,7 +171,7 @@ public class UnparsedLiteral implements Literal<Object> {
 //			return null;
 //		return convert(to, p, context);
 	}
-	
+
 //	private <T> Literal<T> convert(final Class<T> to, final Parser<?> parser, final ParseContext context) {
 //		assert parser.canParse(context);
 //		final SimpleLog log = SkriptLogger.startSubLog();
@@ -269,7 +269,7 @@ public class UnparsedLiteral implements Literal<Object> {
 		return this;
 	}
 	
-	private final static SkriptAPIException invalidAccessException() {
+	private static SkriptAPIException invalidAccessException() {
 		return new SkriptAPIException("UnparsedLiterals must be converted before use");
 	}
 	
@@ -352,5 +352,4 @@ public class UnparsedLiteral implements Literal<Object> {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		throw invalidAccessException();
 	}
-	
 }

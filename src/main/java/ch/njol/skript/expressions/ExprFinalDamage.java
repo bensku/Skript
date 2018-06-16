@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -38,7 +37,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 @Name("Final Damage")
 @Description("How much damage is done in a damage event, considering all types of damage reduction. Can NOT be changed.")
@@ -46,6 +44,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("2.2-dev19")
 @Events("damage")
 public class ExprFinalDamage extends SimpleExpression<Double> {
+	
 	static {
 		Skript.registerExpression(ExprFinalDamage.class, Double.class, ExpressionType.SIMPLE, "[the] final damage");
 	}
@@ -64,7 +63,7 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	protected Double[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
 			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+		return new Double[]{HealthUtils.getDamage((EntityDamageEvent) e)};
 	}
 	
 	@Override
@@ -88,5 +87,4 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the final damage";
 	}
-	
 }

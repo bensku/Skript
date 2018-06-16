@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -39,7 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 /**
  * A list of expressions.
- * 
+ *
  * @author Peter Güttinger
  */
 public class ExpressionList<T> implements Expression<T> {
@@ -102,8 +101,7 @@ public class ExpressionList<T> implements Expression<T> {
 			if (t.length > 0)
 				return t;
 		}
-		@SuppressWarnings("unchecked")
-		final T[] r = (T[]) Array.newInstance(returnType, 0);
+		@SuppressWarnings("unchecked") final T[] r = (T[]) Array.newInstance(returnType, 0);
 		assert r != null;
 		return r;
 	}
@@ -111,7 +109,7 @@ public class ExpressionList<T> implements Expression<T> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public T[] getAll(final Event e) {
-		final ArrayList<T> r = new ArrayList<T>();
+		final ArrayList<T> r = new ArrayList<>();
 		for (final Expression<? extends T> expr : expressions)
 			r.addAll(Arrays.asList(expr.getAll(e)));
 		return r.toArray((T[]) Array.newInstance(returnType, r.size()));
@@ -190,7 +188,7 @@ public class ExpressionList<T> implements Expression<T> {
 		for (int i = 0; i < exprs.length; i++)
 			if ((exprs[i] = expressions[i].getConvertedExpression(to)) == null)
 				return null;
-		return new ExpressionList<R>(exprs, (Class<R>) Utils.getSuperType(to), and, this);
+		return new ExpressionList<>(exprs, (Class<R>) Utils.getSuperType(to), and, this);
 	}
 	
 	@Override
@@ -205,7 +203,7 @@ public class ExpressionList<T> implements Expression<T> {
 	
 	/**
 	 * For use in {@link CondCompare} only.
-	 * 
+	 *
 	 * @return The old 'and' value
 	 */
 	public boolean setAnd(final boolean and) {
@@ -248,7 +246,7 @@ public class ExpressionList<T> implements Expression<T> {
 		} else {
 			for (int i = 0; i < expressions.length; i++) {
 				Expression<?> expr = expressions[i];
-				expr.change(e, new Object[] {delta[i]}, mode);
+				expr.change(e, new Object[]{delta[i]}, mode);
 			}
 		}
 	}
@@ -330,18 +328,16 @@ public class ExpressionList<T> implements Expression<T> {
 			isSimpleList &= expressions[i].isSingle();
 		}
 		if (isLiteralList && isSimpleList) {
-			@SuppressWarnings("unchecked")
-			final T[] values = (T[]) Array.newInstance(returnType, expressions.length);
+			@SuppressWarnings("unchecked") final T[] values = (T[]) Array.newInstance(returnType, expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<T>(values, returnType, and);
+			return new SimpleLiteral<>(values, returnType, and);
 		}
 		if (isLiteralList) {
 			final Literal<? extends T>[] ls = Arrays.copyOf(expressions, expressions.length, Literal[].class);
 			assert ls != null;
-			return new LiteralList<T>(ls, returnType, and);
+			return new LiteralList<>(ls, returnType, and);
 		}
 		return this;
 	}
-	
 }

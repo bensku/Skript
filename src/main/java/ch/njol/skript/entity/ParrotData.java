@@ -1,27 +1,25 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Parrot.Variant;
 import org.eclipse.jdt.annotation.Nullable;
@@ -45,11 +43,10 @@ public class ParrotData extends EntityData<Parrot> {
 	}
 	
 	/**
-	 * Parrot variant. To avoid literally crashing on MC<1.12,
-	 * we just map enum values to int.
+	 * Parrot variant. To avoid literally crashing on MC<1.12, we just map enum values to int.
 	 */
 	private int variant;
-
+	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern == 0) { // Just a parrot, variant -1 to request random variant on spawn
@@ -59,7 +56,7 @@ public class ParrotData extends EntityData<Parrot> {
 		}
 		return true;
 	}
-
+	
 	@Override
 	protected boolean init(@Nullable Class<? extends Parrot> c, @Nullable Parrot e) {
 		if (e != null) { // Entity provided, take its variant
@@ -75,7 +72,7 @@ public class ParrotData extends EntityData<Parrot> {
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void set(Parrot entity) {
 		if (variant == -1) {
@@ -85,38 +82,37 @@ public class ParrotData extends EntityData<Parrot> {
 			entity.setVariant((Variant) variants[variant]);
 		}
 	}
-
+	
 	@Override
 	protected boolean match(Parrot entity) {
 		return variant == -1 || entity.getVariant() == variants[variant];
 	}
-
+	
 	@Override
 	public Class<? extends Parrot> getType() {
 		return Parrot.class;
 	}
-
+	
 	@Override
 	public EntityData getSuperType() {
 		return new ParrotData();
 	}
-
+	
 	@Override
 	protected int hashCode_i() {
 		return variant;
 	}
-
+	
 	@Override
 	protected boolean equals_i(EntityData<?> obj) {
 		if (obj instanceof ParrotData)
 			return ((ParrotData) obj).variant == variant;
 		return false;
 	}
-
+	
 	@Override
 	public boolean isSupertypeOf(EntityData<?> e) {
 		// True if e is parrot, and this is generic parrot OR if this and e are similar parrots
 		return e instanceof ParrotData && (variant == -1 || ((ParrotData) e).variant == variant);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
@@ -35,7 +33,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -103,14 +100,15 @@ public class Variable<T> implements Expression<T> {
 	}
 	
 	/**
-	 * Checks whether a string is a valid variable name. This is used to verify variable names as well as command and function arguments.
-	 * 
-	 * @param name The name to test
+	 * Checks whether a string is a valid variable name. This is used to verify variable names as well as command and
+	 * function arguments.
+	 *
+	 * @param name              The name to test
 	 * @param allowListVariable Whether to allow a list variable
-	 * @param printErrors Whether to print errors when they are encountered
+	 * @param printErrors       Whether to print errors when they are encountered
 	 * @return true if the name is valid, false otherwise.
 	 */
-	public final static boolean isValidVariableName(String name, final boolean allowListVariable, final boolean printErrors) {
+	public static boolean isValidVariableName(String name, final boolean allowListVariable, final boolean printErrors) {
 		name = name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : "" + name.trim();
 		if (!allowListVariable && name.contains(SEPARATOR)) {
 			if (printErrors)
@@ -224,7 +222,7 @@ public class Variable<T> implements Expression<T> {
 				if (v.getValue() instanceof Map)
 					o = ((Map<String, ?>) v.getValue()).get(null);
 				else
-					o = v.getValue();	
+					o = v.getValue();
 				l.add(convertIfOldPlayer(name + v.getKey(), e, o));
 			}
 		}
@@ -234,15 +232,16 @@ public class Variable<T> implements Expression<T> {
 	private final static boolean uuidSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
 	
 	/*
-	 * Workaround for player variables when a player has left and rejoined 
+	 * Workaround for player variables when a player has left and rejoined
 	 * because the player object inside the variable will be a (kinda) dead variable
 	 * as a new player object has been created by the server.
 	 */
 	@SuppressWarnings({"deprecation"})
-	@Nullable Object convertIfOldPlayer(String key, Event event, @Nullable Object t){
-		if(SkriptConfig.enablePlayerVariableFix.value() && t != null && t instanceof Player){
+	@Nullable
+	Object convertIfOldPlayer(String key, Event event, @Nullable Object t) {
+		if (SkriptConfig.enablePlayerVariableFix.value() && t != null && t instanceof Player) {
 			Player p = (Player) t;
-			if(!p.isValid() && p.isOnline()){
+			if (!p.isValid() && p.isOnline()) {
 				Player player = uuidSupported ? Bukkit.getPlayer(p.getUniqueId()) : Bukkit.getPlayerExact(p.getName());
 				Variables.setVariable(key, player, event, local);
 				return player;
@@ -260,8 +259,7 @@ public class Variable<T> implements Expression<T> {
 			return new EmptyIterator<>();
 		assert val instanceof TreeMap;
 		// temporary list to prevent CMEs
-		@SuppressWarnings("unchecked")
-		final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
+		@SuppressWarnings("unchecked") final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
 		return new Iterator<Pair<String, Object>>() {
 			@Nullable
 			private String key;
@@ -310,8 +308,7 @@ public class Variable<T> implements Expression<T> {
 			return new EmptyIterator<>();
 		assert val instanceof TreeMap;
 		// temporary list to prevent CMEs
-		@SuppressWarnings("unchecked")
-		final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
+		@SuppressWarnings("unchecked") final Iterator<String> keys = new ArrayList<>(((Map<String, Object>) val).keySet()).iterator();
 		return new Iterator<T>() {
 			@Nullable
 			private String key;
@@ -388,12 +385,12 @@ public class Variable<T> implements Expression<T> {
 		switch (mode) {
 			case DELETE:
 				if (list) {
-					final ArrayList<String> rem = new ArrayList<>(); 
+					final ArrayList<String> rem = new ArrayList<>();
 					final Map<String, Object> o = (Map<String, Object>) getRaw(e);
 					if (o == null)
 						return;
 					for (final Entry<String, Object> i : o.entrySet()) {
-						if (i.getKey() != null){
+						if (i.getKey() != null) {
 							rem.add(i.getKey());
 						}
 					}
@@ -422,9 +419,9 @@ public class Variable<T> implements Expression<T> {
 					}
 				} else {
 					//Mirre Start, Location bug quickfix.
-					if(delta[0] instanceof Location){
-						set(e, ((Location)delta[0]).clone());
-					}else
+					if (delta[0] instanceof Location) {
+						set(e, ((Location) delta[0]).clone());
+					} else
 						set(e, delta[0]);
 					//Mirre End
 					
@@ -555,7 +552,6 @@ public class Variable<T> implements Expression<T> {
 						}
 						
 						ChangerUtils.change(changer, one, l.toArray(), mode);
-						
 					}
 				}
 				break;
@@ -578,7 +574,7 @@ public class Variable<T> implements Expression<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T[] getAll(final Event e) {
-		if(list)
+		if (list)
 			return getConvertedArray(e);
 		final T o = getConverted(e);
 		if (o == null) {
@@ -609,11 +605,11 @@ public class Variable<T> implements Expression<T> {
 	public boolean check(final Event e, final Checker<? super T> c) {
 		return SimpleExpression.check(getAll(e), c, false, getAnd());
 	}
-
+	
 	public VariableString getName() {
 		return name;
 	}
-
+	
 	@Override
 	public boolean getAnd() {
 		return true;
@@ -644,5 +640,4 @@ public class Variable<T> implements Expression<T> {
 	public Expression<? extends T> simplify() {
 		return this;
 	}
-	
 }

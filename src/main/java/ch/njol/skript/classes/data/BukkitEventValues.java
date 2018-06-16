@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
@@ -34,7 +33,6 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Vehicle;
@@ -44,7 +42,6 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -73,8 +70,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.hanging.HangingEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -108,7 +103,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.command.CommandEvent;
 import ch.njol.skript.events.EvtMoveOn;
 import ch.njol.skript.registrations.EventValues;
@@ -126,7 +120,8 @@ import ch.njol.skript.util.slot.Slot;
 @SuppressWarnings({"unchecked", "deprecation"})
 public final class BukkitEventValues {
 	
-	public BukkitEventValues() {}
+	public BukkitEventValues() {
+	}
 	
 	protected static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
 	
@@ -219,7 +214,7 @@ public final class BukkitEventValues {
 			public Direction get(final BlockPlaceEvent e) {
 				if (e.getBlock() != null) {
 					BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
-					return new Direction(new double[] {bf.getModX(), bf.getModY(), bf.getModZ()});
+					return new Direction(new double[]{bf.getModX(), bf.getModY(), bf.getModZ()});
 				}
 				return Direction.ZERO;
 			}
@@ -633,7 +628,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Direction get(final PlayerInteractEvent e) {
 				if (e.getBlockFace() != null)
-					return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
+					return new Direction(new double[]{e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
 				return Direction.ZERO; // Same as 'BlockFace.SELF' or literal 'at'
 			}
 		}, 0);
@@ -919,7 +914,7 @@ public final class BukkitEventValues {
 				return e.getCause();
 			}
 		}, 0);
-
+		
 		//PlayerToggleFlightEvent
 		EventValues.registerEventValue(PlayerToggleFlightEvent.class, Player.class, new Getter<Player, PlayerToggleFlightEvent>() {
 			@Override
@@ -927,6 +922,5 @@ public final class BukkitEventValues {
 				return e.getPlayer();
 			}
 		}, 0);
-
 	}
 }

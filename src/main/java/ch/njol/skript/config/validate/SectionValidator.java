@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config.validate;
 
@@ -37,6 +36,7 @@ import ch.njol.util.Setter;
 public class SectionValidator implements NodeValidator {
 	
 	private final static class NodeInfo {
+		
 		public NodeValidator v;
 		public boolean optional;
 		
@@ -50,7 +50,8 @@ public class SectionValidator implements NodeValidator {
 	private boolean allowUndefinedSections = false;
 	private boolean allowUndefinedEntries = false;
 	
-	public SectionValidator() {}
+	public SectionValidator() {
+	}
 	
 	public SectionValidator addNode(final String name, final NodeValidator v, final boolean optional) {
 		assert name != null;
@@ -113,7 +114,7 @@ public class SectionValidator implements NodeValidator {
 		return ok;
 	}
 	
-	public final static void notASectionError(final Node node) {
+	public static void notASectionError(final Node node) {
 		SkriptLogger.setNode(node);
 		Skript.error("'" + node.getKey() + "' is not a section (like 'name:', followed by one or more indented lines)");
 	}
@@ -127,5 +128,4 @@ public class SectionValidator implements NodeValidator {
 		allowUndefinedEntries = b;
 		return this;
 	}
-	
 }

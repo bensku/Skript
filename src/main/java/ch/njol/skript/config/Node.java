@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config;
 
@@ -46,7 +45,7 @@ public abstract class Node {
 	@Nullable
 	protected SectionNode parent;
 	protected Config config;
-	
+
 //	protected Node() {
 //		key = null;
 //		debug = false;
@@ -81,11 +80,12 @@ public abstract class Node {
 		config = parent.getConfig();
 		SkriptLogger.setNode(this);
 	}
-	
+
 //	protected Node(final String key, final SectionNode parent, final ConfigReader r) {
 //		this(key, parent, r.getLine(), r.getLineNum());
 //	}
 //
+	
 	/**
 	 * Key of this node. <tt>null</tt> for empty or invalid nodes, and the config's main node.
 	 */
@@ -121,13 +121,14 @@ public abstract class Node {
 	/**
 	 * Splits a line into value and comment.
 	 * <p>
-	 * Whitespace is preserved (whitespace in front of the comment is added to the value), and any ## in the value are replaced by a single #. The comment is returned with a
-	 * leading #, except if there is no comment in which case it will be the empty string.
-	 * 
+	 * Whitespace is preserved (whitespace in front of the comment is added to the value), and any ## in the value are
+	 * replaced by a single #. The comment is returned with a leading #, except if there is no comment in which case it
+	 * will be the empty string.
+	 *
 	 * @param line
 	 * @return A pair (value, comment).
 	 */
-	public final static NonNullPair<String, String> splitLine(final String line) {
+	public static NonNullPair<String, String> splitLine(final String line) {
 		final Matcher m = linePattern.matcher(line);
 		if (m.matches())
 			return new NonNullPair<>("" + m.group(1).replace("##", "#"), "" + m.group(2));
@@ -153,7 +154,8 @@ public abstract class Node {
 	}
 	
 	/**
-	 * @return String to save this node as. The correct indentation and the comment will be added automatically, as well as all '#'s will be escaped.
+	 * @return String to save this node as. The correct indentation and the comment will be added automatically, as well
+	 * as all '#'s will be escaped.
 	 */
 	abstract String save_i();
 	
@@ -193,7 +195,7 @@ public abstract class Node {
 	public boolean isVoid() {
 		return this instanceof VoidNode;// || this instanceof ParseOptionNode;
 	}
-	
+
 //	/**
 //	 * get a node via path:to:the:node. relative paths are possible by starting with a ':'; a double colon '::' will go up a node.<br/>
 //	 * selecting the n-th node can be done with #n.
@@ -261,5 +263,4 @@ public abstract class Node {
 	public boolean debug() {
 		return debug;
 	}
-	
 }

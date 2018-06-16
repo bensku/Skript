@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.regions;
 
@@ -27,46 +26,34 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import com.google.common.base.Objects;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
-import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.regions.WorldGuardHook.WorldGuardRegion;
 import ch.njol.skript.hooks.regions.classes.Region;
-import ch.njol.skript.util.AABB;
 import ch.njol.skript.variables.Variables;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilID;
 
 /**
- * Hook for Residence protection plugin. Currently supports
- * only basic operations.
+ * Hook for Residence protection plugin. Currently supports only basic operations.
+ *
  * @author bensku
  */
 public class ResidenceHook extends RegionsPlugin<Residence> {
 	
-	public ResidenceHook() throws IOException {}
+	public ResidenceHook() throws IOException {
+	}
 	
 	@Override
 	protected boolean init() {
@@ -143,7 +130,7 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 			f.putObject("region", res.getName());
 			return f;
 		}
-
+		
 		@Override
 		public void deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
 			Object region = fields.getObject("region");
@@ -155,50 +142,50 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 				throw new StreamCorruptedException("Invalid region " + region + " in world " + world);
 			this.res = res;
 		}
-
+		
 		@Override
 		public boolean contains(Location l) {
 			return res.containsLoc(l);
 		}
-
+		
 		@Override
 		public boolean isMember(OfflinePlayer p) {
 			return res.getPermissions().playerHas(p.getName(), Flags.build, false);
 		}
-
+		
 		@SuppressWarnings("null")
 		@Override
 		public Collection<OfflinePlayer> getMembers() {
 			return Collections.emptyList();
 		}
-
+		
 		@Override
 		public boolean isOwner(OfflinePlayer p) {
 			return Objects.equal(res.getPermissions().getOwnerUUID(), p.getUniqueId());
 		}
-
+		
 		@SuppressWarnings("null")
 		@Override
 		public Collection<OfflinePlayer> getOwners() {
 			return Collections.singleton(Residence.getInstance().getOfflinePlayer(res.getPermissions().getOwner()));
 		}
-
+		
 		@SuppressWarnings("null")
 		@Override
 		public Iterator<Block> getBlocks() {
 			return Collections.emptyIterator();
 		}
-
+		
 		@Override
 		public String toString() {
 			return res.getName() + " in world " + world.getName();
 		}
-
+		
 		@Override
 		public RegionsPlugin<?> getPlugin() {
 			return ResidenceHook.this;
 		}
-
+		
 		@Override
 		public boolean equals(@Nullable Object o) {
 			if (o == this)
@@ -209,11 +196,10 @@ public class ResidenceHook extends RegionsPlugin<Residence> {
 				return true;
 			return false;
 		}
-
+		
 		@Override
 		public int hashCode() {
 			return res.getName().hashCode();
 		}
-		
 	}
 }

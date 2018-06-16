@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -61,6 +60,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 @Events({"smelt", "fuel burn"})
 public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
+	
 	private final static int ORE = 0, FUEL = 1, RESULT = 2;
 	private final static String[] slotNames = {"ore", "fuel", "result"};
 	
@@ -112,7 +112,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				case FUEL:
 					if (e instanceof FurnaceBurnEvent)
 						return getTime() > -1 ? ((FurnaceBurnEvent) e).getFuel().clone() : super.getItem();
-					 else
+					else
 						return pastItem();
 				case ORE:
 					if (e instanceof FurnaceSmeltEvent)
@@ -123,7 +123,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 					return null;
 			}
 		}
-
+		
 		@SuppressWarnings("synthetic-access")
 		@Override
 		public void setItem(final @Nullable ItemStack item) {
@@ -137,7 +137,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 					super.setItem(item);
 			}
 		}
-
+		
 		@Nullable
 		private ItemStack pastItem() {
 			if (getTime() < 1) {
@@ -150,7 +150,6 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				return item.getAmount() == 0 ? new ItemStack(Material.AIR, 1) : item;
 			}
 		}
-		
 	}
 	
 	@Override
@@ -193,5 +192,4 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), FurnaceSmeltEvent.class, FurnaceBurnEvent.class);
 	}
-	
 }

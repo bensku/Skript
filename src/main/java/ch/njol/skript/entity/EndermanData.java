@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
@@ -39,6 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 public class EndermanData extends EntityData<Enderman> {
+	
 	static {
 		EntityData.register(EndermanData.class, "enderman", Enderman.class, "enderman");
 	}
@@ -62,7 +62,7 @@ public class EndermanData extends EntityData<Enderman> {
 				final ItemStack i = m.toItemStack(1);
 				if (i == null)
 					return false;
-				hand = new ItemType[] {new ItemType(i)};
+				hand = new ItemType[]{new ItemType(i)};
 			}
 		}
 		return true;
@@ -77,7 +77,6 @@ public class EndermanData extends EntityData<Enderman> {
 			if (i != null)
 				entity.setCarriedMaterial(i.getData());
 		}
-		
 	}
 	
 	@Override
@@ -119,7 +118,7 @@ public class EndermanData extends EntityData<Enderman> {
 		return Arrays.equals(hand, other.hand);
 	}
 	
-//		if (hand == null)
+	//		if (hand == null)
 //			return "";
 //		final StringBuilder b = new StringBuilder();
 //		for (final ItemType h : hand) {
@@ -170,5 +169,4 @@ public class EndermanData extends EntityData<Enderman> {
 	public EntityData getSuperType() {
 		return new EndermanData();
 	}
-	
 }

@@ -1,25 +1,23 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes;
 
-import ch.njol.skript.classes.Arithmetic;
 import org.bukkit.util.Vector;
 
 /**
@@ -41,17 +39,17 @@ public class VectorArithmethic implements Arithmetic<Vector, Vector> {
 	public Vector subtract(Vector value, Vector difference) {
 		return new Vector().add(value).subtract(difference);
 	}
-
+	
 	@Override
 	public Vector multiply(Vector value, Vector multiplier) {
 		return value.clone().multiply(multiplier);
 	}
-
+	
 	@Override
 	public Vector divide(Vector value, Vector divider) {
 		return value.clone().divide(divider);
 	}
-
+	
 	@Override
 	public Vector power(Vector value, Vector exponent) {
 		return new Vector(Math.pow(value.getX(), exponent.getX()), Math.pow(value.getY(), exponent.getY()), Math.pow(value.getZ(), exponent.getZ()));

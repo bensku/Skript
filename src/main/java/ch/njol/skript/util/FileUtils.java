@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -38,6 +37,7 @@ import ch.njol.skript.classes.Converter;
 public abstract class FileUtils {
 	
 	private static boolean RUNNINGJAVA6 = true;// = System.getProperty("java.version").startsWith("1.6"); // doesn't work reliably?
+	
 	static {
 		try {
 			new File(".").toPath();
@@ -49,20 +49,21 @@ public abstract class FileUtils {
 		}
 	}
 	
-	private FileUtils() {}
+	private FileUtils() {
+	}
 	
 	private final static SimpleDateFormat backupFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 	
 	/**
 	 * @return The current date and time
 	 */
-	public final static String getBackupSuffix() {
+	public static String getBackupSuffix() {
 		synchronized (backupFormat) {
 			return "" + backupFormat.format(System.currentTimeMillis());
 		}
 	}
 	
-	public final static File backup(final File f) throws IOException {
+	public static File backup(final File f) throws IOException {
 		String name = f.getName();
 		final int c = name.lastIndexOf('.');
 		final String ext = c == -1 ? null : name.substring(c + 1);
@@ -78,7 +79,7 @@ public abstract class FileUtils {
 		return backup;
 	}
 	
-	public final static File move(final File from, final File to, final boolean replace) throws IOException {
+	public static File move(final File from, final File to, final boolean replace) throws IOException {
 		if (!replace && to.exists())
 			throw new IOException("Can't rename " + from.getName() + " to " + to.getName() + ": The target file already exists");
 		if (!RUNNINGJAVA6) {
@@ -107,43 +108,29 @@ public abstract class FileUtils {
 		return to;
 	}
 	
-	public final static void copy(final File from, final File to) throws IOException {
+	public static void copy(final File from, final File to) throws IOException {
 		if (!RUNNINGJAVA6) {
 			Files.copy(from.toPath(), to.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
 		} else {
-			FileInputStream in = null;
-			FileOutputStream out = null;
-			try {
-				in = new FileInputStream(from);
-				out = new FileOutputStream(to);
+			try (FileInputStream in = new FileInputStream(from); FileOutputStream out = new FileOutputStream(to)) {
 				final byte[] buffer = new byte[4096];
 				int bytesRead;
 				while ((bytesRead = in.read(buffer)) != -1)
 					out.write(buffer, 0, bytesRead);
 			} catch (final Exception e) {
 				throw new IOException("Can't copy " + from.getName() + " to " + to.getName() + ": " + e.getLocalizedMessage(), e);
-			} finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (final IOException e) {}
-				}
-				if (out != null) {
-					try {
-						out.close();
-					} catch (final IOException e) {}
-				}
 			}
 		}
 	}
 	
 	/**
 	 * @param directory
-	 * @param renamer Renames files. Return null to leave a file as-is.
+	 * @param renamer   Renames files. Return null to leave a file as-is.
 	 * @return A collection of all changed files (with their new names)
-	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed already.
+	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed
+	 *                     already.
 	 */
-	public final static Collection<File> renameAll(final File directory, final Converter<String, String> renamer) throws IOException {
+	public static Collection<File> renameAll(final File directory, final Converter<String, String> renamer) throws IOException {
 		final Collection<File> changed = new ArrayList<>();
 		for (final File f : directory.listFiles()) {
 			if (f.isDirectory()) {
@@ -165,25 +152,19 @@ public abstract class FileUtils {
 	
 	/**
 	 * Saves the contents of an InputStream in a file.
-	 * 
-	 * @param in The InputStream to read from. This stream will not be closed when this method returns.
+	 *
+	 * @param in   The InputStream to read from. This stream will not be closed when this method returns.
 	 * @param file The file to save to. Will be replaced if it exists, or created if it doesn't.
 	 * @throws IOException
 	 */
-	public final static void save(final InputStream in, final File file) throws IOException {
+	public static void save(final InputStream in, final File file) throws IOException {
 		file.getParentFile().mkdirs();
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(file);
+		try (FileOutputStream out = new FileOutputStream(file)) {
 			final byte[] buffer = new byte[16 * 1024];
 			int read;
 			while ((read = in.read(buffer)) > 0) {
 				out.write(buffer, 0, read);
 			}
-		} finally {
-			if (out != null)
-				out.close();
 		}
 	}
-	
 }

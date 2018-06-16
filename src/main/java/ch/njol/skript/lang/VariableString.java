@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -59,12 +58,13 @@ import ch.njol.util.coll.iterator.SingleItemIterator;
 
 /**
  * Represents a string that may contain expressions, and is thus "variable".
- * 
+ *
  * @author Peter Güttinger
  */
 public class VariableString implements Expression<String> {
 	
 	private final static class ExpressionInfo {
+		
 		ExpressionInfo(final Expression<?> expr) {
 			this.expr = expr;
 		}
@@ -86,11 +86,12 @@ public class VariableString implements Expression<String> {
 	@Nullable
 	private final String simpleUnformatted;
 	private final StringMode mode;
-
+	
 	public static boolean disableVariableStartingWithExpressionWarnings = false;
 	
 	/**
 	 * Creates a new VariableString which does not contain variables.
+	 *
 	 * @param s Content for string.
 	 */
 	private VariableString(final String s) {
@@ -107,9 +108,10 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Creates a new VariableString which contains variables.
-	 * @param orig Original string (unparsed).
+	 *
+	 * @param orig   Original string (unparsed).
 	 * @param string Objects, some of them are variables.
-	 * @param mode String mode.
+	 * @param mode   String mode.
 	 */
 	private VariableString(final String orig, final Object[] string, final StringMode mode) {
 		this.orig = orig;
@@ -149,12 +151,12 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Tests whether a string is correctly quoted, i.e. only has doubled double quotes in it.
-	 * 
-	 * @param s The string
+	 *
+	 * @param s          The string
 	 * @param withQuotes Whether s must be surrounded by double quotes or not
 	 * @return Whether the string is quoted correctly
 	 */
-	public final static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
+	public static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
 		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
 			return false;
 		boolean quote = false;
@@ -171,12 +173,12 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Removes quoted quotes from a string.
-	 * 
-	 * @param s The string
+	 *
+	 * @param s                 The string
 	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
 	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
 	 */
-	public final static String unquote(final String s, final boolean surroundingQuotes) {
+	public static String unquote(final String s, final boolean surroundingQuotes) {
 		assert isQuotedCorrectly(s, surroundingQuotes);
 		if (surroundingQuotes)
 			return "" + s.substring(1, s.length() - 1).replace("\"\"", "\"");
@@ -184,9 +186,9 @@ public class VariableString implements Expression<String> {
 	}
 	
 	/**
-	 * Creates an instance of VariableString by parsing given string.
-	 * Prints errors and returns null if it is somehow invalid.
-	 * 
+	 * Creates an instance of VariableString by parsing given string. Prints errors and returns null if it is somehow
+	 * invalid.
+	 *
 	 * @param orig Unquoted string to parse.
 	 * @param mode
 	 * @return A new VariableString instance.
@@ -237,8 +239,7 @@ public class VariableString implements Expression<String> {
 				} else {
 					final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 					try {
-						@SuppressWarnings("unchecked")
-						final Expression<?> expr = new SkriptParser("" + s.substring(c + 1, c2), SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT).parseExpression(Object.class);
+						@SuppressWarnings("unchecked") final Expression<?> expr = new SkriptParser("" + s.substring(c + 1, c2), SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT).parseExpression(Object.class);
 						if (expr == null) {
 							log.printErrors("Can't understand this expression: " + s.substring(c + 1, c2));
 							return null;
@@ -326,7 +327,8 @@ public class VariableString implements Expression<String> {
 		final Pattern pattern;
 		if (string != null) {
 			final StringBuilder p = new StringBuilder();
-			stringLoop: for (final Object o : string) {
+			stringLoop:
+			for (final Object o : string) {
 				if (o instanceof Expression) {
 					for (final ClassInfo<?> ci : Classes.getClassInfos()) {
 						final Parser<?> parser = ci.getParser();
@@ -356,8 +358,9 @@ public class VariableString implements Expression<String> {
 	}
 	
 	/**
-	 * Copied from {@link SkriptParser#nextBracket(String, char, char, int, boolean)}, but removed escaping & returns -1 on error.
-	 * 
+	 * Copied from {@link SkriptParser#nextBracket(String, char, char, int, boolean)}, but removed escaping & returns -1
+	 * on error.
+	 *
 	 * @param s
 	 * @param start Index after the opening bracket
 	 * @return The next closing curly bracket
@@ -409,7 +412,7 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Parses all expressions in the string and returns it.
-	 * 
+	 *
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
@@ -447,9 +450,8 @@ public class VariableString implements Expression<String> {
 	}
 	
 	/**
-	 * Parses all expressions in the string and returns it.
-	 * Does not parse formatting codes!
-	 * 
+	 * Parses all expressions in the string and returns it. Does not parse formatting codes!
+	 *
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
@@ -497,7 +499,7 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Parses all expressions in the string and returns it in chat JSON format.
-	 * 
+	 *
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
@@ -506,7 +508,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Nullable
-	private final static ChatColor getLastColor(final CharSequence s) {
+	private static ChatColor getLastColor(final CharSequence s) {
 		for (int i = s.length() - 2; i >= 0; i--) {
 			if (s.charAt(i) == ChatColor.COLOR_CHAR) {
 				final ChatColor c = ChatColor.getByChar(s.charAt(i + 1));
@@ -601,12 +603,12 @@ public class VariableString implements Expression<String> {
 	
 	@Override
 	public String[] getArray(final Event e) {
-		return new String[] {toString(e)};
+		return new String[]{toString(e)};
 	}
 	
 	@Override
 	public String[] getAll(final Event e) {
-		return new String[] {toString(e)};
+		return new String[]{toString(e)};
 	}
 	
 	@Override
@@ -685,7 +687,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public final static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
+	public static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
 		if (e instanceof ExpressionList) {
 			final Expression<?>[] ls = ((ExpressionList<?>) e).getExpressions();
 			for (int i = 0; i < ls.length; i++) {

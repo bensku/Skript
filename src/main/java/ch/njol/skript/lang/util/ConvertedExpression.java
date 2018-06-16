@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.util;
 
@@ -25,7 +24,6 @@ import java.util.NoSuchElementException;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
@@ -39,13 +37,14 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
- * Represents a expression converted to another type. This, and not Expression, is the required return type of {@link SimpleExpression#getConvertedExpr(Class...)} because this
- * class
+ * Represents a expression converted to another type. This, and not Expression, is the required return type of {@link
+ * SimpleExpression#getConvertedExpr(Class...)} because this class
  * <ol>
  * <li>automatically lets the source expression handle everything apart from the get() methods</li>
- * <li>will never convert itself to another type, but rather request a new converted expression from the source expression.</li>
+ * <li>will never convert itself to another type, but rather request a new converted expression from the source
+ * expression.</li>
  * </ol>
- * 
+ *
  * @author Peter Güttinger
  */
 public class ConvertedExpression<F, T> implements Expression<T> {
@@ -71,11 +70,10 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			assert c != null;
 			// casting <? super ? extends F> to <? super F> is wrong, but since the converter is only used for values returned by the expression
 			// (which are instances of "<? extends F>") this won't result in any ClassCastExceptions.
-			@SuppressWarnings("unchecked")
-			final Converter<? super F, ? extends T> conv = (Converter<? super F, ? extends T>) Converters.getConverter(v.getReturnType(), c);
+			@SuppressWarnings("unchecked") final Converter<? super F, ? extends T> conv = (Converter<? super F, ? extends T>) Converters.getConverter(v.getReturnType(), c);
 			if (conv == null)
 				continue;
-			return new ConvertedExpression<F, T>(v, c, conv);
+			return new ConvertedExpression<>(v, c, conv);
 		}
 		return null;
 	}
@@ -265,5 +263,4 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 		return source.beforeChange(changed, delta); // Forward to source
 		// TODO this is not entirely safe, even though probably works well enough
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -62,7 +61,7 @@ import ch.njol.util.Math2;
 @Since("1.0 (basic), 2.0 (extended)")
 public class ExprDirection extends SimpleExpression<Direction> {
 	
-	private final static BlockFace[] byMark = new BlockFace[] {
+	private final static BlockFace[] byMark = new BlockFace[]{
 			BlockFace.UP, BlockFace.DOWN,
 			BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST,
 			BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST};
@@ -148,7 +147,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 				d = d.next;
 			}
 			assert v != null;
-			return new Direction[] {new Direction(v)};
+			return new Direction[]{new Direction(v)};
 		} else if (relativeTo != null) {
 			final Object o = relativeTo.getSingle(e);
 			if (o == null)
@@ -156,39 +155,39 @@ public class ExprDirection extends SimpleExpression<Direction> {
 			if (o instanceof Block) {
 				final BlockFace f = Direction.getFacing((Block) o);
 				if (f == BlockFace.SELF || horizontal && (f == BlockFace.UP || f == BlockFace.DOWN))
-					return new Direction[] {Direction.ZERO};
-				return new Direction[] {new Direction(f, ln)};
+					return new Direction[]{Direction.ZERO};
+				return new Direction[]{new Direction(f, ln)};
 			} else {
 				final Location l = ((Entity) o).getLocation();
 				if (!horizontal) {
 					if (!facing) {
 						final Vector v = l.getDirection().normalize().multiply(ln);
 						assert v != null;
-						return new Direction[] {new Direction(v)};
+						return new Direction[]{new Direction(v)};
 					}
 					final double pitch = Direction.pitchToRadians(l.getPitch());
 					assert pitch >= -Math.PI / 2 && pitch <= Math.PI / 2;
 					if (pitch > Math.PI / 4)
-						return new Direction[] {new Direction(new double[] {0, ln, 0})};
+						return new Direction[]{new Direction(new double[]{0, ln, 0})};
 					if (pitch < -Math.PI / 4)
-						return new Direction[] {new Direction(new double[] {0, -ln, 0})};
+						return new Direction[]{new Direction(new double[]{0, -ln, 0})};
 				}
 				double yaw = Direction.yawToRadians(l.getYaw());
 				if (horizontal && !facing) {
-					return new Direction[] {new Direction(new double[] {Math.cos(yaw) * ln, 0, Math.sin(yaw) * ln})};
+					return new Direction[]{new Direction(new double[]{Math.cos(yaw) * ln, 0, Math.sin(yaw) * ln})};
 				}
 				yaw = Math2.mod(yaw, 2 * Math.PI);
 				if (yaw >= Math.PI / 4 && yaw < 3 * Math.PI / 4)
-					return new Direction[] {new Direction(new double[] {0, 0, ln})};
+					return new Direction[]{new Direction(new double[]{0, 0, ln})};
 				if (yaw >= 3 * Math.PI / 4 && yaw < 5 * Math.PI / 4)
-					return new Direction[] {new Direction(new double[] {-ln, 0, 0})};
+					return new Direction[]{new Direction(new double[]{-ln, 0, 0})};
 				if (yaw >= 5 * Math.PI / 4 && yaw < 7 * Math.PI / 4)
-					return new Direction[] {new Direction(new double[] {0, 0, -ln})};
+					return new Direction[]{new Direction(new double[]{0, 0, -ln})};
 				assert yaw >= 0 && yaw < Math.PI / 4 || yaw >= 7 * Math.PI / 4 && yaw < 2 * Math.PI;
-				return new Direction[] {new Direction(new double[] {ln, 0, 0})};
+				return new Direction[]{new Direction(new double[]{ln, 0, 0})};
 			}
 		} else {
-			return new Direction[] {new Direction(horizontal ? Direction.IGNORE_PITCH : 0, yaw, ln)};
+			return new Direction[]{new Direction(horizontal ? Direction.IGNORE_PITCH : 0, yaw, ln)};
 		}
 	}
 	
@@ -209,5 +208,4 @@ public class ExprDirection extends SimpleExpression<Direction> {
 				relativeTo != null ? " in " + (horizontal ? "horizontal " : "") + (facing ? "facing" : "direction") + " of " + relativeTo.toString(e, debug) :
 						(horizontal ? "horizontally " : "") + Direction.toString(0, yaw, 1));
 	}
-	
 }

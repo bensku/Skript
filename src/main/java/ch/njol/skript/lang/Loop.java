@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -35,15 +34,15 @@ import ch.njol.skript.util.Container.ContainerType;
 
 /**
  * A trigger section which represents a loop.
- * 
+ *
  * @author Peter Güttinger
  */
 public class Loop extends TriggerSection {
 	
 	private final Expression<?> expr;
 	
-	private transient Map<Event, Object> current = new WeakHashMap<Event, Object>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<Event, Iterator<?>>();
+	private transient Map<Event, Object> current = new WeakHashMap<>();
+	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
 	
 	@Nullable
 	private TriggerItem actualNext;
@@ -119,5 +118,4 @@ public class Loop extends TriggerSection {
 	public TriggerItem getActualNext() {
 		return actualNext;
 	}
-	
 }

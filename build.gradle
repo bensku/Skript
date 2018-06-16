@@ -34,20 +34,20 @@ repositories {
 	maven {
 		url 'https://repo.destroystokyo.com/repository/maven-public/'
 	}
-	
+
 	maven {
 		url 'http://ci.emc.gs/nexus/content/groups/aikar/'
 	}
-	
+
 	maven {
 		url 'http://nexus.hc.to/content/repositories/pub_releases'
 	}
-	
+
 //	maven {
 //		url 'http://maven.elmakers.com/repository/'
 //	}
-	
-	
+
+
 	maven {
 		url 'https://jitpack.io'
 	}
@@ -81,18 +81,22 @@ processResources {
 
 jar {
 	archiveName System.getenv('SKRIPT_JAR_NAME') == null ? 'Skript.jar' : System.getenv("SKRIPT_JAR_NAME")
-	
+
 	manifest {
 		attributes("Name": "ch/njol/skript",
 				"Sealed": "true")
 	}
 }
 
+// ./gradlew licenseFormat
 license {
-    header file('licenseheader.txt')
-    exclude('**/Metrics.java') // Not under GPLv3
-    exclude('**/*.sk') // Sample scripts and maybe aliases
-    exclude('**/*.lang') // Language files
+	header file('licenseheader.txt')
+	mapping {
+		java = 'SLASHSTAR_STYLE'
+	}
+	exclude('**/Metrics.java') // Not under GPLv3
+	exclude('**/*.sk') // Sample scripts and maybe aliases
+	exclude('**/*.lang') // Language files
 }
 
 configurations {
@@ -107,7 +111,14 @@ sourceCompatibility = 1.8
 compileJava {
 	options.fork = true
 	options.encoding = 'UTF-8'
-	options.compilerArgs = ['-properties', '.settings/org.eclipse.jdt.core.prefs', '-encoding', 'UTF-8']
+	options.compilerArgs = [
+			'-properties', '.settings/org.eclipse.jdt.core.prefs',
+			'-encoding', 'UTF-8',
+
+            // the Residence dependency seems to use annotation processors, what according to Gradle
+            // slows down the build, and since we don't need them, we can disable them, like Gradle recommends
+            '-proc:none'
+    ]
 	options.forkOptions.with {
 		executable = 'java'
 		jvmArgs = ['-classpath', project.configurations.ecj.asPath, 'org.eclipse.jdt.internal.compiler.batch.Main']
@@ -132,7 +143,7 @@ publishing {
 			}
 		}
 	}
-	
+
 	repositories {
 		maven {
 			url "file:///itemapi_repo/"

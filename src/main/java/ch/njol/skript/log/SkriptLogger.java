@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.log;
 
@@ -58,19 +57,19 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Shorthand for <tt>{@link #startLogHandler(LogHandler) startLogHandler}(new {@link RetainingLogHandler}());</tt>
-	 * 
+	 *
 	 * @return A newly created RetainingLogHandler
 	 */
-	public final static RetainingLogHandler startRetainingLog() {
+	public static RetainingLogHandler startRetainingLog() {
 		return startLogHandler(new RetainingLogHandler());
 	}
 	
 	/**
 	 * Shorthand for <tt>{@link #startLogHandler(LogHandler) startLogHandler}(new {@link ParseLogHandler}());</tt>
-	 * 
+	 *
 	 * @return A newly created ParseLogHandler
 	 */
-	public final static ParseLogHandler startParseLogHandler() {
+	public static ParseLogHandler startParseLogHandler() {
 		return startLogHandler(new ParseLogHandler());
 	}
 	
@@ -78,7 +77,7 @@ public abstract class SkriptLogger {
 	 * Starts a log handler.
 	 * <p>
 	 * This should be used like this:
-	 * 
+	 *
 	 * <pre>
 	 * LogHandler log = SkriptLogger.startLogHandler(new ...LogHandler());
 	 * try {
@@ -88,7 +87,7 @@ public abstract class SkriptLogger {
 	 * 	log.stop();
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @return The passed LogHandler
 	 * @see #startParseLogHandler()
 	 * @see #startRetainingLog()
@@ -98,12 +97,12 @@ public abstract class SkriptLogger {
 	 * @see FilteringLogHandler
 	 * @see RedirectingLogHandler
 	 */
-	public final static <T extends LogHandler> T startLogHandler(final T h) {
+	public static <T extends LogHandler> T startLogHandler(final T h) {
 		handlers.add(h);
 		return h;
 	}
 	
-	final static void removeHandler(final LogHandler h) {
+	static void removeHandler(final LogHandler h) {
 		if (!handlers.contains(h))
 			return;
 		if (!h.equals(handlers.remove())) {
@@ -114,12 +113,12 @@ public abstract class SkriptLogger {
 		}
 	}
 	
-	final static boolean isStopped(final LogHandler h) {
+	static boolean isStopped(final LogHandler h) {
 		return !handlers.contains(h);
 	}
 	
 	@Nullable
-	final static StackTraceElement getCaller() {
+	static StackTraceElement getCaller() {
 		for (final StackTraceElement e : new Exception().getStackTrace()) {
 			if (!e.getClassName().startsWith(SkriptLogger.class.getPackage().getName()))
 				return e;
@@ -144,12 +143,12 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Logging should be done like this:
-	 * 
+	 *
 	 * <pre>
 	 * if (Skript.logNormal())
 	 * 	Skript.info(&quot;this information is displayed on verbosity normal or higher&quot;);
 	 * </pre>
-	 * 
+	 *
 	 * @param level
 	 * @param message
 	 * @see Skript#info(String)
@@ -178,7 +177,6 @@ public abstract class SkriptLogger {
 					entry.discarded("denied by " + h);
 					return;
 				case LOG:
-					continue;
 			}
 		}
 		entry.logged();
@@ -199,7 +197,7 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Checks whether messages should be logged for the given verbosity.
-	 * 
+	 *
 	 * @param minVerb minimal verbosity
 	 * @return Whether messages should be logged for the given verbosity.
 	 */
@@ -210,5 +208,4 @@ public abstract class SkriptLogger {
 	public static boolean debug() {
 		return debug;
 	}
-	
 }

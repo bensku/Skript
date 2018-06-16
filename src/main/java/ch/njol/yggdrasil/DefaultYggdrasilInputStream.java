@@ -1,32 +1,31 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
-
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Array;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +36,6 @@ import org.eclipse.jdt.annotation.NonNull;
 // _x(): read data only (e.g. contents)
 
 public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
-	
-	@SuppressWarnings("null")
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private final short version;
 	
@@ -95,7 +91,7 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		}
 		final byte[] d = new byte[length];
 		readFully(d);
-		final String s = new String(d, UTF_8);
+		final String s = new String(d, StandardCharsets.UTF_8);
 		if (length > 4)
 			readShortStrings.add(s);
 		return s;
@@ -195,7 +191,7 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 				return readChar();
 			case T_BOOLEAN:
 				return readBoolean();
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				throw new YggdrasilException("Internal error; " + type);
 		}
@@ -213,7 +209,7 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		final int length = readUnsignedInt();
 		final byte[] d = new byte[length];
 		readFully(d);
-		return new String(d, UTF_8);
+		return new String(d, StandardCharsets.UTF_8);
 	}
 	
 	// Array
@@ -320,9 +316,9 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		try {
 			read();
 			throw new StreamCorruptedException("Stream still has data, at least " + (1 + in.available()) + " bytes remain");
-		} catch (final EOFException e) {} finally {
+		} catch (final EOFException e) {
+		} finally {
 			in.close();
 		}
 	}
-	
 }

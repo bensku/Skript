@@ -1,28 +1,23 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
-import java.util.Arrays;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -67,8 +62,7 @@ public class EvtClick extends SkriptEvent {
 	private final static int RIGHT = 1, LEFT = 2, ANY = RIGHT | LEFT;
 	
 	/**
-	 * If we used "holding" somewhere there, we must check if either hand
-	 * contains the tool.
+	 * If we used "holding" somewhere there, we must check if either hand contains the tool.
 	 */
 	private final static int HOLDING = 4;
 	
@@ -76,15 +70,15 @@ public class EvtClick extends SkriptEvent {
 		/*
 		 * On 1.9 and above, handling entity click events is a mess, because
 		 * just listening for one event is enough.
-		 * 
+		 *
 		 * PlayerInteractEntityEvent
 		 * Good: when it is fired, you can cancel it
 		 * Bad: not fired for armor stands, at all
-		 * 
+		 *
 		 * PlayerInteractAtEntityEvent
 		 * Good: catches clicks on armor stands
 		 * Bad: cannot be cancelled if entity is item frame or villager (!)
-		 * 
+		 *
 		 * Just use both? Well, not so simple, as in many cases both are
 		 * called. To make matters worse, handling both events sometimes
 		 * causes PlayerInteractAtEntityEvent to be called TWICE.
@@ -292,7 +286,7 @@ public class EvtClick extends SkriptEvent {
 			case MONSTER_EGG:
 				offUsable = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				offUsable = false;
 		}
@@ -329,7 +323,7 @@ public class EvtClick extends SkriptEvent {
 			case WRITTEN_BOOK:
 				mainUsable = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				mainUsable = false;
 		}
@@ -384,7 +378,7 @@ public class EvtClick extends SkriptEvent {
 				case CAKE_BLOCK:
 					mainOnly = true;
 					break;
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					blockUsable = false;
 			}
@@ -393,7 +387,7 @@ public class EvtClick extends SkriptEvent {
 				case ITEM_FRAME:
 					mainOnly = true;
 					break;
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					mainOnly = false;
 			}
@@ -432,5 +426,4 @@ public class EvtClick extends SkriptEvent {
 		//Skript.info("Final return!");
 		return false; // Both hands are AIR material!
 	}
-	
 }

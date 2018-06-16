@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.command;
 
@@ -39,7 +38,7 @@ import ch.njol.skript.variables.Variables;
 
 /**
  * Represents an argument of a command
- * 
+ *
  * @author Peter Güttinger
  */
 public class Argument<T> {
@@ -57,7 +56,7 @@ public class Argument<T> {
 	
 	private final boolean optional;
 	
-	private transient WeakHashMap<Event, T[]> current = new WeakHashMap<Event, T[]>();
+	private transient WeakHashMap<Event, T[]> current = new WeakHashMap<>();
 	
 	private Argument(@Nullable final String name, final @Nullable Expression<? extends T> def, final ClassInfo<T> type, final boolean single, final int index, final boolean optional) {
 		this.name = name;
@@ -96,7 +95,7 @@ public class Argument<T> {
 						if (def.startsWith("\"") && def.endsWith("\""))
 							d = (Expression<? extends T>) VariableString.newInstance("" + def.substring(1, def.length() - 1));
 						else
-							d = (Expression<? extends T>) new SimpleLiteral<String>(def, false);
+							d = (Expression<? extends T>) new SimpleLiteral<>(def, false);
 					} else {
 						d = new SkriptParser(def, SkriptParser.PARSE_LITERALS, ParseContext.DEFAULT).parseExpression(type.getC());
 					}
@@ -110,7 +109,7 @@ public class Argument<T> {
 				}
 			}
 		}
-		return new Argument<T>(name, d, type, single, index, def != null || forceOptional);
+		return new Argument<>(name, d, type, single, index, def != null || forceOptional);
 	}
 	
 	@Override
@@ -161,5 +160,4 @@ public class Argument<T> {
 	public boolean isSingle() {
 		return single;
 	}
-	
 }

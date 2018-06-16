@@ -1,26 +1,24 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions.base;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +27,6 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -38,7 +35,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -51,17 +47,18 @@ import ch.njol.util.Kleenean;
 /**
  * A useful class for creating default expressions. It simply returns the event value of the given type.
  * <p>
- * This class can be used as default expression with <code>new EventValueExpression&lt;T&gt;(T.class)</code> or extended to make it manually placeable in expressions with:
- * 
+ * This class can be used as default expression with <code>new EventValueExpression&lt;T&gt;(T.class)</code> or extended
+ * to make it manually placeable in expressions with:
+ *
  * <pre>
  * class MyExpression extends EventValueExpression&lt;SomeClass&gt; {
  * 	public MyExpression() {
  * 		super(SomeClass.class);
- * 	}
+ *    }
  * 	// ...
  * }
  * </pre>
- * 
+ *
  * @author Peter Güttinger
  * @see Classes#registerClass(ClassInfo)
  * @see ClassInfo#defaultExpression(DefaultExpression)
@@ -90,8 +87,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 		final T o = getValue(e);
 		if (o == null)
 			return null;
-		@SuppressWarnings("unchecked")
-		final T[] one = (T[]) Array.newInstance(c, 1);
+		@SuppressWarnings("unchecked") final T[] one = (T[]) Array.newInstance(c, 1);
 		one[0] = o;
 		return one;
 	}
@@ -215,5 +211,4 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 	public boolean isDefault() {
 		return true;
 	}
-	
 }
