@@ -1,68 +1,57 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-
-import ch.njol.skript.Updater.ResponseEntry;
 import ch.njol.skript.localization.FormattedMessage;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.Task;
-import ch.njol.skript.util.Version;
 
 /**
  * Skript's new updater, which uses Github API.
  */
 public class Updater {
 	
-	public static final String RELEASES_URL  = "https://api.github.com/repos/SkriptLang/Skript/releases";
+	public static final String RELEASES_URL = "https://api.github.com/repos/SkriptLang/Skript/releases";
 	
 	@Nullable
 	private static Gson gson;
@@ -126,40 +115,43 @@ public class Updater {
 	 */
 	@NonNullByDefault(value = false)
 	public class ResponseEntry {
+		
 		public String url;
-	    public String assets_url;
-	    public String upload_url;
-	    public String html_url;
-	    public int id;
-	    public String tag_name;
-	    public String target_commitish;
-	    public String name;
-	    public boolean draft;
-	    
-	    public boolean prerelease;
-	    public String created_at;
-	    public String published_at;
-	    
-	    public class AssetsEntry {
-	    	public int size;
-	    	public int download_count;
-	    	public String browser_download_url;
-	    }
-	    
-	    public List<AssetsEntry> assets;
-	    public String body; // Description of release
-	    
-	    @Override
-	    public String toString() {
-	    	return tag_name;
-	    }
-	    
-	    public class Author {
-	    	public String login;
-	    	public int id;
-	    }
-	    
-	    public Author author;
+		public String assets_url;
+		public String upload_url;
+		public String html_url;
+		public int id;
+		public String tag_name;
+		public String target_commitish;
+		public String name;
+		public boolean draft;
+		
+		public boolean prerelease;
+		public String created_at;
+		public String published_at;
+		
+		public class AssetsEntry {
+			
+			public int size;
+			public int download_count;
+			public String browser_download_url;
+		}
+		
+		public List<AssetsEntry> assets;
+		public String body; // Description of release
+		
+		@Override
+		public String toString() {
+			return tag_name;
+		}
+		
+		public class Author {
+			
+			public String login;
+			public int id;
+		}
+		
+		public Author author;
 	}
 	
 	@SuppressWarnings("null")
@@ -183,7 +175,8 @@ public class Updater {
 	public static List<ResponseEntry> deserialize(String str) {
 		assert str != null : "Cannot deserialize null string";
 		@SuppressWarnings("serial")
-		Type listType = new TypeToken<List<ResponseEntry>>() {}.getType();
+		Type listType = new TypeToken<List<ResponseEntry>>() {
+		}.getType();
 		assert gson != null;
 		List<ResponseEntry> responses = gson.fromJson(str, listType);
 		assert responses != null;
@@ -205,7 +198,7 @@ public class Updater {
 			assert sender != null;
 			this.sender = sender;
 		}
-
+		
 		private CommandSender sender;
 		
 		public String tryLoadReleases(URL url) throws IOException, SocketTimeoutException {
@@ -311,7 +304,7 @@ public class Updater {
 					case RUNNING_CUSTOM:
 						Skript.info(sender, "" + m_custom_version);
 						break;
-						//$CASES-OMITTED$
+					//$CASES-OMITTED$
 					default:
 						Skript.error(sender, "" + m_internal_error);
 						Thread.dumpStack();
@@ -334,7 +327,7 @@ public class Updater {
 			assert sender != null;
 			this.sender = sender;
 		}
-
+		
 		private CommandSender sender;
 		
 		@Override

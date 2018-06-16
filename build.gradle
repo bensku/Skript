@@ -88,11 +88,15 @@ jar {
 	}
 }
 
+// ./gradlew licenseFormat
 license {
-    header file('licenseheader.txt')
-    exclude('**/Metrics.java') // Not under GPLv3
-    exclude('**/*.sk') // Sample scripts and maybe aliases
-    exclude('**/*.lang') // Language files
+	header file('licenseheader.txt')
+	mapping {
+		java = 'SLASHSTAR_STYLE'
+	}
+	exclude('**/Metrics.java') // Not under GPLv3
+	exclude('**/*.sk') // Sample scripts and maybe aliases
+	exclude('**/*.lang') // Language files
 }
 
 configurations {

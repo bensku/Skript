@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -38,6 +37,7 @@ import ch.njol.skript.classes.Converter;
 public abstract class FileUtils {
 	
 	private static boolean RUNNINGJAVA6 = true;// = System.getProperty("java.version").startsWith("1.6"); // doesn't work reliably?
+	
 	static {
 		try {
 			new File(".").toPath();
@@ -49,7 +49,8 @@ public abstract class FileUtils {
 		}
 	}
 	
-	private FileUtils() {}
+	private FileUtils() {
+	}
 	
 	private final static SimpleDateFormat backupFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 	
@@ -126,12 +127,14 @@ public abstract class FileUtils {
 				if (in != null) {
 					try {
 						in.close();
-					} catch (final IOException e) {}
+					} catch (final IOException e) {
+					}
 				}
 				if (out != null) {
 					try {
 						out.close();
-					} catch (final IOException e) {}
+					} catch (final IOException e) {
+					}
 				}
 			}
 		}
@@ -139,9 +142,10 @@ public abstract class FileUtils {
 	
 	/**
 	 * @param directory
-	 * @param renamer Renames files. Return null to leave a file as-is.
+	 * @param renamer   Renames files. Return null to leave a file as-is.
 	 * @return A collection of all changed files (with their new names)
-	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed already.
+	 * @throws IOException If renaming one of the files caused an IOException. Some files might have been renamed
+	 *                     already.
 	 */
 	public static Collection<File> renameAll(final File directory, final Converter<String, String> renamer) throws IOException {
 		final Collection<File> changed = new ArrayList<>();
@@ -165,8 +169,8 @@ public abstract class FileUtils {
 	
 	/**
 	 * Saves the contents of an InputStream in a file.
-	 * 
-	 * @param in The InputStream to read from. This stream will not be closed when this method returns.
+	 *
+	 * @param in   The InputStream to read from. This stream will not be closed when this method returns.
 	 * @param file The file to save to. Will be replaced if it exists, or created if it doesn't.
 	 * @throws IOException
 	 */
@@ -185,5 +189,4 @@ public abstract class FileUtils {
 				out.close();
 		}
 	}
-	
 }

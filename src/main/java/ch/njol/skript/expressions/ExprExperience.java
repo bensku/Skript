@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -48,6 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("2.1")
 @Events("experience spawn")
 public class ExprExperience extends SimpleExpression<Experience> {
+	
 	static {
 		Skript.registerExpression(ExprExperience.class, Experience.class, ExpressionType.SIMPLE, "[the] (spawned|dropped|) [e]xp[erience] [orb[s]]");
 	}
@@ -66,7 +66,7 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	protected Experience[] get(final Event e) {
 		if (!(e instanceof ExperienceSpawnEvent))
 			return new Experience[0];
-		return new Experience[] {new Experience(((ExperienceSpawnEvent) e).getSpawnedXP())};
+		return new Experience[]{new Experience(((ExperienceSpawnEvent) e).getSpawnedXP())};
 	}
 	
 	@Override
@@ -77,9 +77,9 @@ public class ExprExperience extends SimpleExpression<Experience> {
 			case DELETE:
 			case REMOVE:
 			case REMOVE_ALL:
-				return new Class[] {Experience[].class, Number[].class};
+				return new Class[]{Experience[].class, Number[].class};
 			case SET:
-				return new Class[] {Experience.class, Number.class};
+				return new Class[]{Experience.class, Number.class};
 			case RESET:
 				return null;
 		}
@@ -129,5 +129,4 @@ public class ExprExperience extends SimpleExpression<Experience> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the experience";
 	}
-	
 }

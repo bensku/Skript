@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.util;
 
@@ -97,7 +96,7 @@ public abstract class Math2 {
 	
 	/**
 	 * finds the smallest positive number (&ge;0) in the sequence
-	 * 
+	 *
 	 * @param nums
 	 * @return smallest positive number in the sequence or -1 if no number is positive
 	 */
@@ -114,7 +113,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Fits a number into the given interval. The method's behaviour when min > max is unspecified.
-	 * 
+	 *
 	 * @return <tt>x <= min ? min : x >= max ? max : x</tt>
 	 */
 	public static int fit(final int min, final int x, final int max) {
@@ -124,7 +123,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Fits a number into the given interval. The method's behaviour when min > max is unspecified.
-	 * 
+	 *
 	 * @return <tt>x <= min ? min : x >= max ? max : x</tt>
 	 */
 	public static short fit(final short min, final short x, final short max) {
@@ -134,7 +133,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Fits a number into the given interval. The method's behaviour when min > max is unspecified.
-	 * 
+	 *
 	 * @return <tt>x <= min ? min : x >= max ? max : x</tt>
 	 */
 	public static long fit(final long min, final long x, final long max) {
@@ -144,7 +143,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Fits a number into the given interval. The method's behaviour when min > max is unspecified.
-	 * 
+	 *
 	 * @return <tt>x <= min ? min : x >= max ? max : x</tt>
 	 */
 	public static float fit(final float min, final float x, final float max) {
@@ -154,7 +153,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Fits a number into the given interval. The method's behaviour when min > max is unspecified.
-	 * 
+	 *
 	 * @return <tt>x <= min ? min : x >= max ? max : x</tt>
 	 */
 	public static double fit(final double min, final double x, final double max) {
@@ -164,7 +163,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Modulo that returns positive values even for negative arguments.
-	 * 
+	 *
 	 * @param d
 	 * @param m
 	 * @return <tt>d%m < 0 ? d%m + m : d%m</tt>
@@ -176,7 +175,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Modulo that returns positive values even for negative arguments.
-	 * 
+	 *
 	 * @param d
 	 * @param m
 	 * @return <tt>d%m < 0 ? d%m + m : d%m</tt>
@@ -188,7 +187,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Modulo that returns positive values even for negative arguments.
-	 * 
+	 *
 	 * @param d
 	 * @param m
 	 * @return <tt>d%m < 0 ? d%m + m : d%m</tt>
@@ -200,7 +199,7 @@ public abstract class Math2 {
 	
 	/**
 	 * Modulo that returns positive values even for negative arguments.
-	 * 
+	 *
 	 * @param d
 	 * @param m
 	 * @return <tt>d%m < 0 ? d%m + m : d%m</tt>
@@ -213,7 +212,8 @@ public abstract class Math2 {
 	/**
 	 * Floors the given double and returns the result as a long.
 	 * <p>
-	 * This method can be up to 20 times faster than the default {@link Math#floor(double)} (both with and without casting to long).
+	 * This method can be up to 20 times faster than the default {@link Math#floor(double)} (both with and without
+	 * casting to long).
 	 */
 	public static long floor(final double d) {
 		final long l = (long) d;
@@ -227,7 +227,8 @@ public abstract class Math2 {
 	/**
 	 * Ceils the given double and returns the result as a long.
 	 * <p>
-	 * This method can be up to 20 times faster than the default {@link Math#ceil(double)} (both with and without casting to long).
+	 * This method can be up to 20 times faster than the default {@link Math#ceil(double)} (both with and without
+	 * casting to long).
 	 */
 	public static long ceil(final double d) {
 		final long l = (long) d;
@@ -437,14 +438,15 @@ public abstract class Math2 {
 	}
 	
 	/**
-	 * Performs a hermite interpolation between the given values, or returns 0 or 1 respectively if the value is out of range.
+	 * Performs a hermite interpolation between the given values, or returns 0 or 1 respectively if the value is out of
+	 * range.
 	 * <p>
-	 * Specifically this method returns <tt>d * d * (3 - 2 * d)</tt>, where <tt>d = {@link #fit(double, double, double) fit}(0, (x - x1) / (x2 - x1), 1)</tt>. This is very similar
-	 * to <tt>0.5 - 0.5 * cos(PI * d)</tt>.
+	 * Specifically this method returns <tt>d * d * (3 - 2 * d)</tt>, where <tt>d = {@link #fit(double, double, double)
+	 * fit}(0, (x - x1) / (x2 - x1), 1)</tt>. This is very similar to <tt>0.5 - 0.5 * cos(PI * d)</tt>.
 	 * <p>
 	 * This function is essentially equal to GLSL's smoothstep, but with a different argument order.
-	 * 
-	 * @param x The value to get the step at
+	 *
+	 * @param x  The value to get the step at
 	 * @param x1 The lower end of the step
 	 * @param x2 The upper end of the step
 	 * @return The step's value at <tt>x</tt>
@@ -453,5 +455,4 @@ public abstract class Math2 {
 		final double d = fit(0, (x - x1) / (x2 - x1), 1);
 		return d * d * (3 - 2 * d);
 	}
-	
 }

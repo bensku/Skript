@@ -1,26 +1,26 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil.xml;
 
-import static ch.njol.yggdrasil.Tag.*;
-
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.OutputStream;
@@ -41,8 +41,8 @@ import ch.njol.yggdrasil.YggdrasilException;
 import ch.njol.yggdrasil.YggdrasilOutputStream;
 
 /**
- * @deprecated XML has so many quirks that storing arbitrary data cannot be guaranteed.
  * @author Peter Güttinger
+ * @deprecated XML has so many quirks that storing arbitrary data cannot be guaranteed.
  */
 @Deprecated
 public final class YggXMLOutputStream extends YggdrasilOutputStream {
@@ -180,8 +180,7 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writePrimitive_(final Object o) throws IOException {
-		@SuppressWarnings("null")
-		final Tag type = getPrimitiveFromWrapper(o.getClass());
+		@SuppressWarnings("null") final Tag type = getPrimitiveFromWrapper(o.getClass());
 		final int size;
 		final long value;
 		switch (type) {
@@ -335,5 +334,4 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 			throw new IOException(e);
 		}
 	}
-	
 }

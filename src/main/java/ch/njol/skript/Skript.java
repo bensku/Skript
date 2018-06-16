@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
 
@@ -26,9 +25,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,9 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Filter;
@@ -51,7 +46,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -93,6 +87,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEventInfo;
 import ch.njol.skript.lang.Statement;
 import ch.njol.skript.lang.SyntaxElementInfo;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.function.Functions;
@@ -124,7 +119,6 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NullableChecker;
-import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -133,19 +127,23 @@ import ch.njol.util.coll.iterator.EnumerationIterable;
 // TODO meaningful error if someone uses an %expression with percent signs% outside of text or a variable
 
 /**
- * <b>Skript</b> - A Bukkit plugin to modify how Minecraft behaves without having to write a single line of code (You'll likely be writing some code though if you're reading this
+ * <b>Skript</b> - A Bukkit plugin to modify how Minecraft behaves without having to write a single line of code (You'll
+ * likely be writing some code though if you're reading this
  * =P)
  * <p>
- * Use this class to extend this plugin's functionality by adding more {@link Condition conditions}, {@link Effect effects}, {@link SimpleExpression expressions}, etc.
+ * Use this class to extend this plugin's functionality by adding more {@link Condition conditions}, {@link Effect
+ * effects}, {@link SimpleExpression expressions}, etc.
  * <p>
- * If your plugin.yml contains <tt>'depend: [Skript]'</tt> then your plugin will not start at all if Skript is not present. Add <tt>'softdepend: [Skript]'</tt> to your plugin.yml
- * if you want your plugin to work even if Skript isn't present, but want to make sure that Skript gets loaded before your plugin.
+ * If your plugin.yml contains <tt>'depend: [Skript]'</tt> then your plugin will not start at all if Skript is not
+ * present. Add <tt>'softdepend: [Skript]'</tt> to your plugin.yml if you want your plugin to work even if Skript isn't
+ * present, but want to make sure that Skript gets loaded before your plugin.
  * <p>
- * If you use 'softdepend' you can test whether Skript is loaded with <tt>'Bukkit.getPluginManager().getPlugin(&quot;Skript&quot;) != null'</tt>
+ * If you use 'softdepend' you can test whether Skript is loaded with <tt>'Bukkit.getPluginManager().getPlugin(&quot;Skript&quot;)
+ * != null'</tt>
  * <p>
- * Once you made sure that Skript is loaded you can use <code>Skript.getInstance()</code> whenever you need a reference to the plugin, but you likely won't need it since all API
- * methods are static.
- * 
+ * Once you made sure that Skript is loaded you can use <code>Skript.getInstance()</code> whenever you need a reference
+ * to the plugin, but you likely won't need it since all API methods are static.
+ *
  * @author Peter Güttinger
  * @see #registerAddon(JavaPlugin)
  * @see #registerCondition(Class, String...)
@@ -208,8 +206,9 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	/**
-	 * Checks if server software and Minecraft version are supported.
-	 * Prints errors or warnings to console if something is wrong.
+	 * Checks if server software and Minecraft version are supported. Prints errors or warnings to console if something
+	 * is wrong.
+	 *
 	 * @return Whether Skript can continue loading at all.
 	 */
 	private static boolean checkServerPlatform() {
@@ -316,13 +315,15 @@ public final class Skript extends JavaPlugin implements Listener {
 					}
 				}
 				info("Successfully generated the config, the example scripts and the aliases files.");
-			} catch (final ZipException e) {} catch (final IOException e) {
+			} catch (final ZipException e) {
+			} catch (final IOException e) {
 				error("Error generating the default files: " + ExceptionUtils.toString(e));
 			} finally {
 				if (f != null) {
 					try {
 						f.close();
-					} catch (final IOException e) {}
+					} catch (final IOException e) {
+					}
 				}
 			}
 		}
@@ -419,7 +420,8 @@ public final class Skript extends JavaPlugin implements Listener {
 					} finally {
 						try {
 							jar.close();
-						} catch (final IOException e) {}
+						} catch (final IOException e) {
+						}
 					}
 				} catch (final Exception e) {
 					error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
@@ -673,7 +675,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Used to test whether certain Bukkit features are supported.
-	 * 
+	 *
 	 * @param className
 	 * @return Whether the given class exists.
 	 * @deprecated use {@link #classExists(String)}
@@ -685,7 +687,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Tests whether a given class exists in the classpath.
-	 * 
+	 *
 	 * @param className The {@link Class#getCanonicalName() canonical name} of the class
 	 * @return Whether the given class exists.
 	 */
@@ -700,9 +702,9 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Tests whether a method exists in the given class.
-	 * 
-	 * @param c The class
-	 * @param methodName The name of the method
+	 *
+	 * @param c              The class
+	 * @param methodName     The name of the method
 	 * @param parameterTypes The parameter types of the method
 	 * @return Whether the given method exists.
 	 */
@@ -720,12 +722,13 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Tests whether a method exists in the given class, and whether the return type matches the expected one.
 	 * <p>
-	 * Note that this method doesn't work properly if multiple methods with the same name and parameters exist but have different return types.
-	 * 
-	 * @param c The class
-	 * @param methodName The name of the method
+	 * Note that this method doesn't work properly if multiple methods with the same name and parameters exist but have
+	 * different return types.
+	 *
+	 * @param c              The class
+	 * @param methodName     The name of the method
 	 * @param parameterTypes The parameter types of the method
-	 * @param returnType The expected return type
+	 * @param returnType     The expected return type
 	 * @return Whether the given method exists.
 	 */
 	public static boolean methodExists(final Class<?> c, final String methodName, final Class<?>[] parameterTypes, final Class<?> returnType) {
@@ -741,8 +744,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Tests whether a field exists in the given class.
-	 * 
-	 * @param c The class
+	 *
+	 * @param c         The class
 	 * @param fieldName The name of the field
 	 * @return Whether the given field exists.
 	 */
@@ -817,7 +820,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * Registers a Closeable that should be closed when this plugin is disabled.
 	 * <p>
 	 * All registered Closeables will be closed after all scripts have been stopped.
-	 * 
+	 *
 	 * @param closeable
 	 */
 	public static void closeOnDisable(final Closeable closeable) {
@@ -852,7 +855,8 @@ public final class Skript extends JavaPlugin implements Listener {
 			public void run() {
 				try {
 					Thread.sleep(10000);
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException e) {
+				}
 				try {
 					final Field modifiers = Field.class.getDeclaredField("modifiers");
 					modifiers.setAccessible(true);
@@ -909,23 +913,23 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * A small value, useful for comparing doubles or floats.
 	 * <p>
 	 * E.g. to test whether two floating-point numbers are equal:
-	 * 
+	 *
 	 * <pre>
 	 * Math.abs(a - b) &lt; Skript.EPSILON
 	 * </pre>
-	 * 
+	 *
 	 * or whether a location is within a specific radius of another location:
-	 * 
+	 *
 	 * <pre>
 	 * location.distanceSquared(center) - radius * radius &lt; Skript.EPSILON
 	 * </pre>
-	 * 
+	 *
 	 * @see #EPSILON_MULT
 	 */
 	public final static double EPSILON = 1e-10;
 	/**
 	 * A value a bit larger than 1
-	 * 
+	 *
 	 * @see #EPSILON
 	 */
 	public final static double EPSILON_MULT = 1.00001;
@@ -986,9 +990,10 @@ public final class Skript extends JavaPlugin implements Listener {
 	private final static HashMap<String, SkriptAddon> addons = new HashMap<>();
 	
 	/**
-	 * Registers an addon to Skript. This is currently not required for addons to work, but the returned {@link SkriptAddon} provides useful methods for registering syntax elements
-	 * and adding new strings to Skript's localization system (e.g. the required "types.[type]" strings for registered classes).
-	 * 
+	 * Registers an addon to Skript. This is currently not required for addons to work, but the returned {@link
+	 * SkriptAddon} provides useful methods for registering syntax elements and adding new strings to Skript's
+	 * localization system (e.g. the required "types.[type]" strings for registered classes).
+	 *
 	 * @param p The plugin
 	 */
 	public static SkriptAddon registerAddon(final JavaPlugin p) {
@@ -1038,9 +1043,9 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * registers a {@link Condition}.
-	 * 
+	 *
 	 * @param condition The condition's class
-	 * @param patterns Skript patterns to match this condition
+	 * @param patterns  Skript patterns to match this condition
 	 */
 	public static <E extends Condition> void registerCondition(final Class<E> condition, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
@@ -1051,8 +1056,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Registers an {@link Effect}.
-	 * 
-	 * @param effect The effect's class
+	 *
+	 * @param effect   The effect's class
 	 * @param patterns Skript patterns to match this effect
 	 */
 	public static <E extends Effect> void registerEffect(final Class<E> effect, final String... patterns) throws IllegalArgumentException {
@@ -1082,11 +1087,12 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Registers an expression.
-	 * 
-	 * @param c The expression's class
+	 *
+	 * @param c          The expression's class
 	 * @param returnType The superclass of all values returned by the expression
-	 * @param type The expression's {@link ExpressionType type}. This is used to determine in which order to try to parse expressions.
-	 * @param patterns Skript patterns that match this expression
+	 * @param type       The expression's {@link ExpressionType type}. This is used to determine in which order to try
+	 *                   to parse expressions.
+	 * @param patterns   Skript patterns that match this expression
 	 * @throws IllegalArgumentException if returnType is not a normal class
 	 */
 	public static <E extends Expression<T>, T> void registerExpression(final Class<E> c, final Class<T> returnType, final ExpressionType type, final String... patterns) throws IllegalArgumentException {
@@ -1127,11 +1133,11 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Registers an event.
-	 * 
-	 * @param name Capitalised name of the event without leading "On" which is added automatically (Start the name with an asterisk to prevent this). Used for error messages and
-	 *            the documentation.
-	 * @param c The event's class
-	 * @param event The Bukkit event this event applies to
+	 *
+	 * @param name     Capitalised name of the event without leading "On" which is added automatically (Start the name
+	 *                 with an asterisk to prevent this). Used for error messages and the documentation.
+	 * @param c        The event's class
+	 * @param event    The Bukkit event this event applies to
 	 * @param patterns Skript patterns to match this event
 	 * @return A SkriptEventInfo representing the registered event. Used to generate Skript's documentation.
 	 */
@@ -1145,10 +1151,10 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Registers an event.
-	 * 
-	 * @param name The name of the event, used for error messages
-	 * @param c The event's class
-	 * @param events The Bukkit events this event applies to
+	 *
+	 * @param name     The name of the event, used for error messages
+	 * @param c        The event's class
+	 * @param events   The Bukkit events this event applies to
 	 * @param patterns Skript patterns to match this event
 	 * @return A SkriptEventInfo representing the registered event. Used to generate Skript's documentation.
 	 */
@@ -1167,7 +1173,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Dispatches a command with calling command events
-	 * 
+	 *
 	 * @param sender
 	 * @param command
 	 * @return Whether the command was run
@@ -1251,9 +1257,9 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	/**
-	 * Use this in {@link Expression#init(Expression[], int, Kleenean, ch.njol.skript.lang.SkriptParser.ParseResult)} (and other methods that are called during the parsing) to log
-	 * errors with a specific {@link ErrorQuality}.
-	 * 
+	 * Use this in {@link Expression#init(Expression[], int, Kleenean, ch.njol.skript.lang.SkriptParser.ParseResult)}
+	 * (and other methods that are called during the parsing) to log errors with a specific {@link ErrorQuality}.
+	 *
 	 * @param error
 	 * @param quality
 	 */
@@ -1265,7 +1271,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Used if something happens that shouldn't happen
-	 * 
+	 *
 	 * @param info Description of the error and additional information
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
@@ -1286,23 +1292,23 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	/**
-	 * Maps Java packages of plugins to descriptions of said plugins.
-	 * This is only done for plugins that depend or soft-depend on Skript.
+	 * Maps Java packages of plugins to descriptions of said plugins. This is only done for plugins that depend or
+	 * soft-depend on Skript.
 	 */
 	private static Map<String, PluginDescriptionFile> pluginPackages = new HashMap<>();
 	private static boolean checkedPlugins = false;
 	
 	/**
 	 * Used if something happens that shouldn't happen
-	 * 
+	 *
 	 * @param cause exception that shouldn't occur
-	 * @param info Description of the error and additional information
+	 * @param info  Description of the error and additional information
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
 	public static EmptyStacktraceException exception(@Nullable Throwable cause, final @Nullable Thread thread, final @Nullable TriggerItem item, final String... info) {
 		
 		// First error: gather plugin package information
-		if (!checkedPlugins) { 
+		if (!checkedPlugins) {
 			for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 				if (plugin.getName().equals("Skript")) // Don't track myself!
 					continue;
@@ -1339,7 +1345,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		Set<PluginDescriptionFile> stackPlugins = new HashSet<>();
 		for (StackTraceElement s : stackTrace) { // Look through stack trace
-			for (Entry<String,PluginDescriptionFile> e : pluginPackages.entrySet()) { // Look through plugins
+			for (Entry<String, PluginDescriptionFile> e : pluginPackages.entrySet()) { // Look through plugins
 				if (s.getClassName().contains(e.getKey())) // Hey, is this plugin in that stack trace?
 					stackPlugins.add(e.getValue()); // Yes? Add it to list
 			}
@@ -1455,7 +1461,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	public static String SKRIPT_PREFIX = ChatColor.GRAY + "[" + ChatColor.GOLD + "Skript" + ChatColor.GRAY + "]" + ChatColor.RESET + " ";
-	
+
 //	static {
 //		Language.addListener(new LanguageChangeListener() {
 //			@Override
@@ -1486,7 +1492,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Similar to {@link #info(CommandSender, String)} but no [Skript] prefix is added.
-	 * 
+	 *
 	 * @param sender
 	 * @param info
 	 */
@@ -1500,10 +1506,10 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Indicates if Skript is running prerelease build.
+	 *
 	 * @return Boolean.
 	 */
 	public static boolean isPrerelease() {
 		return true;
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -47,6 +46,7 @@ import ch.njol.util.Kleenean;
 		"    toggle the block at the arrow"})
 @Since("1.4")
 public class EffToggle extends Effect {
+	
 	static {
 		Skript.registerEffect(EffToggle.class, "(close|turn off|de[-]activate) %blocks%", "(toggle|switch) [[the] state of] %blocks%", "(open|turn on|activate) %blocks%");
 	}
@@ -66,6 +66,7 @@ public class EffToggle extends Effect {
 	// TODO !Update with every version [blocks]
 	private final static byte[] bitFlags = new byte[Skript.MAXBLOCKID + 1];
 	private final static boolean[] doors = new boolean[Skript.MAXBLOCKID + 1];
+	
 	static {
 		bitFlags[Material.DETECTOR_RAIL.getId()] = 0x8;
 		// Doors
@@ -127,5 +128,4 @@ public class EffToggle extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "toggle " + blocks.toString(e, debug);
 	}
-	
 }

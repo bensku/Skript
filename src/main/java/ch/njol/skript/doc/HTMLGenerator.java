@@ -1,47 +1,38 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.doc;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.bekvon.bukkit.residence.commands.info;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.ClassInfo;
@@ -60,9 +51,8 @@ import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 
 /**
- * Template engine, primarily used for generating Skript documentation
- * pages by combining data from annotations and templates.
- * 
+ * Template engine, primarily used for generating Skript documentation pages by combining data from annotations and
+ * templates.
  */
 public class HTMLGenerator {
 	
@@ -93,9 +83,10 @@ public class HTMLGenerator {
 	 * Sorts annotated documentation entries alphabetically.
 	 */
 	private static class AnnotatedComparator implements Comparator<SyntaxElementInfo<?>> {
-
-		public AnnotatedComparator() {}
-
+		
+		public AnnotatedComparator() {
+		}
+		
 		@Override
 		public int compare(@Nullable SyntaxElementInfo<?> o1, @Nullable SyntaxElementInfo<?> o2) {
 			// Nullness check
@@ -118,7 +109,6 @@ public class HTMLGenerator {
 			
 			return name1.value().compareTo(name2.value());
 		}
-		
 	}
 	
 	private static final AnnotatedComparator annotatedComparator = new AnnotatedComparator();
@@ -127,9 +117,10 @@ public class HTMLGenerator {
 	 * Sorts events alphabetically.
 	 */
 	private static class EventComparator implements Comparator<SkriptEventInfo<?>> {
-
-		public EventComparator() {}
-
+		
+		public EventComparator() {
+		}
+		
 		@Override
 		public int compare(@Nullable SkriptEventInfo<?> o1, @Nullable SkriptEventInfo<?> o2) {
 			// Nullness check
@@ -145,7 +136,6 @@ public class HTMLGenerator {
 			
 			return o1.name.compareTo(o2.name);
 		}
-		
 	}
 	
 	private static final EventComparator eventComparator = new EventComparator();
@@ -154,9 +144,10 @@ public class HTMLGenerator {
 	 * Sorts class infos alphabetically.
 	 */
 	private static class ClassInfoComparator implements Comparator<ClassInfo<?>> {
-
-		public ClassInfoComparator() {}
-
+		
+		public ClassInfoComparator() {
+		}
+		
 		@Override
 		public int compare(@Nullable ClassInfo<?> o1, @Nullable ClassInfo<?> o2) {
 			// Nullness check
@@ -174,7 +165,6 @@ public class HTMLGenerator {
 			
 			return name1.compareTo(name2);
 		}
-		
 	}
 	
 	private static final ClassInfoComparator classInfoComparator = new ClassInfoComparator();
@@ -183,9 +173,10 @@ public class HTMLGenerator {
 	 * Sorts functions by their names, alphabetically.
 	 */
 	private static class FunctionComparator implements Comparator<JavaFunction<?>> {
-
-		public FunctionComparator() {}
-
+		
+		public FunctionComparator() {
+		}
+		
 		@Override
 		public int compare(@Nullable JavaFunction<?> o1, @Nullable JavaFunction<?> o2) {
 			// Nullness check
@@ -196,17 +187,15 @@ public class HTMLGenerator {
 			
 			return o1.getName().compareTo(o2.getName());
 		}
-		
 	}
 	
 	private static final FunctionComparator functionComparator = new FunctionComparator();
 	
 	/**
-	 * Generates documentation using template and output directories
-	 * given in the constructor.
+	 * Generates documentation using template and output directories given in the constructor.
 	 */
 	public void generate() {
-		for (File f : template.listFiles()) {			
+		for (File f : template.listFiles()) {
 			if (f.getName().equals("css")) { // Copy CSS files
 				File cssTo = new File(output + "/css");
 				cssTo.mkdirs();
@@ -254,9 +243,9 @@ public class HTMLGenerator {
 				String descTemp = readFile(new File(template + "/templates/" + genParams[1]));
 				String genType = genParams[0];
 				if (genType.equals("expressions")) {
-					Iterator<ExpressionInfo<?,?>> it = sortedIterator(Skript.getExpressions(), annotatedComparator);
+					Iterator<ExpressionInfo<?, ?>> it = sortedIterator(Skript.getExpressions(), annotatedComparator);
 					while (it.hasNext()) {
-						ExpressionInfo<?,?> info = it.next();
+						ExpressionInfo<?, ?> info = it.next();
 						assert info != null;
 						if (info.c.getAnnotation(NoDoc.class) != null)
 							continue;
@@ -318,10 +307,11 @@ public class HTMLGenerator {
 	}
 	
 	/**
-	 * Generates documentation entry for a type which is documented using
-	 * annotations. This means expressions, effects and conditions.
+	 * Generates documentation entry for a type which is documented using annotations. This means expressions, effects
+	 * and conditions.
+	 *
 	 * @param descTemp Template for description.
-	 * @param info Syntax element info.
+	 * @param info     Syntax element info.
 	 * @return Generated HTML entry.
 	 */
 	private String generateAnnotated(String descTemp, SyntaxElementInfo<?> info) {
@@ -543,50 +533,49 @@ public class HTMLGenerator {
 	
 	static String cleanPatterns(final String patterns) {
 		final String s = StringUtils.replaceAll("" +
-				Documentation.escapeHTML(patterns) // escape HTML
-				.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
-				.replace("()", "") // remove empty mark setting groups (mark¦)
-				.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
-				.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
-				.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
-				.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
-		, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
-			@Override
-			public String run(final Matcher m) {
-				String s = m.group(1);
-				if (s.startsWith("-"))
-					s = s.substring(1);
-				String flag = "";
-				if (s.startsWith("*") || s.startsWith("~")) {
-					flag = s.substring(0, 1);
-					s = s.substring(1);
-				}
-				final int a = s.indexOf("@");
-				if (a != -1)
-					s = s.substring(0, a);
-				final StringBuilder b = new StringBuilder("%");
-				b.append(flag);
-				boolean first = true;
-				for (final String c : s.split("/")) {
-					assert c != null;
-					if (!first)
-						b.append("/");
-					first = false;
-					final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
-					final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
-					if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
-						b.append("<a href='classes.html#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
-					} else {
-						b.append(c);
-						if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
-							Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
+						Documentation.escapeHTML(patterns) // escape HTML
+								.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
+								.replace("()", "") // remove empty mark setting groups (mark¦)
+								.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
+								.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
+								.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
+								.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
+				, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
+					@Override
+					public String run(final Matcher m) {
+						String s = m.group(1);
+						if (s.startsWith("-"))
+							s = s.substring(1);
+						String flag = "";
+						if (s.startsWith("*") || s.startsWith("~")) {
+							flag = s.substring(0, 1);
+							s = s.substring(1);
+						}
+						final int a = s.indexOf("@");
+						if (a != -1)
+							s = s.substring(0, a);
+						final StringBuilder b = new StringBuilder("%");
+						b.append(flag);
+						boolean first = true;
+						for (final String c : s.split("/")) {
+							assert c != null;
+							if (!first)
+								b.append("/");
+							first = false;
+							final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
+							final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
+							if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
+								b.append("<a href='classes.html#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
+							} else {
+								b.append(c);
+								if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
+									Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
+							}
+						}
+						return "" + b.append("%").toString();
 					}
-				}
-				return "" + b.append("%").toString();
-			}
-		});
+				});
 		assert s != null : patterns;
 		return s;
 	}
-	
 }

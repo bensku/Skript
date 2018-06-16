@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.doc;
 
@@ -50,9 +49,9 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * TODO list special expressions for events and event values
- * TODO compare doc in code with changed one of the webserver and warn about differences?
- * 
+ * TODO list special expressions for events and event values TODO compare doc in code with changed one of the webserver
+ * and warn about differences?
+ *
  * @author Peter Güttinger
  */
 @SuppressFBWarnings("ES_COMPARING_STRINGS_WITH_EQ")
@@ -157,48 +156,48 @@ public class Documentation {
 	
 	private static String cleanPatterns(final String patterns) {
 		final String s = StringUtils.replaceAll("" +
-				escapeHTML(patterns) // escape HTML
-				.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
-				.replace("()", "") // remove empty mark setting groups (mark¦)
-				.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
-				.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
-				.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
-				.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
-		, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
-			@Override
-			public String run(final Matcher m) {
-				String s = m.group(1);
-				if (s.startsWith("-"))
-					s = s.substring(1);
-				String flag = "";
-				if (s.startsWith("*") || s.startsWith("~")) {
-					flag = s.substring(0, 1);
-					s = s.substring(1);
-				}
-				final int a = s.indexOf("@");
-				if (a != -1)
-					s = s.substring(0, a);
-				final StringBuilder b = new StringBuilder("%");
-				b.append(flag);
-				boolean first = true;
-				for (final String c : s.split("/")) {
-					assert c != null;
-					if (!first)
-						b.append("/");
-					first = false;
-					final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
-					final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
-					if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
-						b.append("<a href='../classes/#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
-					} else {
-						b.append(c);
-						if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
-							Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
+						escapeHTML(patterns) // escape HTML
+								.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
+								.replace("()", "") // remove empty mark setting groups (mark¦)
+								.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
+								.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
+								.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
+								.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
+				, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
+					@Override
+					public String run(final Matcher m) {
+						String s = m.group(1);
+						if (s.startsWith("-"))
+							s = s.substring(1);
+						String flag = "";
+						if (s.startsWith("*") || s.startsWith("~")) {
+							flag = s.substring(0, 1);
+							s = s.substring(1);
+						}
+						final int a = s.indexOf("@");
+						if (a != -1)
+							s = s.substring(0, a);
+						final StringBuilder b = new StringBuilder("%");
+						b.append(flag);
+						boolean first = true;
+						for (final String c : s.split("/")) {
+							assert c != null;
+							if (!first)
+								b.append("/");
+							first = false;
+							final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
+							final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
+							if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
+								b.append("<a href='../classes/#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
+							} else {
+								b.append(c);
+								if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
+									Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
+							}
+						}
+						return "" + b.append("%").toString();
 					}
-				}
-				return "" + b.append("%").toString();
-			}
-		});
+				});
 		assert s != null : patterns;
 		return s;
 	}
@@ -322,6 +321,7 @@ public class Documentation {
 	}
 	
 	private static ArrayList<Pattern> validation = new ArrayList<>();
+	
 	static {
 		validation.add(Pattern.compile("<" + "(?!a href='|/a>|br ?/|/?(i|b|u|code|pre|ul|li|em)>)"));
 		validation.add(Pattern.compile("(?<!</a|'|br ?/|/?(i|b|u|code|pre|ul|li|em))" + ">"));
@@ -341,7 +341,8 @@ public class Documentation {
 		}
 		html = "" + html.replaceAll("&(?!(amp|lt|gt|quot);)", "&amp;");
 		final Matcher m = Pattern.compile("<a href='(.*?)'>").matcher(html);
-		linkLoop: while (m.find()) {
+		linkLoop:
+		while (m.find()) {
 			final String url = m.group(1);
 			final String[] s = url.split("#");
 			if (s.length == 1)
@@ -366,7 +367,8 @@ public class Documentation {
 						try {
 							Class.forName("ch.njol.skript." + urls[i] + "." + s[1]);
 							continue;
-						} catch (final ClassNotFoundException e) {}
+						} catch (final ClassNotFoundException e) {
+						}
 					}
 				}
 			}
@@ -386,5 +388,4 @@ public class Documentation {
 		}
 		return "" + s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
 	}
-	
 }

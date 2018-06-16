@@ -1,25 +1,23 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -55,6 +53,7 @@ import ch.njol.util.Kleenean;
 		"        set targeted block to argument"})
 @Since("1.0")
 public class ExprTargetedBlock extends PropertyExpression<Player, Block> {
+	
 	static {
 		Skript.registerExpression(ExprTargetedBlock.class, Block.class, ExpressionType.COMBINED,
 				"[the] target[ed] block[s] [of %players%]", "%players%'[s] target[ed] block[s]",
@@ -100,7 +99,7 @@ public class ExprTargetedBlock extends PropertyExpression<Player, Block> {
 //			return ((PlayerInteractEvent) e).getClickedBlock();
 //		}
 		try {
-			Block b = p.getTargetBlock((Set<Material>)null, SkriptConfig.maxTargetBlockDistance.value());
+			Block b = p.getTargetBlock((Set<Material>) null, SkriptConfig.maxTargetBlockDistance.value());
 			if (b.getType() == Material.AIR)
 				b = null;
 			targetedBlocks.put(p, b);
@@ -136,5 +135,4 @@ public class ExprTargetedBlock extends PropertyExpression<Player, Block> {
 		super.setTime(time);
 		return true;
 	}
-	
 }

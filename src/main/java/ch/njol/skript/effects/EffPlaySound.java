@@ -1,23 +1,24 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
+
+import java.util.Locale;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -36,32 +37,30 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-import java.util.Locale;
-
 @Name("Play Sound")
 @Description("Plays a sound at given location for everyone or just for given players. Playing sounds from resource packs is supported.")
 @Examples("")
 @Since("2.2-dev28")
 public class EffPlaySound extends Effect {
-
+	
 	static {
 		Skript.registerEffect(EffPlaySound.class, "play sound %string% [with volume %number%] [(and|with) pitch %number%] at %location% [for %players%]");
 	}
-
+	
 	@SuppressWarnings("null")
 	private Expression<String> sound;
 	@Nullable
 	private Expression<Number> volume;
 	@Nullable
 	private Expression<Number> pitch;
-
+	
 	@SuppressWarnings("null")
 	private Expression<Location> location;
 	@Nullable
 	private Expression<Player> players;
-
+	
 	private boolean useCategory;
-
+	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -71,25 +70,26 @@ public class EffPlaySound extends Effect {
 		location = (Expression<Location>) exprs[3];
 		players = (Expression<Player>) exprs[4];
 		useCategory = Skript.classExists("org.bukkit.SoundCategory");
-
+		
 		return true;
 	}
-
+	
 	@SuppressWarnings("null")
 	@Override
 	protected void execute(Event e) {
 		Location l = location.getSingle(e);
 		Sound soundEnum = null;
 		String s = sound.getSingle(e);
-
+		
 		if (s != null) {
 			float vol = volume != null ? volume.getSingle(e).floatValue() : 0;
 			float pi = pitch != null ? pitch.getSingle(e).floatValue() : 0;
-
+			
 			try {
 				soundEnum = Sound.valueOf(s.toUpperCase(Locale.ENGLISH));
-			} catch(IllegalArgumentException e1) {}
-
+			} catch (IllegalArgumentException e1) {
+			}
+			
 			if (players != null) {
 				if (soundEnum == null) {
 					for (Player p : players.getAll(e)) {
@@ -116,7 +116,6 @@ public class EffPlaySound extends Effect {
 				}
 			}
 		}
-
 	}
 	
 	@Override
@@ -125,5 +124,4 @@ public class EffPlaySound extends Effect {
 			return "play sound " + sound.getSingle(e);
 		return "play sound";
 	}
-	
 }

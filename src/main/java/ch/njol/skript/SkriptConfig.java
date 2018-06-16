@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript;
 
@@ -26,14 +25,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.locks.LockSupport;
-
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.function.Function;
 
 import org.bukkit.event.EventPriority;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Converter;
@@ -42,6 +35,8 @@ import ch.njol.skript.config.EnumParser;
 import ch.njol.skript.config.Option;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
@@ -56,12 +51,14 @@ import ch.njol.util.Setter;
 
 /**
  * Important: don't save values from the config, a '/skript reload config/configs/all' won't work correctly otherwise!
- * 
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("unused")
 public abstract class SkriptConfig {
-	private SkriptConfig() {}
+	
+	private SkriptConfig() {
+	}
 	
 	@Nullable
 	static Config mainConfig;
@@ -169,7 +166,7 @@ public abstract class SkriptConfig {
 	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<Boolean>("disable variable missing and/or warnings", false);
 	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings = new Option<Boolean>("disable starting a variable's name with an expression warnings", false)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					VariableString.disableVariableStartingWithExpressionWarnings = t;
@@ -189,7 +186,7 @@ public abstract class SkriptConfig {
 	
 	public final static Option<Boolean> enableTimings = new Option<Boolean>("enable timings", false)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					if (Skript.classExists("co.aikar.timings.Timings")) { // Check for Paper server
@@ -202,12 +199,11 @@ public abstract class SkriptConfig {
 						SkriptTimings.setEnabled(false); // Just to be sure, deactivate timings support completely
 					}
 				}
-				
 			});
 	
 	public final static Option<String> parseLinks = new Option<String>("parse links in chat messages", "disabled")
 			.setter(new Setter<String>() {
-
+				
 				@Override
 				public void set(String t) {
 					try {
@@ -231,23 +227,21 @@ public abstract class SkriptConfig {
 						// Ignore it, we're on unsupported server platform and class loading failed
 					}
 				}
-				
 			});
-
+	
 	public final static Option<Boolean> caseInsensitiveVariables = new Option<Boolean>("case-insensitive variables", true)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					Variables.caseInsensitiveVariables = t;
 				}
-				
 			})
 			.optional(true);
 	
 	public final static Option<Boolean> colorResetCodes = new Option<Boolean>("color codes reset formatting", true)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					try {
@@ -256,37 +250,34 @@ public abstract class SkriptConfig {
 						// Ignore it, we're on unsupported server platform and class loading failed
 					}
 				}
-				
 			});
-
+	
 	public final static Option<Boolean> asyncLoaderEnabled = new Option<Boolean>("asynchronous script loading", false)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					ScriptLoader.loadAsync = t;
 				}
-				
 			})
 			.optional(true);
 	
 	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
 			.optional(true);
-
+	
 	public final static Option<Boolean> keepLastUsageDates = new Option<Boolean>("keep command last usage dates", false)
 			.optional(true);
 	
 	public final static Option<Boolean> executeFunctionsWithMissingParams = new Option<Boolean>("execute functions with missing parameters", true)
 			.optional(true)
 			.setter(new Setter<Boolean>() {
-
+				
 				@Override
 				public void set(Boolean t) {
 					Function.executeWithNulls = t;
 				}
-				
 			});
-
+	
 	/**
 	 * This should only be used in special cases
 	 */
@@ -386,7 +377,7 @@ public abstract class SkriptConfig {
 			}
 			
 			mc.load(SkriptConfig.class);
-			
+
 //			if (!keepConfigsLoaded.value())
 //				mainConfig = null;
 		} catch (final RuntimeException e) {
@@ -395,5 +386,4 @@ public abstract class SkriptConfig {
 		}
 		return true;
 	}
-	
 }

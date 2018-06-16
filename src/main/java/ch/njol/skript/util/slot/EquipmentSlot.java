@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -26,7 +25,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -62,7 +60,7 @@ public class EquipmentSlot extends SlotWithIndex {
 			}
 		},
 		OFF_HAND { // Since Minecraft 1.9 (defaults to empty if earlier version)
-
+			
 			@Override
 			@Nullable
 			public ItemStack get(EntityEquipment e) {
@@ -72,7 +70,7 @@ public class EquipmentSlot extends SlotWithIndex {
 				Skript.warning("No off hand support, but a skript would need that!");
 				return new ItemStack(Material.AIR);
 			}
-
+			
 			@Override
 			public void set(EntityEquipment e, @Nullable ItemStack item) {
 				if (Skript.isRunningMinecraft(1, 9)) {
@@ -81,7 +79,6 @@ public class EquipmentSlot extends SlotWithIndex {
 					Skript.warning("No off hand support, but a skript would need that!");
 				}
 			}
-			
 		},
 		HELMET(39) {
 			@Override
@@ -172,7 +169,7 @@ public class EquipmentSlot extends SlotWithIndex {
 		// So this math trick gets us the EquipSlot from inventory slot index
 		this.slotToString = true; // Referring to numeric slot id, right?
 	}
-
+	
 	@Override
 	@Nullable
 	public ItemStack getItem() {
@@ -188,17 +185,18 @@ public class EquipmentSlot extends SlotWithIndex {
 	
 	/**
 	 * Gets underlying armor slot enum.
+	 *
 	 * @return Armor slot.
 	 */
 	public EquipSlot getEquipSlot() {
 		return slot;
 	}
-
+	
 	@Override
 	public int getIndex() {
 		return slot.slotNumber;
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		if (slotToString) // Slot to string
@@ -206,5 +204,4 @@ public class EquipmentSlot extends SlotWithIndex {
 		else // Contents of slot to string
 			return Classes.toString(getItem());
 	}
-	
 }

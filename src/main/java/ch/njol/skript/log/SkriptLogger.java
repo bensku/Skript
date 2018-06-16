@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.log;
 
@@ -58,7 +57,7 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Shorthand for <tt>{@link #startLogHandler(LogHandler) startLogHandler}(new {@link RetainingLogHandler}());</tt>
-	 * 
+	 *
 	 * @return A newly created RetainingLogHandler
 	 */
 	public static RetainingLogHandler startRetainingLog() {
@@ -67,7 +66,7 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Shorthand for <tt>{@link #startLogHandler(LogHandler) startLogHandler}(new {@link ParseLogHandler}());</tt>
-	 * 
+	 *
 	 * @return A newly created ParseLogHandler
 	 */
 	public static ParseLogHandler startParseLogHandler() {
@@ -78,7 +77,7 @@ public abstract class SkriptLogger {
 	 * Starts a log handler.
 	 * <p>
 	 * This should be used like this:
-	 * 
+	 *
 	 * <pre>
 	 * LogHandler log = SkriptLogger.startLogHandler(new ...LogHandler());
 	 * try {
@@ -88,7 +87,7 @@ public abstract class SkriptLogger {
 	 * 	log.stop();
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @return The passed LogHandler
 	 * @see #startParseLogHandler()
 	 * @see #startRetainingLog()
@@ -144,12 +143,12 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Logging should be done like this:
-	 * 
+	 *
 	 * <pre>
 	 * if (Skript.logNormal())
 	 * 	Skript.info(&quot;this information is displayed on verbosity normal or higher&quot;);
 	 * </pre>
-	 * 
+	 *
 	 * @param level
 	 * @param message
 	 * @see Skript#info(String)
@@ -199,7 +198,7 @@ public abstract class SkriptLogger {
 	
 	/**
 	 * Checks whether messages should be logged for the given verbosity.
-	 * 
+	 *
 	 * @param minVerb minimal verbosity
 	 * @return Whether messages should be logged for the given verbosity.
 	 */
@@ -210,5 +209,4 @@ public abstract class SkriptLogger {
 	public static boolean debug() {
 		return debug;
 	}
-	
 }

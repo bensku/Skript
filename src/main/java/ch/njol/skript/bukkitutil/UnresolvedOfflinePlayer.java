@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -40,7 +39,7 @@ import ch.njol.util.Closeable;
  * Should only be used in {@link Commands} and the parser for offline players.
  * <p>
  * Will produce {@link NullPointerException}s if used incorrectly.
- * 
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("null")
@@ -53,7 +52,7 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 		resolverThread = Skript.newThread(new Runnable() {
 			@SuppressWarnings({"deprecation", "unused"})
 			@Override
-			public void run() {				
+			public void run() {
 				while (true) {
 					if (toResolve == null) {
 						toResolve = new LinkedBlockingQueue<>();
@@ -84,8 +83,9 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 	final Callback<Void, OfflinePlayer> callback;
 	
 	/**
-	 * @param name The player's name
-	 * @param callback A callback that will be run when the player has been resolved. It will be called on the resolver thread which should not be blocked.
+	 * @param name     The player's name
+	 * @param callback A callback that will be run when the player has been resolved. It will be called on the resolver
+	 *                 thread which should not be blocked.
 	 */
 	public UnresolvedOfflinePlayer(final String name, final Callback<Void, OfflinePlayer> callback) {
 		this.name = name;
@@ -165,5 +165,4 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 	public Location getBedSpawnLocation() {
 		return bukkitOfflinePlayer.getBedSpawnLocation();
 	}
-	
 }

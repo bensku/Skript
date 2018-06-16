@@ -1,25 +1,36 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.config.Node;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -27,20 +38,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -52,15 +49,15 @@ import java.util.List;
 		"remove 5 wool from the inventory of the clicked block"})
 @Since("1.0")
 public class ExprInventory extends SimpleExpression<Object> {
-
+	
 	private boolean inLoop;
 	@SuppressWarnings("null")
 	private Expression<InventoryHolder> holders;
-
+	
 	static {
 		PropertyExpression.register(ExprInventory.class, Object.class, "inventor(y|ies)", "inventoryholders");
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -70,8 +67,8 @@ public class ExprInventory extends SimpleExpression<Object> {
 		holders = (Expression<InventoryHolder>) exprs[0];
 		return true;
 	}
-
-
+	
+	
 	@Override
 	protected Object[] get(Event e) {
 		List<Inventory> inventories = new ArrayList<>();
@@ -85,28 +82,28 @@ public class ExprInventory extends SimpleExpression<Object> {
 			 * in inventory expression to not duplicate code
 			 */
 			ExprItemsIn expr = new ExprItemsIn();
-			expr.init(new Expression[] {
+			expr.init(new Expression[]{
 					new SimpleExpression() {
 						@Override
 						protected Object[] get(Event e) {
 							return invArray;
 						}
-
+						
 						@Override
 						public boolean isSingle() {
 							return invArray.length == 1;
 						}
-
+						
 						@Override
 						public Class<?> getReturnType() {
 							return Inventory.class;
 						}
-
+						
 						@Override
 						public String toString(@Nullable Event e, boolean debug) {
 							return "loop of inventory expression";
 						}
-
+						
 						@Override
 						public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 							return true;
@@ -117,12 +114,12 @@ public class ExprInventory extends SimpleExpression<Object> {
 		}
 		return invArray;
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return !inLoop && holders.isSingle();
 	}
-
+	
 	@Override
 	public Class<?> getReturnType() {
 		return inLoop ? Slot.class : Inventory.class;
@@ -132,5 +129,4 @@ public class ExprInventory extends SimpleExpression<Object> {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "inventor" + (holders.isSingle() ? "y" : "ies") + " of " + holders.toString(e, debug);
 	}
-	
 }

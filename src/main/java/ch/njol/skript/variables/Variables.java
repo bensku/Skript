@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
 
@@ -65,15 +64,18 @@ import ch.njol.yggdrasil.Yggdrasil;
  * @author Peter Güttinger
  */
 public abstract class Variables {
-	private Variables() {}
+	
+	private Variables() {
+	}
 	
 	public final static short YGGDRASIL_VERSION = 1;
 	
 	public final static Yggdrasil yggdrasil = new Yggdrasil(YGGDRASIL_VERSION);
-
+	
 	public static boolean caseInsensitiveVariables = true;
 	
 	private final static String configurationSerializablePrefix = "ConfigurationSerializable_";
+	
 	static {
 		yggdrasil.registerSingleClass(Kleenean.class, "Kleenean");
 		yggdrasil.registerClassResolver(new ConfigurationSerializer<ConfigurationSerializable>() {
@@ -136,7 +138,8 @@ public abstract class Variables {
 				while (true) {
 					try {
 						Thread.sleep(Skript.logNormal() ? 1000 : 5000); // low verbosity won't disable these messages, but makes them more rare
-					} catch (final InterruptedException e) {}
+					} catch (final InterruptedException e) {
+					}
 					synchronized (tempVars) {
 						final Map<String, NonNullPair<Object, VariablesStorage>> tvs = tempVars.get();
 						if (tvs != null)
@@ -269,17 +272,18 @@ public abstract class Variables {
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
-	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
+	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is
+	 * not set.
 	 */
 	@Nullable
 	public static Object getVariable(final String name, final @Nullable Event e, final boolean local) {
 		String n = name;
-        if (caseInsensitiveVariables) {
-            n = name.toLowerCase(Locale.ENGLISH);
-        }
-	    if (local) {
+		if (caseInsensitiveVariables) {
+			n = name.toLowerCase(Locale.ENGLISH);
+		}
+		if (local) {
 			final VariablesMap map = localVariables.get(e);
 			if (map == null)
 				return null;
@@ -296,16 +300,17 @@ public abstract class Variables {
 	
 	/**
 	 * Sets a variable.
-	 * 
-	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
+	 *
+	 * @param name  The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this
+	 *              case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
 	public static void setVariable(final String name, @Nullable Object value, final @Nullable Event e, final boolean local) {
-        String n = name;
-        if (caseInsensitiveVariables) {
-            n = name.toLowerCase(Locale.ENGLISH);
-        }
-	    if (value != null) {
+		String n = name;
+		if (caseInsensitiveVariables) {
+			n = name.toLowerCase(Locale.ENGLISH);
+		}
+		if (value != null) {
 			assert !n.endsWith("::*");
 			final ClassInfo<?> ci = Classes.getSuperClassInfo(value.getClass());
 			final Class<?> sas = ci.getSerializeAs();
@@ -346,12 +351,14 @@ public abstract class Variables {
 	private static int loadConflicts = 0;
 	
 	/**
-	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while variables are loaded when Skript is starting.
+	 * Sets a variable and moves it to the appropriate database if the config was changed. Must only be used while
+	 * variables are loaded when Skript is starting.
 	 * <p>
 	 * Must be called on Bukkit's main thread.
 	 * <p>
-	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be holding any database locks or such when calling this!
-	 * 
+	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be
+	 * holding any database locks or such when calling this!
+	 *
 	 * @param name
 	 * @param value
 	 * @param source
@@ -402,7 +409,7 @@ public abstract class Variables {
 	
 	/**
 	 * Stores loaded variables into the variables map and the appropriate databases.
-	 * 
+	 *
 	 * @return How many variables were not stored anywhere
 	 */
 	@SuppressWarnings("null")
@@ -467,7 +474,8 @@ public abstract class Variables {
 							break;
 						}
 					}
-				} catch (final InterruptedException e) {}
+				} catch (final InterruptedException e) {
+				}
 			}
 		}
 	}, "Skript variable save thread");
@@ -476,7 +484,8 @@ public abstract class Variables {
 		while (queue.size() > 0) {
 			try {
 				Thread.sleep(10);
-			} catch (final InterruptedException e) {}
+			} catch (final InterruptedException e) {
+			}
 		}
 		closed = true;
 		saveThread.interrupt();
@@ -490,5 +499,4 @@ public abstract class Variables {
 			variablesLock.readLock().unlock();
 		}
 	}
-	
 }

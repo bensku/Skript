@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -25,38 +24,58 @@ import java.util.Map;
 import org.eclipse.jdt.annotation.Nullable;
 
 public enum Tag {
-	/** the null reference */
+	/**
+	 * the null reference
+	 */
 	T_NULL(0x0, null, "null"),
 	
-	/** primitive types */
+	/**
+	 * primitive types
+	 */
 	T_BYTE(0x1, byte.class, "byte"), T_SHORT(0x2, short.class, "short"), T_INT(0x3, int.class, "int"), T_LONG(0x4, long.class, "long"),
 	T_FLOAT(0x8, float.class, "float"), T_DOUBLE(0x9, double.class, "double"),
 	T_CHAR(0xe, char.class, "char"), T_BOOLEAN(0xf, boolean.class, "boolean"),
 	
-	/** wrapper types */
+	/**
+	 * wrapper types
+	 */
 	T_BYTE_OBJ(0x10 + T_BYTE.tag, Byte.class, "Byte"), T_SHORT_OBJ(0x10 + T_SHORT.tag, Short.class, "Short"), T_INT_OBJ(0x10 + T_INT.tag, Integer.class, "Integer"), T_LONG_OBJ(0x10 + T_LONG.tag, Long.class, "Long"),
 	T_FLOAT_OBJ(0x10 + T_FLOAT.tag, Float.class, "Float"), T_DOUBLE_OBJ(0x10 + T_DOUBLE.tag, Double.class, "Double"),
 	T_CHAR_OBJ(0x10 + T_CHAR.tag, Character.class, "Character"), T_BOOLEAN_OBJ(0x10 + T_BOOLEAN.tag, Boolean.class, "Boolean"),
 	
-	/** saved as UTF-8 */
+	/**
+	 * saved as UTF-8
+	 */
 	T_STRING(0x20, String.class, "string"),
 	
-	/** arrays */
+	/**
+	 * arrays
+	 */
 	T_ARRAY(0x30, null, "array"),
 	
-	/** enum constants & class singletons */
+	/**
+	 * enum constants & class singletons
+	 */
 	T_ENUM(0x40, null, "enum"), T_CLASS(0x41, Class.class, "class"),
 	
-	/** a generic object */
+	/**
+	 * a generic object
+	 */
 	T_OBJECT(0x80, Object.class, "object"),
 	
-	/** must always be 0xFF (check uses) */
+	/**
+	 * must always be 0xFF (check uses)
+	 */
 	T_REFERENCE(0xFF, null, "reference");
 	
-	/** primitive tags are between these value */
+	/**
+	 * primitive tags are between these value
+	 */
 	public final static int MIN_PRIMITIVE = T_BYTE.tag, MAX_PRIMITIVE = T_BOOLEAN.tag;
 	
-	/** primitive tags are between these value */
+	/**
+	 * primitive tags are between these value
+	 */
 	public final static int MIN_WRAPPER = T_BYTE_OBJ.tag, MAX_WRAPPER = T_BOOLEAN_OBJ.tag;
 	
 	public final byte tag;
@@ -105,6 +124,7 @@ public enum Tag {
 	private final static Map<Class<?>, Tag> types = new HashMap<>();
 	private final static Tag[] byID = new Tag[256];
 	private final static Map<String, Tag> byName = new HashMap<>();
+	
 	static {
 		for (final Tag t : Tag.values()) {
 			types.put(t.c, t);
@@ -140,6 +160,7 @@ public enum Tag {
 	}
 	
 	private final static HashMap<Class<?>, Tag> wrapperTypes = new HashMap<>();
+	
 	static {
 		wrapperTypes.put(Byte.class, T_BYTE);
 		wrapperTypes.put(Short.class, T_SHORT);

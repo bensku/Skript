@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
 
@@ -88,7 +87,7 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 				.since("2.0");
 	}
 	
-//	private final static HashMap<BlockLocation, List<Trigger>> blockTriggers = new HashMap<BlockLocation, List<Trigger>>();
+	//	private final static HashMap<BlockLocation, List<Trigger>> blockTriggers = new HashMap<BlockLocation, List<Trigger>>();
 	final static HashMap<Integer, List<Trigger>> itemTypeTriggers = new HashMap<>();
 	@SuppressWarnings("null")
 	ItemType[] types = null;
@@ -126,7 +125,8 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 					return;
 				SkriptEventHandler.logEventStart(e);
 				final byte data = to.getWorld().getBlockAt(to.getBlockX(), y, to.getBlockZ()).getData();
-				triggersLoop: for (final Trigger t : ts) {
+				triggersLoop:
+				for (final Trigger t : ts) {
 					final EvtMoveOn se = (EvtMoveOn) t.getEvent();
 					for (final ItemType i : se.types) {
 						if (i.isOfType(id, data)) {
@@ -177,8 +177,7 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 //			y = b.getY();
 //			z = b.getZ();
 //		} else {
-		@SuppressWarnings("unchecked")
-		final Literal<? extends ItemType> l = (Literal<? extends ItemType>) args[0];//SkriptParser.parseLiteral(parser.regexes.get(0).group(), ItemType.class, ParseContext.EVENT);
+		@SuppressWarnings("unchecked") final Literal<? extends ItemType> l = (Literal<? extends ItemType>) args[0];//SkriptParser.parseLiteral(parser.regexes.get(0).group(), ItemType.class, ParseContext.EVENT);
 		if (l == null)
 			return false;
 		types = l.getAll();
@@ -228,7 +227,8 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 		}
 //		}
 		if (!registeredExecutor) {
-			Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), executor, Skript.getInstance(), true);
+			Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {
+			}, SkriptConfig.defaultEventPriority.value(), executor, Skript.getInstance(), true);
 			registeredExecutor = true;
 		}
 	}
@@ -256,5 +256,4 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 //		blockTriggers.clear();
 		itemTypeTriggers.clear();
 	}
-	
 }

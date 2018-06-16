@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -36,15 +35,16 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.yggdrasil.Fields.FieldContext; // required - wtf
+import ch.njol.yggdrasil.Fields.FieldContext;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilRobustSerializable;
 
 @NotThreadSafe
 public final class Fields implements Iterable<FieldContext> {
 	
 	/**
-	 * Holds a field's name and value, and throws {@link StreamCorruptedException}s if primitives or objects are used incorrectly.
-	 * 
+	 * Holds a field's name and value, and throws {@link StreamCorruptedException}s if primitives or objects are used
+	 * incorrectly.
+	 *
 	 * @author Peter Güttinger
 	 */
 	@NotThreadSafe
@@ -52,7 +52,9 @@ public final class Fields implements Iterable<FieldContext> {
 		
 		final String id;
 		
-		/** not null if this {@link #isPrimitiveValue is a primitive} */
+		/**
+		 * not null if this {@link #isPrimitiveValue is a primitive}
+		 */
 		@Nullable
 		private Object value;
 		
@@ -168,7 +170,6 @@ public final class Fields implements Iterable<FieldContext> {
 			final FieldContext other = (FieldContext) obj;
 			return id.equals(other.id);
 		}
-		
 	}
 	
 	@Nullable
@@ -188,10 +189,12 @@ public final class Fields implements Iterable<FieldContext> {
 	}
 	
 	/**
-	 * Creates a fields object and initialises it with all non-transient and non-static fields of the given class and its superclasses.
-	 * 
+	 * Creates a fields object and initialises it with all non-transient and non-static fields of the given class and
+	 * its superclasses.
+	 *
 	 * @param c Some class
-	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name as a field in one of its superclasses)
+	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name
+	 *                                  as a field in one of its superclasses)
 	 */
 	public Fields(final Class<?> c, final Yggdrasil yggdrasil) throws NotSerializableException {
 		this.yggdrasil = yggdrasil;
@@ -204,9 +207,10 @@ public final class Fields implements Iterable<FieldContext> {
 	
 	/**
 	 * Creates a fields object and initialises it with all non-transient and non-static fields of the given object.
-	 * 
+	 *
 	 * @param o Some object
-	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name as a field in one of its superclasses)
+	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name
+	 *                                  as a field in one of its superclasses)
 	 */
 	public Fields(final Object o) throws NotSerializableException {
 		this(o, null);
@@ -214,9 +218,10 @@ public final class Fields implements Iterable<FieldContext> {
 	
 	/**
 	 * Creates a fields object and initialises it with all non-transient and non-static fields of the given object.
-	 * 
+	 *
 	 * @param o Some object
-	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name as a field in one of its superclasses)
+	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name
+	 *                                  as a field in one of its superclasses)
 	 */
 	public Fields(final Object o, @Nullable final Yggdrasil yggdrasil) throws NotSerializableException {
 		this.yggdrasil = yggdrasil;
@@ -238,10 +243,11 @@ public final class Fields implements Iterable<FieldContext> {
 	
 	/**
 	 * Gets all serialisable fields of the provided class, including superclasses.
-	 * 
+	 *
 	 * @param c The class to get the fields of
 	 * @return All non-static and non-transient fields of the given class and its superclasses
-	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name as a field in one of its superclasses)
+	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name
+	 *                                  as a field in one of its superclasses)
 	 */
 	public static Collection<Field> getFields(final Class<?> c) throws NotSerializableException {
 		Collection<Field> fields = cache.get(c);
@@ -271,11 +277,11 @@ public final class Fields implements Iterable<FieldContext> {
 	
 	/**
 	 * Sets all fields of the given Object to the values stored in this Fields object.
-	 * 
+	 *
 	 * @param o The object whose fields should be set
 	 * @throws StreamCorruptedException
 	 * @throws NotSerializableException
-	 * @throws YggdrasilException If this was called on a Fields object not created by Yggdrasil itself
+	 * @throws YggdrasilException       If this was called on a Fields object not created by Yggdrasil itself
 	 */
 	public void setFields(final Object o) throws StreamCorruptedException, NotSerializableException {
 		final Yggdrasil y = yggdrasil;
@@ -339,7 +345,7 @@ public final class Fields implements Iterable<FieldContext> {
 	}
 	
 	public boolean hasField(String fieldID) {
-	    return this.fields.containsKey(fieldID);
+		return this.fields.containsKey(fieldID);
 	}
 	
 	@Nullable
@@ -389,7 +395,7 @@ public final class Fields implements Iterable<FieldContext> {
 	
 	/**
 	 * Removes a field and its value from this Fields object.
-	 * 
+	 *
 	 * @param fieldID The id of the field to remove
 	 * @return Whether a field with the given name was actually defined
 	 */
@@ -402,5 +408,4 @@ public final class Fields implements Iterable<FieldContext> {
 	public Iterator<FieldContext> iterator() {
 		return fields.values().iterator();
 	}
-	
 }

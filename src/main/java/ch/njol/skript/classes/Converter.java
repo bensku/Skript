@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes;
 
@@ -26,7 +25,7 @@ import ch.njol.skript.registrations.Converters;
 
 /**
  * used to convert data from one type to another.
- * 
+ *
  * @param <F> the accepted type of objects to convert <u>f</u>rom
  * @param <T> the type to convert <u>t</u>o
  * @author Peter Güttinger
@@ -41,10 +40,10 @@ public interface Converter<F, T> {
 	
 	/**
 	 * holds information about a converter
-	 * 
-	 * @author Peter Güttinger
+	 *
 	 * @param <F> same as in {@link Converter}
 	 * @param <T> dito
+	 * @author Peter Güttinger
 	 */
 	@SuppressWarnings("null")
 	@NonNullByDefault
@@ -61,12 +60,11 @@ public interface Converter<F, T> {
 			this.converter = converter;
 			this.options = options;
 		}
-		
 	}
 	
 	/**
 	 * Converts an object from the given to the desired type.
-	 * 
+	 *
 	 * @param f The object to convert.
 	 * @return the converted object
 	 */
@@ -125,7 +123,5 @@ public interface Converter<F, T> {
 				}
 			};
 		}
-		
 	}
-	
 }

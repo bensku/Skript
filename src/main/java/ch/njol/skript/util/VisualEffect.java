@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -56,6 +55,7 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
  * @author Peter Güttinger
  */
 public final class VisualEffect implements SyntaxElement, YggdrasilSerializable {
+	
 	public static boolean EFFECT_LIB = false;
 	private final static String LANGUAGE_NODE = "visual effects";
 	
@@ -249,6 +249,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		
 		/**
 		 * Gets Minecraft name of the effect, if it exists.
+		 *
 		 * @return Name or null if effect uses numeric id instead.
 		 */
 		@Nullable
@@ -258,6 +259,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	}
 	
 	private final static String TYPE_ID = "VisualEffect.Type";
+	
 	static {
 		Variables.yggdrasil.registerSingleClass(Type.class, TYPE_ID);
 		Variables.yggdrasil.registerSingleClass(Effect.class, "Bukkit_Effect");
@@ -268,6 +270,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	static SyntaxElementInfo<VisualEffect> info;
 	final static List<Type> types = new ArrayList<>(Type.values().length);
 	final static Noun[] names = new Noun[Type.values().length];
+	
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -311,7 +314,8 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	 * For parsing & deserialisation
 	 */
 	@SuppressWarnings("null")
-	public VisualEffect() {}
+	public VisualEffect() {
+	}
 	
 	@SuppressWarnings("null")
 	@Override
@@ -332,7 +336,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 					/*
 					 * Colored particles use dX, dY and dZ as RGB values which
 					 * have range from 0 to 1.
-					 * 
+					 *
 					 * For now, only speed exactly 1 is allowed.
 					 */
 					dX = color.getRed() / 255.0f + 0.00001f;
@@ -363,7 +367,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
 				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
 				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
-			} else if (numberParams == 4){ // Both present
+			} else if (numberParams == 4) { // Both present
 				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
 				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
 				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
@@ -483,5 +487,4 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		}
 		return true;
 	}
-	
 }

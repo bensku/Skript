@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.util;
 
@@ -25,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
 
 /**
  * @author Peter Güttinger
@@ -40,7 +37,7 @@ public abstract class StringUtils {
 	
 	/**
 	 * Appends the english order suffix to the given number.
-	 * 
+	 *
 	 * @param i the number
 	 * @return 1st, 2nd, 3rd, 4th, etc.
 	 */
@@ -57,11 +54,12 @@ public abstract class StringUtils {
 	
 	/**
 	 * Performs regex replacing using a callback.
-	 * 
-	 * @param string the String in which should be searched & replaced
-	 * @param regex the Regex to match
-	 * @param callback the callback will be run for every match of the regex in the string, and should return the replacement string for the given match.
-	 *            If the callback returns null for any given match this function will immediately terminate and return null.
+	 *
+	 * @param string   the String in which should be searched & replaced
+	 * @param regex    the Regex to match
+	 * @param callback the callback will be run for every match of the regex in the string, and should return the
+	 *                 replacement string for the given match. If the callback returns null for any given match this
+	 *                 function will immediately terminate and return null.
 	 * @return
 	 */
 	@SuppressWarnings("null")
@@ -72,11 +70,12 @@ public abstract class StringUtils {
 	
 	/**
 	 * Performs regex replacing using a callback.
-	 * 
-	 * @param string the String in which should be searched & replaced
-	 * @param regex the Regex to match
-	 * @param callback the callback will be run for every match of the regex in the string, and should return the replacement string for the given match.
-	 *            If the callback returns null for any given match this function will immediately terminate and return null.
+	 *
+	 * @param string   the String in which should be searched & replaced
+	 * @param regex    the Regex to match
+	 * @param callback the callback will be run for every match of the regex in the string, and should return the
+	 *                 replacement string for the given match. If the callback returns null for any given match this
+	 *                 function will immediately terminate and return null.
 	 * @return
 	 */
 	@Nullable
@@ -122,8 +121,8 @@ public abstract class StringUtils {
 	
 	/**
 	 * Gets a rounded english (##.##) representation of a number
-	 * 
-	 * @param d The number to be turned into a string
+	 *
+	 * @param d        The number to be turned into a string
 	 * @param accuracy Maximum number of digits after the period
 	 * @return
 	 */
@@ -149,8 +148,9 @@ public abstract class StringUtils {
 	}
 	
 	/**
-	 * Equal to {@link String#substring(int, int)}, but allows negative indices that are counted from the end of the string.
-	 * 
+	 * Equal to {@link String#substring(int, int)}, but allows negative indices that are counted from the end of the
+	 * string.
+	 *
 	 * @param s
 	 * @param start
 	 * @param end
@@ -167,8 +167,9 @@ public abstract class StringUtils {
 	}
 	
 	/**
-	 * Capitalises the first character of the string and all characters that follow periods, exclamation and question marks.
-	 * 
+	 * Capitalises the first character of the string and all characters that follow periods, exclamation and question
+	 * marks.
+	 *
 	 * @param string
 	 * @return
 	 */
@@ -198,7 +199,7 @@ public abstract class StringUtils {
 	
 	/**
 	 * Shorthand for <tt>{@link #numberAt(CharSequence, int, boolean) numberAt}(s, index, true)</tt>
-	 * 
+	 *
 	 * @param s
 	 * @param index
 	 * @return
@@ -209,7 +210,7 @@ public abstract class StringUtils {
 	
 	/**
 	 * Shorthand for <tt>{@link #numberAt(CharSequence, int, boolean) numberAt}(s, index, false)</tt>
-	 * 
+	 *
 	 * @param s
 	 * @param index
 	 * @return
@@ -219,13 +220,14 @@ public abstract class StringUtils {
 	}
 	
 	/**
-	 * Finds a positive number in the given CharSequence, starting at the given index, and searching in the given direction.
+	 * Finds a positive number in the given CharSequence, starting at the given index, and searching in the given
+	 * direction.
 	 * <p>
-	 * The number has to start exactly at the given index (ignoring whitespace), and will only count if the other end of the number is either at an end of the string or padded by
-	 * whitespace.
-	 * 
-	 * @param s The ChatSequence to search the number in
-	 * @param index The index to start searching at (inclusive)
+	 * The number has to start exactly at the given index (ignoring whitespace), and will only count if the other end of
+	 * the number is either at an end of the string or padded by whitespace.
+	 *
+	 * @param s       The ChatSequence to search the number in
+	 * @param index   The index to start searching at (inclusive)
 	 * @param forward Whether to search forwards or backwards
 	 * @return The number found or -1 if no matching number was found
 	 */
@@ -365,7 +367,7 @@ public abstract class StringUtils {
 	
 	/**
 	 * Scans the string starting at <tt>start</tt> for digits.
-	 * 
+	 *
 	 * @param s
 	 * @param start Index of the first digit
 	 * @return The index <i>after</i> the last digit or <tt>start</tt> if there are no digits at the given index
@@ -379,7 +381,7 @@ public abstract class StringUtils {
 	
 	/**
 	 * Searches for whether a String contains any of the characters of another string.
-	 * 
+	 *
 	 * @param s
 	 * @param chars
 	 * @return
@@ -407,5 +409,4 @@ public abstract class StringUtils {
 			return "" + haystack.replace(needle, replacement);
 		return "" + haystack.replaceAll("(?ui)" + Pattern.quote(needle), replacement);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -45,6 +44,7 @@ import ch.njol.skript.util.slot.Slot;
 		"	set the time to 6:00"/*,"	delete the item"*/})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprItem extends EventValueExpression<ItemStack> {
+	
 	static {
 		Skript.registerExpression(ExprItem.class, ItemStack.class, ExpressionType.SIMPLE, "[the] item");
 	}
@@ -65,11 +65,11 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 			return null;
 		item = new EventValueExpression<>(Item.class);
 		if (item.init())
-			return new Class[] {ItemType.class};
+			return new Class[]{ItemType.class};
 		item = null;
 		slot = new EventValueExpression<>(Slot.class);
 		if (slot.init())
-			return new Class[] {ItemType.class};
+			return new Class[]{ItemType.class};
 		slot = null;
 		return null;
 	}
@@ -117,5 +117,4 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 		else
 			assert false;
 	}
-	
 }

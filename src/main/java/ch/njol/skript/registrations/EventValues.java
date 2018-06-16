@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
 
@@ -35,7 +34,8 @@ import ch.njol.skript.util.Getter;
  */
 public class EventValues {
 	
-	private EventValues() {}
+	private EventValues() {
+	}
 	
 	private final static class EventValueInfo<E extends Event, T> {
 		
@@ -75,13 +75,15 @@ public class EventValues {
 	
 	/**
 	 * Registers an event value.
-	 * 
-	 * @param e the event type
-	 * @param c the type of the default value
-	 * @param g the getter to get the value
-	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
-	 *            <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only register a default and a past state. The future state will
-	 *            default to the default state in this case.
+	 *
+	 * @param e    the event type
+	 * @param c    the type of the default value
+	 * @param g    the getter to get the value
+	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't
+	 *             have distinct states.
+	 *             <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only
+	 *             register a default and a past state. The future state will
+	 *             default to the default state in this case.
 	 */
 	public static <T, E extends Event> void registerEventValue(final Class<E> e, final Class<T> c, final Getter<T, E> g, final int time) {
 		registerEventValue(e, c, g, time, null, (Class<? extends E>[]) null);
@@ -94,7 +96,7 @@ public class EventValues {
 	
 	/**
 	 * Same as {@link #registerEventValue(Class, Class, Getter, int)}
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param g
@@ -120,11 +122,12 @@ public class EventValues {
 	}
 	
 	/**
-	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to try and get the desired value).
+	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to
+	 * try and get the desired value).
 	 * <p>
-	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link EventValueExpression#EventValueExpression(Class)} instead of invoking this
-	 * method repeatedly.
-	 * 
+	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link
+	 * EventValueExpression#EventValueExpression(Class)} instead of invoking this method repeatedly.
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -133,8 +136,7 @@ public class EventValues {
 	 */
 	@Nullable
 	public static <T, E extends Event> T getEventValue(final E e, final Class<T> c, final int time) {
-		@SuppressWarnings({"null", "unchecked"})
-		final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
+		@SuppressWarnings({"null", "unchecked"}) final Getter<? extends T, ? super E> g = EventValues.getEventValueGetter((Class<E>) e.getClass(), c, time);
 		if (g == null)
 			return null;
 		return g.get(e);
@@ -144,7 +146,7 @@ public class EventValues {
 	 * Returns a getter to get a value from an event.
 	 * <p>
 	 * Can print an error if the event value is blocked for the given event.
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param time
@@ -247,5 +249,4 @@ public class EventValues {
 	public static boolean doesEventValueHaveTimeStates(final Class<? extends Event> e, final Class<?> c) {
 		return getEventValueGetter(e, c, -1, false) != null || getEventValueGetter(e, c, 1, false) != null;
 	}
-	
 }

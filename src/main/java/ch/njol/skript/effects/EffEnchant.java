@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -46,6 +45,7 @@ import ch.njol.util.Kleenean;
 		"disenchant the player's tool"})
 @Since("2.0")
 public class EffEnchant extends Effect {
+	
 	static {
 		Skript.registerEffect(EffEnchant.class,
 				"enchant %~itemstack% with %enchantmenttypes%",
@@ -82,12 +82,12 @@ public class EffEnchant extends Effect {
 			for (final EnchantmentType type : types) {
 				i.addUnsafeEnchantment(type.getType(), type.getLevel());
 			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
+			item.change(e, new ItemStack[]{i}, ChangeMode.SET);
 		} else {
 			for (final Enchantment ench : i.getEnchantments().keySet()) {
 				i.removeEnchantment(ench);
 			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
+			item.change(e, new ItemStack[]{i}, ChangeMode.SET);
 		}
 	}
 	
@@ -95,5 +95,4 @@ public class EffEnchant extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return enchs == null ? "disenchant " + item.toString(e, debug) : "enchant " + item.toString(e, debug) + " with " + enchs;
 	}
-	
 }

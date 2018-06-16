@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -48,6 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"	set the colour of the block to black"})
 @Since("1.2")
 public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
+	
 	static {
 		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "itemstacks/entities");
 	}
@@ -78,7 +78,7 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 	}
 	
 	boolean changeItemStack = false;
-
+	
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -116,9 +116,9 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 				
 				if (o instanceof ItemStack) {
 					if (changeItemStack)
-						getExpr().change(e, new ItemStack[] {is}, mode);
+						getExpr().change(e, new ItemStack[]{is}, mode);
 					else
-						getExpr().change(e, new ItemType[] {new ItemType(is)}, mode);
+						getExpr().change(e, new ItemType[]{new ItemType(is)}, mode);
 				} else {
 					((Item) o).setItemStack(is);
 				}
@@ -127,5 +127,4 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 			}
 		}
 	}
-	
 }

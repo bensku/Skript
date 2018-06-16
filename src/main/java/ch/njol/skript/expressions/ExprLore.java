@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -50,8 +49,9 @@ import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
 
 /**
- * TODO make a 'line %number% of %text%' expression and figure out how to deal with signs (4 lines, delete = empty, etc...)
- * 
+ * TODO make a 'line %number% of %text%' expression and figure out how to deal with signs (4 lines, delete = empty,
+ * etc...)
+ *
  * @author joeuguce99
  */
 @Name("Lore")
@@ -59,6 +59,7 @@ import ch.njol.util.StringUtils;
 @Examples("set the 1st line of the item's lore to \"<orange>Excalibur 2.0\"")
 @Since("2.1")
 public class ExprLore extends SimpleExpression<String> {
+	
 	static {
 		try {
 			ItemMeta.class.getName();
@@ -67,8 +68,8 @@ public class ExprLore extends SimpleExpression<String> {
 					"[the] lore of %itemstack/itemtype%", "%itemstack/itemtype%'[s] lore",
 					"[the] line %number% of [the] lore of %itemstack/itemtype%", "[the] line %number% of %itemstack/itemtype%'[s] lore",
 					"[the] %number%(st|nd|rd|th) line of [the] lore of %itemstack/itemtype%", "[the] %number%(st|nd|rd|th) line of %itemstack/itemtype%'[s] lore");
-			
-		} catch (final NoClassDefFoundError e) {}
+		} catch (final NoClassDefFoundError e) {
+		}
 	}
 	
 	@Nullable
@@ -108,7 +109,7 @@ public class ExprLore extends SimpleExpression<String> {
 		final int l = n.intValue() - 1;
 		if (l < 0 || l >= lore.size())
 			return new String[0];
-		return new String[] {lore.get(l)};
+		return new String[]{lore.get(l)};
 	}
 	
 	@Override
@@ -126,7 +127,7 @@ public class ExprLore extends SimpleExpression<String> {
 			case REMOVE:
 			case REMOVE_ALL:
 				if (ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class, ItemType.class))
-					return new Class[] {String.class};
+					return new Class[]{String.class};
 				return null;
 			case RESET:
 			default:
@@ -211,9 +212,9 @@ public class ExprLore extends SimpleExpression<String> {
 		else
 			((ItemType) i).setItemMeta(meta);
 		if (ChangerUtils.acceptsChange(item, ChangeMode.SET, i.getClass())) {
-			item.change(e, i instanceof ItemStack ? new ItemStack[] {(ItemStack) i} : new ItemType[] {(ItemType) i}, ChangeMode.SET);
+			item.change(e, i instanceof ItemStack ? new ItemStack[]{(ItemStack) i} : new ItemType[]{(ItemType) i}, ChangeMode.SET);
 		} else {
-			item.change(e, i instanceof ItemStack ? new ItemType[] {new ItemType((ItemStack) i)} : new ItemStack[] {((ItemType) i).getRandom()}, ChangeMode.SET);
+			item.change(e, i instanceof ItemStack ? new ItemType[]{new ItemType((ItemStack) i)} : new ItemStack[]{((ItemType) i).getRandom()}, ChangeMode.SET);
 		}
 		return;
 	}
@@ -222,5 +223,4 @@ public class ExprLore extends SimpleExpression<String> {
 	public boolean isSingle() {
 		return true;
 	}
-	
 }

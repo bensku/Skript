@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
 
@@ -51,10 +50,10 @@ import ch.njol.skript.util.Version;
 import ch.njol.util.NotifyingReference;
 
 /**
- * TODO use a database (SQLite) instead and only load a limited amount of variables into RAM - e.g. 2 GB (configurable). If more variables are available they will be loaded when
- * accessed. (rem: print a warning when Skript starts)
- * rem: store null variables (in memory) to prevent looking up the same variables over and over again
- * 
+ * TODO use a database (SQLite) instead and only load a limited amount of variables into RAM - e.g. 2 GB (configurable).
+ * If more variables are available they will be loaded when accessed. (rem: print a warning when Skript starts) rem:
+ * store null variables (in memory) to prevent looking up the same variables over and over again
+ *
  * @author Peter Güttinger
  */
 public class FlatFileStorage extends VariablesStorage {
@@ -63,7 +62,8 @@ public class FlatFileStorage extends VariablesStorage {
 	public final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	/**
-	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link Variables#getReadLock()}).
+	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link
+	 * Variables#getReadLock()}).
 	 */
 	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<PrintWriter>();
 	
@@ -114,7 +114,8 @@ public class FlatFileStorage extends VariablesStorage {
 							varVersion = new Version("" + line.substring("# version:".length()).trim());
 							update2_0_beta3 = varVersion.isSmallerThan(v2_0_beta3);
 							update2_1 = varVersion.isSmallerThan(v2_1);
-						} catch (final IllegalArgumentException e) {}
+						} catch (final IllegalArgumentException e) {
+						}
 					}
 					continue;
 				}
@@ -155,7 +156,8 @@ public class FlatFileStorage extends VariablesStorage {
 			if (r != null) {
 				try {
 					r.close();
-				} catch (final IOException e) {}
+				} catch (final IOException e) {
+				}
 			}
 		}
 		
@@ -351,7 +353,7 @@ public class FlatFileStorage extends VariablesStorage {
 	
 	/**
 	 * Completely rewrites the while file
-	 * 
+	 *
 	 * @param finalSave whether this is the last save in this session or not.
 	 */
 	public final void saveVariables(final boolean finalSave) {
@@ -419,14 +421,15 @@ public class FlatFileStorage extends VariablesStorage {
 	 * Saves the variables.
 	 * <p>
 	 * This method uses the sorted variables map to save the variables in order.
-	 * 
+	 *
 	 * @param pw
 	 * @param parent The parent's name with {@link Variable#SEPARATOR} at the end
 	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
 	private final void save(final PrintWriter pw, final String parent, final TreeMap<String, Object> map) {
-		outer: for (final Entry<String, Object> e : map.entrySet()) {
+		outer:
+		for (final Entry<String, Object> e : map.entrySet()) {
 			final Object val = e.getValue();
 			if (val == null)
 				continue;
@@ -447,5 +450,4 @@ public class FlatFileStorage extends VariablesStorage {
 			}
 		}
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
@@ -23,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -78,7 +76,8 @@ import ch.njol.util.coll.CollectionUtils;
 @SuppressWarnings({"rawtypes"})
 public class DefaultComparators {
 	
-	public DefaultComparators() {}
+	public DefaultComparators() {
+	}
 	
 	static {
 		
@@ -89,7 +88,7 @@ public class DefaultComparators {
 				if (n1 instanceof Long && n2 instanceof Long)
 					return Relation.get(n1.longValue() - n2.longValue());
 				Double d1 = n1.doubleValue(),
-					   d2 = n2.doubleValue();
+						d2 = n2.doubleValue();
 				if (d1.isNaN() || d2.isNaN()) {
 					return Relation.SMALLER;
 				} else if (d1.isInfinite() || d2.isInfinite()) {
@@ -110,24 +109,23 @@ public class DefaultComparators {
 		
 		// Slot - Slot
 		Comparators.registerComparator(Slot.class, Slot.class, new Comparator<Slot, Slot>() {
-
+			
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
 				if (o1.isSameSlot(o2))
 					return Relation.EQUAL;
 				return Relation.NOT_EQUAL;
 			}
-
+			
 			@Override
 			public boolean supportsOrdering() {
 				return false;
 			}
-			
 		});
 		
 		// Slot - Integer
 		Comparators.registerComparator(Slot.class, Integer.class, new Comparator<Slot, Integer>() {
-
+			
 			@Override
 			public Relation compare(Slot o1, Integer o2) {
 				if (o1 instanceof SlotWithIndex) {
@@ -137,12 +135,11 @@ public class DefaultComparators {
 				}
 				return Relation.NOT_EQUAL;
 			}
-
+			
 			@Override
 			public boolean supportsOrdering() {
 				return false;
 			}
-			
 		});
 		
 		// ItemStack - ItemType
@@ -225,6 +222,7 @@ public class DefaultComparators {
 	
 	// EntityData - ItemType
 	final static LinkedHashMap<Class<? extends Entity>, Material> entityMaterials = new LinkedHashMap<>();
+	
 	static {
 		// to fix comparisons of eggs, arrows, etc. (e.g. 'projectile is an arrow')
 		// TODO !Update with every version [entities]
@@ -266,6 +264,7 @@ public class DefaultComparators {
 		if (Skript.classExists("org.bukkit.entity.ArmorStand"))
 			entityMaterials.put(ArmorStand.class, Material.ARMOR_STAND);
 	}
+	
 	public final static Comparator<EntityData, ItemType> entityItemComparator = new Comparator<EntityData, ItemType>() {
 		@Override
 		public Relation compare(final EntityData e, final ItemType i) {
@@ -276,7 +275,7 @@ public class DefaultComparators {
 			if (Skript.classExists("org.bukkit.entity.WitherSkull") && e instanceof WitherSkull)
 				return Relation.get(i.isOfType(Material.SKULL_ITEM.getId(), (short) 1));
 			if (e instanceof BoatData)
-				return Relation.get(((BoatData)e).isOfItemType(i));
+				return Relation.get(((BoatData) e).isOfItemType(i));
 			if (entityMaterials.containsKey(e.getType()))
 				return Relation.get(i.isOfType(entityMaterials.get(e.getType()).getId(), (short) 0));
 			for (final Entry<Class<? extends Entity>, Material> m : entityMaterials.entrySet()) {
@@ -291,6 +290,7 @@ public class DefaultComparators {
 			return false;
 		}
 	};
+	
 	static {
 		Comparators.registerComparator(EntityData.class, ItemType.class, entityItemComparator);
 	}
@@ -451,7 +451,7 @@ public class DefaultComparators {
 						return Relation.get(t.isOfType(Material.LAVA.getId(), (short) -1) && t.isOfType(Material.STATIONARY_LAVA.getId(), (short) -1));
 					case MAGIC:
 						return Relation.get(t.isOfType(Material.POTION.getId(), (short) -1));
-						//$CASES-OMITTED$
+					//$CASES-OMITTED$
 					default:
 						return Relation.NOT_EQUAL;
 				}
@@ -475,7 +475,7 @@ public class DefaultComparators {
 						return Relation.get(e.isSupertypeOf(EntityData.fromClass(Wither.class)));
 					case FALLING_BLOCK:
 						return Relation.get(e.isSupertypeOf(EntityData.fromClass(FallingBlock.class)));
-						//$CASES-OMITTED$
+					//$CASES-OMITTED$
 					default:
 						return Relation.NOT_EQUAL;
 				}
@@ -487,5 +487,4 @@ public class DefaultComparators {
 			}
 		});
 	}
-	
 }

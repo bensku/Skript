@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
 
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.SequenceInputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +35,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.localization.Language;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -53,6 +50,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.StringMode;
@@ -72,7 +70,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public abstract class Classes {
 	
-	private Classes() {}
+	private Classes() {
+	}
 	
 	@Nullable
 	private static ClassInfo<?>[] classInfos = null;
@@ -129,7 +128,8 @@ public abstract class Classes {
 	}
 	
 	/**
-	 * Sorts the class infos according to sub/superclasses and relations set with {@link ClassInfo#before(String...)} and {@link ClassInfo#after(String...)}.
+	 * Sorts the class infos according to sub/superclasses and relations set with {@link ClassInfo#before(String...)}
+	 * and {@link ClassInfo#after(String...)}.
 	 */
 	@SuppressFBWarnings("LI_LAZY_INIT_STATIC")
 	private static void sortClassInfos() {
@@ -224,7 +224,6 @@ public abstract class Classes {
 			}
 			Skript.info("All registered classes in order: " + b.toString());
 		}
-		
 	}
 	
 	@SuppressWarnings({"null", "unused"})
@@ -253,7 +252,7 @@ public abstract class Classes {
 	
 	/**
 	 * This method can be called even while Skript is loading.
-	 * 
+	 *
 	 * @param codeName
 	 * @return The ClassInfo with the given code name
 	 * @throws SkriptAPIException If the given class was not registered
@@ -267,9 +266,10 @@ public abstract class Classes {
 	
 	/**
 	 * This method can be called even while Skript is loading.
-	 * 
+	 *
 	 * @param codeName
-	 * @return The class info registered with the given code name or null if the code name is invalid or not yet registered
+	 * @return The class info registered with the given code name or null if the code name is invalid or not yet
+	 * registered
 	 */
 	@Nullable
 	public static ClassInfo<?> getClassInfoNoError(final @Nullable String codeName) {
@@ -280,7 +280,7 @@ public abstract class Classes {
 	 * Gets the class info for the given class.
 	 * <p>
 	 * This method can be called even while Skript is loading.
-	 * 
+	 *
 	 * @param c The exact class to get the class info for
 	 * @return The class info for the given class of null if no info was found.
 	 */
@@ -291,8 +291,9 @@ public abstract class Classes {
 	}
 	
 	/**
-	 * Gets the class info of the given class or its closest registered superclass. This method will never return null unless <tt>c</tt> is null.
-	 * 
+	 * Gets the class info of the given class or its closest registered superclass. This method will never return null
+	 * unless <tt>c</tt> is null.
+	 *
 	 * @param c
 	 * @return The closest superclass's info
 	 */
@@ -316,7 +317,7 @@ public abstract class Classes {
 	
 	/**
 	 * Gets a class by its code name
-	 * 
+	 *
 	 * @param codeName
 	 * @return the class with the given code name
 	 * @throws SkriptAPIException If the given class was not registered
@@ -328,7 +329,7 @@ public abstract class Classes {
 	
 	/**
 	 * As the name implies
-	 * 
+	 *
 	 * @param name
 	 * @return the class info or null if the name was not recognised
 	 */
@@ -350,7 +351,7 @@ public abstract class Classes {
 	
 	/**
 	 * As the name implies
-	 * 
+	 *
 	 * @param name
 	 * @return the class or null if the name was not recognized
 	 */
@@ -363,7 +364,7 @@ public abstract class Classes {
 	
 	/**
 	 * Gets the default of a class
-	 * 
+	 *
 	 * @param codeName
 	 * @return the expression holding the default value or null if this class doesn't have one
 	 * @throws SkriptAPIException If the given class was not registered
@@ -376,7 +377,7 @@ public abstract class Classes {
 	
 	/**
 	 * Gets the default expression of a class
-	 * 
+	 *
 	 * @param c The class
 	 * @return The expression holding the default value or null if this class doesn't have one
 	 */
@@ -389,7 +390,7 @@ public abstract class Classes {
 	
 	/**
 	 * Gets the name a class was registered with.
-	 * 
+	 *
 	 * @param c The exact class
 	 * @return The name of the class or null if the given class wasn't registered.
 	 */
@@ -404,7 +405,7 @@ public abstract class Classes {
 	 * Parses without trying to convert anything.
 	 * <p>
 	 * Can log an error xor other log messages.
-	 * 
+	 *
 	 * @param s
 	 * @param c
 	 * @return The parsed object
@@ -418,8 +419,7 @@ public abstract class Classes {
 				if (parser == null || !parser.canParse(context) || !c.isAssignableFrom(info.getC()))
 					continue;
 				log.clear();
-				@SuppressWarnings("unchecked")
-				final T t = (T) parser.parse(s, context);
+				@SuppressWarnings("unchecked") final T t = (T) parser.parse(s, context);
 				if (t != null) {
 					log.printLog();
 					return t;
@@ -435,10 +435,11 @@ public abstract class Classes {
 	/**
 	 * Parses a string to get an object of the desired type.
 	 * <p>
-	 * Instead of repeatedly calling this with the same class argument, you should get a parser with {@link #getParser(Class)} and use it for parsing.
+	 * Instead of repeatedly calling this with the same class argument, you should get a parser with {@link
+	 * #getParser(Class)} and use it for parsing.
 	 * <p>
 	 * Can log an error if it returned null.
-	 * 
+	 *
 	 * @param s The string to parse
 	 * @param c The desired type. The returned value will be of this type or a subclass if it.
 	 * @return The parsed object
@@ -476,8 +477,9 @@ public abstract class Classes {
 	}
 	
 	/**
-	 * Gets a parser for parsing instances of the desired type from strings. The returned parser may only be used for parsing, i.e. you must not use its toString methods.
-	 * 
+	 * Gets a parser for parsing instances of the desired type from strings. The returned parser may only be used for
+	 * parsing, i.e. you must not use its toString methods.
+	 *
 	 * @param to
 	 * @return A parser to parse object of the desired type
 	 */
@@ -507,10 +509,12 @@ public abstract class Classes {
 	}
 	
 	/**
-	 * Gets a parser for an exactly known class. You should usually use {@link #getParser(Class)} instead of this method.
+	 * Gets a parser for an exactly known class. You should usually use {@link #getParser(Class)} instead of this
+	 * method.
 	 * <p>
-	 * The main benefit of this method is that it's the only class info method of Skript that can be used while Skript is initializing and thus useful for parsing configs.
-	 * 
+	 * The main benefit of this method is that it's the only class info method of Skript that can be used while Skript
+	 * is initializing and thus useful for parsing configs.
+	 *
 	 * @param c
 	 * @return A parser to parse object of the desired type
 	 */
@@ -560,7 +564,8 @@ public abstract class Classes {
 	
 	/**
 	 * @param o Any object, preferably not an array: use {@link Classes#toString(Object[], boolean)} instead.
-	 * @return String representation of the object (using a parser if found or {@link String#valueOf(Object)} otherwise).
+	 * @return String representation of the object (using a parser if found or {@link String#valueOf(Object)}
+	 * otherwise).
 	 * @see #toString(Object, StringMode)
 	 * @see #toString(Object[], boolean)
 	 * @see #toString(Object[], boolean, StringMode)
@@ -598,10 +603,9 @@ public abstract class Classes {
 		for (final ClassInfo<?> ci : getClassInfos()) {
 			final Parser<?> parser = ci.getParser();
 			if (parser != null && ci.getC().isInstance(o)) {
-				@SuppressWarnings("unchecked")
-				final String s = mode == StringMode.MESSAGE ? ((Parser<T>) parser).toString(o, flags)
+				@SuppressWarnings("unchecked") final String s = mode == StringMode.MESSAGE ? ((Parser<T>) parser).toString(o, flags)
 						: mode == StringMode.DEBUG ? "[" + ci.getCodeName() + ":" + ((Parser<T>) parser).toString(o, mode) + "]"
-								: ((Parser<T>) parser).toString(o, mode);
+						: ((Parser<T>) parser).toString(o, mode);
 				return s;
 			}
 		}
@@ -763,11 +767,13 @@ public abstract class Classes {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (final IOException e) {}
+				} catch (final IOException e) {
+				}
 			}
 			try {
 				value.close();
-			} catch (final IOException e) {}
+			} catch (final IOException e) {
+			}
 		}
 	}
 	
@@ -775,7 +781,7 @@ public abstract class Classes {
 	 * Deserialises an object.
 	 * <p>
 	 * This method must only be called from Bukkits main thread!
-	 * 
+	 *
 	 * @param type
 	 * @param value
 	 * @return Deserialised value or null if the input is invalid
@@ -792,5 +798,4 @@ public abstract class Classes {
 			return null;
 		return s.deserialize(value);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -55,7 +54,7 @@ public class Direction implements YggdrasilRobustSerializable {
 	/**
 	 * A direction that doesn't point anywhere, i.e. equal to 'at'.
 	 */
-	public final static Direction ZERO = new Direction(new double[] {0, 0, 0});
+	public final static Direction ZERO = new Direction(new double[]{0, 0, 0});
 	/**
 	 * A direction that points in the direction of the object(s) passed to the various <tt>getDirection</tt> methods.
 	 */
@@ -163,7 +162,7 @@ public class Direction implements YggdrasilRobustSerializable {
 	
 	@Override
 	public int hashCode() {
-		return (relative ? 1 : -1) * Arrays.hashCode(new double[] {pitchOrX, yawOrY, lengthOrZ});
+		return (relative ? 1 : -1) * Arrays.hashCode(new double[]{pitchOrX, yawOrY, lengthOrZ});
 	}
 	
 	@Override
@@ -288,19 +287,20 @@ public class Direction implements YggdrasilRobustSerializable {
 	
 	@Override
 	public String toString() {
-		return relative ? toString(pitchOrX == IGNORE_PITCH ? 0 : pitchOrX, yawOrY, lengthOrZ) : toString(new double[] {pitchOrX, yawOrY, lengthOrZ});
+		return relative ? toString(pitchOrX == IGNORE_PITCH ? 0 : pitchOrX, yawOrY, lengthOrZ) : toString(new double[]{pitchOrX, yawOrY, lengthOrZ});
 	}
 	
 	public static String toString(final double pitch, final double yaw, final double length) {
 		final double front = Math.cos(pitch) * Math.cos(yaw) * length;
 		final double left = Math.cos(pitch) * Math.sin(yaw) * length;
 		final double above = Math.sin(pitch) * length;
-		return toString(new double[] {front, left, above}, relativeDirections);
+		return toString(new double[]{front, left, above}, relativeDirections);
 	}
 	
 	private final static Message m_at = new Message("directions.at");
 	private final static Message[] absoluteDirections = new Message[6];
 	private final static Message[] relativeDirections = new Message[6];
+	
 	static {
 		final String[] rd = {"front", "behind", "left", "right", "above", "below"};
 		for (int i = 0; i < rd.length; i++) {
@@ -324,7 +324,7 @@ public class Direction implements YggdrasilRobustSerializable {
 	public static String toString(final Vector dir) {
 		if (dir.getX() == 0 && dir.getY() == 0 && dir.getZ() == 0)
 			return Language.get("directions.at");
-		return toString(new double[] {dir.getX(), dir.getY(), dir.getZ()}, absoluteDirections);
+		return toString(new double[]{dir.getX(), dir.getY(), dir.getZ()}, absoluteDirections);
 	}
 	
 	@SuppressWarnings("null")
@@ -349,7 +349,7 @@ public class Direction implements YggdrasilRobustSerializable {
 		b.append(d > 0 ? direction : oppositeDirection);
 	}
 	
-//		return "" + relative + ":" + (relative ? pitch + "," + yaw + "," + length : mod[0] + "," + mod[1] + "," + mod[2]);
+	//		return "" + relative + ":" + (relative ? pitch + "," + yaw + "," + length : mod[0] + "," + mod[1] + "," + mod[2]);
 	@Deprecated
 	@Nullable
 	public static Direction deserialize(final String s) {
@@ -371,7 +371,7 @@ public class Direction implements YggdrasilRobustSerializable {
 			if (split2.length != 3)
 				return null;
 			try {
-				return new Direction(new double[] {Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2])});
+				return new Direction(new double[]{Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2])});
 			} catch (final NumberFormatException e) {
 				return null;
 			}
@@ -500,5 +500,4 @@ public class Direction implements YggdrasilRobustSerializable {
 			return true;
 		return false;
 	}
-	
 }

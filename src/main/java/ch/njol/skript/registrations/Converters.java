@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
 
@@ -41,7 +40,8 @@ import ch.njol.util.Pair;
  */
 public abstract class Converters {
 	
-	private Converters() {}
+	private Converters() {
+	}
 	
 	private static List<ConverterInfo<?, ?>> converters = new ArrayList<ConverterInfo<?, ?>>(50);
 	
@@ -52,7 +52,7 @@ public abstract class Converters {
 	
 	/**
 	 * Registers a converter.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @param converter
@@ -116,9 +116,9 @@ public abstract class Converters {
 	}
 	
 	/**
-	 * Converts the given value to the desired type. If you want to convert multiple values of the same type you should use {@link #getConverter(Class, Class)} to get a
-	 * converter to convert the values.
-	 * 
+	 * Converts the given value to the desired type. If you want to convert multiple values of the same type you should
+	 * use {@link #getConverter(Class, Class)} to get a converter to convert the values.
+	 *
 	 * @param o
 	 * @param to
 	 * @return The converted value or null if no converter exists or the converter returned null for the given value.
@@ -130,8 +130,7 @@ public abstract class Converters {
 			return null;
 		if (to.isInstance(o))
 			return (T) o;
-		@SuppressWarnings("null")
-		final Converter<? super F, ? extends T> conv = getConverter((Class<F>) o.getClass(), to);
+		@SuppressWarnings("null") final Converter<? super F, ? extends T> conv = getConverter((Class<F>) o.getClass(), to);
 		if (conv == null)
 			return null;
 		return conv.convert(o);
@@ -141,7 +140,7 @@ public abstract class Converters {
 	 * Converts an object into one of the given types.
 	 * <p>
 	 * This method does not convert the object if it is already an instance of any of the given classes.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @return The converted object
@@ -156,8 +155,7 @@ public abstract class Converters {
 				return (T) o;
 		final Class<F> c = (Class<F>) o.getClass();
 		for (final Class<? extends T> t : to) {
-			@SuppressWarnings("null")
-			final Converter<? super F, ? extends T> conv = getConverter(c, t);
+			@SuppressWarnings("null") final Converter<? super F, ? extends T> conv = getConverter(c, t);
 			if (conv != null)
 				return conv.convert(o);
 		}
@@ -165,9 +163,10 @@ public abstract class Converters {
 	}
 	
 	/**
-	 * Converts all entries in the given array to the desired type, using {@link #convert(Object, Class)} to convert every single value. If you want to convert an array of values
-	 * of a known type, consider using {@link #convert(Object[], Class, Converter)} for much better performance.
-	 * 
+	 * Converts all entries in the given array to the desired type, using {@link #convert(Object, Class)} to convert
+	 * every single value. If you want to convert an array of values of a known type, consider using {@link
+	 * #convert(Object[], Class, Converter)} for much better performance.
+	 *
 	 * @param o
 	 * @param to
 	 * @return A T[] array without null elements
@@ -191,7 +190,7 @@ public abstract class Converters {
 	
 	/**
 	 * Converts multiple objects into any of the given classes.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @param superType The component type of the returned array
@@ -217,16 +216,15 @@ public abstract class Converters {
 		assert r != null;
 		return r;
 	}
-
+	
 	/**
-	 * Strictly converts an array to a non-null array of the specified class.
-	 * Uses registered {@link ch.njol.skript.registrations.Converters} to convert.
+	 * Strictly converts an array to a non-null array of the specified class. Uses registered {@link
+	 * ch.njol.skript.registrations.Converters} to convert.
 	 *
 	 * @param original The array to convert
 	 * @param to       What to convert {@code original} to
 	 * @return {@code original} converted to an array of {@code to}
-	 * @throws ClassCastException if one of {@code original}'s
-	 * elements cannot be converted to a {@code to}
+	 * @throws ClassCastException if one of {@code original}'s elements cannot be converted to a {@code to}
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] convertStrictly(Object[] original, Class<T> to) throws ClassCastException {
@@ -240,12 +238,12 @@ public abstract class Converters {
 		}
 		return end;
 	}
-
+	
 	/**
 	 * Strictly converts an object to the specified class
 	 *
 	 * @param original The object to convert
-	 * @param to What to convert {@code original} to
+	 * @param to       What to convert {@code original} to
 	 * @return {@code original} converted to a {@code to}
 	 * @throws ClassCastException if {@code original} could not be converted to a {@code to}
 	 */
@@ -256,12 +254,12 @@ public abstract class Converters {
 		else
 			throw new ClassCastException();
 	}
-
+	
 	private final static Map<Pair<Class<?>, Class<?>>, Converter<?, ?>> convertersCache = new HashMap<Pair<Class<?>, Class<?>>, Converter<?, ?>>();
 	
 	/**
 	 * Tests whether a converter between the given classes exists.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return Whether a converter exists
@@ -283,7 +281,7 @@ public abstract class Converters {
 	
 	/**
 	 * Gets a converter
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return the converter or null if none exist
@@ -348,5 +346,4 @@ public abstract class Converters {
 		assert ts != null;
 		return ts;
 	}
-	
 }

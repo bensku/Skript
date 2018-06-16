@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -51,6 +50,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
 				"[the] (full|complete|whole) command", "[the] command [label]", "[the] arguments");
@@ -82,15 +82,15 @@ public class ExprCommand extends SimpleExpression<String> {
 			return new String[0];
 		}
 		if (what == FULL)
-			return new String[] {s};
+			return new String[]{s};
 		final int c = s.indexOf(' ');
 		if (what == ARGS) {
 			if (c == -1)
 				return new String[0];
-			return new String[] {s.substring(c + 1).trim()};
+			return new String[]{s.substring(c + 1).trim()};
 		}
 		assert what == LABEL;
-		return new String[] {c == -1 ? s : s.substring(0, c)};
+		return new String[]{c == -1 ? s : s.substring(0, c)};
 	}
 	
 	@Override
@@ -107,5 +107,4 @@ public class ExprCommand extends SimpleExpression<String> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return what == 0 ? "the full command" : what == 1 ? "the command" : "the arguments";
 	}
-	
 }

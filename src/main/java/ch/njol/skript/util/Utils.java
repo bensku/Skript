@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -47,12 +46,13 @@ import ch.njol.util.StringUtils;
 
 /**
  * Utility class.
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class Utils {
 	
-	private Utils() {}
+	private Utils() {
+	}
 	
 	public final static Random random = new Random();
 	
@@ -83,7 +83,7 @@ public abstract class Utils {
 	
 	/**
 	 * Tests whether two item stacks are of the same type, i.e. it ignores the amounts.
-	 * 
+	 *
 	 * @param is1
 	 * @param is2
 	 * @return Whether the item stacks are of the same type
@@ -97,9 +97,9 @@ public abstract class Utils {
 	
 	/**
 	 * Gets an entity's target.
-	 * 
+	 *
 	 * @param entity The entity to get the target of
-	 * @param type Can be null for any entity
+	 * @param type   Can be null for any entity
 	 * @return The entity's target
 	 */
 	@SuppressWarnings("unchecked")
@@ -137,7 +137,7 @@ public abstract class Utils {
 		}
 		return new Pair<>(s, Integer.valueOf(-1));
 	}
-	
+
 //	public final static class AmountResponse {
 //		public final String s;
 //		public final int amount;
@@ -240,7 +240,7 @@ public abstract class Utils {
 	
 	/**
 	 * Gets the english plural of a word.
-	 * 
+	 *
 	 * @param s
 	 * @return The english plural of the given word
 	 */
@@ -256,7 +256,7 @@ public abstract class Utils {
 	
 	/**
 	 * Gets the plural of a word (or not if p is false)
-	 * 
+	 *
 	 * @param s
 	 * @param p
 	 * @return The english plural of the given word, or the word itself if p is false.
@@ -269,7 +269,7 @@ public abstract class Utils {
 	
 	/**
 	 * Adds 'a' or 'an' to the given string, depending on the first character of the string.
-	 * 
+	 *
 	 * @param s The string to add the article to
 	 * @return The given string with an appended a/an and a space at the beginning
 	 * @see #A(String)
@@ -281,7 +281,7 @@ public abstract class Utils {
 	
 	/**
 	 * Adds 'A' or 'An' to the given string, depending on the first character of the string.
-	 * 
+	 *
 	 * @param s The string to add the article to
 	 * @return The given string with an appended A/An and a space at the beginning
 	 * @see #a(String)
@@ -293,8 +293,8 @@ public abstract class Utils {
 	
 	/**
 	 * Adds 'a' or 'an' to the given string, depending on the first character of the string.
-	 * 
-	 * @param s The string to add the article to
+	 *
+	 * @param s    The string to add the article to
 	 * @param capA Whether to use a capital a or not
 	 * @return The given string with an appended a/an (or A/An if capA is true) and a space at the beginning
 	 * @see #a(String)
@@ -313,10 +313,11 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Gets the collision height of solid or partially-solid blocks at the center of the block. This is mostly for use in the {@link EffTeleport teleport effect}.
+	 * Gets the collision height of solid or partially-solid blocks at the center of the block. This is mostly for use
+	 * in the {@link EffTeleport teleport effect}.
 	 * <p>
 	 * TODO !Update with every version [blocks]
-	 * 
+	 *
 	 * @param type
 	 * @return The block's height at the center
 	 */
@@ -371,6 +372,7 @@ public abstract class Utils {
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
+	
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -400,7 +402,7 @@ public abstract class Utils {
 	
 	/**
 	 * Replaces &lt;chat styles&gt; in the message
-	 * 
+	 *
 	 * @param message
 	 * @return message with localised chat styles converted to Minecraft's format
 	 */
@@ -425,9 +427,9 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the language of colour codes is not well defined while the language is
-	 * changing, and for some hardcoded messages.
-	 * 
+	 * Replaces english &lt;chat styles&gt; in the message. This is used for messages in the language file as the
+	 * language of colour codes is not well defined while the language is changing, and for some hardcoded messages.
+	 *
 	 * @param message
 	 * @return message with english chat styles converted to Minecraft's format
 	 */
@@ -453,7 +455,7 @@ public abstract class Utils {
 	
 	/**
 	 * Gets a random value between <tt>start</tt> (inclusive) and <tt>end</tt> (exclusive)
-	 * 
+	 *
 	 * @param start
 	 * @param end
 	 * @return <tt>start + random.nextInt(end - start)</tt>
@@ -469,7 +471,8 @@ public abstract class Utils {
 		assert cs.length > 0;
 		Class<?> r = cs[0];
 		assert r != null;
-		outer: for (final Class<?> c : cs) {
+		outer:
+		for (final Class<?> c : cs) {
 			assert c != null && !c.isArray() && !c.isPrimitive() : c;
 			if (c.isAssignableFrom(r)) {
 				r = c;
@@ -497,10 +500,10 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Integer#parseInt(String)} due to
-	 * overflow.
-	 * This method will return {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively if that happens.
-	 * 
+	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException}
+	 * when parsed with {@link Integer#parseInt(String)} due to overflow. This method will return {@link
+	 * Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively if that happens.
+	 *
 	 * @param s
 	 * @return The parsed integer, {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively
 	 */
@@ -514,10 +517,10 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException} when parsed with {@link Long#parseLong(String)} due to
-	 * overflow.
-	 * This method will return {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively if that happens.
-	 * 
+	 * Parses a number that was validated to be an integer but might still result in a {@link NumberFormatException}
+	 * when parsed with {@link Long#parseLong(String)} due to overflow. This method will return {@link Long#MIN_VALUE}
+	 * or {@link Long#MAX_VALUE} respectively if that happens.
+	 *
 	 * @param s
 	 * @return The parsed long, {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively
 	 */
@@ -531,8 +534,8 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Gets class for name. Throws RuntimeException instead of checked one.
-	 * Use this only when absolutely necessary.
+	 * Gets class for name. Throws RuntimeException instead of checked one. Use this only when absolutely necessary.
+	 *
 	 * @param name Class name.
 	 * @return The class.
 	 */
@@ -545,5 +548,4 @@ public abstract class Utils {
 			throw new RuntimeException("Class not found!");
 		}
 	}
-	
 }

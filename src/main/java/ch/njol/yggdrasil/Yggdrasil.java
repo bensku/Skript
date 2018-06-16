@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -47,18 +46,20 @@ import ch.njol.yggdrasil.xml.YggXMLOutputStream;
 /**
  * Yggdrasil is a simple data format to store object graphs.
  * <p>
- * Yggdrasil uses String IDs to identify classes, thus all classes to be (de)serialised have to be registered to Yggdrasil before doing anything (they can also be registered while
- * Yggdrasil is working, but you must make sure that all classes are registered in time when deserialising). A {@link ClassResolver} or {@link YggdrasilSerializer} can also be used
- * to find classes and IDs dynamically.
+ * Yggdrasil uses String IDs to identify classes, thus all classes to be (de)serialised have to be registered to
+ * Yggdrasil before doing anything (they can also be registered while Yggdrasil is working, but you must make sure that
+ * all classes are registered in time when deserialising). A {@link ClassResolver} or {@link YggdrasilSerializer} can
+ * also be used to find classes and IDs dynamically.
  * <p>
  * <b>Default behaviour</b>
  * <p>
- * A Java object can be serialised and deserialised if it is a primitive, a primitive wrapper, a String, an enum or {@link PseudoEnum} (both require an ID), or its class meets all
- * of the following requirements:
+ * A Java object can be serialised and deserialised if it is a primitive, a primitive wrapper, a String, an enum or
+ * {@link PseudoEnum} (both require an ID), or its class meets all of the following requirements:
  * <ul>
  * <li>It implements {@link YggdrasilSerializable}
  * <li>It has an ID assigned to it (using the methods described above)
- * <li>It provides a nullary constructor (any access modifier) (in particular anonymous and non-static inner classes can't be serialised)
+ * <li>It provides a nullary constructor (any access modifier) (in particular anonymous and non-static inner classes
+ * can't be serialised)
  * <li>All its non-transient and non-static fields are serialisable according to these requirements
  * </ul>
  * <p>
@@ -66,12 +67,13 @@ import ch.njol.yggdrasil.xml.YggXMLOutputStream;
  * <p>
  * <b>Customisation</b>
  * <p>
- * Any object that does not meet the above requirements for serialisation can still be (de)serialised using an {@link YggdrasilSerializer} (useful for objects of an external API),
- * or by implementing {@link YggdrasilExtendedSerializable}.
+ * Any object that does not meet the above requirements for serialisation can still be (de)serialised using an {@link
+ * YggdrasilSerializer} (useful for objects of an external API), or by implementing {@link
+ * YggdrasilExtendedSerializable}.
  * <p>
- * The behaviour in case of an invalid or outdated stream can be defined likewise, or one can implement {@link YggdrasilRobustSerializable} or {@link YggdrasilRobustEnum}
- * respectively.
- * 
+ * The behaviour in case of an invalid or outdated stream can be defined likewise, or one can implement {@link
+ * YggdrasilRobustSerializable} or {@link YggdrasilRobustEnum} respectively.
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
@@ -85,7 +87,9 @@ public final class Yggdrasil {
 	 */
 	public final static int MAGIC_NUMBER = ('Y' << 24) + ('g' << 16) + ('g' << 8) + '\0';
 	
-	/** latest protocol version */
+	/**
+	 * latest protocol version
+	 */
 	public final static short LATEST_VERSION = 1; // version 2 is only one minor change currently
 	
 	public final short version;
@@ -221,7 +225,7 @@ public final class Yggdrasil {
 	 * Gets the ID of a field.
 	 * <p>
 	 * This method performs no checks on the given field.
-	 * 
+	 *
 	 * @param f
 	 * @return The field's id as given by its {@link YggdrasilID} annotation, or its name if it's not annotated.
 	 */
@@ -371,5 +375,4 @@ public final class Yggdrasil {
 		System.err.println("Command line not supported yet");
 		System.exit(1);
 	}
-	
 }

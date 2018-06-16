@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
@@ -42,7 +41,9 @@ import ch.njol.yggdrasil.Fields;
  * @author Peter Güttinger
  */
 public class JavaClasses {
-	public JavaClasses() {}
+	
+	public JavaClasses() {
+	}
 	
 	public final static int VARIABLENAME_NUMBERACCURACY = 8;
 	
@@ -72,7 +73,8 @@ public class JavaClasses {
 					public Number parse(final String s, final ParseContext context) {
 						try {
 							return Long.valueOf(s);
-						} catch (final NumberFormatException e) {}
+						} catch (final NumberFormatException e) {
+						}
 						try {
 							Double d = s.endsWith("%") ? Double.parseDouble(s.substring(0, s.length() - 1)) / 100 : Double.parseDouble(s);
 							if (d.isNaN() || d.isInfinite()) {
@@ -114,13 +116,14 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + n;
+					//						return "" + n;
 					@Override
 					@Nullable
 					public Number deserialize(final String s) {
 						try {
 							return Integer.valueOf(s);
-						} catch (final NumberFormatException e) {}
+						} catch (final NumberFormatException e) {
+						}
 						try {
 							return Double.valueOf(s);
 						} catch (final NumberFormatException e) {
@@ -180,7 +183,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + l;
+					//						return "" + l;
 					@Override
 					@Nullable
 					public Long deserialize(final String s) {
@@ -241,7 +244,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + i;
+					//						return "" + i;
 					@Override
 					@Nullable
 					public Integer deserialize(final String s) {
@@ -308,7 +311,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + d;
+					//						return "" + d;
 					@Override
 					@Nullable
 					public Double deserialize(final String s) {
@@ -373,7 +376,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + f;
+					//						return "" + f;
 					@Override
 					@Nullable
 					public Float deserialize(final String s) {
@@ -444,7 +447,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + b;
+					//						return "" + b;
 					@Override
 					@Nullable
 					public Boolean deserialize(final String s) {
@@ -505,7 +508,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + s;
+					//						return "" + s;
 					@Override
 					@Nullable
 					public Short deserialize(final String s) {
@@ -566,7 +569,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return "" + b;
+					//						return "" + b;
 					@Override
 					@Nullable
 					public Byte deserialize(final String s) {
@@ -587,7 +590,7 @@ public class JavaClasses {
 				.user("(text|string)s?")
 				.name("Text")
 				.description("Text is simply text, i.e. a sequence of characters, which can optionally contain expressions which will be replaced with a meaningful representation " +
-						"(e.g. %player% will be replaced with the player's name).",
+								"(e.g. %player% will be replaced with the player's name).",
 						"Because scripts are also text, you have to put text into double quotes to tell Skript which part of the line is an effect/expression and which part is the text.",
 						"Please read the article on <a href='../strings/'>Texts and Variable Names</a> to learn more.")
 				.usage("simple: \"...\"",
@@ -662,7 +665,7 @@ public class JavaClasses {
 						assert false;
 					}
 					
-//						return s;
+					//						return s;
 					@Override
 					public String deserialize(final String s) {
 						return s;

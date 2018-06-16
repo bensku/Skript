@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -47,6 +46,7 @@ import ch.njol.util.Kleenean;
 		"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
 @Since("2.0, 2.2-dev27 (ambient and particle-less potion effects)")
 public class EffPotion extends Effect {
+	
 	static {
 		Skript.registerEffect(EffPotion.class,
 				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
@@ -127,7 +127,7 @@ public class EffPotion extends Effect {
 			final Timespan dur = duration.getSingle(e);
 			if (dur == null)
 				return;
-			d = (int) (dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE: dur.getTicks_i());
+			d = (int) (dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : dur.getTicks_i());
 		}
 		for (final LivingEntity en : entities.getArray(e)) {
 			for (final PotionEffectType t : ts) {
@@ -152,5 +152,4 @@ public class EffPotion extends Effect {
 		else
 			return "remove " + potions.toString(e, debug) + " from " + entities.toString(e, debug);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -32,14 +31,17 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * A class that acts as a "pseudo-enum", i.e. a class which only has immutable, (public,) final static instances, which can be identified by their unique name. The instances don't
- * even have to be defined in their class, as they are registered in the constructor.
+ * A class that acts as a "pseudo-enum", i.e. a class which only has immutable, (public,) final static instances, which
+ * can be identified by their unique name. The instances don't even have to be defined in their class, as they are
+ * registered in the constructor.
  * <p>
- * Please note that you cannot define a constant's id used for saving by annotating it with {@link YggdrasilID @YggdrasilID}, as the field(s) of the constant may not be known, and
- * furthermore a constant can be assigned to any number of fields.
+ * Please note that you cannot define a constant's id used for saving by annotating it with {@link YggdrasilID
+ * @YggdrasilID}, as the field(s) of the constant may not be known, and furthermore a constant can be assigned to any
+ * number of fields.
  * <p>
- * This class defines methods similar to those in {@link Enum} with minor differences, e.g. {@link #values()} returns a {@link List} instead of an array.
- * 
+ * This class defines methods similar to those in {@link Enum} with minor differences, e.g. {@link #values()} returns a
+ * {@link List} instead of an array.
+ *
  * @author Peter Güttinger
  */
 @ThreadSafe
@@ -72,7 +74,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	
 	/**
 	 * Returns the unique name of this constant.
-	 * 
+	 *
 	 * @return The unique name of this constant.
 	 * @see Enum#name()
 	 */
@@ -82,7 +84,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	
 	/**
 	 * Returns {@link #name()}.
-	 * 
+	 *
 	 * @return {@link #name()}
 	 * @see Enum#toString()
 	 */
@@ -92,9 +94,9 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Returns the unique ID of this constant. This will not be used by Yggdrasil and can thus change freely across version, in particular reordering and inserting constants is
-	 * permitted.
-	 * 
+	 * Returns the unique ID of this constant. This will not be used by Yggdrasil and can thus change freely across
+	 * version, in particular reordering and inserting constants is permitted.
+	 *
 	 * @return The unique ID of this constant.
 	 * @see Enum#ordinal()
 	 */
@@ -119,8 +121,9 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Prevents cloning of pseudo-enums. If you want to make your enums cloneable, create a <tt>(name, constantToClone)</tt> constructor.
-	 * 
+	 * Prevents cloning of pseudo-enums. If you want to make your enums cloneable, create a <tt>(name,
+	 * constantToClone)</tt> constructor.
+	 *
 	 * @return newer returns normally
 	 * @throws CloneNotSupportedException always
 	 */
@@ -130,9 +133,10 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Returns this constant's pseudo-enum class, i.e. the first non-anonymous superclass of this constant. This class is the same for all constants inheriting from a common class
-	 * independently from whether they define an anonymous subclass.
-	 * 
+	 * Returns this constant's pseudo-enum class, i.e. the first non-anonymous superclass of this constant. This class
+	 * is the same for all constants inheriting from a common class independently from whether they define an anonymous
+	 * subclass.
+	 *
 	 * @return This constant's pseudo-enum class.
 	 * @see Enum#getDeclaringClass()
 	 */
@@ -142,8 +146,9 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Returns the common base class for constants of the given type, i.e. the first non-anonymous superclass of <tt>type</tt>.
-	 * 
+	 * Returns the common base class for constants of the given type, i.e. the first non-anonymous superclass of
+	 * <tt>type</tt>.
+	 *
 	 * @return The pseudo-enum class of the given class.
 	 * @see Enum#getDeclaringClass()
 	 */
@@ -155,12 +160,13 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Returns all constants registered so far, ordered by their {@link #ordinal() id} (i.e. <tt>c.values()[c.ordinal()] == c</tt> is true for any constant c).
+	 * Returns all constants registered so far, ordered by their {@link #ordinal() id} (i.e. <tt>c.values()[c.ordinal()]
+	 * == c</tt> is true for any constant c).
 	 * <p>
 	 * The returned list is a copy of the internal list at the time this method was called.
 	 * <p>
 	 * Please note that you
-	 * 
+	 *
 	 * @return All constants registered so far.
 	 * @see Enum#valueOf(Class, String)
 	 */
@@ -169,13 +175,14 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * Returns all constants of the given class registered so far, ordered by their {@link #ordinal() id} (i.e. <tt>c.values()[c.ordinal()] == c</tt> is true for any constant
-	 * c).
+	 * Returns all constants of the given class registered so far, ordered by their {@link #ordinal() id} (i.e.
+	 * <tt>c.values()[c.ordinal()] == c</tt> is true for any constant c).
 	 * <p>
 	 * The returned list is a copy of the internal list at the time this method was called.
-	 * 
+	 *
 	 * @return All constants registered so far.
-	 * @throws IllegalArgumentException If <tt>{@link #getDeclaringClass(Class) getDeclaringClass}(c) != c</tt> (i.e. if the given class is anonymous).
+	 * @throws IllegalArgumentException If <tt>{@link #getDeclaringClass(Class) getDeclaringClass}(c) != c</tt> (i.e. if
+	 *                                  the given class is anonymous).
 	 * @see Enum#valueOf(Class, String)
 	 */
 	public static <T extends PseudoEnum<T>> List<T> values(final Class<T> c) throws IllegalArgumentException {
@@ -195,7 +202,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	
 	/**
 	 * Returns the constant with the given ID.
-	 * 
+	 *
 	 * @param id The constant's ID
 	 * @return The constant with the given ID.
 	 * @throws IndexOutOfBoundsException if ID is < 0 or >= {@link #numConstants()}
@@ -239,9 +246,10 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	}
 	
 	/**
-	 * @param c The class of the constant to find
+	 * @param c    The class of the constant to find
 	 * @param name The name of the constant to find
-	 * @return The constant with the given name, or null if no constant with that exact name was found in the given class.
+	 * @return The constant with the given name, or null if no constant with that exact name was found in the given
+	 * class.
 	 * @see Enum#valueOf(Class, String)
 	 */
 	@Nullable
@@ -257,13 +265,15 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	
 	@SuppressWarnings("null")
 	private final static class Info<T extends PseudoEnum<T>> {
+		
 		final List<T> values = new ArrayList<>();
 		final Map<String, T> map = new HashMap<>();
 		
 		final ReadWriteLock lock = new ReentrantReadWriteLock(true);
 		final Lock readLock = lock.readLock(), writeLock = lock.writeLock();
 		
-		public Info() {}
+		public Info() {
+		}
 	}
 	
 	/**
@@ -279,5 +289,4 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 			return info;
 		}
 	}
-	
 }

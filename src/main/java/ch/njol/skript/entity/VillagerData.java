@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
@@ -41,8 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class VillagerData extends EntityData<Villager> {
 	
 	/**
-	 * Professions can be for zombies also. These are the ones which are only
-	 * for villagers.
+	 * Professions can be for zombies also. These are the ones which are only for villagers.
 	 */
 	private static List<Profession> professions;
 	
@@ -108,7 +106,7 @@ public class VillagerData extends EntityData<Villager> {
 		}
 		if (hasNitwit && profession == Profession.NITWIT)
 			v.setRecipes(Collections.emptyList()); // Remove trades from nitwit
-			
+		
 		return v;
 	}
 	
@@ -135,7 +133,7 @@ public class VillagerData extends EntityData<Villager> {
 		return profession == other.profession;
 	}
 	
-//		return profession == null ? "" : profession.name();
+	//		return profession == null ? "" : profession.name();
 	@Override
 	protected boolean deserialize(final String s) {
 		if (s.isEmpty())
@@ -159,5 +157,4 @@ public class VillagerData extends EntityData<Villager> {
 	public EntityData getSuperType() {
 		return new VillagerData();
 	}
-	
 }

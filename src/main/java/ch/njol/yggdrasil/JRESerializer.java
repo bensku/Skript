@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -74,15 +73,15 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 			f.putObject("keys", m.keySet().toArray());
 			f.putObject("values", m.values().toArray());
 		} else if (o instanceof UUID) {
-			f.putPrimitive("mostSigBits", Long.valueOf(((UUID)o).getMostSignificantBits()));
-			f.putPrimitive("leastSigBits", Long.valueOf(((UUID)o).getLeastSignificantBits()));
+			f.putPrimitive("mostSigBits", Long.valueOf(((UUID) o).getMostSignificantBits()));
+			f.putPrimitive("leastSigBits", Long.valueOf(((UUID) o).getLeastSignificantBits()));
 		}
 		assert f.size() > 0 : o;
 		return f;
 	}
 	
 	@Override
-	public boolean canBeInstantiated(Class<? extends Object> c){
+	public boolean canBeInstantiated(Class<? extends Object> c) {
 		return c != UUID.class;
 	}
 	
@@ -132,9 +131,8 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 	@Override
 	public <E> E deserialize(Class<E> c, Fields fields) throws StreamCorruptedException, NotSerializableException {
 		if (c == UUID.class) {
-			return (E) new UUID(((Long)fields.getPrimitive("mostSigBits", Long.TYPE)).longValue(), ((Long)fields.getPrimitive("leastSigBits", Long.TYPE)).longValue());
+			return (E) new UUID(((Long) fields.getPrimitive("mostSigBits", Long.TYPE)).longValue(), ((Long) fields.getPrimitive("leastSigBits", Long.TYPE)).longValue());
 		}
 		throw new StreamCorruptedException();
 	}
-	
 }

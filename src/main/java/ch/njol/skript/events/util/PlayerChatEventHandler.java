@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.events.util;
 
@@ -34,15 +33,17 @@ import ch.njol.skript.Skript;
 @SuppressWarnings("deprecation")
 public abstract class PlayerChatEventHandler {
 	
-	private PlayerChatEventHandler() {}
+	private PlayerChatEventHandler() {
+	}
 	
 	public final static boolean usesAsyncEvent = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent");
 	
 	public static void registerChatEvent(final EventPriority priority, final EventExecutor executor, final boolean ignoreCancelled) {
 		if (Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent"))
-			Bukkit.getPluginManager().registerEvent(AsyncPlayerChatEvent.class, new Listener() {}, priority, executor, Skript.getInstance(), ignoreCancelled);
+			Bukkit.getPluginManager().registerEvent(AsyncPlayerChatEvent.class, new Listener() {
+			}, priority, executor, Skript.getInstance(), ignoreCancelled);
 		else
-			Bukkit.getPluginManager().registerEvent(PlayerChatEvent.class, new Listener() {}, priority, executor, Skript.getInstance(), ignoreCancelled);
+			Bukkit.getPluginManager().registerEvent(PlayerChatEvent.class, new Listener() {
+			}, priority, executor, Skript.getInstance(), ignoreCancelled);
 	}
-	
 }

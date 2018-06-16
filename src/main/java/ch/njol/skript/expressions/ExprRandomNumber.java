@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -46,6 +45,7 @@ import ch.njol.util.Math2;
 		"send \"You rolled a %random integer from 1 to 6%!\" to the player"})
 @Since("1.4")
 public class ExprRandomNumber extends SimpleExpression<Number> {
+	
 	static {
 		Skript.registerExpression(ExprRandomNumber.class, Number.class, ExpressionType.COMBINED,
 				"[a] random (1¦integer|2¦number) (from|between) %number% (to|and) %number%");
@@ -77,9 +77,9 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 		final double ll = Math.min(l.doubleValue(), u.doubleValue());
 		final double uu = Math.max(l.doubleValue(), u.doubleValue());
 		if (integer) {
-			return new Long[] {Math2.ceil(ll) + Math2.mod(rand.nextLong(), Math2.floor(uu) - Math2.ceil(ll) + 1)};
+			return new Long[]{Math2.ceil(ll) + Math2.mod(rand.nextLong(), Math2.floor(uu) - Math2.ceil(ll) + 1)};
 		} else {
-			return new Double[] {ll + rand.nextDouble() * (uu - ll)};
+			return new Double[]{ll + rand.nextDouble() * (uu - ll)};
 		}
 	}
 	
@@ -97,5 +97,4 @@ public class ExprRandomNumber extends SimpleExpression<Number> {
 	public boolean isSingle() {
 		return true;
 	}
-	
 }

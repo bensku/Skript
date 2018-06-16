@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.config;
 
@@ -38,7 +37,7 @@ import ch.njol.skript.config.validate.SectionValidator;
 
 /**
  * Represents a config file.
- * 
+ *
  * @author Peter Güttinger
  */
 public class Config implements Comparable<Config> {
@@ -112,7 +111,7 @@ public class Config implements Comparable<Config> {
 	
 	/**
 	 * For testing
-	 * 
+	 *
 	 * @param s
 	 * @param fileName
 	 * @param simple
@@ -148,7 +147,7 @@ public class Config implements Comparable<Config> {
 	
 	/**
 	 * Saves the config to a file.
-	 * 
+	 *
 	 * @param f The file to save to
 	 * @throws IOException If the file could not be written to.
 	 */
@@ -166,8 +165,9 @@ public class Config implements Comparable<Config> {
 	/**
 	 * Sets this config's values to those in the given config.
 	 * <p>
-	 * Used by Skript to import old settings into the updated config. The return value is used to not modify the config if no new options were added.
-	 * 
+	 * Used by Skript to import old settings into the updated config. The return value is used to not modify the config
+	 * if no new options were added.
+	 *
 	 * @param other
 	 * @return Whether the configs' keys differ, i.e. false == configs only differ in values, not keys.
 	 */
@@ -204,7 +204,7 @@ public class Config implements Comparable<Config> {
 	
 	/**
 	 * Splits the given path at the dot character and passes the result to {@link #get(String...)}.
-	 * 
+	 *
 	 * @param path
 	 * @return <tt>get(path.split("\\."))</tt>
 	 */
@@ -216,9 +216,10 @@ public class Config implements Comparable<Config> {
 	
 	/**
 	 * Gets an entry node's value at the designated path
-	 * 
+	 *
 	 * @param path
-	 * @return The entry node's value at the location defined by path or null if it either doesn't exist or is not an entry.
+	 * @return The entry node's value at the location defined by path or null if it either doesn't exist or is not an
+	 * entry.
 	 */
 	@Nullable
 	public String get(final String... path) {
@@ -261,8 +262,7 @@ public class Config implements Comparable<Config> {
 					if (OptionSection.class.isAssignableFrom(f.getType())) {
 						final Object p = f.get(o);
 						@SuppressWarnings("null")
-						@NonNull
-						final Class<?> pc = p.getClass();
+						@NonNull final Class<?> pc = p.getClass();
 						load(pc, p, path + ((OptionSection) p).key + ".");
 					} else if (Option.class.isAssignableFrom(f.getType())) {
 						((Option<?>) f.get(o)).set(this, path);
@@ -290,12 +290,11 @@ public class Config implements Comparable<Config> {
 	public void load(final Class<?> c) {
 		load(c, null, "");
 	}
-
+	
 	@Override
 	public int compareTo(@Nullable Config other) {
 		if (other == null)
 			return 0;
 		return fileName.compareTo(other.fileName);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.yggdrasil.xml;
 
@@ -39,8 +38,8 @@ import ch.njol.yggdrasil.Yggdrasil;
 import ch.njol.yggdrasil.YggdrasilInputStream;
 
 /**
- * @deprecated XML has so many quirks that storing arbitrary data cannot be guaranteed.
  * @author Peter Güttinger
+ * @deprecated XML has so many quirks that storing arbitrary data cannot be guaranteed.
  */
 @Deprecated
 public final class YggXMLInputStream extends YggdrasilInputStream {
@@ -57,14 +56,16 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 		is = in;
 		try {
 			this.in = XMLInputFactory.newFactory().createXMLStreamReader(in);
-			while (this.in.next() != XMLStreamConstants.START_ELEMENT) {}
+			while (this.in.next() != XMLStreamConstants.START_ELEMENT) {
+			}
 			if (!this.in.getLocalName().equals("yggdrasil"))
 				throw new StreamCorruptedException("Not an Yggdrasil stream");
 			final String v = getAttribute("version");
 			short ver = 0;
 			try {
 				ver = Short.parseShort(v);
-			} catch (final NumberFormatException e) {}
+			} catch (final NumberFormatException e) {
+			}
 			if (ver <= 0 || ver > Yggdrasil.LATEST_VERSION)
 				throw new StreamCorruptedException("Input was saved using a later version of Yggdrasil");
 			version = ver;
@@ -119,14 +120,14 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 			return t;
 		}
 		try {
-			while (in.next() != XMLStreamConstants.START_ELEMENT) {}
+			while (in.next() != XMLStreamConstants.START_ELEMENT) {
+			}
 		} catch (final XMLStreamException e) {
 			throw new StreamCorruptedException(e.getMessage());
 		} catch (final NoSuchElementException e) {
 			throw new EOFException();
 		}
-		@SuppressWarnings("null")
-		final Tag t = Tag.byName(in.getLocalName());
+		@SuppressWarnings("null") final Tag t = Tag.byName(in.getLocalName());
 		if (t == null)
 			throw new StreamCorruptedException("Invalid tag " + in.getLocalName());
 		return t;
@@ -158,7 +159,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 					if (v.length() > 1)
 						throw new StreamCorruptedException();
 					return v.charAt(0);
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					throw new StreamCorruptedException();
 			}
@@ -207,7 +208,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 					throw new StreamCorruptedException();
 				case T_CHAR:
 					return primitiveData.charAt(primitiveDataIndex++);
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					throw new StreamCorruptedException();
 			}
@@ -322,5 +323,4 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 			throw new IOException(e);
 		}
 	}
-	
 }

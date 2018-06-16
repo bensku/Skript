@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -39,13 +38,11 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -66,6 +63,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"clear passengers of boat"})
 @Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
 public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create 'vehicle' and 'passenger' expressions for vehicle enter/exit events?
+	
 	static { // It was necessary to convert to SimpleExpression due to the method 'isSingle()'.
 		Skript.registerExpression(ExprPassenger.class, Entity.class, ExpressionType.PROPERTY, "[the] passenger[s] of %entities%", "%entities%'[s] passenger[s]");
 	}
@@ -77,19 +75,20 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	@Nullable
 	protected Entity[] get(Event e) {
 		Entity[] source = vehicle.getAll(e);
-		Converter<Entity, Entity[]> conv = new Converter<Entity, Entity[]>(){
+		Converter<Entity, Entity[]> conv = new Converter<Entity, Entity[]>() {
 			@Override
 			@Nullable
 			public Entity[] convert(Entity v) {
 				if (getTime() >= 0 && e instanceof VehicleEnterEvent && v.equals(((VehicleEnterEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleEnterEvent) e).getEntered()};
+					return new Entity[]{((VehicleEnterEvent) e).getEntered()};
 				}
 				if (getTime() >= 0 && e instanceof VehicleExitEvent && v.equals(((VehicleExitEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleExitEvent) e).getExited()};
+					return new Entity[]{((VehicleExitEvent) e).getExited()};
 				}
 				return PassengerUtils.getPassenger(v);
-			}};
-			
+			}
+		};
+		
 		List<Entity> entities = new ArrayList<>();
 		for (Entity v : source) {
 			if (v == null)
@@ -108,36 +107,36 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 		vehicle = (Expression<Entity>) exprs[0];
 		return true;
 	}
-
+	
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (!isSingle())
-			return new Class[] {Entity[].class, EntityData[].class}; // To support more than one entity
+			return new Class[]{Entity[].class, EntityData[].class}; // To support more than one entity
 		if (mode == ChangeMode.SET)
-			return new Class[] {Entity.class, EntityData.class};
+			return new Class[]{Entity.class, EntityData.class};
 		return super.acceptChange(mode);
 	}
-
+	
 	@SuppressWarnings("null")
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		Entity[] vehicles = this.vehicle.getArray(e);
 		if (!isSingle() || mode == ChangeMode.SET) {
-			for (Entity vehicle: vehicles){
+			for (Entity vehicle : vehicles) {
 				if (vehicle == null)
 					continue;
-				switch(mode){
-					case SET: 
+				switch (mode) {
+					case SET:
 						vehicle.eject();
 						//$FALL-THROUGH$
 					case ADD:
 						if (delta == null || delta.length == 0)
 							return;
-						for (Object obj : delta){
+						for (Object obj : delta) {
 							if (obj == null)
 								continue;
-							Entity passenger = obj instanceof Entity ? (Entity)obj: ((EntityData<?>)obj).spawn(vehicle.getLocation());
+							Entity passenger = obj instanceof Entity ? (Entity) obj : ((EntityData<?>) obj).spawn(vehicle.getLocation());
 							PassengerUtils.addPassenger(vehicle, passenger);
 						}
 						break;
@@ -145,14 +144,14 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 					case REMOVE:
 						if (delta == null || delta.length == 0)
 							return;
-						for (Object obj : delta){
+						for (Object obj : delta) {
 							if (obj == null)
 								continue;
-							if (obj instanceof Entity){
-								PassengerUtils.removePassenger(vehicle, (Entity)obj);
+							if (obj instanceof Entity) {
+								PassengerUtils.removePassenger(vehicle, (Entity) obj);
 							} else {
 								for (Entity passenger : PassengerUtils.getPassenger(vehicle))
-									if (passenger != null && ((EntityData<?>)obj).isInstance((passenger))){
+									if (passenger != null && ((EntityData<?>) obj).isInstance((passenger))) {
 										PassengerUtils.removePassenger(vehicle, passenger);
 									}
 							}
@@ -166,7 +165,6 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 		} else {
 			super.change(e, delta, mode);
 		}
-		
 	}
 	
 	@Override
@@ -189,5 +187,5 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, vehicle, VehicleEnterEvent.class, VehicleExitEvent.class);
-	}	
+	}
 }

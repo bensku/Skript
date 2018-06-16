@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
@@ -35,13 +34,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
 /**
  * @author Peter Güttinger
@@ -53,13 +51,14 @@ import edu.umd.cs.findbugs.ba.bcp.New;
 		"wait a tick"})
 @Since("1.4")
 public class Delay extends Effect {
+	
 	static {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}
-
+	
 	@SuppressWarnings("null")
 	protected Expression<Timespan> duration;
-
+	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -72,7 +71,7 @@ public class Delay extends Effect {
 		}
 		return true;
 	}
-
+	
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
@@ -106,26 +105,25 @@ public class Delay extends Effect {
 		}
 		return null;
 	}
-
+	
 	@SuppressWarnings("null")
 	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<Event, Boolean>());
-
+	
 	public static boolean isDelayed(final Event e) {
 		return delayed.contains(e);
 	}
-
-	public static void addDelayedEvent(Event event){
+	
+	public static void addDelayedEvent(Event event) {
 		delayed.add(event);
 	}
-
+	
 	@Override
 	protected void execute(final Event e) {
 		throw new UnsupportedOperationException();
 	}
-
+	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "wait for " + duration.toString(e, debug) + (e == null ? "" : "...");
 	}
-
 }

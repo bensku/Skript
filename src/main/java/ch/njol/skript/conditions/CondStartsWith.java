@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -39,19 +38,19 @@ import ch.njol.util.Kleenean;
 		"	send \"Stop!\""})
 @Since("INSERT VERSION")
 public class CondStartsWith extends Condition {
-
+	
 	static {
 		Skript.registerCondition(CondStartsWith.class,
 				"%strings% (start|1¦end)[s] with %string%",
 				"%strings% do[es](n't| not) (start|1¦end) with %string%");
 	}
-
+	
 	@SuppressWarnings("null")
 	private Expression<String> strings;
 	@SuppressWarnings("null")
 	private Expression<String> prefix;
 	private boolean ends;
-
+	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -61,14 +60,14 @@ public class CondStartsWith extends Condition {
 		setNegated(matchedPattern == 1);
 		return true;
 	}
-
+	
 	@Override
 	public boolean check(Event e) {
 		String p = prefix.getSingle(e);
-
+		
 		if (p == null)
 			return false;
-
+		
 		return strings.check(e, new Checker<String>() {
 			@Override
 			public boolean check(String s) {
@@ -76,11 +75,9 @@ public class CondStartsWith extends Condition {
 			}
 		}, isNegated());
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return strings.toString(e, debug) + (isNegated() ? " don't " : " ") + (ends ? "start" : "end") +  " with " + prefix.toString(e, debug);
+		return strings.toString(e, debug) + (isNegated() ? " don't " : " ") + (ends ? "start" : "end") + " with " + prefix.toString(e, debug);
 	}
-
-
 }

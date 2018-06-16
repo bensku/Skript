@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -36,10 +35,13 @@ import ch.njol.util.Math2;
 
 @SuppressWarnings("null")
 public abstract class HealthUtils {
-	private HealthUtils() {}
+	
+	private HealthUtils() {
+	}
 	
 	private final static boolean supportsDoubles = Skript.methodExists(Damageable.class, "setHealth", double.class);
 	private static Method getHealth, setHealth, getMaxHealth, setMaxHealth, damage;
+	
 	static {
 		if (!supportsDoubles) {
 			try {
@@ -147,10 +149,10 @@ public abstract class HealthUtils {
 			heal(e, -d);
 			return;
 		}
-		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d*2);
+		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return;
-
+		
 		if (supportsDoubles) {
 			e.damage(event.getDamage());
 			return;
@@ -165,6 +167,7 @@ public abstract class HealthUtils {
 			Skript.exception(ex);
 		}
 	}
+	
 	/**
 	 * @param e
 	 * @param h Amount of hearts to heal
@@ -178,6 +181,7 @@ public abstract class HealthUtils {
 	}
 	
 	private static Method getDamage, setDamage;
+	
 	static {
 		if (!supportsDoubles) {
 			try {
@@ -233,5 +237,4 @@ public abstract class HealthUtils {
 		e.setLastDamageCause(new EntityDamageEvent(e, cause, 0)); // Use deprecated way too keep it compatible and create cleaner code
 		// Non-deprecated way is really, really bad
 	}
-	
 }

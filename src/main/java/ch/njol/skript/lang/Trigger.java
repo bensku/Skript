@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
 
@@ -48,6 +47,7 @@ public class Trigger extends TriggerSection {
 	
 	/**
 	 * Executes this trigger for certain event.
+	 *
 	 * @param e Event.
 	 * @return false if an exception occurred
 	 */
@@ -68,6 +68,7 @@ public class Trigger extends TriggerSection {
 	
 	/**
 	 * Gets name of this trigger.
+	 *
 	 * @return Name of trigger.
 	 */
 	public String getName() {
@@ -82,19 +83,19 @@ public class Trigger extends TriggerSection {
 	public File getScript() {
 		return script;
 	}
-
+	
 	/**
-	 * Sets line number for this trigger's start.
-	 * Only used for debugging.
+	 * Sets line number for this trigger's start. Only used for debugging.
+	 *
 	 * @param line Line number
 	 */
 	public void setLineNumber(int line) {
-		this.line  = line;
+		this.line = line;
 	}
 	
 	/**
-	 * Gets line number for this trigger's start.
-	 * Only use it for debugging!
+	 * Gets line number for this trigger's start. Only use it for debugging!
+	 *
 	 * @return Line number.
 	 */
 	public int getLineNumber() {
@@ -108,5 +109,4 @@ public class Trigger extends TriggerSection {
 	public String getDebugLabel() {
 		return debugLabel;
 	}
-	
 }

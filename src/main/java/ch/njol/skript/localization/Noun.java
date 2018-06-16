@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.localization;
 
@@ -114,7 +113,7 @@ public class Noun extends Message {
 	
 	/**
 	 * Returns the article appropriate for the given gender & flags.
-	 * 
+	 *
 	 * @param flags
 	 * @return The article with a trailing space (as no article is possible in which case the empty string is returned)
 	 */
@@ -241,10 +240,11 @@ public class Noun extends Message {
 	}
 	
 	/**
-	 * Normalizes plural markers, i.e. increases the total number of markers to a multiple of 3 without changing the string's meaning.
+	 * Normalizes plural markers, i.e. increases the total number of markers to a multiple of 3 without changing the
+	 * string's meaning.
 	 * <p>
 	 * A @gender at the end of the string will be treated correctly.
-	 * 
+	 *
 	 * @param s Some string
 	 * @return The same string with normalized plural markers
 	 */
@@ -269,7 +269,7 @@ public class Noun extends Message {
 	
 	/**
 	 * @param gender Gender id as defined in [language].lang (i.e. without the leading @)
-	 * @param key Key to use in error messages§
+	 * @param key    Key to use in error messages§
 	 * @return The gender's id
 	 */
 	public static int getGender(final String gender, final String key) {
@@ -295,10 +295,10 @@ public class Noun extends Message {
 	
 	/**
 	 * For use by {@link Aliases}
-	 * 
-	 * @param s String
+	 *
+	 * @param s   String
 	 * @param key Key to report in case of error
-	 * @return (stripped string, gender or -1 if none)
+	 * @return (stripped string, gender or - 1 if none)
 	 */
 	public static NonNullPair<String, Integer> stripGender(String s, final String key) {
 		final int c = s.lastIndexOf('@');
@@ -390,5 +390,4 @@ public class Noun extends Message {
 	public static String toString(final String singular, final String plural, final int gender, final int flags) {
 		return getArticleWithSpace(flags, gender) + ((flags & Language.F_PLURAL) != 0 ? plural : singular);
 	}
-	
 }

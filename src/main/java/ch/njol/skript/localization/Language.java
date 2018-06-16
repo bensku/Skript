@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.localization;
 
@@ -91,9 +90,9 @@ public class Language {
 	}
 	
 	/**
-	 * Gets a string from the language file with the given key, or the english variant if the string is missing from the chosen language's file, or the key itself if the key does
-	 * not exist.
-	 * 
+	 * Gets a string from the language file with the given key, or the english variant if the string is missing from the
+	 * chosen language's file, or the key itself if the key does not exist.
+	 *
 	 * @param key The message's key (case-insensitive)
 	 * @return The requested message if it exists or the key otherwise
 	 */
@@ -104,7 +103,7 @@ public class Language {
 	
 	/**
 	 * Equal to {@link #get(String)}, but returns null instead of the key if the key cannot be found.
-	 * 
+	 *
 	 * @param key The message's key (case-insensitive)
 	 * @return The requested message or null if it doesn't exist
 	 */
@@ -119,7 +118,7 @@ public class Language {
 	
 	/**
 	 * Gets a string and uses it as format in {@link String#format(String, Object...)}.
-	 * 
+	 *
 	 * @param key
 	 * @param args The arguments to pass to {@link String#format(String, Object...)}
 	 * @return The formatted string
@@ -139,7 +138,7 @@ public class Language {
 	
 	/**
 	 * Gets a localized string surrounded by spaces, or a space if the string is empty
-	 * 
+	 *
 	 * @param key
 	 * @return The message surrounded by spaces, a space if the entry is empty, or " "+key+" " if the entry is missing.
 	 */
@@ -155,14 +154,14 @@ public class Language {
 	
 	/**
 	 * Gets a list of strings.
-	 * 
+	 *
 	 * @param key
 	 * @return a non-null String array with at least one element
 	 */
 	public static String[] getList(final String key) {
 		final String s = get_i("" + key.toLowerCase(Locale.ENGLISH));
 		if (s == null)
-			return new String[] {key.toLowerCase(Locale.ENGLISH)};
+			return new String[]{key.toLowerCase(Locale.ENGLISH)};
 		final String[] r = listSplitPattern.split(s);
 		assert r != null;
 		return r;
@@ -190,7 +189,8 @@ public class Language {
 		} finally {
 			try {
 				din.close();
-			} catch (final IOException e) {}
+			} catch (final IOException e) {
+			}
 		}
 		final String v = en.get("version");
 		if (v == null)
@@ -272,7 +272,8 @@ public class Language {
 		} finally {
 			try {
 				in.close();
-			} catch (final IOException e) {}
+			} catch (final IOException e) {
+			}
 		}
 	}
 	
@@ -313,10 +314,12 @@ public class Language {
 	/**
 	 * Registers a listener. The listener will immediately be called if a language has already been loaded.
 	 * <p>
-	 * The first call to a listener is guaranteed to be (pseudo-*)English even if another language is active, in which case the listener is called twice when registered.
+	 * The first call to a listener is guaranteed to be (pseudo-*)English even if another language is active, in which
+	 * case the listener is called twice when registered.
 	 * <p>
-	 * * Only this class will be English (i.e. no language listeners are notified) if the current language is not English.
-	 * 
+	 * * Only this class will be English (i.e. no language listeners are notified) if the current language is not
+	 * English.
+	 *
 	 * @param l
 	 */
 	public static void addListener(final LanguageChangeListener l) {
@@ -340,7 +343,7 @@ public class Language {
 	
 	/**
 	 * Use this preferably like this:
-	 * 
+	 *
 	 * <pre>
 	 * final boolean wasLocal = Language.setUseLocal(true / false);
 	 * try {
@@ -349,7 +352,7 @@ public class Language {
 	 * 	Language.setUseLocal(wasLocal);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param b Whether to enable localisation or not
 	 * @return Previous state
 	 */
@@ -372,5 +375,4 @@ public class Language {
 	public static boolean isUsingLocal() {
 		return useLocal;
 	}
-	
 }

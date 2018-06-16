@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
@@ -105,6 +104,7 @@ import ch.njol.yggdrasil.Fields;
 public class SimpleEntityData extends EntityData<Entity> {
 	
 	public final static class SimpleEntityDataInfo {
+		
 		final String codeName;
 		final Class<? extends Entity> c;
 		final boolean isSupertype;
@@ -142,6 +142,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 	}
 	
 	private final static List<SimpleEntityDataInfo> types = new ArrayList<>();
+	
 	static {
 		types.add(new SimpleEntityDataInfo("arrow", Arrow.class));
 		if (!Skript.methodExists(Boat.class, "getWoodType")) // Only for 1.9 and lower. See BoatData instead
@@ -186,7 +187,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		if (Skript.classExists("org.bukkit.entity.Firework"))
 			types.add(new SimpleEntityDataInfo("firework", Firework.class));
-		if(Skript.classExists("org.bukkit.entity.ArmorStand")){
+		if (Skript.classExists("org.bukkit.entity.ArmorStand")) {
 			types.add(new SimpleEntityDataInfo("endermite", Endermite.class));
 			types.add(new SimpleEntityDataInfo("armor stand", ArmorStand.class));
 		}
@@ -311,7 +312,8 @@ public class SimpleEntityData extends EntityData<Entity> {
 	}
 	
 	@Override
-	public void set(final Entity entity) {}
+	public void set(final Entity entity) {
+	}
 	
 	@Override
 	public boolean match(final Entity e) {
@@ -363,7 +365,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		throw new StreamCorruptedException("Invalid SimpleEntityDataInfo code name " + codeName);
 	}
 	
-//		return info.c.getName();
+	//		return info.c.getName();
 	@Override
 	@Deprecated
 	protected boolean deserialize(final String s) {
@@ -390,5 +392,4 @@ public class SimpleEntityData extends EntityData<Entity> {
 	public EntityData getSuperType() {
 		return new SimpleEntityData(info);
 	}
-	
 }

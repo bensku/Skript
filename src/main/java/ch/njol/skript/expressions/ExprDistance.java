@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -43,6 +42,7 @@ import ch.njol.util.Kleenean;
 		"	message \"You're very close to your home!\""})
 @Since("1.0")
 public class ExprDistance extends SimpleExpression<Double> {
+	
 	static {
 		Skript.registerExpression(ExprDistance.class, Double.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
 	}
@@ -64,7 +64,7 @@ public class ExprDistance extends SimpleExpression<Double> {
 		final Location l1 = loc1.getSingle(e), l2 = loc2.getSingle(e);
 		if (l1 == null || l2 == null || l1.getWorld() != l2.getWorld())
 			return new Double[0];
-		return new Double[] {l1.distance(l2)};
+		return new Double[]{l1.distance(l2)};
 	}
 	
 	@Override
@@ -81,5 +81,4 @@ public class ExprDistance extends SimpleExpression<Double> {
 	public Class<? extends Double> getReturnType() {
 		return Double.class;
 	}
-	
 }

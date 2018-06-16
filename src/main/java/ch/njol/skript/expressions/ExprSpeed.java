@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -45,6 +44,7 @@ import ch.njol.util.Math2;
 		"increase the argument's fly speed by 0.1"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
+	
 	static {
 		register(ExprSpeed.class, Float.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
 	}
@@ -72,7 +72,7 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
-			return new Class[] {Number.class};
+			return new Class[]{Number.class};
 		return null;
 	}
 	
@@ -94,7 +94,7 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 				case REMOVE:
 					newSpeed = oldSpeed - input;
 					break;
-					//$CASES-OMITTED$
+				//$CASES-OMITTED$
 				default:
 					newSpeed = walk ? 0.2f : 0.1f;
 					break;
@@ -118,5 +118,4 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 	protected String getPropertyName() {
 		return walk ? "walk speed" : "fly speed";
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -49,14 +47,13 @@ import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.Setter;
 
 /**
  * FIXME rename
- * 
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
@@ -100,6 +97,7 @@ public abstract class Aliases {
 	
 	// this is not an alias!
 	private final static ItemType everything = new ItemType();
+	
 	static {
 		everything.setAll(true);
 		everything.add(new ItemData());
@@ -127,6 +125,7 @@ public abstract class Aliases {
 	private final static ArgsMessage m_loaded_x_aliases = new ArgsMessage("aliases.loaded x aliases");
 	
 	final static class Variations extends HashMap<String, HashMap<String, ItemType>> {
+		
 		private final static long serialVersionUID = -139481665727386819L;
 	}
 	
@@ -150,9 +149,9 @@ public abstract class Aliases {
 	}
 	
 	/**
-	 * Concatenates parts of an alias's name. This currently 'lowercases' the first character of any part if there's no space in front of it. It also replaces double spaces with a
-	 * single one and trims the resulting string.
-	 * 
+	 * Concatenates parts of an alias's name. This currently 'lowercases' the first character of any part if there's no
+	 * space in front of it. It also replaces double spaces with a single one and trims the resulting string.
+	 *
 	 * @param parts
 	 */
 	private static String concatenate(final String... parts) {
@@ -176,8 +175,8 @@ public abstract class Aliases {
 	}
 	
 	/**
-	 * @param name Mixedcase string with no whitespace besides spaces and no double spaces.
-	 * @param value The alias's value, used for {variations}
+	 * @param name       Mixedcase string with no whitespace besides spaces and no double spaces.
+	 * @param value      The alias's value, used for {variations}
 	 * @param variations
 	 * @return A map containing all parsed aliases
 	 */
@@ -317,8 +316,8 @@ public abstract class Aliases {
 	
 	/**
 	 * Parses & adds new aliases
-	 * 
-	 * @param name mixedcase string
+	 *
+	 * @param name       mixedcase string
 	 * @param value
 	 * @param variations
 	 * @return amount of added aliases
@@ -412,8 +411,7 @@ public abstract class Aliases {
 				} else {
 					if (n == null)
 						materialNames.put(Integer.valueOf(d.getId()), n = new MaterialName(d.getId(), "" + d.getId(), "" + d.getId(), g.getSecond()));
-					@SuppressWarnings("null")
-					final NonNullPair<Short, Short> data = new NonNullPair<Short, Short>(Short.valueOf(d.dataMin), Short.valueOf(d.dataMax));
+					@SuppressWarnings("null") final NonNullPair<Short, Short> data = new NonNullPair<Short, Short>(Short.valueOf(d.dataMin), Short.valueOf(d.dataMax));
 					n.names.put(data, p);
 				}
 			}
@@ -423,7 +421,7 @@ public abstract class Aliases {
 	
 	/**
 	 * Gets the custom name of of a material, or the default if none is set.
-	 * 
+	 *
 	 * @param id
 	 * @param data
 	 * @return The material's name
@@ -489,7 +487,7 @@ public abstract class Aliases {
 	
 	/**
 	 * Parses an ItemType to be used as an alias, i.e. it doesn't parse 'all'/'every' and the amount.
-	 * 
+	 *
 	 * @param s mixed case string
 	 * @return A new ItemType representing the given value
 	 */
@@ -523,7 +521,7 @@ public abstract class Aliases {
 	 * Parses an ItemType.
 	 * <p>
 	 * Prints errors.
-	 * 
+	 *
 	 * @param s
 	 * @return The parsed ItemType or null if the input is invalid.
 	 */
@@ -556,7 +554,8 @@ public abstract class Aliases {
 		final String lc = s.toLowerCase();
 		final String of = Language.getSpaced("enchantments.of").toLowerCase();
 		int c = -1;
-		outer: while ((c = lc.indexOf(of, c + 1)) != -1) {
+		outer:
+		while ((c = lc.indexOf(of, c + 1)) != -1) {
 			final ItemType t2 = t.clone();
 			final BlockingLogHandler log = SkriptLogger.startLogHandler(new BlockingLogHandler());
 			try {
@@ -590,9 +589,10 @@ public abstract class Aliases {
 	
 	/**
 	 * Prints errors.
-	 * 
-	 * @param s The string holding the type, can be either a number or an alias, plus an optional data part. Case does not matter.
-	 * @param t The ItemType to add the parsed ItemData(s) to (i.e. this ItemType will be modified)
+	 *
+	 * @param s       The string holding the type, can be either a number or an alias, plus an optional data part. Case
+	 *                does not matter.
+	 * @param t       The ItemType to add the parsed ItemData(s) to (i.e. this ItemType will be modified)
 	 * @param isAlias Whether this type is parsed for an alias.
 	 * @return The given item type or null if the input couldn't be parsed.
 	 */
@@ -663,7 +663,7 @@ public abstract class Aliases {
 	
 	/**
 	 * Gets an alias from the aliases defined in the config.
-	 * 
+	 *
 	 * @param s The alias to get, case does not matter
 	 * @return A copy of the ItemType represented by the given alias or null if no such alias exists.
 	 */
@@ -711,7 +711,7 @@ public abstract class Aliases {
 	
 	/**
 	 * Gets the data part of an item data
-	 * 
+	 *
 	 * @param s Everything after ':'
 	 * @return ItemData with only the dataMin and dataMax set
 	 */
@@ -861,7 +861,7 @@ public abstract class Aliases {
 					Skript.info(m_loaded_x_aliases.toString(num));
 				
 				addMissingMaterialNames();
-				
+
 //			if (!SkriptConfig.keepConfigsLoaded.value())
 //				aliasConfig = null;
 				
@@ -869,7 +869,5 @@ public abstract class Aliases {
 		} finally {
 			Language.setUseLocal(wasLocal);
 		}
-		
 	}
-	
 }

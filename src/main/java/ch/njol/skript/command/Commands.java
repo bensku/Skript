@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.command;
 
@@ -31,16 +30,9 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Filter;
-import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.util.StringMode;
-import ch.njol.skript.util.Timespan;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -69,16 +61,19 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.log.BukkitLoggerFilter;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.Task;
+import ch.njol.skript.util.StringMode;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Callback;
 import ch.njol.util.NonNullPair;
@@ -125,7 +120,8 @@ public abstract class Commands {
 					final Field aliasesField = SimpleCommandMap.class.getDeclaredField("aliases");
 					aliasesField.setAccessible(true);
 					cmAliases = (Set<String>) aliasesField.get(commandMap);
-				} catch (final NoSuchFieldException e) {}
+				} catch (final NoSuchFieldException e) {
+				}
 			}
 		} catch (final SecurityException e) {
 			Skript.error("Please disable the security manager");
@@ -222,7 +218,8 @@ public abstract class Commands {
 							if (f.get())
 								e.setCancelled(true);
 							break;
-						} catch (final InterruptedException e1) {}
+						} catch (final InterruptedException e1) {
+						}
 					}
 				} catch (final ExecutionException e1) {
 					Skript.exception(e1);
@@ -337,7 +334,7 @@ public abstract class Commands {
 		Matcher m = commandPattern.matcher(s);
 		final boolean a = m.matches();
 		assert a;
-
+		
 		final String command = "" + m.group(1).toLowerCase();
 		final ScriptCommand existingCommand = commands.get(command);
 		if (alsoRegister && existingCommand != null && existingCommand.getLabel().equals(command)) {
@@ -424,17 +421,17 @@ public abstract class Commands {
 		else if (aliases.get(0).isEmpty())
 			aliases = new ArrayList<>(0);
 		final String permission = ScriptLoader.replaceOptions(node.get("permission", ""));
-
+		
 		final String rawPermissionMessage = ScriptLoader.replaceOptions(node.get("permission message", ""));
-
+		
 		Expression<String> permissionMessage = rawPermissionMessage.isEmpty() ?
 				null
 				: VariableString.newInstance(rawPermissionMessage);
-
+		
 		if (permissionMessage != null && ((VariableString) permissionMessage).isSimple()) {
 			permissionMessage = new SimpleLiteral<>(rawPermissionMessage, false);
 		}
-
+		
 		final SectionNode trigger = (SectionNode) node.get("trigger");
 		if (trigger == null)
 			return null;
@@ -449,7 +446,7 @@ public abstract class Commands {
 				Skript.warning("'executable by' should be either be 'players', 'console', or both, but found '" + b + "'");
 			}
 		}
-
+		
 		final String cooldownString = ScriptLoader.replaceOptions(node.get("cooldown", ""));
 		Timespan cooldown = null;
 		if (!cooldownString.isEmpty()) {
@@ -459,30 +456,30 @@ public abstract class Commands {
 				Skript.warning("'" + cooldownString + "' is an invalid timespan for the cooldown");
 			}
 		}
-
+		
 		final String cooldownMessageString = ScriptLoader.replaceOptions(node.get("cooldown message", ""));
 		boolean usingCooldownMessage = !cooldownMessageString.isEmpty();
 		VariableString cooldownMessage = null;
 		if (usingCooldownMessage) {
 			cooldownMessage = VariableString.newInstance(cooldownMessageString);
 		}
-
+		
 		String cooldownBypass = ScriptLoader.replaceOptions(node.get("cooldown bypass", ""));
-
+		
 		if (permissionMessage != null && permission.isEmpty()) {
 			Skript.warning("command /" + command + " has a permission message set, but not a permission");
 		}
-
+		
 		if (usingCooldownMessage && cooldownString.isEmpty()) {
 			Skript.warning("command /" + command + " has a cooldown message set, but not a cooldown");
 		}
-
+		
 		String cooldownStorageString = ScriptLoader.replaceOptions(node.get("cooldown storage", ""));
 		VariableString cooldownStorage = null;
 		if (!cooldownStorageString.isEmpty()) {
 			cooldownStorage = VariableString.newInstance(cooldownStorageString, StringMode.VARIABLE_NAME);
 		}
-
+		
 		if (Skript.debug() || node.debug())
 			Skript.debug("command " + desc + ":");
 		
@@ -510,7 +507,7 @@ public abstract class Commands {
 		currentArguments = null;
 		return c;
 	}
-	
+
 //	public static boolean skriptCommandExists(final String command) {
 //		final ScriptCommand c = commands.get(command);
 //		return c != null && c.getName().equals(command);
@@ -620,5 +617,4 @@ public abstract class Commands {
 			}
 		}
 	}
-	
 }

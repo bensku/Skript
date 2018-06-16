@@ -1,23 +1,28 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.util;
+
+import java.lang.reflect.Array;
+import java.util.Iterator;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -28,31 +33,27 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.Iterator;
 
 /**
- * An implementation of the {@link Expression} interface. You should usually extend this class to make a new expression.
- * 
- * @see Skript#registerExpression(Class, Class, ExpressionType, String...)
+ * An implementation of the {@link Expression} interface. You should usually extend this class to make a new
+ * expression.
+ *
  * @author Peter Güttinger
+ * @see Skript#registerExpression(Class, Class, ExpressionType, String...)
  */
 public abstract class SimpleExpression<T> implements Expression<T> {
 	
 	private int time = 0;
 	
 	@SuppressWarnings("null")
-	protected SimpleExpression() {}
+	protected SimpleExpression() {
+	}
 	
 	@Override
 	@Nullable
@@ -68,7 +69,8 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Unlike {@link #get(Event)} you have to make sure that the this method's returned array is neither null nor contains null elements.
+	 * Unlike {@link #get(Event)} you have to make sure that the this method's returned array is neither null nor
+	 * contains null elements.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -142,9 +144,9 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	}
 	
 	/**
-	 * This is the internal method to get an expression's values.<br>
-	 * To get the expression's value from the outside use {@link #getSingle(Event)} or {@link #getArray(Event)}.
-	 * 
+	 * This is the internal method to get an expression's values.<br> To get the expression's value from the outside use
+	 * {@link #getSingle(Event)} or {@link #getArray(Event)}.
+	 *
 	 * @param e The event
 	 * @return An array of values for this event. May not contain nulls.
 	 */
@@ -182,10 +184,11 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	}
 	
 	/**
-	 * Converts this expression to another type. Unless the expression is special, the default implementation is sufficient.
+	 * Converts this expression to another type. Unless the expression is special, the default implementation is
+	 * sufficient.
 	 * <p>
 	 * This method is never called with a supertype of the return type of this expression, or the return type itself.
-	 * 
+	 *
 	 * @param to The desired return type of the returned expression
 	 * @return Expression with the desired return type or null if it can't be converted to the given type
 	 * @see Expression#getConvertedExpression(Class...)
@@ -197,12 +200,12 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 		assert !CollectionUtils.containsSuperclass(to, getReturnType());
 		return ConvertedExpression.newInstance(this, to);
 	}
-
+	
 	/**
-	 * Usually, you want to override {@link SimpleExpression#getConvertedExpr(Class[])}.
-	 * However, it may be useful to override this method if you have an expression with a return
-	 * type that is unknown until runtime (like variables). Usually, you'll be fine with just
-	 * the default implementation. This method is final on versions below INSERT VERSION.
+	 * Usually, you want to override {@link SimpleExpression#getConvertedExpr(Class[])}. However, it may be useful to
+	 * override this method if you have an expression with a return type that is unknown until runtime (like variables).
+	 * Usually, you'll be fine with just the default implementation. This method is final on versions below INSERT
+	 * VERSION.
 	 *
 	 * @param to The desired return type of the returned expression
 	 * @return The converted expression
@@ -247,7 +250,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	 * {@inheritDoc}
 	 * <p>
 	 * This implementation sets the time but returns false.
-	 * 
+	 *
 	 * @see #setTime(int, Class, Expression...)
 	 * @see #setTime(int, Expression, Class...)
 	 */

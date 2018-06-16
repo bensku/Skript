@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.command;
 
@@ -33,14 +32,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.util.Date;
-import ch.njol.skript.util.Timespan;
-import ch.njol.skript.variables.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -59,28 +50,37 @@ import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.command.Commands.CommandAliasHelpTopic;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
+import ch.njol.skript.util.Date;
 import ch.njol.skript.util.EmptyStacktraceException;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.StringUtils;
 import ch.njol.util.Validate;
 
 /**
  * This class is used for user-defined commands.
- * 
+ *
  * @author Peter Güttinger
  */
 public class ScriptCommand implements CommandExecutor {
+	
 	public final static Message m_executable_by_players = new Message("commands.executable by players");
 	public final static Message m_executable_by_console = new Message("commands.executable by console");
 	
@@ -98,7 +98,7 @@ public class ScriptCommand implements CommandExecutor {
 	@Nullable
 	private final Expression<String> cooldownStorage;
 	final String usage;
-
+	
 	final Trigger trigger;
 	
 	private final String pattern;
@@ -108,21 +108,21 @@ public class ScriptCommand implements CommandExecutor {
 	final int executableBy;
 	
 	private transient PluginCommand bukkitCommand;
-
-	private Map<UUID,Date> lastUsageMap = new HashMap<>();
-
+	
+	private Map<UUID, Date> lastUsageMap = new HashMap<>();
+	
 	/**
 	 * Creates a new SkriptCommand.
-	 * 
-	 * @param name /name
+	 *
+	 * @param name              /name
 	 * @param pattern
-	 * @param arguments the list of Arguments this command takes
-	 * @param description description to display in /help
-	 * @param usage message to display if the command was used incorrectly
-	 * @param aliases /alias1, /alias2, ...
-	 * @param permission permission or null if none
+	 * @param arguments         the list of Arguments this command takes
+	 * @param description       description to display in /help
+	 * @param usage             message to display if the command was used incorrectly
+	 * @param aliases           /alias1, /alias2, ...
+	 * @param permission        permission or null if none
 	 * @param permissionMessage message to display if the player doesn't have the given permission
-	 * @param items trigger to execute
+	 * @param items             trigger to execute
 	 */
 	public ScriptCommand(final File script, final String name, final String pattern, final List<Argument<?>> arguments,
 						 final String description, final String usage, final ArrayList<String> aliases,
@@ -136,14 +136,14 @@ public class ScriptCommand implements CommandExecutor {
 		this.permissionMessage = permissionMessage == null ?
 				new SimpleLiteral<>(Language.get("commands.no permission message"), false)
 				: permissionMessage;
-
+		
 		this.cooldown = cooldown;
 		this.cooldownMessage = cooldownMessage == null
-				? new SimpleLiteral<>(Language.get("commands.cooldown message"),false)
+				? new SimpleLiteral<>(Language.get("commands.cooldown message"), false)
 				: cooldownMessage;
 		this.cooldownBypass = cooldownBypass;
 		this.cooldownStorage = cooldownStorage;
-
+		
 		final Iterator<String> as = aliases.iterator();
 		while (as.hasNext()) { // remove aliases that are the same as the command
 			if (as.next().equalsIgnoreCase(label))
@@ -206,29 +206,30 @@ public class ScriptCommand implements CommandExecutor {
 				return false;
 			}
 		}
-
+		
 		final ScriptCommandEvent event = new ScriptCommandEvent(ScriptCommand.this, sender);
-
+		
 		if (!permission.isEmpty() && !sender.hasPermission(permission)) {
 			sender.sendMessage(permissionMessage.getSingle(event));
 			return false;
 		}
-
-		cooldownCheck : {
+		
+		cooldownCheck:
+		{
 			if (sender instanceof Player && cooldown != null) {
 				Player player = ((Player) sender);
 				UUID uuid = player.getUniqueId();
-
+				
 				// Cooldown bypass
 				if (!cooldownBypass.isEmpty() && player.hasPermission(cooldownBypass)) {
 					setLastUsage(uuid, event, null);
 					break cooldownCheck;
 				}
-
+				
 				if (getLastUsage(uuid, event) != null) {
 					if (getRemainingMilliseconds(uuid, event) <= 0) {
-                        if (!SkriptConfig.keepLastUsageDates.value()) {
-                        	setLastUsage(uuid, event, null);
+						if (!SkriptConfig.keepLastUsageDates.value()) {
+							setLastUsage(uuid, event, null);
 						}
 					} else {
 						sender.sendMessage(cooldownMessage.getSingle(event));
@@ -237,7 +238,7 @@ public class ScriptCommand implements CommandExecutor {
 				}
 			}
 		}
-
+		
 		if (Bukkit.isPrimaryThread()) {
 			execute2(event, sender, commandLabel, rest);
 			if (sender instanceof Player && !event.isCooldownCancelled()) {
@@ -255,10 +256,10 @@ public class ScriptCommand implements CommandExecutor {
 				}
 			});
 		}
-
+		
 		return true; // Skript prints its own error message anyway
 	}
-
+	
 	boolean execute2(final ScriptCommandEvent event, final CommandSender sender, final String commandLabel, final String rest) {
 		final ParseLogHandler log = SkriptLogger.startParseLogHandler();
 		try {
@@ -298,7 +299,7 @@ public class ScriptCommand implements CommandExecutor {
 	
 	/**
 	 * Gets the arguments this command takes.
-	 * 
+	 *
 	 * @return The internal list of arguments. Do not modify it!
 	 */
 	public List<Argument<?>> getArguments() {
@@ -377,8 +378,7 @@ public class ScriptCommand implements CommandExecutor {
 			try {
 				final Field topics = IndexHelpTopic.class.getDeclaredField("allTopics");
 				topics.setAccessible(true);
-				@SuppressWarnings("unchecked")
-				final ArrayList<HelpTopic> as = new ArrayList<HelpTopic>((Collection<HelpTopic>) topics.get(aliases));
+				@SuppressWarnings("unchecked") final ArrayList<HelpTopic> as = new ArrayList<HelpTopic>((Collection<HelpTopic>) topics.get(aliases));
 				for (final String alias : activeAliases) {
 					final HelpTopic at = new CommandAliasHelpTopic("/" + alias, "/" + getLabel(), help);
 					as.add(at);
@@ -399,8 +399,7 @@ public class ScriptCommand implements CommandExecutor {
 			try {
 				final Field topics = IndexHelpTopic.class.getDeclaredField("allTopics");
 				topics.setAccessible(true);
-				@SuppressWarnings("unchecked")
-				final ArrayList<HelpTopic> as = new ArrayList<HelpTopic>((Collection<HelpTopic>) topics.get(aliases));
+				@SuppressWarnings("unchecked") final ArrayList<HelpTopic> as = new ArrayList<HelpTopic>((Collection<HelpTopic>) topics.get(aliases));
 				as.removeAll(helps);
 				topics.set(aliases, as);
 			} catch (final Exception e) {
@@ -417,12 +416,12 @@ public class ScriptCommand implements CommandExecutor {
 	public String getLabel() {
 		return label;
 	}
-
+	
 	@Nullable
 	public Timespan getCooldown() {
 		return cooldown;
 	}
-
+	
 	@Nullable
 	private String getStorageVariableName(Event event) {
 		assert cooldownStorage != null;
@@ -438,7 +437,7 @@ public class ScriptCommand implements CommandExecutor {
 		}
 		return variableString;
 	}
-
+	
 	@Nullable
 	public Date getLastUsage(UUID uuid, Event event) {
 		if (cooldownStorage == null) {
@@ -449,7 +448,7 @@ public class ScriptCommand implements CommandExecutor {
 			return (Date) Variables.getVariable(name, null, false);
 		}
 	}
-
+	
 	public void setLastUsage(UUID uuid, Event event, @Nullable Date date) {
 		if (cooldownStorage != null) {
 			// Using a variable
@@ -459,13 +458,13 @@ public class ScriptCommand implements CommandExecutor {
 		} else {
 			// Use the map
 			if (date == null) {
-                lastUsageMap.remove(uuid);
-            } else {
-                lastUsageMap.put(uuid, date);
-            }
+				lastUsageMap.remove(uuid);
+			} else {
+				lastUsageMap.put(uuid, date);
+			}
 		}
 	}
-
+	
 	public long getRemainingMilliseconds(UUID uuid, Event event) {
 		Date lastUsage = getLastUsage(uuid, event);
 		if (lastUsage == null) {
@@ -479,7 +478,7 @@ public class ScriptCommand implements CommandExecutor {
 		}
 		return remaining;
 	}
-
+	
 	public void setRemainingMilliseconds(UUID uuid, Event event, long milliseconds) {
 		Timespan cooldown = this.cooldown;
 		assert cooldown != null;
@@ -489,22 +488,22 @@ public class ScriptCommand implements CommandExecutor {
 		}
 		setElapsedMilliSeconds(uuid, event, cooldownMs - milliseconds);
 	}
-
+	
 	public long getElapsedMilliseconds(UUID uuid, Event event) {
 		Date lastUsage = getLastUsage(uuid, event);
 		return lastUsage == null ? 0 : new Date().getTimestamp() - lastUsage.getTimestamp();
 	}
-
+	
 	public void setElapsedMilliSeconds(UUID uuid, Event event, long milliseconds) {
 		Date date = new Date();
 		date.subtract(new Timespan(milliseconds));
 		setLastUsage(uuid, event, date);
 	}
-
+	
 	public String getCooldownBypass() {
 		return cooldownBypass;
 	}
-
+	
 	public List<String> getAliases() {
 		return aliases;
 	}
@@ -521,5 +520,4 @@ public class ScriptCommand implements CommandExecutor {
 	public File getScript() {
 		return trigger.getScript();
 	}
-	
 }

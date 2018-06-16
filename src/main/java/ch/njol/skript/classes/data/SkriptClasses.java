@@ -1,38 +1,36 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.Skript;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
@@ -46,7 +44,6 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.classes.YggdrasilSerializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
@@ -72,7 +69,9 @@ import ch.njol.yggdrasil.Fields;
  */
 @SuppressWarnings("rawtypes")
 public class SkriptClasses {
-	public SkriptClasses() {}
+	
+	public SkriptClasses() {
+	}
 	
 	static {
 		Classes.registerClass(new ClassInfo<>(ClassInfo.class, "classinfo")
@@ -144,7 +143,7 @@ public class SkriptClasses {
 						return ci;
 					}
 					
-//					return c.getCodeName();
+					//					return c.getCodeName();
 					@Override
 					@Nullable
 					public ClassInfo deserialize(final String s) {
@@ -195,7 +194,7 @@ public class SkriptClasses {
 				.user("item ?types?", "items", "materials")
 				.name("Item Type")
 				.description("An item type is an alias, e.g. 'a pickaxe', 'all plants', etc., and can result in different items when added to an inventory, " +
-						"and unlike <a href='#itemstack'>items</a> they are well suited for checking whether an inventory contains a certain item or whether a certain item is of a certain type.",
+								"and unlike <a href='#itemstack'>items</a> they are well suited for checking whether an inventory contains a certain item or whether a certain item is of a certain type.",
 						"An item type can also have one or more <a href='#enchantmenttype'>enchantments</a> with or without a specific level defined, " +
 								"and can optionally start with 'all' or 'every' to make this item type represent <i>all</i> types that the alias represents, including data ranges.")
 				.usage("<code>[&lt;number&gt; [of]] [all/every] &lt;alias&gt; [of &lt;enchantment&gt; [&lt;level&gt;] [,/and &lt;more enchantments...&gt;]]</code>")
@@ -253,7 +252,7 @@ public class SkriptClasses {
 					}
 				})
 				.serializer(new YggdrasilSerializer<ItemType>() {
-//						final StringBuilder b = new StringBuilder();
+					//						final StringBuilder b = new StringBuilder();
 //						b.append(t.getInternalAmount());
 //						b.append("," + t.isAll());
 //						for (final ItemData d : t.getTypes()) {
@@ -365,7 +364,7 @@ public class SkriptClasses {
 						return "time:\\d+";
 					}
 				}).serializer(new YggdrasilSerializer<Time>() {
-//						return "" + t.getTicks();
+					//						return "" + t.getTicks();
 					@Override
 					@Nullable
 					public Time deserialize(final String s) {
@@ -416,7 +415,7 @@ public class SkriptClasses {
 						return "timespan:\\d+";
 					}
 				}).serializer(new YggdrasilSerializer<Timespan>() {
-//						return "" + t.getMilliSeconds();
+					//						return "" + t.getMilliSeconds();
 					@Override
 					@Nullable
 					public Timespan deserialize(final String s) {
@@ -447,17 +446,17 @@ public class SkriptClasses {
 					public Timespan subtract(final Timespan value, final Timespan difference) {
 						return new Timespan(Math.max(0, value.getMilliSeconds() - difference.getMilliSeconds()));
 					}
-
+					
 					@Override
 					public Timespan multiply(Timespan value, Timespan multiplier) {
 						throw new UnsupportedOperationException();
 					}
-
+					
 					@Override
 					public Timespan divide(Timespan value, Timespan divider) {
 						throw new UnsupportedOperationException();
 					}
-
+					
 					@Override
 					public Timespan power(Timespan value, Timespan exponent) {
 						throw new UnsupportedOperationException();
@@ -518,7 +517,7 @@ public class SkriptClasses {
 						return "timeperiod:\\d+-\\d+";
 					}
 				}).serializer(new YggdrasilSerializer<Timeperiod>() {
-//						return t.start + "-" + t.end;
+					//						return t.start + "-" + t.end;
 					@Override
 					@Nullable
 					public Timeperiod deserialize(final String s) {
@@ -544,7 +543,7 @@ public class SkriptClasses {
 						"# now {_yesterday} represents the date 24 hours before now")
 				.since("1.4")
 				.serializer(new YggdrasilSerializer<Date>() {
-//						return "" + d.getTimestamp();
+					//						return "" + d.getTimestamp();
 					@Override
 					@Nullable
 					public Date deserialize(final String s) {
@@ -569,17 +568,17 @@ public class SkriptClasses {
 					public Date subtract(final Date value, final Timespan difference) {
 						return new Date(value.getTimestamp() - difference.getMilliSeconds());
 					}
-
+					
 					@Override
 					public Date multiply(Date value, Timespan multiplier) {
 						throw new UnsupportedOperationException();
 					}
-
+					
 					@Override
 					public Date divide(Date value, Timespan divider) {
 						throw new UnsupportedOperationException();
 					}
-
+					
 					@Override
 					public Date power(Date value, Timespan exponent) {
 						throw new UnsupportedOperationException();
@@ -597,7 +596,7 @@ public class SkriptClasses {
 						"loop blocks from the block infront of the player to the block 10 below the player:",
 						"	set the block behind the loop-block to water")
 				.since("2.0")
-				.defaultExpression(new SimpleLiteral<>(new Direction(new double[] {0, 0, 0}), true))
+				.defaultExpression(new SimpleLiteral<>(new Direction(new double[]{0, 0, 0}), true))
 				.parser(new Parser<Direction>() {
 					@Override
 					@Nullable
@@ -626,7 +625,7 @@ public class SkriptClasses {
 					}
 				})
 				.serializer(new YggdrasilSerializer<Direction>() {
-//						return o.serialize();
+					//						return o.serialize();
 					@Override
 					@Deprecated
 					@Nullable
@@ -639,7 +638,7 @@ public class SkriptClasses {
 				.user("(inventory )?slots?")
 				.name("Inventory Slot")
 				.description("Represents a single slot of an <a href='#inventory'>inventory</a>. " +
-						"Notable slots are the <a href='../expressions/#ExprArmorSlot'>armour slots</a> and <a href='../expressions/#ExprFurnaceSlot'>furnace slots</a>. ",
+								"Notable slots are the <a href='../expressions/#ExprArmorSlot'>armour slots</a> and <a href='../expressions/#ExprFurnaceSlot'>furnace slots</a>. ",
 						"The most important property that distinguishes a slot from an <a href='#itemstack'>item</a> is its ability to be changed, e.g. it can be set, deleted, enchanted, etc. " +
 								"(Some item expressions can be changed as well, e.g. items stored in variables. " +
 								"For that matter: slots are never saved to variables, only the items they represent at the time when the variable is set).",
@@ -658,7 +657,7 @@ public class SkriptClasses {
 					public Class<Object>[] acceptChange(final ChangeMode mode) {
 						if (mode == ChangeMode.RESET)
 							return null;
-						return new Class[] {ItemType.class, ItemStack.class};
+						return new Class[]{ItemType.class, ItemStack.class};
 					}
 					
 					@Override
@@ -813,7 +812,7 @@ public class SkriptClasses {
 					}
 				})
 				.serializer(new YggdrasilSerializer<EnchantmentType>() {
-//						return o.getType().getId() + ":" + o.getLevel();
+					//						return o.getType().getId() + ":" + o.getLevel();
 					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
@@ -871,7 +870,7 @@ public class SkriptClasses {
 					}
 				})
 				.serializer(new YggdrasilSerializer<Experience>() {
-//						return "" + xp;
+					//						return "" + xp;
 					@Override
 					@Nullable
 					public Experience deserialize(final String s) {
@@ -897,17 +896,17 @@ public class SkriptClasses {
 						public VisualEffect parse(final String s, final ParseContext context) {
 							return VisualEffect.parse(s);
 						}
-
+						
 						@Override
 						public String toString(final VisualEffect e, final int flags) {
 							return e.toString(flags);
 						}
-
+						
 						@Override
 						public String toVariableNameString(final VisualEffect e) {
 							return e.toString();
 						}
-
+						
 						@Override
 						public String getVariableNamePattern() {
 							return ".*";
@@ -918,5 +917,4 @@ public class SkriptClasses {
 			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
 		}
 	}
-	
 }

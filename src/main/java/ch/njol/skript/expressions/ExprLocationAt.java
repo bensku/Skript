@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -37,7 +36,7 @@ import ch.njol.util.Kleenean;
 
 /**
  * FIXME doesn't parse - update documentation when fixed
- * 
+ *
  * @author Peter Güttinger
  */
 @Name("Location At")
@@ -46,6 +45,7 @@ import ch.njol.util.Kleenean;
 		"distance between the player and the location (0, 0, 0) is less than 200"})
 @Since("2.0")
 public class ExprLocationAt extends SimpleExpression<Location> {
+	
 	static {
 		Skript.registerExpression(ExprLocationAt.class, Location.class, ExpressionType.COMBINED,
 				"[the] (location|position) [at] [\\(][x[ ][=[ ]]]%number%, [y[ ][=[ ]]]%number%, [and] [z[ ][=[ ]]]%number%[\\)] [[(in|of) [[the] world]] %world%]");
@@ -73,7 +73,7 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 		final Number x = this.x.getSingle(e), y = this.y.getSingle(e), z = this.z.getSingle(e);
 		if (w == null || x == null || y == null || z == null)
 			return new Location[0];
-		return new Location[] {new Location(w, x.doubleValue(), y.doubleValue(), z.doubleValue())};
+		return new Location[]{new Location(w, x.doubleValue(), y.doubleValue(), z.doubleValue())};
 	}
 	
 	@Override
@@ -90,5 +90,4 @@ public class ExprLocationAt extends SimpleExpression<Location> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the location at (" + x.toString(e, debug) + ", " + y.toString(e, debug) + ", " + z.toString(e, debug) + ") in " + world.toString(e, debug);
 	}
-	
 }

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.log;
 
@@ -65,7 +64,7 @@ public class RetainingLogHandler extends LogHandler {
 	 * Prints all retained errors or the given one if no errors were retained.
 	 * <p>
 	 * This handler is stopped if not already done.
-	 * 
+	 *
 	 * @param def Error to print if no errors were logged, can be null to not print any error if there are none
 	 * @return Whether there were any errors
 	 */
@@ -98,9 +97,9 @@ public class RetainingLogHandler extends LogHandler {
 	 * Sends all retained error messages to the given recipient.
 	 * <p>
 	 * This handler is stopped if not already done.
-	 * 
+	 *
 	 * @param recipient
-	 * @param def Error to send if no errors were logged, can be null to not print any error if there are none
+	 * @param def       Error to send if no errors were logged, can be null to not print any error if there are none
 	 * @return Whether there were any errors to send
 	 */
 	public final boolean printErrors(final CommandSender recipient, final @Nullable String def) {
@@ -197,5 +196,4 @@ public class RetainingLogHandler extends LogHandler {
 	public int getNumErrors() {
 		return numErrors;
 	}
-	
 }

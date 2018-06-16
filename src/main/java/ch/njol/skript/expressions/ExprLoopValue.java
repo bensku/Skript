@@ -1,33 +1,30 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
-import org.mozilla.javascript.Script;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -54,7 +51,7 @@ import ch.njol.util.Kleenean;
  * Used to access a loop's current value.
  * <p>
  * TODO expression to get the current # of execution (e.g. loop-index/number/count/etc (not number though));
- * 
+ *
  * @author Peter Güttinger
  */
 @Name("Loop value")
@@ -69,6 +66,7 @@ import ch.njol.util.Kleenean;
 		"		set loop-block-2 to any wool"})
 @Since("1.0")
 public class ExprLoopValue extends SimpleExpression<Object> {
+	
 	static {
 		Skript.registerExpression(ExprLoopValue.class, Object.class, ExpressionType.SIMPLE, "[the] loop-<.+>");
 	}
@@ -161,12 +159,11 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	@Nullable
 	protected Object[] get(final Event e) {
 		if (isVariableLoop) {
-			@SuppressWarnings("unchecked")
-			final Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
+			@SuppressWarnings("unchecked") final Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
 			if (current == null)
 				return null;
 			if (isIndex)
-				return new String[] {current.getKey()};
+				return new String[]{current.getKey()};
 			final Object[] one = (Object[]) Array.newInstance(getReturnType(), 1);
 			one[0] = current.getValue();
 			return one;
@@ -181,13 +178,11 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		if (e == null)
 			return name;
 		if (isVariableLoop) {
-			@SuppressWarnings("unchecked")
-			final Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
+			@SuppressWarnings("unchecked") final Entry<String, Object> current = (Entry<String, Object>) loop.getCurrent(e);
 			if (current == null)
 				return Classes.getDebugMessage(null);
 			return isIndex ? "\"" + current.getKey() + "\"" : Classes.getDebugMessage(current.getValue());
 		}
 		return Classes.getDebugMessage(loop.getCurrent(e));
 	}
-	
 }

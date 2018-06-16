@@ -1,28 +1,25 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -48,12 +45,12 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.slot.Slot;
-import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -65,7 +62,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.0, 2.2-dev35 (more clickable things)")
 @Events({"click", "inventory click"})
 public class ExprClicked extends SimpleExpression<Object> {
-
+	
 	private static enum ClickableType {
 		
 		BLOCK_AND_ITEMS(1, Block.class, "clicked block/itemtype/entity", " clicked (block|%-*itemtype/entitydata%)"),
@@ -77,7 +74,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 		private String name, syntax;
 		private Class<?> c;
 		private int value;
-
+		
 		private ClickableType(int value, Class<?> c, String name, String syntax) {
 			this.syntax = syntax;
 			this.value = value;
@@ -110,11 +107,11 @@ public class ExprClicked extends SimpleExpression<Object> {
 	
 	static {
 		Skript.registerExpression(ExprClicked.class, Object.class, ExpressionType.SIMPLE, "[the] ("
-					+ ClickableType.BLOCK_AND_ITEMS.getSyntax(false)
-					+ ClickableType.SLOT.getSyntax(false)
-					+ ClickableType.INVENTORY.getSyntax(false)
-					+ ClickableType.TYPE.getSyntax(false)
-					+ ClickableType.ACTION.getSyntax(true) + ")");
+				+ ClickableType.BLOCK_AND_ITEMS.getSyntax(false)
+				+ ClickableType.SLOT.getSyntax(false)
+				+ ClickableType.INVENTORY.getSyntax(false)
+				+ ClickableType.TYPE.getSyntax(false)
+				+ ClickableType.ACTION.getSyntax(true) + ")");
 	}
 	
 	@Nullable
@@ -177,10 +174,10 @@ public class ExprClicked extends SimpleExpression<Object> {
 					final Block block = ((PlayerInteractEvent) e).getClickedBlock();
 					
 					if (itemType == null)
-						return new Block[] {block};
+						return new Block[]{block};
 					assert itemType != null;
 					if (itemType.isOfType(block))
-						return new Block[] {block};
+						return new Block[]{block};
 					return null;
 				} else if (e instanceof PlayerInteractEntityEvent) {
 					if (entityType == null) //We're testing for the entity in this event
@@ -198,11 +195,11 @@ public class ExprClicked extends SimpleExpression<Object> {
 				}
 				break;
 			case TYPE:
-				return new ClickType[] {((InventoryClickEvent) e).getClick()};
+				return new ClickType[]{((InventoryClickEvent) e).getClick()};
 			case ACTION:
-				return new InventoryAction[] {((InventoryClickEvent) e).getAction()};
+				return new InventoryAction[]{((InventoryClickEvent) e).getAction()};
 			case INVENTORY:
-				return new Inventory[] {((InventoryClickEvent) e).getClickedInventory()};
+				return new Inventory[]{((InventoryClickEvent) e).getClickedInventory()};
 			case SLOT:
 				// Slots are specific to inventories, so refering to wrong one is impossible
 				// (as opposed to using the numbers directly)
@@ -226,7 +223,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 		// Slots must be transformed to item stacks when writing to variables
 		// Documentation by Njol states so, plus it is convenient
 		if (changed instanceof Variable && first instanceof Slot) {
-			return new ItemStack[] {((Slot) first).getItem()};
+			return new ItemStack[]{((Slot) first).getItem()};
 		}
 		
 		// Everything else (inventories, actions, etc.) does not need special handling
@@ -237,5 +234,4 @@ public class ExprClicked extends SimpleExpression<Object> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the " + (clickable != ClickableType.BLOCK_AND_ITEMS ? clickable.getName() : "clicked " + (entityType != null ? entityType : itemType != null ? itemType : "block"));
 	}
-	
 }

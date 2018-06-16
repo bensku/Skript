@@ -1,23 +1,28 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import java.lang.reflect.Array;
+
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -30,11 +35,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
 
 /**
  * @author bi0qaw
@@ -52,7 +52,7 @@ import java.lang.reflect.Array;
 		"set {_v} to {_v} // 5"})
 @Since("2.2-dev28")
 public class ExprVectorArithmetic extends SimpleExpression<Vector> {
-
+	
 	private static enum Operator {
 		PLUS("++") {
 			@Override
@@ -82,39 +82,39 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 				return v1.clone().divide(v2);
 			}
 		};
-
+		
 		public final String sign;
-
+		
 		private Operator(final String sign) {
 			this.sign = sign;
 		}
-
+		
 		public abstract Vector calculate(Vector v1, Vector v2);
-
+		
 		@Override
 		public String toString() {
 			return sign;
 		}
 	}
-
-	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][] {
-
+	
+	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][]{
+			
 			{"%vector%[ ]++[ ]%vector%", Operator.PLUS},
 			{"%vector%[ ]--[ ]%vector%", Operator.MINUS},
-
+			
 			{"%vector%[ ]**[ ]%vector%", Operator.MULT},
 			{"%vector%[ ]//[ ]%vector%", Operator.DIV},
 	});
-
+	
 	static {
 		Skript.registerExpression(ExprVectorArithmetic.class, Vector.class, ExpressionType.SIMPLE, patterns.getPatterns());
 	}
-
+	
 	@SuppressWarnings("null")
 	private Expression<Vector> first, second;
 	@SuppressWarnings("null")
 	private Operator op;
-
+	
 	@Override
 	protected Vector[] get(Event event) {
 		final Vector[] vectors = (Vector[]) Array.newInstance(Vector.class, 1);
@@ -128,22 +128,22 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 		vectors[0] = op.calculate(v1, v2);
 		return vectors;
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-
+	
 	@Override
 	public Class<? extends Vector> getReturnType() {
 		return Vector.class;
 	}
-
+	
 	@Override
 	public String toString(final @Nullable Event event, boolean b) {
-		return first.toString(event, b) + " " + op +  " " + second.toString(event, b);
+		return first.toString(event, b) + " " + op + " " + second.toString(event, b);
 	}
-
+	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {

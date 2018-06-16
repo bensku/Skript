@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.economy.classes;
 
@@ -38,6 +37,7 @@ import ch.njol.util.StringUtils;
  * @author Peter Güttinger
  */
 public class Money {
+	
 	static {
 		Classes.registerClass(new ClassInfo<>(Money.class, "money")
 				.user("money")
@@ -90,17 +90,17 @@ public class Money {
 					public Money subtract(final Money value, final Money difference) {
 						return new Money(value.amount - difference.amount);
 					}
-
+					
 					@Override
 					public Money multiply(Money value, Money multiplier) {
 						return new Money(value.getAmount() * multiplier.getAmount());
 					}
-
+					
 					@Override
 					public Money divide(Money value, Money divider) {
 						return new Money(value.getAmount() / divider.getAmount());
 					}
-
+					
 					@Override
 					public Money power(Money value, Money exponent) {
 						throw new UnsupportedOperationException();
@@ -162,12 +162,14 @@ public class Money {
 				try {
 					final double d = Double.parseDouble(s.substring(0, s.length() - plural.length()).trim());
 					return new Money(d);
-				} catch (final NumberFormatException e) {}
+				} catch (final NumberFormatException e) {
+				}
 			} else if (StringUtils.startsWithIgnoreCase(s, plural)) {
 				try {
 					final double d = Double.parseDouble(s.substring(plural.length()).trim());
 					return new Money(d);
-				} catch (final NumberFormatException e) {}
+				} catch (final NumberFormatException e) {
+				}
 			}
 		}
 		if (!singular.isEmpty()) {
@@ -175,12 +177,14 @@ public class Money {
 				try {
 					final double d = Double.parseDouble(s.substring(0, s.length() - singular.length()).trim());
 					return new Money(d);
-				} catch (final NumberFormatException e) {}
+				} catch (final NumberFormatException e) {
+				}
 			} else if (StringUtils.startsWithIgnoreCase(s, singular)) {
 				try {
 					final double d = Double.parseDouble(s.substring(singular.length()).trim());
 					return new Money(d);
-				} catch (final NumberFormatException e) {}
+				} catch (final NumberFormatException e) {
+				}
 			}
 		}
 //		try {
@@ -193,5 +197,4 @@ public class Money {
 	public String toString() {
 		return "" + VaultHook.economy.format(amount);
 	}
-	
 }

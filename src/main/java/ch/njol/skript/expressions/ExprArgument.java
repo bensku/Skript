@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -58,6 +57,7 @@ import ch.njol.util.StringUtils;
 		"heal the last argument"})
 @Since("1.0")
 public class ExprArgument extends SimpleExpression<Object> {
+	
 	static {
 		Skript.registerExpression(ExprArgument.class, Object.class, ExpressionType.SIMPLE,
 				"[the] last arg[ument][s]",
@@ -87,8 +87,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 				break;
 			case 1:
 			case 2:
-				@SuppressWarnings("null")
-				final int i = Utils.parseInt(parser.regexes.get(0).group(1));
+				@SuppressWarnings("null") final int i = Utils.parseInt(parser.regexes.get(0).group(1));
 				if (i > currentArguments.size()) {
 					Skript.error("The command doesn't have a " + StringUtils.fancyOrderNumber(i) + " argument", ErrorQuality.SEMANTIC_ERROR);
 					return false;
@@ -105,10 +104,8 @@ public class ExprArgument extends SimpleExpression<Object> {
 				break;
 			case 4:
 			case 5:
-				@SuppressWarnings("unchecked")
-				final ClassInfo<?> c = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
-				@SuppressWarnings("null")
-				final int num = parser.regexes.size() > 0 ? Utils.parseInt(parser.regexes.get(0).group()) : -1;
+				@SuppressWarnings("unchecked") final ClassInfo<?> c = ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
+				@SuppressWarnings("null") final int num = parser.regexes.size() > 0 ? Utils.parseInt(parser.regexes.get(0).group()) : -1;
 				int j = 1;
 				for (final Argument<?> a : currentArguments) {
 					if (!c.getC().isAssignableFrom(a.getType()))
@@ -174,5 +171,4 @@ public class ExprArgument extends SimpleExpression<Object> {
 	public boolean isLoopOf(final String s) {
 		return s.equalsIgnoreCase("argument");
 	}
-	
 }

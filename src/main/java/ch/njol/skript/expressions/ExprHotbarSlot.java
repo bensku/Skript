@@ -1,32 +1,28 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.util.Arrays;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -39,10 +35,10 @@ import ch.njol.skript.util.slot.Slot;
 @Name("Hotbar Slot")
 @Description({"The slot number of the currently selected hotbar slot."})
 @Examples({"message \"%player's current hotbar slot%\"",
-            "set player's selected hotbar slot to slot 4 of player"})
+		"set player's selected hotbar slot to slot 4 of player"})
 @Since("2.2-dev36")
 public class ExprHotbarSlot extends SimplePropertyExpression<Player, Slot> {
-
+	
 	static {
 		register(ExprHotbarSlot.class, Slot.class, "[([currently] selected|current)] hotbar slot", "players");
 	}
@@ -69,7 +65,7 @@ public class ExprHotbarSlot extends SimplePropertyExpression<Player, Slot> {
 	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
 		if (mode == Changer.ChangeMode.SET)
-			return new Class[] {Slot.class};
+			return new Class[]{Slot.class};
 		return null;
 	}
 	
@@ -88,5 +84,4 @@ public class ExprHotbarSlot extends SimplePropertyExpression<Player, Slot> {
 			p.getInventory().setHeldItemSlot(index);
 		}
 	}
-	
 }

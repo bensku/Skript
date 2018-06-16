@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -23,16 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.ThrownPotion;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
 
@@ -42,7 +37,8 @@ import ch.njol.skript.localization.LanguageChangeListener;
 @SuppressWarnings("deprecation")
 public abstract class PotionEffectUtils {
 	
-	private PotionEffectUtils() {}
+	private PotionEffectUtils() {
+	}
 	
 	final static Map<String, PotionEffectType> types = new HashMap<>();
 	
@@ -106,8 +102,9 @@ public abstract class PotionEffectUtils {
 	}
 	
 	/**
-	 * Checks if given string represents a known potion type and returns that type.
-	 * Unused currently, will be used soon (TM).
+	 * Checks if given string represents a known potion type and returns that type. Unused currently, will be used soon
+	 * (TM).
+	 *
 	 * @param name Name of potion type
 	 * @return
 	 */
@@ -164,8 +161,9 @@ public abstract class PotionEffectUtils {
 	}
 	
 	/**
-	 * Wrapper around deprecated API function, in case it gets removed.
-	 * Changing one method is easier that changing loads of them from different expressions.
+	 * Wrapper around deprecated API function, in case it gets removed. Changing one method is easier that changing
+	 * loads of them from different expressions.
+	 *
 	 * @param effect Type.
 	 * @return Potion type.
 	 */
@@ -176,13 +174,14 @@ public abstract class PotionEffectUtils {
 	
 	/**
 	 * Get potion string representation.
+	 *
 	 * @param effect
 	 * @param extended
 	 * @param strong
 	 * @return
 	 */
 	public static String getPotionName(@Nullable PotionEffectType effect, boolean extended, boolean strong) {
-		if (effect == null) return "bottle of water"; 
+		if (effect == null) return "bottle of water";
 		
 		String s = "";
 		if (extended) s += "extended";

@@ -1,21 +1,20 @@
-/**
- *   This file is part of Skript.
+/*
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright 2011-2018 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
@@ -33,44 +32,45 @@ import ch.njol.util.coll.CollectionUtils;
 
 /**
  * TODO !Update with every version [blocks] - also update aliases-*.sk
- * 
+ *
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public abstract class BlockUtils {
 	
-	private final static BlockFace[] torch = new BlockFace[] {
+	private final static BlockFace[] torch = new BlockFace[]{
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN
 	};
 	
-	private final static BlockFace[] button = new BlockFace[] {
+	private final static BlockFace[] button = new BlockFace[]{
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, null, null, null,
 			null, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH
 	};
 	
-	private final static BlockFace[] ladder = new BlockFace[] {
+	private final static BlockFace[] ladder = new BlockFace[]{
 			null, null, BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST
 	}, wallSign = ladder;
 	
-	private final static BlockFace[] trapdoor = new BlockFace[] {
+	private final static BlockFace[] trapdoor = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST
 	};
 	
-	private final static BlockFace[] lever = new BlockFace[] {
+	private final static BlockFace[] lever = new BlockFace[]{
 			BlockFace.UP, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.DOWN, BlockFace.UP,
 			BlockFace.UP, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.DOWN, BlockFace.DOWN, BlockFace.UP
 	};
 	
-	private final static BlockFace[] cocoa = new BlockFace[] {
+	private final static BlockFace[] cocoa = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
 	};
 	
-	private final static BlockFace[] tripwireHook = new BlockFace[] {
+	private final static BlockFace[] tripwireHook = new BlockFace[]{
 			BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
 			BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST
 	};
 	
 	private final static BlockFace[][] attached = new BlockFace[Skript.MAXBLOCKID + 1][];
+	
 	static {
 		attached[Material.TORCH.getId()] = torch;
 		attached[Material.STONE_BUTTON.getId()] = button;
@@ -86,20 +86,20 @@ public abstract class BlockUtils {
 			attached[Material.WOOD_BUTTON.getId()] = button;
 	}
 	
-	private final static BlockFace[] bed = new BlockFace[] {
+	private final static BlockFace[] bed = new BlockFace[]{
 			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
 	};
 	
 	// not the actual facing, but a direction where fence posts should exist
-	private final static BlockFace[] gate = new BlockFace[] {
+	private final static BlockFace[] gate = new BlockFace[]{
 			BlockFace.WEST, BlockFace.NORTH
 	};
 	
 	/**
 	 * @param b
 	 * @param type
-	 * @param dataMin The minimum data value from 0 to 15, can be -1
-	 * @param dataMax The maximum data value from 0 to 15, can be -1
+	 * @param dataMin      The minimum data value from 0 to 15, can be -1
+	 * @param dataMax      The maximum data value from 0 to 15, can be -1
 	 * @param applyPhysics TODO add effect that sets block without physics checks
 	 * @return Whether the block could be set successfully
 	 */
@@ -269,6 +269,7 @@ public abstract class BlockUtils {
 			152, 153, 155, 158, 159, 161, 162, 170, 172, 173, 174
 	};
 	private final static boolean[] isSolid = new boolean[Skript.MAXBLOCKID + 1];
+	
 	static {
 		for (final int i : solid)
 			isSolid[i] = true;
@@ -307,5 +308,4 @@ public abstract class BlockUtils {
 		}
 		return l;
 	}
-	
 }
