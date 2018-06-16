@@ -134,30 +134,30 @@ public enum Color implements YggdrasilSerializable {
 	}
 	
 	@Nullable
-	public final static Color byName(final String name) {
+	public static Color byName(final String name) {
 		return byName.get(name.toLowerCase());
 	}
 	
 	@Nullable
-	public final static Color byEnglishName(final String name) {
+	public static Color byEnglishName(final String name) {
 		return byEnglishName.get(name.toLowerCase());
 	}
 	
 	@Nullable
-	public final static Color byWool(final short data) {
+	public static Color byWool(final short data) {
 		if (data < 0 || data >= 16)
 			return null;
 		return byWool[data];
 	}
 	
 	@Nullable
-	public final static Color byDye(final short data) {
+	public static Color byDye(final short data) {
 		if (data < 0 || data >= 16)
 			return null;
 		return byWool[15 - data];
 	}
 	
-	public final static Color byWoolColor(final DyeColor color) {
+	public static Color byWoolColor(final DyeColor color) {
 		return byWool(color.getWoolData());
 	}
 	

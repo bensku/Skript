@@ -48,7 +48,7 @@ public abstract class PlayerUtils {
 	
 	final static Set<Player> inviUpdate = new HashSet<>();
 	
-	public final static void updateInventory(final @Nullable Player p) {
+	public static void updateInventory(final @Nullable Player p) {
 		if (p != null)
 			inviUpdate.add(p);
 	}
@@ -73,7 +73,7 @@ public abstract class PlayerUtils {
 	private static Method getOnlinePlayers = null;
 	
 	@SuppressWarnings({"null", "unchecked"})
-	public final static Collection<? extends Player> getOnlinePlayers() {
+	public static Collection<? extends Player> getOnlinePlayers() {
 		if (hasCollecionGetOnlinePlayers) {
 			return ImmutableList.copyOf(Bukkit.getOnlinePlayers());
 		} else {
@@ -104,7 +104,7 @@ public abstract class PlayerUtils {
 	}
 	
 	
-	public final static boolean canEat(Player p, Material food) {
+	public static boolean canEat(Player p, Material food) {
 		GameMode gm = p.getGameMode();
 		if (gm == GameMode.CREATIVE || gm == GameMode.SPECTATOR)
 			return false; // Can't eat anything in those gamemodes

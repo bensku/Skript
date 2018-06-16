@@ -106,7 +106,7 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private final static ArgsMessage m_reloading = new ArgsMessage(NODE + ".reload.reloading");
 	
-	private final static void reloading(final CommandSender sender, String what, final Object... args) {
+	private static void reloading(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : Language.format(NODE + ".reload." + what, args);
 		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what)));
 	}
@@ -116,7 +116,7 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private final static ArgsMessage m_changes_title = new ArgsMessage(NODE + ".update.changes.title");
 	
-	private final static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
+	private static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
 			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what))));
@@ -124,17 +124,17 @@ public class SkriptCommand implements CommandExecutor {
 			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors()))));
 	}
 	
-	private final static void info(final CommandSender sender, String what, final Object... args) {
+	private static void info(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.info(sender, StringUtils.fixCapitalization(what));
 	}
 	
-	private final static void message(final CommandSender sender, String what, final Object... args) {
+	private static void message(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.message(sender, StringUtils.fixCapitalization(what));
 	}
 	
-	private final static void error(final CommandSender sender, String what, final Object... args) {
+	private static void error(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.error(sender, StringUtils.fixCapitalization(what));
 	}
@@ -405,7 +405,7 @@ public class SkriptCommand implements CommandExecutor {
 		return f;
 	}
 	
-	private final static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
+	private static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
 		return FileUtils.renameAll(folder, new Converter<String, String>() {
 			@Override
 			@Nullable

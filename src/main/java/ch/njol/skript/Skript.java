@@ -679,7 +679,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @deprecated use {@link #classExists(String)}
 	 */
 	@Deprecated
-	public final static boolean supports(final String className) {
+	public static boolean supports(final String className) {
 		return classExists(className);
 	}
 	
@@ -689,7 +689,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param className The {@link Class#getCanonicalName() canonical name} of the class
 	 * @return Whether the given class exists.
 	 */
-	public final static boolean classExists(final String className) {
+	public static boolean classExists(final String className) {
 		try {
 			Class.forName(className);
 			return true;
@@ -706,7 +706,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param parameterTypes The parameter types of the method
 	 * @return Whether the given method exists.
 	 */
-	public final static boolean methodExists(final Class<?> c, final String methodName, final Class<?>... parameterTypes) {
+	public static boolean methodExists(final Class<?> c, final String methodName, final Class<?>... parameterTypes) {
 		try {
 			c.getDeclaredMethod(methodName, parameterTypes);
 			return true;
@@ -728,7 +728,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param returnType The expected return type
 	 * @return Whether the given method exists.
 	 */
-	public final static boolean methodExists(final Class<?> c, final String methodName, final Class<?>[] parameterTypes, final Class<?> returnType) {
+	public static boolean methodExists(final Class<?> c, final String methodName, final Class<?>[] parameterTypes, final Class<?> returnType) {
 		try {
 			final Method m = c.getDeclaredMethod(methodName, parameterTypes);
 			return m.getReturnType() == returnType;
@@ -746,7 +746,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param fieldName The name of the field
 	 * @return Whether the given field exists.
 	 */
-	public final static boolean fieldExists(final Class<?> c, final String fieldName) {
+	public static boolean fieldExists(final Class<?> c, final String fieldName) {
 		try {
 			c.getDeclaredField(fieldName);
 			return true;
@@ -768,7 +768,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Clears triggers, commands, functions and variable names
 	 */
-	final static void disableScripts() {
+	static void disableScripts() {
 		VariableString.variableNames.clear();
 		SkriptEventHandler.removeAllTriggers();
 		Commands.clearCommands();
@@ -778,7 +778,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Prints errors from reloading the config & scripts
 	 */
-	final static void reload() {
+	static void reload() {
 		if (!ScriptLoader.loadAsync)
 			disableScripts();
 		reloadMainConfig();
@@ -789,7 +789,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Prints errors
 	 */
-	final static void reloadScripts() {
+	static void reloadScripts() {
 		if (!ScriptLoader.loadAsync)
 			disableScripts();
 		ScriptLoader.loadScripts();
@@ -798,14 +798,14 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Prints errors
 	 */
-	final static void reloadMainConfig() {
+	static void reloadMainConfig() {
 		SkriptConfig.load();
 	}
 	
 	/**
 	 * Prints errors
 	 */
-	final static void reloadAliases() {
+	static void reloadAliases() {
 		Aliases.clear();
 		Aliases.load();
 	}
@@ -940,7 +940,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	public final static int MAXDATAVALUE = Short.MAX_VALUE - Short.MIN_VALUE;
 	
 	// TODO localise Infinity, -Infinity, NaN (and decimal point?)
-	public final static String toString(final double n) {
+	public static String toString(final double n) {
 		return StringUtils.toString(n, SkriptConfig.numberAccuracy.value());
 	}
 	
@@ -954,7 +954,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	/**
 	 * Creates a new Thread and sets its UncaughtExceptionHandler. The Thread is not started automatically.
 	 */
-	public final static Thread newThread(final Runnable r, final String name) {
+	public static Thread newThread(final Runnable r, final String name) {
 		final Thread t = new Thread(r, name);
 		t.setUncaughtExceptionHandler(UEH);
 		return t;
@@ -1159,7 +1159,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		return r;
 	}
 	
-	public final static Collection<SkriptEventInfo<?>> getEvents() {
+	public static Collection<SkriptEventInfo<?>> getEvents() {
 		return events;
 	}
 	
@@ -1172,7 +1172,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param command
 	 * @return Whether the command was run
 	 */
-	public final static boolean dispatchCommand(final CommandSender sender, final String command) {
+	public static boolean dispatchCommand(final CommandSender sender, final String command) {
 		try {
 			if (sender instanceof Player) {
 				final PlayerCommandPreprocessEvent e = new PlayerCommandPreprocessEvent((Player) sender, "/" + command);
@@ -1195,27 +1195,27 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	// ================ LOGGING ================
 	
-	public final static boolean logNormal() {
+	public static boolean logNormal() {
 		return SkriptLogger.log(Verbosity.NORMAL);
 	}
 	
-	public final static boolean logHigh() {
+	public static boolean logHigh() {
 		return SkriptLogger.log(Verbosity.HIGH);
 	}
 	
-	public final static boolean logVeryHigh() {
+	public static boolean logVeryHigh() {
 		return SkriptLogger.log(Verbosity.VERY_HIGH);
 	}
 	
-	public final static boolean debug() {
+	public static boolean debug() {
 		return SkriptLogger.debug();
 	}
 	
-	public final static boolean testing() {
+	public static boolean testing() {
 		return debug() || Skript.class.desiredAssertionStatus();
 	}
 	
-	public final static boolean log(final Verbosity minVerb) {
+	public static boolean log(final Verbosity minVerb) {
 		return SkriptLogger.log(minVerb);
 	}
 	
@@ -1269,19 +1269,19 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param info Description of the error and additional information
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
-	public final static EmptyStacktraceException exception(final String... info) {
+	public static EmptyStacktraceException exception(final String... info) {
 		return exception(null, info);
 	}
 	
-	public final static EmptyStacktraceException exception(final @Nullable Throwable cause, final String... info) {
+	public static EmptyStacktraceException exception(final @Nullable Throwable cause, final String... info) {
 		return exception(cause, null, null, info);
 	}
 	
-	public final static EmptyStacktraceException exception(final @Nullable Throwable cause, final @Nullable Thread thread, final String... info) {
+	public static EmptyStacktraceException exception(final @Nullable Throwable cause, final @Nullable Thread thread, final String... info) {
 		return exception(cause, thread, null, info);
 	}
 	
-	public final static EmptyStacktraceException exception(final @Nullable Throwable cause, final @Nullable TriggerItem item, final String... info) {
+	public static EmptyStacktraceException exception(final @Nullable Throwable cause, final @Nullable TriggerItem item, final String... info) {
 		return exception(cause, null, item, info);
 	}
 	
@@ -1299,7 +1299,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param info Description of the error and additional information
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
-	public final static EmptyStacktraceException exception(@Nullable Throwable cause, final @Nullable Thread thread, final @Nullable TriggerItem item, final String... info) {
+	public static EmptyStacktraceException exception(@Nullable Throwable cause, final @Nullable Thread thread, final @Nullable TriggerItem item, final String... info) {
 		
 		// First error: gather plugin package information
 		if (!checkedPlugins) { 
@@ -1445,11 +1445,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		return new EmptyStacktraceException();
 	}
 	
-	final static void logEx() {
+	static void logEx() {
 		SkriptLogger.LOGGER.severe(EXCEPTION_PREFIX);
 	}
 	
-	final static void logEx(final String... lines) {
+	static void logEx(final String... lines) {
 		for (final String line : lines)
 			SkriptLogger.LOGGER.severe(EXCEPTION_PREFIX + line);
 	}

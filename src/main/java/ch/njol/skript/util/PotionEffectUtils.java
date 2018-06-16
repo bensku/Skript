@@ -49,7 +49,7 @@ public abstract class PotionEffectUtils {
 	final static String[] names = new String[getMaxPotionId() + 1];
 	
 	// MCPC+ workaround
-	private final static int getMaxPotionId() {
+	private static int getMaxPotionId() {
 		int i = 0;
 		for (final PotionEffectType t : PotionEffectType.values()) {
 			if (t != null && t.getId() > i)
@@ -92,7 +92,7 @@ public abstract class PotionEffectUtils {
 		return names[t.getId()];
 	}
 	
-	public final static String[] getNames() {
+	public static String[] getNames() {
 		return names;
 	}
 	

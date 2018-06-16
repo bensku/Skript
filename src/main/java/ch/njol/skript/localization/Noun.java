@@ -118,7 +118,7 @@ public class Noun extends Message {
 	 * @param flags
 	 * @return The article with a trailing space (as no article is possible in which case the empty string is returned)
 	 */
-	public final static String getArticleWithSpace(final int gender, final int flags) {
+	public static String getArticleWithSpace(final int gender, final int flags) {
 		if (gender == PLURAL) {
 			if ((flags & Language.F_DEFINITE_ARTICLE) != 0)
 				return definitePluralArticle + " ";
@@ -272,7 +272,7 @@ public class Noun extends Message {
 	 * @param key Key to use in error messages§
 	 * @return The gender's id
 	 */
-	public final static int getGender(final String gender, final String key) {
+	public static int getGender(final String gender, final String key) {
 		if (gender.equalsIgnoreCase(PLURAL_TOKEN))
 			return PLURAL;
 		if (gender.equalsIgnoreCase(NO_GENDER_TOKEN))
@@ -285,7 +285,7 @@ public class Noun extends Message {
 	}
 	
 	@Nullable
-	public final static String getGenderID(final int gender) {
+	public static String getGenderID(final int gender) {
 		if (gender == PLURAL)
 			return PLURAL_TOKEN;
 		if (gender == NO_GENDER)
@@ -300,7 +300,7 @@ public class Noun extends Message {
 	 * @param key Key to report in case of error
 	 * @return (stripped string, gender or -1 if none)
 	 */
-	public final static NonNullPair<String, Integer> stripGender(String s, final String key) {
+	public static NonNullPair<String, Integer> stripGender(String s, final String key) {
 		final int c = s.lastIndexOf('@');
 		int g = -1;
 		if (c != -1) {
@@ -363,7 +363,7 @@ public class Noun extends Message {
 		}, LanguageListenerPriority.EARLIEST);
 	}
 	
-	public final static String stripIndefiniteArticle(final String s) {
+	public static String stripIndefiniteArticle(final String s) {
 		for (final String a : indefiniteArticles) {
 			if (StringUtils.startsWithIgnoreCase(s, a + " "))
 				return "" + s.substring(a.length() + 1);
@@ -371,23 +371,23 @@ public class Noun extends Message {
 		return s;
 	}
 	
-	public final static boolean isIndefiniteArticle(final String s) {
+	public static boolean isIndefiniteArticle(final String s) {
 		return indefiniteArticles.contains(s.toLowerCase());
 	}
 	
-	public final static boolean isLocalIndefiniteArticle(final String s) {
+	public static boolean isLocalIndefiniteArticle(final String s) {
 		return localIndefiniteArticles.contains(s.toLowerCase());
 	}
 	
-	public final static boolean isDefiniteArticle(final String s) {
+	public static boolean isDefiniteArticle(final String s) {
 		return definiteArticles.contains(s.toLowerCase()) || definitePluralArticle.equalsIgnoreCase(s);
 	}
 	
-	public final static boolean isLocalDefiniteArticle(final String s) {
+	public static boolean isLocalDefiniteArticle(final String s) {
 		return localDefiniteArticles.contains(s.toLowerCase()) || localDefinitePluralArticle.equalsIgnoreCase(s);
 	}
 	
-	public final static String toString(final String singular, final String plural, final int gender, final int flags) {
+	public static String toString(final String singular, final String plural, final int gender, final int flags) {
 		return getArticleWithSpace(flags, gender) + ((flags & Language.F_PLURAL) != 0 ? plural : singular);
 	}
 	

@@ -61,7 +61,7 @@ public abstract class SkriptLogger {
 	 * 
 	 * @return A newly created RetainingLogHandler
 	 */
-	public final static RetainingLogHandler startRetainingLog() {
+	public static RetainingLogHandler startRetainingLog() {
 		return startLogHandler(new RetainingLogHandler());
 	}
 	
@@ -70,7 +70,7 @@ public abstract class SkriptLogger {
 	 * 
 	 * @return A newly created ParseLogHandler
 	 */
-	public final static ParseLogHandler startParseLogHandler() {
+	public static ParseLogHandler startParseLogHandler() {
 		return startLogHandler(new ParseLogHandler());
 	}
 	
@@ -98,12 +98,12 @@ public abstract class SkriptLogger {
 	 * @see FilteringLogHandler
 	 * @see RedirectingLogHandler
 	 */
-	public final static <T extends LogHandler> T startLogHandler(final T h) {
+	public static <T extends LogHandler> T startLogHandler(final T h) {
 		handlers.add(h);
 		return h;
 	}
 	
-	final static void removeHandler(final LogHandler h) {
+	static void removeHandler(final LogHandler h) {
 		if (!handlers.contains(h))
 			return;
 		if (!h.equals(handlers.remove())) {
@@ -114,12 +114,12 @@ public abstract class SkriptLogger {
 		}
 	}
 	
-	final static boolean isStopped(final LogHandler h) {
+	static boolean isStopped(final LogHandler h) {
 		return !handlers.contains(h);
 	}
 	
 	@Nullable
-	final static StackTraceElement getCaller() {
+	static StackTraceElement getCaller() {
 		for (final StackTraceElement e : new Exception().getStackTrace()) {
 			if (!e.getClassName().startsWith(SkriptLogger.class.getPackage().getName()))
 				return e;

@@ -269,7 +269,7 @@ public class UnparsedLiteral implements Literal<Object> {
 		return this;
 	}
 	
-	private final static SkriptAPIException invalidAccessException() {
+	private static SkriptAPIException invalidAccessException() {
 		return new SkriptAPIException("UnparsedLiterals must be converted before use");
 	}
 	

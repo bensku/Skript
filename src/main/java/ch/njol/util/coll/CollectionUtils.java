@@ -126,7 +126,7 @@ public abstract class CollectionUtils {
 		return -1;
 	}
 	
-	public final static boolean contains(final @Nullable int[] array, final int num) {
+	public static boolean contains(final @Nullable int[] array, final int num) {
 		return indexOf(array, num) != -1;
 	}
 	
@@ -223,7 +223,7 @@ public abstract class CollectionUtils {
 	 * @param c The class to look for
 	 * @return Whether the class or any of its superclasses are contained in the array
 	 */
-	public final static boolean containsSuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?> c) {
+	public static boolean containsSuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?> c) {
 		if (classes == null || c == null)
 			return false;
 		for (final Class<?> cl : classes) {
@@ -240,7 +240,7 @@ public abstract class CollectionUtils {
 	 * @param cs The classes to look for
 	 * @return Whether the classes or any of their superclasses are contained in the array
 	 */
-	public final static boolean containsAnySuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?>... cs) {
+	public static boolean containsAnySuperclass(final @Nullable Class<?>[] classes, final @Nullable Class<?>... cs) {
 		if (classes == null || cs == null)
 			return false;
 		for (final Class<?> cl : classes) {
@@ -299,7 +299,7 @@ public abstract class CollectionUtils {
 	 * @return
 	 */
 	@SuppressWarnings("null")
-	public final static <E> Set<E> intersection(final @Nullable Set<E>... sets) {
+	public static <E> Set<E> intersection(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
@@ -320,7 +320,7 @@ public abstract class CollectionUtils {
 	 * @return
 	 */
 	@SuppressWarnings("null")
-	public final static <E> Set<E> union(final @Nullable Set<E>... sets) {
+	public static <E> Set<E> union(final @Nullable Set<E>... sets) {
 		if (sets == null || sets.length == 0)
 			return Collections.emptySet();
 		if (sets.length == 1 && sets[0] != null)
@@ -354,7 +354,7 @@ public abstract class CollectionUtils {
 	 * @param end The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
-	public final static int[] permutation(final int start, final int end) {
+	public static int[] permutation(final int start, final int end) {
 		if (start > end)
 			return new int[0];
 		final int length = end - start + 1;
@@ -377,7 +377,7 @@ public abstract class CollectionUtils {
 	 * @param end The highest number which will be included in the permutation
 	 * @return an array of length end - start + 1, or an empty array if start > end.
 	 */
-	public final static byte[] permutation(final byte start, final byte end) {
+	public static byte[] permutation(final byte start, final byte end) {
 		if (start > end)
 			return new byte[0];
 		final int length = end - start + 1;
@@ -396,7 +396,7 @@ public abstract class CollectionUtils {
 	/**
 	 * Shorthand for <code>{@link permutation permutation}(0, length - 1)</code>
 	 */
-	public final static int[] permutation(final int length) {
+	public static int[] permutation(final int length) {
 		return permutation(0, length - 1);
 	}
 	
@@ -407,7 +407,7 @@ public abstract class CollectionUtils {
 	 * @return An int[] containing the elements of the given collection in the order they were returned by the collection's iterator.
 	 */
 	@SuppressWarnings("null")
-	public final static int[] toArray(final @Nullable Collection<Integer> ints) {
+	public static int[] toArray(final @Nullable Collection<Integer> ints) {
 		if (ints == null)
 			return new int[0];
 		final int[] r = new int[ints.size()];
@@ -421,7 +421,7 @@ public abstract class CollectionUtils {
 		return r;
 	}
 	
-	public final static float[] toFloats(final @Nullable double[] doubles) {
+	public static float[] toFloats(final @Nullable double[] doubles) {
 		if (doubles == null)
 			return new float[0];
 		final float[] floats = new float[doubles.length];

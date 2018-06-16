@@ -127,7 +127,7 @@ public abstract class Node {
 	 * @param line
 	 * @return A pair (value, comment).
 	 */
-	public final static NonNullPair<String, String> splitLine(final String line) {
+	public static NonNullPair<String, String> splitLine(final String line) {
 		final Matcher m = linePattern.matcher(line);
 		if (m.matches())
 			return new NonNullPair<>("" + m.group(1).replace("##", "#"), "" + m.group(2));

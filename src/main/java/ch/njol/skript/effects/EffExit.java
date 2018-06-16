@@ -99,7 +99,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		return true;
 	}
 	
-	private final static int numLevels(final int type) {
+	private static int numLevels(final int type) {
 		if (type == EVERYTHING)
 			return ScriptLoader.currentSections.size();
 		int r = 0;

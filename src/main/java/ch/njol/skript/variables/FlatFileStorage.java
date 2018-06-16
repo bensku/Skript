@@ -226,7 +226,7 @@ public class FlatFileStorage extends VariablesStorage {
 		return new File(file);
 	}
 	
-	final static String encode(final byte[] data) {
+	static String encode(final byte[] data) {
 		final char[] r = new char[data.length * 2];
 		for (int i = 0; i < data.length; i++) {
 			r[2 * i] = Character.toUpperCase(Character.forDigit((data[i] & 0xF0) >>> 4, 16));
@@ -235,7 +235,7 @@ public class FlatFileStorage extends VariablesStorage {
 		return new String(r);
 	}
 	
-	final static byte[] decode(final String hex) {
+	static byte[] decode(final String hex) {
 		final byte[] r = new byte[hex.length() / 2];
 		for (int i = 0; i < r.length; i++) {
 			r[i] = (byte) ((Character.digit(hex.charAt(2 * i), 16) << 4) + Character.digit(hex.charAt(2 * i + 1), 16));
@@ -247,7 +247,7 @@ public class FlatFileStorage extends VariablesStorage {
 	private final static Pattern csv = Pattern.compile("(?<=^|,)\\s*([^\",]*|\"([^\"]|\"\")*\")\\s*(,|$)");
 	
 	@Nullable
-	final static String[] splitCSV(final String line) {
+	static String[] splitCSV(final String line) {
 		final Matcher m = csv.matcher(line);
 		int lastEnd = 0;
 		final ArrayList<String> r = new ArrayList<String>();
@@ -295,7 +295,7 @@ public class FlatFileStorage extends VariablesStorage {
 	@SuppressWarnings("null")
 	private final static Pattern containsWhitespace = Pattern.compile("\\s");
 	
-	private final static void writeCSV(final PrintWriter pw, final String... values) {
+	private static void writeCSV(final PrintWriter pw, final String... values) {
 		assert values.length == 3; // name, type, value
 		for (int i = 0; i < values.length; i++) {
 			if (i != 0)

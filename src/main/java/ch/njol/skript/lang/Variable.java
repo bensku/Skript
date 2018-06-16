@@ -110,7 +110,7 @@ public class Variable<T> implements Expression<T> {
 	 * @param printErrors Whether to print errors when they are encountered
 	 * @return true if the name is valid, false otherwise.
 	 */
-	public final static boolean isValidVariableName(String name, final boolean allowListVariable, final boolean printErrors) {
+	public static boolean isValidVariableName(String name, final boolean allowListVariable, final boolean printErrors) {
 		name = name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : "" + name.trim();
 		if (!allowListVariable && name.contains(SEPARATOR)) {
 			if (printErrors)

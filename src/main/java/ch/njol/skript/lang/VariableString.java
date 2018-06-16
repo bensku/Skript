@@ -154,7 +154,7 @@ public class VariableString implements Expression<String> {
 	 * @param withQuotes Whether s must be surrounded by double quotes or not
 	 * @return Whether the string is quoted correctly
 	 */
-	public final static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
+	public static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
 		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
 			return false;
 		boolean quote = false;
@@ -176,7 +176,7 @@ public class VariableString implements Expression<String> {
 	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
 	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
 	 */
-	public final static String unquote(final String s, final boolean surroundingQuotes) {
+	public static String unquote(final String s, final boolean surroundingQuotes) {
 		assert isQuotedCorrectly(s, surroundingQuotes);
 		if (surroundingQuotes)
 			return "" + s.substring(1, s.length() - 1).replace("\"\"", "\"");
@@ -506,7 +506,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Nullable
-	private final static ChatColor getLastColor(final CharSequence s) {
+	private static ChatColor getLastColor(final CharSequence s) {
 		for (int i = s.length() - 2; i >= 0; i--) {
 			if (s.charAt(i) == ChatColor.COLOR_CHAR) {
 				final ChatColor c = ChatColor.getByChar(s.charAt(i + 1));
@@ -685,7 +685,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public final static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
+	public static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
 		if (e instanceof ExpressionList) {
 			final Expression<?>[] ls = ((ExpressionList<?>) e).getExpressions();
 			for (int i = 0; i < ls.length; i++) {

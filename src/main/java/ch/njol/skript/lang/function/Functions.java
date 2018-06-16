@@ -87,7 +87,7 @@ public abstract class Functions {
 	 * @param function
 	 * @return The passed function
 	 */
-	public final static JavaFunction<?> registerFunction(final JavaFunction<?> function) {
+	public static JavaFunction<?> registerFunction(final JavaFunction<?> function) {
 		Skript.checkAcceptRegistrations();
 		if (!function.name.matches(functionNamePattern))
 			throw new SkriptAPIException("Invalid function name '" + function.name + "'");
@@ -101,7 +101,7 @@ public abstract class Functions {
 		return function;
 	}
 	
-	final static void registerCaller(final FunctionReference<?> r) {
+	static void registerCaller(final FunctionReference<?> r) {
 		final Signature<?> sign = signatures.get(r.functionName);
 		assert sign != null;
 		sign.calls.add(r);
@@ -120,7 +120,7 @@ public abstract class Functions {
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public final static Function<?> loadFunction(final SectionNode node) {
+	public static Function<?> loadFunction(final SectionNode node) {
 		SkriptLogger.setNode(node);
 		final String key = node.getKey();
 		final String definition = ScriptLoader.replaceOptions(key == null ? "" : key);
@@ -230,7 +230,7 @@ public abstract class Functions {
 	 * @return Null.
 	 */
 	@Nullable
-	private final static Function<?> error(final String error) {
+	private static Function<?> error(final String error) {
 		Skript.error(error);
 		return null;
 	}
@@ -241,7 +241,7 @@ public abstract class Functions {
 	 * @return Null.
 	 */
 	@Nullable
-	private final static Signature<?> signError(final String error) {
+	private static Signature<?> signError(final String error) {
 		Skript.error(error);
 		return null;
 	}
@@ -254,7 +254,7 @@ public abstract class Functions {
 	 * @return Function, or null if it does not exist.
 	 */
 	@Nullable
-	public final static Function<?> getFunction(final String name) {
+	public static Function<?> getFunction(final String name) {
 		final FunctionData d = functions.get(name);
 		if (d == null)
 			return null;
@@ -267,7 +267,7 @@ public abstract class Functions {
 	 * @return Signature, or null if function does not exist.
 	 */
 	@Nullable
-	public final static Signature<?> getSignature(final String name) {
+	public static Signature<?> getSignature(final String name) {
 		return signatures.get(name);
 	}
 	
@@ -279,7 +279,7 @@ public abstract class Functions {
 	 * @param script
 	 * @return How many functions were removed
 	 */
-	public final static int clearFunctions(final File script) {
+	public static int clearFunctions(final File script) {
 		int r = 0;
 		final Iterator<FunctionData> iter = functions.values().iterator();
 		while (iter.hasNext()) {
@@ -309,7 +309,7 @@ public abstract class Functions {
 		return r;
 	}
 	
-	public final static void validateFunctions() {
+	public static void validateFunctions() {
 		for (final FunctionReference<?> c : toValidate)
 			c.validateFunction(false);
 		toValidate.clear();
@@ -318,7 +318,7 @@ public abstract class Functions {
 	/**
 	 * Clears all function calls and removes script functions.
 	 */
-	public final static void clearFunctions() {
+	public static void clearFunctions() {
 		final Iterator<FunctionData> iter = functions.values().iterator();
 		while (iter.hasNext()) {
 			final FunctionData d = iter.next();

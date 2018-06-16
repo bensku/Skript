@@ -41,7 +41,7 @@ public class EffFunctionCall extends Effect {
 	}
 	
 	@Nullable
-	public final static EffFunctionCall parse(final String line) {
+	public static EffFunctionCall parse(final String line) {
 		final FunctionReference<?> function = new SkriptParser(line, SkriptParser.ALL_FLAGS, ParseContext.DEFAULT).parseFunction((Class<?>[]) null);
 		if (function != null)
 			return new EffFunctionCall(function);

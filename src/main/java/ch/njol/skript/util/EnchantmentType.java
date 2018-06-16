@@ -145,7 +145,7 @@ public class EnchantmentType implements YggdrasilSerializable {
 	}
 	
 	@SuppressWarnings("null")
-	public final static Collection<String> getNames() {
+	public static Collection<String> getNames() {
 		return enchantmentNames.values();
 	}
 	

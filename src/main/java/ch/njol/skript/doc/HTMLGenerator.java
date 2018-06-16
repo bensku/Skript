@@ -540,7 +540,7 @@ public class HTMLGenerator {
 		}
 	}
 	
-	final static String cleanPatterns(final String patterns) {
+	static String cleanPatterns(final String patterns) {
 		final String s = StringUtils.replaceAll("" +
 				Documentation.escapeHTML(patterns) // escape HTML
 				.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks

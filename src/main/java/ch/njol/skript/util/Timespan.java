@@ -59,7 +59,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	@Nullable
-	public final static Timespan parse(final String s) {
+	public static Timespan parse(final String s) {
 		if (s.isEmpty())
 			return null;
 		long t = 0;

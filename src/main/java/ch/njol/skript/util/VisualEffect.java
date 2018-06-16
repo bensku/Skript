@@ -379,7 +379,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	}
 	
 	@Nullable
-	public final static VisualEffect parse(final String s) {
+	public static VisualEffect parse(final String s) {
 		final SyntaxElementInfo<VisualEffect> info = VisualEffect.info;
 		if (info == null)
 			return null;

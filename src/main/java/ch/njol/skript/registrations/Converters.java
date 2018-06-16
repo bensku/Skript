@@ -101,7 +101,7 @@ public abstract class Converters {
 		}
 	}
 	
-	private final static boolean converterExistsSlow(final Class<?> from, final Class<?> to) {
+	private static boolean converterExistsSlow(final Class<?> from, final Class<?> to) {
 		for (final ConverterInfo<?, ?> i : converters) {
 			if ((i.from.isAssignableFrom(from) || from.isAssignableFrom(i.from)) && (i.to.isAssignableFrom(to) || to.isAssignableFrom(i.to))) {
 				return true;
@@ -148,7 +148,7 @@ public abstract class Converters {
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public final static <F, T> T convert(final @Nullable F o, final Class<? extends T>[] to) {
+	public static <F, T> T convert(final @Nullable F o, final Class<? extends T>[] to) {
 		if (o == null)
 			return null;
 		for (final Class<? extends T> t : to)
@@ -266,13 +266,13 @@ public abstract class Converters {
 	 * @param to
 	 * @return Whether a converter exists
 	 */
-	public final static boolean converterExists(final Class<?> from, final Class<?> to) {
+	public static boolean converterExists(final Class<?> from, final Class<?> to) {
 		if (to.isAssignableFrom(from) || from.isAssignableFrom(to))
 			return true;
 		return getConverter(from, to) != null;
 	}
 	
-	public final static boolean converterExists(final Class<?> from, final Class<?>... to) {
+	public static boolean converterExists(final Class<?> from, final Class<?>... to) {
 		for (final Class<?> t : to) {
 			assert t != null;
 			if (converterExists(from, t))
@@ -290,7 +290,7 @@ public abstract class Converters {
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public final static <F, T> Converter<? super F, ? extends T> getConverter(final Class<F> from, final Class<T> to) {
+	public static <F, T> Converter<? super F, ? extends T> getConverter(final Class<F> from, final Class<T> to) {
 		final Pair<Class<?>, Class<?>> p = new Pair<Class<?>, Class<?>>(from, to);
 		if (convertersCache.containsKey(p)) // can contain null to denote nonexistence of a converter
 			return (Converter<? super F, ? extends T>) convertersCache.get(p);
@@ -301,7 +301,7 @@ public abstract class Converters {
 	
 	@SuppressWarnings("unchecked")
 	@Nullable
-	private final static <F, T> Converter<? super F, ? extends T> getConverter_i(final Class<F> from, final Class<T> to) {
+	private static <F, T> Converter<? super F, ? extends T> getConverter_i(final Class<F> from, final Class<T> to) {
 		for (final ConverterInfo<?, ?> conv : converters) {
 			if (conv.from.isAssignableFrom(from) && to.isAssignableFrom(conv.to))
 				return (Converter<? super F, ? extends T>) conv.converter;
@@ -329,11 +329,11 @@ public abstract class Converters {
 	 * @throws ArrayStoreException if the given class is not a superclass of all objects returned by the converter
 	 */
 	@SuppressWarnings("unchecked")
-	public final static <F, T> T[] convertUnsafe(final F[] from, final Class<?> to, final Converter<? super F, ? extends T> conv) {
+	public static <F, T> T[] convertUnsafe(final F[] from, final Class<?> to, final Converter<? super F, ? extends T> conv) {
 		return convert(from, (Class<T>) to, conv);
 	}
 	
-	public final static <F, T> T[] convert(final F[] from, final Class<T> to, final Converter<? super F, ? extends T> conv) {
+	public static <F, T> T[] convert(final F[] from, final Class<T> to, final Converter<? super F, ? extends T> conv) {
 		@SuppressWarnings("unchecked")
 		T[] ts = (T[]) Array.newInstance(to, from.length);
 		int j = 0;

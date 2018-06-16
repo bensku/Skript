@@ -151,7 +151,7 @@ public class Money {
 	
 	@SuppressWarnings({"null", "unused"})
 	@Nullable
-	public final static Money parse(final String s) {
+	public static Money parse(final String s) {
 		if (VaultHook.economy == null) {
 //			Skript.error("No economy plugin detected");
 			return null;

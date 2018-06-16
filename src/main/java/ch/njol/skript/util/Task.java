@@ -147,7 +147,7 @@ public abstract class Task implements Runnable, Closeable {
 	 * Equivalent to <tt>{@link #callSync(Callable, Plugin) callSync}(c, {@link Skript#getInstance()})</tt>
 	 */
 	@Nullable
-	public final static <T> T callSync(final Callable<T> c) {
+	public static <T> T callSync(final Callable<T> c) {
 		return callSync(c, Skript.getInstance());
 	}
 	
@@ -161,7 +161,7 @@ public abstract class Task implements Runnable, Closeable {
 	 * @return What the method returned or null if it threw an error or was stopped (usually due to the server shutting down)
 	 */
 	@Nullable
-	public final static <T> T callSync(final Callable<T> c, final Plugin p) {
+	public static <T> T callSync(final Callable<T> c, final Plugin p) {
 		if (Bukkit.isPrimaryThread()) {
 			try {
 				return c.call();

@@ -162,7 +162,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	}
 	
 	// TODO return a kleenean (UNKNOWN if 'all' is null or empty)
-	public final static <T> boolean check(final @Nullable T[] all, final Checker<? super T> c, final boolean invert, final boolean and) {
+	public static <T> boolean check(final @Nullable T[] all, final Checker<? super T> c, final boolean invert, final boolean and) {
 		if (all == null)
 			return invert;
 		boolean hasElement = false;

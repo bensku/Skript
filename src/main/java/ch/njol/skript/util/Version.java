@@ -143,7 +143,7 @@ public class Version implements Serializable, Comparable<Version> {
 		return version[0] + "." + version[1] + (version[2] == 0 ? "" : "." + version[2]) + (pf == null ? "" : pf.startsWith("-") ? pf : " " + pf);
 	}
 	
-	public final static int compare(final String v1, final String v2) {
+	public static int compare(final String v1, final String v2) {
 		return new Version(v1).compareTo(new Version(v2));
 	}
 }

@@ -125,17 +125,17 @@ public enum Tag {
 	}
 	
 	@Nullable
-	public final static Tag byID(final byte tag) {
+	public static Tag byID(final byte tag) {
 		return byID[tag & 0xFF];
 	}
 	
 	@Nullable
-	public final static Tag byID(final int tag) {
+	public static Tag byID(final int tag) {
 		return byID[tag];
 	}
 	
 	@Nullable
-	public final static Tag byName(final String name) {
+	public static Tag byName(final String name) {
 		return byName.get(name);
 	}
 	
@@ -151,11 +151,11 @@ public enum Tag {
 		wrapperTypes.put(Boolean.class, T_BOOLEAN);
 	}
 	
-	public final static boolean isWrapper(final Class<?> c) {
+	public static boolean isWrapper(final Class<?> c) {
 		return wrapperTypes.containsKey(c);
 	}
 	
-	public final static Tag getPrimitiveFromWrapper(final Class<?> wrapper) {
+	public static Tag getPrimitiveFromWrapper(final Class<?> wrapper) {
 		final Tag t = wrapperTypes.get(wrapper);
 		if (t == null) {
 			assert false : wrapper;
@@ -164,7 +164,7 @@ public enum Tag {
 		return t;
 	}
 	
-	public final static Class<?> getWrapperClass(final Class<?> primitive) {
+	public static Class<?> getWrapperClass(final Class<?> primitive) {
 		assert primitive.isPrimitive();
 		final Tag t = types.get(primitive);
 		if (t == null) {

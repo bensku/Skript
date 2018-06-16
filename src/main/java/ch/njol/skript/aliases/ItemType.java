@@ -254,7 +254,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		}
 	}
 	
-	private final static void unsetItemMetaEnchs(final @Nullable ItemMeta meta) {
+	private static void unsetItemMetaEnchs(final @Nullable ItemMeta meta) {
 		if (meta == null)
 			return;
 		for (final Enchantment e : meta.getEnchants().keySet())
@@ -659,7 +659,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		return addTo(getStorageContents(invi));
 	}
 	
-	public final static ItemStack[] getCopiedContents(final Inventory invi) {
+	public static ItemStack[] getCopiedContents(final Inventory invi) {
 		final ItemStack[] buf = invi.getContents();
 		for (int i = 0; i < buf.length; i++)
 			if (buf[i] != null)
@@ -673,7 +673,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * @param invi Inventory
 	 * @return Copied storage contents
 	 */
-	public final static ItemStack[] getStorageContents(final Inventory invi) {
+	public static ItemStack[] getStorageContents(final Inventory invi) {
 		if (invi instanceof PlayerInventory) {
 			final ItemStack[] buf = invi.getContents();
 			final ItemStack[] tBuf = new ItemStack[36];
@@ -975,7 +975,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * @param sub
 	 * @return Whether all item types in <tt>sub</tt> have at least one {@link #isSupertypeOf(ItemType) super type} in <tt>set</tt>
 	 */
-	public final static boolean isSubset(final ItemType[] set, final ItemType[] sub) {
+	public static boolean isSubset(final ItemType[] set, final ItemType[] sub) {
 		outer: for (final ItemType i : sub) {
 			assert i != null;
 			for (final ItemType t : set) {

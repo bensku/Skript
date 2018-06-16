@@ -49,7 +49,7 @@ import ch.njol.util.StringUtils;
 public class DefaultFunctions {
 	public DefaultFunctions() {}
 	
-	private final static String s(final double n) {
+	private static String s(final double n) {
 		return StringUtils.toString(n, 4);
 	}
 	

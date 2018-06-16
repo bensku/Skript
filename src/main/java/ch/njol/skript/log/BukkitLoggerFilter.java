@@ -50,11 +50,11 @@ public class BukkitLoggerFilter {
 	 * 
 	 * @param f A filter to filter log messages
 	 */
-	public final static void addFilter(final Filter f) {
+	public static void addFilter(final Filter f) {
 		filter.addFilter(f);
 	}
 	
-	public final static boolean removeFilter(final Filter f) {
+	public static boolean removeFilter(final Filter f) {
 		return filter.removeFilter(f);
 	}
 	
