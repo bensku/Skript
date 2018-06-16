@@ -157,9 +157,7 @@ public final class Yggdrasil {
 		try {
 			return c.isPrimitive() || c == Object.class || (Enum.class.isAssignableFrom(c) || PseudoEnum.class.isAssignableFrom(c)) && getIDNoError(c) != null ||
 					((YggdrasilSerializable.class.isAssignableFrom(c) || getSerializer(c) != null) && newInstance(c) != c);// whatever, just make true out if it (null is a valid return value)
-		} catch (final StreamCorruptedException e) { // thrown by newInstance if the class does not provide a correct constructor or is abstract
-			return false;
-		} catch (final NotSerializableException e) {
+		} catch (final StreamCorruptedException | NotSerializableException e) { // thrown by newInstance if the class does not provide a correct constructor or is abstract
 			return false;
 		}
 	}
@@ -339,11 +337,7 @@ public final class Yggdrasil {
 			throw new StreamCorruptedException("Cannot create an instance of " + c + " because the security manager didn't allow it");
 		} catch (final InstantiationException e) {
 			throw new StreamCorruptedException("Cannot create an instance of " + c + " because it is abstract");
-		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
-			assert false;
-			return null;
-		} catch (final IllegalArgumentException e) {
+		} catch (final IllegalAccessException | IllegalArgumentException e) {
 			e.printStackTrace();
 			assert false;
 			return null;

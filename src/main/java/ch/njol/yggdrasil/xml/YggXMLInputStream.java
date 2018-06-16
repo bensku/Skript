@@ -69,9 +69,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 			if (ver <= 0 || ver > Yggdrasil.LATEST_VERSION)
 				throw new StreamCorruptedException("Input was saved using a later version of Yggdrasil");
 			version = ver;
-		} catch (final XMLStreamException e) {
-			throw new IOException(e);
-		} catch (final FactoryConfigurationError e) {
+		} catch (final XMLStreamException | FactoryConfigurationError e) {
 			throw new IOException(e);
 		}
 	}
@@ -163,9 +161,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 				default:
 					throw new StreamCorruptedException();
 			}
-		} catch (final XMLStreamException e) {
-			throw new StreamCorruptedException();
-		} catch (final NumberFormatException e) {
+		} catch (final XMLStreamException | NumberFormatException e) {
 			throw new StreamCorruptedException();
 		}
 	}
@@ -212,11 +208,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 				default:
 					throw new StreamCorruptedException();
 			}
-		} catch (final XMLStreamException e) {
-			throw new StreamCorruptedException();
-		} catch (final StringIndexOutOfBoundsException e) {
-			throw new StreamCorruptedException();
-		} catch (final NumberFormatException e) {
+		} catch (final XMLStreamException | NumberFormatException | StringIndexOutOfBoundsException e) {
 			throw new StreamCorruptedException();
 		}
 	}
@@ -282,9 +274,7 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	protected int readReference() throws IOException {
 		try {
 			return Integer.parseInt(in.getElementText());
-		} catch (final NumberFormatException e) {
-			throw new StreamCorruptedException();
-		} catch (final XMLStreamException e) {
+		} catch (final NumberFormatException | XMLStreamException e) {
 			throw new StreamCorruptedException();
 		}
 	}

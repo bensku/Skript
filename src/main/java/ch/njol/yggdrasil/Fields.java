@@ -231,9 +231,7 @@ public final class Fields implements Iterable<FieldContext> {
 			assert f != null;
 			try {
 				fields.put(Yggdrasil.getID(f), new FieldContext(f, o));
-			} catch (final IllegalArgumentException e) {
-				assert false;
-			} catch (final IllegalAccessException e) {
+			} catch (final IllegalArgumentException | IllegalAccessException e) {
 				assert false;
 			}
 		}

@@ -90,11 +90,7 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 	public <T> T newInstance(final Class<T> c) {
 		try {
 			return c.newInstance();
-		} catch (final InstantiationException e) { // all collections handled here have public nullary constructors
-			e.printStackTrace();
-			assert false;
-			return null;
-		} catch (final IllegalAccessException e) {
+		} catch (final InstantiationException | IllegalAccessException e) { // all collections handled here have public nullary constructors
 			e.printStackTrace();
 			assert false;
 			return null;

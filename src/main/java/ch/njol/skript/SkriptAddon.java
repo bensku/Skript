@@ -162,9 +162,7 @@ public final class SkriptAddon {
 			getFile.setAccessible(true);
 			file = (File) getFile.invoke(plugin);
 			return file;
-		} catch (final NoSuchMethodException e) {
-			Skript.outdatedError(e);
-		} catch (final IllegalArgumentException e) {
+		} catch (final NoSuchMethodException | IllegalArgumentException e) {
 			Skript.outdatedError(e);
 		} catch (final IllegalAccessException e) {
 			assert false;

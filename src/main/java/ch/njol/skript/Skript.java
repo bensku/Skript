@@ -692,9 +692,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		try {
 			c.getDeclaredMethod(methodName, parameterTypes);
 			return true;
-		} catch (final NoSuchMethodException e) {
-			return false;
-		} catch (final SecurityException e) {
+		} catch (final NoSuchMethodException | SecurityException e) {
 			return false;
 		}
 	}
@@ -715,9 +713,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		try {
 			final Method m = c.getDeclaredMethod(methodName, parameterTypes);
 			return m.getReturnType() == returnType;
-		} catch (final NoSuchMethodException e) {
-			return false;
-		} catch (final SecurityException e) {
+		} catch (final NoSuchMethodException | SecurityException e) {
 			return false;
 		}
 	}
@@ -733,9 +729,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		try {
 			c.getDeclaredField(fieldName);
 			return true;
-		} catch (final NoSuchFieldException e) {
-			return false;
-		} catch (final SecurityException e) {
+		} catch (final NoSuchFieldException | SecurityException e) {
 			return false;
 		}
 	}

@@ -254,9 +254,7 @@ public class SkriptParser {
 								return t;
 							}
 						}
-					} catch (final InstantiationException e) {
-						assert false;
-					} catch (final IllegalAccessException e) {
+					} catch (final InstantiationException | IllegalAccessException e) {
 						assert false;
 					}
 				}
@@ -1234,9 +1232,7 @@ public class SkriptParser {
 							log.printLog();
 							return new NonNullPair<>(info, e);
 						}
-					} catch (final InstantiationException e) {
-						assert false;
-					} catch (final IllegalAccessException e) {
+					} catch (final InstantiationException | IllegalAccessException e) {
 						assert false;
 					}
 				}

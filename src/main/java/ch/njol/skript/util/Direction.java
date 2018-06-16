@@ -459,11 +459,7 @@ public class Direction implements YggdrasilRobustSerializable {
 			final Field f = Direction.class.getDeclaredField(field);
 			f.setAccessible(true); // required for final fields
 			f.set(this, value);
-		} catch (final IllegalArgumentException e) {
-			assert false : e;
-		} catch (final IllegalAccessException e) {
-			assert false : e;
-		} catch (final NoSuchFieldException e) {
+		} catch (final IllegalArgumentException | NoSuchFieldException | IllegalAccessException e) {
 			assert false : e;
 		}
 	}

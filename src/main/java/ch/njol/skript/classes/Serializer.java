@@ -73,16 +73,11 @@ public abstract class Serializer<T> extends YggdrasilSerializer<T> {
 			final Constructor<E> constr = c.getDeclaredConstructor();
 			constr.setAccessible(true);
 			return constr.newInstance();
-		} catch (final InstantiationException e) {
-			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
-		} catch (final NoSuchMethodException e) {
+		} catch (final InstantiationException | NoSuchMethodException e) {
 			throw new SkriptAPIException("Serializer of " + info.getCodeName() + " must override newInstance(), canBeInstantiated() or mustSyncDeserialization() if its class does not have a nullary constructor");
 		} catch (final SecurityException e) {
 			throw Skript.exception("Security manager present");
-		} catch (final IllegalArgumentException e) {
-			assert false;
-			return null;
-		} catch (final IllegalAccessException e) {
+		} catch (final IllegalArgumentException | IllegalAccessException e) {
 			assert false;
 			return null;
 		} catch (final InvocationTargetException e) {

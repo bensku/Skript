@@ -264,9 +264,7 @@ public class Config implements Comparable<Config> {
 					} else if (Option.class.isAssignableFrom(f.getType())) {
 						((Option<?>) f.get(o)).set(this, path);
 					}
-				} catch (final IllegalArgumentException e) {
-					assert false;
-				} catch (final IllegalAccessException e) {
+				} catch (final IllegalArgumentException | IllegalAccessException e) {
 					assert false;
 				}
 			}

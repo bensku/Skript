@@ -107,9 +107,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 				final EntityData<?> d = info.c.newInstance();
 				d.deserialize(fields);
 				return d;
-			} catch (final InstantiationException e) {
-				Skript.exception(e);
-			} catch (final IllegalAccessException e) {
+			} catch (final InstantiationException | IllegalAccessException e) {
 				Skript.exception(e);
 			}
 			throw new StreamCorruptedException();
