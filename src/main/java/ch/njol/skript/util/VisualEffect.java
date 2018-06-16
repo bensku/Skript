@@ -329,7 +329,8 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		
 		if (type.isColorable()) {
 			for (Expression<?> expr : exprs) {
-				if (expr == null) continue;
+				if (expr == null) {
+				}
 				else if (expr.getReturnType().isAssignableFrom(Color.class)) {
 					org.bukkit.Color color = ((Color) expr.getSingle(null)).getBukkitColor();
 					

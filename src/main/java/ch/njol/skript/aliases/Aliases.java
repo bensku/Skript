@@ -135,7 +135,6 @@ public abstract class Aliases {
 		for (int i = start + 1; i < s.length(); i++) {
 			if (s.charAt(i) == '\\') {
 				i++;
-				continue;
 			} else if (s.charAt(i) == closingBracket) {
 				if (n == 0)
 					return i;

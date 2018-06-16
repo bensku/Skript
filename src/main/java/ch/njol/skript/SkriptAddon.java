@@ -111,7 +111,6 @@ public final class SkriptAddon {
 						} catch (final ExceptionInInitializerError err) {
 							Skript.exception(err.getCause(), this + "'s class " + c + " generated an exception while loading");
 						}
-						continue;
 					}
 				}
 			}

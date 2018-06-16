@@ -51,7 +51,6 @@ final class VariablesMap {
 						return -1;
 					i = i2;
 					j = j2;
-					continue;
 				} else {
 					if (c1 > c2)
 						return 1;
@@ -101,7 +100,6 @@ final class VariablesMap {
 				if (o instanceof Map) {
 					current = (Map<String, Object>) o;
 					assert i != split.length - 1;
-					continue;
 				} else {
 					return null;
 				}
@@ -138,7 +136,6 @@ final class VariablesMap {
 				} else if (value != null) {
 					parent.put(n, current = new TreeMap<String, Object>(variableNameComparator));
 					parent = (TreeMap<String, Object>) current;
-					continue;
 				} else {
 					break;
 				}
@@ -160,7 +157,6 @@ final class VariablesMap {
 					break;
 				} else {
 					parent = (TreeMap<String, Object>) current;
-					continue;
 				}
 			} else {
 				if (i == split.length - 1) {
@@ -174,7 +170,6 @@ final class VariablesMap {
 					c.put(null, current);
 					parent.put(n, c);
 					parent = c;
-					continue;
 				} else {
 					break;
 				}

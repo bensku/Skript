@@ -400,7 +400,6 @@ public final class Skript extends JavaPlugin implements Listener {
 								} catch (final ExceptionInInitializerError err) {
 									Skript.exception(err.getCause(), "Class " + c + " generated an exception while loading");
 								}
-								continue;
 							}
 						}
 					}

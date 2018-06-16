@@ -177,7 +177,6 @@ public abstract class SkriptLogger {
 					entry.discarded("denied by " + h);
 					return;
 				case LOG:
-					continue;
 			}
 		}
 		entry.logged();
