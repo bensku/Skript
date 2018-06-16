@@ -47,7 +47,7 @@ public abstract class VariablesStorage implements Closeable {
 	
 	private final static int QUEUE_SIZE = 1000, FIRST_WARNING = 300;
 	
-	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<SerializedVariable>(QUEUE_SIZE);
+	final LinkedBlockingQueue<SerializedVariable> changesQueue = new LinkedBlockingQueue<>(QUEUE_SIZE);
 	
 	protected volatile boolean closed = false;
 	

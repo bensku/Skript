@@ -107,7 +107,7 @@ public class Delay extends Effect {
 	}
 	
 	@SuppressWarnings("null")
-	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<Event, Boolean>());
+	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<>());
 	
 	public static boolean isDelayed(final Event e) {
 		return delayed.contains(e);

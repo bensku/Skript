@@ -62,12 +62,12 @@ public abstract class SkriptConfig {
 	
 	@Nullable
 	static Config mainConfig;
-	static Collection<Config> configs = new ArrayList<Config>();
+	static Collection<Config> configs = new ArrayList<>();
 	
-	final static Option<String> version = new Option<String>("version", Skript.getVersion().toString())
+	final static Option<String> version = new Option<>("version", Skript.getVersion().toString())
 			.optional(true);
 	
-	public final static Option<String> language = new Option<String>("language", "english")
+	public final static Option<String> language = new Option<>("language", "english")
 			.optional(true)
 			.setter(new Setter<String>() {
 				@Override
@@ -78,8 +78,8 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	final static Option<Boolean> checkForNewVersion = new Option<Boolean>("check for new version", false);
-	final static Option<Timespan> updateCheckInterval = new Option<Timespan>("update check interval", new Timespan(12 * 60 * 60 * 1000))
+	final static Option<Boolean> checkForNewVersion = new Option<>("check for new version", false);
+	final static Option<Timespan> updateCheckInterval = new Option<>("update check interval", new Timespan(12 * 60 * 60 * 1000))
 			.setter(new Setter<Timespan>() {
 				@Override
 				public void set(final Timespan t) {
@@ -88,24 +88,24 @@ public abstract class SkriptConfig {
 						ct.setNextExecution(t.getTicks_i());
 				}
 			});
-	final static Option<Integer> updaterDownloadTries = new Option<Integer>("updater download tries", 7)
+	final static Option<Integer> updaterDownloadTries = new Option<>("updater download tries", 7)
 			.optional(true);
-	final static Option<Boolean> updateToPrereleases = new Option<Boolean>("update to pre-releases", true);
-	final static Option<Boolean> automaticallyDownloadNewVersion = new Option<Boolean>("automatically download new version", false);
+	final static Option<Boolean> updateToPrereleases = new Option<>("update to pre-releases", true);
+	final static Option<Boolean> automaticallyDownloadNewVersion = new Option<>("automatically download new version", false);
 	
-	public final static Option<Boolean> enableEffectCommands = new Option<Boolean>("enable effect commands", false);
-	public final static Option<String> effectCommandToken = new Option<String>("effect command token", "!");
-	public final static Option<Boolean> allowOpsToUseEffectCommands = new Option<Boolean>("allow ops to use effect commands", false);
+	public final static Option<Boolean> enableEffectCommands = new Option<>("enable effect commands", false);
+	public final static Option<String> effectCommandToken = new Option<>("effect command token", "!");
+	public final static Option<Boolean> allowOpsToUseEffectCommands = new Option<>("allow ops to use effect commands", false);
 	
 	// everything handled by Variables
 	public final static OptionSection databases = new OptionSection("databases");
 	
-	public final static Option<Boolean> usePlayerUUIDsInVariableNames = new Option<Boolean>("use player UUIDs in variable names", false); // TODO change to true later (as well as in the default config)
-	public final static Option<Boolean> enablePlayerVariableFix = new Option<Boolean>("player variable fix", true);
+	public final static Option<Boolean> usePlayerUUIDsInVariableNames = new Option<>("use player UUIDs in variable names", false); // TODO change to true later (as well as in the default config)
+	public final static Option<Boolean> enablePlayerVariableFix = new Option<>("player variable fix", true);
 	
 	@SuppressWarnings("null")
 	private final static DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-	private final static Option<DateFormat> dateFormat = new Option<DateFormat>("date format", shortDateFormat, new Converter<String, DateFormat>() {
+	private final static Option<DateFormat> dateFormat = new Option<>("date format", shortDateFormat, new Converter<String, DateFormat>() {
 		@Override
 		@Nullable
 		public DateFormat convert(final String s) {
@@ -127,7 +127,7 @@ public abstract class SkriptConfig {
 		}
 	}
 	
-	final static Option<Verbosity> verbosity = new Option<Verbosity>("verbosity", Verbosity.NORMAL, new EnumParser<Verbosity>(Verbosity.class, "verbosity"))
+	final static Option<Verbosity> verbosity = new Option<>("verbosity", Verbosity.NORMAL, new EnumParser<>(Verbosity.class, "verbosity"))
 			.setter(new Setter<Verbosity>() {
 				@Override
 				public void set(final Verbosity v) {
@@ -135,7 +135,7 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	public final static Option<EventPriority> defaultEventPriority = new Option<EventPriority>("plugin priority", EventPriority.NORMAL, new Converter<String, EventPriority>() {
+	public final static Option<EventPriority> defaultEventPriority = new Option<>("plugin priority", EventPriority.NORMAL, new Converter<String, EventPriority>() {
 		@Override
 		@Nullable
 		public EventPriority convert(final String s) {
@@ -148,23 +148,23 @@ public abstract class SkriptConfig {
 		}
 	});
 	
-	public final static Option<Boolean> logPlayerCommands = new Option<Boolean>("log player commands", false);
+	public final static Option<Boolean> logPlayerCommands = new Option<>("log player commands", false);
 	
 	/**
 	 * Maximum number of digits to display after the period for floats and doubles
 	 */
-	public final static Option<Integer> numberAccuracy = new Option<Integer>("number accuracy", 2);
+	public final static Option<Integer> numberAccuracy = new Option<>("number accuracy", 2);
 	
-	public final static Option<Integer> maxTargetBlockDistance = new Option<Integer>("maximum target block distance", 100);
+	public final static Option<Integer> maxTargetBlockDistance = new Option<>("maximum target block distance", 100);
 	
-	public final static Option<Boolean> caseSensitive = new Option<Boolean>("case sensitive", false);
-	public final static Option<Boolean> allowFunctionsBeforeDefs = new Option<Boolean>("allow function calls before definations", false)
+	public final static Option<Boolean> caseSensitive = new Option<>("case sensitive", false);
+	public final static Option<Boolean> allowFunctionsBeforeDefs = new Option<>("allow function calls before definations", false)
 			.optional(true);
 	
-	public final static Option<Boolean> disableVariableConflictWarnings = new Option<Boolean>("disable variable conflict warnings", false);
-	public final static Option<Boolean> disableObjectCannotBeSavedWarnings = new Option<Boolean>("disable variable will not be saved warnings", false);
-	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<Boolean>("disable variable missing and/or warnings", false);
-	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings = new Option<Boolean>("disable starting a variable's name with an expression warnings", false)
+	public final static Option<Boolean> disableVariableConflictWarnings = new Option<>("disable variable conflict warnings", false);
+	public final static Option<Boolean> disableObjectCannotBeSavedWarnings = new Option<>("disable variable will not be saved warnings", false);
+	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<>("disable variable missing and/or warnings", false);
+	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings = new Option<>("disable starting a variable's name with an expression warnings", false)
 			.setter(new Setter<Boolean>() {
 				
 				@Override
@@ -173,18 +173,18 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	public final static Option<Boolean> enableScriptCaching = new Option<Boolean>("enable script caching", false)
+	public final static Option<Boolean> enableScriptCaching = new Option<>("enable script caching", false)
 			.optional(true);
 	
-	public final static Option<Boolean> keepConfigsLoaded = new Option<Boolean>("keep configs loaded", false)
+	public final static Option<Boolean> keepConfigsLoaded = new Option<>("keep configs loaded", false)
 			.optional(true);
 	
-	public final static Option<Boolean> addonSafetyChecks = new Option<Boolean>("addon safety checks", false)
+	public final static Option<Boolean> addonSafetyChecks = new Option<>("addon safety checks", false)
 			.optional(true);
 	
-	public final static Option<Boolean> apiSoftExceptions = new Option<Boolean>("soft api exceptions", false);
+	public final static Option<Boolean> apiSoftExceptions = new Option<>("soft api exceptions", false);
 	
-	public final static Option<Boolean> enableTimings = new Option<Boolean>("enable timings", false)
+	public final static Option<Boolean> enableTimings = new Option<>("enable timings", false)
 			.setter(new Setter<Boolean>() {
 				
 				@Override
@@ -201,7 +201,7 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	public final static Option<String> parseLinks = new Option<String>("parse links in chat messages", "disabled")
+	public final static Option<String> parseLinks = new Option<>("parse links in chat messages", "disabled")
 			.setter(new Setter<String>() {
 				
 				@Override
@@ -229,7 +229,7 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	public final static Option<Boolean> caseInsensitiveVariables = new Option<Boolean>("case-insensitive variables", true)
+	public final static Option<Boolean> caseInsensitiveVariables = new Option<>("case-insensitive variables", true)
 			.setter(new Setter<Boolean>() {
 				
 				@Override
@@ -239,7 +239,7 @@ public abstract class SkriptConfig {
 			})
 			.optional(true);
 	
-	public final static Option<Boolean> colorResetCodes = new Option<Boolean>("color codes reset formatting", true)
+	public final static Option<Boolean> colorResetCodes = new Option<>("color codes reset formatting", true)
 			.setter(new Setter<Boolean>() {
 				
 				@Override
@@ -252,7 +252,7 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	public final static Option<Boolean> asyncLoaderEnabled = new Option<Boolean>("asynchronous script loading", false)
+	public final static Option<Boolean> asyncLoaderEnabled = new Option<>("asynchronous script loading", false)
 			.setter(new Setter<Boolean>() {
 				
 				@Override
@@ -262,13 +262,13 @@ public abstract class SkriptConfig {
 			})
 			.optional(true);
 	
-	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
+	public final static Option<Boolean> allowUnsafePlatforms = new Option<>("allow unsafe platforms", false)
 			.optional(true);
 	
-	public final static Option<Boolean> keepLastUsageDates = new Option<Boolean>("keep command last usage dates", false)
+	public final static Option<Boolean> keepLastUsageDates = new Option<>("keep command last usage dates", false)
 			.optional(true);
 	
-	public final static Option<Boolean> executeFunctionsWithMissingParams = new Option<Boolean>("execute functions with missing parameters", true)
+	public final static Option<Boolean> executeFunctionsWithMissingParams = new Option<>("execute functions with missing parameters", true)
 			.optional(true)
 			.setter(new Setter<Boolean>() {
 				

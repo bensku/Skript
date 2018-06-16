@@ -154,7 +154,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 				.examples("victim is a cow",
 						"spawn a creeper")
 				.since("1.3")
-				.defaultExpression(new SimpleLiteral<EntityData>(new SimpleEntityData(Entity.class), true))
+				.defaultExpression(new SimpleLiteral<>(new SimpleEntityData(Entity.class), true))
 				.before("entitytype")
 				.parser(new Parser<EntityData>() {
 					@Override

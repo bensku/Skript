@@ -314,7 +314,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	@Override
 	@Nullable
 	public Iterator<? extends T> iterator(final Event e) {
-		return new ArrayIterator<T>(getArray(e));
+		return new ArrayIterator<>(getArray(e));
 	}
 	
 	@Override

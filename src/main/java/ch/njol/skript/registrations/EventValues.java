@@ -59,9 +59,9 @@ public class EventValues {
 		}
 	}
 	
-	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<EventValueInfo<?, ?>>(30);
-	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<EventValueInfo<?, ?>>();
-	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<EventValueInfo<?, ?>>();
+	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
+	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
+	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
 	
 	private static List<EventValueInfo<?, ?>> getEventValuesList(final int time) {
 		if (time == -1)
@@ -109,11 +109,11 @@ public class EventValues {
 		for (int i = 0; i < eventValues.size(); i++) {
 			final EventValueInfo<?, ?> info = eventValues.get(i);
 			if (info.event != e ? info.event.isAssignableFrom(e) : info.c.isAssignableFrom(c)) {
-				eventValues.add(i, new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+				eventValues.add(i, new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 				return;
 			}
 		}
-		eventValues.add(new EventValueInfo<E, T>(e, c, g, excludeErrorMessage, excludes));
+		eventValues.add(new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 	}
 	
 	@Deprecated

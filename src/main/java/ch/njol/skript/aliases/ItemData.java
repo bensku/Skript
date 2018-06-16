@@ -205,7 +205,7 @@ public class ItemData implements Cloneable, YggdrasilSerializable {
 			};
 		}
 		if (dataMin == dataMax)
-			return new SingleItemIterator<ItemStack>(new ItemStack(typeid, 1, dataMin == -1 ? 0 : dataMin));
+			return new SingleItemIterator<>(new ItemStack(typeid, 1, dataMin == -1 ? 0 : dataMin));
 		return new Iterator<ItemStack>() {
 			
 			private short data = dataMin;

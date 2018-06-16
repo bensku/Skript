@@ -65,7 +65,7 @@ public class FlatFileStorage extends VariablesStorage {
 	 * A Lock on this object must be acquired after connectionLock (if that lock is used) (and thus also after {@link
 	 * Variables#getReadLock()}).
 	 */
-	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<PrintWriter>();
+	private final NotifyingReference<PrintWriter> changesWriter = new NotifyingReference<>();
 	
 	private volatile boolean loaded = false;
 	
@@ -243,7 +243,7 @@ public class FlatFileStorage extends VariablesStorage {
 	static String[] splitCSV(final String line) {
 		final Matcher m = csv.matcher(line);
 		int lastEnd = 0;
-		final ArrayList<String> r = new ArrayList<String>();
+		final ArrayList<String> r = new ArrayList<>();
 		while (m.find()) {
 			if (lastEnd != m.start())
 				return null;

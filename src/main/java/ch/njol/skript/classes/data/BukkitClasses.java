@@ -987,7 +987,7 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "item:.+";
 					}
-				}).serializer(new ConfigurationSerializer<ItemStack>()));
+				}).serializer(new ConfigurationSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(Item.class, "itementity")
 				.name(ClassInfo.NO_DOC)

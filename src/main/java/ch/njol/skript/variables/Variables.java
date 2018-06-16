@@ -345,7 +345,7 @@ public abstract class Variables {
 	 * <p>
 	 * Access must be synchronised.
 	 */
-	final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<>(new HashMap<String, NonNullPair<Object, VariablesStorage>>());
+	final static SynchronizedReference<Map<String, NonNullPair<Object, VariablesStorage>>> tempVars = new SynchronizedReference<>(new HashMap<>());
 	
 	private static final int MAX_CONFLICT_WARNINGS = 50;
 	private static int loadConflicts = 0;

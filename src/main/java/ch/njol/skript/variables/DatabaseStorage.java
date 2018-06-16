@@ -121,7 +121,7 @@ public class DatabaseStorage extends VariablesStorage {
 	private String formattedCreateQuery;
 	
 	@SuppressWarnings("null")
-	final SynchronizedReference<Database> db = new SynchronizedReference<Database>(null);
+	final SynchronizedReference<Database> db = new SynchronizedReference<>(null);
 	
 	private boolean monitor = false;
 	long monitor_interval;

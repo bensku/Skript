@@ -66,7 +66,7 @@ public class JavaClasses {
 						"set {_temp} to 2*{_temp} - 2.5")
 				.since("1.0")
 				// is registered after all other number classes
-				.defaultExpression(new SimpleLiteral<Number>(1, true))
+				.defaultExpression(new SimpleLiteral<>(1, true))
 				.parser(new Parser<Number>() {
 					@Override
 					@Nullable

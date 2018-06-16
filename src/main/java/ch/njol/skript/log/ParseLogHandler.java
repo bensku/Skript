@@ -34,7 +34,7 @@ public class ParseLogHandler extends LogHandler {
 	@Nullable
 	private LogEntry error = null;
 	
-	private final List<LogEntry> log = new ArrayList<LogEntry>();
+	private final List<LogEntry> log = new ArrayList<>();
 	
 	@Override
 	public LogResult log(final LogEntry entry) {

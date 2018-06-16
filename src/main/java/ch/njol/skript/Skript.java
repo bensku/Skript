@@ -794,7 +794,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	@SuppressWarnings("null")
-	private final static Collection<Closeable> closeOnDisable = Collections.synchronizedCollection(new ArrayList<Closeable>());
+	private final static Collection<Closeable> closeOnDisable = Collections.synchronizedCollection(new ArrayList<>());
 	
 	/**
 	 * Registers a Closeable that should be closed when this plugin is disabled.
