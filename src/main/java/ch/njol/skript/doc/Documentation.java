@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,16 +62,12 @@ public class Documentation {
 		if (!generate)
 			return;
 		try {
-			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(Skript.getInstance().getDataFolder(), "doc.sql")), "UTF-8"));
+			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(Skript.getInstance().getDataFolder(), "doc.sql")), StandardCharsets.UTF_8));
 			asSql(pw);
 			pw.flush();
 			pw.close();
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
-			return;
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return;
 		}
 	}
 	

@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -525,7 +526,7 @@ public class HTMLGenerator {
 	@SuppressWarnings("null")
 	private static String readFile(File f) {
 		try {
-			return Files.toString(f, Charset.forName("UTF-8"));
+			return Files.toString(f, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "";
@@ -534,7 +535,7 @@ public class HTMLGenerator {
 	
 	private static void writeFile(File f, String data) {
 		try {
-			Files.write(data, f, Charset.forName("UTF-8"));
+			Files.write(data, f, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

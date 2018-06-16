@@ -23,7 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -31,9 +31,6 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author Peter Güttinger
  */
 public class ConfigReader extends BufferedReader {
-	
-	@SuppressWarnings("null")
-	public final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	@Nullable
 	private String line;
@@ -43,7 +40,7 @@ public class ConfigReader extends BufferedReader {
 	private boolean hasNonEmptyLine = false;
 	
 	public ConfigReader(final InputStream source) {
-		super(new InputStreamReader(source, UTF_8));
+		super(new InputStreamReader(source, StandardCharsets.UTF_8));
 	}
 	
 	@Override

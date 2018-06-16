@@ -19,16 +19,16 @@
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
-
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
-	
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
 	
 	private final OutputStream out;
 	
@@ -69,7 +69,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 		} else {
 			if (nextShortStringID < 0)
 				throw new YggdrasilException("Too many field names/class IDs (max: " + Integer.MAX_VALUE + ")");
-			final byte[] d = s.getBytes(UTF_8);
+			final byte[] d = s.getBytes(StandardCharsets.UTF_8);
 			if (d.length >= (T_REFERENCE.tag & 0xFF))
 				throw new YggdrasilException("Field name or Class ID too long: " + s);
 			write(d.length);
@@ -182,7 +182,7 @@ public final class DefaultYggdrasilOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writeStringValue(final String s) throws IOException {
-		final byte[] d = s.getBytes(UTF_8);
+		final byte[] d = s.getBytes(StandardCharsets.UTF_8);
 		writeUnsignedInt(d.length);
 		out.write(d);
 	}
