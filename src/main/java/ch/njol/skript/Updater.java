@@ -203,18 +203,13 @@ public class Updater {
 		
 		public String tryLoadReleases(URL url) throws IOException, SocketTimeoutException {
 			//Skript.debug("Trying to load releases from " + url + "...");
-			Scanner scan = null;
-			try {
-				scan = new Scanner(url.openStream(), "UTF-8");
+			try (Scanner scan = new Scanner(url.openStream(), "UTF-8")) {
 				String out = scan.useDelimiter("\\A").next();
 				if (out == null)
 					throw new IOException("Null output from scanner!");
 				return out;
-			} finally {
-				//Skript.debug("Closing scanner NOW!");
-				if (scan != null)
-					scan.close();
 			}
+			//Skript.debug("Closing scanner NOW!");
 		}
 		
 		public boolean performUpdate(List<ResponseEntry> releases) {

@@ -88,11 +88,8 @@ public class Config implements Comparable<Config> {
 			if (Skript.logVeryHigh())
 				Skript.info("loading '" + fileName + "'");
 			
-			final ConfigReader r = new ConfigReader(source);
-			try {
+			try (ConfigReader r = new ConfigReader(source)) {
 				main = SectionNode.load(this, r);
-			} finally {
-				r.close();
 			}
 		} finally {
 			source.close();

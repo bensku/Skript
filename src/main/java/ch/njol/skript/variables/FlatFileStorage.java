@@ -100,9 +100,7 @@ public class FlatFileStorage extends VariablesStorage {
 		final Version v2_1 = new Version(2, 1);
 		boolean update2_1 = false;
 		
-		BufferedReader r = null;
-		try {
-			r = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8));
+		try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_8))) {
 			String line = null;
 			int lineNum = 0;
 			while ((line = r.readLine()) != null) {
@@ -152,13 +150,6 @@ public class FlatFileStorage extends VariablesStorage {
 		} catch (final IOException e) {
 			loadError = true;
 			ioEx = e;
-		} finally {
-			if (r != null) {
-				try {
-					r.close();
-				} catch (final IOException e) {
-				}
-			}
 		}
 		
 		final File file = this.file;
@@ -387,9 +378,7 @@ public class FlatFileStorage extends VariablesStorage {
 						}
 					}
 					final File tempFile = new File(Skript.getInstance().getDataFolder(), "variables.csv.temp");
-					PrintWriter pw = null;
-					try {
-						pw = new PrintWriter(tempFile, "UTF-8");
+					try (PrintWriter pw = new PrintWriter(tempFile, "UTF-8")) {
 						pw.println("# === Skript's variable storage ===");
 						pw.println("# Please do not modify this file manually!");
 						pw.println("#");
@@ -402,9 +391,6 @@ public class FlatFileStorage extends VariablesStorage {
 						FileUtils.move(tempFile, f, true);
 					} catch (final IOException e) {
 						Skript.error("Unable to make a final save of the database '" + databaseName + "' (no variables are lost): " + ExceptionUtils.toString(e)); // FIXME happens at random - check locks/threads
-					} finally {
-						if (pw != null)
-							pw.close();
 					}
 				} finally {
 					if (!finalSave) {

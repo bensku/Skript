@@ -295,34 +295,16 @@ public final class Yggdrasil {
 	}
 	
 	public void saveToFile(final Object o, final File f) throws IOException {
-		FileOutputStream fout = null;
-		YggdrasilOutputStream yout = null;
-		try {
-			fout = new FileOutputStream(f);
-			yout = newOutputStream(fout);
+		try (FileOutputStream fout = new FileOutputStream(f); YggdrasilOutputStream yout = newOutputStream(fout)) {
 			yout.writeObject(o);
 			yout.flush();
-		} finally {
-			if (yout != null)
-				yout.close();
-			if (fout != null)
-				fout.close();
 		}
 	}
 	
 	@Nullable
 	public <T> T loadFromFile(final File f, final Class<T> expectedType) throws IOException {
-		FileInputStream fin = null;
-		YggdrasilInputStream yin = null;
-		try {
-			fin = new FileInputStream(f);
-			yin = newInputStream(fin);
+		try (FileInputStream fin = new FileInputStream(f); YggdrasilInputStream yin = newInputStream(fin)) {
 			return yin.readObject(expectedType);
-		} finally {
-			if (yin != null)
-				yin.close();
-			if (fin != null)
-				fin.close();
 		}
 	}
 	
