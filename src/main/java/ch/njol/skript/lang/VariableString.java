@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import ch.njol.skript.util.ScriptOptions;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -310,14 +311,14 @@ public class VariableString implements Expression<String> {
 		}
 		return new VariableString(orig, sa, mode);
 	}
-	
+
 	private static void checkVariableConflicts(final String name, final StringMode mode, final @Nullable Iterable<Object> string) {
 		if (mode != StringMode.VARIABLE_NAME || variableNames.containsKey(name))
 			return;
 		if (name.startsWith("%")) {// inside the if to only print this message once per variable
 			final Config script = ScriptLoader.currentScript;
 			if (script != null) {
-				if (disableVariableStartingWithExpressionWarnings) {
+				if (disableVariableStartingWithExpressionWarnings && !ScriptOptions.getInstance().suppressesWarning(script.getFile(), "start expression")) {
 					Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). You could prefix it with the script's name: {" + StringUtils.substring(script.getFileName(), 0, -3) + "." + name + "}");
 				}
 			}
@@ -345,10 +346,21 @@ public class VariableString implements Expression<String> {
 			pattern = Pattern.compile(Pattern.quote(name));
 		}
 		if (!SkriptConfig.disableVariableConflictWarnings.value()) {
-			for (final Entry<String, Pattern> e : variableNames.entrySet()) {
-				if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
-					Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
-					break;
+			if (ScriptLoader.currentScript != null) {
+				if (!ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "conflict")) {
+					for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+						if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
+							Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
+							break;
+						}
+					}
+				}
+			} else {
+				for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+					if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
+						Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
+						break;
+					}
 				}
 			}
 		}

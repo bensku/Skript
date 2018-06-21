@@ -22,6 +22,8 @@ package ch.njol.skript.effects;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import ch.njol.skript.ScriptLoader;
+import ch.njol.skript.util.ScriptOptions;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -255,8 +257,15 @@ public class EffChange extends Effect {
 			
 			if (changed instanceof Variable && !((Variable<?>) changed).isLocal() && (mode == ChangeMode.SET || ((Variable<?>) changed).isList() && mode == ChangeMode.ADD)) {
 				final ClassInfo<?> ci = Classes.getSuperClassInfo(ch.getReturnType());
-				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value())
-					Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value()) {
+					if (ScriptLoader.currentScript != null) {
+						if (!ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "instance var")) {
+							Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+						}
+					} else {
+						Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+					}
+				}
 			}
 		}
 		return true;
