@@ -11,7 +11,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("${Effect_Name}")
@@ -25,17 +25,17 @@ public class Eff${NAME} extends Effect {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		return true;
 	}
 	
 	@Override
 	protected void execute(final Event e) {
+	
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "";
 	}
-	
 }

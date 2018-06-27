@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -296,9 +297,18 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				}
 				final String[] ps = patterns.toArray(new String[patterns.size()]);
 				assert ps != null;
-				info = new SyntaxElementInfo<>(ps, VisualEffect.class);
+
+				info = new SyntaxElementInfo<>(ps, VisualEffect.class, getOriginPath(VisualEffect.class));
 			}
 		});
+	}
+
+	static String getOriginPath(Class<VisualEffect> c){
+		String path = c.getName();
+		if (path != null){
+			return path;
+		}
+		return "<null>";
 	}
 	
 	private Type type;

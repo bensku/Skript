@@ -64,6 +64,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -424,5 +425,14 @@ public class SimpleEvents {
 						"	if {game::%player%::playing} exists:",
 						"		cancel event")
 				.since("2.2-dev36");
+		if (Skript.classExists("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
+			Skript.registerEvent("Language Change", SimpleEvent.class, PlayerLocaleChangeEvent.class, "[player] (language|locale) chang(e|ing)", "[player] chang(e|ing) (language|locale)")
+					.description("Called after a player changed their language in the game settings. You can use the <a href='expressions.html#ExprLanguage'>language</a> expression to get the current language of the player.",
+						"This event requires Minecraft 1.12+.")
+					.examples("on language change:",
+							"	if player's language starts with \"en\":",
+							"		send \"Hello!\"")
+					.since("INSERT VERSION");
+		}
 	}
 }

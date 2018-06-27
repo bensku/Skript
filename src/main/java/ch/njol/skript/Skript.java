@@ -1044,7 +1044,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	 */
 	public static <E extends Condition> void registerCondition(final Class<E> condition, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
-		final SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, condition);
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		final SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, condition, originClassPath);
 		conditions.add(info);
 		statements.add(info);
 	}
@@ -1057,7 +1058,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	 */
 	public static <E extends Effect> void registerEffect(final Class<E> effect, final String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
-		final SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, effect);
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		final SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, effect, originClassPath);
 		effects.add(info);
 		statements.add(info);
 	}
@@ -1093,7 +1095,8 @@ public final class Skript extends JavaPlugin implements Listener {
 		checkAcceptRegistrations();
 		if (returnType.isAnnotation() || returnType.isArray() || returnType.isPrimitive())
 			throw new IllegalArgumentException("returnType must be a normal type");
-		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c);
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath);
 		for (int i = type.ordinal() + 1; i < ExpressionType.values().length; i++) {
 			expressionTypesStartIndices[i]++;
 		}
@@ -1138,7 +1141,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	@SuppressWarnings({"unchecked"})
 	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(final String name, final Class<E> c, final Class<? extends Event> event, final String... patterns) {
 		checkAcceptRegistrations();
-		final SkriptEventInfo<E> r = new SkriptEventInfo<>(name, patterns, c, CollectionUtils.array(event));
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		final SkriptEventInfo<E> r = new SkriptEventInfo<>(name, patterns, c, originClassPath, CollectionUtils.array(event));
 		events.add(r);
 		return r;
 	}
@@ -1154,7 +1158,8 @@ public final class Skript extends JavaPlugin implements Listener {
 	 */
 	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(final String name, final Class<E> c, final Class<? extends Event>[] events, final String... patterns) {
 		checkAcceptRegistrations();
-		final SkriptEventInfo<E> r = new SkriptEventInfo<>(name, patterns, c, events);
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		final SkriptEventInfo<E> r = new SkriptEventInfo<>(name, patterns, c, originClassPath, events);
 		Skript.events.add(r);
 		return r;
 	}

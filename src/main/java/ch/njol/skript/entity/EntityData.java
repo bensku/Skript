@@ -189,7 +189,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		final Noun[] names;
 		
 		public EntityDataInfo(final Class<T> dataClass, final String codeName, final String[] codeNames, final int defaultName, final Class<? extends Entity> entityClass) throws IllegalArgumentException {
-			super(new String[codeNames.length], dataClass);
+			super(new String[codeNames.length], dataClass, dataClass.getName());
 			assert codeName != null && entityClass != null && codeNames.length > 0;
 			this.codeName = codeName;
 			this.codeNames = codeNames;
