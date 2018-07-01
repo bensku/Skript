@@ -89,6 +89,7 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.Task;
+import ch.njol.skript.variables.TypeHints;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Callback;
 import ch.njol.util.Kleenean;
@@ -132,7 +133,7 @@ final public class ScriptLoader {
 	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
 	 * @param addon A non-null SkriptAddon
 	 */
-	public static void setCallPreloadEvent(boolean state, @NonNull SkriptAddon addon) {
+	public static void setCallPreloadEvent(boolean state, SkriptAddon addon) {
 		Validate.notNull(addon);
 		callPreLoadEvent = state;
 		if (state)
@@ -187,13 +188,14 @@ final public class ScriptLoader {
 		currentEventName = null;
 		currentEvents = null;
 		hasDelayBefore = Kleenean.FALSE;
+		TypeHints.clear(); // Local variables are local to event
 	}
 	
 	public static List<TriggerSection> currentSections = new ArrayList<>();
 	public static List<Loop> currentLoops = new ArrayList<>();
 	private final static Map<String, ItemType> currentAliases = new HashMap<>();
 	final static HashMap<String, String> currentOptions = new HashMap<>();
-	
+		
 	public static Map<String, ItemType> getScriptAliases() {
 		return currentAliases;
 	}

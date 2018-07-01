@@ -30,6 +30,7 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
@@ -39,6 +40,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Getter;
@@ -63,16 +65,29 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 	private final static String[] slotNames = {"ore", "fuel", "result"};
 	
 	static {
-		register(ExprFurnaceSlot.class, Slot.class, "(" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]", "blocks");
+		Skript.registerExpression(ExprFurnaceSlot.class, Slot.class, ExpressionType.PROPERTY,
+				"(" + FUEL + "¦fuel|" + RESULT + "¦result) [slot]",
+				"(" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]] of %blocks%",
+				"%blocks%'[s] (" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]");
 	}
 	
-	int slot;
+	private int slot;
+	private boolean isEvent;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		setExpr((Expression<Block>) exprs[0]);
-		slot = parser.mark;
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		isEvent = matchedPattern == 0;
+		slot = parseResult.mark;
+		if (isEvent && slot == RESULT && !ScriptLoader.isCurrentEvent(FurnaceSmeltEvent.class)) {
+			Skript.error("Cannot use 'result slot' outside a fuel smelt event.");
+			return false;
+		} else if (isEvent && slot == FUEL && !ScriptLoader.isCurrentEvent(FurnaceBurnEvent.class)) {
+			Skript.error("Cannot use 'fuel slot' outside a fuel burn event.");
+			return false;
+		}
+		if (!isEvent)
+			setExpr((Expression<Block>) exprs[0]);
 		return true;
 	}
 	
@@ -88,78 +103,51 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 		@Override
 		@Nullable
 		public ItemStack getItem() {
-			if (e instanceof FurnaceSmeltEvent) {
-				if (slot == RESULT) {
-					if (getTime() >= 0)
-						return ((FurnaceSmeltEvent) e).getResult().clone();
+			switch (slot) {
+				case RESULT:
+					if (e instanceof FurnaceSmeltEvent)
+						return getTime() > -1 ? ((FurnaceSmeltEvent) e).getResult().clone() : super.getItem();
 					else
 						return super.getItem();
-				} else if (slot == ORE) {
-					if (getTime() <= 0) {
+				case FUEL:
+					if (e instanceof FurnaceBurnEvent)
+						return getTime() > -1 ? ((FurnaceBurnEvent) e).getFuel().clone() : super.getItem();
+					 else
+						return pastItem();
+				case ORE:
+					if (e instanceof FurnaceSmeltEvent)
+						return pastItem();
+					else
 						return super.getItem();
-					} else {
-						final ItemStack i = super.getItem();
-						if (i == null)
-							return null;
-						i.setAmount(i.getAmount() - 1);
-						return i.getAmount() == 0 ? new ItemStack(Material.AIR, 1) : i;
-					}
-				} else {
-					return super.getItem();
-				}
-			} else {
-				if (slot == FUEL) {
-					if (getTime() <= 0) {
-						return super.getItem();
-					} else {
-						final ItemStack i = super.getItem();
-						if (i == null)
-							return null;
-						i.setAmount(i.getAmount() - 1);
-						return i.getAmount() == 0 ? new ItemStack(Material.AIR, 1) : i;
-					}
-				} else {
-					return super.getItem();
-				}
+				default:
+					return null;
 			}
 		}
-		
+
 		@SuppressWarnings("synthetic-access")
 		@Override
 		public void setItem(final @Nullable ItemStack item) {
-			if (e instanceof FurnaceSmeltEvent) {
-				if (slot == RESULT && getTime() >= 0) {
-					if (item == null || item.getType() == Material.AIR) { // null/air crashes the server on account of a NPE if using event.setResult(...)
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-							@Override
-							public void run() {
-								FurnaceEventSlot.super.setItem(null);
-							}
-						});
-					} else {
-						((FurnaceSmeltEvent) e).setResult(item);
-					}
-				} else if (slot == ORE && getTime() >= 0) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() {
-							FurnaceEventSlot.super.setItem(item);
-						}
-					});
-				} else {
-					super.setItem(item);
-				}
+			if (getTime() > -1) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(),
+						() -> FurnaceEventSlot.super.setItem(item));
 			} else {
-				if (slot == FUEL && getTime() >= 0) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() {
-							FurnaceEventSlot.super.setItem(item);
-						}
-					});
-				} else {
+				if (e instanceof FurnaceSmeltEvent && slot == RESULT)
+					((FurnaceSmeltEvent) e).setResult(item);
+				else
 					super.setItem(item);
-				}
+			}
+		}
+
+		@Nullable
+		private ItemStack pastItem() {
+			if (getTime() < 1) {
+				return super.getItem();
+			} else {
+				ItemStack item = super.getItem();
+				if (item == null)
+					return null;
+				item.setAmount(item.getAmount() - 1);
+				return item.getAmount() == 0 ? new ItemStack(Material.AIR, 1) : item;
 			}
 		}
 		
@@ -173,7 +161,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 			public Slot get(final Block b) {
 				if (b.getType() != Material.FURNACE && b.getType() != Material.BURNING_FURNACE)
 					return null;
-				if (getTime() >= 0 && (e instanceof FurnaceSmeltEvent && b.equals(((FurnaceSmeltEvent) e).getBlock()) || e instanceof FurnaceBurnEvent && b.equals(((FurnaceBurnEvent) e).getBlock())) && !Delay.isDelayed(e)) {
+				if (isEvent && getTime() > -1 && !Delay.isDelayed(e)) {
 					FurnaceInventory invi = ((Furnace) b.getState()).getInventory();
 					if (invi != null)
 						return new FurnaceEventSlot(e, invi);

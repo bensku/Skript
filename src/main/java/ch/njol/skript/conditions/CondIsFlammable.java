@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 @Name("Is Flammable")
 @Description("Checks whether an item is flammable.")
 @Examples({"wood is flammable", "player's tool is flammable"})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class CondIsFlammable extends PropertyCondition<ItemStack> {
 
 	static {

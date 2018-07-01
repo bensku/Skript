@@ -35,7 +35,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Name("Has Metadata")
 @Description("Checks whether a metadata holder has a metadata tag.")
 @Examples("if player has metadata value \"healer\":")
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 @SuppressWarnings("null")
 public class CondHasMetadata extends Condition {
 

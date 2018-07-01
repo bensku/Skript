@@ -46,6 +46,7 @@ import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger
@@ -153,6 +154,21 @@ public abstract class SkriptEventHandler {
 			SkriptTimings.stop(timing);
 			logTriggerEnd(t);
 		}
+		
+		// Clear local variables
+		Variables.removeLocals(e);
+		/*
+		 * Local variables can be used in delayed effects by backing reference
+		 * of VariablesMap up. Basically:
+		 * 
+		 * Object localVars = Variables.removeLocals(e);
+		 * 
+		 * ... and when you want to continue execution:
+		 * 
+		 * Variables.setLocalVariables(e, localVars);
+		 * 
+		 * See Delay effect for reference.
+		 */
 		
 		logEventEnd();
 	}

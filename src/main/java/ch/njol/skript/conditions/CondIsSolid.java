@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 @Name("Is Solid")
 @Description("Checks whether an item is solid.")
 @Examples({"grass block is solid", "player's tool isn't solid"})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class CondIsSolid extends PropertyCondition<ItemStack> {
 
 	static {

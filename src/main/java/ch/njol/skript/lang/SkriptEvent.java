@@ -19,12 +19,11 @@
  */
 package ch.njol.skript.lang;
 
-import org.bukkit.event.Event;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.events.EvtClick;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
 
 /**
  * A SkriptEvent is like a condition. It is called when any of the registered events occurs.

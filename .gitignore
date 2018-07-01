@@ -1,7 +1,43 @@
+# ===== GRADLE =====
+
+# Gradle: compiled stuff lands here
 /target
-/dep
-/build/
+
+# Gradle: auto-generated
 /.gradle/
-/bin/
-/.idea/
+
+
+# ===== INTELLIJ and other JetBrains products =====
+
+# IntelliJ: compiled stuff lands here
+build/
+out/
+
+# IntelliJ: user-specific
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/inspectionProfiles
+.idea/**/deployment.xml
+
+# IntelliJ: auto-generated
 *.iml
+.idea/**/libraries
+.idea/**/modules
+
+# IntelliJ: meaningless in general or for Skript
+.idea/**/usage.statistics.xml
+.idea/**/uiDesigner.xml
+.idea/**/shelf
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/dbnavigator.xml
+
+
+# ===== OTHER =====
+
+# [Maybe ECJ:] compiled stuff lands here
+/bin/

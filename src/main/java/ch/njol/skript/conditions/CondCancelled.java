@@ -38,7 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tif event is cancelled:",
 		"\t\tbroadcast \"no clicks allowed!\""
 })
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class CondCancelled extends Condition {
 
 	static {

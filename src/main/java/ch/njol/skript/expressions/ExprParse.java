@@ -123,6 +123,10 @@ public class ExprParse extends SimpleExpression<Object> {
 			plurals = p.getSecond();
 		} else {
 			c = ((Literal<ClassInfo<?>>) exprs[1]).getSingle();
+			if (c.getC() == String.class) {
+				Skript.error("Parsing as text is useless as only things that are already text may be parsed");
+				return false;
+			}
 			final Parser<?> p = c.getParser();
 			if (p == null || !p.canParse(ParseContext.COMMAND)) { // TODO special parse context?
 				Skript.error("Text cannot be parsed as " + c.getName().withIndefiniteArticle(), ErrorQuality.SEMANTIC_ERROR);

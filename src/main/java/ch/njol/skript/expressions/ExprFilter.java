@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
 		"only \"something\" would be broadcast as it is the only string that matched the condition.")
 @Examples("send \"congrats on being staff!\" to all players where [player input has permission \"staff\"]")
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprFilter<T> extends SimpleExpression<T> {
 
@@ -170,7 +170,7 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 			"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
 			"the condition would be checked twice, using \"something\" and \"something else\" as the inputs.")
 	@Examples("send \"congrats on being staff!\" to all players where [player input has permission \"staff\"]")
-	@Since("INSERT VERSION")
+	@Since("2.2-dev36")
 	@SuppressWarnings({"null", "unchecked"})
 	public static class ExprInput<T> extends SimpleExpression<T> {
 

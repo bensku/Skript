@@ -1310,7 +1310,7 @@ public class BukkitClasses {
 				.name("Metadata Holder")
 				.description("Something that can hold metadata (e.g. an entity or block)")
 				.examples("set metadata value \"super cool\" of player to true")
-				.since("INSERT VERSION")
+				.since("2.2-dev36")
 		);
 
 	}

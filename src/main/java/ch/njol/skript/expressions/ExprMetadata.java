@@ -49,7 +49,7 @@ import java.util.List;
 @Examples({"set metadata value \"healer\" of player to true",
 		"broadcast \"%metadata value \"\"healer\"\" of player%\"",
 		"clear metadata value \"healer\" of player"})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 @SuppressWarnings({"unchecked", "null"})
 public class ExprMetadata<T> extends SimpleExpression<T> {
 

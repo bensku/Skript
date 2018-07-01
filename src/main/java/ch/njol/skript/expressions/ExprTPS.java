@@ -39,7 +39,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description("Returns the 3 most recent TPS readings, like the /tps command. " +
 			"This expression is only supported on some server software.")
 @Examples("broadcast \"%tps%\"")
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class ExprTPS extends SimpleExpression<Double> {
 
 	private static final boolean SUPPORTED = Skript.methodExists(Server.class, "getTPS");

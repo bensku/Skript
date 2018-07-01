@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 @Name("Is Transparent")
 @Description("Checks whether an item is transparent.")
 @Examples({"glass is transparent", "player's tool is transparent."})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class CondIsTransparent extends PropertyCondition<ItemStack> {
 
 	static {

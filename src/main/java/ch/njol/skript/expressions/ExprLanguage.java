@@ -19,49 +19,46 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.ItemFrame;
 import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.classes.Changer.ChangeMode;
+import org.bukkit.entity.Player;
+import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.util.slot.DroppedItemSlot;
-import ch.njol.skript.util.slot.ItemFrameSlot;
-import ch.njol.skript.util.slot.Slot;
 
-@Name("Item of an Entity")
-@Description("An item associated with an entity. For dropped item entities, it gets, obviously, the item that was dropped. "
-		+ "For item frames, the item inside the frame is returned. Other entities do not have items associated with them.")
-@Examples("")
-@Since("2.2-dev35, 2.2-dev36 (improved)")
-public class ExprItemFrameSlot extends SimplePropertyExpression<Entity, Slot> {
-	
+@Name("Language")
+@Description({"Currently selected game language of a player. The value of the language is not defined properly.",
+			"The vanilla Minecraft client will use lowercase language / country pairs separated by an underscore, but custom resource packs may use any format they wish."})
+@Examples({"message player's current language"})
+@Since("INSERT VERSION")
+public class ExprLanguage extends SimplePropertyExpression<Player, String> {
+
+	private static final boolean USE_DEPRECATED_METHOD = !Skript.methodExists(Player.class, "getLocale");
+
 	static {
-		register(ExprItemFrameSlot.class, Slot.class, "item", "entities");
+		register(ExprLanguage.class, String.class, "[([currently] selected|current)] [game] (language|locale) [setting]", "players");
 	}
-	
+
 	@Override
 	@Nullable
-	public Slot convert(Entity e) {
-		if (e instanceof ItemFrame)
-			return new ItemFrameSlot((ItemFrame) e);
-		else if (e instanceof Item)
-			return new DroppedItemSlot((Item) e);
-		return null; // Other entities don't have associated items
+	public String convert(Player p) {
+		if (USE_DEPRECATED_METHOD) {
+			return p.spigot().getLocale();
+		} else {
+			return p.getLocale();
+		}
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "item of entity";
+		return "language";
 	}
-	
+
 	@Override
-	public Class<? extends Slot> getReturnType() {
-		return Slot.class;
+	public Class<? extends String> getReturnType() {
+		return String.class;
 	}
+
 }

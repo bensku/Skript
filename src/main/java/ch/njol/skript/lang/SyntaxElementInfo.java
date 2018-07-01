@@ -27,10 +27,12 @@ public class SyntaxElementInfo<E extends SyntaxElement> {
 	
 	public final Class<E> c;
 	public final String[] patterns;
+	public final String originClassPath;
 	
-	public SyntaxElementInfo(final String[] patterns, final Class<E> c) throws IllegalArgumentException {
+	public SyntaxElementInfo(final String[] patterns, final Class<E> c, final String originClassPath) throws IllegalArgumentException {
 		this.patterns = patterns;
 		this.c = c;
+		this.originClassPath = originClassPath;
 		try {
 			c.getConstructor();
 //			if (!c.getDeclaredConstructor().isAccessible())

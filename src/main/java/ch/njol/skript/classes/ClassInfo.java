@@ -283,6 +283,11 @@ public class ClassInfo<T> implements Debuggable {
 	public Arithmetic<? super T, ?> getMath() {
 		return math;
 	}
+
+	@Nullable
+	public <R> Arithmetic<T, R> getRelativeMath() {
+		return (Arithmetic<T, R>) math;
+	}
 	
 	@Nullable
 	public Class<?> getMathRelativeType() {

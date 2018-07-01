@@ -240,16 +240,38 @@ public abstract class Variables {
 	 * must be locked with {@link #variablesLock}.
 	 */
 	private final static VariablesMap variables = new VariablesMap();
+	
 	/**
-	 * Not accessed concurrently
+	 * Not to be accessed outside of Bukkit's main thread!
 	 */
-	private final static WeakHashMap<Event, VariablesMap> localVariables = new WeakHashMap<>();
+	private final static Map<Event, VariablesMap> localVariables = new HashMap<>();
 	
 	/**
 	 * Remember to lock with {@link #getReadLock()} and to not make any changes!
 	 */
 	static TreeMap<String, Object> getVariables() {
 		return variables.treeMap;
+	}
+	
+	/**
+	 * Removes local variables associated with given event and returns them,
+	 * if they exist.
+	 * @param event Event.
+	 * @return Local variables or null.
+	 */
+	@Nullable
+	public static VariablesMap removeLocals(Event event) {
+		return localVariables.remove(event);
+	}
+	
+	/**
+	 * Sets local variables associated with given event.
+	 * Warning: this can overwrite local variables!
+	 * @param event Event.
+	 * @param map New local variables.
+	 */
+	public static void setLocalVariables(Event event, Object map) {
+		localVariables.put(event, (VariablesMap) map);
 	}
 	
 	/**

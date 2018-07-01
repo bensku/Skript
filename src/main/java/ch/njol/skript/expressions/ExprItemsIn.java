@@ -62,7 +62,11 @@ public class ExprItemsIn extends SimpleExpression<Slot> {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	/*
+	 * the parse result will be null if it is used via the ExprInventory expression, however the expression will never
+	 * be a variable when used with that expression (it is always a anonymous SimpleExpression)
+	 */
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, @Nullable final ParseResult parseResult) {
 		invis = (Expression<Inventory>) exprs[0];
 		if (invis instanceof Variable && !invis.isSingle() && parseResult.mark != 1)
 			Skript.warning("'items in {variable::*}' does not actually represent the items stored in the variable. Use either '{variable::*}' (e.g. 'loop {variable::*}') if the variable contains items, or 'items in inventories {variable::*}' if the variable contains inventories.");

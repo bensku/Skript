@@ -19,6 +19,15 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.config.Node;
+import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.util.slot.Slot;
+import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.eclipse.jdt.annotation.Nullable;
@@ -30,6 +39,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Peter Güttinger
  */
@@ -39,25 +51,86 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"clear the player's inventory",
 		"remove 5 wool from the inventory of the clicked block"})
 @Since("1.0")
-public class ExprInventory extends SimplePropertyExpression<InventoryHolder, Inventory> {
+public class ExprInventory extends SimpleExpression<Object> {
+
+	private boolean inLoop;
+	@SuppressWarnings("null")
+	private Expression<InventoryHolder> holders;
+
 	static {
-		register(ExprInventory.class, Inventory.class, "inventor(y|ies)", "inventoryholders");
+		PropertyExpression.register(ExprInventory.class, Object.class, "inventor(y|ies)", "inventoryholders");
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		// if we're dealing with a loop of just this expression
+		Node n = SkriptLogger.getNode();
+		inLoop = n != null && ("loop " + parseResult.expr).equals(n.getKey());
+		holders = (Expression<InventoryHolder>) exprs[0];
+		return true;
+	}
+
+
+	@Override
+	protected Object[] get(Event e) {
+		List<Inventory> inventories = new ArrayList<>();
+		for (InventoryHolder holder : holders.getArray(e)) {
+			inventories.add(holder.getInventory());
+		}
+		Inventory[] invArray = inventories.toArray(new Inventory[0]);
+		if (inLoop) {
+			/*
+			 * Return the items in the inventory if in a loop using the items
+			 * in inventory expression to not duplicate code
+			 */
+			ExprItemsIn expr = new ExprItemsIn();
+			expr.init(new Expression[] {
+					new SimpleExpression() {
+						@Override
+						protected Object[] get(Event e) {
+							return invArray;
+						}
+
+						@Override
+						public boolean isSingle() {
+							return invArray.length == 1;
+						}
+
+						@Override
+						public Class<?> getReturnType() {
+							return Inventory.class;
+						}
+
+						@Override
+						public String toString(@Nullable Event e, boolean debug) {
+							return "loop of inventory expression";
+						}
+
+						@Override
+						public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+							return true;
+						}
+					}
+			}, 0, Kleenean.FALSE, null);
+			return expr.get(e);
+		}
+		return invArray;
+	}
+
+	@Override
+	public boolean isSingle() {
+		return !inLoop && holders.isSingle();
+	}
+
+	@Override
+	public Class<?> getReturnType() {
+		return inLoop ? Slot.class : Inventory.class;
 	}
 	
 	@Override
-	@Nullable
-	public Inventory convert(final InventoryHolder h) {
-		return h.getInventory();
-	}
-	
-	@Override
-	public Class<Inventory> getReturnType() {
-		return Inventory.class;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "inventor" + (getExpr().isSingle() ? "y" : "ies");
+	public String toString(@Nullable Event e, boolean debug) {
+		return "inventor" + (holders.isSingle() ? "y" : "ies") + " of " + holders.toString(e, debug);
 	}
 	
 }

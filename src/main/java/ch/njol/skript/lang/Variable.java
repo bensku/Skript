@@ -38,6 +38,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -54,6 +55,7 @@ import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.StringMode;
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.TypeHints;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
@@ -148,10 +150,36 @@ public class Variable<T> implements Expression<T> {
 		name = "" + name.trim();
 		if (!isValidVariableName(name, true, true))
 			return null;
-		final VariableString vs = VariableString.newInstance(name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : name, StringMode.VARIABLE_NAME);
+		VariableString vs = VariableString.newInstance(name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : name, StringMode.VARIABLE_NAME);
 		if (vs == null)
 			return null;
-		return new Variable<>(vs, types, name.startsWith(LOCAL_VARIABLE_TOKEN), name.endsWith(SEPARATOR + "*"), null);
+		
+		boolean isLocal = name.startsWith(LOCAL_VARIABLE_TOKEN);
+		boolean isPlural = name.endsWith(SEPARATOR + "*");
+		
+		// Check for local variable type hints
+		if (isLocal && vs.isSimple()) { // Only variable names we fully know already
+			Class<?> hint = TypeHints.get(vs.toString());
+			if (hint != null && !hint.equals(Object.class)) { // Type hint available
+				for (Class<? extends T> type : types) {
+					if (type.isAssignableFrom(hint)) {
+						// Hint matches, use variable with exactly correct type
+						return new Variable<>(vs, CollectionUtils.array(type), isLocal, isPlural, null);
+					}
+				}
+				
+				// Hint exists and does NOT match any types requested
+				ClassInfo<?>[] infos = new ClassInfo[types.length];
+				for (int i = 0; i < types.length; i++) {
+					infos[i] = Classes.getExactClassInfo(types[i]);
+				}
+				Skript.warning("Local variable '" + name + "' is " + Classes.toString(Classes.getExactClassInfo(hint))
+						+ ", not " + Classes.toString(infos, false));
+				// Fall back to not having any type hints
+			}
+		}
+		
+		return new Variable<>(vs, types, isLocal, isPlural, null);
 	}
 	
 	@Override

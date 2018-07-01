@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 @Name("Is Edible")
 @Description("Checks whether an item is edible.")
 @Examples({"steak is edible", "player's tool is edible"})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class CondIsEdible extends PropertyCondition<ItemStack> {
 
 	static {

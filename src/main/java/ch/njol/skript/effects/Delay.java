@@ -40,6 +40,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import edu.umd.cs.findbugs.ba.bcp.New;
 
@@ -80,6 +81,9 @@ public class Delay extends Effect {
 		final long start = Skript.debug() ? System.nanoTime() : 0;
 		final TriggerItem next = getNext();
 		if (next != null) {
+			// Back up local variables
+			Object localVars = Variables.removeLocals(e);
+			
 			delayed.add(e);
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
@@ -89,6 +93,10 @@ public class Delay extends Effect {
 				public void run() {
 					if (Skript.debug())
 						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+					
+					// Re-set local variables
+					if (localVars != null)
+						Variables.setLocalVariables(e, localVars);
 					
 					Object timing = null;
 					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must

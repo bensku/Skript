@@ -38,7 +38,7 @@ import org.bukkit.entity.Player;
 @Examples({"command /ping <player=%player%>:",
 			"\ttrigger:",
 			"\t\tsend \"%arg-1%'s ping is %arg-1's ping%\""})
-@Since("INSERT VERSION")
+@Since("2.2-dev36")
 public class ExprPing extends SimplePropertyExpression<Player, Number> {
 
 	private static final boolean SUPPORTED = Skript.methodExists(Player.Spigot.class, "getPing");

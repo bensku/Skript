@@ -202,7 +202,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	 * Usually, you want to override {@link SimpleExpression#getConvertedExpr(Class[])}.
 	 * However, it may be useful to override this method if you have an expression with a return
 	 * type that is unknown until runtime (like variables). Usually, you'll be fine with just
-	 * the default implementation. This method is final on versions below INSERT VERSION.
+	 * the default implementation. This method is final on versions below 2.2-dev36.
 	 *
 	 * @param to The desired return type of the returned expression
 	 * @return The converted expression
