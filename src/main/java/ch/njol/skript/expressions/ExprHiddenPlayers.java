@@ -31,10 +31,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
