@@ -1,0 +1,6 @@
+#
+# Disables rain & thunder in all worlds
+#
+
+on weather change to rain or thunder:
+	cancel event

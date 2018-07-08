@@ -1,0 +1,24 @@
+#
+# Adds a command that allows player's to wear any kind of block as a hat.
+# You could add a condition to allow only certain blocks to be worn if you want to.
+#
+
+command /head <material>:
+	description: wear a block as helmet/head
+	aliases: hat
+	usage: /head <material>
+	permission: skript.hat
+	trigger:
+		id of argument 1 is greater than 255:
+			message "You cannot wear an item, only blocks"
+			stop trigger
+		player doesn't have argument 1:
+			player doesn't have the permission "skript.hat.free":
+				message "You do not have a %argument 1% you could wear!"
+				stop trigger
+		helmet slot of player is not empty:
+			message "You're already wearing a helmet"
+			stop trigger
+		player doesn't have the permission "skript.hat.free":
+			remove argument 1 from player
+		equip player with argument 1

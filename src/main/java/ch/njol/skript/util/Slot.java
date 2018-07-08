@@ -1,0 +1,41 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.util;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.bekvon.bukkit.residence.commands.check;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.expressions.base.EventValueExpression;
+import ch.njol.skript.lang.Debuggable;
+import ch.njol.skript.registrations.Classes;
+
+/**
+ * Preserved for addon compatibility for a limited amount of time.
+ * Please, do use {@link ch.njol.skript.util.slot.Slot} instead!
+ * @deprecated Slot stuff got its own package.
+ */
+@Deprecated
+public abstract class Slot extends ch.njol.skript.util.slot.Slot {
+}

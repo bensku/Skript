@@ -1,0 +1,32 @@
+#
+# Plants seeds when you right click dirt, grass or farmland with a hoe, using seeds from the inventory.
+# it will also plant cacti on sand if there's space for it.
+# The hoe used will be damaged by 1 point for planting the seeds/cactus.
+#
+
+aliases:
+	# all blocks which are allowed next to a cactus. If any block which is not in this list is placed next to a cactus the cactus breaks.
+	# please note that changing this list won't affect which blocks actually break a cactus.
+	allowed next to cactus = 0, 6, 9, 10, 11, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 65, 66, 75, 76, 77, 78, 83, 90, 93, 94, 104, 105, 106, 111, 115, 119
+
+on rightclick on grass, dirt or soil with any hoe:
+	block above is air
+	player has seeds
+	
+	set block above to crops
+	remove seeds from player
+	damage tool by 1
+	
+	block is not soil:
+		set block to soil
+		damage tool by 1 # damages the hoe a second time if the ground was not soil before
+
+# right click sand to plant a cactus
+on rightclick on sand with any hoe:
+	player has a cactus
+	block above is air
+	blocks north above, east above, south above and west above are allowed next to cactus
+	
+	damage tool by 1
+	set block above to cactus
+	remove a cactus from player

@@ -1,0 +1,22 @@
+#
+# A simple home script which allows players with the permission 'skript.home' to
+# define a home location with /sethome and teleport to that location whenever they want to with /home.
+#
+
+command /sethome:
+	description: Set your home
+	permission: skript.home
+	executable by: players
+	trigger:
+		set {homes.%player%.location} to location of player
+		message "Set your home to <grey>%location of player%<reset>"
+
+command /home:
+	description: Teleport yourself to your home
+	permission: skript.home
+	executable by: players
+	trigger:
+		if {homes.%player%.location} is not set:
+			message "You have not set your home yet!"
+			stop trigger
+		teleport player to {homes.%player%.location}

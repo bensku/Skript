@@ -1,0 +1,43 @@
+#
+# This file automates furnaces.
+# They store smelted items, refuel and restock automatically in/from surrounding chests
+# But only as long as they have fuel and something to smelt, and there's storage space for the smolten item(s).,
+# I.e. if a furnace stops burning it won't resume automatically, but has to be lit manually again.
+#
+
+options:
+	# radius: in which radius chest should be searched.
+	# Putting a small radius is recommended as it increases performance and prevents furnaces from taking items out of chests behind walls or otherwise hidden chests.
+	# Some recommended values:
+	#   1: only chests direcly next to the furnace are affected
+	#   1.5: chests diaginally adjacent (i.e. which touch the furnace with one edge) are affected as well
+	#   1.75: all surrounding chests in a 3x3x3 cube are affected
+	radius: 1
+
+on fuel burn:
+	fuel slot of block will be empty
+	loop blocks in radius {@radius}:
+		loop-block is chest
+		loop items of type fuel:
+			loop-block contains loop-item
+			remove loop-item from loop-block
+			set fuel of event-block to loop-item
+			stop trigger
+
+on smelt:
+	ore slot of block will be empty
+	loop blocks in radius {@radius}:
+		loop-block is chest
+		loop items of types ore and log:
+			loop-block contains loop-item
+			remove loop-item from loop-block
+			set ore of event-block to loop-item
+			stop trigger
+
+on smelt:
+	loop blocks in radius {@radius}:
+		loop-block is chest
+		loop-block can hold result of event-block
+		add result of event-block to loop-block
+		clear result of event-block
+		stop trigger

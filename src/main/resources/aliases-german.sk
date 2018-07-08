@@ -1,0 +1,1792 @@
+﻿
+#
+# == Deutsches aliases.sk ==
+# Diese Gegenstandsnamen werden verwendet, falls Skript auf deutsch konfiguriert wurde (siehe config.sk).
+# Die englishen Gegenstandsnamen werden weiterhin in Skripten verwendet, z.B. 'give a diamond sword to the player',
+# aber sämtliche Texte und Befehle verwenden die deutschen Namen, z.B. "Das ist ein %item%" ergibt "Das ist eine Karotte",
+# und 'command /item <items>' kann wie '/item 5 Diamanten und eine rote Wolle' benutzt werden.
+#
+# == WICHTIG: DIESE GEGENSTANDSNAMEN SIND NOCH NICHT ALLE ÜBERSETZT!
+#   bitte melde dich bei mir (njol@gmx.ch) falls du beim Übersetzen helfen möchtest :)
+#
+# Fix for MC 1.8 items by mrschmock (mrschmock@julcraft.de)
+ 
+item = Gegenst¦and¦ände @m
+block = Bl¦ock¦öcke @m
+
+aliases = Standardnamen, Sammlungen, eigene Namen
+
+eigene Namen:
+	# -- leer --
+
+Sammlungen:
+	# === Sammlungen ===
+
+	# Erze
+	Erz¦e = Kohlenerz, Eisenerz, Golderz, Diamanterz, Lapiserz, beliebiges Rotsteinerz
+	# Bennmaterialien für Schmelzöfen
+	Brennmaterial¦ien = Lavaeimer, Lohenstab, Kohle, Holzkohle, Planke, Baumstamm, grosser Pilz, Werkbank, Zaun, wooden stairs, trapdoor, Setzling, Stock, Truhe, locked chest, Jukebox, Notenblock
+	#Brennmaterial¦ien = Lavaeimer, Lohenstab, Kohle, Holzkohle, Planke, Baumstamm, grosser Pilz, Werkbank, Zaun, Holztreppe, Falltür, Setzling, Stock, Kiste, verschlossene Kiste, Musikbox, Notenblock
+	
+	# Essen exkl. Kuchen
+	Essen = beliebiger Apfel, Pilzsuppe, Brot, beliebiges Schweinefleisch, beliebiger Fisch, Keks, Melonenschnitz, beliebiges Rindfleisch, beliebiges Huhn, verrottetes Fleisch
+	# die gleiche Liste ohne rohes & verrottetes Fleisch
+	gesundes Essen = beliebiger Apfel, Pilzsuppe, Brot, gekochtes Schweinefleisch, gekochter Fisch, Keks, Melonenschnitz, gekochtes Rindfleisch, gekochtes Huhn
+
+	# Transportmittel
+	Transportmittel = beliebige Lore, Boot
+
+	# Pflanzen ohne Kürbisse & Melonen
+	Pflanze¦n = Blätter, beliebiges hohes Gras, toter Busch, beliebige Blume, beliebiger Pilz, Seerose, Rebe, Melonenstiel, Kürbisstiel, Netherwarze
+
+
+Standardnamen:
+	# === Standardnamen ===
+
+	# -- spezielles --
+	etwas = : # ':' passt auf jede ID. Du solltest dies nur zusammen mit einer {Variation} welche ein {default} (Standardwert) enthält benutzen.
+	          # (':' bedeutet '<beliebige ID>:<beliebiger Wert>')
+	alles = * # '*' is eigentlich dasselbe wie 'jedes :', aber 'jedes' kann nicht in Itemnamen verwendet werden,
+	          # weshalb ich diesen kleinen Hack erstellt habe, um einen 'alles' Itemnamen definieren zu können.
+
+
+	# ====== Blöcke ======
+
+	# -- Luft --
+	Luft = 0
+	nichts = 0
+	leer = 0
+	[leere] (H¦and¦ände|F¦aust¦äuste) = 0
+
+
+	# -- Stein --
+	Stein¦e @m = 1
+
+
+	# -- Gras --
+	Gras @n = 2
+	Grasbl¦ock¦öcke @m = 2
+
+
+	# -- Erde --
+	Erde @f = 3
+	Erdbl¦ock¦öcke @m = 3
+
+
+	# -- Pflasterstein --
+	Pflasterstein¦e @m = 4
+	(bewachsene[r]|mosige[r]) Pflasterstein¦e @m = 48
+
+
+	# -- Planken & Setzlinge: siehe Holz
+
+
+	# -- Bedrock --
+	Bedrock @m = 7
+
+
+	# -- Wasser & Lava --
+	Wasser @n = 8
+	Wasser @n = 9
+	Wasser @n = 8, 9
+	Wasser <item/block> = 9
+	stationäres Wasser @n = 8:0, 9:0
+	Wasserquelle @f = 8:0, 9:0
+	Quelle @f = 8:0, 9:0
+	fliessendes Wasser @n= 8:1-8, 9:1-8 # change to '8:0-7' if you want to exclude falling water
+	fallendes Wasser @n = 8:8, 9:8
+	bewegtes Wasser @n = 8:1-8, 9:1-8
+
+	Lava @f = 10
+	Lava @f = 11
+	Lava @f = 10, 11
+	Lava <item/block> = 11
+	stationäre Lava @f = 10:0, 11:0
+	Lavaquelle @f = 10:0, 11:0
+	fliessende Lava @f = 10:1-8, 11:1-8 # change to '10:0-7' if you want to exclude falling lava
+	fallende Lava @f = 10:8, 11:8
+	gewegte Lava @f = 10:1-8, 11:1-8
+
+
+	# -- Sand & Geröll --
+	Sand @m = 12
+	Geröll @n = 13
+	(Schutt|Schotter) @m = 13
+
+
+	# -- Erze & wertvolle Blöcke--
+	Golderz¦e @n = 14
+	Gold<block> = 41
+
+	Eisenerz¦e @n = 15
+	Eisen<block> = 42
+
+	Kohlenerz¦e @n = 16
+
+	Lapis[lazuli]erz¦e = 21
+	Lapis[lazuli]<block> = 22
+
+	# Rotsteinerz: siehe Rotstein
+
+	Diamanterz¦ @n = 56
+	Diamant<block> = 57
+
+	Smaradgerz¦e = 129
+	Smaragd<block> = 133
+
+
+	# -- Holz, Blätter, Setzlinge & Planken --
+	{tree type}:
+		{default} = :0-15
+		(Eichen|normale(r|s|) ) = :0, :4, :8, :12
+		(Tannen|Fichten) = :1, :5, :9, :13
+		Birken = :2, :6, :10, :14
+		Tropen = :3, :7, :11, :15
+		Dschungel = :3, :7, :11, :15
+		Jungel = :3, :7, :11, :15
+	{tree type 2}:
+		{default} = :0-15
+		Akazien = :0, :4, :8, :12, :2, :6, :10, :14
+		(dunkles Eichen|dunkles ) = :1, :5, :9, :13, :3, :7, :11, :15
+	{wood type}: # also used elsewhere
+		{default} = :0-5
+		<any> = :0-5
+		(Eichen|normale(r|s|) ) = :0
+		(Tannen|Fichten) = :1
+		Birken = :2
+		Tropen = :3
+		Dschungel = :3
+		Jungel = :3
+		Akazien = :4
+		(dunkles Eichen|dunkles) = :5
+
+	{log direction}:
+		{default} = :0-3
+		vertikal = :0-3
+		ost-west = :4-7
+		west-ost = :4-7
+		süd-nord = :8-11
+		nord-süd = :8-11
+		horizontal = :4-11
+		gedreht = :4-11
+		(volle(r|s|)|ganze(r|s|)) = :12-15
+		<any> = :0-15
+	{log direction no default}:
+		vertikal = :0-3
+		ost-west = :4-7
+		west-ost = :4-7
+		süd-nord = :8-11
+		nord-süd = :8-11
+		horizontal = :4-11
+		gedreht = :4-11
+		(volle(r|s|)|ganze(r|s|)) = :12-15
+		<any> = :0-15
+
+	{wood type}Setzling¦e @m = 6
+	{wood type}[Holz]Planke¦n @f = 5
+	
+	{log direction no default} {tree type}([Baum]St¦amm¦ämme @m|H¦olz¦ölzer @n) = 17
+	{log direction} {tree type}([Baum]Stamm|Holz) <item/block> = 17
+	{tree type}Blätter @x = 18
+	[<any>] permanente {tree type}Blätter @x = 18:4-7, 18:12-15
+
+	{log direction no default} {tree type 2}([Baum]St¦amm¦ämme @m|H¦olz¦ölzer @n) = 162
+	{log direction} {tree type 2}([Baum]Stamm|Holz) <item/block> = 162
+	{tree type 2}Blätter @x = 161
+	[<any>] permanente {tree type 2}Blätter @x = 161:4-7, 161:12-15
+
+	{log direction no default} ([Baum]St¦amm¦ämme @m|H¦olz¦ölzer @n) = 17, 161
+	{log direction} ([Baum]Stamm|Holz) <item/block> = 17, 161
+	[<any>] Blätter @x = 18:0-15, 161:0-15
+	[<any>] permanente Blätter @x = 18:4-7, 18:12-15, 161:4-7, 161:12-15
+
+
+	# -- Schwamm --
+	Schw¦amm¦ämme @m = 19
+
+
+	# -- Glas --
+	Glas @n = 20
+	[Glas]Scheibe¦n @f = 102
+	dünne¦s Glas¦ Gläser @n = 102
+	Fenster[gl¦as¦äser] @n = 102
+	
+	gefärbte(s Gl¦as¦äser| [Glas]Scheibe¦n) = 160
+	<any> gefärbte(s Gl¦as¦äser| [Glas]Scheibe¦n) = 160:0-15
+	weiss[ ]gefärbte(s Gl¦as¦äser| [Glas]Scheibe¦n) = 160:0
+	# etc...
+	
+
+	# -- Lapislazuli --
+	# Lapiserz & -block: siehe Erze
+	# Lapislazuli: siehe Färbemittel
+
+
+	# -- Dispenser --
+	Dispenser @m = 23
+	Spender @m = 23
+
+
+	# -- Sandstein --
+	Sandstein¦e @m = 24
+
+
+	# -- Notenblock --
+	Noten<block> = 25
+
+
+	# -- Bett --
+	{bed occupied}:
+		besetzte¦s¦¦ = :4-7, :12-15
+		(freie|leere)¦s¦¦ = :0-3, :8-11
+	{bed part}:
+		kopfende¦¦n¦ = :8-15
+		fussende¦¦n¦ = :0-7
+	{bed occupied} Bett¦¦en¦{bed part}[<block>] @n = 26
+	Bett¦en @n = 26, 355
+	Bett<block> = 26
+	Bett<item> = 355
+
+
+	# -- Schienen --
+	{minerail}:
+		gerade = :0-5
+		gerade flache = :0-1
+		flache gerade = :0-1
+		gebogene = :6-9
+		flache = :0-1, :6-9
+		schräge = :2-5
+	{minerail straight}:
+		flache = :0-1, :8-9
+		schräge = :2-5, :10-13
+	# normale Schiene
+	[<any>] {minerail} [(Minecart|Loren)]Schiene¦n @f = 27, 28, 66
+	{minerail} [(Minecart|Loren)]Schienen<item/block> = 66
+	# angetriebene Schiene
+	{minerail straight} powered [minecart] (rail|track) = 27
+	{minerail straight} [minecart] booster¦s = 27
+	{minerail straight} [minecart] booster (rail|track)¦s = 27
+	{minerail straight} powered [minecart] (rail|track)¦ on¦s on = powered rail:8-15
+	{minerail straight} powered [minecart] (rail|track)¦ off¦s off = powered rail:0-7
+	{minerail straight} active powered [minecart] (rail|track)¦s = powered rail:8-15
+	{minerail straight} inactive powered [minecart] (rail|track)¦s = powered rail:0-7
+	{minerail straight} [minecart] booster¦ on¦s on = powered rail:8-15
+	{minerail straight} [minecart] booster¦ off¦s off = powered rail:0-7
+	{minerail straight} [minecart] booster (rail|track)¦ on¦s on = powered rail:8-15
+	{minerail straight} [minecart] booster (rail|track)¦ off¦s off = powered rail:0-7
+	{minerail straight} (active|powered) [minecart] booster¦s = powered rail:8-15
+	{minerail straight} (inactive|unpowered) [minecart] booster¦s = powered rail:0-7
+	{minerail straight} (active|powered) [minecart] booster (rail|track)¦s = powered rail:8-15
+	{minerail straight} (inactive|unpowered) [minecart] booster (rail|track)¦s = powered rail:0-7
+	# Detektorschiene
+	{minerail straight} detector [minecart] (rail|track)¦s = 28
+	{minerail straight} detector [minecart] (rail|track)¦ on¦s on = detector rail:8-15
+	{minerail straight} detector [minecart] (rail|track)¦ off¦s off = detector rail:0-7
+	{minerail straight} active detector [minecart] (rail|track)¦s = detector rail:8-15
+	{minerail straight} inactive detector [minecart] (rail|track)¦s = detector rail:0-7
+	# activator rail
+	{minerail straight} activator [minecart] (rail|track)¦s = 157
+
+
+	# -- klebriger Kolben: siehe Rotstein
+
+
+	# -- Spinnennetz --
+	Spinnennetz¦e @n = 30
+
+
+	# -- Pflanzen --
+	
+	# Setzlinge & Blätter: siehe Holz
+	
+	<any> (hohe|lange)¦s Gras¦ Gräser @n = 31:1-2
+	tote¦s Gras¦ Gräser @n = 31:0
+	(hohe|lange)¦s Gras¦ Gräser @n = 31:1
+	Farn¦e @m = 31:2
+	
+	tote¦r Busch¦ Büsche @m = 32
+	
+	doppelt(-||es | so )(hohe|lange)¦s Gras¦ Gräser @n = 175:2
+	(grosse|hohe)¦r Farn¦ Farne @m = 175:3
+	
+	Löwenzahn @m = 37
+	gelbe Blume¦n @f = 37
+	Rose¦n @f = 38:0
+	rote Rose¦n @f = 38:0
+	rote Blume¦n @f = 38:0
+	Mohn @m = 38:0
+	[blaue] Orchidee¦n @f = 38:1
+	[Stern]Lauch @m = 38:2
+	Porzellansternchen @n = 38:3
+	rote Tulpe¦n @f = 38:4
+	orange Tulpe¦n @f = 38:5
+	weisse Tulpe¦n @f = 38:6
+	(lila|rosa) Tulpe¦n @f = 38:7
+	Margerite¦n @f = 38:8
+	Ochsenauge = 38:8
+	Sonnenauge = 38:8
+	[<any>] kleine Blume¦n = 37, 38:0-8
+	
+	Sonnenblume¦n @f = 175:0
+	Flieder @m = 175:1
+	Rosenb¦usch¦üsche @m = 175:4
+	Pfingstrose¦n @f = 175:5
+	[<any>] grosse Blume¦n = 175:0-1, 175:4-5
+	[<any>] grosse Pflanze¦n = 175:0-5
+	
+	[<any>] Blume¦n = kleine Blume, grosse Blume
+	
+	Pilz¦e @m = 39, 40
+	braune¦r Pilz¦ Pilze @m = 39
+	rote¦r Pilz¦ Pilze @m = 40
+	
+	{huge mushroom type}:
+		{default} = 99, 100
+		braune¦r¦¦ = 99
+		rote¦r¦¦ = 100
+	(grosse|riesige)¦r¦¦ {huge mushroom type} Pilz¦¦e¦ @m = :
+	(grosse|riesige)¦r¦¦ {huge mushroom type} Pilzst¦amm¦ämme¦ @m = :10
+	(grosse|riesige)¦r¦¦ {huge mushroom type} Pilzh¦ut¦üte¦ @m = :1-9 # :0 ist kein echer Block
+	
+	Kürbis¦se @m = 86
+	Kübrislaterne¦n @f = 91
+	leuchtende¦r¦¦ Kürbis¦¦se¦ @m = 91
+	Kürbispflanze¦n @f = 104
+	Kürbisstiel¦e @m = 104
+	Kürbissame¦n @m = 361
+	Kürbiskuchen @m = 400
+	
+	Melone¦n @f = 103
+	Melonen<block> = 103
+	Melonenschnitz¦e @m = 360
+	Melonenpflanze¦n @f = 105
+	Melonenstiel¦e @m = 105
+	Melonensame¦n @m = 362
+	
+	Rebe¦n @f = 106
+	# the amount of vines here refers to the number of vines on the sides of the vine block.
+	# the top vine is always present if there's a solid block above the vines or the data is 0.
+	keine Rebe[n] @- = 106:0
+	einzelne Rebe @f = 106:1, 106:2, 106:4, 106:8
+	doppelte Rebe¦n @f = 106:3, 106:5, 106:9, 106:6, 106:10, 106:12
+	dreifache Rebe¦n @f = 106:7, 106:11, 106:13, 106:14
+	verfache Rebe¦n @f = 106:15
+	
+	Seerose¦n @f = 111
+	Seerosenbl¦att¦ätter @n = 111
+	
+	Netherwarze¦n @f = 115, 372
+	Netherwarzen<block> = 115
+	Netherwarzen<item> = 372
+	reife Netherwarze¦n @f = 115:3
+	
+	Kakao @m = 127
+	cocoa plant¦s = 127
+	(freshly planted|small) cocoa [plant¦s] = 127:0-3
+	medium cocoa [plant¦s] = 127:4-7
+	(ripe|big|large) cocoa [plant¦s] = 127:8-11
+	
+	{flower pot}:
+		leere[r] = :0
+		(Rose[n]|rote Blume) = :1
+		(Löwenzahn|gelbe Blume) = :2
+		Blume[n] = :1-2
+		Eichensetzling = :3
+		(Tannen|Fichten)setzling = :4
+		Birckensetzling = :5
+		Jungelsetzling = :6
+		Setzling = :3-6
+		rote(r|m) Pilz  = :7
+		braune(r|m) Pilz = :8
+		Pilz = :7-8
+		Kaktus = :9
+		tote(r|m) Busch = :10
+		Farn = :11
+	{flower pot}( |-)Blument¦opf¦öpfe @m = 140
+	{flower pot}( |-)Blumentopf<block> = 140
+	Blument¦opf¦öpfe¦ mit [eine(m|r)] {flower pot} @m = 140
+	Blumentopf<item> = 390
+	Blument¦opf¦öpfe = 140, 390
+	
+	Karrottenpflanze¦n @f = 141
+	Karrotten<block> = 141
+	Karotten<item> = 391
+	goldene Karotte¦n @f = 396
+	Karotte¦ am Stock¦n an Stöcken @f = 398
+	
+	Kartoffelpflanze¦n @f = 142
+	Kartoffel<block> = 142
+	Kartoffel¦n = 392
+	Kartoffel<item> = 392
+	(gebackene|gebratene) Kartoffel¦n @f = 393
+	giftige Fartoffel¦n @f = 394
+
+
+	# -- Kolben: siehe Rotstein
+
+
+	# -- Wolle und Färbemittel --
+	Wolle @f = 35
+	<any> Wolle @f = 35:0-15
+	weisse Wolle @f = 35:0
+	orange Wolle @f = 35:1
+	(magenta|rosa) Wolle @f = 35:2
+	hellblaue Wolle @f = 35:3
+	gelbe Wolle @f = 35:4
+	hellgrüne Wolle @f = 35:5
+	(pinke|lila) Wolle @f = 35:6
+	graue Wolle @f = 35:7
+	hellgraue Wolle @f = 35:8
+	cyan Wolle @f = 35:9
+	purpurne Wolle @f = 35:10
+	blaue Wolle @f = 35:11
+	braune Wolle @f = 35:12
+	[dunkel]grüne Wolle @f = 35:13
+	rote Wolle @f = 35:14
+	schwarze Wolle @f = 35:15
+	
+	(carpet|rug)¦s = 171:0-15
+
+	(Färbemittel @n|Farbe¦n @f) = 351
+	<any> (Färbemittel @n|Farbe¦n @f) = 351:0-15
+	weisse(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:15
+	Knochenmehl¦e @n = 351:15
+	orange(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:14
+	(magenta|rosa) (Färbemittel @n|Farbe¦n @f) = 351:13
+	hellblaue(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:12
+	gelbe(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:11
+	Löwenzahngelb = 351:11
+	hellgrüne(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:10
+	pinke(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:9
+	lila (Färbemittel @n|Farbe¦n @f) = 351:9
+	graue(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:8
+	hellgraue(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:7
+	cyan (Färbemittel @n|Farbe¦n @f) = 351:6
+	purpur (Färbemittel @n|Farbe¦n @f) = 351:5
+	blaue(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:4
+	Lapis[lazuli¦s] @m = 351:4
+	Kakaobohne¦n @f = 351:3
+	braune(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:3
+	[dunkel]grüne(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:2
+	Kaaktusgrün = 351:2
+	rote(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:1
+	Rosenrot = 351:1
+	schwarze(¦s¦¦ Färbemittel @n| Farbe¦n @f) = 351:0
+	Tintens¦ack¦äcke @m = 351:0
+	
+
+	# -- Block 36 --
+	Block 36 @m = 36
+	bewegte¦r¦¦ <block> = 36
+
+
+	# -- Blumen & Pilze: siehe Vegetation
+
+
+	# -- Eisen- & Goldblock: siehe Erze
+
+
+	# -- Stufen --
+	{any slab}:
+		{default} = 44, 126
+		single = 44, 126
+		double = 43, 125
+	{stone slab}:
+		{default} = 44
+		single = 44
+		double = 43
+	{wooden slab}:
+		{default} = 126
+		single = 126
+		double = 125
+	
+	{slab facing}:
+		{default} = :0-7
+		regular = :0-7
+		default = :0-7
+		upside-down = :8-15
+		any = :0-15
+	{slab facing no default}:
+		regular = :0-7
+		default = :0-7
+		upside-down = :8-15
+		any = :0-15
+	
+	{wooden slab type}:
+		{default} = :0-5, :8-13
+		<any> = :0-5, :8-13
+		(oak|regular|normal) = :0, :8
+		(spruce|fir|redwood|pine) = :1, :9
+		birch = :2, :10
+		jungle = :3, :11
+		acacia = :4, :12
+		dark oak = :5, :13
+	{stone slab type}:
+		{default} = :0-1, :3-5, :8-9, :11-13
+		any = :0-1, :3-5, :8-9, :11-13
+		stone = :0, :8
+		sandstone = :1, :9
+		cobble[stone] = :3, :11
+		brick = :4, :12
+		stone brick[s]) = :5, :13
+	{stone slab type no default}:
+		any = :0-1, :3-5, :8-9, :11-13
+		stone = :0, :8
+		sandstone = :1, :9
+		cobble[stone] = :3, :11
+		brick = :4, :12
+		stone brick[s]) = :5, :13
+	
+	{slab facing no default} {stone slab} {stone slab type no default} (step|slab)¦s = :
+	{slab facing} {stone slab} {stone slab type} (step|slab) (block|item)¦s = :
+	{slab facing no default} {wooden slab} {wooden slab type} [wood[en]] (step|slab)¦s = :
+	{slab facing} {wooden slab} {wooden slab type} (step|slab) (block|item)¦s = :
+	{slab facing no default} {any slab} (step|slab)¦s = :
+	{slab facing} {any slab} (step|slab) (block|item)¦s = :
+
+
+	# -- bricks --
+	[clay] bricks = 45
+	[clay] brick[s] <block> = 45
+	[clay] brick[s] <item> = 336
+
+	[stained] [hard[ened]] clay = 159
+	
+	clay = 82, 337
+	clay <block> = 82
+	clay <item> = 337
+	clay ball¦s = 337
+	
+	hard[ened] clay = 172
+
+
+	# -- TNT --
+	TNT¦s @n = 46
+	Dynamit @m = 46
+
+
+	# -- bookshelf --
+	bookshel¦f¦ves = 47
+
+
+	# -- mossy cobblestone: see cobblestone
+
+
+	# -- obsidian --
+	Obsidian @m = 49
+
+
+	# -- torch --
+	{torch}: #also used for redstone torches
+		Boden = :5
+		Wand = :1-4
+	{torch}Fackel¦n @f = 50
+
+
+	# -- fire --
+	Feuer @n = 51
+	(eternal|infinite) fire¦s = 51:15 #never tested this myself
+	finite fire¦s = 51:0-14
+	(new|fresh) fire¦s = 51:0
+
+
+	# -- monster spawner --
+	Monsterspawner @m = 52
+	mob spawner¦s = 52
+
+
+	# -- stairs --
+	{stairs}:
+		{default} = 53, 134, 135, 136, 67, 108, 109, 114, 128, 156
+		(eichen|regular|normal) [wood] = 53
+		(spruce|fir|redwood|pine) [wood] = 134
+		birch [wood] = 135
+		jungle [wood] = 136
+		[any] wood[en] = 53, 134, 135, 136
+		cobble[stone] = 67
+		[clay] brick[s] = 108
+		stone brick[s] = 109
+		nether [brick[s]] = 114
+		sand[ ]stone = 128
+		[nether] quarz = 156
+		acacia [wood] = 163
+		dark oak [wood] = 164
+	{stairs direction}:
+		{default} = :0-3
+		any = :0-7
+		upside-down = :4-7
+	{stairs direction no default}:
+		any = :0-7
+		upside-down = :4-7
+
+	{stairs direction no default} {stairs} stair[s] = :
+	{stairs direction} {stairs} stair[s] (block|item)¦s = :
+
+
+	# -- chest --
+	Truhe¦n @f = 54
+	Endertruhe¦n @f = 130
+	Redstonetruhe¦n = 146
+	Rotsteintruhe¦n = 146
+
+
+	# -- redstone wire: see redstone
+
+
+	# -- diamond ore & block: see ores & blocks
+
+
+	# -- crafting table --
+	Werkb¦ank¦änke @f = 58
+	crafting table¦s = 58
+
+
+	# -- crops / wheat --
+	crops = 59
+	wheat block¦s = 59
+	wheat item¦s = 296
+	wheat = 59, 296
+	[wheat] seeds = 295
+	freshly planted (crops|wheat) = 59:0
+	ripe (crops|wheat) = 59:7
+
+
+	# -- farmland/soil --
+	(farmland|soil) = 60
+	dry (farmland|soil) = 60:0
+	wet (farmland|soil) = 60:1-8
+
+
+	# -- furnace --
+	furnace¦s = 61, 62
+	(burning|lighted|lit) furnace¦s = 62
+	furnace¦ on¦s on = 62
+	(non-burning|unlighted|unlit|extinguished) furnace¦s = 61
+	furnace¦ off¦s off = 61
+
+
+	# -- signs --
+	sign post¦s = 63
+	wall sign¦s = 68
+	sign block¦s = 63, 68
+	sign item¦s = 323
+	sign¦s = 63, 68, 323
+
+
+	# -- doors, trapdoors and fence gates --
+	# I currently discourage from creating aliases like 'open door' or doors with specific facings
+	# as any 'block is <alias>' condition will fail if you click the wrong part of the door.
+	# 'set <block> to door:1' will correctly place an open door though.
+	{doortype}:
+		{default} = 64, 71
+		wood[en] = 64
+		iron = 71
+	{doorhalf}:
+		top¦s = :8-9
+		bottom¦s = :0-7
+	{doortype} door [block] {doorhalf} = :
+	{doortype} door block¦s = :
+	wood[en] door item¦s = 324
+	wood[en] door¦s = 324, 64
+	iron door item¦s = 330
+	iron door¦s = 330, 71
+	door item¦s = 330, 324
+	door¦s = 330, 71, 324, 64
+
+	trapdoor¦s = 96
+	open[ed] trapdoor¦s = 96:4-7
+	closed trapdoor¦s = 96:0-3
+
+	fence gate¦s = 107
+	open[ed] fence gate¦s = 107:4-7
+	closed fence gate¦s = 107:0-3
+
+
+	# -- ladder --
+	ladder¦s = 65
+
+
+	# -- rails: see minecart rails
+
+
+	# -- coblestone stairs: see stairs
+
+
+	# -- redstone --
+	[redstone] wire¦s = 55
+	[redstone] wire¦ on¦s on = 55:1-15
+	[redstone] wire¦ off¦s off = 55:0
+	powered [redstone] wire¦s = redstone wire on
+	unpowered [redstone] wire¦s = redstone wire off
+	active [redstone] wire¦s = redstone wire on
+	inactive [redstone] wire¦s = redstone wire off
+
+	Rotsteinerz¦e = 73, 74
+	(active|glowing) redstone ore¦s = 74
+	(inactive|non-glowing) redstone ore¦s = 73
+	redstone ore¦ on¦s on = 74
+	redstone ore¦ off¦s off = 73
+
+	# variation {torch}: see torch
+	{torch} redstone torch¦es = 75, 76
+	{torch} redstone torch¦ on¦es on = 76
+	active {torch} redstone torch¦es = 76
+	{torch} redstone torch¦ off¦es off = 75
+	inactive {torch} redstone torch¦es = 75
+
+	{diodedelay}:
+		1-tick[-delay] = :0-3
+		2-tick[-delay] = :4-7
+		3-tick[-delay] = :8-11
+		4-tick[-delay] = :12-15
+	{diodedelay} [redstone] (repeater|diode)[ block]¦s = 93, 94
+	[redstone] (repeater|diode) item¦s = 356
+	[redstone] (repeater|diode)¦s = 356, 93, 94
+	{diodedelay} [redstone] (repeater|diode)[ block]¦ on¦s on = 94
+	{diodedelay} [redstone] (repeater|diode)[ block]¦ off¦s off = 93
+	(active|powered) {diodedelay} [redstone] (repeater|diode)[ block]¦s = 94
+	(inactive|unpowered) {diodedelay} [redstone] (repeater|diode)[ block]¦s = 93
+
+	{lever position}:
+		wall = :1-4, :9-12
+		ground = :5-6, :13-14
+		floor = :5-6, :13-14
+	{lever position} lever¦s = 69
+	{lever position} lever¦ on¦s on = 69:8-15
+	(pulled|thrown|active) {lever position} lever¦s = 69:8-15
+	{lever position} lever¦ off¦s off = 69:0-7
+	(unpulled|unthrown|inactive) {lever position} lever¦s = 69:0-7
+
+	{button}:
+		{default} = 77, 143
+		stone = 77
+		wood[en] = 143
+	{button} button¦s = :
+	{button} button¦ on¦s on = :8-15
+	pressed {button} button¦s = :8-15
+	active {button} button¦s = :8-15
+	{button} button¦ off¦s off = :0-7
+	unpressed {button} button¦s = :0-7
+	inactive {button} button¦s = :0-7
+
+	{pressure plate}:
+		{default} = 70, 72, 147, 148
+		wood[en] = 72
+		stone = 70
+		gold[en] = 147
+		iron = 148
+	{pressure plate} [pressure] plate¦s = :
+	(pressed|active) {pressure plate} [pressure] plate¦s = :1
+	(unpressed|inactive) {pressure plate} [pressure] plate¦s = :0
+	{weighted pressure plate}:
+		{default} = 147, 148
+		gold[en] = 147
+		light = 147
+		iron = 148
+		heavy = 148
+	{weighted pressure plate} weighted [pressure] plate¦s = :
+	(pressed|active) {weighted pressure plate} weighted [pressure] plate¦s = :1
+	(unpressed|inactive) {weighted pressure plate} weighted [pressure] plate¦s = :0
+
+	piston base¦s = 33
+	sticky piston base¦s = 29
+	any piston base¦s = 33, 29
+	#
+	piston extension¦s = 34:0-5
+	sticky piston extension¦s = 34:8-13
+	any piston extension¦s = 34
+	#
+	piston¦s = piston base, piston extension
+	piston (item|block)¦s = piston base
+	sticky piston¦s = sticky piston base, sticky piston extension
+	sticky piston (item|block)¦s = sticky piston base
+	any piston¦s = 29, 33, 34
+	#
+	extended piston base¦s = 33:8-13
+	extended sticky piston base¦s = 29:8-13
+	any extended piston base¦s = extended piston base, extended sticky piston base
+	#
+	extended piston¦s = extended piston base, piston extension
+	extended sticky piston¦s = extended sticky piston base, sticky piston extension
+	any extended piston¦s = any extended piston base, any piston extension
+	#
+	retracted piston¦s = 33:0-5
+	retracted sticky piston¦s = 29:0-5
+	any retracted piston¦s = retracted piston, retracted sticky piston
+
+	redstone lamp¦s = 123, 124
+	(inactive|unpowered|unlit) restone lamp¦s = 123
+	restone lamp¦ off¦s off = 123
+	(active|glowing|powered|lit) redstone lamp¦s = 124
+	redstone lamp¦ on¦s on = 124
+	
+	redstone comparator¦s = 149, 150
+	redstone comparator block¦s = 149
+	redstone comparator item¦s = 404
+	(inactive|unpowered) redstone comparator¦s = 149
+	(active|powered) redstone comparator¦s = 150
+	
+	daylight sensor¦s = 151
+	
+	redstone block¦s = 152
+	block¦¦s¦ of redstone = 152
+	
+	hopper¦s = 154
+	
+	dropper¦s = 158
+
+
+	# -- snow & ice --
+	snow layer¦s = 78
+	ice @- = 79
+	ice <block> = 79
+	snow = 80
+	snow <block> = 80
+	packed ice = 174
+	packed ice <block> = 174
+
+
+	# -- cactus --
+	cact¦us¦i = 81
+	cactuses = 81
+
+
+	# -- clay block: see bricks
+
+
+	# -- sugar cane --
+	[sugar] cane¦s = 83, 338
+	[sugar] cane block¦s = 83
+	[sugar] cane item¦s = 338
+
+
+	# -- jukebox --
+	jukebox¦es = 84
+
+
+	# -- fence --
+	Z¦aun¦äune @m = 85
+
+
+	# -- pumpkin & lack-o-lantern: see vegetation
+
+
+	# -- nether stuff --
+	netherrack¦s = 87
+	soul[ ]sand¦s = 88
+	glowstone¦s = 89
+	[nether] portal¦s = 90
+
+
+	# -- cake --
+	cake¦s = 92, 354
+	cake block¦s = 92
+	cake item¦s = 354
+
+
+	# -- redstone repeater: see redstone
+
+
+	# -- locked chest --
+	locked chest¦s = 95
+
+
+	# -- trapdoor: see doors
+
+
+	# -- hidden silverfish --
+	silverfish block¦s = 97:0-2
+	hidden silverfish¦es = 97:0-2
+	[hidden] [smooth] stone silverfish¦es = 97:0
+	[hidden] cobble[stone] silverfish¦es = 97:1
+	[hidden] stone brick[s] silverfish¦es = 97:2
+
+
+	# -- stone bricks --
+	stone brick¦s = 98:0-3
+	any stone brick¦s = 98:0-3
+	stone brick[s] (item|block)¦s = 98:0
+	smooth [stone] brick¦s = 98:0
+	mossy [stone] brick¦s = 98:1
+	cracked [stone] brick¦s = 98:2
+	(circle|fancy|decorated) [stone] brick¦s = 98:3
+
+
+	# -- huge mushrooms: see vegetation
+
+
+	# -- iron bars --
+	[iron] bars = 101
+
+
+	# -- glass pane: see glass
+
+
+	# -- melon, stems & vines: see vegetation
+
+
+	# -- fence gate: see doors
+
+
+	# -- brick & stone brick stairs: see stairs
+
+
+	# -- mycelium --
+	mycelium = 110
+	mushroom (floor|ground|grass) = 110
+
+
+	# -- lily pad: see vegetation
+
+
+	# -- nether brick stuff --
+	nether brick¦s = 112, 405
+	nether brick block¦s = 112
+	nether brick item¦s = 405
+	nether [brick[s]] fence¦s = 113
+	# nether brick stairs: see stairs
+
+
+	# -- nether wart: see vegetation
+
+
+	# -- enchantment table --
+	enchantment table¦s = 116
+
+
+	# -- brewing stand --
+	brewing stand¦s = 117, 379
+	brewing stand block¦s = 117
+	brewing stand item¦s = 379
+	empty brewing stand¦s = 117:0
+	full brewing stand¦s = 117:7
+
+
+	# -- cauldron --
+	cauldron¦s = 118, 380
+	cauldron block¦s = 118
+	cauldron item¦s = 380
+	empty cauldron¦s = 118:0
+	full cauldron¦s = 118:3
+
+
+	# -- End stuff --
+	end[er] portal¦s = 119
+
+	end[er] portal frame¦s = 120
+	empty end[er] portal frame¦s = 120:0-3
+	filled end[er] portal frame¦s = 120:4-7
+	end[er] stone¦s = 121
+
+	[ender[ ]]dragon egg¦s = 122
+
+
+	# -- redstone lamp: see redstone
+
+
+	# -- emerald ore/block: see ores
+
+
+	# -- ender chest: see chest
+
+
+	# -- tripwire & hook
+	tripwire¦s = 132
+	[tripwire] hook¦s = 131
+
+
+	# -- wooden stairs: see stairs
+
+	
+	# -- command block --
+	command block¦s = 137
+	
+	
+	# -- beacon --
+	beacon¦s = 138
+	
+	
+	# -- cobblestone walls --
+	cobble[stone] wall¦s = 139:0-1
+	cobble[stone] wall (item|block)¦s = 139:0
+	(normal|regular) cobble[stone] wall¦s = 139:0
+	moss[y] cobble[stone] wall¦s = 139:1
+
+	
+	# -- flower pot, carrots, potatoes: see vegetation --
+	
+	
+	# -- wooden button: see redstone --
+	
+	
+	# -- mob head --
+	{mob head direction}:
+		floor = :1
+		wall = :2-5
+	{mob head type}:
+		skeleton = :0
+		wither skeleton = :1
+		zombie = :2
+		(human|player) = :3
+		creeper = :4
+	{mob head type} [mob] head[ item]¦s = 397
+	{mob head direction} [mob] head[ block]¦s = 144
+	[mob] head¦s = 144, 397
+	
+	
+	# -- anvil --
+	{anvil}:
+		(regular|complete|undamaged) = :0-1
+		[slightly] damaged = :4-5
+		(very|heavily|severely) damaged = :8-9
+	{anvil} anvil¦s = 145
+	
+	
+	# -- trapped chest: see chest
+	
+	
+	# -- weighted pressure plates, redstone comparator, daylight sensor, redstone block: see redstone
+	
+	
+	# -- nether quarz ore, quarz block -- 
+	[nether] quartz ore = 153
+	{quartz block}:
+		(normal|regular) = :0
+		chiseled = :1
+		pillar = :2-3
+		vertical pillar = :2
+		horizontal pillar = :3-4
+		ns pillas = :3
+		ew pillar = :4
+	{quartz block} [nether] quartz = 155
+	{quartz block} [nether] quartz block¦s = 155
+	pillar [nether] quartz (block|item) = 155:2
+	[nether] quartz = 155, 406
+	[nether] quartz item¦s = 406
+	# quarz stairs: see stairs
+	
+	
+	# -- hopper: see redstone
+	
+	
+	# -- activator rail: see rails
+	
+	
+	# -- dropper: see redstone
+
+	
+	# -- stained clay: see clay
+	
+	
+	# -- stained glass: see glass
+	
+	
+	# -- hay block --
+	(hay|wheat) block¦s = 170
+	block¦¦s¦ of (hay|wheat) = 170
+	
+	
+	# -- carpet: see wool
+	
+	
+	# -- hardened clay: see clay
+	
+	
+	# -- block of coal: see coal
+
+
+	# -- packed ice: see ice
+	
+	
+	# -- large flower: see vegetation
+
+
+
+
+
+
+
+	# ====== Items ======
+
+	# -- flint and steel --
+	Feuerzeug¦e @n = 259
+
+
+	# -- apples --
+	<any> ¦A¦Ä¦pfel @m = 260, 322:0-1
+	¦A¦Ä¦pfel @m = 260
+	rote¦r A¦ Ä¦pfel @m = 260
+	goldene¦r A¦ Ä¦pfel @m = 322:0-1
+	goldene¦r A¦ Ä¦pfel <item> = 322:0
+	verzauberte¦r¦¦ goldene¦r A¦ Ä¦pfel @m = 322:1
+
+
+	# -- bow & arrow --
+	B¦o¦ö¦gen @m = 261
+	Pfeil¦e @m = 262
+
+
+	# -- coal --
+	<any> Kohle @f = 263:0-1
+	Holzkohle @f = 263:1
+	Kohle @f = 263:0, 173
+	Kohle <item> = 263:0
+	Kohle <block> = 173
+	Kohlenblock @m = 173
+
+
+	# -- diamond & ingots --
+	Diamant¦en @m = 264
+	Eisenbarren @m = 265
+	Goldbarren @m = 266
+	Barren @m = 265, 266
+
+
+	# -- tools --
+	sword¦s = 267, 268, 272, 276, 283
+	pick[axe]¦s = 270, 274, 257, 278, 285
+	axe¦s = 271, 275, 258, 279, 286
+	shovel¦s = 269, 273, 256, 277, 284
+	spade¦s = shovel
+	hoe¦s = 290, 291, 292, 293, 294
+
+	wood[en] tool¦s = 268, 269, 270, 271, 290
+	stone tool¦s = 272, 273, 274, 275, 291
+	iron tool¦s = 256, 257, 258, 267, 292
+	diamond tool¦s = 276, 277, 278, 279, 293
+	gold[en] tool¦s = 283, 284, 285, 286, 294
+
+	wood[en] sword¦s = 268
+	wood[en] (shovel|spade)¦s = 269
+	wood[en] pick[axe]¦s = 270
+	wood[en] axe¦s = 271
+	wood[en] hoe¦s = 290
+
+	stone sword¦s = 272
+	stone (shovel|spade)¦s = 273
+	stone pick[axe]¦s = 274
+	stone axe¦s = 275
+	stone hoe¦s = 291
+
+	iron sword¦s = 267
+	iron (shovel|spade)¦s = 256
+	iron pick[axe]¦s = 257
+	iron axe¦s = 258
+	iron hoe¦s = 292
+
+	diamond sword¦s = 276
+	diamond (shovel|spade)¦s = 277
+	diamond pick[axe]¦s = 278
+	diamond axe¦s = 279
+	diamond hoe¦s = 293
+
+	gold[en] sword¦s = 283
+	gold[en] (shovel|spade)¦s = 284
+	gold[en] pick[axe]¦s = 285
+	gold[en] axe¦s = 286
+	gold[en] hoe¦s = 294
+
+
+	# -- stick --
+	St¦ock¦öcke @m = 280
+
+
+	# -- bowl & stew --
+	Schüssel¦n @f = 281
+	leere Schüssel¦n @f = 281
+	[Pilz]Suppe¦n @f = 282
+
+
+	# -- string --
+	F¦a¦ä¦den @m = 287
+
+
+	# -- feather --
+	Feder¦n @f = 288
+
+
+	# -- gunpowder --
+	Schwarzpulver @n = 289
+
+
+	# -- wheat & seeds: see crops / wheat
+	Brot¦e @n = 297
+
+
+	# -- armour --
+	helmet¦s = 298, 302, 306, 310, 314
+	chestplate¦s = 299, 303, 307, 311, 315
+	leg[ging]s = 300, 304, 308, 312, 316
+	boots = 301, 305, 309, 313, 317
+
+	leather armo[u]r¦s = 298, 299, 300, 301
+	chain[mail] armo[u]r¦s = 302, 303, 304, 305
+	iron armo[u]r¦s = 306, 307, 308, 309
+	diamond armo[u]r¦s = 310, 311, 312, 313
+	gold armo[u]r¦s = 314, 315, 316, 317
+
+	leather (cap|helmet)¦s = 298
+	leather (tunic|chest[plate])¦s = 299
+	leather (pants|leg[ging]s) = 300
+	leather boots = 301
+
+	chain[mail] helmet¦s = 302
+	chain[mail] chestplate¦s = 303
+	chain[mail] leggings = 304
+	chain[mail] boots = 305
+
+	iron helmet¦s = 306
+	iron chest[plate]¦s = 307
+	iron leg[ging]s = 308
+	iron boots = 309
+
+	diamond helmet¦s = 310
+	diamond chest[plate]¦s = 311
+	diamond leg[ging]s = 312
+	diamond boots = 313
+
+	gold[en] helmet¦s = 314
+	gold[en] chest[plate]¦s = 315
+	gold[en] leg[ging]s = 316
+	gold[en] boots = 317
+
+
+	# -- flint --
+	Feuerstein¦e @m = 318
+
+
+	# -- porkchop --
+	[<any>] Schweinefleisch @n = 319, 320
+	Schweinefleisch <item> = 319
+	rohes Schweinefleisch @n = 319
+	(gekochtes|gebratenes) Schweinefleisch @n = 320
+
+
+	# -- painting --
+	Bild¦er @n = 321
+	Gemälde @n = 321
+
+
+	# -- golden apple: see apples
+
+
+	# sign: see signs
+
+
+	# wooden door: see doors
+
+
+	# -- buckets --
+	Eimer @m = 325
+	leere[r] Eimer @m = 325
+	Wassereimer @m = 326
+	Lavaeimer @m = 327
+	Milch @f = 335
+	Milcheimer @m = 335
+
+
+	# -- minecarts --
+	[<any>] Lore¦n @f = 328, 342, 343
+	minecart item¦s = 328
+	storage minecart¦s = 342
+	minecart¦¦s¦ with chest = 342
+	powered minecart¦s = 343
+	minecart¦¦s¦ with furnace = 343
+	minecart¦¦s¦ with TNT = 407
+	TNT minecart¦¦s¦ = 407
+	explosive minecart¦¦s¦ = 407
+	minecart¦¦s¦ with hopper = 408
+	hopper minecart¦¦s¦ = 408
+	minecart¦¦s¦ with command block = 422
+	command block minecart¦¦s¦ = 422
+
+
+	# -- saddle --
+	S¦a¦ä¦ttel @m = 329
+
+
+	# -- iron door: see doors
+
+
+	# -- redstone dust --
+	Rotstein @m = 331
+	Rotsteinstaub @m = 331
+	Redstone @m = 331
+
+
+	# -- snowball --
+	Schneeb¦all¦älle @m = 332
+
+
+	# -- boat --
+	Boot¦e @n = 333
+
+
+	# -- leather --
+	Leder @n = 334
+
+
+	# -- milk: see buckets
+
+
+	# -- clay & clay brick: see bricks
+
+
+	# -- sugar cane: see sugar cane block
+
+
+	# -- paper & books --
+	paper = 339
+	book¦s = 340
+	book¦¦s¦ (and|with) quill = 386
+	written book¦s = 387
+
+
+	# -- slimeball --
+	slime[ball¦s] = 341
+
+
+	# minecart with chest/furnace: see minecarts
+
+
+	# -- [chicken] egg --
+	Ei¦er @n = 344
+	Hühnerei¦er @n = 344
+
+
+	# -- compass --
+	Kompass¦e @m = 345
+
+
+	# -- fishing rod --
+	Angel¦n @f = 346
+	Fischerrute @f = 346
+
+
+	# -- clock --
+	Uhr¦rn @f = 347
+
+
+	# -- glowstone dust --
+	Glühsteinstaub @m = 348
+
+
+	# -- fish --
+	{Fisch}:
+		{default} = #-#
+		Fisch¦e @m = :0
+		Lachs¦e @m = :1
+		Clownfisch¦e @m = :2
+		Kugelfisch¦e @m = :3
+	[<any>] {Fisch} = 349, 350
+	{Fisch} <item> = 349
+	rohe¦r¦¦ {Fisch} = 349
+	(gekochte|gebratene)¦r¦¦ {Fisch} = 350
+
+
+	# -- dyes: see wool & dyes
+
+
+	# -- bone --
+	Knochen @m = 352
+
+
+	# -- sugar --
+	Zucker @m = 353
+
+
+	# -- cake: see cake block
+
+
+	# -- bed: see bed block
+
+
+	# -- redstone repeater: see redstone
+
+
+	# -- cookie --
+	Keks¦e @m = 357
+
+
+	# -- map --
+	Karte¦n @f = 358
+	<any> Karte¦n @f = 358:0-32767
+	leere Karte¦n @f = 395
+	# You can get a specific map with map:#, e.g. map:0 for map_0 (the first map crafted)
+	# (The maximum map number is 65536, but Skript currently only supports numbers up to 32767)
+
+
+	# -- shears --
+	Schere¦n @f = 359
+
+
+	# -- melon slice, pumpkin seeds & melon seeds: see vegetation
+
+
+	# -- beef --
+	[<any>] Rindfleisch = 363, 364
+	Rindfleisch <item> = 363, 364
+	[rohes] Rindfleisch = 363
+	Steak¦s = 364
+	(gekochtes|gebratenes) Rindfleisch = 364
+
+
+	# -- chicken --
+	[<any>] (Huhn|Hühnchen) @- = 365, 366
+	(Huhn|Hühnchen) <item> = 365
+	rohes (Huhn|Hühnchen) @- = 365
+	(gekochte|gebratene)¦s¦¦ (Huhn|Hühnchen) @- = 366
+
+
+	# -- rotten flesh --
+	verrottetes Fleisch @n = 367
+
+
+	# -- ender pearl --
+	Enderperle¦n @f = 368
+
+
+	# -- blaze rod --
+	Lohenst¦ab¦äbe @m = 369
+
+
+	# -- ghast tear --
+	Ghastträne¦n @f = 370
+
+
+	# -- gold nugget --
+	[Gold]Nugget¦s @n = 371
+
+
+	# -- nether wart: see vegetation
+
+
+	# -- potions & bottles --
+	[glass] bottle¦s = 374
+	vial¦s = 374
+	water bottle¦s = 373:0
+	bottle¦¦s¦ of water = 373:0
+	
+	awkward potion¦s = 373:16
+
+	{splash potion}:
+		{default} =                   :0-16383
+		non-splash =                  :0-16383
+		splash =                      :16384-32767
+	{splash potion no default}:
+		non-splash =                  :0-16383
+		splash =                      :16384-32767
+	
+	{extended potion}:
+		{default} =                   :0-63,   :16384-16447
+		(un|non-)extended =           :0-63,   :16384-16447
+		extended =                    :64-127, :16448-16511
+	{extended potion no default}:
+		(un|non-)extended =           :0-63,   :16384-16447
+		extended =                    :64-127, :16448-16511
+	
+	{potion tier}:
+		{default} =                   :0-31,  :64-95,  :16384-16415, :16448-16479
+		(1|I) =                       :0-31,  :64-95,  :16384-16415, :16448-16479
+		(2|II) =                      :32-63, :96-127, :16416-16447, :16480-16511
+	{potion tier no default}:
+		(1|I) =                       :0-31,  :64-95,  :16384-16415, :16448-16479
+		(2|II) =                      :32-63, :96-127, :16416-16447, :16480-16511
+	
+	{potion effect}:
+		Regeneration =                :1,  :33, :65, :97,  :16385, :16417, :16449, :16481
+		(Swiftness|Speed) =	          :2,  :34, :66, :98,  :16386, :16418, :16450, :16482
+		Fire Resistance =             :3,  :35, :67, :99,  :16387, :16419, :16451, :16483
+		Poison =                      :4,  :36, :68, :100, :16388, :16420, :16452, :16484
+		(Healing|[Instant] Health) =  :5,  :53, :69, :101, :16389, :16421, :16453, :16485
+		Night Vision =                :6,  :38, :70, :102, :16390, :16422, :16454, :16486
+		Weakness =                    :8,  :40, :72, :104, :16392, :16424, :16456, :16488
+		Strength =                    :9,  :41, :73, :105, :16393, :16425, :16457, :16489
+		Slowness =                    :10, :42, :74, :106, :16394, :16426, :16458, :16490
+		(Harming|[Instant] Damage) =  :12, :44, :76, :108, :16396, :16428, :16460, :16492
+		Invisibility =                :14, :46, :78, :110, :16398, :16430, :16462, :16494
+
+	{extended potion no default} {splash potion no default} potion¦¦s¦ [of {potion effect} {potion tier no default}] = 373
+	{extended potion} {splash potion} potion¦¦s¦ [of {potion effect} {potion tier}] item = 373
+	{extended potion no default} {splash potion no default} {potion effect} potion¦¦s¦ {potion tier no default} = 373
+	{extended potion} {splash potion} {potion effect} potion {potion tier} item¦s = 373
+
+
+	# -- spider eye & fermented spider eye --
+	Spinnenauge¦n @n = 375
+	fermented spider eye¦s = 376
+
+
+	# -- blaze powder --
+	Lohenpulver @m = 377
+
+
+	# -- magma cream --
+	magma cream¦s = 378
+
+
+	# -- eye of ender --
+	eye¦¦s¦ of ender = 381
+
+
+	# -- glistering melon --
+	glistering melon¦s = 382
+
+
+	# -- spawn egg --
+	{entity type}:
+		experience orb = :2
+		xp orb = :2
+		TNT = :20
+		minecart = :40
+		boat = :41
+		creeper = :50
+		skeleton = :51
+		spider = :52
+		giant = :53
+		zombie = :54
+		slime = :55
+		ghast = :56
+		zombie pigman = :57
+		pig[ ]zombie = :57
+		enderman = :58
+		cave spider = :59
+		silverfish = :60
+		blaze = :61
+		magma cube = :62
+		ender dragon = :63
+		wither = :64
+		witch = :66
+		bat = :65
+		pig = :90
+		sheep = :91
+		cow = :92
+		chicken = :93
+		squid = :94
+		wolf = :95
+		mooshroom = :96
+		snow golem = :97
+		ocelot = :98
+		iron golem = :99
+		villager = :120
+		ender crystal = :200
+
+	{entity type} spawn egg¦s = 383
+	random spawn egg¦s = 383:50-62, 383:65-66, 383:90-99 # only mobs & animals (excluding the enderdragon & wither)
+
+
+	# -- bottle o' enchanting --
+	bottle¦¦s¦ (o'|of) enchanting = 384
+	(xp|exp[erience]) bottle¦s = 384
+
+
+	# -- fire charge --
+	fire charge¦s = 385
+
+
+	# -- book and quill, written book: see book
+
+
+	# -- emerald --
+	Smaragd¦e @m = 388
+
+
+	# -- item frame --
+	item frame¦s = 389
+
+
+	# -- flower pot: see vegetation --
+
+
+	# -- carrot, potatoes: see vegetation --
+
+
+	# -- empty map: see map --
+	
+	
+	# -- golden carrot: see vegetation --
+
+
+	# -- mob head: see mob head block --
+
+
+	# -- carrot on a stick: see vegetation --
+
+
+	# -- nether star --
+	Netherstern¦e @m = 399
+
+
+	# -- pumpkin pie: see vegetation --
+
+
+	# -- Fireworks --
+	Feuerwerksrakete¦n @f = 401
+	Feuerwerksstern¦e @m = 402
+
+
+	# -- Enchanted Book --
+	verzauberte¦s¦¦ B¦uch¦ücher @n = 403
+
+	
+	# -- redstone comparator: see redstone
+	
+	
+	# -- nether brick item: see nether brick stuff
+	
+	
+	# -- nether quarz: see nether quarz block
+	
+	
+	# -- minecart with TNT/hopper: see minecarts
+	
+	
+	# -- horse armour --
+	iron horse armo[u]r¦s = 417
+	gold horse armo[u]r¦s = 418
+	diamond horse armo[u]r¦s = 419
+	
+	
+	# -- lead --
+	lead¦s = 420
+	
+	
+	# -- name tag --
+	name tag¦s = 421
+	
+	
+	# -- minecart with command block: see minecarts
+	
+
+	# -- music discs --
+	music disc¦s = 2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263, 2264, 2265, 2266, 2267
+	record¦s = music disc
+	gold [music] disc¦s = 2256
+	13-disc¦s = 2256
+	green [music] disc¦s = 2257
+	cat [music] disc¦s = 2257
+	blocks [music] disc¦s = 2258
+	chirp [music] disc¦s = 2259
+	far [music] disc¦s = 2260
+	mall [music] disc¦s = 2261
+	mellohi [music] disc¦s = 2262
+	stal [music] disc¦s = 2263
+	strad [music] disc¦s = 2264
+	ward [music] disc¦s = 2265
+	11-disc¦s = 2266
+	wait [music] disc¦s = 2267
+	
+	
+	# -- FIX for 1.8.x --
+	
+	Schleimbl¦ock¦öcke @m = 165
+	Barriere¦n @f = 166
+	Eisenfalltür¦en @f = 167
+	Prismarinbl¦ock¦öcke @m = 168
+	Seelaterne¦n @f = 169
+	
+	Standbanner @n = 176
+	Wandbanner @n = 177
+	
+	invertierter Tageslichsensor¦en @m = 178
+	# Dämmerungssensor vielleicht???
+	
+	Rotsandstein¦e @m = 179
+	Rotandsteintreppe¦n @f = 180
+	Rotsandsteindoppelstufe¦n @f = 181
+	Rotsandsteinstufe¦n @f = 182
+	
+	Fichtenholzzauntor¦e @n = 183
+	Birkenholzzauntor¦e @n = 184
+	Tropenholzzauntor¦e @n = 185
+	Schwarzeichenholzzauntor¦e @n = 186
+	Akazienholzzauntor¦e @n = 187
+	Fichtenholzz¦aun¦äune @m = 188
+	Birkenholzz¦aun¦äune @m  = 189
+	Tropenholzz¦aun¦äune @m  = 190
+	Schwarzeichenholzz¦aun¦äune @m  = 191
+	Akazienholzz¦aun¦äune @m  = 192
+	Fichtenholztür¦en @f = 193
+	Birkenholztür¦en @f = 194
+	Tropenholztür¦en @f = 195
+	Akazienholztür¦en @f = 196
+	Schwarzeichenholztür¦en @f = 197
+	
+	# -- items -- 
+	Fichtenholztür¦en @f = 427
+	Birkenholztür¦en @f = 428
+	Tropenholztür¦e @f = 429
+	Akazienholztür¦en @f = 430
+	Schwarzeichenholztür¦en @f = 431
+	
+	Prismarinscherbe¦n @f = 409
+	Prismarinkristal¦e @m = 410
+	
+	Rohes Kaninchen @n = 411:0
+	Gebratenes Kaninchen @n = 412:0
+	Kaninchenragout @n = 413:0
+	Kaninchenpfote¦n @f = 414:0
+	Kaninchenfell¦e @n = 415:0
+	Rüstungsständer @m = 416:0
+	
+	Rohes Hammelfleisch @n = 423:0
+	Gebratenes Hammelfleisch @n = 424:0
+	
+	
+	Banner @n = 425
+	<any> Banner @n = 425:0-15
+	schwarzes Banner @n = 425:0
+	rotes Banner @n = 425:1
+	grünes Banner @n = 425:2
+	braunes Banner @n = 425:3
+	blaues Banner @n = 425:4
+	violettes Banner @n = 425:5
+	türkises Banner @n = 425:6
+	hellgraues Banner @n = 425:7
+	graues Banner @f = 425:8
+	rosa Banner @n = 425:9
+	hellgrünes Banner @n = 425:10
+	gelbes Banner @n = 425:11
+	hellblaues Banner @n = 425:12
+	magenta Banner @n = 425:13
+	orangenes Banner @n = 425:14
+	weisses Banner @n = 425:15
+
+	# -- FIX for 1.9.x --
+
+	Endstab @m = 198
+	Choruspflanze @f = 199
+	Chorusblüte @f = 200
+	Purpurblock @m = 201
+	Purpursäule @f = 202
+	Purpurtreppe @f = 203
+	Purpurdoppelstufe  @f = 204
+	Purpurstufe @f = 205
+	Endsteinziegel @m = 206
+	Rote-Bete-Keime @f = 207
+	Trampelpfadblock @m = 208
+	Endtorblock @m = 209
+	Wiederhol-Befehlsblock @m = 210
+	Ketten-Befehlsblock @m = 211
+	Gefrorener Eisblock @m = 212
+
+	Struckturblock @m = 255
+
+	Enderkristall @m = 426
+	Chorusfrucht @f = 432
+	Geplatzte Chorusfrucht @f = 433
+	Rote Bete @f = 434
+	Rote-Bete-Samen @m = 435
+	Borschtsch @m = 436
+	Drachenatem @m = 437
+	Wurftrank @m = 438
+	Spektralpfeil  @m = 439
+	Nasserpfeil @m = 440
+	Verweilende Wasserflasche @f = 441
+	Schild @n = 442
+	Elytren = 443
+	Fichtenholzboot @n = 444
+	Birkenholzboot @n = 445
+	Tropenholzboot @n = 446
+	Akazienholzboot @n = 447
+	Schwarzeichenholzboot @n = 448

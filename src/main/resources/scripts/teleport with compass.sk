@@ -1,0 +1,16 @@
+#
+# Allows players with the 'skript.teleport' permission to be able to teleport
+# with a compass like in WorldEdit.
+#
+
+aliases:
+	# blocks without collision as of Minecraft 1.5 (excluding fire, nether portal & end portal)
+	nonsolid = 0, 6, 27, 28, 30, 31, 32, 37, 38, 39, 40, 50, 55, 59, 63, 64, 65, 66, 68, 69, 70, 71, 72, 75, 76, 77, 78:0, 83, 85:4-7, 104, 105, 106, 111, 115, 131, 132, 141, 142, 143, 147, 148, 157
+
+on rightclick with compass:
+	player has permission "skript.teleport"
+	loop blocks above targeted block:
+		loop-block is nonsolid
+		block above loop-block is nonsolid
+		teleport player to loop-block
+		stop trigger
