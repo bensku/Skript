@@ -20,7 +20,9 @@
 package ch.njol.skript.classes.data;
 
 import java.util.Collection;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -292,22 +294,16 @@ public class DefaultConverters {
 			}
 		});
 		
-//		// Entity - String (UUID) // Very slow, thus disabled for now
-//		Converters.registerConverter(String.class, Entity.class, new Converter<String, Entity>() {
-//
-//			@Override
-//			@Nullable
-//			public Entity convert(String f) {
-//				Collection<? extends Player> players = PlayerUtils.getOnlinePlayers();
-//				for (Player p : players) {
-//					if (p.getName().equals(f) || p.getUniqueId().toString().equals(f))
-//						return p;
-//				}
-//				
-//				return null;
-//			}
-//			
-//		});
+		// Entity - String (UUID)
+		Converters.registerConverter(String.class, Entity.class, new Converter<String, Entity>() {
+			@Override
+			@Nullable
+			public Entity convert(String input) {
+				UUID uuid = UUID.fromString(input);
+				Entity entity = uuid != null ? Bukkit.getEntity(uuid) : null;
+				return entity != null ? entity : null;
+			}	
+		});
 		
 		// Number - Vector; DISABLED due to performance problems
 //		Converters.registerConverter(Number.class, Vector.class, new Converter<Number, Vector>() {
