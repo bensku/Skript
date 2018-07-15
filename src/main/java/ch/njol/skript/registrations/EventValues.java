@@ -43,18 +43,18 @@ public class EventValues {
 		public final Class<T> c;
 		public final Getter<T, E> getter;
 		@Nullable
-		public final Class<? extends E>[] exculdes;
+		public final Class<? extends E>[] excludes;
 		@Nullable
 		public final String excludeErrorMessage;
 		
-		public EventValueInfo(final Class<E> event, final Class<T> c, final Getter<T, E> getter, final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>[] exculdes) {
+		public EventValueInfo(final Class<E> event, final Class<T> c, final Getter<T, E> getter, final @Nullable String excludeErrorMessage, final @Nullable Class<? extends E>[] excludes) {
 			assert event != null;
 			assert c != null;
 			assert getter != null;
 			this.event = event;
 			this.c = c;
 			this.getter = getter;
-			this.exculdes = exculdes;
+			this.excludes = excludes;
 			this.excludeErrorMessage = excludeErrorMessage;
 		}
 	}
@@ -212,8 +212,9 @@ public class EventValues {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static boolean checkExcludes(final EventValueInfo<?, ?> ev, final Class<? extends Event> e) {
-		final Class<? extends Event>[] excl = ev.exculdes;
+		final Class<? extends Event>[] excl = (Class<? extends Event>[]) ev.excludes;
 		if (excl == null)
 			return true;
 		for (final Class<? extends Event> ex : excl) {

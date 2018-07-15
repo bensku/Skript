@@ -150,7 +150,6 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 	
 	@Override
 	public BidiHashMap<T1, T2> clone() {
-		return new BidiHashMap<>(this);
+		return new BidiHashMap<T1, T2>(this);
 	}
-	
 }
