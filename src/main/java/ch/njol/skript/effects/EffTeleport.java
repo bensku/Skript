@@ -76,7 +76,7 @@ public class EffTeleport extends Effect {
 			final Block on = to.getBlock().getRelative(BlockFace.DOWN);
 			if (on.getType() != Material.AIR) {
 				to = to.clone();
-				to.setY(on.getY() + Utils.getBlockHeight(on.getTypeId(), on.getData()));
+				to.setY(on.getY() + Utils.getBlockHeight(on.getType(), on.getData()));
 			}
 		}
 		for (final Entity entity : entities.getArray(e)) {

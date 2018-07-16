@@ -90,16 +90,16 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	@Override
 	protected boolean init(final @Nullable Class<? extends FallingBlock> c, final @Nullable FallingBlock e) {
 		if (e != null)
-			types = new ItemType[] {new ItemType(e.getBlockId(), e.getBlockData())};
+			types = new ItemType[] {new ItemType(e.getBlockData().getMaterial().getId())};
 		return true;
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	protected boolean match(final FallingBlock entity) {
+	protected boolean match(final FallingBlock e) {
 		if (types != null) {
 			for (final ItemType t : types) {
-				if (t.isOfType(entity.getBlockId(), entity.getBlockData()))
+				if (t.isOfType(new ItemType(e.getBlockData().getMaterial().getId()).getRandom()))
 					return true;
 			}
 			return false;

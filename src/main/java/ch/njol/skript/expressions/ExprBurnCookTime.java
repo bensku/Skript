@@ -85,7 +85,7 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 			return CollectionUtils.array(Timespan.fromTicks_i(((FurnaceBurnEvent) e).getBurnTime()));
 		else
 			return Arrays.stream(source)
-					.filter(block -> block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE)
+					.filter(block -> block.getType() == Material.FURNACE || block.getType() == Material.LEGACY_BURNING_FURNACE)
 					.map(furnace -> {
 						Furnace state = (Furnace) furnace.getState();
 						return Timespan.fromTicks_i(cookTime ? state.getCookTime() : state.getBurnTime());
@@ -145,7 +145,7 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 		}
 
 		for (Block block : getExpr().getArray(e)) {
-			if (block.getType() != Material.FURNACE || block.getType() != Material.BURNING_FURNACE)
+			if (block.getType() != Material.FURNACE || block.getType() != Material.LEGACY_BURNING_FURNACE)
 				continue;
 			Furnace furnace = (Furnace) block.getState();
 			long time = value.apply(Timespan.fromTicks_i(cookTime ? furnace.getCookTime() : furnace.getBurnTime())).getTicks_i();

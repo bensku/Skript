@@ -87,9 +87,9 @@ public class ExprSkull extends SimplePropertyExpression<Object, ItemType> {
 			return null;
 		}
 		@SuppressWarnings("deprecation")
-		final ItemType i = new ItemType(Material.SKULL_ITEM.getId(), (short) type.ordinal());
+		final ItemType i = new ItemType(Material.LEGACY_SKULL_ITEM.getId(), (short) type.ordinal());
 		if (o instanceof OfflinePlayer) {
-			final SkullMeta s = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+			final SkullMeta s = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.LEGACY_SKULL_ITEM);
 			s.setOwner(((OfflinePlayer) o).getName());
 			i.setItemMeta(s);
 		}

@@ -62,7 +62,7 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	private Serializer<? super T> serializer = null;
 	@Nullable
-	private Class<?> serializeAs = null;
+	public Class<?> serializeAs = null;
 	
 	@Nullable
 	private Arithmetic<? super T, ?> math = null;

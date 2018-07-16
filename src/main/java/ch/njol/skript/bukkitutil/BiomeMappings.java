@@ -19,12 +19,13 @@
  */
 package ch.njol.skript.bukkitutil;
 
+import java.util.Arrays;
+
 import org.bukkit.block.Biome;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.biomes.BiomeHook;
-import ch.njol.skript.hooks.biomes.BiomeMapUtil.To19Mapping;
 import ch.njol.skript.util.EnumUtils;
 
 /**
@@ -38,23 +39,21 @@ public abstract class BiomeMappings {
 	
 	private final static boolean mapFor19 = Skript.isRunningMinecraft(1, 9);
 	
+	@SuppressWarnings("null")
 	public static @Nullable Biome parse(final String name) {
 		if (!mapFor19) return util.parse(name);
 		
-		To19Mapping mapping = BiomeHook.util19.parse(name);
-		if (mapping == null) return util.parse(name); // Should not happen - incomplete maps are a mess to work with for programmer
-		return mapping.getHandle();
+		Biome mapping = Biome.valueOf(name);
+		return mapping != null ? mapping : null;
 	}
 	
+	@SuppressWarnings("null")
 	public static String toString(final Biome biome, final int flags) {
-		if (!mapFor19) return util.toString(biome, flags);
-		To19Mapping mapping = To19Mapping.getMapping(biome);
-		if (mapping == null) return "";
-		return BiomeHook.util19.toString(mapping, flags);
+		return biome.toString();
 	}
 	
+	@SuppressWarnings("null")
 	public static String getAllNames() {
-		if (!mapFor19) return util.getAllNames();
-		return BiomeHook.util19.getAllNames();
+		return Arrays.toString(Biome.values());
 	}
 }

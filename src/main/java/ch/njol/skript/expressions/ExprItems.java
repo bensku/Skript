@@ -159,7 +159,7 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 			@SuppressWarnings("deprecation")
 			@Override
 			public boolean check(final @Nullable ItemStack is) {
-				return is != null && is.getTypeId() <= Skript.MAXBLOCKID;
+				return is != null && is.getType().getId() <= Skript.MAXBLOCKID;
 			}
 		});
 	}

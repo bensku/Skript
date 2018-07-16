@@ -114,12 +114,12 @@ public class BoatData extends EntityData<Boat> {
 			return false;
 		int ordinal = -1;
 		switch (i.getRandom().getType()){
-			case BOAT: ordinal = 0 ; break; //It is to make 'boat' and 'any boat' works as supertype when comparing.
-			case BOAT_SPRUCE: ordinal = TreeSpecies.REDWOOD.ordinal(); break;
-			case BOAT_BIRCH: ordinal = TreeSpecies.BIRCH.ordinal(); break;
-			case BOAT_JUNGLE: ordinal = TreeSpecies.JUNGLE.ordinal(); break;
-			case BOAT_ACACIA: ordinal = TreeSpecies.ACACIA.ordinal(); break;
-			case BOAT_DARK_OAK: ordinal = TreeSpecies.DARK_OAK.ordinal(); break;
+			case LEGACY_BOAT: ordinal = 0 ; break; //It is to make 'boat' and 'any boat' works as supertype when comparing.
+			case LEGACY_BOAT_SPRUCE: ordinal = TreeSpecies.REDWOOD.ordinal(); break;
+			case LEGACY_BOAT_BIRCH: ordinal = TreeSpecies.BIRCH.ordinal(); break;
+			case LEGACY_BOAT_JUNGLE: ordinal = TreeSpecies.JUNGLE.ordinal(); break;
+			case LEGACY_BOAT_ACACIA: ordinal = TreeSpecies.ACACIA.ordinal(); break;
+			case LEGACY_BOAT_DARK_OAK: ordinal = TreeSpecies.DARK_OAK.ordinal(); break;
 				//$CASES-OMITTED$
 			default: return false;
 		}

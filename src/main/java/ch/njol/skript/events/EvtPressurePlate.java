@@ -62,7 +62,7 @@ public class EvtPressurePlate extends SkriptEvent {
 		final Material type = b == null ? null : b.getType();
 		return type != null && ((PlayerInteractEvent) e).getAction() == Action.PHYSICAL &&
 				(tripwire ? (type == Material.TRIPWIRE || type == Material.TRIPWIRE_HOOK)
-						: (type == Material.WOOD_PLATE || type == Material.STONE_PLATE || type.getId() == 147 || type.getId() == 148)); // gold and iron pressure plates
+						: (type == Material.LEGACY_WOOD_PLATE || type == Material.LEGACY_STONE_PLATE || type.getId() == 147 || type.getId() == 148)); // gold and iron pressure plates
 	}
 	
 	@Override

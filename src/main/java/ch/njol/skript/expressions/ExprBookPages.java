@@ -61,7 +61,7 @@ public class ExprBookPages extends SimpleExpression<String> {
 	@Override
 	protected String[] get(Event e) {
 		ItemStack itemStack = book.getSingle(e);
-		if (itemStack == null || (itemStack.getType() != Material.BOOK_AND_QUILL && itemStack.getType() != Material.WRITTEN_BOOK)){
+		if (itemStack == null || (itemStack.getType() != Material.LEGACY_BOOK_AND_QUILL && itemStack.getType() != Material.WRITTEN_BOOK)){
 			return null;
 		}
 		List<String> pages = ((BookMeta) itemStack.getItemMeta()).getPages();

@@ -271,25 +271,25 @@ public class EvtClick extends SkriptEvent {
 			case BOW:
 			case EGG:
 			case SPLASH_POTION:
-			case SNOW_BALL:
+			case LEGACY_SNOW_BALL:
 			case BUCKET:
 			case FISHING_ROD:
 			case FLINT_AND_STEEL:
-			case WOOD_HOE:
+			case LEGACY_WOOD_HOE:
 			case STONE_HOE:
 			case IRON_HOE:
-			case GOLD_HOE:
+			case LEGACY_GOLD_HOE:
 			case DIAMOND_HOE:
-			case LEASH:
+			case LEGACY_LEASH:
 			case SHEARS:
-			case WOOD_SPADE:
-			case STONE_SPADE:
-			case IRON_SPADE:
-			case GOLD_SPADE:
-			case DIAMOND_SPADE:
+			case LEGACY_WOOD_SPADE:
+			case LEGACY_STONE_SPADE:
+			case LEGACY_IRON_SPADE:
+			case LEGACY_GOLD_SPADE:
+			case LEGACY_DIAMOND_SPADE:
 			case SHIELD:
 			case ENDER_PEARL:
-			case MONSTER_EGG:
+			case LEGACY_MONSTER_EGG:
 				offUsable = true;
 				break;
 				//$CASES-OMITTED$
@@ -306,26 +306,26 @@ public class EvtClick extends SkriptEvent {
 			case BOW:
 			case EGG:
 			case SPLASH_POTION:
-			case SNOW_BALL:
+			case LEGACY_SNOW_BALL:
 			case BUCKET:
 			case FISHING_ROD:
 			case FLINT_AND_STEEL:
-			case WOOD_HOE:
+			case LEGACY_WOOD_HOE:
 			case STONE_HOE:
 			case IRON_HOE:
-			case GOLD_HOE:
+			case LEGACY_GOLD_HOE:
 			case DIAMOND_HOE:
-			case LEASH:
+			case LEGACY_LEASH:
 			case SHEARS:
-			case WOOD_SPADE:
-			case STONE_SPADE:
-			case IRON_SPADE:
-			case GOLD_SPADE:
-			case DIAMOND_SPADE:
+			case LEGACY_WOOD_SPADE:
+			case LEGACY_STONE_SPADE:
+			case LEGACY_IRON_SPADE:
+			case LEGACY_GOLD_SPADE:
+			case LEGACY_DIAMOND_SPADE:
 			case ENDER_PEARL:
-			case EYE_OF_ENDER:
-			case MONSTER_EGG:
-			case BOOK_AND_QUILL:
+			case LEGACY_EYE_OF_ENDER:
+			case LEGACY_MONSTER_EGG:
+			case LEGACY_BOOK_AND_QUILL:
 			case WRITTEN_BOOK:
 				mainUsable = true;
 				break;
@@ -345,25 +345,25 @@ public class EvtClick extends SkriptEvent {
 			switch (block.getType()) {
 				case ANVIL:
 				case BEACON:
-				case BED:
+				case LEGACY_BED:
 				case BREWING_STAND:
 				case CAULDRON:
 				case CHEST:
 				case TRAPPED_CHEST:
 				case ENDER_CHEST:
-				case WORKBENCH:
-				case ENCHANTMENT_TABLE:
+				case LEGACY_WORKBENCH:
+				case LEGACY_ENCHANTMENT_TABLE:
 				case FURNACE:
-				case WOODEN_DOOR:
+				case LEGACY_WOODEN_DOOR:
 				case ACACIA_DOOR:
 				case JUNGLE_DOOR:
 				case DARK_OAK_DOOR:
 				case SPRUCE_DOOR:
 				case BIRCH_DOOR:
 				case IRON_DOOR:
-				case TRAP_DOOR:
+				case LEGACY_TRAP_DOOR:
 				case IRON_TRAPDOOR:
-				case FENCE_GATE:
+				case LEGACY_FENCE_GATE:
 				case ACACIA_FENCE_GATE:
 				case JUNGLE_FENCE_GATE:
 				case DARK_OAK_FENCE_GATE:
@@ -373,15 +373,15 @@ public class EvtClick extends SkriptEvent {
 				case DISPENSER:
 				case DROPPER:
 				case LEVER:
-				case WOOD_BUTTON:
+				case LEGACY_WOOD_BUTTON:
 				case STONE_BUTTON:
-				case COMMAND:
+				case LEGACY_COMMAND:
 				case ITEM_FRAME:
-				case SIGN_POST:
+				case LEGACY_SIGN_POST:
 				case WALL_SIGN: // 2 signs...
 					blockUsable = true;
 					break;
-				case CAKE_BLOCK:
+				case LEGACY_CAKE_BLOCK:
 					mainOnly = true;
 					break;
 					//$CASES-OMITTED$

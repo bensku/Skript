@@ -182,7 +182,7 @@ public class BukkitClasses {
 					@SuppressWarnings("deprecation")
 					@Override
 					public String toString(final Block b, final int flags) {
-						return ItemType.toString(new ItemStack(b.getTypeId(), 1, b.getState().getRawData()), flags);
+						return ItemType.toString(new ItemStack(b.getType(), 1, b.getState().getRawData()), flags);
 					}
 					
 					@Override
@@ -983,7 +983,7 @@ public class BukkitClasses {
 						b.append(":" + i.getDurability());
 						b.append("*" + i.getAmount());
 						for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
-							b.append("#" + e.getKey().getId());
+							//b.append("#" + e.getKey().);
 							b.append(":" + e.getValue());
 						}
 						return "" + b.toString();
@@ -1285,18 +1285,6 @@ public class BukkitClasses {
 						if (e == null)
 							throw new StreamCorruptedException("Invalid enchantment " + name);
 						return e;
-					}
-					
-//					return "" + e.getId();
-					@SuppressWarnings("deprecation")
-					@Override
-					@Nullable
-					public Enchantment deserialize(final String s) {
-						try {
-							return Enchantment.getById(Integer.parseInt(s));
-						} catch (final NumberFormatException e) {
-							return null;
-						}
 					}
 					
 					@Override

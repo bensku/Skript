@@ -97,7 +97,7 @@ public class ExprSignText extends SimpleExpression<String> {
 		final Block b = block.getSingle(e);
 		if (b == null)
 			return new String[0];
-		if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN)
+		if (b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.WALL_SIGN)
 			return new String[0];
 		return new String[] {((Sign) b.getState()).getLine(line)};
 	}
@@ -141,7 +141,7 @@ public class ExprSignText extends SimpleExpression<String> {
 					break;
 			}
 		} else {
-			if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN)
+			if (b.getType() != Material.LEGACY_SIGN_POST && b.getType() != Material.WALL_SIGN)
 				return;
 			final Sign s = (Sign) b.getState();
 			switch (mode) {

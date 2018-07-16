@@ -86,7 +86,7 @@ public class EndermanData extends EntityData<Enderman> {
 			@SuppressWarnings("deprecation")
 			@Override
 			public boolean check(final @Nullable ItemType t) {
-				return t != null && t.isOfType(entity.getCarriedMaterial().getItemTypeId(), entity.getCarriedMaterial().getData());
+				return t != null && t.isOfType(entity.getCarriedMaterial().getItemType().getId(), entity.getCarriedMaterial().getData());
 			}
 		}, false, false);
 	}
