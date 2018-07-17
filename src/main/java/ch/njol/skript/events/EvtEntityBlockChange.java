@@ -66,13 +66,13 @@ public class EvtEntityBlockChange extends SkriptEvent {
 		SILVERFISH_ENTER("silverfish enter", new Checker<EntityChangeBlockEvent>() {
 			@Override
 			public boolean check(final EntityChangeBlockEvent e) {
-				return e.getEntity() instanceof Silverfish && e.getTo() == Material.MONSTER_EGGS;
+				return e.getEntity() instanceof Silverfish && e.getTo() == Material.LEGACY_MONSTER_EGGS;
 			}
 		}),
 		SILVERFISH_EXIT("silverfish exit", new Checker<EntityChangeBlockEvent>() {
 			@Override
 			public boolean check(final EntityChangeBlockEvent e) {
-				return e.getEntity() instanceof Silverfish && e.getTo() != Material.MONSTER_EGGS;
+				return e.getEntity() instanceof Silverfish && e.getTo() != Material.LEGACY_MONSTER_EGGS;
 			}
 		});
 		

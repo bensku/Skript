@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -320,48 +321,46 @@ public abstract class Utils {
 	 * @param type
 	 * @return The block's height at the center
 	 */
-	public static double getBlockHeight(final int type, final byte data) {
+	public static double getBlockHeight(final Material type, final byte data) {
 		switch (type) {
-			case 26: // bed
+			case LEGACY_BED: // bed
 				return 9. / 16;
-			case 44: // slabs
-			case 126:
+			case LEGACY_STONE_SLAB2: // slabs
+			case STONE_SLAB:
 				return (data & 0x8) == 0 ? 0.5 : 1;
-			case 78: // snow layer
+			case SNOW: // snow layer
 				return data == 0 ? 1 : (data % 8) * 2. / 16;
-			case 85: // fences & gates
-			case 107:
-			case 113:
-			case 139: // cobblestone wall
+			case LEGACY_FENCE: // fences & gates
+			case LEGACY_COBBLE_WALL: // cobblestone wall
 				return 1.5;
-			case 88: // soul sand
+			case LEGACY_SOUL_SAND: // soul sand
 				return 14. / 16;
-			case 92: // cake
+			case LEGACY_CAKE_BLOCK: // cake
 				return 7. / 16;
-			case 93: // redstone repeater
-			case 94:
-			case 149: // redstone comparator
-			case 150:
+			case REPEATER: // redstone repeater
+			case LEGACY_REDSTONE_COMPARATOR:
 				return 2. / 16;
-			case 96: // trapdoor
+			case LEGACY_TRAP_DOOR: // trapdoor
 				return (data & 0x4) == 0 ? ((data & 0x8) == 0 ? 3. / 16 : 1) : 0;
-			case 116: // enchantment table
+			case LEGACY_ENCHANTMENT_TABLE: // enchantment table
 				return 12. / 16;
-			case 117: // brewing stand
+			case LEGACY_BREWING_STAND: // brewing stand
 				return 14. / 16;
-			case 118: // cauldron
+			case LEGACY_CAULDRON: // cauldron
 				return 5. / 16;
-			case 120: // end portal frame
+			case END_PORTAL_FRAME: // end portal frame
 				return (data & 0x4) == 0 ? 13. / 16 : 1;
-			case 127: // cocoa plant
+			case LEGACY_COCOA: // cocoa plant
 				return 12. / 16;
-			case 140: // flower pot
+			case LEGACY_FLOWER_POT: // flower pot
 				return 6. / 16;
-			case 144: // mob head
+			case ZOMBIE_HEAD: // mob head
+			case CREEPER_HEAD:
+			case PLAYER_HEAD:
 				return 0.5;
-			case 151: // daylight sensor
+			case LEGACY_DAYLIGHT_DETECTOR: // daylight sensor
 				return 6. / 16;
-			case 154: // hopper
+			case LEGACY_HOPPER: // hopper
 				return 10. / 16;
 			default:
 				return 1;

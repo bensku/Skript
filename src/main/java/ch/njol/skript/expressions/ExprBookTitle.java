@@ -52,7 +52,7 @@ public class ExprBookTitle extends SimplePropertyExpression<ItemStack,String> {
 	@Nullable
 	@Override
 	public String convert(ItemStack itemStack) {
-		if (itemStack.getType() != Material.BOOK_AND_QUILL && itemStack.getType() != Material.WRITTEN_BOOK){
+		if (itemStack.getType() != Material.LEGACY_BOOK_AND_QUILL && itemStack.getType() != Material.WRITTEN_BOOK){
 			return null;
 		}
 		return ((BookMeta) itemStack.getItemMeta()).getTitle();
@@ -75,7 +75,7 @@ public class ExprBookTitle extends SimplePropertyExpression<ItemStack,String> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		ItemStack itemStack = getExpr().getSingle(e);
-		if (itemStack == null || (itemStack.getType() != Material.WRITTEN_BOOK && itemStack.getType() != Material.BOOK_AND_QUILL)){
+		if (itemStack == null || (itemStack.getType() != Material.WRITTEN_BOOK && itemStack.getType() != Material.LEGACY_BOOK_AND_QUILL)){
 			return;
 		}
 		BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();

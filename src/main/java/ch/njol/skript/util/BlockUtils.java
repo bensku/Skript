@@ -76,14 +76,14 @@ public abstract class BlockUtils {
 		attached[Material.STONE_BUTTON.getId()] = button;
 		attached[Material.LADDER.getId()] = ladder;
 		attached[Material.WALL_SIGN.getId()] = wallSign;
-		attached[Material.TRAP_DOOR.getId()] = trapdoor;
+		attached[Material.LEGACY_TRAP_DOOR.getId()] = trapdoor;
 		attached[Material.LEVER.getId()] = lever;
 		if (Skript.fieldExists(Material.class, "COCOA")) {
 			attached[Material.COCOA.getId()] = cocoa;
 			attached[Material.TRIPWIRE_HOOK.getId()] = tripwireHook;
 		}
 		if (Skript.fieldExists(Material.class, "WOOD_BUTTON"))
-			attached[Material.WOOD_BUTTON.getId()] = button;
+			attached[Material.LEGACY_WOOD_BUTTON.getId()] = button;
 	}
 	
 	private final static BlockFace[] bed = new BlockFace[] {

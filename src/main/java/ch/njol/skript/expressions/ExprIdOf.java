@@ -98,66 +98,6 @@ public class ExprIdOf extends PropertyExpression<ItemType, Integer> {
 	
 	boolean changeItemStack;
 	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (!getExpr().isSingle())
-			return null;
-		if (!ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class, ItemType.class))
-			return null;
-		changeItemStack = ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class);
-		switch (mode) {
-			case ADD:
-			case REMOVE:
-			case SET:
-				return new Class[] {Number.class};
-			case RESET:
-			case DELETE:
-			case REMOVE_ALL:
-			default:
-				return null;
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		assert delta != null;
-		final int i = ((Number) delta[0]).intValue();
-		final ItemType it = getExpr().getSingle(e);
-		if (it == null)
-			return;
-		final ItemStack is = it.getRandom();
-		if (is == null)
-			return;
-		int type = is.getTypeId();
-		switch (mode) {
-			case ADD:
-				type += i;
-				break;
-			case REMOVE:
-				type -= i;
-				break;
-			case SET:
-				type = i;
-				break;
-			case RESET:
-			case DELETE:
-			case REMOVE_ALL:
-			default:
-				assert false;
-				return;
-		}
-		final Material m = Material.getMaterial(type);
-		if (m != null) {
-			is.setType(m);
-			if (changeItemStack)
-				getExpr().change(e, new ItemStack[] {is}, ChangeMode.SET);
-			else
-				getExpr().change(e, new ItemType[] {new ItemType(is)}, ChangeMode.SET);
-		}
-	}
-	
 	@SuppressWarnings("null")
 	@Override
 	@Nullable

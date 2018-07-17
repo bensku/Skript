@@ -96,7 +96,7 @@ public class EffEquip extends Effect implements Testable {
 					for (final ItemStack item : t.getAll()) {
 						if (item.getType() == Material.SADDLE) {
 							invi.setItem(0, item); // Slot 0=saddle
-						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
+						} else if (item.getType() == Material.LEGACY_IRON_BARDING || item.getType() == Material.LEGACY_GOLD_BARDING || item.getType() == Material.LEGACY_DIAMOND_BARDING) {
 							invi.setItem(1, item); // Slot 1=armor
 						} else if (item.getType() == Material.CHEST && en instanceof ChestedHorse) {
 							((ChestedHorse) en).setCarryingChest(true);
@@ -110,7 +110,7 @@ public class EffEquip extends Effect implements Testable {
 					for (final ItemStack item : t.getAll()) {
 						if (item.getType() == Material.SADDLE) {
 							invi.setSaddle(item);
-						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
+						} else if (item.getType() == Material.LEGACY_IRON_BARDING || item.getType() == Material.LEGACY_GOLD_BARDING || item.getType() == Material.LEGACY_DIAMOND_BARDING) {
 							invi.setArmor(item);
 						} else if (item.getType() == Material.CHEST) {
 							((Horse) en).setCarryingChest(true);
@@ -126,33 +126,33 @@ public class EffEquip extends Effect implements Testable {
 					switch (item.getType()) {// TODO !Update with every version [items]
 						case LEATHER_BOOTS:
 						case IRON_BOOTS:
-						case GOLD_BOOTS:
+						case LEGACY_GOLD_BOOTS:
 						case CHAINMAIL_BOOTS:
 						case DIAMOND_BOOTS:
 							en.getEquipment().setBoots(item);
 							break;
 						case LEATHER_LEGGINGS:
 						case IRON_LEGGINGS:
-						case GOLD_LEGGINGS:
+						case LEGACY_GOLD_LEGGINGS:
 						case CHAINMAIL_LEGGINGS:
 						case DIAMOND_LEGGINGS:
 							en.getEquipment().setLeggings(item);
 							break;
 						case LEATHER_CHESTPLATE:
 						case IRON_CHESTPLATE:
-						case GOLD_CHESTPLATE:
+						case LEGACY_GOLD_CHESTPLATE:
 						case CHAINMAIL_CHESTPLATE:
 						case DIAMOND_CHESTPLATE:
 							en.getEquipment().setChestplate(item);
 							break;
 						//$CASES-OMITTED$
 						default:
-							if (!(item.getType().isBlock() || item.getTypeId() == 397 /* mob head */))
+							if (!(item.getType().isBlock() || item.getType() == Material.SKELETON_SKULL /* mob head */))
 								continue;
 							//$FALL-THROUGH$
 						case LEATHER_HELMET:
 						case IRON_HELMET:
-						case GOLD_HELMET:
+						case LEGACY_GOLD_HELMET:
 						case CHAINMAIL_HELMET:
 						case DIAMOND_HELMET:
 							en.getEquipment().setHelmet(item);

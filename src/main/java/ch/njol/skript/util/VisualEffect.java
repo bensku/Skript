@@ -107,7 +107,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		FLYING_GLYPH(Particle.ENCHANTMENT_TABLE),
 		FLAME(Particle.FLAME),
 		LAVA_POP(Particle.LAVA),
-		FOOTSTEP(Particle.FOOTSTEP),
+		//FOOTSTEP(Particle.FOOTSTEP),
 		SPLASH(Particle.WATER_SPLASH),
 		PARTICLE_SMOKE(Particle.SMOKE_NORMAL), // Why separate particle... ?
 		EXPLOSION_HUGE(Particle.EXPLOSION_HUGE),
@@ -191,10 +191,9 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		@Nullable
 		final String name;
 		
-		@SuppressWarnings("deprecation")
 		private Type(final Effect effect) {
 			this.effect = effect;
-			this.name = effect.getName();
+			this.name = effect.name();
 		}
 		
 		private Type(final EntityEffect effect) {
@@ -401,7 +400,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		play(ps, l, e, 0, 32);
 	}
 	
-	@SuppressWarnings({"deprecation"})
+	@SuppressWarnings({"deprecation", "null"})
 	public void play(final @Nullable Player[] ps, final Location l, final @Nullable Entity e, final int count, final int radius) {
 		assert e == null || l.equals(e.getLocation());
 		if (isEntityEffect()) {
@@ -442,7 +441,8 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			} else {
 				// Non-particle effect (whatever Spigot API says, there are a few)
 				if (ps == null) {
-					l.getWorld().spigot().playEffect(l, (Effect) type.effect, 0, 0, dX, dY, dZ, speed, count, radius);
+					Effect effect = (Effect) type.effect;
+					l.getWorld().playEffect(l, (Effect) type.effect, effect.getData(), radius);
 				} else {
 					for (final Player p : ps)
 						p.playEffect(l, (Effect) type.effect, type.getData(data, l));

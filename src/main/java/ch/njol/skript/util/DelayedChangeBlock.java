@@ -32,6 +32,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -45,7 +46,6 @@ import ch.njol.skript.Skript;
  * 
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation")
 @NonNullByDefault(false)
 public class DelayedChangeBlock implements Block {
 	
@@ -85,6 +85,7 @@ public class DelayedChangeBlock implements Block {
 		b.removeMetadata(metadataKey, owningPlugin);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public byte getData() {
 		return b.getData();
@@ -110,10 +111,10 @@ public class DelayedChangeBlock implements Block {
 		return b.getType();
 	}
 	
-	@Override
+/*	@Override
 	public int getTypeId() {
 		return b.getTypeId();
-	}
+	} 1.13 removal*/
 	
 	@Override
 	public byte getLightLevel() {
@@ -202,7 +203,7 @@ public class DelayedChangeBlock implements Block {
 		}
 	}
 	
-	@Override
+/*	@Override
 	public boolean setTypeId(final int type) {
 		final BlockState newState = this.newState;
 		if (newState != null) {
@@ -252,7 +253,7 @@ public class DelayedChangeBlock implements Block {
 			});
 			return true;
 		}
-	}
+	}*/
 	
 	@Override
 	public BlockFace getFace(final Block block) {
@@ -306,12 +307,12 @@ public class DelayedChangeBlock implements Block {
 	
 	@Override
 	public boolean isEmpty() {
-		return getTypeId() == 0;
+		return b.getType() == Material.AIR;
 	}
 	
 	@Override
 	public boolean isLiquid() {
-		return getType() == Material.WATER || getType() == Material.STATIONARY_WATER || getType() == Material.LAVA || getType() == Material.STATIONARY_LAVA;
+		return getType() == Material.WATER || getType() == Material.LEGACY_STATIONARY_WATER || getType() == Material.LAVA || getType() == Material.LEGACY_STATIONARY_LAVA;
 	}
 	
 	@Override
@@ -383,9 +384,41 @@ public class DelayedChangeBlock implements Block {
 	}
 
 	@Override
-	public void setType(Material arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		
+	public void setType(Material type, boolean arg1) {
+		if (newState != null) {
+			newState.setType(type);
+		} else {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					b.setType(type);
+				}
+			});
+		}
+	}
+
+	@Override
+	public BlockData getBlockData() {
+		return b.getBlockData();
+	}
+
+	@Override
+	public void setBlockData(BlockData data, boolean applyPhysics) {
+		if (newState != null) {
+			newState.setBlockData(data);
+		} else {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					b.setBlockData(data, applyPhysics);
+				}
+			});
+		}
+	}
+
+	@Override
+	public void setBlockData(BlockData data) {
+		setBlockData(data, true);
 	}
 	
 }

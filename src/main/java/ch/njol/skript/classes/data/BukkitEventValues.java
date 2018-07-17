@@ -294,7 +294,7 @@ public final class BukkitEventValues {
 			@Override
 			public Block get(final BlockBreakEvent e) {
 				final BlockState s = e.getBlock().getState();
-				s.setType(s.getType() == Material.ICE ? Material.STATIONARY_WATER : Material.AIR);
+				s.setType(s.getType() == Material.ICE ? Material.LEGACY_STATIONARY_WATER : Material.AIR);
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}
@@ -342,7 +342,7 @@ public final class BukkitEventValues {
 			@Override
 			public Block get(final BlockCanBuildEvent e) {
 				final BlockState s = e.getBlock().getState();
-				s.setTypeId(e.getMaterialId());
+				s.setType(e.getMaterial());
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}
@@ -517,7 +517,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(final PlayerBucketFillEvent e) {
 				final BlockState s = e.getBlockClicked().getRelative(e.getBlockFace()).getState();
-				s.setTypeId(0);
+				s.setType(Material.AIR);
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}
@@ -533,7 +533,7 @@ public final class BukkitEventValues {
 			@Override
 			public Block get(final PlayerBucketEmptyEvent e) {
 				final BlockState s = e.getBlockClicked().getRelative(e.getBlockFace()).getState();
-				s.setType(e.getBucket() == Material.WATER_BUCKET ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA);
+				s.setType(e.getBucket() == Material.WATER_BUCKET ? Material.LEGACY_STATIONARY_WATER : Material.LEGACY_STATIONARY_LAVA);
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}

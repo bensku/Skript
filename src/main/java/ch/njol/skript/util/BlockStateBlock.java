@@ -33,6 +33,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -45,7 +46,6 @@ import ch.njol.skript.Skript;
  * 
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation")
 @NonNullByDefault(false)
 public class BlockStateBlock implements Block {
 	
@@ -107,11 +107,6 @@ public class BlockStateBlock implements Block {
 	@Override
 	public Material getType() {
 		return state.getType();
-	}
-	
-	@Override
-	public int getTypeId() {
-		return state.getTypeId();
 	}
 	
 	@Override
@@ -201,7 +196,7 @@ public class BlockStateBlock implements Block {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public boolean setTypeId(final int type) {
 		if (delayChanges) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
@@ -252,7 +247,7 @@ public class BlockStateBlock implements Block {
 			state.setRawData(data);
 			return id != type || d != data;
 		}
-	}
+	} 1.13*/
 	
 	@Override
 	public BlockFace getFace(final Block block) {
@@ -306,12 +301,12 @@ public class BlockStateBlock implements Block {
 	
 	@Override
 	public boolean isEmpty() {
-		return getTypeId() == 0;
+		return getType() == Material.AIR;
 	}
 	
 	@Override
 	public boolean isLiquid() {
-		return getType() == Material.WATER || getType() == Material.STATIONARY_WATER || getType() == Material.LAVA || getType() == Material.STATIONARY_LAVA;
+		return getType() == Material.WATER || getType() == Material.LEGACY_STATIONARY_WATER || getType() == Material.LAVA || getType() == Material.LEGACY_STATIONARY_LAVA;
 	}
 	
 	@Override
@@ -385,9 +380,32 @@ public class BlockStateBlock implements Block {
 	}
 
 	@Override
-	public void setType(Material arg0, boolean arg1) {
+	public void setType(Material type, boolean arg1) {
+		if (delayChanges) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					state.getBlock().setType(type);
+				}
+			});
+		} else {
+			state.setType(getType());
+		}
+	}
+
+	@Override
+	public BlockData getBlockData() {
+		return state.getBlock().getBlockData();
+	}
+
+	@Override
+	public void setBlockData(BlockData data) {
+		state.getBlock().setBlockData(data);
+	}
+
+	@Override
+	public void setBlockData(BlockData data, boolean applyPhysics) {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }
