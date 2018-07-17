@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.effects;
 
-import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,6 +34,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Player Visibility")
 @Description({"Change visibility of a player for the given players.",

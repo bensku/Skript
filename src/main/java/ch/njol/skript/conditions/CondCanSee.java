@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,6 +32,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.Bukkit;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Can See")
 @Description("Checks whether the given players can see another players.")

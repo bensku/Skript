@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.List;
 import java.util.ArrayList;
-import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,6 +34,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Hidden Players")
 @Description({"The players hidden from a player that hidden using the <a href='effects.html#EffPlayerVisibility'>player visibility</a> effect."})
