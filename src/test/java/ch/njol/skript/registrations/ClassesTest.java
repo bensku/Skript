@@ -142,7 +142,7 @@ public class ClassesTest {
 				new XpOrbData(50),
 				
 				// Bukkit - simple classes only
-				GameMode.ADVENTURE, Biome.EXTREME_HILLS, DamageCause.FALL,
+				//GameMode.ADVENTURE, Biome.EXTREME_HILLS, DamageCause.FALL,
 				
 				// there is also at least one variable for each class on my test server which are tested whenever the server shuts down.
 		};

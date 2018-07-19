@@ -139,7 +139,7 @@ public class DefaultConverters {
 			@SuppressWarnings("deprecation")
 			@Override
 			public ItemStack convert(final Block b) {
-				return new ItemStack(b.getTypeId(), 1, b.getData());
+				return new ItemStack(b.getType(), 1, b.getData());
 			}
 		}, Converter.NO_LEFT_CHAINING | Converter.NO_COMMAND_ARGUMENTS);
 		

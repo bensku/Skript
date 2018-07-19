@@ -66,6 +66,7 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 	private boolean cookTime;
 	private boolean isEvent;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		cookTime = parseResult.mark == 1;
@@ -134,13 +135,18 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 				break;
 			case SET:
 				value = (original) -> changed;
+			case DELETE:
+			case REMOVE_ALL:
+			case RESET:
+			default:
+				break;
 		}
 
 		assert value != null; // It isn't going to be null but the compiler complains so
 
 		if (isEvent) {
 			FurnaceBurnEvent event = (FurnaceBurnEvent) e;
-			event.setBurnTime(value.apply(Timespan.fromTicks_i(event.getBurnTime())).getTicks());
+			event.setBurnTime((int)value.apply(Timespan.fromTicks_i(event.getBurnTime())).getTicks_i());
 			return;
 		}
 

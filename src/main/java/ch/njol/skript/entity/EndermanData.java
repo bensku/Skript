@@ -39,6 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 public class EndermanData extends EntityData<Enderman> {
+
 	static {
 		EntityData.register(EndermanData.class, "enderman", Enderman.class, "enderman");
 	}
@@ -54,6 +55,7 @@ public class EndermanData extends EntityData<Enderman> {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean init(final @Nullable Class<? extends Enderman> c, final @Nullable Enderman e) {
 		if (e != null) {
@@ -170,5 +172,4 @@ public class EndermanData extends EntityData<Enderman> {
 	public EntityData getSuperType() {
 		return new EndermanData();
 	}
-	
 }

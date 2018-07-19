@@ -342,7 +342,7 @@ public final class BukkitEventValues {
 			@Override
 			public Block get(final BlockCanBuildEvent e) {
 				final BlockState s = e.getBlock().getState();
-				s.setTypeId(e.getMaterialId());
+				s.setType(e.getMaterial());
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}
@@ -517,7 +517,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(final PlayerBucketFillEvent e) {
 				final BlockState s = e.getBlockClicked().getRelative(e.getBlockFace()).getState();
-				s.setTypeId(0);
+				s.setType(Material.AIR);
 				s.setRawData((byte) 0);
 				return new BlockStateBlock(s, true);
 			}
@@ -922,6 +922,7 @@ public final class BukkitEventValues {
 
 		//PlayerToggleFlightEvent
 		EventValues.registerEventValue(PlayerToggleFlightEvent.class, Player.class, new Getter<Player, PlayerToggleFlightEvent>() {
+			@SuppressWarnings("null")
 			@Override
 			public Player get(PlayerToggleFlightEvent e) {
 				return e.getPlayer();

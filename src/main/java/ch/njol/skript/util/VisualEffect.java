@@ -191,10 +191,9 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		@Nullable
 		final String name;
 		
-		@SuppressWarnings("deprecation")
 		private Type(final Effect effect) {
 			this.effect = effect;
-			this.name = effect.getName();
+			this.name = effect.name();
 		}
 		
 		private Type(final EntityEffect effect) {
