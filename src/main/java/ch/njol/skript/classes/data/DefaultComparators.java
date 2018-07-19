@@ -75,13 +75,12 @@ import ch.njol.skript.util.slot.SlotWithIndex;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings("rawtypes")
 public class DefaultComparators {
 	
 	public DefaultComparators() {}
 	
 	static {
-		
 		// Number - Number
 		Comparators.registerComparator(Number.class, Number.class, new Comparator<Number, Number>() {
 			@Override
@@ -110,7 +109,6 @@ public class DefaultComparators {
 		
 		// Slot - Slot
 		Comparators.registerComparator(Slot.class, Slot.class, new Comparator<Slot, Slot>() {
-
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
 				if (o1.isSameSlot(o2))
@@ -122,12 +120,10 @@ public class DefaultComparators {
 			public boolean supportsOrdering() {
 				return false;
 			}
-			
 		});
 		
 		// Slot - Integer
 		Comparators.registerComparator(Slot.class, Integer.class, new Comparator<Slot, Integer>() {
-
 			@Override
 			public Relation compare(Slot o1, Integer o2) {
 				if (o1 instanceof SlotWithIndex) {
@@ -142,7 +138,6 @@ public class DefaultComparators {
 			public boolean supportsOrdering() {
 				return false;
 			}
-			
 		});
 		
 		// ItemStack - ItemType
@@ -209,6 +204,7 @@ public class DefaultComparators {
 				return false;
 			}
 		});
+		
 		// EntityData - EntityData
 		Comparators.registerComparator(EntityData.class, EntityData.class, new Comparator<EntityData, EntityData>() {
 			@Override
@@ -221,81 +217,7 @@ public class DefaultComparators {
 				return false;
 			}
 		});
-	}
-	
-	// EntityData - ItemType
-	final static LinkedHashMap<Class<? extends Entity>, Material> entityMaterials = new LinkedHashMap<>();
-	static {
-		// to fix comparisons of eggs, arrows, etc. (e.g. 'projectile is an arrow')
-		// TODO !Update with every version [entities]
-		entityMaterials.put(Boat.class, Material.BOAT);
-		entityMaterials.put(Painting.class, Material.PAINTING);
-		entityMaterials.put(Arrow.class, Material.ARROW);
-		entityMaterials.put(Egg.class, Material.EGG);
-		entityMaterials.put(Chicken.class, Material.RAW_CHICKEN);
-		entityMaterials.put(EnderPearl.class, Material.ENDER_PEARL);
-		entityMaterials.put(Snowball.class, Material.SNOW_BALL);
-		entityMaterials.put(ThrownExpBottle.class, Material.EXP_BOTTLE);
-//		entityMaterials.put(Fish.class, Material.RAW_FISH); // TODO 1.7
-		entityMaterials.put(TNTPrimed.class, Material.TNT);
-		entityMaterials.put(Slime.class, Material.SLIME_BALL);
-		if (Skript.classExists("org.bukkit.entity.ItemFrame"))
-			entityMaterials.put(ItemFrame.class, Material.ITEM_FRAME);
-		if (Skript.classExists("org.bukkit.entity.Firework"))
-			entityMaterials.put(Firework.class, Material.FIREWORK);
-		if (Skript.classExists("org.bukkit.entity.minecart.StorageMinecart")) {
-			entityMaterials.put(org.bukkit.entity.minecart.StorageMinecart.class, Material.STORAGE_MINECART);
-			entityMaterials.put(org.bukkit.entity.minecart.PoweredMinecart.class, Material.POWERED_MINECART);
-			entityMaterials.put(RideableMinecart.class, Material.MINECART);
-			entityMaterials.put(HopperMinecart.class, Material.HOPPER_MINECART);
-			entityMaterials.put(ExplosiveMinecart.class, Material.EXPLOSIVE_MINECART);
-			entityMaterials.put(Minecart.class, Material.MINECART);
-		} else { // 1.11 does not have these classes, and we compile against 1.11+ API now
-			try {
-				@SuppressWarnings("unchecked")
-				Class<Entity> storageCart = (Class<Entity>) Class.forName("org.bukkit.entity.StorageMinecart");
-				entityMaterials.put(storageCart, Material.STORAGE_MINECART);
-				@SuppressWarnings("unchecked")
-				Class<Entity> poweredCart = (Class<Entity>) Class.forName("org.bukkit.entity.PoweredMinecart");
-				entityMaterials.put(poweredCart, Material.POWERED_MINECART);
-				entityMaterials.put(Minecart.class, Material.MINECART);
-			} catch (ClassNotFoundException e) {
-				Skript.exception(e, "Cannot initialize material support for minecarts");
-			}
-		}
-		if (Skript.classExists("org.bukkit.entity.ArmorStand"))
-			entityMaterials.put(ArmorStand.class, Material.ARMOR_STAND);
-	}
-	public final static Comparator<EntityData, ItemType> entityItemComparator = new Comparator<EntityData, ItemType>() {
-		@Override
-		public Relation compare(final EntityData e, final ItemType i) {
-			if (e instanceof Item)
-				return Relation.get(i.isOfType(((Item) e).getItemStack()));
-			if (e instanceof ThrownPotion)
-				return Relation.get(i.isOfType(Material.POTION.getId(), PotionEffectUtils.guessData((ThrownPotion) e)));
-			if (Skript.classExists("org.bukkit.entity.WitherSkull") && e instanceof WitherSkull)
-				return Relation.get(i.isOfType(Material.SKULL_ITEM.getId(), (short) 1));
-			if (e instanceof BoatData)
-				return Relation.get(((BoatData)e).isOfItemType(i));
-			if (entityMaterials.containsKey(e.getType()))
-				return Relation.get(i.isOfType(entityMaterials.get(e.getType()).getId(), (short) 0));
-			for (final Entry<Class<? extends Entity>, Material> m : entityMaterials.entrySet()) {
-				if (m.getKey().isAssignableFrom(e.getType()))
-					return Relation.get(i.isOfType(m.getValue().getId(), (short) 0));
-			}
-			return Relation.NOT_EQUAL;
-		}
 		
-		@Override
-		public boolean supportsOrdering() {
-			return false;
-		}
-	};
-	static {
-		Comparators.registerComparator(EntityData.class, ItemType.class, entityItemComparator);
-	}
-	
-	static {
 		// CommandSender - CommandSender
 		Comparators.registerComparator(CommandSender.class, CommandSender.class, new Comparator<CommandSender, CommandSender>() {
 			@Override
@@ -462,6 +384,7 @@ public class DefaultComparators {
 				return false;
 			}
 		});
+		
 		// DamageCause - EntityData
 		Comparators.registerComparator(DamageCause.class, EntityData.class, new Comparator<DamageCause, EntityData>() {
 			@Override
@@ -488,4 +411,77 @@ public class DefaultComparators {
 		});
 	}
 	
+	// EntityData - ItemType
+	final static LinkedHashMap<Class<? extends Entity>, Material> entityMaterials = new LinkedHashMap<>();
+	static {
+		// to fix comparisons of eggs, arrows, etc. (e.g. 'projectile is an arrow')
+		// TODO !Update with every version [entities]
+		entityMaterials.put(Boat.class, Material.BOAT);
+		entityMaterials.put(Painting.class, Material.PAINTING);
+		entityMaterials.put(Arrow.class, Material.ARROW);
+		entityMaterials.put(Egg.class, Material.EGG);
+		entityMaterials.put(Chicken.class, Material.RAW_CHICKEN);
+		entityMaterials.put(EnderPearl.class, Material.ENDER_PEARL);
+		entityMaterials.put(Snowball.class, Material.SNOW_BALL);
+		entityMaterials.put(ThrownExpBottle.class, Material.EXP_BOTTLE);
+//			entityMaterials.put(Fish.class, Material.RAW_FISH); // TODO 1.7
+		entityMaterials.put(TNTPrimed.class, Material.TNT);
+		entityMaterials.put(Slime.class, Material.SLIME_BALL);
+		if (Skript.classExists("org.bukkit.entity.ItemFrame"))
+			entityMaterials.put(ItemFrame.class, Material.ITEM_FRAME);
+		if (Skript.classExists("org.bukkit.entity.Firework"))
+			entityMaterials.put(Firework.class, Material.FIREWORK);
+		if (Skript.classExists("org.bukkit.entity.minecart.StorageMinecart")) {
+			entityMaterials.put(org.bukkit.entity.minecart.StorageMinecart.class, Material.STORAGE_MINECART);
+			entityMaterials.put(org.bukkit.entity.minecart.PoweredMinecart.class, Material.POWERED_MINECART);
+			entityMaterials.put(RideableMinecart.class, Material.MINECART);
+			entityMaterials.put(HopperMinecart.class, Material.HOPPER_MINECART);
+			entityMaterials.put(ExplosiveMinecart.class, Material.EXPLOSIVE_MINECART);
+			entityMaterials.put(Minecart.class, Material.MINECART);
+		} else { // 1.11 does not have these classes, and we compile against 1.11+ API now
+			try {
+				@SuppressWarnings("unchecked")
+				Class<Entity> storageCart = (Class<Entity>) Class.forName("org.bukkit.entity.StorageMinecart");
+				entityMaterials.put(storageCart, Material.STORAGE_MINECART);
+				@SuppressWarnings("unchecked")
+				Class<Entity> poweredCart = (Class<Entity>) Class.forName("org.bukkit.entity.PoweredMinecart");
+				entityMaterials.put(poweredCart, Material.POWERED_MINECART);
+				entityMaterials.put(Minecart.class, Material.MINECART);
+			} catch (ClassNotFoundException e) {
+				Skript.exception(e, "Cannot initialize material support for minecarts");
+			}
+		}
+		if (Skript.classExists("org.bukkit.entity.ArmorStand"))
+			entityMaterials.put(ArmorStand.class, Material.ARMOR_STAND);
+	}
+	
+	public final static Comparator<EntityData, ItemType> entityItemComparator = new Comparator<EntityData, ItemType>() {
+		@Override
+		public Relation compare(final EntityData e, final ItemType i) {
+			if (e instanceof Item)
+				return Relation.get(i.isOfType(((Item) e).getItemStack()));
+			if (e instanceof ThrownPotion)
+				return Relation.get(i.isOfType(Material.POTION.getId(), PotionEffectUtils.guessData((ThrownPotion) e)));
+			if (Skript.classExists("org.bukkit.entity.WitherSkull") && e instanceof WitherSkull)
+				return Relation.get(i.isOfType(Material.SKULL_ITEM.getId(), (short) 1));
+			if (e instanceof BoatData)
+				return Relation.get(((BoatData)e).isOfItemType(i));
+			if (entityMaterials.containsKey(e.getType()))
+				return Relation.get(i.isOfType(entityMaterials.get(e.getType()).getId(), (short) 0));
+			for (final Entry<Class<? extends Entity>, Material> m : entityMaterials.entrySet()) {
+				if (m.getKey().isAssignableFrom(e.getType()))
+					return Relation.get(i.isOfType(m.getValue().getId(), (short) 0));
+			}
+			return Relation.NOT_EQUAL;
+		}
+		
+		@Override
+		public boolean supportsOrdering() {
+			return false;
+		}
+	};
+	
+	static {
+		Comparators.registerComparator(EntityData.class, ItemType.class, entityItemComparator);
+	}
 }

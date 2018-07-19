@@ -11,14 +11,17 @@ repositories {
 	jcenter()
 	mavenCentral()
 
+	// Spigot/Bukkit
 	maven {
 		url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 	}
 
+	// WorldEdit
 	maven {
 		url 'http://maven.sk89q.com/repo'
 	}
 
+	// Paper
 	maven {
 		url 'https://repo.destroystokyo.com/repository/maven-public/'
 	}
@@ -27,6 +30,7 @@ repositories {
 		url 'http://ci.emc.gs/nexus/content/groups/aikar/'
 	}
 
+	// Vault
 	maven {
 		url 'http://nexus.hc.to/content/repositories/pub_releases'
 	}
@@ -37,12 +41,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.destroystokyo.paper:paper-api:1.12.2-R0.1-SNAPSHOT'
+	implementation 'com.github.marcelo-mason:PreciousStones:24e3d4bf67b7240ae36b32be10e99d4091938c5c'
+	implementation 'com.destroystokyo.paper:paper-api:1.13-pre7-R0.1-SNAPSHOT'
 	implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:1.1.0'
 	implementation 'com.google.code.findbugs:findbugs:2.0.3'
 	implementation 'com.sk89q:worldguard:6.1.1-SNAPSHOT'
 	implementation 'net.milkbowl.vault:Vault:1.6.6'
-	implementation 'com.github.marcelo-mason:PreciousStones:24e3d4bf67b7240ae36b32be10e99d4091938c5c'
 
 	testImplementation 'junit:junit:4.12'
 	testImplementation 'org.easymock:easymock:3.4'

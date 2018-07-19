@@ -33,6 +33,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -181,8 +182,8 @@ public class BukkitClasses {
 					
 					@SuppressWarnings("deprecation")
 					@Override
-					public String toString(final Block b, final int flags) {
-						return ItemType.toString(new ItemStack(b.getTypeId(), 1, b.getState().getRawData()), flags);
+					public String toString(final Block block, final int flags) {
+						return ItemType.toString(new ItemStack(block.getType(), 1, block.getState().getRawData()), flags);
 					}
 					
 					@Override
@@ -1250,6 +1251,7 @@ public class BukkitClasses {
 						return EnchantmentType.toString(e, flags);
 					}
 					
+					@SuppressWarnings("deprecation")
 					@Override
 					public String toVariableNameString(final Enchantment e) {
 						return "" + e.getName();
@@ -1261,6 +1263,7 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new Serializer<Enchantment>() {
+					@SuppressWarnings("deprecation")
 					@Override
 					public Fields serialize(final Enchantment e) {
 						final Fields f = new Fields();
@@ -1278,6 +1281,7 @@ public class BukkitClasses {
 						assert false;
 					}
 					
+					@SuppressWarnings("deprecation")
 					@Override
 					protected Enchantment deserialize(final Fields fields) throws StreamCorruptedException {
 						final String name = fields.getObject("name", String.class);
@@ -1285,18 +1289,6 @@ public class BukkitClasses {
 						if (e == null)
 							throw new StreamCorruptedException("Invalid enchantment " + name);
 						return e;
-					}
-					
-//					return "" + e.getId();
-					@SuppressWarnings("deprecation")
-					@Override
-					@Nullable
-					public Enchantment deserialize(final String s) {
-						try {
-							return Enchantment.getById(Integer.parseInt(s));
-						} catch (final NumberFormatException e) {
-							return null;
-						}
 					}
 					
 					@Override
