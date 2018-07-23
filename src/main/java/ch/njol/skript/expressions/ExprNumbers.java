@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2017 Peter G�ttinger and contributors
+ * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -40,7 +40,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
- * @author Peter G�ttinger
+ * @author Peter Güttinger
  */
 @Name("Numbers")
 @Description({"All numbers between two given numbers, useful for looping.",
@@ -53,7 +53,7 @@ import ch.njol.util.Kleenean;
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
-				"[(all [[of] the]|the)] (numbers|1�integers) (between|from) %number% (and|to) %number%",
+				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%",
 				"%number% times");
 	}
 	
