@@ -41,7 +41,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 
 @Name("Reversed List")
-@Description("Reverses the given list. This is done by replacing indices by random numbers in resulting list.")
+@Description("Reverses the given list.")
 @Examples({"set {_list::*} to reversed {_list::*}"})
 @Since("INSERT VERSION")
 public class ExprReversedList extends SimpleExpression<Object> {
