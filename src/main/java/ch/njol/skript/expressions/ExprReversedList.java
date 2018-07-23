@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
 
 @Name("Reversed List")
 @Description("Reverses the given list.")
-@Examples({"set {_list::*} to reversed {_list::*}"})
+@Examples("set {_list::*} to reversed {_list::*}")
 @Since("INSERT VERSION")
 public class ExprReversedList extends SimpleExpression<Object> {
 	
