@@ -53,7 +53,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	@SuppressWarnings("null")
 	private Expression<Object> list;
 	
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		list = LiteralUtils.defendExpression(exprs[0]);
@@ -62,14 +62,14 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
-		Object[] origin = list.getAll(e);
+	protected Object[] get(Event event) {
+		Object[] origin = list.getArray(event);
 		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
 		
 		try {
 			Collections.shuffle(shuffled);
 		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to sort a list, but some objects are not comparable!");
+			Skript.error("Tried to shuffle a list, but some objects are not comparable!");
 		}
 		return shuffled.toArray();
 	}
