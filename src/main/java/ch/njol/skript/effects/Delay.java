@@ -81,13 +81,15 @@ public class Delay extends Effect {
 		final long start = Skript.debug() ? System.nanoTime() : 0;
 		final TriggerItem next = getNext();
 		if (next != null) {
-			// Back up local variables
-			Object localVars = Variables.removeLocals(e);
 			
 			delayed.add(e);
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
 				return null;
+			
+			// Back up local variables
+			Object localVars = Variables.removeLocals(e);
+			
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 				@Override
 				public void run() {
