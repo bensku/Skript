@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
