@@ -109,7 +109,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "sorted list";
+		return "sorted list: " + list.toString(e, debug);
 	}
 	
 }

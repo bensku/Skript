@@ -81,7 +81,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "shuffled list";
+		return "shuffled list: " + list.toString(e, debug);
 	}
 
 }

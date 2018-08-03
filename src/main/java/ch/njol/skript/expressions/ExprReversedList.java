@@ -81,7 +81,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "reversed list";
+		return "reversed list: " + list.toString(e, debug);
 	}
 
 }
