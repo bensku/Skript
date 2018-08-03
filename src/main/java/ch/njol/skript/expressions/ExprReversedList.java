@@ -53,6 +53,16 @@ public class ExprReversedList extends SimpleExpression<Object> {
 	@SuppressWarnings("null")
 	private Expression<Object> list;
 	
+	@Override
+	public Class<? extends Object> getReturnType() {
+		return Object.class;
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+	
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -65,26 +75,13 @@ public class ExprReversedList extends SimpleExpression<Object> {
 	protected Object[] get(Event event) {
 		Object[] origin = list.getArray(event);
 		List<Object> reversed = Arrays.asList(origin.clone());
-		try {
-			Collections.reverse(reversed);
-		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to reverse a list, but some objects are not comparable!");
-		}
+		Collections.reverse(reversed);
 		return reversed.toArray();
-	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return Object.class;
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "reversed list";
 	}
+
 }

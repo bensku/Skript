@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -32,6 +33,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
@@ -48,13 +50,32 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Object> list;
+	private Expression<?> list;
+	
+	@Override
+	public Class<? extends Object> getReturnType() {
+		return Object.class;
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
 	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		Class<? extends Object> type = exprs[0].getReturnType();
-		if (Comparable.class.isAssignableFrom(type)) {
+		if (exprs[0] instanceof Variable<?>) {
+			Variable<?> variable = ((Variable<?>) exprs[0]);
+			if (!variable.isList()) {
+				Skript.error("You may only sort list variables, not single variables.");
+				return false;
+			}
+			list = exprs[0].getConvertedExpression(Object.class);
+			return true;
+		}
+		if (!Comparable.class.isAssignableFrom(type)) {
 			Skript.error("List of type " + Classes.toString(type) + " does not support sorting.");
 			return false;
 		}
@@ -65,7 +86,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] unsorted = list.getAll(e);
+		Object[] unsorted = list.getArray(e);
 		Object[] sorted = new Object[unsorted.length]; // Not yet sorted...
 		
 		for (int i = 0; i < sorted.length; i++) {
@@ -85,16 +106,6 @@ public class ExprSortedList extends SimpleExpression<Object> {
 			Skript.error("Tried to sort a list, but some objects are not comparable!");
 		}
 		return sorted;
-	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return Object.class;
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
 	}
 
 	@Override

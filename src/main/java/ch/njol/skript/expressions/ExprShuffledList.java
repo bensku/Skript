@@ -46,12 +46,22 @@ import ch.njol.util.Kleenean;
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
 	
-	static{
+	static {
 		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Object> list;
+	
+	@Override
+	public Class<? extends Object> getReturnType() {
+		return Object.class;
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
 	
 	@SuppressWarnings("null")
 	@Override
@@ -65,27 +75,13 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	protected Object[] get(Event event) {
 		Object[] origin = list.getArray(event);
 		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
-		
-		try {
-			Collections.shuffle(shuffled);
-		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to shuffle a list, but some objects are not comparable!");
-		}
+		Collections.shuffle(shuffled);
 		return shuffled.toArray();
-	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return Object.class;
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return false;
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "shuffled list";
 	}
+
 }
