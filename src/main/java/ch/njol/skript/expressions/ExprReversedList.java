@@ -55,7 +55,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
-		return Object.class;
+		return list.getReturnType();
 	}
 	
 	@Override
