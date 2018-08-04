@@ -51,7 +51,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Object> list;
+	private Expression<?> list;
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
