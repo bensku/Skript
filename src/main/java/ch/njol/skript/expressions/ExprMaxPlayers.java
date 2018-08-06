@@ -42,7 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description({"The count of max players. This can be changed in a <a href='events.html#server_list_ping'>server list ping</a> event only.",
 		"'real max players' returns the real count of max players of the server always and can't be changed."})
 @Examples({"on server list ping:",
-		"	set the fake max players count to (size of all players + 1)"})
+		"	set the max players count to (online players count + 1)"})
 @Since("INSERT VERSION")
 public class ExprMaxPlayers extends SimpleExpression<Number> {
 

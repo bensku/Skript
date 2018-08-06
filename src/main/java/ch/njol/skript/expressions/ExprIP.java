@@ -51,8 +51,8 @@ import org.eclipse.jdt.annotation.Nullable;
 		"	broadcast \"%player%: %ip%\"",
 		"",
 		"on server list ping:",
-		"	send \"%player%: %ip adress of the pinger%\" to the console"})
-@Since("1.4, 2.2-dev26 (when used in connect event)")
+		"	send \"%ip adress of the pinger%\" to the console"})
+@Since("1.4, 2.2-dev26 (when used in connect event), INSERT VERSION (server ping event and pattern improvements)")
 public class ExprIP extends SimpleExpression<String> {
 
 	static {

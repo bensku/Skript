@@ -436,7 +436,7 @@ public class SimpleEvents {
 							"		send \"Hello!\"")
 					.since("2.2-dev37");
 		}
-		Skript.registerEvent("Server List Ping", SimpleEvent.class, (Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") ? PaperServerListPingEvent.class : ServerListPingEvent.class), "[server [list]] ping")
+		Skript.registerEvent("Server List Ping", SimpleEvent.class, (Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") ? PaperServerListPingEvent.class : ServerListPingEvent.class), "server [list] ping")
 				.description("Called when a server list ping is coming in, generally when a Minecraft client pings the server to show its information in the server list.",
 						"The <a href='expressions.html#ExprIP'>IP</a> expression can be used to get the IP adress of the pinger.",
 						"This event can be cancelled on PaperSpigot 1.12.2+ only and this means the client will see the server as offline (but still the player can join).",
