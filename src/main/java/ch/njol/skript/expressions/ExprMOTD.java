@@ -1,0 +1,127 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.expressions;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.classes.Changer;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.ScriptLoader;
+import ch.njol.util.coll.CollectionUtils;
+import ch.njol.util.Kleenean;
+import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.bukkit.event.server.ServerListPingEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+@Name("MOTD")
+@Description({"The message of the day in the server list. " +
+		"This can be changed in a <a href='events.html#server_list_ping'>server list ping</a> event only.",
+		"'default MOTD' returns the default MOTD always and can't be changed."})
+@Examples({"on server list ping:",
+		"	set the motd to \"Join now!\""})
+@Since("INSERT VERSION")
+public class ExprMOTD extends SimpleExpression<String> {
+
+	static {
+		Skript.registerExpression(ExprMOTD.class, String.class, ExpressionType.SIMPLE, "[the] [(1¦default)|(2¦shown|displayed)] (MOTD|message of [the] day)");
+	}
+
+	@SuppressWarnings("null")
+	private Kleenean delay;
+
+	private boolean isDefault;
+
+	@SuppressWarnings({"unchecked", "null"})
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) ||
+				(Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
+		if (parseResult.mark == 2 && !isServerPingEvent) {
+			Skript.error("The 'shown' MOTD expression can't be used outside of a server list ping event");
+			return false;
+		}
+		isDefault = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
+		delay = isDelayed;
+		return true;
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+
+	@Override
+	@Nullable
+	public String[] get(Event e) {
+		if (isDefault)
+			return CollectionUtils.array(Bukkit.getMotd());
+		else
+			return CollectionUtils.array(((ServerListPingEvent) e).getMotd());
+	}
+
+	@Override
+	@Nullable
+	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+		if (!isDefault) {
+			if (delay == Kleenean.TRUE) {
+				Skript.error("Can't change the MOTD anymore after the server list ping event has already passed");
+				return null;
+			}
+			if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET)
+				return CollectionUtils.array(String.class);
+		}
+		return null;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+		switch (mode){
+			case SET:
+				((ServerListPingEvent) e).setMotd((String) delta[0]);
+				break;
+			case DELETE:
+				((ServerListPingEvent) e).setMotd("");
+				break;
+			case RESET:
+				((ServerListPingEvent) e).setMotd(Bukkit.getMotd());
+				break;
+		}
+	}
+
+	@Override
+	public Class<? extends String> getReturnType() {
+		return String.class;
+	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "the " + (isDefault ? "default MOTD" : "MOTD");
+	}
+
+}
