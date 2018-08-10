@@ -21,7 +21,6 @@ package ch.njol.skript.classes.data;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -44,17 +43,17 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -1310,8 +1309,57 @@ public class BukkitClasses {
 				.name("Metadata Holder")
 				.description("Something that can hold metadata (e.g. an entity or block)")
 				.examples("set metadata value \"super cool\" of player to true")
-				.since("2.2-dev36")
-		);
+				.since("2.2-dev36"));
+
+		EnumUtils<TeleportCause> teleportCauses = new EnumUtils<>(TeleportCause.class, "teleport causes");
+		Classes.registerClass(new ClassInfo<>(TeleportCause.class, "teleportcause")
+				.user("teleport (cause|reason|type)s?")
+				.name("Teleport Cause")
+				.description("The teleport cause in a <a href='events.html#teleport'>teleport</a> event.")
+				.examples(teleportCauses.getAllNames())
+				.since("2.2-dev35")
+				.parser(new Parser<TeleportCause>() {
+					@Override
+					public String toString(TeleportCause teleportCause, int flags) {
+						return teleportCauses.toString(teleportCause, flags);
+					}
+
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(TeleportCause teleportCause) {
+						return teleportCause.name();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				}));
+
+		EnumUtils<SpawnReason> spawnReasons = new EnumUtils<>(SpawnReason.class, "spawn reasons");
+		Classes.registerClass(new ClassInfo<>(SpawnReason.class, "spawnreason")
+				.user("spawn(ing)? reasons?")
+				.name("Spawn Reason")
+				.description("The spawn reason in a <a href='events.html#spawn'>spawn</a> event.")
+				.examples(spawnReasons.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<SpawnReason>() {
+					@Override
+					public String toString(SpawnReason spawnReason, int flags) {
+						return spawnReasons.toString(spawnReason, flags);
+					}
+
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(SpawnReason spawnReason) {
+						return spawnReason.name();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				}));
 
 	}
 
