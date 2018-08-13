@@ -65,12 +65,12 @@ public class EffConnect extends Effect {
 		Utils.sendPluginMessage(BUNGEE_CHANNEL, r -> GET_SERVERS_CHANNEL.equals(r.readUTF()), GET_SERVERS_CHANNEL)
 			.thenAccept(response ->
 				Stream.of(response.readUTF().split(", "))
-						.filter(s -> s.equalsIgnoreCase(server))
-						.findFirst()
-						.ifPresent(s -> {
-							for (Player player : players)
-								Utils.sendPluginMessage(player, BUNGEE_CHANNEL, CONNECT_CHANNEL, s);
-						})
+					.filter(s -> s.equalsIgnoreCase(server))
+					.findFirst()
+					.ifPresent(s -> {
+						for (Player player : players)
+							Utils.sendPluginMessage(player, BUNGEE_CHANNEL, CONNECT_CHANNEL, s);
+					})
 			);
 	}
 
