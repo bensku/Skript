@@ -24,16 +24,15 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -51,30 +50,21 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprVersionString extends SimpleExpression<String> {
 
 	static {
-		Skript.registerExpression(ExprVersionString.class, String.class, ExpressionType.SIMPLE, "[the] [(shown|custom|fake)] version [(string|text)]");
+		Skript.registerExpression(ExprVersionString.class, String.class, ExpressionType.SIMPLE, "[the] [(shown|custom)] version [(string|text)]");
 	}
 
-	@SuppressWarnings("null")
-	private Kleenean delay;
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class);
-		boolean isPaperEvent = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
-		if (isServerPingEvent) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (ScriptLoader.isCurrentEvent(ServerListPingEvent.class)) {
 			Skript.error("The version string expression requires PaperSpigot 1.12.2+");
 			return false;
-		} else if (!isPaperEvent) {
-			Skript.error("The version string expression can't be used outside of a server list ping event" + (isServerPingEvent ? " and requires PaperSpigot 1.12.2+" : ""));
+		} else if (!(PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class))) {
+			Skript.error("The version string expression can't be used outside of a server list ping event");
 			return false;
 		}
-		delay = isDelayed;
-		return true;
-	}
-
-	@Override
-	public boolean isSingle() {
 		return true;
 	}
 
@@ -86,20 +76,25 @@ public class ExprVersionString extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (delay == Kleenean.TRUE) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (ScriptLoader.hasDelayBefore.isTrue()) {
 			Skript.error("Can't change the version string anymore after the server list ping event has already passed");
 			return null;
 		}
-		if (mode == Changer.ChangeMode.SET)
+		if (mode == ChangeMode.SET)
 			return CollectionUtils.array(String.class);
 		return null;
 	}
 
-	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		((PaperServerListPingEvent) e).setVersion(((String) delta[0]));
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override

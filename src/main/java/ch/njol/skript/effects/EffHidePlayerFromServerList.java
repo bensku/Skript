@@ -20,7 +20,6 @@
 package ch.njol.skript.effects;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Iterator;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -29,10 +28,11 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import com.google.common.collect.Iterators;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
@@ -48,18 +48,20 @@ public class EffHidePlayerFromServerList extends Effect {
 
 	static {
 		Skript.registerEffect(EffHidePlayerFromServerList.class,
-				"hide [info[rmation] (of|about|related to)] %players% (in|on|from) [the] server list",
+				"hide %players% (in|on|from) [the] server list",
 				"hide %players%'[s] info[rmation] (in|on|from) [the] server list");
 	}
+
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
 	@SuppressWarnings("null")
 	private Expression<Player> players;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) ||
-				(Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
+				(PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
 		if (!isServerPingEvent) {
 			Skript.error("The hide player from server list effect can't be used outside of a server list ping event");
 			return false;
@@ -74,12 +76,7 @@ public class EffHidePlayerFromServerList extends Effect {
 	@Override
 	protected void execute(Event e) {
 		Iterator<Player> it = ((ServerListPingEvent) e).iterator();		
-		List<Player> toRemove = Arrays.asList(players.getArray(e));
-
-		while (it.hasNext()) {
-			if (toRemove.contains(it.next())) 
-				it.remove();
-		}
+		Iterators.removeAll(it, Arrays.asList(players.getArray(e)));
 	}
 
 	@Override

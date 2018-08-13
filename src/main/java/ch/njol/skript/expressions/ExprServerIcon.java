@@ -19,16 +19,17 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Field;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
@@ -40,9 +41,11 @@ import org.bukkit.util.CachedServerIcon;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Server Icon")
-@Description({"Icon of the server in the server list. The first pattern doesn't return anything and will not work outside of a <a href='events.html#server_list_ping'>server list ping</a> event. " +
-		"But can be set to an icon that loaded using the <a href='effects.html#EffLoadServerIcon'>load server icon</a> effect, or can be reset to the default icon.",
-		"The second pattern returns the default server icon (server-icon.png) and cannot be changed."})
+@Description({"Icon of the server in the server list. This returns the currently shown icon on PaperSpigot 1.12.2+, but returns the default server icon on older versions or Spigot.",
+		"Also can be set to an icon that loaded using the <a href='effects.html#EffLoadServerIcon'>load server icon</a> effect, " +
+		"or can be reset to the default icon in a <a href='events.html#server_list_ping'>server list ping</a>.",
+		"",
+		"'default server icon' returns the default server icon (server-icon.png) always and cannot be changed."})
 @Examples({"on script load:",
 		"	set {server-icons::default} to the default server icon"})
 @Since("INSERT VERSION")
@@ -50,70 +53,76 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 
 	static {
 		Skript.registerExpression(ExprServerIcon.class, CachedServerIcon.class, ExpressionType.PROPERTY,
-				"[the] [(shown|sent)] [server] icon",
-				"[the] default [server] icon");
+				"[the] [(1¦(default)|2¦(shown|sent))] [server] icon");
 	}
 
-	private boolean isServerPingEvent;
-	private int pattern;
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
-	@SuppressWarnings("null")
-	private Kleenean delay;
+	private boolean isServerPingEvent, isDefault;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		pattern = matchedPattern;
-		boolean isPaperEvent = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
-		isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) || isPaperEvent;
-		if (!isServerPingEvent && pattern == 0) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) || (PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
+		isDefault = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
+		if (!isServerPingEvent && !isDefault) {
 			Skript.error("The 'shown' server icon expression can't be used outside of a server list ping event");
 			return false;
 		}
-		delay = isDelayed;
-		return true;
-	}
-
-	@Override
-	public boolean isSingle() {
 		return true;
 	}
 
 	@Override
 	@Nullable
 	public CachedServerIcon[] get(Event e) {
-		if (isServerPingEvent && pattern == 0)
+		CachedServerIcon icon = null;
+		if ((isServerPingEvent && !isDefault) && PAPER_EVENT_EXISTS)
+			icon = ((PaperServerListPingEvent) e).getServerIcon();
+		else
+			icon = Bukkit.getServerIcon();
+		if (!PAPER_EVENT_EXISTS) {
+			try {
+				String value = (String) icon.getClass().getDeclaredField("value").get(icon);
+				if (value == null)
+					return null;
+			} catch (Exception ex) {}
+		} else if (icon.getData() == null) {
 			return null;
-		CachedServerIcon icon = Bukkit.getServerIcon();
-		// Returns null if server-icon.png doesn't exist
-		return CollectionUtils.array(icon.getData() == null ? null : icon);
+		}
+		return CollectionUtils.array(icon);
 	}
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (isServerPingEvent && pattern == 0) {
-			if (delay == Kleenean.TRUE) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (isServerPingEvent && !isDefault) {
+			if (ScriptLoader.hasDelayBefore.isTrue()) {
 				Skript.error("Can't change the server icon anymore after the server list ping event has already passed");
 				return null;
 			}
-			if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET)
+			if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
 				return CollectionUtils.array(CachedServerIcon.class);
 		}
 		return null;
 	}
 
-	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		ServerListPingEvent event = (ServerListPingEvent) e;
 		switch (mode) {
 			case SET:
-				((ServerListPingEvent) e).setServerIcon((CachedServerIcon) delta[0]);
+				event.setServerIcon((CachedServerIcon) delta[0]);
 				break;
 			case RESET:
-				((ServerListPingEvent) e).setServerIcon(Bukkit.getServerIcon());
+				event.setServerIcon(Bukkit.getServerIcon());
 				break;
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override
@@ -123,7 +132,7 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the " + ((!isServerPingEvent || pattern == 1) ? "default server icon" : "shown server icon");
+		return "the " + (!isServerPingEvent || isDefault ? "default" : "shown") + " server icon";
 	}
 
 }

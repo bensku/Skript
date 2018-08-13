@@ -1313,7 +1313,7 @@ public class BukkitClasses {
 				.since("2.2-dev36"));
 		
 		Classes.registerClass(new ClassInfo<>(CachedServerIcon.class, "cachedservericon")
-				.user("((loaded|cached) ?)?server ?icons?")
+				.user("server ?icons?")
 				.name("Loaded Server Icon")
 				.description("A server icon that loaded using the <a href='effects.html#EffLoadServerIcon'>load server icon</a> effect.")
 				.examples("")
@@ -1323,6 +1323,11 @@ public class BukkitClasses {
 					@Nullable
 					public CachedServerIcon parse(final String s, final ParseContext context) {
 						return null;
+					}
+					
+					@Override
+					public boolean canParse(final ParseContext context) {
+						return false;
 					}
 					
 					@Override
@@ -1338,7 +1343,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String getVariableNamePattern() {
-						return "\\S+";
+						return "server icon";
 					}
 				}));
 	}

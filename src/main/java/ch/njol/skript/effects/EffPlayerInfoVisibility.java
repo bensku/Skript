@@ -26,7 +26,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
@@ -53,18 +53,18 @@ public class EffPlayerInfoVisibility extends Effect {
 				"(show|reveal) [all] player [related] info[rmation] [(in|to|on|from) [the] server list]");
 	}
 
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
+
 	private boolean shouldHide;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class);
-		boolean isPaperEvent = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
-		if (isServerPingEvent) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (ScriptLoader.isCurrentEvent(ServerListPingEvent.class)) {
 			Skript.error("The player info visibility effect requires PaperSpigot 1.12.2+");
 			return false;
-		} else if (!isPaperEvent) {
-			Skript.error("The player info visibility effect can't be used outside of a server list ping event" + (isServerPingEvent ? " and requires PaperSpigot 1.12.2+" : ""));
+		} else if (!(PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class))) {
+			Skript.error("The player info visibility effect can't be used outside of a server list ping event");
 			return false;
 		} else if (isDelayed == Kleenean.TRUE) {
 			Skript.error("Can't change the player info visibility anymore after the server list ping event has already passed");

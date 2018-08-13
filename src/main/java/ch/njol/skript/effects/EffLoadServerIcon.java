@@ -71,21 +71,16 @@ public class EffLoadServerIcon extends AsyncEffect {
 		if (f.exists() && f.isFile()) {
 			try {
 				lastLoaded = Bukkit.loadServerIcon(f);
-			} catch (NullPointerException npe) {
-				Skript.warning("'" + path + "' is not an image!");
-			} catch (IllegalArgumentException iae) {
-				Skript.warning("The image to be set as the server icon must be 64x64 pixels! ('" + path + "')");
+			} catch (NullPointerException | IllegalArgumentException ignored) {
 			} catch (Exception ex) {
 				Skript.exception(ex);
 			}
-		} else {
-			Skript.warning("'" + path.getSingle(e) + "' is not a valid file path!");
 		}
     }
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "load server icon from file '" + path.toString(e, debug) + "'";
+		return "load server icon from file " + path.toString(e, debug);
 	}
 
 }

@@ -24,11 +24,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
@@ -51,27 +51,20 @@ public class ExprMOTD extends SimpleExpression<String> {
 		Skript.registerExpression(ExprMOTD.class, String.class, ExpressionType.SIMPLE, "[the] [(1¦default)|(2¦shown|displayed)] (MOTD|message of [the] day)");
 	}
 
-	@SuppressWarnings("null")
-	private Kleenean delay;
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
 	private boolean isDefault;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) ||
-				(Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
+				(PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
 		if (parseResult.mark == 2 && !isServerPingEvent) {
 			Skript.error("The 'shown' MOTD expression can't be used outside of a server list ping event");
 			return false;
 		}
 		isDefault = (parseResult.mark == 0 && !isServerPingEvent) || parseResult.mark == 1;
-		delay = isDelayed;
-		return true;
-	}
-
-	@Override
-	public boolean isSingle() {
 		return true;
 	}
 
@@ -86,32 +79,42 @@ public class ExprMOTD extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (!isDefault) {
-			if (delay == Kleenean.TRUE) {
+			if (ScriptLoader.hasDelayBefore.isTrue()) {
 				Skript.error("Can't change the MOTD anymore after the server list ping event has already passed");
 				return null;
 			}
-			if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET)
-				return CollectionUtils.array(String.class);
+			switch (mode) {
+				case SET:
+				case DELETE:
+				case RESET:
+					return CollectionUtils.array(String.class);
+			}
 		}
 		return null;
 	}
 
-	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		ServerListPingEvent event = (ServerListPingEvent) e;
 		switch (mode){
 			case SET:
-				((ServerListPingEvent) e).setMotd((String) delta[0]);
+				event.setMotd((String) delta[0]);
 				break;
 			case DELETE:
-				((ServerListPingEvent) e).setMotd("");
+				event.setMotd("");
 				break;
 			case RESET:
-				((ServerListPingEvent) e).setMotd(Bukkit.getMotd());
+				event.setMotd(Bukkit.getMotd());
 				break;
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override

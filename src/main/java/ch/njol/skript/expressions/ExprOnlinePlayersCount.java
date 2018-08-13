@@ -25,16 +25,15 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -52,36 +51,28 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Number> {
 
 	static {
 		Skript.registerExpression(ExprOnlinePlayersCount.class, Number.class, ExpressionType.PROPERTY,
-				"[the] [(1¦(real|default)|(2¦fake|shown|displayed))] online players (count|amount|number|size)",
-				"[the] [(1¦(real|default)|(2¦fake|shown|displayed))] (count|amount|number|size) of online players");
+				"[the] [(1¦(real|default)|2¦(fake|shown|displayed))] online players (count|amount|number|size)",
+				"[the] [(1¦(real|default)|2¦(fake|shown|displayed))] (count|amount|number|size) of online players");
 	}
 
-	@SuppressWarnings("null")
-	private Kleenean delay;
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
 
 	private boolean isReal;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class);
-		boolean isPaperEvent = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		boolean isPaperEvent = PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
 		if (parseResult.mark == 2) {
-			if (isServerPingEvent) {
-				Skript.error("The 'shown' online players count expression requires PaperSpigot 1.12.2+");
+			if (ScriptLoader.isCurrentEvent(ServerListPingEvent.class)) {
+				Skript.error("The 'fake' online players count expression requires PaperSpigot 1.12.2+");
 				return false;
 			} else if (!isPaperEvent) {
-				Skript.error("The 'shown' online players count expression can't be used outside of a server list ping event" + (isServerPingEvent ? " and requires PaperSpigot 1.12.2+" : ""));
+				Skript.error("The 'fake' online players count expression can't be used outside of a server list ping event");
 				return false;
 			}
 		}
 		isReal = (parseResult.mark == 0 && !isPaperEvent) || parseResult.mark == 1;
-		delay = isDelayed;
-		return true;
-	}
-
-	@Override
-	public boolean isSingle() {
 		return true;
 	}
 
@@ -96,27 +87,29 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Number> {
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (!isReal) {
-			if (delay == Kleenean.TRUE) {
+			if (ScriptLoader.hasDelayBefore.isTrue()) {
 				Skript.error("Can't change the shown online players count anymore after the server list ping event has already passed");
 				return null;
 			}
-			if (mode == Changer.ChangeMode.SET ||
-					mode == Changer.ChangeMode.ADD ||
-					mode == Changer.ChangeMode.REMOVE ||
-					mode == Changer.ChangeMode.DELETE ||
-					mode == Changer.ChangeMode.RESET)
-				return CollectionUtils.array(Number.class);
+			switch (mode) {
+				case SET:
+				case ADD:
+				case REMOVE:
+				case DELETE:
+				case RESET:
+					return CollectionUtils.array(Number.class);
+			}
 		}
 		return null;
 	}
 
-	@Override
 	@SuppressWarnings("null")
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		PaperServerListPingEvent event = (PaperServerListPingEvent) e;
-		switch (mode){
+		switch (mode) {
 			case SET:
 				event.setNumPlayers(((Number) delta[0]).intValue());
 				break;
@@ -131,6 +124,11 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Number> {
 				event.setNumPlayers(PlayerUtils.getOnlinePlayers().size());
 				break;
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override

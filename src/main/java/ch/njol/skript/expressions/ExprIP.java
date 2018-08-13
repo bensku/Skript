@@ -26,10 +26,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
@@ -41,8 +41,8 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("IP")
-@Description({"The IP address of a player, or the connected player in a <a href='events.html#connect'>connect</a>> event, " +
-		"or the pinger in a <a href='events.html#server_list_ping'>server list ping</a> event."})
+@Description("The IP address of a player, or the connected player in a <a href='events.html#connect'>connect</a>> event, " +
+		"or the pinger in a <a href='events.html#server_list_ping'>server list ping</a> event.")
 @Examples({"IP-ban the player # is equal to the next line",
 		"ban the IP-address of the player",
 		"broadcast \"Banned the IP %IP of player%\"",
@@ -52,7 +52,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"",
 		"on server list ping:",
 		"	send \"%ip adress of the pinger%\" to the console"})
-@Since("1.4, 2.2-dev26 (when used in connect event), INSERT VERSION (server ping event and pattern improvements)")
+@Since("1.4, 2.2-dev26 (when used in connect event), INSERT VERSION (when used in server list ping event)")
 public class ExprIP extends SimpleExpression<String> {
 
 	static {
@@ -66,6 +66,8 @@ public class ExprIP extends SimpleExpression<String> {
 				"pinger's IP[( |-)address]");
 	}
 
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
+
 	@SuppressWarnings("null")
 	private Expression<Player> players;
 
@@ -78,7 +80,7 @@ public class ExprIP extends SimpleExpression<String> {
 		pattern = matchedPattern;
 		isConnectEvent = ScriptLoader.isCurrentEvent(PlayerLoginEvent.class);
 		isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) ||
-				(Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
+				(PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class));
 		if (pattern < 2) {
 			players = (Expression<Player>) exprs[0];
 		} else if (!isConnectEvent && !isServerPingEvent) {
@@ -90,7 +92,7 @@ public class ExprIP extends SimpleExpression<String> {
 
 	@Override
 	@Nullable
-	protected String[] get(final Event e) {
+	protected String[] get(Event e) {
 		// If no player is specified
 		if (pattern > 1) {
 			InetAddress addr;
@@ -135,21 +137,25 @@ public class ExprIP extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<String> getReturnType() {
-		return String.class;
-	}
-
-	@Override
 	public boolean isSingle() {
 		return true;
 	}
 
 	@Override
+	public Class<String> getReturnType() {
+		return String.class;
+	}
+
+	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (e != null)
-			return "ip of " + (isServerPingEvent ? "the pinger" : (isConnectEvent ? "the connected player" : players.toString(e, debug)));
-		else
+		if (e != null) {
+			if (pattern > 1)
+				return "ip of " + (isServerPingEvent ? "the pinger" : "the connected player");
+			else
+				return "ip of " + players.toString(e, debug);
+		} else {
 			return "ip";
+		}
 	}
 
 }
