@@ -23,17 +23,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.effects.EffTeleport;
 import ch.njol.skript.entity.EntityData;
@@ -366,6 +377,105 @@ public abstract class Utils {
 			default:
 				return 1;
 		}
+	}
+
+	/**
+	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
+	 *
+	 * The next plugin message to be received through {@code channel} will be assumed to be
+	 * the response.
+	 *
+	 * @param channel the channel for this plugin message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if no players are online.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel, String... data) {
+		return sendPluginMessage(channel, r -> true, data);
+	}
+
+	/**
+	 * Sends a plugin message using the from {@code player}.
+	 *
+	 * The next plugin message to be received through {@code channel} will be assumed to be
+	 * the response.
+	 *
+	 * @param player the player to send the plugin message through
+	 * @param channel the channel for this plugin message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if no players are online.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel, String... data) {
+		return sendPluginMessage(player, channel, r -> true, data);
+	}
+
+	/**
+	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
+	 *
+	 * @param channel the channel for this plugin message
+	 * @param messageVerifier verifies that a plugin message is the response to the sent message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if the player is null.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel,
+			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
+		Player firstPlayer = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+		return sendPluginMessage(firstPlayer, channel, messageVerifier, data);
+	}
+
+	/**
+	 * Sends a plugin message.
+	 *
+	 * Example usage using the "GetServers" bungee plugin message channel via an overload:
+	 * <code>
+	 *     Utils.sendPluginMessage("BungeeCord", r -> "GetServers".equals(r.readUTF()), "GetServers")
+	 *     			.thenAccept(response -> Bukkit.broadcastMessage(response.readUTF()) // comma delimited server broadcast
+	 *     			.exceptionally(ex -> {
+	 *     			 	Skript.warning("Failed to get servers because there are no players online");
+	 *     			 	return null;
+	 *     			});
+	 * </code>
+	 *
+	 * @param player the player to send the plugin message through
+	 * @param channel the channel for this plugin message
+	 * @param messageVerifier verifies that a plugin message is the response to the sent message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if the player is null.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel,
+			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
+		CompletableFuture<ByteArrayDataInput> completableFuture = new CompletableFuture<>();
+
+		if (player == null) {
+			completableFuture.completeExceptionally(new IllegalStateException("Can't send plugin messages from a null player"));
+			return completableFuture;
+		}
+
+		Bukkit.getMessenger().registerOutgoingPluginChannel(Skript.getInstance(), channel);
+
+		Bukkit.getMessenger().registerIncomingPluginChannel(Skript.getInstance(), channel, new PluginMessageListener() {
+
+			@Override
+			public void onPluginMessageReceived(@Nullable String sendingChannel, @Nullable Player sendingPlayer,
+					@Nullable byte[] message) {
+				ByteArrayDataInput input = ByteStreams.newDataInput(message);
+				if (channel.equals(sendingChannel) && sendingPlayer == player && !completableFuture.isDone()
+						&& messageVerifier.test(input)) {
+					completableFuture.complete(input);
+					Bukkit.getMessenger().unregisterIncomingPluginChannel(Skript.getInstance(), channel, this);
+				}
+			}
+
+		});
+
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		Stream.of(data).forEach(out::writeUTF);
+		player.sendPluginMessage(Skript.getInstance(), channel, out.toByteArray());
+
+		return completableFuture;
 	}
 	
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
