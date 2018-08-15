@@ -36,6 +36,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -454,22 +455,30 @@ public abstract class Utils {
 			return completableFuture;
 		}
 
-		Bukkit.getMessenger().registerOutgoingPluginChannel(Skript.getInstance(), channel);
+		Skript skript = Skript.getInstance();
+		Messenger messenger = Bukkit.getMessenger();
 
-		Bukkit.getMessenger().registerIncomingPluginChannel(Skript.getInstance(), channel, new PluginMessageListener() {
+		messenger.registerOutgoingPluginChannel(skript, channel);
 
-			@Override
-			public void onPluginMessageReceived(@Nullable String sendingChannel, @Nullable Player sendingPlayer,
-					@Nullable byte[] message) {
-				ByteArrayDataInput input = ByteStreams.newDataInput(message);
-				if (channel.equals(sendingChannel) && sendingPlayer == player && !completableFuture.isDone()
-						&& messageVerifier.test(input)) {
-					completableFuture.complete(input);
-					Bukkit.getMessenger().unregisterIncomingPluginChannel(Skript.getInstance(), channel, this);
-				}
+		PluginMessageListener listener = (sendingChannel, sendingPlayer, message) -> {
+			ByteArrayDataInput input = ByteStreams.newDataInput(message);
+			if (channel.equals(sendingChannel) && sendingPlayer == player && !completableFuture.isDone()
+					&& !completableFuture.isCancelled() && messageVerifier.test(input)) {
+				completableFuture.complete(input);
 			}
+		};
 
-		});
+		messenger.registerIncomingPluginChannel(skript, channel, listener);
+
+		completableFuture.whenComplete((r, ex) -> messenger.unregisterIncomingPluginChannel(skript, channel, listener));
+
+		// if we haven't gotten a response after a minute, let's just assume there wil never be one
+		Bukkit.getScheduler().scheduleSyncDelayedTask(skript, () -> {
+
+			if (!completableFuture.isDone())
+				completableFuture.cancel(true);
+
+		}, 60 * 20);
 
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		Stream.of(data).forEach(out::writeUTF);

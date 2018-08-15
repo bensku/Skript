@@ -19,19 +19,25 @@
  */
 package ch.njol.skript.effects;
 
-import java.util.stream.Stream;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 
+@Name("Connect")
+@Description("Connects a player to another bungeecord server")
+@Examples("connect all players to \"hub\"")
+@Since("INSERT VERSION")
 public class EffConnect extends Effect {
 
 	public static final String BUNGEE_CHANNEL = "BungeeCord";
@@ -57,21 +63,18 @@ public class EffConnect extends Effect {
 		if (server == null)
 			return;
 
-		Player[] players = this.players.getArray(e);
-		if (players == null || players.length == 0)
-			return;
-
 		// the message channel is case sensitive so let's fix that
 		Utils.sendPluginMessage(BUNGEE_CHANNEL, r -> GET_SERVERS_CHANNEL.equals(r.readUTF()), GET_SERVERS_CHANNEL)
-			.thenAccept(response ->
-				Stream.of(response.readUTF().split(", "))
-					.filter(s -> s.equalsIgnoreCase(server))
-					.findFirst()
-					.ifPresent(s -> {
-						for (Player player : players)
-							Utils.sendPluginMessage(player, BUNGEE_CHANNEL, CONNECT_CHANNEL, s);
-					})
-			);
+			.thenAccept(response -> {
+				// for loop isn't as pretty a stream, but will be faster with tons of servers
+				for (String validServer : response.readUTF().split(", ")) {
+					if (validServer.equalsIgnoreCase(server)) {
+						for (Player player : players.getArray(e))
+							Utils.sendPluginMessage(player, BUNGEE_CHANNEL, CONNECT_CHANNEL, validServer);
+						break;
+					}
+				}
+			});
 	}
 
 	@Override
