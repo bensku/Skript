@@ -146,6 +146,7 @@ Current team behind Skript:
 * [bensku](https://github.com/bensku) (Skript maintainer/developer)
 * [Snow-Pyon](https://github.com/Snow-Pyon) (Skript developer)
 * [Pikachu920](https://github.com/Pikachu920) (Skript developer)
+* [Nicofisi](https://github.com/Nicofisi) (Skript developer)
 * [TheBentoBox](https://github.com/TheBentoBox) (issue tracker manager)
 
 Also, of course, we should thank [Njol](https://github.com/Njol) for creating

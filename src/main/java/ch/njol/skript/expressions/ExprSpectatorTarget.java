@@ -37,7 +37,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The entity a player is currently spectating. This can be set and cleared when" +
 		"the given player is in spectator mode.")
 @Examples("set spectator target of player to last spawned creeper")
-@Since("INSERT VERSION")
+@Since("2.2-dev37")
 public class ExprSpectatorTarget extends SimplePropertyExpression<Player, Entity> {
 
 	static {

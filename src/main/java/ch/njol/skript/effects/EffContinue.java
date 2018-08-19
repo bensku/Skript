@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 		"\tif loop-value does not have permission \"moderator\":\n" +
 		"\t\tcontinue # filter out non moderators\n" +
 		"\tbroadcast \"%loop-player% is a moderator!\" # only moderators get broadcast")
-@Since("INSERT VERSION")
+@Since("2.2-dev37")
 public class EffContinue extends Effect {
 
 	static {

@@ -41,7 +41,7 @@ import ch.njol.util.Kleenean;
 @Name("Send Block Change")
 @Description("Makes a player see a block as something it really isn't")
 @Examples("make player see block at player as dirt")
-@Since("INSERT VERSION")
+@Since("2.2-dev37")
 public class EffSendBlockChange extends Effect {
 
 	private static final boolean SUPPORTED = Skript.methodExists(Player.class, "sendBlockChange", Location.class,

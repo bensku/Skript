@@ -19,16 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -37,26 +31,23 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.util.Kleenean;
 
 @Name("Raw Name")
-@Description("Raw Minecraft material name for given item. Note that this is not guaranteed to give same results on all servers.")
+@Description("The raw Minecraft material name of the given item. Note that this is not guaranteed to give same results on all servers.")
 @Examples("raw name of tool of player")
 @Since("unknown (2.2)")
 public class ExprRawName extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprRawName.class, String.class, ExpressionType.SIMPLE, "(raw|minecraft|vanilla) name of %itemtypes%");
+		Skript.registerExpression(ExprRawName.class, String.class, ExpressionType.SIMPLE, "(raw|minecraft|vanilla) name[s] of %itemtypes%");
 	}
 	
-	@Nullable
+	@SuppressWarnings("null")
 	private Expression<ItemType> types;
 	
 	@SuppressWarnings("unchecked")
@@ -70,15 +61,7 @@ public class ExprRawName extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
-		if (types == null) return null;
-		
-		ItemType[] items = types.getAll(e);
-		List<String> names = new ArrayList<>();
-		for (int i = 0; i < items.length; i++) {
-			names.addAll(items[i].getRawNames());
-		}
-		
-		return names.toArray(new String[names.size()]);
+		return Arrays.stream(types.getAll(e)).map(ItemType::getRawNames).flatMap(List::stream).toArray(String[]::new);
 	}
 	
 	@Override

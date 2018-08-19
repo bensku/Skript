@@ -262,6 +262,11 @@ public class DelayedChangeBlock implements Block {
 	@Override
 	public BlockState getState() {
 		return b.getState();
+	}	
+
+	@Override
+	public BlockState getState(boolean useSnapshot) {
+		return b.getState(useSnapshot);
 	}
 	
 	@Override

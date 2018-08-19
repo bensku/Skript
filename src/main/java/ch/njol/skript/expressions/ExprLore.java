@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,10 +49,11 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * TODO make a 'line %number% of %text%' expression and figure out how to deal with signs (4 lines, delete = empty, etc...)
- * 
+ *
  * @author joeuguce99
  */
 @Name("Lore")
@@ -59,43 +61,36 @@ import ch.njol.util.StringUtils;
 @Examples("set the 1st line of the item's lore to \"<orange>Excalibur 2.0\"")
 @Since("2.1")
 public class ExprLore extends SimpleExpression<String> {
+
 	static {
-		try {
-			ItemMeta.class.getName();
-			
 			Skript.registerExpression(ExprLore.class, String.class, ExpressionType.PROPERTY,
 					"[the] lore of %itemstack/itemtype%", "%itemstack/itemtype%'[s] lore",
-					"[the] line %number% of [the] lore of %itemstack/itemtype%", "[the] line %number% of %itemstack/itemtype%'[s] lore",
-					"[the] %number%(st|nd|rd|th) line of [the] lore of %itemstack/itemtype%", "[the] %number%(st|nd|rd|th) line of %itemstack/itemtype%'[s] lore");
-			
-		} catch (final NoClassDefFoundError e) {}
+					"[the] line %number% of [the] lore of %itemstack/itemtype%",
+					"[the] line %number% of %itemstack/itemtype%'[s] lore",
+					"[the] %number%(st|nd|rd|th) line of [the] lore of %itemstack/itemtype%",
+					"[the] %number%(st|nd|rd|th) line of %itemstack/itemtype%'[s] lore");
 	}
-	
+
 	@Nullable
-	private Expression<Number> line;
-	
+	private Expression<Number> lineNumber;
+
 	@SuppressWarnings("null")
 	private Expression<?> item;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		line = exprs.length > 1 ? (Expression<Number>) exprs[0] : null;
+		lineNumber = exprs.length > 1 ? (Expression<Number>) exprs[0] : null;
 		item = exprs[exprs.length - 1];
 		return true;
 	}
-	
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
-	
+
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
 		final Object i = item.getSingle(e);
-		final Number n = line != null ? line.getSingle(e) : null;
-		if (n == null && line != null)
+		final Number n = lineNumber != null ? lineNumber.getSingle(e) : null;
+		if (n == null && lineNumber != null)
 			return null;
 		if (i == null || i instanceof ItemStack && ((ItemStack) i).getType() == Material.AIR)
 			return new String[0];
@@ -108,119 +103,151 @@ public class ExprLore extends SimpleExpression<String> {
 		final int l = n.intValue() - 1;
 		if (l < 0 || l >= lore.size())
 			return new String[0];
-		return new String[] {lore.get(l)};
+		return new String[]{lore.get(l)};
 	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return (line != null ? "the line " + line.toString(e, debug) + " of " : "") + "the lore of " + item.toString(e, debug);
-	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
+		boolean acceptsMany = lineNumber == null;
 		switch (mode) {
-			case SET:
-			case DELETE:
-			case ADD:
 			case REMOVE:
 			case REMOVE_ALL:
-				if (ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class, ItemType.class))
-					return new Class[] {String.class};
+			case DELETE:
+				acceptsMany = false;
+			case SET:
+			case ADD:
+				if (ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class, ItemType.class)) {
+					return CollectionUtils.array(acceptsMany ? String[].class : String.class);
+				}
 				return null;
 			case RESET:
 			default:
 				return null;
 		}
 	}
-	
-	// TODO test (especially remove)
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		final Object i = item.getSingle(e);
+		Object i = item.getSingle(e);
+
+		String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
+
+		// air is just nothing, it can't have a lore
 		if (i == null || i instanceof ItemStack && ((ItemStack) i).getType() == Material.AIR)
 			return;
+
 		ItemMeta meta = i instanceof ItemStack ? ((ItemStack) i).getItemMeta() : (ItemMeta) ((ItemType) i).getItemMeta();
 		if (meta == null)
 			meta = Bukkit.getItemFactory().getItemMeta(Material.STONE);
-		final Number n = line != null ? line.getSingle(e) : null;
+
+		Number lineNumber = this.lineNumber != null ? this.lineNumber.getSingle(e) : null;
 		List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-		if (n == null) {
-			if (line != null)
+
+		if (lineNumber == null) {
+			// if the condition below is true, the pattern with the line %number% expression was used,
+			// but the line number turned out to be null at runtime, meaning we should ignore it
+			if (this.lineNumber != null) {
 				return;
+			}
+
 			switch (mode) {
 				case SET:
-					assert delta != null;
-					lore = Arrays.asList((String) delta[0]);
+					assert stringDelta != null;
+					lore = Arrays.asList(stringDelta);
 					break;
 				case ADD:
-					assert delta != null;
-					lore.add((String) delta[0]);
+					assert stringDelta != null;
+					lore.addAll(Arrays.asList(stringDelta));
 					break;
 				case DELETE:
 					lore = null;
 					break;
 				case REMOVE:
 				case REMOVE_ALL:
-					assert delta != null;
-					if (SkriptConfig.caseSensitive.value()) {
-						lore = Arrays.asList((mode == ChangeMode.REMOVE ? StringUtils.join(lore, "\n").replaceFirst(Pattern.quote((String) delta[0]), "") : StringUtils.join(lore, "\n").replace((CharSequence) delta[0], "")).split("\n"));
-					} else {
-						final Matcher m = Pattern.compile(Pattern.quote((String) delta[0]), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(StringUtils.join(lore, "\n"));
-						lore = Arrays.asList((mode == ChangeMode.REMOVE ? m.replaceFirst("") : m.replaceAll("")).split("\n"));
-					}
+					assert stringDelta != null;
+					lore = Arrays.asList(handleRemove(
+							StringUtils.join(lore, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n"));
 					break;
 				case RESET:
 					assert false;
-					break;
+					return;
 			}
 		} else {
-			final int l = Math2.fit(0, n.intValue() - 1, 99); // TODO figure out the actual maximum
-			for (int j = lore.size(); j <= l; j++)
-				lore.add("");
+			// note that the line number is changed from one-indexed to zero-indexed here
+			int lineNum = Math2.fit(0, lineNumber.intValue() - 1, 99); // TODO figure out the actual maximum
+
+			// fill in the empty lines above the line being set with empty strings, if they haven't been set to anything already
+			if (lineNum > lore.size()) {
+				lore.addAll(Collections.nCopies(lineNum - lore.size() + 1, ""));
+			}
 			switch (mode) {
 				case SET:
-					assert delta != null;
-					lore.set(l, (String) delta[0]);
-					break;
-				case DELETE:
-					lore.remove(l);
+					assert stringDelta != null;
+					lore.set(lineNum, stringDelta[0]);
 					break;
 				case ADD:
-					assert delta != null;
-					lore.set(l, lore.get(l) + (String) delta[0]);
+					assert stringDelta != null;
+					lore.set(lineNum, lore.get(lineNum) + stringDelta[0]);
+					break;
+				case DELETE:
+					lore.remove(lineNum);
 					break;
 				case REMOVE:
 				case REMOVE_ALL:
-					assert delta != null;
-					if (SkriptConfig.caseSensitive.value()) {
-						lore.set(l, mode == ChangeMode.REMOVE ? lore.get(l).replaceFirst(Pattern.quote((String) delta[0]), "") : lore.get(l).replace((CharSequence) delta[0], ""));
-					} else {
-						final Matcher m = Pattern.compile(Pattern.quote((String) delta[0]), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(lore.get(l));
-						lore.set(l, mode == ChangeMode.REMOVE ? m.replaceFirst("") : m.replaceAll(""));
-					}
+					assert stringDelta != null;
+					lore.set(lineNum, handleRemove(lore.get(lineNum), stringDelta[0], mode == ChangeMode.REMOVE_ALL));
 					break;
 				case RESET:
 					assert false;
 					return;
 			}
 		}
+
 		meta.setLore(lore == null || lore.size() == 0 ? null : lore);
-		if (i instanceof ItemStack)
+		if (i instanceof ItemStack) {
 			((ItemStack) i).setItemMeta(meta);
-		else
-			((ItemType) i).setItemMeta(meta);
-		if (ChangerUtils.acceptsChange(item, ChangeMode.SET, i.getClass())) {
-			item.change(e, i instanceof ItemStack ? new ItemStack[] {(ItemStack) i} : new ItemType[] {(ItemType) i}, ChangeMode.SET);
 		} else {
-			item.change(e, i instanceof ItemStack ? new ItemType[] {new ItemType((ItemStack) i)} : new ItemStack[] {((ItemType) i).getRandom()}, ChangeMode.SET);
+			((ItemType) i).setItemMeta(meta);
 		}
-		return;
+
+		if (ChangerUtils.acceptsChange(item, ChangeMode.SET, i.getClass())) {
+			Object[] itemDelta = i instanceof ItemStack ? new ItemStack[]{(ItemStack) i} : new ItemType[]{(ItemType) i};
+			item.change(e, itemDelta, ChangeMode.SET);
+		} else {
+			Object[] itemDelta = i instanceof ItemStack ? new ItemType[]{new ItemType((ItemStack) i)} :
+					new ItemStack[]{((ItemType) i).getRandom()};
+			item.change(e, itemDelta, ChangeMode.SET);
+		}
 	}
-	
+
+	private String handleRemove(String input, String toRemove, boolean all) {
+		if (SkriptConfig.caseSensitive.value()) {
+			if (all) {
+				return input.replace(toRemove, "");
+			} else {
+				// .replaceFirst requires the regex to be quoted, .replace does it internally
+				return input.replaceFirst(Pattern.quote(toRemove), "");
+			}
+		} else {
+			final Matcher m = Pattern.compile(Pattern.quote(toRemove),
+					Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(input);
+			return all ? m.replaceAll("") : m.replaceFirst("");
+		}
+	}
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
+	@Override
+	public Class<? extends String> getReturnType() {
+		return String.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return (lineNumber != null ? "the line " + lineNumber.toString(e, debug) + " of " : "") + "the lore of " + item.toString(e, debug);
+	}
 }

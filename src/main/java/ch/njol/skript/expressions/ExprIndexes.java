@@ -38,23 +38,39 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-@Name("Indexes of List")
-@Description("Returns all the indexes of a list variable")
+@Name("Indices of List")
+@Description("Gets indices of a list variable.")
 @Examples("set {l::*} to \"some\", \"cool\" and \"values\"\n" +
-		"broadcast \"%all indexes of {l::*}%\" # result is 1, 2 and 3")
-@Since("INSERT VERSION")
+		"broadcast \"%all indices of {l::*}%\" # Result is 1, 2 and 3")
+@Since("2.2-dev37")
 public class ExprIndexes extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprIndexes.class, String.class, ExpressionType.PROPERTY,
-				"[(all [[of] the]|the)] indexes of %objects%",
-				"%objects%'s indexes"
+				"[(all [[of] the]|the)] indices of %objects%",
+				"%objects%'s indices"
 		);
 	}
 
 	@SuppressWarnings("null")
 	private Variable<?> list;
 
+	@SuppressWarnings("null")
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		if (exprs[0] instanceof Variable<?> && ((Variable<?>) exprs[0]).isList()) {
+			list = (Variable<?>) exprs[0];
+			return true;
+		}
+
+		// Things like "all indexes of fake expression" shouldn't have any output at all
+		if (!(exprs[0] instanceof UnparsedLiteral)) {
+			Skript.error("The indexes expression may only be used with list variables");
+		}
+
+		return false;
+	}
+	
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
@@ -78,23 +94,8 @@ public class ExprIndexes extends SimpleExpression<String> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		// we need to provide a null event otherwise the string value is what's held in the var
+		// We need to provide a null event otherwise the string value is what's held in the var
 		return "all indexes of " + list.toString(null, debug);
-	}
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		if (exprs[0] instanceof Variable<?> && ((Variable<?>) exprs[0]).isList()) {
-			list = (Variable<?>) exprs[0];
-			return true;
-		}
-
-		// things like "all indexes of fake expression" shouldn't have any output at all
-		if (!(exprs[0] instanceof UnparsedLiteral)) {
-			Skript.error("The indexes expression may only be used with list variables");
-		}
-
-		return false;
 	}
 
 }

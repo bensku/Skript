@@ -19,37 +19,48 @@
  */
 package ch.njol.skript.conditions;
 
+import java.util.Random;
+
+import org.bukkit.Chunk;
+
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.World;
 
-@Name("Is Loaded")
-@Description("Checks whether or not a chunk/world is loaded")
-@Examples("if chunk at {home::%player's uuid%} is loaded:")
-@Since("2.2-dev37")
-public class CondIsLoaded extends PropertyCondition<Object> {
+/**
+ * @author Nicofisi
+ */
+@Name("Is Slime Chunk")
+@Description({"Tests whether a chunk is a so-called slime chunk.",
+		"Slimes can generally spawn in the swamp biome and in slime chunks.",
+		"For more info, see https://minecraft.gamepedia.com/Slime#.22Slime_chunks.22"})
+@Examples({"command /slimey:",
+		"\ttrigger:",
+		"\t\tif chunk at player is a slime chunk:",
+		"\t\t\tsend \"Yeah, it is!\"",
+		"\t\telse:",
+		"\t\t\tsend \"Nope, it isn't\""})
+@Since("INSERT VERSION")
+public class CondIsSlimeChunk extends PropertyCondition<Chunk> {
 
 	static {
-		register(CondIsLoaded.class, "loaded", "worlds/chunks");
+		register(CondIsSlimeChunk.class, "([a] slime chunk|slime chunks|slimey)", "chunk");
 	}
 
 	@Override
-	public boolean check(Object o) {
-		if (o instanceof Chunk)
-			return ((Chunk) o).isLoaded();
-		else if (o instanceof World)
-			return Bukkit.getWorld(((World) o).getName()) != null;
-		return false;
+	public boolean check(Chunk chunk) {
+		Random random = new Random(chunk.getWorld().getSeed() +
+				(long) (chunk.getX() * chunk.getX() * 0x4c1906) +
+				(long) (chunk.getX() * 0x5ac0db) +
+				(long) (chunk.getZ() * chunk.getZ()) * 0x4307a7L +
+				(long) (chunk.getZ() * 0x5f24f) ^ 0x3ad8025f);
+		return random.nextInt(10) == 0;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "loaded";
+		return "slime chunk";
 	}
-
 }

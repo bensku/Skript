@@ -53,7 +53,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on fuel burn:",
 		"	if fuel slot is coal:",
 		"		set burning time to 1 tick"})
-@Since("INSERT VERSION")
+@Since("2.2-dev37")
 public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 
 	static {

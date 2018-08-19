@@ -21,8 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,7 +28,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -39,7 +36,6 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
 /**
@@ -50,6 +46,8 @@ import ch.njol.util.Kleenean;
 @Examples("unbreakable iron sword #Creates unbreakable iron sword")
 @Since("2.2-dev13b")
 public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
+
+	private static final boolean USE_DEPRECATED_METHOD = !Skript.methodExists(ItemMeta.class, "setUnbreakable", boolean.class);
 	
 	static {
 		Skript.registerExpression(ExprUnbreakable.class, ItemType.class, ExpressionType.PROPERTY, "unbreakable %itemtypes%");
@@ -62,30 +60,32 @@ public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected ItemType[] get(final Event e, final ItemType[] source) {
-		return get(source, new Converter<ItemType, ItemType>() {
-			@Override
-			public ItemType convert(final ItemType i) {
-				ItemType clone = i.clone();
-				
-				Object meta = clone.getItemMeta();
-				if (meta == null) {
-					ItemStack random = clone.getRandom(); // Should not happen, but...
-					if (random == null)
-						return clone;
-					meta = random.getItemMeta();
-				}
-				if (!(meta instanceof ItemMeta)) {
-					Skript.error("Unknown item meta type, can't make item unbreakable!");
+		return get(source, itemType -> {
+			ItemType clone = itemType.clone();
+
+			Object meta = clone.getItemMeta();
+			if (meta == null) {
+				ItemStack random = clone.getRandom(); // Should not happen, but...
+				if (random == null)
 					return clone;
-				}
-				
-				((ItemMeta) meta).spigot().setUnbreakable(true);
-				clone.setItemMeta(meta);
-				
+				meta = random.getItemMeta();
+			}
+			if (!(meta instanceof ItemMeta)) {
+				Skript.error("Unknown item meta type, can't make item unbreakable!");
 				return clone;
 			}
+			if (USE_DEPRECATED_METHOD) {
+				((ItemMeta) meta).spigot().setUnbreakable(true);
+			} else {
+				((ItemMeta) meta).setUnbreakable(true);
+
+			}
+			clone.setItemMeta(meta);
+
+			return clone;
 		});
 	}
 
