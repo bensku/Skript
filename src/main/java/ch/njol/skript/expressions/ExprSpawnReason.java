@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -46,7 +47,7 @@ public class ExprSpawnReason extends EventValueExpression<SpawnReason> {
 	}
 
 	@Override
-	public String toString(Event e, boolean debug) {
+	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the spawning reason";
 	}
 }

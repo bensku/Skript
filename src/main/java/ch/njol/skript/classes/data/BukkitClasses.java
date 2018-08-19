@@ -1334,7 +1334,8 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-				}));
+				})
+				.serializer(new EnumSerializer<>(TeleportCause.class)));
 
 		EnumUtils<SpawnReason> spawnReasons = new EnumUtils<>(SpawnReason.class, "spawn reasons");
 		Classes.registerClass(new ClassInfo<>(SpawnReason.class, "spawnreason")
@@ -1359,7 +1360,8 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-				}));
+				})
+				.serializer(new EnumSerializer<>(SpawnReason.class)));
 
 	}
 
