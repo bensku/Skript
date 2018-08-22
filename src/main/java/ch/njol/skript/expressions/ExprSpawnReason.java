@@ -20,7 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -31,24 +31,23 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ExpressionType;
 
-@Name("Teleport Cause")
-@Description("The <a href='classes.html#teleportcause'>teleport cause</a> within a player <a href='events.html#teleport'>teleport</a> event.")
-@Examples({"on teleport",
-	"\tteleport cause is nether portal, end portal or end gateway"})
-@Since("2.2-dev35")
-public class ExprTeleportCause extends EventValueExpression<TeleportCause> {
+// TODO add a comparator for item types once aliases rework is done.
+@Name("Spawn Reason")
+@Description("The <a href='classes.html#spawnreason'>spawn reason</a> in a <a href='events.html#spawn'>spawn</a> event.")
+@Examples({"on spawn:",
+	"\tspawn reason is reinforcements or breeding"})
+@Since("INSERT VERSION")
+public class ExprSpawnReason extends EventValueExpression<SpawnReason> {
 
 	static {
-		Skript.registerExpression(ExprTeleportCause.class, TeleportCause.class, ExpressionType.SIMPLE, "[the] teleport (cause|reason|type)");
+		Skript.registerExpression(ExprSpawnReason.class, SpawnReason.class, ExpressionType.SIMPLE, "[the] spawn[ing] reason");
 	}
-
-	public ExprTeleportCause() {
-		super(TeleportCause.class);
+	public ExprSpawnReason() {
+		super(SpawnReason.class);
 	}
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the teleport cause";
+		return "the spawning reason";
 	}
-
 }

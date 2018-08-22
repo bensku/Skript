@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.effects;
 
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -34,43 +33,39 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("Make Fly")
-@Description({"Forces a player to start/stop flying.", 
-	     	"Be aware that this also changes the <a href='expressions.html#ExprFlightMode'>flight mode</a> of the player."})
-@Examples({"make player fly", "force all players to stop flying"})
-@Since("2.2-dev34")
-public class EffMakeFly extends Effect {
+@Name("Toggle Flight")
+@Description("Toggle the <a href='expressions.html#ExprFlightMode'>flight mode</a> of a player.")
+@Examples("allow flight to event-player")
+@Since("INSERT VERSION")
+public class EffToggleFlight extends Effect {
 
 	static {
-		if (Skript.methodExists(Player.class, "setFlying", boolean.class)) {
-			Skript.registerEffect(EffMakeFly.class, "force %players% to [(start|1¦stop)] fly[ing]",
-								"make %players% (start|1¦stop) flying",
-								"make %players% fly");
-		}
+		Skript.registerEffect(EffToggleFlight.class,
+			"(allow|enable) (fly|flight) (for|to) %players%",
+			"(disallow|disable) (fly|flight) (for|to) %players%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Player> players;
-	private boolean flying;
 
-	@SuppressWarnings({"unchecked", "null"})
+	private boolean allow;
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = (Expression<Player>) exprs[0];
-		flying = parseResult.mark != 1;
+		allow = matchedPattern == 0;
 		return true;
 	}
 
 	@Override
-	protected void execute(Event e) {
-		for (Player player : players.getArray(e)) {
-			player.setAllowFlight(flying);
-			player.setFlying(flying);
-		}
+	protected void execute(final Event e) {
+		for (Player player : players.getArray(e))
+			player.setAllowFlight(allow);
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "make " + players.toString(e, debug) + (flying ? " start " : " stop ") + "flying";
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "allow flight to " + players.toString(e, debug);
 	}
 }

@@ -52,6 +52,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -925,6 +927,15 @@ public final class BukkitEventValues {
 			@Override
 			public Player get(PlayerToggleFlightEvent e) {
 				return e.getPlayer();
+			}
+		}, 0);
+
+		//CreatureSpawnEvent
+		EventValues.registerEventValue(CreatureSpawnEvent.class, SpawnReason.class, new Getter<SpawnReason, CreatureSpawnEvent>() {
+			@Nullable
+			@Override
+			public SpawnReason get(CreatureSpawnEvent e) {
+				return e.getSpawnReason();
 			}
 		}, 0);
 

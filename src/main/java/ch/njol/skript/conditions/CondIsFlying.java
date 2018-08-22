@@ -49,5 +49,4 @@ public class CondIsFlying extends PropertyCondition<Player> {
 	protected String getPropertyName() {
 		return "flying";
 	}
-	
 }

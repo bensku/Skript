@@ -17,8 +17,7 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.effects;
-
+package ch.njol.skript.conditions;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -29,48 +28,42 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("Make Fly")
-@Description({"Forces a player to start/stop flying.", 
-	     	"Be aware that this also changes the <a href='expressions.html#ExprFlightMode'>flight mode</a> of the player."})
-@Examples({"make player fly", "force all players to stop flying"})
-@Since("2.2-dev34")
-public class EffMakeFly extends Effect {
+@Name("Has Client Weather")
+@Description("Checks whether the given players have a custom client weather")
+@Examples({"if the player has custom weather:",
+		"\tmessage \"Your custom weather is %player's weather%\""})
+@Since("INSERT VERSION")
+public class CondHasClientWeather extends Condition {
 
 	static {
-		if (Skript.methodExists(Player.class, "setFlying", boolean.class)) {
-			Skript.registerEffect(EffMakeFly.class, "force %players% to [(start|1¦stop)] fly[ing]",
-								"make %players% (start|1¦stop) flying",
-								"make %players% fly");
-		}
+		Skript.registerCondition(CondHasClientWeather.class,
+				"%players% (has|have) [a] (client|custom) weather [set]",
+				"%players% do[es](n't| not) have [a] (client|custom) weather [set]");
 	}
-
+	
 	@SuppressWarnings("null")
 	private Expression<Player> players;
-	private boolean flying;
 
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		players = (Expression<Player>) exprs[0];
-		flying = parseResult.mark != 1;
+		setNegated(matchedPattern == 1);
+		this.players = (Expression<Player>) exprs[0];
 		return true;
 	}
 
 	@Override
-	protected void execute(Event e) {
-		for (Player player : players.getArray(e)) {
-			player.setAllowFlight(flying);
-			player.setFlying(flying);
-		}
+	public boolean check(Event e) {
+		return players.check(e, player -> player.getPlayerWeather() != null, isNegated());
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "make " + players.toString(e, debug) + (flying ? " start " : " stop ") + "flying";
+		return players.toString(e, debug) + (isNegated() ? " have " : " don't have ") + " custom weather";
 	}
 }
