@@ -54,6 +54,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -87,7 +88,6 @@ import ch.njol.yggdrasil.Fields;
 /**
  * @author Peter Güttinger
  */
-// TODO vectors
 public class BukkitClasses {
 	
 	public BukkitClasses() {}
@@ -161,7 +161,7 @@ public class BukkitClasses {
 				.user("blocks?")
 				.name("Block")
 				.description("A block in a <a href='#world'>world</a>. It has a <a href='#location'>location</a> and a <a href='#itemstack'>type</a>, " +
-						"and can also have a <a href='#direction'>direction</a> (mostly a <a href='../expressions/#ExprFacing'>facing</a>), an <a href='#inventory'>inventory</a>, or other special properties.")
+						"and can also have a <a href='#direction'>direction</a> (mostly a <a href='../expressions.html#ExprFacing'>facing</a>), an <a href='#inventory'>inventory</a>, or other special properties.")
 				.usage("")
 				.examples("")
 				.since("1.0")
@@ -515,7 +515,7 @@ public class BukkitClasses {
 				.name("Inventory")
 				.description("An inventory of a <a href='#player'>player</a> or <a href='#block'>block</a>. Inventories have many effects and conditions regarding the items contained.",
 						"An inventory has a fixed amount of <a href='#slot'>slots</a> which represent a specific place in the inventory, " +
-								"e.g. the <a href='../expressions/#ExprArmorSlot'>helmet slot</a> for players (Please note that slot support is still very limited but will be improved eventually).")
+								"e.g. the <a href='../expressions.html#ExprArmorSlot'>helmet slot</a> for players (Please note that slot support is still very limited but will be improved eventually).")
 				.usage("")
 				.examples("")
 				.since("1.0")
@@ -845,7 +845,7 @@ public class BukkitClasses {
 				.user("(commands?)? ?(sender|executor)s?")
 				.name("Command Sender")
 				.description("A player or the console.")
-				.usage("use <a href='../expressions/#LitConsole'>the console</a> for the console",
+				.usage("use <a href='../expressions.html#LitConsole'>the console</a> for the console",
 						"see <a href='#player'>player</a> for players.")
 				.examples("on command /pm:",
 						"	command sender is not the console",
@@ -1107,7 +1107,7 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(DamageCause.class, "damagecause")
 				.user("damage causes?")
 				.name("Damage Cause")
-				.description("The cause/type of a <a href='../events/#damage'>damage event</a>, e.g. lava, fall, fire, drowning, explosion, poison, etc.",
+				.description("The cause/type of a <a href='../events.html#damage'>damage event</a>, e.g. lava, fall, fire, drowning, explosion, poison, etc.",
 						"Please note that support for this type is very rudimentary, e.g. lava, fire and burning, as well as projectile and attack are considered different types.")
 				.usage(DamageCauseUtils.getAllNames())
 				.examples("")
@@ -1303,7 +1303,7 @@ public class BukkitClasses {
 						return false;
 					}
 				}));
-
+		
 		Classes.registerClass(new ClassInfo<>(Metadatable.class, "metadataholder")
 				.user("metadata holders?")
 				.name("Metadata Holder")
@@ -1362,6 +1362,41 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(SpawnReason.class)));
+
+		Classes.registerClass(new ClassInfo<>(CachedServerIcon.class, "cachedservericon")
+				.user("server ?icons?")
+				.name("Loaded Server Icon")
+				.description("A server icon that loaded using the <a href='effects.html#EffLoadServerIcon'>load server icon</a> effect.")
+				.examples("")
+				.since("INSERT VERSION")
+				.parser(new Parser<CachedServerIcon>() {
+					@Override
+					@Nullable
+					public CachedServerIcon parse(final String s, final ParseContext context) {
+						return null;
+					}
+					
+					@Override
+					public boolean canParse(final ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(final CachedServerIcon o, int flags) {
+						return "server icon";
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(final CachedServerIcon o) {
+						return "server icon";
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "server icon";
+					}
+				}));
 
 	}
 
