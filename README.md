@@ -101,13 +101,11 @@ this is for you.
 
 First, you need to add the JitPack repository at the **END** of all your repositories. Skript is not available in Maven Central.
 ```gradle
-allprojects {
-    repositories {
-        jcenter()
-        ...
-        maven { 
-            url 'https://jitpack.io' 
-        }
+repositories {
+    jcenter()
+    ...
+    maven { 
+        url 'https://jitpack.io' 
     }
 }
 ```
