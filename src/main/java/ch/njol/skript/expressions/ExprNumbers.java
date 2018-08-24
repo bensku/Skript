@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -60,6 +59,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@SuppressWarnings("null")
 	private Expression<Number> start, end;
+	private int matchedPattern;
 	boolean integer;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -68,31 +68,17 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		start = matchedPattern == 0 ? (Expression<Number>) exprs[0] : new SimpleLiteral<>(1, false);
 		end = (Expression<Number>) exprs[1 - matchedPattern];
 		integer = parseResult.mark == 1 || matchedPattern == 1;
+		this.matchedPattern = matchedPattern;
 		return true;
 	}
 	
 	@Override
 	@Nullable
 	protected Number[] get(final Event event) {
-		Number s = start.getSingle(event), f = end.getSingle(event);
-		if (s == null || f == null)
-			return null;
-		final boolean reverse = s.doubleValue() > f.doubleValue();
-		if (reverse) {
-			Number temp = s;
-			s = f;
-			f = temp;
-		}
-		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : Math.floor(f.doubleValue() - s.doubleValue() + 1);
 		final List<Number> list = new ArrayList<>();
-		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
-		for (int i = 0; i < amount; i++) {
-			if (integer)
-				list.add(Long.valueOf((long) low + i));
-			else
-				list.add(Double.valueOf(low + i));
-		}
-		if (reverse) Collections.reverse(list);
+		Iterator<Number> iterator = iterator(event);
+		if (iterator == null) return null;
+		iterator.forEachRemaining(number -> list.add(number));
 		return list.toArray(new Number[list.size()]);
 	}
 	
@@ -100,8 +86,10 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	@Nullable
 	public Iterator<Number> iterator(final Event event) {
 		Number s = start.getSingle(event), f = end.getSingle(event);
-		if (s == null || f == null)
+		if (s == null || f == null || (matchedPattern == 0 ? s == f : f.intValue() <= 0)) {
+			Skript.error("You cannot loop 0 or negative times, you could simply remove the loop instead. (" + this.toString(event, false) + ")");
 			return null;
+		}
 		final boolean reverse = s.doubleValue() > f.doubleValue();
 		if (reverse) {
 			Number temp = s;
