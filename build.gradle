@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "com.github.hierynomus.license" version "0.14.0"
+	id "com.github.hierynomus.license" version "0.14.0"
 }
 
 apply plugin: 'java'
@@ -58,7 +58,7 @@ configurations.all {
 
 processResources {
 	filter ReplaceTokens, tokens: [
-		"version" :System.getenv('SKRIPT_VERSION') == null ? project.property("version") : System.getenv('SKRIPT_VERSION')
+			"version" :System.getenv('SKRIPT_VERSION') == null ? project.property("version") : System.getenv('SKRIPT_VERSION')
 	]
 }
 
@@ -72,10 +72,10 @@ jar {
 }
 
 license {
-    header file('licenseheader.txt')
-    exclude('**/Metrics.java') // Not under GPLv3
-    exclude('**/*.sk') // Sample scripts and maybe aliases
-    exclude('**/*.lang') // Language files
+	header file('licenseheader.txt')
+	exclude('**/Metrics.java') // Not under GPLv3
+	exclude('**/*.sk') // Sample scripts and maybe aliases
+	exclude('**/*.lang') // Language files
 }
 
 configurations {
@@ -98,7 +98,7 @@ compileJava {
 }
 
 task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
+	from sourceSets.main.allJava
 }
 
 publishing {
@@ -111,7 +111,7 @@ publishing {
 			from components.java
 
 			artifact sourceJar {
-    			classifier "sources"
+				classifier "sources"
 			}
 		}
 	}

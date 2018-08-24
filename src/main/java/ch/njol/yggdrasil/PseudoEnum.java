@@ -137,8 +137,8 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @see Enum#getDeclaringClass()
 	 */
 	@SuppressWarnings({"unchecked", "null"})
-	public final Class<T> getDeclaringClass() {
-		return getDeclaringClass(getClass());
+	public final Class<? super T> getDeclaringClass() {
+		return getDeclaringClass((Class<T>) getClass());
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @return All constants registered so far.
 	 * @see Enum#valueOf(Class, String)
 	 */
-	public final List<T> values() {
+	public final List<? super T> values() {
 		return values(getDeclaringClass(), info);
 	}
 	
@@ -183,8 +183,8 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 			throw new IllegalArgumentException(c + " != " + getDeclaringClass(c));
 		return values(c, getInfo(c));
 	}
-	
-	private static <T extends PseudoEnum<T>> List<T> values(final Class<T> c, final Info<T> info) {
+
+	private static <T extends PseudoEnum<T>> List<T> values(final Class<? super T> c, final Info<T> info) {
 		info.readLock.lock();
 		try {
 			return new ArrayList<>(info.values);
