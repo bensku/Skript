@@ -62,8 +62,8 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 
     private int mark;
 
-    @Override
-    @Nullable
+    @SuppressWarnings("null")
+	@Override
     protected Object[] get(Event e) {
         if (!(e instanceof ScriptCommandEvent)) {
             return null;
@@ -162,7 +162,8 @@ public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
         return null;
     }
 
-    @Override
+    @SuppressWarnings("null")
+	@Override
     public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
         if (!(e instanceof ScriptCommandEvent)) {
             return;

@@ -52,10 +52,10 @@ public class CondIsSlimeChunk extends PropertyCondition<Chunk> {
 	@Override
 	public boolean check(Chunk chunk) {
 		Random random = new Random(chunk.getWorld().getSeed() +
-				(long) (chunk.getX() * chunk.getX() * 0x4c1906) +
-				(long) (chunk.getX() * 0x5ac0db) +
-				(long) (chunk.getZ() * chunk.getZ()) * 0x4307a7L +
-				(long) (chunk.getZ() * 0x5f24f) ^ 0x3ad8025f);
+				chunk.getX() * chunk.getX() * 0x4c1906 +
+				chunk.getX() * 0x5ac0db +
+				chunk.getZ() * chunk.getZ() * 0x4307a7L +
+				chunk.getZ() * 0x5f24f ^ 0x3ad8025f);
 		return random.nextInt(10) == 0;
 	}
 
@@ -63,4 +63,5 @@ public class CondIsSlimeChunk extends PropertyCondition<Chunk> {
 	protected String getPropertyName() {
 		return "slime chunk";
 	}
+
 }

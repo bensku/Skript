@@ -36,39 +36,40 @@ import ch.njol.util.Kleenean;
 
 @Name("Leash entities")
 @Description("Leash living entities to other entities")
-@Examples("leash the player to target entity")
+@Examples("leash the player to the target entity")
 @Since("INSERT VERSION")
 public class EffLeash extends Effect {
 
 	static {
-		Skript.registerEffect(EffLeash.class, "(leash|lead) %livingentities% to %entities%", "make %entities% (leash|lead) %livingentities%");
+		Skript.registerEffect(EffLeash.class, "(leash|lead) %livingentities% to %entity%", "make %entity% (leash|lead) %livingentities%");
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Entity> holders;
+	private Expression<Entity> holder;
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> targets;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		holders = (Expression<Entity>) expressions[1 - matchedPattern];
-		targets = (Expression<LivingEntity>) expressions[matchedPattern];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		holder = (Expression<Entity>) exprs[1 - matchedPattern];
+		targets = (Expression<LivingEntity>) exprs[matchedPattern];
 		return true;
 	}
 	
 	@Override
-	protected void execute(Event event) {
-		for (Entity holder : holders.getArray(event)) {
-			for (LivingEntity target : targets.getArray(event)) {
-				target.setLeashHolder(holder);
-			}
+	protected void execute(Event e) {
+		Entity entity = holder.getSingle(e);
+		if (entity == null)
+			return;
+		for (LivingEntity target : targets.getArray(e)) {
+			target.setLeashHolder(entity);
 		}
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
-		return "leash " + targets.toString(event, debug) + " to " + holders.toString(event, debug);
+	public String toString(@Nullable Event e, boolean debug) {
+		return "leash " + targets.toString(e, debug) + " to " + holder.toString(e, debug);
 	}
 
 }

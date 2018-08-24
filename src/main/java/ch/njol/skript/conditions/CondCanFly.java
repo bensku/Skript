@@ -49,7 +49,7 @@ public class CondCanFly extends Condition {
 	@SuppressWarnings("null")
 	private Expression<Player> players;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = (Expression<Player>) exprs[0];
