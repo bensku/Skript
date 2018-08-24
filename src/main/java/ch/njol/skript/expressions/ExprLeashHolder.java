@@ -47,7 +47,7 @@ public class ExprLeashHolder extends SimplePropertyExpression<LivingEntity, Enti
 	
 	@Override
 	protected String getPropertyName() {
-		return "altitude";
+		return "leash holder";
 	}
 	
 	@Override
