@@ -49,7 +49,7 @@ public class CondLeashHolder extends Condition {
 	static {
 		Skript.registerCondition(CondLeashHolder.class,
 				"%livingentities% (is|are) leashed [(from|by) %-entity%]",
-				"%livingentities% [do[es]] ha(s|ve) [a] leash [holder] [(from|by) %-entity%]",
+				"%livingentities% (has|[does] have) [a] leash [holder] [(from|by) %-entity%]",
 				"%livingentities% (is|are)(n't| not) leashed [(from|by) %-entity%]",
 				"%livingentities% do[es](n't| not) have [a] leash [holder] [(from|by) %-entity%]");
 	}

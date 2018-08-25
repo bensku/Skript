@@ -56,9 +56,12 @@ public class EffLeash extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		holder = (Expression<Entity>) exprs[1 - matchedPattern];
-		targets = (Expression<LivingEntity>) exprs[matchedPattern];
 		unleash = matchedPattern == 2;
+		if (!unleash) {
+			holder = (Expression<Entity>) exprs[1 - matchedPattern];
+			targets = (Expression<LivingEntity>) exprs[matchedPattern];
+		} else 
+			targets = (Expression<LivingEntity>) exprs[0];
 		return true;
 	}
 	
@@ -74,7 +77,7 @@ public class EffLeash extends Effect {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return unleash ? "un" : "" + "leash " + targets.toString(e, debug) + (unleash ? "" : " to ") + holder.toString(e, debug);
+		return unleash ? "un" : "leash " + targets.toString(e, debug) + (unleash ? "" : " to ") + holder.toString(e, debug);
 	}
 
 }
