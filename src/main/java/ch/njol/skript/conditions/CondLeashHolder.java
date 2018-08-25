@@ -48,8 +48,10 @@ public class CondLeashHolder extends Condition {
 	
 	static {
 		Skript.registerCondition(CondLeashHolder.class,
-				"%livingentities% (has|do[es] [have]|contains) [a] leash holder [from %-entity%]",
-				"%livingentities% (has([n't]| not [got])|do[es](n't| not) (contain|have)) [a] leash holder [from %-entity%]");
+				"%livingentities% (is|are) leashed [(from|by) %-entity%]",
+				"%livingentities% [do[es]] ha(s|ve) [a] leash [holder] [(from|by) %-entity%]",
+				"%livingentities% (is|are)(n't| not) leashed [(from|by) %-entity%]",
+				"%livingentities% do[es](n't| not) have [a] leash [holder] [(from|by) %-entity%]");
 	}
 	
 	@SuppressWarnings("null")
@@ -62,7 +64,7 @@ public class CondLeashHolder extends Condition {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		entities = (Expression<LivingEntity>) exprs[0];
 		holder = (Expression<Entity>) exprs[1];
-		setNegated(matchedPattern == 1);
+		setNegated(matchedPattern <= 1);
 		return true;
 	}
 	
@@ -70,13 +72,13 @@ public class CondLeashHolder extends Condition {
 	public boolean check(final Event e) {
 		return entities.check(e, new Checker<LivingEntity>() {
 			@Override
-			public boolean check(final LivingEntity entity) {
+			public boolean check(final LivingEntity target) {
 				if (holder.getSingle(e) == null)
-					return entity.isLeashed() ? isNegated() : !isNegated();
+					return target.isLeashed() ? isNegated() : !isNegated();
 				return holder.check(e, new Checker<Entity>() {
 					@Override
-					public boolean check(final Entity h) {
-						return entity.getLeashHolder().equals(h);
+					public boolean check(final Entity holder) {
+						return target.getLeashHolder().equals(holder);
 					}
 				}, isNegated());
 			}

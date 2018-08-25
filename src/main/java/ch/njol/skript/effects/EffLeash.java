@@ -64,17 +64,17 @@ public class EffLeash extends Effect {
 	
 	@Override
 	protected void execute(Event e) {
-		Entity entity = holder.getSingle(e);
-		if (entity == null && !unleash)
+		Entity holder = this.holder.getSingle(e);
+		if (holder == null && !unleash)
 			return;
 		for (LivingEntity target : targets.getArray(e)) {
-			target.setLeashHolder(!unleash ? entity : null);
+			target.setLeashHolder(!unleash ? holder : null);
 		}
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return unleash ? "un" : "" + "leash " + targets.toString(e, debug) + (unleash ? " from " : "" + " to ") + holder.toString(e, debug);
+		return unleash ? "un" : "" + "leash " + targets.toString(e, debug) + (unleash ? "" : " to ") + holder.toString(e, debug);
 	}
 
 }
