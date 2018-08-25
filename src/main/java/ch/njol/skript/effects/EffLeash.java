@@ -41,19 +41,24 @@ import ch.njol.util.Kleenean;
 public class EffLeash extends Effect {
 
 	static {
-		Skript.registerEffect(EffLeash.class, "(leash|lead) %livingentities% to %entity%", "make %entity% (leash|lead) %livingentities%");
+		Skript.registerEffect(EffLeash.class,
+				"(leash|lead) %livingentities% to %entity%",
+				"make %entity% (leash|lead) %livingentities%",
+				"un(leash|lead) %livingentities% from %entity%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Entity> holder;
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> targets;
+	private boolean unleash;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		holder = (Expression<Entity>) exprs[1 - matchedPattern];
 		targets = (Expression<LivingEntity>) exprs[matchedPattern];
+		unleash = matchedPattern == 2;
 		return true;
 	}
 	
@@ -63,13 +68,13 @@ public class EffLeash extends Effect {
 		if (entity == null)
 			return;
 		for (LivingEntity target : targets.getArray(e)) {
-			target.setLeashHolder(entity);
+			target.setLeashHolder(!unleash ? entity : null);
 		}
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "leash " + targets.toString(e, debug) + " to " + holder.toString(e, debug);
+		return unleash ? "un" : "" + "leash " + targets.toString(e, debug) + (unleash ? " from " : "" + " to ") + holder.toString(e, debug);
 	}
 
 }
