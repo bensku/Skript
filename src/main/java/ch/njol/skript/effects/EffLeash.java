@@ -44,7 +44,7 @@ public class EffLeash extends Effect {
 		Skript.registerEffect(EffLeash.class,
 				"(leash|lead) %livingentities% to %entity%",
 				"make %entity% (leash|lead) %livingentities%",
-				"un(leash|lead) %livingentities% from %entity%");
+				"un(leash|lead) [holder of] %livingentities%");
 	}
 	
 	@SuppressWarnings("null")
@@ -65,7 +65,7 @@ public class EffLeash extends Effect {
 	@Override
 	protected void execute(Event e) {
 		Entity entity = holder.getSingle(e);
-		if (entity == null)
+		if (entity == null && !unleash)
 			return;
 		for (LivingEntity target : targets.getArray(e)) {
 			target.setLeashHolder(!unleash ? entity : null);
