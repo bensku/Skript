@@ -21,9 +21,11 @@ package ch.njol.skript.expressions;
 
 import java.util.Set;
 import java.util.stream.Stream;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -38,8 +40,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Scoreboard Tags")
-@Description({"Scoreboard tags are simple list of texts stored directly in the data of an entity.",
-		"So this is a Minecraft related thing, not Bukkit so the tags will not get removed when the server stops. " +
+@Description({"Scoreboard tags are simple list of texts stored directly in the data of an <a href='classes.html#entity'>entity</a>.",
+		"So this is a Minecraft related thing, not Bukkit, so the tags will not get removed when the server stops. " +
 		"You can visit <a href='https://minecraft.gamepedia.com/Scoreboard#Tags'>visit Minecraft Wiki</a> for more info.",
 		"This is changeable and valid for any type of entities." +
 		"Also you can use use the <a href='conditions.html#CondHasScoreboardTag'>Has Scoreboard Tag</a> condition to check whether an entity has the given tags.",
@@ -99,19 +101,21 @@ public class ExprScoreboardTags extends SimpleExpression<String> {
 
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		assert delta != null;
 		for (Entity entity : entities.getArray(e)) {
 			switch (mode) {
 				case SET:
+					assert delta != null;
 					entity.getScoreboardTags().clear();
 					for (Object tag : delta)
 						entity.addScoreboardTag((String) tag);
 					break;
 				case ADD:
+					assert delta != null;
 					for (Object tag : delta)
 						entity.addScoreboardTag((String) tag);
 					break;
 				case REMOVE:
+					assert delta != null;
 					for (Object tag : delta)
 						entity.removeScoreboardTag((String) tag);
 					break;
