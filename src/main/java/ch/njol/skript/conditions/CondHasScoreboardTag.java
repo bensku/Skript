@@ -21,20 +21,22 @@ package ch.njol.skript.conditions;
 
 import java.util.Arrays;
 import java.util.List;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Has Scoreboard Tag")
 @Description("Checks whether the given entities has the given <a href='expressions.html#ExprScoreboardTags'>scoreboard tags</a>.")
+@Examples("if the targeted armor stand has the scoreboard tag \"test tag\":")
 @Since("INSERT VERSION")
 public class CondHasScoreboardTag extends Condition {
 
@@ -53,9 +55,9 @@ public class CondHasScoreboardTag extends Condition {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		setNegated(matchedPattern == 1);
 		entities = (Expression<Entity>) exprs[0];
 		tags = (Expression<String>) exprs[1];
+		setNegated(matchedPattern == 1);
 		return true;
 	}
 

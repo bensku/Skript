@@ -19,31 +19,30 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 @Name("Scoreboard Tags")
-@Description({"Scoreboard tags are a simple list of single-word texts stored directly in the data of an entity.",
-		"So this is a Minecraft related thing, not Bukkit. For more info, <a href='https://minecraft.gamepedia.com/Scoreboard#Tags'>visit Minecraft Wiki</a>.",
-		"This is changeable and valid for any type of entity. " +
-		"Also you can check whether an entity has specified tags using the <a href='conditions.html#CondHasScoreboardTag'>Has Scoreboard Tag</a> condition.",
+@Description({"Scoreboard tags are simple list of texts stored directly in the data of an entity.",
+		"So this is a Minecraft related thing, not Bukkit so the tags will not get removed when the server stops. " +
+		"You can visit <a href='https://minecraft.gamepedia.com/Scoreboard#Tags'>visit Minecraft Wiki</a> for more info.",
+		"This is changeable and valid for any type of entities." +
+		"Also you can use use the <a href='conditions.html#CondHasScoreboardTag'>Has Scoreboard Tag</a> condition to check whether an entity has the given tags.",
 		"",
 		"Requires Minecraft 1.11+ (actually added in 1.9 to the game, but added in 1.11 to Spigot)."})
 @Examples({"on spawn of a monster:",
@@ -93,34 +92,32 @@ public class ExprScoreboardTags extends SimpleExpression<String> {
 			case DELETE:
 			case RESET:
 				return CollectionUtils.array(String[].class);
+			default:
+				return null;
 		}
-		return null;
 	}
 
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		List<String> values = null;
-		if (delta != null)
-			values = (List) Arrays.asList(delta);
+		assert delta != null;
 		for (Entity entity : entities.getArray(e)) {
-			Set<String> tags = entity.getScoreboardTags();
 			switch (mode) {
 				case SET:
-					assert values != null;
-					tags.clear();
-					tags.addAll(values);
+					entity.getScoreboardTags().clear();
+					for (Object tag : delta)
+						entity.addScoreboardTag((String) tag);
 					break;
 				case ADD:
-					assert values != null;
-					tags.addAll(values);
+					for (Object tag : delta)
+						entity.addScoreboardTag((String) tag);
 					break;
 				case REMOVE:
-					assert values != null;
-					tags.removeAll(values);
+					for (Object tag : delta)
+						entity.removeScoreboardTag((String) tag);
 					break;
 				case DELETE:
 				case RESET:
-					tags.clear();
+					entity.getScoreboardTags().clear();
 			}
 		}
 	}
