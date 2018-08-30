@@ -49,7 +49,7 @@ public class CondHasClientWeather extends Condition {
 	@SuppressWarnings("null")
 	private Expression<Player> players;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setNegated(matchedPattern == 1);
@@ -66,4 +66,5 @@ public class CondHasClientWeather extends Condition {
 	public String toString(@Nullable Event e, boolean debug) {
 		return players.toString(e, debug) + (isNegated() ? " have " : " don't have ") + " custom weather";
 	}
+
 }

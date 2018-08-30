@@ -19,7 +19,8 @@
  */
 package ch.njol.skript.effects;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,39 +34,50 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("Toggle Flight")
-@Description("Toggle the <a href='expressions.html#ExprFlightMode'>flight mode</a> of a player.")
-@Examples("allow flight to event-player")
+@Name("Leash entities")
+@Description("Leash living entities to other entities")
+@Examples("leash the player to the target entity")
 @Since("INSERT VERSION")
-public class EffToggleFlight extends Effect {
+public class EffLeash extends Effect {
 
 	static {
-		Skript.registerEffect(EffToggleFlight.class,
-			"(allow|enable) (fly|flight) (for|to) %players%",
-			"(disallow|disable) (fly|flight) (for|to) %players%");
+		Skript.registerEffect(EffLeash.class,
+				"(leash|lead) %livingentities% to %entity%",
+				"make %entity% (leash|lead) %livingentities%",
+				"un(leash|lead) [holder of] %livingentities%");
 	}
-
+	
 	@SuppressWarnings("null")
-	private Expression<Player> players;
-
-	private boolean allow;
+	private Expression<Entity> holder;
+	@SuppressWarnings("null")
+	private Expression<LivingEntity> targets;
+	private boolean unleash;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		players = (Expression<Player>) exprs[0];
-		allow = matchedPattern == 0;
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		unleash = matchedPattern == 2;
+		if (!unleash) {
+			holder = (Expression<Entity>) exprs[1 - matchedPattern];
+			targets = (Expression<LivingEntity>) exprs[matchedPattern];
+		} else 
+			targets = (Expression<LivingEntity>) exprs[0];
 		return true;
 	}
-
+	
 	@Override
-	protected void execute(final Event e) {
-		for (Player player : players.getArray(e))
-			player.setAllowFlight(allow);
+	protected void execute(Event e) {
+		Entity holder = this.holder.getSingle(e);
+		if (holder == null && !unleash)
+			return;
+		for (LivingEntity target : targets.getArray(e)) {
+			target.setLeashHolder(!unleash ? holder : null);
+		}
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "allow flight to " + players.toString(e, debug);
+	public String toString(@Nullable Event e, boolean debug) {
+		return unleash ? "un" : "leash " + targets.toString(e, debug) + (unleash ? "" : " to ") + holder.toString(e, debug);
 	}
+
 }

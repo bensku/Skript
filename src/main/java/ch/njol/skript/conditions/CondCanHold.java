@@ -67,7 +67,7 @@ public class CondCanHold extends Condition {
 			for (ItemType t : ((Literal<ItemType>) items).getAll()) {
 				t = t.getItem();
 				if (!(t.isAll() || (t.getTypes().size() == 1 && !t.getTypes().get(0).hasDataRange() && t.getTypes().get(0).getId() != -1))) {
-					Skript.error("The condition 'can hold' can currently only be used with aliases that start with 'every' or 'all', or only represent one item and one data value.", ErrorQuality.SEMANTIC_ERROR);
+					Skript.error("The condition 'can hold' currently can only be used with aliases that start with 'every' or 'all', or only represent one item and one data value.", ErrorQuality.SEMANTIC_ERROR);
 					return false;
 				}
 			}

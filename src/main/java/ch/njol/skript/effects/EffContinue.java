@@ -70,6 +70,7 @@ public class EffContinue extends Effect {
 		return "continue";
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		List<Loop> loops = ScriptLoader.currentLoops;

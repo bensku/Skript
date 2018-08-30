@@ -39,7 +39,7 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.LiteralUtils;
@@ -75,7 +75,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		try {
 			parsing = this;
 			objects = LiteralUtils.defendExpression(exprs[0]);
@@ -121,11 +121,11 @@ public class ExprFilter extends SimpleExpression<Object> {
 		return current;
 	}
 
-	private void addChild(ExprInput<?> child) {
+	void addChild(ExprInput<?> child) {
 		children.add(child);
 	}
 
-	private void removeChild(ExprInput<?> child) {
+	void removeChild(ExprInput<?> child) {
 		children.remove(child);
 	}
 
@@ -164,7 +164,6 @@ public class ExprFilter extends SimpleExpression<Object> {
 			"the condition would be checked twice, using \"something\" and \"something else\" as the inputs.")
 	@Examples("send \"congrats on being staff!\" to all players where [input has permission \"staff\"]")
 	@Since("2.2-dev36")
-	@SuppressWarnings({"null", "unchecked"})
 	public static class ExprInput<T> extends SimpleExpression<T> {
 
 		static {
@@ -195,7 +194,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 		}
 
 		@Override
-		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 			parent = ExprFilter.getParsing();
 			if (parent == null) {
 				return false;
@@ -237,7 +236,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			return superType;
 		}
 
-		private ClassInfo<?> getClassInfo() {
+		ClassInfo<?> getClassInfo() {
 			return inputType;
 		}
 

@@ -29,7 +29,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
@@ -50,11 +50,11 @@ public class CondStartsWith extends Condition {
 	private Expression<String> strings;
 	@SuppressWarnings("null")
 	private Expression<String> prefix;
-	private boolean ends;
+	boolean ends;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		prefix = (Expression<String>) exprs[1];
 		ends = parseResult.mark == 1;
@@ -81,6 +81,5 @@ public class CondStartsWith extends Condition {
 	public String toString(@Nullable Event e, boolean debug) {
 		return strings.toString(e, debug) + (isNegated() ? " don't " : " ") + (ends ? "start" : "end") +  " with " + prefix.toString(e, debug);
 	}
-
 
 }
