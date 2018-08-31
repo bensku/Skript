@@ -24,18 +24,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
-import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
-public abstract class PropertyCondition<T> extends Condition implements Checker<T> {
-	
-	@SuppressWarnings("null")
-	private Expression<? extends T> expr;
+public abstract class PropertyCondition<T> extends SingleCondition<T> {
 	
 	/**
 	 * @param c
@@ -43,26 +33,10 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	 * @param type must be plural
 	 */
 	public static void register(final Class<? extends Condition> c, final String property, final String type) {
-		Skript.registerCondition(c, "%" + type + "% (is|are) " + property, "%" + type + "% (isn't|is not|aren't|are not) " + property);
+		Skript.registerCondition(c,
+				"%" + type + "% (is|are) " + property,
+				"%" + type + "% (isn't|is not|aren't|are not) " + property);
 	}
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		expr = (Expression<? extends T>) exprs[0];
-		setNegated(matchedPattern == 1);
-		return true;
-	}
-	
-	@Override
-	public final boolean check(final Event e) {
-		return expr.check(e, this, isNegated());
-	}
-	
-	@Override
-	public abstract boolean check(T t);
-	
-	protected abstract String getPropertyName();
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
