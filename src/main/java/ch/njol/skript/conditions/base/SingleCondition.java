@@ -50,9 +50,4 @@ public abstract class SingleCondition<T> extends Condition implements Checker<T>
 	public abstract boolean check(T t);
 	
 	protected abstract String getPropertyName();
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return expr.toString(e, debug) + (expr.isSingle() ? " is " : " are ") + (isNegated() ? "not " : "") + getPropertyName();
-	}
 }
