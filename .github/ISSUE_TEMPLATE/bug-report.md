@@ -16,9 +16,9 @@ about: Create a report to help us improve
 *A clear and concise description of what you expected to happen.*
 
 **Errors / Screenshots**
-*If applicable, add errors and screenshots to help explain your problem.
+*If applicable, add errors and screenshots to help explain your problem.*
 
-If you get a console error, you **should** send the **full** error. Also if the error contains a stack trace  you can remove the Server Information section below. And you should send long errors using a **permanent** paste service like [Gist](https://gist.github.com).*
+*If you get a console error, you **should** send the **full** error. Also if the error contains a stack trace  you can remove the Server Information section below. And you should send long errors using a **permanent** paste service like [Gist](https://gist.github.com).*
 
 **Server Information**
 * Server Platform:
