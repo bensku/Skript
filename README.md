@@ -131,15 +131,6 @@ Or, if you use Maven:
 
 Note that these repositories are provided as-is, for now. I cannot currently spend time to add nice, but not mandatory, features like Javadoc.
 
-## Relevant Links
-* [SkUnity Forums](https://forums.skunity.com/)
-* [Original Skript at BukkitDev](https://dev.bukkit.org/bukkit-plugins/skript/) (inactive)
-* [Addon Releases @SkUnity](https://forums.skunity.com/forums/addon-releases/)
-* [Skript Chat Discord Invite](https://discord.gg/0lx4QhQvwelCZbEX)
-* [Skript Hub](https://skripthub.net/)
-
-Note that these resources are not maintained by me. If you notice something wrong with them, do not contact me.
-
 ## Developers
 Current team behind Skript:
 
@@ -157,3 +148,12 @@ You can find all contributors [here](https://github.com/SkriptLang/Skript/graphs
 
 All code is owned by it's writer, licensed for others under GPLv3 (see LICENSE)
 unless otherwise specified.
+
+## Relevant Links
+* [SkUnity Forums](https://forums.skunity.com/)
+* [Original Skript at BukkitDev](https://dev.bukkit.org/bukkit-plugins/skript/) (inactive)
+* [Addon Releases @SkUnity](https://forums.skunity.com/forums/addon-releases/)
+* [Skript Chat Discord Invite](https://discord.gg/0lx4QhQvwelCZbEX)
+* [Skript Hub](https://skripthub.net/)
+
+Note that these resources are not maintained by me. If you notice something wrong with them, do not contact me.
