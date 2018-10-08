@@ -68,6 +68,13 @@ public class EnchantmentIds {
 			ids.put(Enchantment.VANISHING_CURSE, 71);
 			ids.put(Enchantment.SWEEPING_EDGE, 22); // Technically 1.11.1, but who runs 1.11 anymore?
 		}
+
+		if (Skript.isRunningMinecraft(1, 13)) {
+			ids.put(Enchantment.LOYALTY, 65);
+			ids.put(Enchantment.IMPALING, 66);
+			ids.put(Enchantment.RIPTIDE, 67);
+			ids.put(Enchantment.CHANNELING, 68);  // Funny 1.13 Comment here?!?! 
+		}
 		
 		for (Map.Entry<Enchantment, Integer> entry : ids.entrySet()) {
 			enchantments[entry.getValue()] = entry.getKey();

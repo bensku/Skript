@@ -22,6 +22,7 @@ package ch.njol.skript.bukkitutil;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 
 import org.bukkit.Server;
 import org.eclipse.jdt.annotation.Nullable;
@@ -34,7 +35,7 @@ import ch.njol.skript.Skript;
 public class CommandReloader {
 	
 	@Nullable
-	private static MethodHandle syncCommandsMethod;
+	private static Method syncCommandsMethod;
 	
 	static {
 		try {
