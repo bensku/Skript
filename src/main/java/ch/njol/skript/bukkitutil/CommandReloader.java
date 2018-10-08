@@ -39,7 +39,7 @@ public class CommandReloader {
 	static {
 		try {
 			Class<?> craftServer = Class.forName("org.bukkit.craftbukkit.v1_13_R2.CraftServer");
-			MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(craftServer, MethodHandles.lookup());
+			MethodHandles.Lookup lookup = MethodHandles.lookup();
 			syncCommandsMethod = lookup.findVirtual(craftServer, "syncCommands", MethodType.methodType(void.class));
 		} catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException e) {
 			// Ignore except for debugging. This is not necessary or in any way supported functionality
