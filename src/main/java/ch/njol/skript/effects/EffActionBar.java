@@ -24,11 +24,19 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 
+@Name("Action bar")
+@Description("Sends an action bar message to the given player.")
+@Examples("send action bar \"Action bar message.\" to player")
+@Since("INSERT VERSION")
 public class EffActionBar extends Effect {
 
 	static {
