@@ -111,6 +111,19 @@ compileJava {
 	}
 }
 
+task checkAliases {
+	description 'Checks for the existence of the aliases.'
+
+	doLast {
+		def aliasFolder = new File('skript-aliases')
+		if (!aliasFolder.exists()) {
+			throw new Exception("Aliases do not exist. Maybe update submodules?")
+		}
+	}
+}
+
+build.dependsOn(checkAliases)
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
