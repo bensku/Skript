@@ -117,7 +117,7 @@ task checkAliases {
 	doLast {
 		def aliasFolder = new File('skript-aliases')
 		if (!aliasFolder.exists()) {
-			throw new Exception("Aliases do not exist. Maybe update submodules?")
+			throw new Exception("Aliases do not exist. Maybe update submodules using `git submodule update --init`?")
 		}
 	}
 }
