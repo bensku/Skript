@@ -48,6 +48,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"kill all endermen, witches and bats"})
 @Since("1.0")
 public class EffKill extends Effect {
+
 	static {
 		Skript.registerEffect(EffKill.class, "kill %entities%");
 	}
@@ -57,12 +58,11 @@ public class EffKill extends Effect {
 	
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
-	private boolean erase;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		entities = (Expression<Entity>) vars[0];
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		entities = (Expression<Entity>) exprs[0];
 		return true;
 	}
 
@@ -85,9 +85,11 @@ public class EffKill extends Effect {
 					((Player) entity).setGameMode(GameMode.CREATIVE);
 			}
 
-			if (entity.isValid()) // if everything done so far has failed to kill this thing
+			// if everything done so far has failed to kill this thing
+			// We also don't want to remove a player as this would remove the player's data from the server.
+			if (entity.isValid() && !(entity instanceof Player))
 				entity.remove();
-
+			
 		}
 	}
 	
@@ -95,5 +97,5 @@ public class EffKill extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "kill" + entities.toString(e, debug);
 	}
-	
+
 }
