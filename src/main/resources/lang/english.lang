@@ -1297,6 +1297,13 @@ spawn reasons:
 	trap: trap
 	village_defense: village defense, golem defense, iron golem defense
 	village_invasion: village invasion, village invading
+	
+# -- Difficulties --
+difficulty:
+	easy: easy
+	normal: medium, normal
+	hard: hard
+	peaceful: peaceful
 
 # -- Boolean --
 boolean:
@@ -1348,6 +1355,7 @@ types:
 	inventorytype: inventory type¦s @an
 	metadataholder: metadata holder¦s @a
 	spawnreason: spawn reason¦s @a
+	difficulty: (difficulty|difficulties) @a
 	
 	# Skript
 	weathertype: weather type¦s @a

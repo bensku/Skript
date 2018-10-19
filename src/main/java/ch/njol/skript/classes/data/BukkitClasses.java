@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -1439,7 +1440,6 @@ public class BukkitClasses {
 							return "server icon";
 						}
 
-						@SuppressWarnings("null")
 						@Override
 						public String toVariableNameString(final CachedServerIcon o) {
 							return "server icon";
@@ -1451,6 +1451,39 @@ public class BukkitClasses {
 						}
 					}));
 		}
+
+		EnumUtils<Difficulty> difficulties = new EnumUtils<>(Difficulty.class, "difficulty");
+		Classes.registerClass(new ClassInfo<>(Difficulty.class, "difficulty")
+				.user("difficult(y|ies)")
+				.name("Difficulty")
+				.description("The difficulty of a <a href='#world'>world</a>.")
+				.examples(difficulties.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Difficulty>() {
+					
+					@Override
+					@Nullable
+					public Difficulty parse(final String input, final ParseContext context) {
+						return difficulties.parse(input);
+					}
+					
+					@Override
+					public String toString(Difficulty difficulty, int flags) {
+						return difficulties.toString(difficulty, flags);
+					}
+
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(Difficulty difficulty) {
+						return difficulty.name();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Difficulty.class)));
 
 	}
 
