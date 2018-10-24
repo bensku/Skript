@@ -31,16 +31,19 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 @Name("Title")
-@Description("Sends a title/subtitle to the given player(s). Fadein/Fadeout/Stay Times are in ticks")
-@Examples("send title \"Hello player!\" with subtitle \"Welcome to our server\" to player with fadein 10 for 70 with fadeout 20")
+@Description("Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times")
+@Examples({"send title \"Competition Started\" with subtitle \"Have fun, Stay safe!\" to player for 5 seconds",
+		"send title \"Hi %player%\" to player", "send title \"Loot Drop\" with subtitle \"starts in 3 minutes\" to all players",
+		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player with fadein 1 second for 5 seconds with fadeout 1 second"})
 @Since("INSERT VERSION")
 public class EffTitle extends Effect {
 	
 	static {
-		Skript.registerEffect(EffTitle.class, "send [the] title %string% [with subtitle %-string%] to %players% [with fadein %-integer%] [for %-integer%] [with fadeout %-integer%]");
+		Skript.registerEffect(EffTitle.class, "send [the] title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
 	}
 	
 	@SuppressWarnings("null")
@@ -51,11 +54,11 @@ public class EffTitle extends Effect {
 	@SuppressWarnings("null")
 	private Expression<Player> recipients;
 	@SuppressWarnings("null")
-	private Expression<Integer> fadein;
+	private Expression<Timespan> fadein;
 	@SuppressWarnings("null")
-	private Expression<Integer> stay;
+	private Expression<Timespan> stay;
 	@SuppressWarnings("null")
-	private Expression<Integer> fadeout;
+	private Expression<Timespan> fadeout;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -63,9 +66,10 @@ public class EffTitle extends Effect {
 		title = (Expression<String>) exprs[0];
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
-		fadein = (Expression<Integer>) exprs[3];
-		stay = (Expression<Integer>) exprs[4];
-		fadeout = (Expression<Integer>) exprs[5];
+		fadein = (Expression<Timespan>) exprs[3];
+		stay = (Expression<Timespan>) exprs[4];
+		fadeout = (Expression<Timespan>) exprs[5];
+		
 		return true;
 	}
 	
@@ -74,9 +78,10 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String msg1 = title.getSingle(e);
 		String msg2 = subtitle != null ? subtitle.getSingle(e) : null;
-		Integer int1 = fadein != null ? fadein.getSingle(e) : 10;
-		Integer int2 = stay != null ? stay.getSingle(e) : 70;
-		Integer int3 = fadeout != null ? fadeout.getSingle(e) : 20;
+		Integer int1 = fadein != null ? (int) fadein.getSingle(e).getTicks_i() : 10;
+		Integer int2 = stay != null ? (int) stay.getSingle(e).getTicks_i() : 70;
+		Integer int3 = fadeout != null ? (int) fadeout.getSingle(e).getTicks_i() : 20;
+		
 		
 		for (Player player : recipients.getArray(e)) {
 			player.sendTitle(msg1, msg2, int1, int2, int3);
