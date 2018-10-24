@@ -90,7 +90,9 @@ public class EffTitle extends Effect {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug);
+		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug) +
+				" with fadein " + fadein.toString(e, debug) + " for " + stay.toString(e, debug) +
+				" with fadeout " + fadeout.toString(e, debug);
 	}
 	
 }
