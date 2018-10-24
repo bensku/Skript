@@ -47,18 +47,11 @@ public class EffTitle extends Effect {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<String> title;
-	@Nullable
-	private Expression<String> subtitle;
-	
+	private Expression<String> title, subtitle;
 	@SuppressWarnings("null")
 	private Expression<Player> recipients;
 	@SuppressWarnings("null")
-	private Expression<Timespan> fadein;
-	@SuppressWarnings("null")
-	private Expression<Timespan> stay;
-	@SuppressWarnings("null")
-	private Expression<Timespan> fadeout;
+	private Expression<Timespan> fadein, stay, fadeout;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
