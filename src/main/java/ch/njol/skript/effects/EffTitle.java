@@ -1,0 +1,91 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.effects;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
+
+@Name("Title")
+@Description("Sends a title/subtitle to the given player(s). Fadein/Fadeout/Stay Times are in ticks")
+@Examples("send title \"Hello player!\" with subtitle \"Welcome to our server\" to player with fadein 10 for 70 with fadeout 20")
+@Since("INSERT VERSION")
+public class EffTitle extends Effect {
+	
+	static {
+		Skript.registerEffect(EffTitle.class, "send [the] title %string% [with subtitle %-string%] to %players% [with fadein %-integer%] [for %-integer%] [with fadeout %-integer%]");
+	}
+	
+	@SuppressWarnings("null")
+	private Expression<String> title;
+	@Nullable
+	private Expression<String> subtitle;
+	
+	@SuppressWarnings("null")
+	private Expression<Player> recipients;
+	@SuppressWarnings("null")
+	private Expression<Integer> fadein;
+	@SuppressWarnings("null")
+	private Expression<Integer> stay;
+	@SuppressWarnings("null")
+	private Expression<Integer> fadeout;
+	
+	@SuppressWarnings({"unchecked", "null"})
+	@Override
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parser) {
+		title = (Expression<String>) exprs[0];
+		subtitle = (Expression<String>) exprs[1];
+		recipients = (Expression<Player>) exprs[2];
+		fadein = (Expression<Integer>) exprs[3];
+		stay = (Expression<Integer>) exprs[4];
+		fadeout = (Expression<Integer>) exprs[5];
+		return true;
+	}
+	
+	@SuppressWarnings("null")
+	@Override
+	protected void execute(final Event e) {
+		String msg1 = title.getSingle(e);
+		String msg2 = subtitle != null ? subtitle.getSingle(e) : null;
+		Integer int1 = fadein != null ? fadein.getSingle(e) : 10;
+		Integer int2 = stay != null ? stay.getSingle(e) : 70;
+		Integer int3 = fadeout != null ? fadeout.getSingle(e) : 20;
+		
+		for (Player player : recipients.getArray(e)) {
+			player.sendTitle(msg1, msg2, int1, int2, int3);
+		}
+	}
+	
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug);
+	}
+	
+}
