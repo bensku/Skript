@@ -78,13 +78,13 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String msg1 = title.getSingle(e);
 		String msg2 = subtitle != null ? subtitle.getSingle(e) : null;
-		Integer int1 = fadein != null ? (int) fadein.getSingle(e).getTicks_i() : 10;
-		Integer int2 = stay != null ? (int) stay.getSingle(e).getTicks_i() : 70;
-		Integer int3 = fadeout != null ? (int) fadeout.getSingle(e).getTicks_i() : 20;
+		Integer fin = fadein != null ? (int) fadein.getSingle(e).getTicks_i() : 10;
+		Integer sty = stay != null ? (int) stay.getSingle(e).getTicks_i() : 70;
+		Integer fout = fadeout != null ? (int) fadeout.getSingle(e).getTicks_i() : 20;
 		
 		
 		for (Player player : recipients.getArray(e)) {
-			player.sendTitle(msg1, msg2, int1, int2, int3);
+			player.sendTitle(msg1, msg2, fin, sty, fout);
 			
 		}
 	}
@@ -93,7 +93,7 @@ public class EffTitle extends Effect {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug) +
 				(fadein != null ? " with fadein " + fadein.toString(e, debug) : "") +
-				(stay != null ?" for " + stay.toString(e, debug) : "") +
+				(stay != null ? " for " + stay.toString(e, debug) : "") +
 				(fadeout != null ? " with fadeout " + fadeout.toString(e, debug) : "");
 	}
 }
