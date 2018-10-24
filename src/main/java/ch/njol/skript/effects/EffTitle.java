@@ -85,14 +85,15 @@ public class EffTitle extends Effect {
 		
 		for (Player player : recipients.getArray(e)) {
 			player.sendTitle(msg1, msg2, int1, int2, int3);
+			
 		}
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug) +
-				" with fadein " + fadein.toString(e, debug) + " for " + stay.toString(e, debug) +
-				" with fadeout " + fadeout.toString(e, debug);
+				(fadein != null ? " with fadein " + fadein.toString(e, debug) : "") +
+				(stay != null ?" for " + stay.toString(e, debug) : "") +
+				(fadeout != null ? " with fadeout " + fadeout.toString(e, debug) : "");
 	}
-	
 }
