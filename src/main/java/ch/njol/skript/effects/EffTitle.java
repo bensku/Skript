@@ -77,7 +77,6 @@ public class EffTitle extends Effect {
 		
 		for (Player player : recipients.getArray(e)) {
 			player.sendTitle(msg1, msg2, fadein, stay, fadeout);
-			
 		}
 	}
 	
@@ -88,4 +87,5 @@ public class EffTitle extends Effect {
 				(stay != null ? " for " + stay.toString(e, debug) : "") +
 				(fadeout != null ? " with fadeout " + fadeout.toString(e, debug) : "");
 	}
+	
 }
