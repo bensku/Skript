@@ -35,7 +35,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 @Name("Title")
-@Description("Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times")
+@Description("Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times for Minecraft versions 1.11 and above.")
 @Examples({"send title \"Competition Started\" with subtitle \"Have fun, Stay safe!\" to player for 5 seconds",
 		"send title \"Hi %player%\" to player", "send title \"Loot Drop\" with subtitle \"starts in 3 minutes\" to all players",
 		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player with fadein 1 second for 5 seconds with fadeout 1 second"})
@@ -43,7 +43,11 @@ import ch.njol.util.Kleenean;
 public class EffTitle extends Effect {
 	
 	static {
-		Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
+		if (Skript.isRunningMinecraft(1, 11)) {
+			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
+		} else {
+			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players%");
+		}
 	}
 	
 	@SuppressWarnings("null")
