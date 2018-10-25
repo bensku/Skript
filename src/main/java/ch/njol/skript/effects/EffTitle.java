@@ -30,7 +30,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class EffTitle extends Effect {
 	
 	static {
-		Skript.registerEffect(EffTitle.class, "send [the] title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
+		Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
 	}
 	
 	@SuppressWarnings("null")
@@ -55,7 +55,7 @@ public class EffTitle extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parser) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		title = (Expression<String>) exprs[0];
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
@@ -71,13 +71,12 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String msg1 = title.getSingle(e);
 		String msg2 = subtitle != null ? subtitle.getSingle(e) : null;
-		Integer fin = fadein != null ? (int) fadein.getSingle(e).getTicks_i() : 10;
-		Integer sty = stay != null ? (int) stay.getSingle(e).getTicks_i() : 70;
-		Integer fout = fadeout != null ? (int) fadeout.getSingle(e).getTicks_i() : 20;
-		
+		int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10;
+		int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
+		int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20;
 		
 		for (Player player : recipients.getArray(e)) {
-			player.sendTitle(msg1, msg2, fin, sty, fout);
+			player.sendTitle(msg1, msg2, fadein, stay, fadeout);
 			
 		}
 	}
