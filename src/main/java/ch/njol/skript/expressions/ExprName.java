@@ -19,11 +19,14 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -71,18 +74,28 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	private static enum NameType {
 		NAME("name", "name[s]", PLAYER | ITEMSTACK | ENTITY | INVENTORY, ITEMSTACK | ENTITY) {
 			@Override
-			void set(final @Nullable Object o, final @Nullable String s) {
+			void set(@Nullable Object o, @Nullable String name) {
 				if (o == null)
 					return;
 				if (o instanceof LivingEntity) {
-					((LivingEntity) o).setCustomName(s);
+					((LivingEntity) o).setCustomName(name);
 					((LivingEntity) o).setRemoveWhenFarAway(false);
 				} else if (o instanceof ItemStack) {
-					final ItemMeta m = ((ItemStack) o).getItemMeta();
+					ItemMeta m = ((ItemStack) o).getItemMeta();
 					if (m != null) {
-						m.setDisplayName(s);
+						m.setDisplayName(name);
 						((ItemStack) o).setItemMeta(m);
 					}
+				} else if (o instanceof Inventory) {
+					Inventory inventory = ((Inventory) o);
+					Inventory copy;
+					if (inventory.getType() == InventoryType.CHEST) {
+						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getSize(), name);
+					} else {
+						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getType(), name);
+					}
+					copy.setContents(inventory.getContents());
+					inventory.getViewers().forEach(human -> human.openInventory(copy));
 				} else {
 					assert false;
 				}
@@ -127,6 +140,16 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 						m.setDisplayName(s);
 						((ItemStack) o).setItemMeta(m);
 					}
+				} else if (o instanceof Inventory) {
+					Inventory inventory = ((Inventory) o);
+					Inventory copy;
+					if (inventory.getType() == InventoryType.CHEST) {
+						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getSize(), name);
+					} else {
+						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getType(), name);
+					}
+					copy.setContents(inventory.getContents());
+					inventory.getViewers().forEach(human -> human.openInventory(copy));
 				} else {
 					assert false;
 				}
@@ -256,7 +279,6 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	
 	// TODO find a better method for handling changes (in general)
 	// e.g. a Changer that takes an object and returns another which should then be saved if applicable (the Changer includes the ChangeMode)
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -279,7 +301,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		final String name = delta == null ? null : (String) delta[0];
 		if (changeType == ITEMSTACK) {
 			if (Slot.class.isAssignableFrom(getExpr().getReturnType())) {
@@ -303,7 +325,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			}
 		} else {
 			for (final Object o : getExpr().getArray(e)) {
-				if (o instanceof LivingEntity || o instanceof Player)
+				if (o instanceof LivingEntity || o instanceof Player || o instanceof Inventory)
 					type.set(o, name);
 			}
 		}
