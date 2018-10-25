@@ -59,10 +59,12 @@ public class EffTitle extends Effect {
 		title = (Expression<String>) exprs[0];
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
-		fadein = (Expression<Timespan>) exprs[3];
-		stay = (Expression<Timespan>) exprs[4];
-		fadeout = (Expression<Timespan>) exprs[5];
-		
+		if (Skript.isRunningMinecraft(1, 11)) {
+			fadein = (Expression<Timespan>) exprs[3];
+			stay = (Expression<Timespan>) exprs[4];
+			fadeout = (Expression<Timespan>) exprs[5];
+			return true;
+		}
 		return true;
 	}
 	
@@ -71,12 +73,18 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String title = this.title.getSingle(e);
 		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
-		int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10;
-		int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
-		int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20;
-		
-		for (Player player : recipients.getArray(e)) {
-			player.sendTitle(title, subtitle, fadein, stay, fadeout);
+		if (Skript.isRunningMinecraft(1, 11)) {
+			int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10;
+			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
+			int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20;
+			
+			for (Player player : recipients.getArray(e)) {
+				player.sendTitle(title, subtitle, fadein, stay, fadeout);
+			}
+		} else {
+			for (Player player : recipients.getArray(e)) {
+				player.sendTitle(title, subtitle);
+			}
 		}
 	}
 	
