@@ -69,14 +69,14 @@ public class EffTitle extends Effect {
 	@SuppressWarnings("null")
 	@Override
 	protected void execute(final Event e) {
-		String msg1 = title.getSingle(e);
-		String msg2 = subtitle != null ? subtitle.getSingle(e) : null;
+		String title = this.title.getSingle(e);
+		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
 		int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10;
 		int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
 		int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20;
 		
 		for (Player player : recipients.getArray(e)) {
-			player.sendTitle(msg1, msg2, fadein, stay, fadeout);
+			player.sendTitle(title, subtitle, fadein, stay, fadeout);
 		}
 	}
 	
