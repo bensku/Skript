@@ -1,4 +1,4 @@
-/**
+/*
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,13 +13,17 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * 
+ * 
  * Copyright 2011-2017 Peter Güttinger and contributors
+ * 
  */
+
 package ch.njol.skript.expressions;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -32,42 +36,26 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 
-@Name("Sorted List")
-@Description("Sorts given list in natural order. All objects in list must be comparable; usually if you think you can compare it, it can be compared.")
-@Examples({"set {_list::*} to sorted {_list::*}"})
-@Since("2.2-dev19")
-public class ExprSortedList extends SimpleExpression<Object> {
+@Name("Reversed List")
+@Description("Reverses the given list.")
+@Examples("set {_list::*} to reversed {_list::*}")
+@Since("INSERT VERSION")
+public class ExprReversedList extends SimpleExpression<Object> {
 	
-	static{
-		Skript.registerExpression(ExprSortedList.class, Object.class, ExpressionType.COMBINED, "sorted %objects%");
+	static {
+		Skript.registerExpression(ExprReversedList.class, Object.class, ExpressionType.COMBINED, "(reverse(d| of)|flip[ped]) %objects%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<?> list;
 	
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		Class<? extends Object> type = exprs[0].getReturnType();
-		if (exprs[0] instanceof Variable<?>) {
-			Variable<?> variable = ((Variable<?>) exprs[0]);
-			if (!variable.isList()) {
-				Skript.error("You may only sort list variables, not single variables.");
-				return false;
-			}
-			list = exprs[0].getConvertedExpression(Object.class);
-			return true;
-		}
-		if (!Comparable.class.isAssignableFrom(type)) {
-			Skript.error("List of type " + Classes.toString(type) + " does not support sorting.");
-			return false;
-		}
 		list = LiteralUtils.defendExpression(exprs[0]);
 		return LiteralUtils.canInitSafely(list);
 	}
@@ -75,31 +63,15 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] unsorted = list.getArray(e);
-		Object[] sorted = new Object[unsorted.length]; // Not yet sorted...
-		
-		for (int i = 0; i < sorted.length; i++) {
-			Object value = unsorted[i];
-			if (value instanceof Long) {
-				// Hope it fits to the double...
-				sorted[i] = new Double(((Long) value).longValue());
-			} else {
-				// No conversion needed
-				sorted[i] = value;
-			}
-		}
-		
-		try {
-			Arrays.sort(sorted); // Now sorted
-		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to sort a list, but some objects are not comparable!");
-		}
-		return sorted;
+		Object[] origin = list.getArray(e);
+		List<Object> reversed = Arrays.asList(origin.clone());
+		Collections.reverse(reversed);
+		return reversed.toArray();
 	}
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
-		return Object.class;
+		return list.getReturnType();
 	}
 	
 	@Override
@@ -109,7 +81,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "sorted list";
+		return "reversed " + list.toString(e, debug);
 	}
-	
+
 }

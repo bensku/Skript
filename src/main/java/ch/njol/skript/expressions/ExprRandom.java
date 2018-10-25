@@ -47,6 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"give a random item out of all items to the player"})
 @Since("1.4.9")
 public class ExprRandom extends SimpleExpression<Object> {
+
 	static {
 		Skript.registerExpression(ExprRandom.class, Object.class, ExpressionType.COMBINED, "[a] random %*classinfo% [out] of %objects%");
 	}
@@ -80,13 +81,13 @@ public class ExprRandom extends SimpleExpression<Object> {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "a random element out of " + expr.toString(e, debug);
-	}
-	
-	@Override
 	public boolean isSingle() {
 		return true;
 	}
 	
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "a random element out of " + expr.toString(e, debug);
+	}
+
 }

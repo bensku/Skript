@@ -37,16 +37,16 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 
 @Name("Shuffled List")
 @Description("Shuffles given list randomly. This is done by replacing indices by random numbers in resulting list.")
-@Examples({"set {_list::*} to shuffled {_list::*}"})
+@Examples("set {_list::*} to shuffled {_list::*}")
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
 	
-	static{
+	static {
 		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
 	
@@ -56,14 +56,14 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		list = (Expression<Object>) exprs[0];
-		return true;
+		list = LiteralUtils.defendExpression(exprs[0]);
+		return LiteralUtils.canInitSafely(list);
 	}
 	
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] origin = list.getAll(e);
+		Object[] origin = list.getArray(e);
 		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
 		
 		try {
@@ -86,6 +86,6 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "shuffled list";
+		return "shuffled " + list.toString(e, debug);
 	}
 }
