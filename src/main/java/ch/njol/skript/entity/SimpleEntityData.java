@@ -67,6 +67,7 @@ import org.bukkit.entity.Illusioner;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.LeashHitch;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.LlamaSpit;
@@ -193,6 +194,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("squid", Squid.class));
 		types.add(new SimpleEntityDataInfo("bottle of enchanting", ThrownExpBottle.class));
 		types.add(new SimpleEntityDataInfo("tnt", TNTPrimed.class));
+		types.add(new SimpleEntityDataInfo("leash hitch", LeashHitch.class));
 		if (Skript.classExists("org.bukkit.entity.Husk")) {
 			// Husk must be registered before zombie to work correctly
 			types.add(new SimpleEntityDataInfo("husk", Husk.class));
