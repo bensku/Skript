@@ -979,7 +979,8 @@ entities:
 		name: animal¦s
 		pattern: animal(|1¦s)
 	damageable:
-		name: damageable
+		name: damageable mob¦s
+		pattern: damageable(|1¦s)
 	water mob:
 		name: water mob¦s
 		pattern: water mob(|1¦s)
