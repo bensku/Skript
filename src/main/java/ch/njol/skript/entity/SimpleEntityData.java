@@ -38,8 +38,10 @@ import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cod;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Dolphin;
 import org.bukkit.entity.Donkey;
+import org.bukkit.entity.DragonFireball;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.ElderGuardian;
@@ -53,6 +55,7 @@ import org.bukkit.entity.EvokerFangs;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Fish;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Golem;
@@ -63,6 +66,7 @@ import org.bukkit.entity.Husk;
 import org.bukkit.entity.Illusioner;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.LlamaSpit;
@@ -86,11 +90,13 @@ import org.bukkit.entity.Slime;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Snowman;
+import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Stray;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownExpBottle;
+import org.bukkit.entity.TippedArrow;
 import org.bukkit.entity.Trident;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Turtle;
@@ -155,6 +161,8 @@ public class SimpleEntityData extends EntityData<Entity> {
 	private final static List<SimpleEntityDataInfo> types = new ArrayList<>();
 	static {
 		types.add(new SimpleEntityDataInfo("arrow", Arrow.class));
+		types.add(new SimpleEntityDataInfo("spectral arrow", SpectralArrow.class));
+		types.add(new SimpleEntityDataInfo("tipped arrow", TippedArrow.class));
 		if (!Skript.methodExists(Boat.class, "getWoodType")) // Only for 1.9 and lower. See BoatData instead
 			types.add(new SimpleEntityDataInfo("boat", Boat.class));
 		types.add(new SimpleEntityDataInfo("blaze", Blaze.class));
@@ -162,12 +170,15 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("mooshroom", MushroomCow.class));
 		types.add(new SimpleEntityDataInfo("cow", Cow.class));
 		types.add(new SimpleEntityDataInfo("cave spider", CaveSpider.class));
+		types.add(new SimpleEntityDataInfo("dragon fireball", DragonFireball.class));
 		types.add(new SimpleEntityDataInfo("egg", Egg.class));
 		types.add(new SimpleEntityDataInfo("ender crystal", EnderCrystal.class));
 		types.add(new SimpleEntityDataInfo("ender dragon", EnderDragon.class));
 		types.add(new SimpleEntityDataInfo("ender pearl", EnderPearl.class));
 		types.add(new SimpleEntityDataInfo("small fireball", SmallFireball.class));
+		types.add(new SimpleEntityDataInfo("large fireball", LargeFireball.class));
 		types.add(new SimpleEntityDataInfo("fireball", Fireball.class));
+		types.add(new SimpleEntityDataInfo("fish hook", FishHook.class));
 		types.add(new SimpleEntityDataInfo("ghast", Ghast.class));
 		types.add(new SimpleEntityDataInfo("giant", Giant.class));
 		types.add(new SimpleEntityDataInfo("iron golem", IronGolem.class));
@@ -263,6 +274,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		
 		// supertypes
 		types.add(new SimpleEntityDataInfo("human", HumanEntity.class, true));
+		types.add(new SimpleEntityDataInfo("damageable", Damageable.class, true));
 		types.add(new SimpleEntityDataInfo("monster", Monster.class, true)); //I don't know why Njol never included that. I did now ^^
 		types.add(new SimpleEntityDataInfo("creature", Creature.class, true));
 		types.add(new SimpleEntityDataInfo("animal", Animals.class, true));
