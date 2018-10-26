@@ -560,6 +560,9 @@ entities:
 	arrow:
 		name: arrow¦s @an
 		pattern: arrow(|1¦s)
+	spectral arrow:
+		name: spectral arrow
+		pattern: spectral[ ]arrow(|1¦s)
 	bat:
 		name: bat¦s
 		pattern: <age> bat(|1¦s)
@@ -627,9 +630,15 @@ entities:
 	fireball:
 		name: fireball¦s
 		pattern: [(ghast|big)] fire[ ]ball(|1¦s)
+	dragon fireball:
+		name: dragon fireball¦s
+		patter: dragon fire[ ]ball(|1¦s)
 	small fireball:
 		name: small fireball¦s
 		pattern: (small|blaze) fire[ ]ball(|1¦s)
+	large fireball:
+		name: large fireball¦s
+		pattern: large fire[ ]ball(|1¦s)
 	any fireball:
 		name: any fireball¦s
 		pattern: any fire[ ]ball(|1¦s)
@@ -881,7 +890,7 @@ entities:
 		pattern: killer <age> rabbit(|1¦s)|killer rabbit <age>(|1¦s)
 	fish hook:
 		name: fish hook¦s
-		pattern: fish hook(|1¦s)
+		pattern: fish[ ]hook(|1¦s)
 	armor stand:
 		name: armor stand¦s
 		pattern: armor stand(|1¦s)
@@ -969,6 +978,8 @@ entities:
 	animal:
 		name: animal¦s
 		pattern: animal(|1¦s)
+	damageable:
+		name: damageable
 	water mob:
 		name: water mob¦s
 		pattern: water mob(|1¦s)
