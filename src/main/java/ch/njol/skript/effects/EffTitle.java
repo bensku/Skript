@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class EffTitle extends Effect {
 	
 	static {
-		if (Skript.isRunningMinecraft(1, 11)) {
+		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
 			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
 		} else {
 			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players%");
@@ -65,11 +65,10 @@ public class EffTitle extends Effect {
 		title = (Expression<String>) exprs[0];
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
-		if (Skript.isRunningMinecraft(1, 11)) {
+		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
 			fadein = (Expression<Timespan>) exprs[3];
 			stay = (Expression<Timespan>) exprs[4];
 			fadeout = (Expression<Timespan>) exprs[5];
-			return true;
 		}
 		return true;
 	}
@@ -79,11 +78,10 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String title = this.title.getSingle(e);
 		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
-		if (Skript.isRunningMinecraft(1, 11)) {
-			int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10;
-			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
-			int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20;
-			
+		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
+			int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10; //Default numbers from Spigot
+			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70; //Default numbers from Spigot
+			int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20; //Default numbers from Spigot
 			for (Player player : recipients.getArray(e)) {
 				player.sendTitle(title, subtitle, fadein, stay, fadeout);
 			}
