@@ -54,7 +54,7 @@ public class EffTitle extends Effect {
 	private Expression<String> title;
 	@Nullable
 	private Expression<String> subtitle;
-	@Nullable
+	@SuppressWarnings("null")
 	private Expression<Player> recipients;
 	@Nullable
 	private Expression<Timespan> fadein, stay, fadeout;
