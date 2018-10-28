@@ -42,11 +42,13 @@ import ch.njol.util.Kleenean;
 @Since("INSERT VERSION")
 public class EffTitle extends Effect {
 	
+	private final static boolean TIME_SUPPORTED = Skript.methodExists(Player.class,"sendTitle", String.class, String.class, int.class, int.class, int.class);
+	
 	static {
-		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
-			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players% [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
+		if (TIME_SUPPORTED) {
+			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%] [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
 		} else {
-			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] to %players%");
+			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%]");
 		}
 	}
 	
@@ -57,7 +59,7 @@ public class EffTitle extends Effect {
 	@SuppressWarnings("null")
 	private Expression<Player> recipients;
 	@Nullable
-	private Expression<Timespan> fadein, stay, fadeout;
+	private Expression<Timespan> fadeIn, stay, fadeOut;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -65,10 +67,10 @@ public class EffTitle extends Effect {
 		title = (Expression<String>) exprs[0];
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
-		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
-			fadein = (Expression<Timespan>) exprs[3];
+		if (TIME_SUPPORTED) {
+			fadeIn = (Expression<Timespan>) exprs[3];
 			stay = (Expression<Timespan>) exprs[4];
-			fadeout = (Expression<Timespan>) exprs[5];
+			fadeOut = (Expression<Timespan>) exprs[5];
 		}
 		return true;
 	}
@@ -78,26 +80,24 @@ public class EffTitle extends Effect {
 	protected void execute(final Event e) {
 		String title = this.title.getSingle(e);
 		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
-		if (Skript.methodExists(Player.class, "sendTitle", String.class, String.class, int.class, int.class, int.class)) {
-			int fadein = this.fadein != null ? (int) this.fadein.getSingle(e).getTicks_i() : 10; //Default numbers from Spigot
-			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70; //Default numbers from Spigot
-			int fadeout = this.fadeout != null ? (int) this.fadeout.getSingle(e).getTicks_i() : 20; //Default numbers from Spigot
-			for (Player player : recipients.getArray(e)) {
-				player.sendTitle(title, subtitle, fadein, stay, fadeout);
-			}
+		if (TIME_SUPPORTED) {
+			int fadein = this.fadeIn != null ? (int) this.fadeIn.getSingle(e).getTicks_i() : 10;
+			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
+			int fadeout = this.fadeOut != null ? (int) this.fadeOut.getSingle(e).getTicks_i() : 20;
+			for (Player p : recipients.getArray(e))
+				p.sendTitle(title, subtitle, fadein, stay, fadeout);
 		} else {
-			for (Player player : recipients.getArray(e)) {
-				player.sendTitle(title, subtitle);
-			}
+			for (Player p : recipients.getArray(e))
+				p.sendTitle(title, subtitle);
 		}
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug) +
-				(fadein != null ? " with fadein " + fadein.toString(e, debug) : "") +
+				(fadeIn != null ? " with fadein " + fadeIn.toString(e, debug) : "") +
 				(stay != null ? " for " + stay.toString(e, debug) : "") +
-				(fadeout != null ? " with fadeout " + fadeout.toString(e, debug) : "");
+				(fadeOut != null ? " with fadeout " + fadeOut.toString(e, debug) : "");
 	}
 	
 }
