@@ -27,6 +27,9 @@
         <ANNO name="org.eclipse.jdt.annotation.Nullable" />
       </REPEAT_ANNOTATIONS>
     </JavaCodeStyleSettings>
+    <MarkdownNavigatorCodeStyleSettings>
+      <option name="RIGHT_MARGIN" value="72" />
+    </MarkdownNavigatorCodeStyleSettings>
     <codeStyleSettings language="JAVA">
       <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
       <indentOptions>

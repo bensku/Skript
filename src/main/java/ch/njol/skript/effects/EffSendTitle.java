@@ -35,24 +35,29 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 @Name("Title")
-@Description("Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times for Minecraft versions 1.11 and above.")
+@Description({"Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times for Minecraft versions 1.11 and above.",
+		"Note: if no input is given for the title/subtitle or the times," +
+		"it will keep the ones from the last title sent, use the <a href='effects.html#EffResetTitle'>reset title</a> effect to restore the default values."})
 @Examples({"send title \"Competition Started\" with subtitle \"Have fun, Stay safe!\" to player for 5 seconds",
 		"send title \"Hi %player%\" to player", "send title \"Loot Drop\" with subtitle \"starts in 3 minutes\" to all players",
-		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player with fadein 1 second for 5 seconds with fadeout 1 second"})
+		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player for 5 seconds with fadein 1 second and fade out 1 second"})
 @Since("INSERT VERSION")
-public class EffTitle extends Effect {
+public class EffSendTitle extends Effect {
 	
 	private final static boolean TIME_SUPPORTED = Skript.methodExists(Player.class,"sendTitle", String.class, String.class, int.class, int.class, int.class);
 	
 	static {
-		if (TIME_SUPPORTED) {
-			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%] [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
-		} else {
-			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%]");
-		}
+		if (TIME_SUPPORTED)
+			Skript.registerEffect(EffSendTitle.class,
+					"send title %string% [with subtitle %-string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]",
+					"send subtitle %string% [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
+		else
+			Skript.registerEffect(EffSendTitle.class, "send title %string% [with subtitle %-string%] [to %players%]",
+												"send subtitle %string% [to %players%]");
+		
 	}
 	
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<String> title;
 	@Nullable
 	private Expression<String> subtitle;
@@ -64,12 +69,12 @@ public class EffTitle extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		title = (Expression<String>) exprs[0];
-		subtitle = (Expression<String>) exprs[1];
+		title = matchedPattern == 0 ? (Expression<String>) exprs[0] : null;
+		subtitle = matchedPattern == 0 ? (Expression<String>) exprs[1] : (Expression<String>) exprs[0];
 		recipients = (Expression<Player>) exprs[2];
 		if (TIME_SUPPORTED) {
-			fadeIn = (Expression<Timespan>) exprs[3];
-			stay = (Expression<Timespan>) exprs[4];
+			stay = (Expression<Timespan>) exprs[3];
+			fadeIn = (Expression<Timespan>) exprs[4];
 			fadeOut = (Expression<Timespan>) exprs[5];
 		}
 		return true;
@@ -78,26 +83,34 @@ public class EffTitle extends Effect {
 	@SuppressWarnings("null")
 	@Override
 	protected void execute(final Event e) {
-		String title = this.title.getSingle(e);
-		String subtitle = this.subtitle != null ? this.subtitle.getSingle(e) : null;
+		String title = this.title != null ? this.title.getSingle(e) : null,
+		sub = subtitle != null ? subtitle.getSingle(e) : null;
+		
 		if (TIME_SUPPORTED) {
-			int fadein = this.fadeIn != null ? (int) this.fadeIn.getSingle(e).getTicks_i() : 10;
-			int stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : 70;
-			int fadeout = this.fadeOut != null ? (int) this.fadeOut.getSingle(e).getTicks_i() : 20;
+			int in = fadeIn != null ? (int) fadeIn.getSingle(e).getTicks_i() : -1,
+			stay = this.stay != null ? (int) this.stay.getSingle(e).getTicks_i() : -1,
+			out = fadeOut != null ? (int) fadeOut.getSingle(e).getTicks_i() : -1;
+			
 			for (Player p : recipients.getArray(e))
-				p.sendTitle(title, subtitle, fadein, stay, fadeout);
+				p.sendTitle(title, sub, in, stay, out);
 		} else {
 			for (Player p : recipients.getArray(e))
-				p.sendTitle(title, subtitle);
+				p.sendTitle(title, sub);
 		}
 	}
 	
+	// TODO: util method to simplify this
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "send title " + title.toString(e, debug) + " to " + recipients.toString(e, debug) +
-				(fadeIn != null ? " with fadein " + fadeIn.toString(e, debug) : "") +
-				(stay != null ? " for " + stay.toString(e, debug) : "") +
-				(fadeOut != null ? " with fadeout " + fadeOut.toString(e, debug) : "");
+		String title = this.title != null ? this.title.toString(e, debug) : "",
+		sub = subtitle != null ? subtitle.toString(e, debug) : "",
+		in = fadeIn != null ? fadeIn.toString(e, debug) : "",
+		stay = this.stay != null ? this.stay.toString(e, debug) : "",
+		out = fadeOut != null ? this.fadeOut.toString(e, debug) : "";
+		return (title == null ? "send subtitle " + sub : "send title " + title +
+				sub == "" ? "" : " with subtitle " + sub) + " to " +
+				recipients.toString(e, debug) + (TIME_SUPPORTED ?
+				" for " + stay + " with fade in " + in + " and fade out" + out : "");
 	}
 	
 }
