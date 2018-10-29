@@ -53,8 +53,9 @@ public class EffSendTitle extends Effect {
 					"send title %string% [with subtitle %-string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]",
 					"send subtitle %string% [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
 		else
-			Skript.registerEffect(EffSendTitle.class, "send title %string% [with subtitle %-string%] [to %players%]",
-												"send subtitle %string% [to %players%]");
+			Skript.registerEffect(EffSendTitle.class,
+					"send title %string% [with subtitle %-string%] [to %players%]",
+					"send subtitle %string% [to %players%]");
 		
 	}
 	
@@ -71,12 +72,12 @@ public class EffSendTitle extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		title = matchedPattern == 0 ? (Expression<String>) exprs[0] : null;
-		subtitle = matchedPattern == 0 ? (Expression<String>) exprs[1] : (Expression<String>) exprs[0];
-		recipients = matchedPattern == 0 ? (Expression<Player>) exprs[2] : (Expression<Player>) exprs[1];
+		subtitle = (Expression<String>) exprs[1 - matchedPattern];
+		recipients = (Expression<Player>) exprs[2 - matchedPattern];
 		if (TIME_SUPPORTED) {
-			stay = matchedPattern == 0 ? (Expression<Timespan>) exprs[3] : (Expression<Timespan>) exprs[2];
-			fadeIn = matchedPattern == 0 ? (Expression<Timespan>) exprs[4] : (Expression<Timespan>) exprs[3];
-			fadeOut = matchedPattern == 0 ? (Expression<Timespan>) exprs[5] : (Expression<Timespan>) exprs[4];
+			stay = (Expression<Timespan>) exprs[3 - matchedPattern];
+			fadeIn = (Expression<Timespan>) exprs[4 - matchedPattern];
+			fadeOut = (Expression<Timespan>) exprs[5 - matchedPattern];
 		}
 		return true;
 	}

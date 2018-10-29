@@ -65,4 +65,5 @@ public class EffResetTitle extends Effect {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "reset the title of " + recipients.toString(e, debug);
 	}
+	
 }
