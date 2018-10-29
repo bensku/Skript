@@ -32,7 +32,8 @@ import ch.njol.skript.doc.Since;
  * @author Peter Güttinger
  */
 @Name("Is Swimming")
-@Description("Checks whether a living entity is swimming.")
+@Description({"Checks whether a living entity is swimming.",
+		"Note: Only supported on Minecraft 1.13+"})
 @Examples("player is swimming")
 @Since("INSERT VERSION")
 public class CondIsSwimming extends PropertyCondition<LivingEntity> {
