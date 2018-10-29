@@ -33,7 +33,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("Reset Title")
+@Name("Title - Reset")
 @Description("Resets the title of the player to the default values.")
 @Examples({"reset the titles of all players",
 		"reset the title"})

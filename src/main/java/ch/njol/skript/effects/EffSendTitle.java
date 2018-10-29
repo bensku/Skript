@@ -34,7 +34,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
-@Name("Send Title/Subtitle")
+@Name("Title - Send")
 @Description({"Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times for Minecraft versions 1.11 and above.",
 		"Note: if no input is given for the title/subtitle or the times," +
 		"it will keep the ones from the last title sent, use the <a href='effects.html#EffResetTitle'>reset title</a> effect to restore the default values."})
