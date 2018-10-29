@@ -28,9 +28,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Is Swimming")
 @Description({"Checks whether a living entity is swimming.",
 		"Note: Only supported on Minecraft 1.13+"})
@@ -40,7 +37,7 @@ public class CondIsSwimming extends PropertyCondition<LivingEntity> {
 	
 	static {
 		if (Skript.methodExists(LivingEntity.class, "isSwimming"))
-			register(CondIsSwimming.class, "swimming", "entities");
+			register(CondIsSwimming.class, "swimming", "livingentities");
 	}
 	
 	@Override

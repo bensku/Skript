@@ -481,8 +481,8 @@ public class SimpleEvents {
 					.description("Called when an entity swims or stops swimming",
 							"Note: Only supported on Minecraft 1.13+")
 					.examples("on swim:",
-							"    event-entity does not have permission \"swim\"",
-							"    cancel event")
+							"	event-entity does not have permission \"swim\"",
+							"	cancel event")
 					.since("INSERT VERSION");
 		}
 	}
