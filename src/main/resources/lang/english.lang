@@ -1012,8 +1012,8 @@ entities:
 		name: trident¦s
 		pattern: trident(|1¦s)
 	leash hitch:
-	    name: leash hitch¦es
-	    pattern: leash hitch(|1¦es)
+		name: leash hitch¦es
+		pattern: leash hitch(|1¦es)
 
 
 # -- Damage Causes --
