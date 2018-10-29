@@ -35,10 +35,10 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 @Name("Title")
-@Description("Sends a title/subtitle to the given player(s) with optional fadein/stay/fadeout times for Minecraft versions 1.11 and above.")
+@Description("Sends a title/subtitle to the given player(s) with optional stay/fadein/fadeout times for Minecraft versions 1.11 and above.")
 @Examples({"send title \"Competition Started\" with subtitle \"Have fun, Stay safe!\" to player for 5 seconds",
 		"send title \"Hi %player%\" to player", "send title \"Loot Drop\" with subtitle \"starts in 3 minutes\" to all players",
-		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player with fadein 1 second for 5 seconds with fadeout 1 second"})
+		"send title \"Hello %player%!\" with subtitle \"Welcome to our server\" to player for 5 seconds with 1 second fadein with 1 second fadeout"})
 @Since("INSERT VERSION")
 public class EffTitle extends Effect {
 	
@@ -46,7 +46,7 @@ public class EffTitle extends Effect {
 	
 	static {
 		if (TIME_SUPPORTED) {
-			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%] [with fade[(-| )]in %-timespan%] [for %-timespan%] [with fade[(-| )]out %-timespan%]");
+			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%] [for %-timespan%] [with %-timespan% fade[(-| )]in] [(with|and with) %-timespan% fade[(-| )]out]");
 		} else {
 			Skript.registerEffect(EffTitle.class, "send title %string% [with subtitle %-string%] [to %players%]");
 		}
@@ -68,8 +68,8 @@ public class EffTitle extends Effect {
 		subtitle = (Expression<String>) exprs[1];
 		recipients = (Expression<Player>) exprs[2];
 		if (TIME_SUPPORTED) {
-			fadeIn = (Expression<Timespan>) exprs[3];
-			stay = (Expression<Timespan>) exprs[4];
+			stay = (Expression<Timespan>) exprs[3];
+			fadeIn = (Expression<Timespan>) exprs[4];
 			fadeOut = (Expression<Timespan>) exprs[5];
 		}
 		return true;
