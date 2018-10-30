@@ -235,12 +235,12 @@ public class SkriptClasses {
 						for (final ItemData d : t.getTypes()) {
 							b.append("," + d.getType());
 						}
-						final Map<Enchantment, Integer> enchs = t.getEnchantments();
-						if (enchs != null && !enchs.isEmpty()) {
+						final EnchantmentType[] enchs = t.getEnchantmentTypes();
+						if (enchs != null) {
 							b.append("|");
-							for (final Entry<Enchantment, Integer> e : enchs.entrySet()) {
-								b.append("#" + EnchantmentIds.ids.get(e.getKey()));
-								b.append(":" + e.getValue());
+							for (final EnchantmentType e : enchs) {
+								b.append("#" + EnchantmentIds.ids.get(e.getType()));
+								b.append(":" + e.getLevel());
 							}
 						}
 						return "" + b.toString();

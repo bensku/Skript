@@ -68,17 +68,11 @@ public class CondIsEnchanted extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return items.check(e,
-				item -> {
-					final Expression<EnchantmentType> enchsExpr = this.enchs;
-					if (enchsExpr == null) {
-						final Map<Enchantment, Integer> enchs = item.getEnchantments();
-						return isNegated() ^ (enchs != null && !enchs.isEmpty());
-					}
-					return enchsExpr.check(e,
-							ench -> ench.has(item)
-					);
-				}, isNegated());
+		if (enchs != null)
+			return items.check(e, item -> enchs.check(e, ench -> item.hasEnchantments(ench)), isNegated());
+		else
+			return items.check(e, ItemType::hasEnchantments, isNegated());
+		
 	}
 	
 	@Override

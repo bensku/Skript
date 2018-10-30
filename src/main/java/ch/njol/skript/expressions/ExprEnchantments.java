@@ -20,25 +20,22 @@
 package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
@@ -59,7 +56,7 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	@SuppressWarnings({"null","unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		items = (Expression<ItemType>) exprs[0];
 		return true;
 	}
@@ -73,73 +70,64 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 	@Nullable
 	protected EnchantmentType[] get(Event e) {
 		List<EnchantmentType> enchantments = new ArrayList<>();
+		
 		for (ItemType item : items.getArray(e)) {
-			Map<Enchantment, Integer> enchants = item.getEnchantments();
+			EnchantmentType[] enchants = item.getEnchantmentTypes();
+			
 			if (enchants == null)
 				continue;
-			for (Entry<Enchantment, Integer> enchant : enchants.entrySet())
-					enchantments.add(new EnchantmentType(enchant.getKey(), enchant.getValue()));
-
+			
+			Collections.addAll(enchantments, enchants);
 		}
-		return enchantments.toArray(new EnchantmentType[enchantments.size()]);
+		return enchantments.toArray(new EnchantmentType[0]);
 	}
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return CollectionUtils.array(EnchantmentType[].class, Enchantment[].class);
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		// Enchantment doesn't get automatically converted to EnchantmentType if you give it more than a one.
+		// Meaning you can transform an Enchantment array to an EnchantmentType array automatically,
+		// So, we gotta do it manually.
+		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
 	}
 
-
-	// TODO: improve changer once aliases rework is done
+	
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		ItemType[] source = items.getArray(e);
-		Map<Enchantment, Integer> enchantments = new HashMap<>();
-		if (mode != Changer.ChangeMode.DELETE || mode != Changer.ChangeMode.RESET) {
-			assert delta != null;
-			for (Object enchant : delta) {
-				if (enchant instanceof EnchantmentType) {
-					EnchantmentType enchantment = (EnchantmentType) enchant;
-					if (enchantment.getType() != null)
-						enchantments.put(enchantment.getType(), enchantment.getLevel());
-				} else {
-					enchantments.put((Enchantment) enchant, -1);
-				}
+		
+		EnchantmentType[] enchants = new EnchantmentType[delta != null ? delta.length : 0];
+		
+		if (delta != null && delta.length != 0) {
+			for (int i = 0; i<delta.length; i++) {
+				if (delta[i] instanceof EnchantmentType)
+					enchants[i] = (EnchantmentType) delta[i];
+				else
+					enchants[i] = new EnchantmentType((Enchantment) delta[i]);
 			}
-			if (mode == Changer.ChangeMode.SET ||mode == Changer.ChangeMode.ADD)
-				enchantments.replaceAll((enchant, level) -> level == -1 ? 1 : level);
 		}
+		
 		switch (mode) {
 			case ADD:
-				changeEnchantments(item -> {
-					item.addEnchantments(enchantments);
-				}, source);
+				for (ItemType item : source)
+					item.addEnchantments(enchants);
 				break;
 			case REMOVE:
 			case REMOVE_ALL:
-				changeEnchantments(item -> {
-					Map<Enchantment, Integer> enchants = item.getEnchantments();
-					assert enchants != null;
-					enchantments.forEach((enchant, level) -> {
-						if (level == -1)
-							enchants.remove(enchant);
-						else
-							enchants.remove(enchant, level);
-					});
-					item.clearEnchantments();
-					item.addEnchantments(enchants);
-				}, source);
+				for (ItemType item : source)
+					item.removeEnchantments(enchants);
 				break;
 			case SET:
-				changeEnchantments(item -> {
+				for (ItemType item : source) {
 					item.clearEnchantments();
-					item.addEnchantments(enchantments);
-				}, source);
+					item.addEnchantments(enchants);
+				}
 				break;
 			case DELETE:
 			case RESET:
-				changeEnchantments(ItemType::clearEnchantments, source);
+				for (ItemType item : source)
+					item.clearEnchantments();
+				break;
 		}
 	}
 
@@ -150,13 +138,7 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "" + String.format("the enchantments of %s", items.toString(e, debug));
+		return "the enchantments of " + items.toString(e, debug);
 	}
-
-	private static void changeEnchantments(Consumer<ItemType> consumer, ItemType... items) {
-		for (ItemType item : items) {
-			consumer.accept(item);
-		}
-	}
-
+	
 }

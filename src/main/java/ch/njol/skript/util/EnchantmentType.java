@@ -51,6 +51,11 @@ public class EnchantmentType implements YggdrasilSerializable {
 		level = -1;
 	}
 	
+	public EnchantmentType(final Enchantment type) {
+		assert type != null;
+		this.type = type;
+		this.level = -1;
+	}
 	public EnchantmentType(final Enchantment type, final int level) {
 		assert type != null;
 		this.type = type;
@@ -76,16 +81,14 @@ public class EnchantmentType implements YggdrasilSerializable {
 		return type;
 	}
 	
+	/**
+	 * Checks whether the given item type has this enchantment.
+	 * @param item the item to be checked.
+	 * @deprecated Use {@link ItemType#hasEnchantments(Enchantment...)}
+	 */
+	@Deprecated
 	public boolean has(final ItemType item) {
-		final Map<Enchantment, Integer> enchs = item.getEnchantments();
-		if (enchs == null)
-			return false;
-		final Integer l = enchs.get(type);
-		if (l == null)
-			return false;
-		if (level == -1)
-			return true;
-		return l == level;
+		return item.hasEnchantments(type);
 	}
 	
 	@Override
@@ -169,9 +172,7 @@ public class EnchantmentType implements YggdrasilSerializable {
 		final EnchantmentType other = (EnchantmentType) obj;
 		if (level != other.level)
 			return false;
-		if (!type.equals(other.type))
-			return false;
-		return true;
+		return type.equals(other.type);
 	}
 	
 }

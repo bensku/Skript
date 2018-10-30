@@ -36,6 +36,8 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -1057,7 +1059,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	/**
 	 * Gets all enchantments of this item.
 	 * @return Enchantments.
+	 * @deprecated Use {@link ItemType#getEnchantmentTypes()}
 	 */
+	@Deprecated
 	@Nullable
 	public Map<Enchantment,Integer> getEnchantments() {
 		if (globalMeta == null)
@@ -1068,11 +1072,13 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			return null;
 		return enchants;
 	}
-
+	
 	/**
 	 * Adds enchantments to this item type.
 	 * @param enchantments Enchantments.
+	 * @deprecated Use {@link ItemType#addEnchantments(EnchantmentType...)}
 	 */
+	@Deprecated
 	public void addEnchantments(Map<Enchantment,Integer> enchantments) {
 		if (globalMeta == null)
 			globalMeta = ItemData.itemFactory.getItemMeta(Material.STONE);
@@ -1081,7 +1087,111 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			globalMeta.addEnchant(entry.getKey(), entry.getValue(), true);
 		}
 	}
-
+	
+	/**
+	 * Gets all enchantments of this item.
+	 * @return the enchantments of this item type.
+	 */
+	@Nullable
+	public EnchantmentType[] getEnchantmentTypes() {
+		if (globalMeta == null)
+			return null;
+		
+		assert globalMeta != null;
+		Set<Entry<Enchantment, Integer>> enchants = globalMeta.getEnchants().entrySet();
+		
+		return enchants.stream()
+			.map(enchant -> new EnchantmentType(enchant.getKey(), enchant.getValue()))
+			.toArray(EnchantmentType[]::new);
+	}
+	
+	/**
+	 * Checks whether this item type has enchantments.
+	 */
+	public boolean hasEnchantments() {
+		if (globalMeta == null)
+			return false;
+		
+		assert globalMeta != null;
+		return globalMeta.hasEnchants();
+	}
+	
+	/**
+	 * Checks whether this item type has the given enchantments.
+	 * @param enchantments the enchantments to be checked.
+	 */
+	public boolean hasEnchantments(Enchantment... enchantments) {
+		if (!hasEnchantments())
+			return false;
+		
+		for (Enchantment enchantment : enchantments) {
+			assert globalMeta != null;
+			if (!globalMeta.hasEnchant(enchantment))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks wether this item type contains at most one of the given enchantments.
+	 * @param enchantments the enchantments to be checked.
+	 */
+	public boolean hasAnyEnchantments(Enchantment... enchantments) {
+		if (!hasEnchantments())
+			return false;
+		
+		for (Enchantment enchantment : enchantments) {
+			assert globalMeta != null;
+			if (globalMeta.hasEnchant(enchantment))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks wether this item type contains the given enchantments.
+	 * @param enchantments the enchantments to be checked.
+	 */
+	public boolean hasEnchantments(EnchantmentType... enchantments) {
+		if (!hasEnchantments())
+			return false;
+		
+		for (EnchantmentType enchantment : enchantments) {
+			assert globalMeta != null;
+			if (!globalMeta.hasEnchant(enchantment.getType()))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Adds the given enchantments to the item type.
+	 * @param enchantments the enchantments to be added.
+	 */
+	public void addEnchantments(EnchantmentType... enchantments) {
+		if (globalMeta == null)
+			globalMeta = ItemData.itemFactory.getItemMeta(Material.STONE);
+		
+		for (EnchantmentType enchantment : enchantments) {
+			assert globalMeta != null;
+			globalMeta.addEnchant(enchantment.getType(), enchantment.getLevel(), true);
+		}
+	}
+	
+	/**
+	 * Removes the given enchantments from this item type.
+	 * @param enchantments the enchantments to be removed.
+	 */
+	public void removeEnchantments(EnchantmentType... enchantments) {
+		if (globalMeta == null)
+			return;
+		
+		for (EnchantmentType enchantment : enchantments) {
+			assert globalMeta != null;
+			globalMeta.removeEnchant(enchantment.getType());
+		}
+	}
+	
 	/**
 	 * Clears all enchantments from this item type except the ones that are
 	 * defined for individual item datas only.
