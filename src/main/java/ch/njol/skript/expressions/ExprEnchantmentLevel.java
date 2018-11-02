@@ -49,10 +49,10 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 	
 	static {
 		Skript.registerExpression(ExprEnchantmentLevel.class, Integer.class, ExpressionType.PROPERTY,
-				"[the] [enchant[ment]] level of %enchantments% (on|of) %itemtypes%",
-				"[the] %enchantments% [enchant[ment]] level (on|of) %itemtypes%",
-				"%itemtypes%'[s] %enchantments% [enchant[ment]] level",
-				"%itemtypes%'[s] [enchant[ment]] level of %enchantments%");
+				"[the] [enchant[ment]] level[s] of %enchantments% (on|of) %itemtypes%",
+				"[the] %enchantments% [enchant[ment]] level[s] (on|of) %itemtypes%",
+				"%itemtypes%'[s] %enchantments% [enchant[ment]] level[s]",
+				"%itemtypes%'[s] [enchant[ment]] level[s] of %enchantments%");
 	}
 	
 	@SuppressWarnings("null")
@@ -95,8 +95,8 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		switch (mode) {
 			case SET:
-			case REMOVE:
 			case ADD:
+			case REMOVE:
 				return CollectionUtils.array(Number.class);
 			default:
 				return null;
@@ -110,7 +110,7 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 		
 		ItemType[] source = items.getArray(e);
 		Enchantment[] enchantments = enchants.getArray(e);
-		int newLevel = ((Number) delta[0]).intValue();
+		int levelModifier = ((Number) delta[0]).intValue();
 		
 		for (ItemType item : source) {
 			if (!item.hasAnyEnchantments(enchantments))
@@ -123,12 +123,22 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 				Enchantment type = enchant.getType();
 				assert type != null;
 				
-				if (mode == ChangeMode.ADD)
-					newLevel += enchant.getLevel();
-				else if (mode == ChangeMode.REMOVE)
-					newLevel -= enchant.getLevel();
-				
-				item.addEnchantments(new EnchantmentType(type, newLevel));
+				EnchantmentType newType;
+				switch (mode) {
+					case SET:
+						newType = new EnchantmentType(type, levelModifier);
+						break;
+					case ADD:
+						newType = new EnchantmentType(type, enchant.getLevel() + levelModifier);
+						break;
+					case REMOVE:
+						newType = new EnchantmentType(type, enchant.getLevel() - levelModifier);
+						break;
+					default:
+						assert false;
+						return;
+				}
+				item.addEnchantments(newType);
 			}
 		}
 	}
