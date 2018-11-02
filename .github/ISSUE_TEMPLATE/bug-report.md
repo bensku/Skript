@@ -4,7 +4,7 @@ about: Create a report to help us improve
 
 ---
 
-<!--- This is a suggested template, so not required. But you should follow it --->
+<!--- This is just a recommended template, but you should follow it --->
 
 ### Description
 <!--- A clear and concise description of what the problem is --->
@@ -20,7 +20,7 @@ about: Create a report to help us improve
 
 <!---
  If you get a console error, you should send the full error. Also if the error contains a stack trace; you can remove the Server Information section below.
- And you should send long errors using a permanent paste service like Gist.
+ Also you should send long errors using a permanent and reliable paste service like Gist, not hastebin.
 --->
 
 ### Server Information
