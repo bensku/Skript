@@ -49,10 +49,10 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 	
 	static {
 		Skript.registerExpression(ExprEnchantmentLevel.class, Integer.class, ExpressionType.PROPERTY,
-				"[the] [enchant[ment]] level of %enchantments% (on|of) %itemtypes%",
-				"[the] %enchantments% [enchant[ment]] level (on|of) %itemtypes%",
-				"%itemtypes%'[s] %enchantments% [enchant[ment]] level",
-				"%itemtypes%'[s] [enchant[ment]] level of %enchantments%");
+				"[the] [enchant[ment]] level[s] of %enchantments% (on|of) %itemtypes%",
+				"[the] %enchantments% [enchant[ment]] level[s] (on|of) %itemtypes%",
+				"%itemtypes%'[s] %enchantments% [enchant[ment]] level[s]",
+				"%itemtypes%'[s] [enchant[ment]] level[s] of %enchantments%");
 	}
 	
 	@SuppressWarnings("null")
@@ -121,14 +121,16 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 			for (EnchantmentType enchant : enchants) {
 				item.removeEnchantments(enchant);
 				Enchantment type = enchant.getType();
+				int changed = newLevel;
 				assert type != null;
 				
 				if (mode == ChangeMode.ADD)
-					newLevel += enchant.getLevel();
+					changed = Math.max(0, enchant.getLevel() + changed);
 				else if (mode == ChangeMode.REMOVE)
-					newLevel -= enchant.getLevel();
+					changed = Math.max(0, enchant.getLevel() - changed);
 				
-				item.addEnchantments(new EnchantmentType(type, newLevel));
+				if (changed > 0)
+					item.addEnchantments(new EnchantmentType(type, newLevel));
 			}
 		}
 	}
