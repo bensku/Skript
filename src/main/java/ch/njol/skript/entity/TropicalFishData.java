@@ -51,21 +51,21 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 		this(0);
 	}
 
-	public TropicalFishData(int pattern) {
-		this.pattern = pattern;
+	public TropicalFishData(Pattern pattern) {
+		matchedPattern = pattern.ordinal() + 1;
+	}
+
+	private TropicalFishData(int pattern) {
+		matchedPattern = pattern;
 	}
 
 	@Nullable
 	private DyeColor patternColor;
 	@Nullable
 	private DyeColor bodyColor;
-	private int pattern = -1;
 
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
-		if (matchedPattern != 0)
-			pattern = matchedPattern - 1;
-		
 		if (exprs[2] != null) {
 			bodyColor = ((Literal<Color>) exprs[2]).getSingle().getWoolColor();
 			patternColor = bodyColor;
@@ -82,7 +82,7 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 	@Override
 	protected boolean init(@Nullable Class<? extends TropicalFish> c, @Nullable TropicalFish tropicalFish) {
 		if (tropicalFish != null) {
-			pattern = tropicalFish.getPattern().ordinal();
+			matchedPattern = tropicalFish.getPattern().ordinal() + 1;
 			bodyColor = tropicalFish.getBodyColor();
 			patternColor = tropicalFish.getPatternColor();
 		}
@@ -91,10 +91,10 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 
 	@Override
 	public void set(TropicalFish entity) {
-		if (pattern == -1)
+		if (matchedPattern == 0)
 			entity.setPattern((Pattern) patterns[ThreadLocalRandom.current().nextInt(patterns.length)]);
 		else
-			entity.setPattern((Pattern) patterns[pattern]);
+			entity.setPattern((Pattern) patterns[matchedPattern]);
 
 		if (bodyColor != null)
 			entity.setBodyColor(bodyColor);
@@ -104,8 +104,8 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 
 	@Override
 	protected boolean match(TropicalFish entity) {
-		boolean samePattern = pattern == -1 || pattern == entity.getPattern().ordinal();
-		boolean sameBody = bodyColor != null ? bodyColor == entity.getBodyColor() : true;
+		boolean samePattern = matchedPattern == 0 || matchedPattern == entity.getPattern().ordinal() + 1;
+		boolean sameBody = bodyColor == null || bodyColor == entity.getBodyColor();
 
 		if (patternColor == null)
 			return samePattern && sameBody;
@@ -124,12 +124,13 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 			return false;
 
 		TropicalFishData other = (TropicalFishData) obj;
-		return pattern == other.pattern && bodyColor == other.bodyColor && patternColor == other.patternColor;
+		return matchedPattern == other.matchedPattern
+			&& bodyColor == other.bodyColor && patternColor == other.patternColor;
 	}
 
 	@Override
 	protected int hashCode_i() {
-		return Objects.hash(pattern, bodyColor, patternColor);
+		return Objects.hash(matchedPattern, bodyColor, patternColor);
 	}
 
 	@Override
@@ -138,11 +139,12 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 			return false;
 
 		TropicalFishData other = (TropicalFishData) e;
-		return pattern == other.pattern && bodyColor == other.bodyColor && patternColor == other.patternColor;
+		return matchedPattern == other.matchedPattern
+			&& bodyColor == other.bodyColor && patternColor == other.patternColor;
 	}
 
 	@Override
 	public EntityData getSuperType() {
-		return new TropicalFishData(pattern);
+		return new TropicalFishData(matchedPattern);
 	}
 }
