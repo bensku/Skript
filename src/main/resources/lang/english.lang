@@ -628,43 +628,43 @@ entities:
 		pattern: fish(|1¦es)
 	tropical fish:
 		name: tropical fish¦es
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] tropical fish(|1¦es)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] tropical fish(|1¦es)
 	kob:
 		name: kob¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] kob(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] kob(|1¦s)
 	sunstreak:
 		name: sunstreak¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] sunstreak(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] sunstreak(|1¦s)
 	snooper:
 		name: snooper¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] snooper(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] snooper(|1¦s)
 	dasher:
 		name: dasher¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] dasher(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] dasher(|1¦s)
 	brinely:
 		name: brinely¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] brinely(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] brinely(|1¦s)
 	spotty:
 		name: spotty¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] spotty(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] spotty(|1¦s)
 	flopper:
 		name: flopper¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] flopper(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] flopper(|1¦s)
 	stripey:
 		name: stripey¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] stripey(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] stripey(|1¦s)
 	glitter:
 		name: glitter¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] glitter(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] glitter(|1¦s)
 	blockfish:
 		name: blockfish¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] blockfish(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] blockfish(|1¦s)
 	betty:
 		name: betty¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] betty(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] betty(|1¦s)
 	clayfish:
 		name: clayfish¦s
-		pattern: [(%-color%[-%-color%]|2¦fully %-color%)] clayfish(|1¦s)
+		pattern: [(%-color%[-%-color%]|fully %-color%)] clayfish(|1¦s)
 	ghast:
 		name: ghast¦s
 		pattern: ghast(|1¦s)

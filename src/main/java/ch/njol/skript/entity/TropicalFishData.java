@@ -29,7 +29,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
 
 public class TropicalFishData extends EntityData<TropicalFish> {
@@ -47,7 +47,9 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 		}
 	}
 
-	public TropicalFishData() {}
+	public TropicalFishData() {
+		this(0);
+	}
 
 	public TropicalFishData(int pattern) {
 		this.pattern = pattern;
@@ -60,15 +62,20 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 	private int pattern = -1;
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedPattern, SkriptParser.ParseResult parseResult) {
+	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern != 0)
 			pattern = matchedPattern - 1;
-
-		bodyColor = exprs.length > 0 ? ((Literal<Color>) exprs[0]).getSingle().getWoolColor() : null;
-		if (parseResult.mark == 2)
+		
+		if (exprs[2] != null) {
+			bodyColor = ((Literal<Color>) exprs[2]).getSingle().getWoolColor();
 			patternColor = bodyColor;
-		else
-			patternColor = exprs.length > 1 ? ((Literal<Color>) exprs[1]).getSingle().getWoolColor() : null;
+		}
+
+		if (exprs[0] != null)
+			bodyColor = ((Literal<Color>) exprs[0]).getSingle().getWoolColor();
+		if (exprs[1] != null)
+			patternColor = ((Literal<Color>) exprs[1]).getSingle().getWoolColor();
+
 		return true;
 	}
 
