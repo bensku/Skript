@@ -63,8 +63,8 @@ public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Tim
 		return Timespan.fromTicks_i(entity.getRemainingAir());
 	}
 	
-	@Nullable
 	@Override
+	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
 		return (mode != ChangeMode.REMOVE_ALL) ? CollectionUtils.array(Timespan.class) : null;
 	}
