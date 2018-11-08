@@ -42,7 +42,7 @@ public class CondIsSwimming extends PropertyCondition<LivingEntity> {
 	}
 	
 	@Override
-	public boolean check(final LivingEntity e) {
+	public boolean check(LivingEntity e) {
 		return e.isSwimming();
 	}
 	
