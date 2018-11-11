@@ -40,7 +40,7 @@ repositories {
 	}
 	
 	maven {
-	    url = 'url = 'https://repo.codemc.org/repository/maven-public''
+	    url = 'https://repo.codemc.org/repository/maven-public'
 	}
 }
 
