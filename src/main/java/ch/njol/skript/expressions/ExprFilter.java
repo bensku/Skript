@@ -50,14 +50,14 @@ import java.util.regex.Pattern;
 @Since("2.2-dev36")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprFilter<T> extends SimpleExpression<T> {
-
+	
 	private static ExprFilter<?> parsing;
-
+	
 	static {
 		Skript.registerExpression(ExprFilter.class, Object.class, ExpressionType.COMBINED,
 				"%objects% (where|that match) \\[<.+>\\]");
 	}
-
+	
 	private ExprFilter<?> source;
 	private Object current;
 	private List<ExprInput<?>> children = new ArrayList<>();
@@ -65,11 +65,11 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 	private Condition condition;
 	private String rawCond;
 	private Expression<Object> objects;
-
+	
 	public ExprFilter() {
 		this(null, (Class<? extends T>) Object.class);
 	}
-
+	
 	public ExprFilter(ExprFilter<?> source, Class<? extends T>... types) {
 		this.source = source;
 		if (source != null) {
@@ -83,11 +83,11 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 		}
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
-
+	
 	public static ExprFilter<?> getParsing() {
 		return parsing;
 	}
-
+	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		parsing = this;
@@ -97,7 +97,7 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 		parsing = null;
 		return condition != null && LiteralUtils.canInitSafely(objects);
 	}
-
+	
 	@Override
 	protected T[] get(Event e) {
 		List<Object> filtered = new ArrayList<>();
@@ -117,40 +117,40 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 			return null;
 		}
 	}
-
+	
 	public Object getCurrent() {
 		return current;
 	}
-
+	
 	public void addChild(ExprInput<?> child) {
 		children.add(child);
 	}
-
+	
 	@Override
 	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		return new ExprFilter<>(this, to);
 	}
-
+	
 	@Override
 	public Expression<?> getSource() {
 		return source == null ? this : source;
 	}
-
+	
 	@Override
 	public Class<? extends T> getReturnType() {
 		return superType;
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return objects.isSingle();
 	}
-
+	
 	@Override
 	public String toString(Event e, boolean debug) {
 		return String.format("%s where [%s]", objects.toString(e, debug), rawCond);
 	}
-
+	
 	@Override
 	public boolean isLoopOf(String s) {
 		for (ExprInput<?> child : children) { // if they used player input, let's assume loop-player is valid
@@ -164,7 +164,7 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 		}
 		return objects.isLoopOf(s); // nothing matched, so we'll rely on the object expression's logic
 	}
-
+	
 	@Name("Filter Input")
 	@Description("Represents the input in a filter expression. " +
 			"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
@@ -173,21 +173,21 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 	@Since("2.2-dev36")
 	@SuppressWarnings({"null", "unchecked"})
 	public static class ExprInput<T> extends SimpleExpression<T> {
-
+		
 		static {
 			Skript.registerExpression(ExprInput.class, Object.class, ExpressionType.COMBINED,
 					"[%-classinfo%] input");
 		}
-
+		
 		private ExprInput<?> source;
 		private Class<T> superType;
 		private ExprFilter<?> parent;
 		private Literal<ClassInfo<?>> inputType;
-
+		
 		public ExprInput() {
 			this(null, (Class<? extends T>) Object.class);
 		}
-
+		
 		public ExprInput(ExprInput<?> source, Class<? extends T>... types) {
 			this.source = source;
 			if (source != null) {
@@ -197,7 +197,7 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 			}
 			this.superType = (Class<T>) Utils.getSuperType(types);
 		}
-
+		
 		@Override
 		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 			if (ExprFilter.getParsing() == null || !(exprs[0] == null || exprs[0] instanceof Literal)) {
@@ -208,7 +208,7 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 			inputType = (Literal<ClassInfo<?>>) exprs[0];
 			return true;
 		}
-
+		
 		@Override
 		protected T[] get(Event e) {
 			Object current = parent.getCurrent();
@@ -221,40 +221,40 @@ public class ExprFilter<T> extends SimpleExpression<T> {
 				return (T[]) Array.newInstance(superType, 0);
 			}
 		}
-
+		
 		public void setParent(ExprFilter<?> parent) {
 			this.parent = parent;
 		}
-
+		
 		@Override
 		public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
 			return new ExprInput<>(this, to);
 		}
-
+		
 		@Override
 		public Expression<?> getSource() {
 			return source == null ? this : source;
 		}
-
+		
 		@Override
 		public Class<? extends T> getReturnType() {
 			return superType;
 		}
-
+		
 		public ClassInfo<?> getClassInfo() {
 			return inputType == null ? null : inputType.getSingle();
 		}
-
+		
 		@Override
 		public boolean isSingle() {
 			return true;
 		}
-
+		
 		@Override
 		public String toString(Event e, boolean debug) {
 			return inputType == null ? "input" : String.format("%s input", inputType.toString(e, debug));
 		}
-
+		
 	}
-
+	
 }

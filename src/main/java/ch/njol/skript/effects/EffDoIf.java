@@ -41,17 +41,17 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\tgive a diamond to the player if the player has permission \"rank.vip\""})
 @Since("2.3")
 public class EffDoIf extends Effect  {
-
+	
 	static {
 		Skript.registerEffect(EffDoIf.class, "<.+> if <.+>");
 	}
-
+	
 	@SuppressWarnings("null")
 	private Effect effect;
-
+	
 	@SuppressWarnings("null")
 	private Condition condition;
-
+	
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -65,16 +65,16 @@ public class EffDoIf extends Effect  {
 		condition = Condition.parse(cond, "Can't understand this condition: " + cond);
 		return effect != null && condition != null;
 	}
-
+	
 	@Override
 	protected void execute(Event e) {
 		if (condition.check(e))
 			effect.run(e);
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return effect.toString(e, debug) + " if " + condition.toString(e, debug);
 	}
-
+	
 }
