@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * objects.
  */
 public class LiteralUtils {
-	
+
 	/**
 	 * Checks an {@link Expression} for {@link UnparsedLiteral} objects
 	 * and converts them if found.
@@ -54,7 +54,7 @@ public class LiteralUtils {
 		}
 		return (Expression<T>) expr;
 	}
-	
+
 	/**
 	 * Checks if an Expression contains {@link UnparsedLiteral}
 	 * objects.
@@ -71,7 +71,7 @@ public class LiteralUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the passed Expressions are non-null
 	 * and do not contain {@link UnparsedLiteral} objects.
@@ -87,5 +87,5 @@ public class LiteralUtils {
 		}
 		return true;
 	}
-	
+
 }
