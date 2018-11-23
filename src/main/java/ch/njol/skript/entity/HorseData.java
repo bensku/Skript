@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
