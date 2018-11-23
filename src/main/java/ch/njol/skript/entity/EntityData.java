@@ -43,6 +43,8 @@ import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
+import ch.njol.skript.classes.data.DefaultChangers;
+import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.ParseContext;
@@ -58,6 +60,7 @@ import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
@@ -250,6 +253,14 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 				return;
 			}
 		}
+		if (!name.equals("simple")
+				&& Classes.getClassInfoNoError(name) == null
+				&& Classes.getExactClassInfo(entityClass) == null)
+			Classes.registerClass(new ClassInfo<>(entityClass, name)
+					.defaultExpression(new EventValueExpression<>(entityClass))
+					.user(name + "s?")
+					.changer(DefaultChangers.entityChanger));
+		
 		infos.add((EntityDataInfo<EntityData<?>>) info);
 	}
 	

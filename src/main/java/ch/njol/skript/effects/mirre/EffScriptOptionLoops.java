@@ -61,13 +61,11 @@ public class EffScriptOptionLoops extends Effect {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "Script Option Loops";
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	protected void execute(Event e) {
 		

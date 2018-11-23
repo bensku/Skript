@@ -24,97 +24,20 @@ import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.Blaze;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.CaveSpider;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cod;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Dolphin;
-import org.bukkit.entity.Donkey;
-import org.bukkit.entity.DragonFireball;
-import org.bukkit.entity.Drowned;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.ElderGuardian;
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Endermite;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Evoker;
-import org.bukkit.entity.EvokerFangs;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Golem;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Husk;
-import org.bukkit.entity.Illusioner;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.LargeFireball;
-import org.bukkit.entity.LeashHitch;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.LlamaSpit;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Mule;
-import org.bukkit.entity.MushroomCow;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Phantom;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.PolarBear;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.PufferFish;
-import org.bukkit.entity.Salmon;
-import org.bukkit.entity.Shulker;
-import org.bukkit.entity.ShulkerBullet;
-import org.bukkit.entity.Silverfish;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.SkeletonHorse;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.SmallFireball;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Snowman;
-import org.bukkit.entity.SpectralArrow;
-import org.bukkit.entity.Spider;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Stray;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.TippedArrow;
-import org.bukkit.entity.Trident;
-import org.bukkit.entity.TropicalFish;
-import org.bukkit.entity.Turtle;
-import org.bukkit.entity.Vex;
-import org.bukkit.entity.Vindicator;
-import org.bukkit.entity.WaterMob;
-import org.bukkit.entity.Witch;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkeleton;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.entity.Zombie;
-import org.bukkit.entity.ZombieHorse;
+import org.bukkit.entity.*;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.data.DefaultChangers;
+import ch.njol.skript.expressions.base.EventValueExpression;
+import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleLiteral;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
 
 /**
@@ -157,6 +80,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 			assert isSupertype == other.isSupertype;
 			return true;
 		}
+		
 	}
 	
 	private final static List<SimpleEntityDataInfo> types = new ArrayList<>();
@@ -167,7 +91,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		if (Skript.classExists("org.bukkit.entity.TippedArrow"))
 			types.add(new SimpleEntityDataInfo("tipped arrow", TippedArrow.class));
 		if (!Skript.methodExists(Boat.class, "getWoodType")) // Only for 1.9 and lower. See BoatData instead
-			types.add(new SimpleEntityDataInfo("boat", Boat.class));
+			types.add(new SimpleEntityDataInfo("boat", Boat.class, true));
 		types.add(new SimpleEntityDataInfo("blaze", Blaze.class));
 		types.add(new SimpleEntityDataInfo("chicken", Chicken.class));
 		types.add(new SimpleEntityDataInfo("mooshroom", MushroomCow.class));
@@ -227,7 +151,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		if (Skript.classExists("org.bukkit.entity.AreaEffectCloud")) {
 			types.add(new SimpleEntityDataInfo("area effect cloud", AreaEffectCloud.class));
 		}
-		if (Skript.isRunningMinecraft(1, 11)) { // More subtypes, more supertypes - changes needed
+		if (Skript.isRunningMinecraft(1, 11)) {
 			types.add(new SimpleEntityDataInfo("wither skeleton", WitherSkeleton.class));
 			types.add(new SimpleEntityDataInfo("stray", Stray.class));
 			types.add(new SimpleEntityDataInfo("skeleton", Skeleton.class, true));
@@ -236,14 +160,14 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("elder guardian", ElderGuardian.class));
 			types.add(new SimpleEntityDataInfo("normal guardian", Guardian.class));
 			types.add(new SimpleEntityDataInfo("guardian", Guardian.class, true));
-
+			
 			// Horses
 			types.add(new SimpleEntityDataInfo("donkey", Donkey.class));
 			types.add(new SimpleEntityDataInfo("mule", Mule.class));
 			types.add(new SimpleEntityDataInfo("llama", Llama.class));
 			types.add(new SimpleEntityDataInfo("undead horse", ZombieHorse.class));
 			types.add(new SimpleEntityDataInfo("skeleton horse", SkeletonHorse.class));
-			types.add(new SimpleEntityDataInfo("horse", Horse.class));
+			types.add(new SimpleEntityDataInfo("horse", Horse.class, true));
 
 			// New 1.11 horse supertypes
 			types.add(new SimpleEntityDataInfo("chested horse", ChestedHorse.class, true));
@@ -280,7 +204,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		// supertypes
 		types.add(new SimpleEntityDataInfo("human", HumanEntity.class, true));
 		types.add(new SimpleEntityDataInfo("damageable", Damageable.class, true));
-		types.add(new SimpleEntityDataInfo("monster", Monster.class, true)); //I don't know why Njol never included that. I did now ^^
+		types.add(new SimpleEntityDataInfo("monster", Monster.class, true));
 		types.add(new SimpleEntityDataInfo("creature", Creature.class, true));
 		types.add(new SimpleEntityDataInfo("animal", Animals.class, true));
 		types.add(new SimpleEntityDataInfo("golem", Golem.class, true));
@@ -289,16 +213,30 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("entity", Entity.class, true));
 		types.add(new SimpleEntityDataInfo("water mob" , WaterMob.class, true));
 		types.add(new SimpleEntityDataInfo("fish" , Fish.class, true));
-		
 		types.add(new SimpleEntityDataInfo("any fireball", Fireball.class, true));
 	}
 	
 	static {
-		final String[] codeNames = new String[types.size()];
-		int i = 0;
-		for (final SimpleEntityDataInfo info : types) {
-			codeNames[i++] = info.codeName;
+		//register the entity data as a classinfo for usage in entity expressions.
+		for (SimpleEntityDataInfo info : types) {
+			//If this entity class is already registered, ignore.
+			if (Classes.getExactClassInfo(info.c) == null) {
+				String name = info.codeName.replace(" ", "");
+				assert name != null;
+				//Attempt to add "entity" to the end of the classinfo due to already in use.
+				if (Classes.getClassInfoNoError(name) != null)
+					name = name + "entity";
+				Classes.registerClass(new ClassInfo<>(info.c, name)
+						.user(name + "s?")
+						.changer(DefaultChangers.entityChanger));
+			}
 		}
+		String[] codeNames = new String[types.size()];
+		int i = 0;
+		
+		for (SimpleEntityDataInfo info : types)
+			codeNames[i++] = info.codeName;
+		
 		EntityData.register(SimpleEntityData.class, "simple", Entity.class, 0, codeNames);
 	}
 	

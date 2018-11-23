@@ -19,10 +19,12 @@
  */
 package ch.njol.skript.entity;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Horse.Variant;
+import org.bukkit.entity.Llama;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -39,14 +41,18 @@ public class HorseData extends EntityData<Horse> {
 		if (Skript.classExists("org.bukkit.entity.Horse")) {
 			if (!Skript.isRunningMinecraft(1, 11)) // For 1.11+ see SimpleEntityData
 				EntityData.register(HorseData.class, "horse", Horse.class, 0,
-						"horse", "donkey", "mule", "undead horse", "skeleton horse");
+						"horse", "donkey", "mule", "undead horse", "skeleton horse", "llama");
 			
+			Variables.yggdrasil.registerSingleClass(Llama.Color.class, "Llama.Color");
 			Variables.yggdrasil.registerSingleClass(Variant.class, "Horse.Variant");
 			Variables.yggdrasil.registerSingleClass(Color.class, "Horse.Color");
 			Variables.yggdrasil.registerSingleClass(Style.class, "Horse.Style");
 		}
 	}
 	
+	@Nullable
+	private Llama.Color llamaColor;
+	private boolean llama;
 	@Nullable
 	private Variant variant;
 	@Nullable
@@ -78,8 +84,10 @@ public class HorseData extends EntityData<Horse> {
 			case 4:
 				variant = Variant.SKELETON_HORSE;
 				break;
+			case 5:
+				variant = Variant.LLAMA;
+				break;
 		}
-		
 		return true;
 	}
 	
@@ -87,14 +95,24 @@ public class HorseData extends EntityData<Horse> {
 	protected boolean init(final @Nullable Class<? extends Horse> c, final @Nullable Horse e) {
 		if (e != null) {
 			variant = e.getVariant();
-			color = e.getColor();
-			style = e.getStyle();
+			if (e instanceof Llama) {
+				llamaColor = ((Llama)e).getColor();
+				llama = true;
+			} else {
+				color = e.getColor();
+				style = e.getStyle();
+			}
 		}
 		return true;
 	}
 	
 	@Override
 	protected boolean match(final Horse entity) {
+		if (entity instanceof Llama) {
+			Llama llama = (Llama) entity;
+			return (variant == null || variant == llama.getVariant())
+					&& (llamaColor == null || llamaColor == llama.getColor());
+		}
 		return (variant == null || variant == entity.getVariant())
 				&& (color == null || color == entity.getColor())
 				&& (style == null || style == entity.getStyle());
@@ -107,12 +125,16 @@ public class HorseData extends EntityData<Horse> {
 	
 	@Override
 	public void set(final Horse entity) {
+		if (entity instanceof Llama && llamaColor != null) {
+			((Llama) entity).setColor(llamaColor);
 		if (variant != null)
 			entity.setVariant(variant);
-		if (color != null)
-			entity.setColor(color);
-		if (style != null)
-			entity.setStyle(style);
+		} else {
+			if (color != null)
+				entity.setColor(color);
+			if (style != null)
+				entity.setStyle(style);
+		}
 	}
 	
 	@Override
@@ -120,6 +142,9 @@ public class HorseData extends EntityData<Horse> {
 		if (!(e instanceof HorseData))
 			return false;
 		final HorseData d = (HorseData) e;
+		if (d.llama == llama)
+			return (variant == null || variant == d.variant)
+					&& (llamaColor == null || llamaColor == d.llamaColor);
 		return (variant == null || variant == d.variant)
 				&& (color == null || color == d.color)
 				&& (style == null || style == d.style);
@@ -128,22 +153,6 @@ public class HorseData extends EntityData<Horse> {
 	@Override
 	public Class<? extends Horse> getType() {
 		return Horse.class;
-	}
-	
-//		return (variant == null ? "" : variant.name()) + "," + (color == null ? "" : color.name()) + "," + (style == null ? "" : style.name());
-	@Override
-	protected boolean deserialize(final String s) {
-		final String[] split = s.split(",");
-		if (split.length != 3)
-			return false;
-		try {
-			variant = split[0].isEmpty() ? null : Variant.valueOf(split[0]);
-			color = split[1].isEmpty() ? null : Color.valueOf(split[1]);
-			style = split[2].isEmpty() ? null : Style.valueOf(split[2]);
-		} catch (final IllegalArgumentException e) {
-			return false;
-		}
-		return true;
 	}
 	
 	@Override
@@ -166,6 +175,8 @@ public class HorseData extends EntityData<Horse> {
 		if (style != other.style)
 			return false;
 		if (variant != other.variant)
+			return false;
+		if (llamaColor != other.llamaColor)
 			return false;
 		return true;
 	}

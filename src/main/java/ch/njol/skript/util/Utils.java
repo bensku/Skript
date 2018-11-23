@@ -49,6 +49,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.effects.EffTeleport;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.entity.SimpleEntityData;
+import ch.njol.skript.entity.SimpleEntityData.SimpleEntityDataInfo;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.registrations.Classes;
