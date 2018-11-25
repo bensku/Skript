@@ -153,13 +153,11 @@ public class SimpleEntityData extends EntityData<Entity> {
 
 			// Guardians
 			types.add(new SimpleEntityDataInfo("elder guardian", ElderGuardian.class));
-			types.add(new SimpleEntityDataInfo("normal guardian", Guardian.class));
 			types.add(new SimpleEntityDataInfo("guardian", Guardian.class, true));
 			
 			// Horses
 			types.add(new SimpleEntityDataInfo("donkey", Donkey.class));
 			types.add(new SimpleEntityDataInfo("mule", Mule.class));
-			types.add(new SimpleEntityDataInfo("llama", Llama.class));
 			types.add(new SimpleEntityDataInfo("undead horse", ZombieHorse.class));
 			types.add(new SimpleEntityDataInfo("skeleton horse", SkeletonHorse.class));
 			types.add(new SimpleEntityDataInfo("horse", Horse.class, true));
@@ -186,7 +184,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("cod", Cod.class));
 			types.add(new SimpleEntityDataInfo("puffer fish", PufferFish.class));
 			types.add(new SimpleEntityDataInfo("salmon", Salmon.class));
-			types.add(new SimpleEntityDataInfo("tropical fish", TropicalFish.class));
 			types.add(new SimpleEntityDataInfo("trident", Trident.class));
 
 
