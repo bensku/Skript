@@ -36,13 +36,16 @@ import ch.njol.skript.variables.Variables;
  */
 @SuppressWarnings("deprecation") // Until 1.12: use old deprecated methods for backwards compatibility
 public class HorseData extends EntityData<Horse> {
+	
+	private static boolean supported;
+	
 	static {
 		if (Skript.classExists("org.bukkit.entity.Horse")) {
 			if (!Skript.isRunningMinecraft(1, 11)) // For 1.11+ see SimpleEntityData
 				EntityData.register(HorseData.class, "horse", Horse.class, 0,
 						"horse", "donkey", "mule", "undead horse", "skeleton horse", "llama");
-			
-			Variables.yggdrasil.registerSingleClass(Llama.Color.class, "Llama.Color");
+			if (supported = Skript.isRunningMinecraft(1, 11))
+				Variables.yggdrasil.registerSingleClass(Llama.Color.class, "Llama.Color");
 			Variables.yggdrasil.registerSingleClass(Variant.class, "Horse.Variant");
 			Variables.yggdrasil.registerSingleClass(Color.class, "Horse.Color");
 			Variables.yggdrasil.registerSingleClass(Style.class, "Horse.Style");
@@ -84,7 +87,8 @@ public class HorseData extends EntityData<Horse> {
 				variant = Variant.SKELETON_HORSE;
 				break;
 			case 5:
-				variant = Variant.LLAMA;
+				if (supported)
+					variant = Variant.LLAMA;
 				break;
 		}
 		return true;
@@ -94,7 +98,7 @@ public class HorseData extends EntityData<Horse> {
 	protected boolean init(final @Nullable Class<? extends Horse> c, final @Nullable Horse e) {
 		if (e != null) {
 			variant = e.getVariant();
-			if (e instanceof Llama) {
+			if (supported && e instanceof Llama) {
 				llamaColor = ((Llama)e).getColor();
 				llama = true;
 			} else {
@@ -107,7 +111,7 @@ public class HorseData extends EntityData<Horse> {
 	
 	@Override
 	protected boolean match(final Horse entity) {
-		if (entity instanceof Llama) {
+		if (supported && entity instanceof Llama) {
 			Llama llama = (Llama) entity;
 			return (variant == null || variant == llama.getVariant())
 					&& (llamaColor == null || llamaColor == llama.getColor());
@@ -124,7 +128,7 @@ public class HorseData extends EntityData<Horse> {
 	
 	@Override
 	public void set(final Horse entity) {
-		if (entity instanceof Llama && llamaColor != null) {
+		if (supported && entity instanceof Llama && llamaColor != null) {
 			((Llama) entity).setColor(llamaColor);
 		if (variant != null)
 			entity.setVariant(variant);
