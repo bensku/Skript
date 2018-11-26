@@ -222,10 +222,10 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		
 		@Override
 		public boolean equals(final @Nullable Object obj) {
-			if (this == obj)
-				return true;
 			if (obj == null)
 				return false;
+			if (this == obj)
+				return true;
 			if (!(obj instanceof EntityDataInfo))
 				return false;
 			final EntityDataInfo other = (EntityDataInfo) obj;
@@ -379,12 +379,21 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		return equals_i(other);
 	}
 	
-	public static EntityDataInfo<?> getInfo(final Class<? extends EntityData<?>> c) {
-		for (final EntityDataInfo<?> i : infos) {
-			if (i.c == c)
-				return i;
+	public static String[] getCodeNames(EntityData<?> data) {
+		for (EntityDataInfo<?> info : infos) {
+			if (info.c == data.getClass())
+				return info.codeNames;
 		}
-		throw new SkriptAPIException("Unregistered EntityData class " + c.getName());
+		throw new SkriptAPIException("Unregistered EntityData class " + data.getName());
+	}
+	
+	@SuppressWarnings("null")
+	public static String getDefaultCodeName(EntityData<?> data) {
+		for (EntityDataInfo<?> info : infos) {
+			if (info.c == data.getClass())
+				return info.codeNames[info.defaultName];
+		}
+		throw new SkriptAPIException("Unregistered EntityData class " + data.getName());
 	}
 	
 	@Nullable

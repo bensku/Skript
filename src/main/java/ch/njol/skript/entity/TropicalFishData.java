@@ -64,6 +64,7 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 	@Nullable
 	private DyeColor bodyColor;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (exprs[2] != null) {

@@ -37,7 +37,6 @@ import ch.njol.skript.util.Utils;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation")
 public class MinecartData extends EntityData<Minecart> {
 	
 	@SuppressWarnings("null")

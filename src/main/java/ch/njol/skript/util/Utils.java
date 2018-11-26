@@ -665,4 +665,23 @@ public abstract class Utils {
 		}
 	}
 	
+	/**
+	 * Creates a marker pattern with optionals.
+	 * @param patterns The pattern types to include.
+	 * @return The final completed pattern as a string.
+	 */
+	public static String createMarkerPattern(String... patterns) {
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		builder.append("(" + i + "¦");
+		for (String pattern : patterns) {
+			i++;
+			builder.append(pattern + "|" + i + "¦");
+		}
+		builder.append(")");
+		String pattern = builder.toString();
+		assert pattern != null;
+		return pattern;
+	}
+
 }
