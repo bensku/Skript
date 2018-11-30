@@ -1,9 +1,28 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
 package ch.njol.skript.effects;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
-import com.sun.istack.internal.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,9 +51,9 @@ public class EffTabHeadFoot extends Effect {
 	
 	@SuppressWarnings("null")
 	private Expression<Player> player;
-	@Nullable
+	@SuppressWarnings("null")
 	private Expression<String> header;
-	@Nullable
+	@SuppressWarnings("null")
 	private Expression<String> footer;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -55,9 +74,9 @@ public class EffTabHeadFoot extends Effect {
 	}
 	
 	@Override
-	public String toString(@Nullable Event event, boolean debug) {
-		return ("set tablist header to " + header.toString(event, debug) + " and footer to " + footer.toString(event, debug) +
-				" for " + player.toString(event, debug));
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return ("set tablist header to " + header.toString(e, debug) + " and footer to " + footer.toString(e, debug) +
+				" for " + player.toString(e, debug));
 	}
 	
 }
