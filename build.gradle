@@ -77,7 +77,8 @@ jar {
 
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+				"Sealed": "true",
+				"Main-Class": "ch.njol.skript.SkriptCLI")
 	}
 
 	from('skript-aliases') {
