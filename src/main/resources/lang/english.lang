@@ -55,6 +55,7 @@ skript command:
 	help:
 		description: Skript's main command
 		help: Prints this help message. Use '/skript reload/enable/disable/update' to get more info
+		info: Prints a message with links to Skript's aliases and documentation
 		reload:
 			description: Reloads the config, all scripts, everything, or a specific script
 			all: Reloads all configs and all scripts

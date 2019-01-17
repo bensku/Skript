@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -97,7 +98,8 @@ public class SkriptCommand implements CommandExecutor {
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
 //					.add("find", "Find variables")
-			).add("help");
+			).add("info")
+			.add("help");
 	
 	static {
 		if (new File(Skript.getInstance().getDataFolder() + "/doc-templates").exists()) {
@@ -338,6 +340,11 @@ public class SkriptCommand implements CommandExecutor {
 				Skript.info(sender, "Generating docs...");
 				generator.generate(); // Try to generate docs... hopefully
 				Skript.info(sender, "Documentation generated!");
+			} else if (args[0].equalsIgnoreCase("info")) {
+				String aliases = ChatColor.AQUA + "https://github.com/SkriptLang/skript-aliases";
+				String docs = ChatColor.AQUA + "http://skriptlang.github.io/Skript/";
+				Skript.info(sender, "Skript's aliases can be found here: " + aliases);
+				Skript.info(sender, "Skript's documentation can be found here: " + docs);
 			}
 		} catch (final Exception e) {
 			Skript.exception(e, "Exception occurred in Skript's main command", "Used command: /" + label + " " + StringUtils.join(args, " "));
