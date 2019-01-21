@@ -39,7 +39,7 @@ public class BoatData extends EntityData<Boat> {
 		// See SimpleEntityData if 1.9 or lower.
 		if (Skript.methodExists(Boat.class, "getWoodType")) { //The 'boat' is the same of 'oak boat', 'any boat' works as supertype and it can spawn random boat.
 			EntityData.register(BoatData.class, "boat", Boat.class, 0,
-					"boat", "any boat", "oak boat");
+					"boat", "any boat");
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class BoatData extends EntityData<Boat> {
 		return false;
 	}
 	
-	private static final ItemType oakBoat = Aliases.javaItemType("oak boat");
+	private static final ItemType boat = Aliases.javaItemType("boat");
 
 	
 	public boolean isOfItemType(ItemType i){
@@ -119,7 +119,7 @@ public class BoatData extends EntityData<Boat> {
 		int ordinal = -1;
 		
 		ItemStack stack = i.getRandom();
-		if (oakBoat.isOfType(stack))
+		if (boat.isOfType(stack))
 			ordinal = 0;
 		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 2) || ordinal == 0;
 		
