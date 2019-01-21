@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.Locale;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -100,7 +102,7 @@ public class EffOpenInventory extends Effect {
 				try {
 					p.openInventory(i);
 				} catch (IllegalArgumentException ex){
-					Skript.error("You can't open a " +i.getType().name().toLowerCase().replaceAll("_", "") + " inventory to a player.");
+					Skript.error("You can't open a " + i.getType().name().toLowerCase(Locale.ENGLISH).replaceAll("_", "") + " inventory to a player.");
 				}
 			}
 		} else {

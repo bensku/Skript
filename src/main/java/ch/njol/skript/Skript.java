@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -563,14 +564,14 @@ public final class Skript extends JavaPlugin implements Listener {
 					
 					@Override
 					public String getValue() {
-						return "" + SkriptConfig.verbosity.value().name().toLowerCase().replace('_', ' ');
+						return "" + SkriptConfig.verbosity.value().name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 				});
 				metrics.addCustomChart(new Metrics.SimplePie("pluginPriority") {
 					
 					@Override
 					public String getValue() {
-						return "" + SkriptConfig.defaultEventPriority.value().name().toLowerCase().replace('_', ' ');
+						return "" + SkriptConfig.defaultEventPriority.value().name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 				});
 				metrics.addCustomChart(new Metrics.SimplePie("logPlayerCommands") {
@@ -608,7 +609,7 @@ public final class Skript extends JavaPlugin implements Listener {
 					
 					@Override
 					public String getValue() {
-						return "" + ChatMessages.linkParseMode.name().toLowerCase();
+						return "" + ChatMessages.linkParseMode.name().toLowerCase(Locale.ENGLISH);
 					}
 				});
 				metrics.addCustomChart(new Metrics.SimplePie("colorResetCodes") {
@@ -658,7 +659,7 @@ public final class Skript extends JavaPlugin implements Listener {
 					public boolean isLoggable(final @Nullable LogRecord record) {
 						if (record == null)
 							return false;
-						if (record.getMessage() != null && record.getMessage().toLowerCase().startsWith("can't keep up!"))
+						if (record.getMessage() != null && record.getMessage().toLowerCase(Locale.ENGLISH).startsWith("can't keep up!"))
 							return false;
 						return true;
 					}

@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.events;
 
+import java.util.Locale;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Sheep;
@@ -119,7 +121,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "" + event.name().replace('_', ' ').toLowerCase();
+		return "" + event.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 	}
 	
 }

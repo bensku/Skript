@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.aliases;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
@@ -29,32 +28,22 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.SkriptCommand;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.config.Config;
-import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -63,11 +52,8 @@ import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.Version;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.Setter;
 
 public abstract class Aliases {
 
@@ -239,7 +225,7 @@ public abstract class Aliases {
 			assert m != null;
 			ItemData data = new ItemData(m);
 			if (provider.getMaterialName(data) == null) { // Material name is missing
-				provider.setMaterialName(data, new MaterialName(m, "" + m.toString().toLowerCase().replace('_', ' '), "" + m.toString().toLowerCase().replace('_', ' '), 0));
+				provider.setMaterialName(data, new MaterialName(m, "" + m.toString().toLowerCase(Locale.ENGLISH).replace('_', ' '), "" + m.toString().toLowerCase().replace('_', ' '), 0));
 				missing.append(m + ", ");
 				r++;
 			}

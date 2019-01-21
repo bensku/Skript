@@ -26,14 +26,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.locks.LockSupport;
-
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.function.Function;
+import java.util.Locale;
 
 import org.bukkit.event.EventPriority;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Converter;
@@ -42,13 +37,14 @@ import ch.njol.skript.config.EnumParser;
 import ch.njol.skript.config.Option;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseChannel;
 import ch.njol.skript.util.FileUtils;
-import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
@@ -186,7 +182,7 @@ public abstract class SkriptConfig {
 		@Nullable
 		public EventPriority convert(final String s) {
 			try {
-				return EventPriority.valueOf(s.toUpperCase());
+				return EventPriority.valueOf(s.toUpperCase(Locale.ENGLISH));
 			} catch (final IllegalArgumentException e) {
 				Skript.error("The plugin priority has to be one of lowest, low, normal, high, or highest.");
 				return null;

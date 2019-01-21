@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.events;
 
+import java.util.Locale;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
@@ -66,7 +68,7 @@ public final class EvtGameMode extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "gamemode change" + (mode != null ? " to " + mode.toString().toLowerCase() : "");
+		return "gamemode change" + (mode != null ? " to " + mode.toString().toLowerCase(Locale.ENGLISH) : "");
 	}
 	
 }
