@@ -79,7 +79,6 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.BiomeUtils;
 import ch.njol.skript.util.DamageCauseUtils;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.EnumUtils;
@@ -997,38 +996,6 @@ public class BukkitClasses {
 				.name(ClassInfo.NO_DOC)
 				.since("2.0")
 				.changer(DefaultChangers.itemChanger));
-
-		Classes.registerClass(new ClassInfo<>(Biome.class, "biome")
-				.user("biomes?")
-				.name("Biome")
-				.description("All possible biomes Minecraft uses to generate a world.")
-				.usage(BiomeUtils.getAllNames())
-				.examples("biome at the player is desert")
-				.since("1.4.4")
-				.after("damagecause")
-				.parser(new Parser<Biome>() {
-					@Override
-					@Nullable
-					public Biome parse(final String s, final ParseContext context) {
-						return BiomeUtils.parse(s);
-					}
-					
-					@Override
-					public String toString(final Biome b, final int flags) {
-						return BiomeUtils.toString(b, flags);
-					}
-					
-					@Override
-					public String toVariableNameString(final Biome b) {
-						return "" + b.name();
-					}
-					
-					@Override
-					public String getVariableNamePattern() {
-						return "\\S+";
-					}
-				})
-				.serializer(new EnumSerializer<>(Biome.class)));
 
 //		PotionEffect is not used; ItemType is used instead
 		Classes.registerClass(new ClassInfo<>(PotionEffectType.class, "potioneffecttype")

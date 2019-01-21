@@ -166,7 +166,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("spectral arrow", SpectralArrow.class));
 		if (Skript.classExists("org.bukkit.entity.TippedArrow"))
 			types.add(new SimpleEntityDataInfo("tipped arrow", TippedArrow.class));
-		if (!Skript.methodExists(Boat.class, "getWoodType")) // Only for 1.9 and lower. See BoatData instead
+		if (Skript.methodExists(Boat.class, "getWoodType"))
 			types.add(new SimpleEntityDataInfo("boat", Boat.class));
 		types.add(new SimpleEntityDataInfo("blaze", Blaze.class));
 		types.add(new SimpleEntityDataInfo("chicken", Chicken.class));

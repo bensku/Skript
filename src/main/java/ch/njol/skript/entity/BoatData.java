@@ -39,7 +39,7 @@ public class BoatData extends EntityData<Boat> {
 		// See SimpleEntityData if 1.9 or lower.
 		if (Skript.methodExists(Boat.class, "getWoodType")) { //The 'boat' is the same of 'oak boat', 'any boat' works as supertype and it can spawn random boat.
 			EntityData.register(BoatData.class, "boat", Boat.class, 0,
-					"boat", "any boat", "oak boat", "spruce boat", "birch boat", "jungle boat", "acacia boat", "dark oak boat");
+					"boat", "any boat", "oak boat");
 		}
 	}
 	
@@ -111,11 +111,6 @@ public class BoatData extends EntityData<Boat> {
 	}
 	
 	private static final ItemType oakBoat = Aliases.javaItemType("oak boat");
-	private static final ItemType spruceBoat = Aliases.javaItemType("spruce boat");
-	private static final ItemType birchBoat = Aliases.javaItemType("birch boat");
-	private static final ItemType jungleBoat = Aliases.javaItemType("jungle boat");
-	private static final ItemType acaciaBoat = Aliases.javaItemType("acacia boat");
-	private static final ItemType darkOakBoat = Aliases.javaItemType("dark oak boat");
 
 	
 	public boolean isOfItemType(ItemType i){
@@ -126,16 +121,6 @@ public class BoatData extends EntityData<Boat> {
 		ItemStack stack = i.getRandom();
 		if (oakBoat.isOfType(stack))
 			ordinal = 0;
-		else if (spruceBoat.isOfType(stack))
-			ordinal = TreeSpecies.REDWOOD.ordinal();
-		else if (birchBoat.isOfType(stack))
-			ordinal = TreeSpecies.BIRCH.ordinal();
-		else if (jungleBoat.isOfType(stack))
-			ordinal = TreeSpecies.JUNGLE.ordinal();
-		else if (acaciaBoat.isOfType(stack))
-			ordinal = TreeSpecies.ACACIA.ordinal();
-		else if (darkOakBoat.isOfType(stack))
-			ordinal = TreeSpecies.DARK_OAK.ordinal();
 		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 2) || ordinal == 0;
 		
 	}
