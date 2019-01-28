@@ -68,7 +68,7 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	@SuppressWarnings({"deprecation"})
 	@Override
 	protected ItemType[] get(Event e, ItemType[] source) {
-		Number value = damage.getSingle(e) != null ? damage.getSingle(e) : 0;
+		Number value = damage != null ? damage.getSingle(e) : 0;
 		return get(source, new Getter<ItemType, ItemType>() {
 			@Override
 			public ItemType get(ItemType item) {
