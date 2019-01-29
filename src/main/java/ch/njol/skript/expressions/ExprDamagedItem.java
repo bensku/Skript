@@ -21,12 +21,12 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -41,9 +41,9 @@ import ch.njol.util.Kleenean;
 @Name("Damaged Item")
 @Description("Directly damages an item. In MC versions 1.12.2 and lower, this can be used to apply data values to items/blocks")
 @Examples({"give player diamond sword with damage value 100", "set player's tool to diamond hoe damaged by 250",
-		"give player diamond sword with damage 700 named \"BROKEN SWORD\"",
-		"set {_item} to diamond hoe with damage value 50 named \"SAD HOE\"",
-		"set target block of player to wool with data value 1", "set target block of player to potato plant with data value 7"})
+	"give player diamond sword with damage 700 named \"BROKEN SWORD\"",
+	"set {_item} to diamond hoe with damage value 50 named \"SAD HOE\"",
+	"set target block of player to wool with data value 1", "set target block of player to potato plant with data value 7"})
 @Since("INSERT VERSION")
 public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	
@@ -70,15 +70,9 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 		return get(source, new Getter<ItemType, ItemType>() {
 			@Override
 			public ItemType get(ItemType item) {
-				int value = damage != null ? damage.intValue() : 0;
-				item = item.clone();
-				if (Skript.isRunningMinecraft(1, 13)) {
-					ItemMeta meta = item.getItemMeta();
-					((Damageable) meta).setDamage(value);
-					item.setItemMeta(meta);
-				} else {
-					item.iterator().forEachRemaining(d -> d.setDurability(value));
-				}
+				ItemStack newItem = new ItemStack(item.getRandom());
+				ItemUtils.setDamage(newItem, damage != null ? damage.intValue() : 0);
+				item = new ItemType(newItem);
 				return item;
 			}
 		});
