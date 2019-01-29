@@ -21,7 +21,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
@@ -41,10 +40,10 @@ import ch.njol.util.Kleenean;
 
 @Name("Damaged Item")
 @Description("Directly damages an item. In MC versions 1.12.2 and lower, this can be used to apply data values to items/blocks")
-@Examples({"give player diamond sword with damage value 100", "set player's tool to diamond hoe with damage 250",
+@Examples({"give player diamond sword with damage value 100", "set player's tool to diamond hoe damaged by 250",
 		"give player diamond sword with damage 700 named \"BROKEN SWORD\"",
 		"set {_item} to diamond hoe with damage value 50 named \"SAD HOE\"",
-		"set target block of player to dirt with data value 1", "set target block of player to potato plant with data value 7"})
+		"set target block of player to wool with data value 1", "set target block of player to potato plant with data value 7"})
 @Since("INSERT VERSION")
 public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	
@@ -65,22 +64,20 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 		return true;
 	}
 	
-	@SuppressWarnings({"deprecation"})
 	@Override
 	protected ItemType[] get(Event e, ItemType[] source) {
-		Number value = damage != null ? damage.getSingle(e) : 0;
+		Number damage = this.damage != null ? this.damage.getSingle(e) : 0;
 		return get(source, new Getter<ItemType, ItemType>() {
 			@Override
 			public ItemType get(ItemType item) {
+				int value = damage != null ? damage.intValue() : 0;
 				item = item.clone();
 				if (Skript.isRunningMinecraft(1, 13)) {
 					ItemMeta meta = item.getItemMeta();
-					((Damageable) meta).setDamage(value != null ? value.intValue() : 0);
+					((Damageable) meta).setDamage(value);
 					item.setItemMeta(meta);
 				} else {
-					ItemStack stack = new ItemStack(item.getRandom());
-					stack.setDurability(value != null ? value.shortValue() : 0);
-					item = new ItemType(stack);
+					item.iterator().forEachRemaining(d -> d.setDurability(value));
 				}
 				return item;
 			}
