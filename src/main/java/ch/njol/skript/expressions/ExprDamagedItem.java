@@ -21,12 +21,10 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -35,7 +33,6 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 
 @Name("Damaged Item")
@@ -67,14 +64,10 @@ public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	@Override
 	protected ItemType[] get(Event e, ItemType[] source) {
 		Number damage = this.damage != null ? this.damage.getSingle(e) : 0;
-		return get(source, new Getter<ItemType, ItemType>() {
-			@Override
-			public ItemType get(ItemType item) {
-				ItemStack newItem = new ItemStack(item.getRandom());
-				ItemUtils.setDamage(newItem, damage != null ? damage.intValue() : 0);
-				item = new ItemType(newItem);
-				return item;
-			}
+		int num = damage != null ? damage.intValue() : 0;
+		return get(source.clone(), item -> {
+			item.iterator().forEachRemaining(i -> i.setDurability(num));
+			return item;
 		});
 	}
 	
