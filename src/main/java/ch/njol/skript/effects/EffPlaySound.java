@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.Locale;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -36,94 +38,129 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-import java.util.Locale;
-
 @Name("Play Sound")
-@Description("Plays a sound at given location for everyone or just for given players. Playing sounds from resource packs is supported.")
-@Examples("play sound \"block.note.pling\" with volume 0.3 at player")
+@Description({"Plays a sound at given location for everyone or just for given players, or plays a sound to specified players. " +
+		"Both Minecraft sound names and " +
+		"<a href=\"https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html\">Spigot sound names</a> " +
+		"are supported. Playing resource packs sounds are supported too.",
+		"",
+		"Please note that sound names can get changed in any Minecraft or Spigot version, or even removed from Minecraft itself."})
+@Examples({"play sound \"block.note_block.pling\" at player # It is block.note.pling in 1.12.2",
+		"play sound \"entity.experience_orb.pickup\" with volume 0.5 for the player"})
 @Since("2.2-dev28")
 public class EffPlaySound extends Effect {
 
 	static {
-		Skript.registerEffect(EffPlaySound.class, "play sound %string% [with volume %-number%] [(and|with) pitch %-number%] at %location% [for %-players%]");
+		Skript.registerEffect(EffPlaySound.class,
+				"play sound[s] %strings% [with volume %-number%] [(and|with) pitch %-number%] at %location% [for %-players%]",
+				"play sound[s] %strings% [with volume %-number%] [(and|with) pitch %-number%] [(to|for) %players%]");
 	}
 
+	private static final boolean SOUND_CATEGORIES_EXIST = Skript.classExists("org.bukkit.SoundCategory");
+
 	@SuppressWarnings("null")
-	private Expression<String> sound;
+	private Expression<String> sounds;
 	@Nullable
 	private Expression<Number> volume;
 	@Nullable
 	private Expression<Number> pitch;
-
 	@SuppressWarnings("null")
 	private Expression<Location> location;
-	@Nullable
+	@SuppressWarnings("null")
 	private Expression<Player> players;
 
-	private boolean useCategory;
-
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		sound = (Expression<String>) exprs[0];
+		sounds = (Expression<String>) exprs[0];
 		volume = (Expression<Number>) exprs[1];
 		pitch = (Expression<Number>) exprs[2];
-		location = (Expression<Location>) exprs[3];
-		players = (Expression<Player>) exprs[4];
-		useCategory = Skript.classExists("org.bukkit.SoundCategory");
-
+		if (matchedPattern == 0) {
+			location = (Expression<Location>) exprs[3];
+			players = (Expression<Player>) exprs[4];
+		} else {
+			players = (Expression<Player>) exprs[3];
+		}
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	protected void execute(Event e) {
-		Location l = location.getSingle(e);
-		Sound soundEnum = null;
-		String s = sound.getSingle(e);
-
-		if (s != null) {
-			float vol = volume != null ? volume.getSingle(e).floatValue() : 1;
-			float pi = pitch != null ? pitch.getSingle(e).floatValue() : 1;
-
+		float volume = 1, pitch = 1;
+		if (this.volume != null) {
+			Number volumeNumber = this.volume.getSingle(e);
+			if (volumeNumber == null)
+				return;
+			volume = volumeNumber.floatValue();
+		}
+		if (this.pitch != null) {
+			Number pitchNumber = this.pitch.getSingle(e);
+			if (pitchNumber == null)
+				return;
+			pitch = pitchNumber.floatValue();
+		}
+		for (String sound : sounds.getArray(e)) {
+			Sound soundEnum = null;
 			try {
-				soundEnum = Sound.valueOf(s.toUpperCase(Locale.ENGLISH));
-			} catch(IllegalArgumentException e1) {}
-
-			if (players != null) {
-				if (soundEnum == null) {
-					for (Player p : players.getAll(e)) {
-						if (useCategory) {
-							p.playSound(l, s, SoundCategory.MASTER, vol, pi);
+				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
+			} catch (IllegalArgumentException ignored) { }
+			
+			if (location != null) {
+				Location location = this.location.getSingle(e);
+				if (location == null)
+					return;
+				if (players != null) {
+					if (soundEnum == null) {
+						if (SOUND_CATEGORIES_EXIST) {
+							for (Player p : players.getArray(e))
+								p.playSound(location, sound, SoundCategory.MASTER, volume, pitch);
 						} else {
-							p.playSound(l, s, vol, pi);
+							for (Player p : players.getArray(e))
+								p.playSound(location, sound, volume, pitch);
+						}
+					} else {
+						if (SOUND_CATEGORIES_EXIST) {
+							for (Player p : players.getArray(e))
+								p.playSound(location, soundEnum, SoundCategory.MASTER, volume, pitch);
+						} else {
+							for (Player p : players.getArray(e))
+								p.playSound(location, soundEnum, volume, pitch);
 						}
 					}
 				} else {
-					for (Player p : players.getAll(e)) {
-						if (useCategory) {
-							p.playSound(l, soundEnum, SoundCategory.MASTER, vol, pi);
-						} else {
-							p.playSound(l, soundEnum, vol, pi);
-						}
-					}
+					if (soundEnum == null)
+						location.getWorld().playSound(location, sound, volume, pitch);
+					else
+						location.getWorld().playSound(location, soundEnum, volume, pitch);
 				}
 			} else {
 				if (soundEnum == null) {
-					l.getWorld().playSound(l, s, vol, pi);
+					for (Player p : players.getArray(e))
+						p.playSound(p.getLocation(), sound, volume, pitch);
 				} else {
-					l.getWorld().playSound(l, soundEnum, vol, pi);
+					for (Player p : players.getArray(e))
+						p.playSound(p.getLocation(), soundEnum, volume, pitch);
 				}
 			}
 		}
-
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (e != null)
-			return "play sound " + sound.getSingle(e);
+		if (e != null) {
+			if (location != null)
+				return "play sound " + sounds.toString(e, debug) +
+						(volume != null ? " with volume " + volume.toString(e, debug) : "") +
+						(pitch != null ? " with pitch " + pitch.toString(e, debug) : "") +
+						" at " + location.toString(e, debug) +
+						(players != null ? " for " + players.toString(e, debug) : "");
+			else
+				return "play sound " + sounds.toString(e, debug) +
+						(volume != null ? " with volume " + volume.toString(e, debug) : "") +
+						(pitch != null ? " with pitch " + pitch.toString(e, debug) : "") +
+						" for " + players.toString(e, debug);
+		}
 		return "play sound";
 	}
-	
+
 }
