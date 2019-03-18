@@ -354,7 +354,7 @@ public final class BukkitEventValues {
 				return new BlockStateBlock(s, true);
 			}
 		}, 0);
-		// BockCanBuildEvent#getPlayer was added in 1.13
+		// BlockCanBuildEvent#getPlayer was added in 1.13
 		if (Skript.methodExists(BlockCanBuildEvent.class, "getPlayer")) {
 			EventValues.registerEventValue(BlockCanBuildEvent.class, Player.class, new Getter<Player, BlockCanBuildEvent>() {
 				@Override
