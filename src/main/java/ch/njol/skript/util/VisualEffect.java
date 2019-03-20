@@ -366,7 +366,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			for (Expression<?> expr : exprs) {
 				if (expr == null) continue;
 				else if (expr.getReturnType().isAssignableFrom(Color.class)) {
-					org.bukkit.Color color = ((Color) expr.getSingle(null)).getBukkitColor();
+					org.bukkit.Color color = ((Color) expr.getSingle(null)).asBukkitColor();
 					
 					/*
 					 * Colored particles use dX, dY and dZ as RGB values which

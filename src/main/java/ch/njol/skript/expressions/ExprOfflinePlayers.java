@@ -52,7 +52,7 @@ public class ExprOfflinePlayers extends SimpleExpression<OfflinePlayer> {
 	
 	@Override
 	public boolean isSingle() {
-		return Bukkit.getOfflinePlayers().length == 1;
+		return false;
 	}
 	
 	@Override

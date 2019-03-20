@@ -159,7 +159,7 @@ contant us about any problems you might have with them.
 Current team behind Skript:
 
 * [bensku](https://github.com/bensku) (Skript maintainer/developer)
-* [Snow-Pyon](https://github.com/Snow-Pyon) (Skript developer)
+* [FranKusmiruk](https://github.com/FranKusmiruk) (Skript developer)
 * [Pikachu920](https://github.com/Pikachu920) (Skript developer)
 * [Nicofisi](https://github.com/Nicofisi) (Skript developer)
 * [TheBentoBox](https://github.com/TheBentoBox) (issue tracker manager, aliases developer)

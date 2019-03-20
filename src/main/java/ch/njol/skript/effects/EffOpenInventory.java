@@ -38,22 +38,19 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Open/Close Inventory")
 @Description({"Opens an inventory to a player. The player can then access and modify the inventory as if it was a chest that he just opened.",
 		"Please note that currently 'show' and 'open' have the same effect, but 'show' will eventually show an unmodifiable view of the inventory in the future."})
 @Examples({"show the victim's inventory to the player",
 		"open the player's inventory for the player"})
-@Since("2.0, 2.1.1 (closing), 2.2-Fixes-V10 (anvil)")
+@Since("2.0, 2.1.1 (closing), 2.2-Fixes-V10 (anvil), INSERT VERSION (hopper, dropper, dispenser")
 public class EffOpenInventory extends Effect {
 	
-	private final static int WORKBENCH = 0, CHEST = 1, ANVIL = 2;
+	private final static int WORKBENCH = 0, CHEST = 1, ANVIL = 2, HOPPER = 3, DROPPER = 4, DISPENSER = 5;
 	
 	static {
 		Skript.registerEffect(EffOpenInventory.class,
-				"(0¦open|1¦show) ((20¦(crafting [table]|workbench)|40¦chest|60¦anvil) (view|window|inventory|)|%-inventory%) (to|for) %players%",
+				"(0¦open|1¦show) ((2¦(crafting [table]|workbench)|3¦chest|4¦anvil|5¦hopper|6¦dropper|7¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
 				"close [the] inventory [view] (to|of|for) %players%", "close %players%'[s] inventory [view]");
 	}
 	
@@ -70,15 +67,24 @@ public class EffOpenInventory extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		int openFlag = 0;
-		if (parseResult.mark >= 60) {
-			openFlag = parseResult.mark ^ 60;
+		if(parseResult.mark >= 7) {
+			openFlag = parseResult.mark ^ 7;
+			invType = DISPENSER;
+		} else if(parseResult.mark >= 6) {
+			openFlag = parseResult.mark ^ 6;
+			invType = DROPPER;
+		} else if(parseResult.mark >= 5) {
+			openFlag = parseResult.mark ^ 5;
+			invType = HOPPER;
+		} else if (parseResult.mark >= 4) {
+			openFlag = parseResult.mark ^ 4;
 			invType = ANVIL;
-		} else if (parseResult.mark >= 40) {
-			openFlag = parseResult.mark ^ 40;
+		} else if (parseResult.mark >= 3) {
+			openFlag = parseResult.mark ^ 3;
 			invType = CHEST;
-		} else if (parseResult.mark >= 20) {
+		} else if (parseResult.mark >= 2) {
 			invType = WORKBENCH;
-			openFlag = parseResult.mark ^ 20;
+			openFlag = parseResult.mark ^ 2;
 		} else {
 			openFlag = parseResult.mark;
 		}
@@ -117,6 +123,16 @@ public class EffOpenInventory extends Effect {
 							break;
 						case ANVIL:
 							p.openInventory(Bukkit.createInventory(p, InventoryType.ANVIL));
+							break;
+						case HOPPER:
+							p.openInventory(Bukkit.createInventory(p, InventoryType.HOPPER));
+							break;
+						case DROPPER:
+							p.openInventory(Bukkit.createInventory(p, InventoryType.DROPPER));
+							break;
+						case DISPENSER:
+							p.openInventory(Bukkit.createInventory(p, InventoryType.DISPENSER));
+					
 					}
 				} else
 					p.closeInventory();

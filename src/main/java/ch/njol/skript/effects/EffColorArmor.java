@@ -102,7 +102,7 @@ public class EffColorArmor extends Effect {
 			final Color cl = color.getSingle(e);
 			if (cl == null)
 				return;
-			c = cl.getBukkitColor();
+			c = cl.asBukkitColor();
 		} else {
 			final Expression<Number>[] rgb = this.rgb;
 			assert rgb != null;

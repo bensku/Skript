@@ -55,7 +55,7 @@ import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
-import ch.njol.skript.util.Color;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.yggdrasil.Fields;
 
 /**
@@ -139,7 +139,7 @@ public class ChatMessages {
 		
 		if (code.isLocalized()) {
 			if (code.getColorCode() != null) { // Color code!
-				for (String name : Language.getList(Color.LANGUAGE_NODE + "." + langName + ".names")) {
+				for (String name : Language.getList(SkriptColor.LANGUAGE_NODE + "." + langName + ".names")) {
 					codes.put(name, code);
 				}
 			} else { // Not color code

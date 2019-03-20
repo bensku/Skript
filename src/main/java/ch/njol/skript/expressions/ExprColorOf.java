@@ -19,6 +19,15 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
@@ -34,8 +43,13 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.SkriptColor;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -47,41 +61,75 @@ import ch.njol.util.coll.CollectionUtils;
 		"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
 		"	set the colour of the block to black"})
 @Since("1.2")
-public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
+public class ExprColorOf extends PropertyExpression<Object, Color> {
+
 	static {
-		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "itemstacks/entities");
+		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "itemstacks/entities/fireworkeffects");
 	}
 	
 	@SuppressWarnings("null")
 	@Override
-	@Nullable
-	public Color convert(final Object o) {
-		if (o instanceof ItemStack || o instanceof Item) {
-			final ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
-			final MaterialData d = is.getData();
-			if (d instanceof Colorable)
-				return Color.byWoolColor(((Colorable) d).getColor());
-		} else if (o instanceof Colorable) { // Sheep
-			return Color.byWoolColor(((Colorable) o).getColor());
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		setExpr(exprs[0]);
+		return true;
+	}
+	
+	@SuppressWarnings("null")
+	@Override
+	protected Color[] get(Event e, Object[] source) {
+		if (source instanceof FireworkEffect[]) {
+			List<Color> colors = new ArrayList<>();
+			for (FireworkEffect effect : (FireworkEffect[])source) {
+				effect.getColors().stream()
+						.map(color -> SkriptColor.fromDyeColor(DyeColor.getByColor(color)))//TODO: Skript's color only supports 16 colors, not a plethora of RGB from fireworks.
+						.filter(optional -> optional.isPresent())
+						.forEach(colour -> colors.add(colour.get()));
+			}
+			if (colors.size() == 0)
+				return null;
+			return colors.toArray(new Color[colors.size()]);
 		}
-		return null;
+		return get(source, new Getter<Color, Object>() {
+			@Override
+			@Nullable
+			public Color get(Object o) {
+				if (o instanceof ItemStack || o instanceof Item) {
+					final ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
+					final MaterialData d = is.getData();
+					if (d instanceof Colorable) {
+						Optional<SkriptColor> color = SkriptColor.fromDyeColor(((Colorable) d).getColor());
+						if (!color.isPresent())
+							return null;
+						return color.get();
+					}
+				} else if (o instanceof Colorable) { // Sheep
+					Optional<SkriptColor> color = SkriptColor.fromDyeColor(((Colorable) o).getColor());
+					if (!color.isPresent())
+						return null;
+					return color.get();
+				}
+				return null;
+			}
+		});
 	}
 	
 	@Override
-	protected String getPropertyName() {
-		return "colour";
-	}
-	
-	@Override
-	public Class<Color> getReturnType() {
+	public Class<? extends Color> getReturnType() {
 		return Color.class;
 	}
 	
-	boolean changeItemStack = false;
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "colour of " + getExpr().toString(e, debug);
+	}
+	
+	boolean changeItemStack;
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (FireworkEffect.class.isAssignableFrom(getExpr().getReturnType()))
+			return CollectionUtils.array(Color[].class);
 		if (mode != ChangeMode.SET)
 			return null;
 		if (Entity.class.isAssignableFrom(getExpr().getReturnType()))
@@ -96,21 +144,17 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		assert mode == ChangeMode.SET;
-		assert delta != null;
-		
-		final Color c = (Color) delta[0];
-		final Object[] os = getExpr().getArray(e);
-		if (os.length == 0)
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null)
 			return;
 		
-		for (final Object o : os) {
+		Color c = (Color) delta[0];
+		for (Object o : getExpr().getArray(e)) {
 			if (o instanceof ItemStack || o instanceof Item) {
-				final ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
-				final MaterialData d = is.getData();
+				ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
+				MaterialData d = is.getData();
 				if (d instanceof Colorable)
-					((Colorable) d).setColor(c.getWoolColor());
+					((Colorable) d).setColor(c.asDyeColor());
 				else
 					continue;
 				
@@ -123,9 +167,34 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
 					((Item) o).setItemStack(is);
 				}
 			} else if (o instanceof Colorable) {
-				((Colorable) o).setColor(c.getWoolColor());
+				((Colorable) o).setColor(c.asDyeColor());
+			} else if (o instanceof FireworkEffect) {
+				Color[] input = (Color[])delta;
+				FireworkEffect effect = ((FireworkEffect) o);
+				switch (mode) {
+					case ADD:
+						for (Color color : input)
+							effect.getColors().add(color.asBukkitColor());
+						break;
+					case REMOVE:
+					case REMOVE_ALL:
+						for (Color color : input)
+							effect.getColors().remove(color.asBukkitColor());
+						break;
+					case DELETE:
+					case RESET:
+						effect.getColors().clear();
+						break;
+					case SET:
+						effect.getColors().clear();
+						for (Color color : input)
+							effect.getColors().add(color.asBukkitColor());
+						break;
+					default:
+						break;
+				}
 			}
 		}
 	}
-	
+
 }

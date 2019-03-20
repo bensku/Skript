@@ -70,14 +70,14 @@ public class TropicalFishData extends EntityData<TropicalFish> {
 			return true; // FIXME aliases reloading must work
 		
 		if (exprs[2] != null) {
-			bodyColor = ((Literal<Color>) exprs[2]).getSingle().getWoolColor();
+			bodyColor = ((Literal<Color>) exprs[2]).getSingle().asDyeColor();
 			patternColor = bodyColor;
 		}
 
 		if (exprs[0] != null)
-			bodyColor = ((Literal<Color>) exprs[0]).getSingle().getWoolColor();
+			bodyColor = ((Literal<Color>) exprs[0]).getSingle().asDyeColor();
 		if (exprs[1] != null)
-			patternColor = ((Literal<Color>) exprs[1]).getSingle().getWoolColor();
+			patternColor = ((Literal<Color>) exprs[1]).getSingle().asDyeColor();
 
 		return true;
 	}

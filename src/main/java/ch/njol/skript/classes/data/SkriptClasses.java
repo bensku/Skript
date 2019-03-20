@@ -24,6 +24,7 @@ import java.io.StreamCorruptedException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import ch.njol.skript.Skript;
@@ -57,6 +58,7 @@ import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
@@ -657,25 +659,26 @@ public class SkriptClasses {
 				.parser(new Parser<Color>() {
 					@Override
 					@Nullable
-					public Color parse(final String s, final ParseContext context) {
-						return Color.byName(s);
+					public Color parse(String input, ParseContext context) {
+						Optional<SkriptColor> color = SkriptColor.fromName(input);
+						return color.isPresent() ? color.get() : null;
 					}
 					
 					@Override
-					public String toString(final Color c, final int flags) {
-						return c.toString();
+					public String toString(Color c, int flags) {
+						return c.getName();
 					}
 					
 					@Override
-					public String toVariableNameString(final Color o) {
-						return "" + o.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					public String toVariableNameString(Color color) {
+						return "" + color.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 					
 					@Override
 					public String getVariableNamePattern() {
 						return "[a-z ]+";
 					}
-				}).serializer(new EnumSerializer<>(Color.class)));
+				}).serializeAs(SkriptColor.class));
 		
 		Classes.registerClass(new ClassInfo<>(StructureType.class, "structuretype")
 				.user("tree ?types?", "trees?")

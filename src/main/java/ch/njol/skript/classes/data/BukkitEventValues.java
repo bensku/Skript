@@ -22,6 +22,7 @@ package ch.njol.skript.classes.data;
 import java.util.List;
 
 import org.bukkit.Chunk;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -30,11 +31,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Vehicle;
@@ -61,6 +62,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.FireworkExplodeEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -352,6 +354,16 @@ public final class BukkitEventValues {
 				return new BlockStateBlock(s, true);
 			}
 		}, 0);
+		// BlockCanBuildEvent#getPlayer was added in 1.13
+		if (Skript.methodExists(BlockCanBuildEvent.class, "getPlayer")) {
+			EventValues.registerEventValue(BlockCanBuildEvent.class, Player.class, new Getter<Player, BlockCanBuildEvent>() {
+				@Override
+				@Nullable
+				public Player get(final BlockCanBuildEvent e) {
+					return e.getPlayer();
+				}
+			}, 0);
+		}
 		// SignChangeEvent
 		EventValues.registerEventValue(SignChangeEvent.class, Player.class, new Getter<Player, SignChangeEvent>() {
 			@Override
@@ -934,23 +946,42 @@ public final class BukkitEventValues {
 				return e.getCause();
 			}
 		}, 0);
-
 		//PlayerToggleFlightEvent
 		EventValues.registerEventValue(PlayerToggleFlightEvent.class, Player.class, new Getter<Player, PlayerToggleFlightEvent>() {
 			@Override
+			@Nullable
 			public Player get(PlayerToggleFlightEvent e) {
 				return e.getPlayer();
 			}
 		}, 0);
-
 		//CreatureSpawnEvent
 		EventValues.registerEventValue(CreatureSpawnEvent.class, SpawnReason.class, new Getter<SpawnReason, CreatureSpawnEvent>() {
-			@Nullable
 			@Override
+			@Nullable
 			public SpawnReason get(CreatureSpawnEvent e) {
 				return e.getSpawnReason();
 			}
 		}, 0);
+		//FireworkExplodeEvent
+		if (Skript.classExists("org.bukkit.event.entity.FireworkExplodeEvent")) {
+			EventValues.registerEventValue(FireworkExplodeEvent.class, Firework.class, new Getter<Firework, FireworkExplodeEvent>() {
+				@Override
+				@Nullable
+				public Firework get(FireworkExplodeEvent e) {
+					return e.getEntity();
+				}
+			}, 0);
+			EventValues.registerEventValue(FireworkExplodeEvent.class, FireworkEffect.class, new Getter<FireworkEffect, FireworkExplodeEvent>() {
+				@Override
+				@Nullable
+				public FireworkEffect get(FireworkExplodeEvent e) {
+					List<FireworkEffect> effects = e.getEntity().getFireworkMeta().getEffects();
+					if (effects == null || effects.size() == 0)
+						return null;
+					return effects.get(0);
+				}
+			}, 0);
+		}
 
 	}
 }

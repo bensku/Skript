@@ -44,6 +44,7 @@ import ch.njol.skript.update.UpdaterState;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -76,20 +77,20 @@ public class SkriptCommand implements CommandExecutor {
 	
 	// TODO /skript scripts show/list - lists all enabled and/or disabled scripts in the scripts folder and/or subfolders (maybe add a pattern [using * and **])
 	// TODO document this command on the website
-	private final static CommandHelp skriptCommandHelp = new CommandHelp("<gray>/<gold>skript", Color.LIGHT_CYAN, NODE + ".help")
-			.add(new CommandHelp("reload", Color.DARK_RED)
+	private final static CommandHelp skriptCommandHelp = new CommandHelp("<gray>/<gold>skript", SkriptColor.LIGHT_CYAN, NODE + ".help")
+			.add(new CommandHelp("reload", SkriptColor.DARK_RED)
 					.add("all")
 					.add("config")
 					.add("aliases")
 					.add("scripts")
 					.add("<script>")
-			).add(new CommandHelp("enable", Color.DARK_RED)
+			).add(new CommandHelp("enable", SkriptColor.DARK_RED)
 					.add("all")
 					.add("<script>")
-			).add(new CommandHelp("disable", Color.DARK_RED)
+			).add(new CommandHelp("disable", SkriptColor.DARK_RED)
 					.add("all")
 					.add("<script>")
-			).add(new CommandHelp("update", Color.DARK_RED)
+			).add(new CommandHelp("update", SkriptColor.DARK_RED)
 					.add("check")
 					.add("changes")
 					.add("download")
