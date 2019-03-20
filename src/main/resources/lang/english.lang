@@ -1364,6 +1364,34 @@ difficulties:
 	hard: hard
 	peaceful: peaceful
 
+# -- Firework types --
+firework types:
+	ball_large: large ball, ball large, large
+	creeper: creeper, creeper face
+	ball: ball, small, small ball
+	star: star, star shaped
+	burst: burst
+
+# -- Resource Pack States --
+resource pack states:
+	accepted: accept, accepted
+	declined: decline, refuse, reject, declined, refused, rejected
+	failed_download: download fail, fail, failed to download, failed
+	successfully_loaded: successfully load, successfully install, success, successfully loaded, successfully installed
+
+# -- Sound Categories --
+sound categories:
+	ambient: ambient, environment
+	blocks: block, blocks
+	hostile: hostile, hostile creature, hostile creatures, hostile mob, hostile mobs
+	master: master, master volume
+	music: music
+	neutral: neutral, friendly creature, friendly creatures, friendly mob, friendly mobs
+	players: player, players
+	records: record, records, jukebox, jukeboxes, noteblock, noteblocks, note block, note blocks
+	voice: voice, speech
+	weather: weather
+
 # -- Boolean --
 boolean:
 	true:
@@ -1416,7 +1444,11 @@ types:
 	metadataholder: metadata holder¦s @a
 	spawnreason: spawn reason¦s @a
 	cachedservericon: server icon¦s @a
-	difficulty: (difficulty|difficulties) @a
+	difficulty: difficult¦y¦ies @a
+	fireworkeffect: firework effect¦s @a
+	fireworktype: firework type¦s @a
+	resourcepackstate: resource pack state¦s @a
+	soundcategory: sound categor¦y¦ies @a
 	
 	# Skript
 	weathertype: weather type¦s @a
@@ -1436,7 +1468,6 @@ types:
 	experience.pattern: (e?xp|experience( points?)?)
 	classinfo: type¦s @a
 	visualeffect: visual effect¦s @a
-
 	
 	# Hooks
 	money: money
@@ -1446,4 +1477,3 @@ types:
 io exceptions:
 	unknownhostexception: Cannot connect to %s
 	accessdeniedexception: Access denied for %s
-

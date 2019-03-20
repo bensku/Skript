@@ -79,6 +79,8 @@ public class ClassInfo<T> implements Debuggable {
 	private String[] examples = null;
 	@Nullable
 	private String since = null;
+	@Nullable
+	private String[] requiredPlugins = null;
 	
 	/**
 	 * @param c The class
@@ -232,6 +234,20 @@ public class ClassInfo<T> implements Debuggable {
 	public ClassInfo<T> since(final String since) {
 		assert this.since == null;
 		this.since = since;
+		return this;
+	}
+	
+	/**
+	 * Other plugin dependencies for this ClassInfo.
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param pluginNames
+	 * @return This ClassInfo object
+	 */
+	public ClassInfo<T> requiredPlugins(final String... pluginNames) {
+		assert this.requiredPlugins == null;
+		this.requiredPlugins = pluginNames;
 		return this;
 	}
 	

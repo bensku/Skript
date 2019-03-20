@@ -126,7 +126,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	}
 
 	/**
-	 * A non critical ID remapping for syntax elements register using the a class multiple times.
+	 * A non critical ID remapping for syntax elements register using the same class multiple times.
 	 *
 	 * Only used for Skript's documentation.
 	 *
@@ -140,7 +140,7 @@ public final class SkriptEventInfo<E extends SkriptEvent> extends SyntaxElementI
 	}
 
 	/**
-	 * Other plugin dependencies for a syntax element
+	 * Other plugin dependencies for this SkriptEvent.
 	 *
 	 * Only used for Skript's documentation.
 	 *
