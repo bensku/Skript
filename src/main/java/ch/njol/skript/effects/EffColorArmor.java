@@ -38,6 +38,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
@@ -51,22 +52,22 @@ import ch.njol.util.Math2;
 		"colour the player's tool red"})
 @Since("2.0, 2.2-dev26 (maps and potions)")
 public class EffColorArmor extends Effect {
-	
+
 	private static final boolean potionColors = Skript.isRunningMinecraft(1, 11);
-	
+
 	static {
 		Skript.registerEffect(EffColorArmor.class,
 				"(dye|colo[u]r|paint) %slots/itemstack% %color%",
 				"(dye|colo[u]r|paint) %slots/itemstack% \\(%number%, %number%, %number%\\)");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> items;
 	@Nullable
 	private Expression<Color> color;
 	@Nullable
 	private Expression<Number>[] rgb;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -82,7 +83,7 @@ public class EffColorArmor extends Effect {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<Color> color = this.color;
@@ -94,49 +95,52 @@ public class EffColorArmor extends Effect {
 			return "dye " + items.toString(e, debug) + " (" + rgb[0].toString(e, debug) + "," + rgb[1].toString(e, debug) + "," + rgb[2].toString(e, debug) + ")";
 		}
 	}
-	
+
 	@Override
-	protected void execute(final Event e) {
-		final org.bukkit.Color c;
-		if (color != null) {
-			final Color cl = color.getSingle(e);
-			if (cl == null)
+	protected void execute(Event e) {
+		org.bukkit.Color color;
+		if (this.color != null) {
+			Color colorl = this.color.getSingle(e);
+			if (colorl == null)
 				return;
-			c = cl.asBukkitColor();
+			color = colorl.asBukkitColor();
 		} else {
-			final Expression<Number>[] rgb = this.rgb;
+			Expression<Number>[] rgb = this.rgb;
 			assert rgb != null;
-			final Number r = rgb[0].getSingle(e), g = rgb[1].getSingle(e), b = rgb[2].getSingle(e);
+			Number r = rgb[0].getSingle(e), g = rgb[1].getSingle(e), b = rgb[2].getSingle(e);
 			if (r == null || g == null || b == null)
 				return;
-			c = org.bukkit.Color.fromRGB(Math2.fit(0, r.intValue(), 255), Math2.fit(0, g.intValue(), 255), Math2.fit(0, b.intValue(), 255));
+			color = new ColorRGB(Math2.fit(0, r.intValue(), 255), Math2.fit(0, g.intValue(), 255), Math2.fit(0, b.intValue(), 255)).asBukkitColor();
 		}
 		
-		for (final Object o : items.getArray(e)) {
-			final ItemStack i = o instanceof Slot ? ((Slot) o).getItem() : (ItemStack) o;
-			if (i == null)
+		for (Object object : items.getArray(e)) {
+			if (object == null)
 				continue;
-			if (i.getType() == Material.LEATHER_BOOTS || i.getType() == Material.LEATHER_CHESTPLATE || i.getType() == Material.LEATHER_HELMET || i.getType() == Material.LEATHER_LEGGINGS) {
-				final LeatherArmorMeta m = (LeatherArmorMeta) i.getItemMeta();
-				m.setColor(c);
-				i.setItemMeta(m);
+			ItemStack item = object instanceof Slot ? ((Slot) object).getItem() : (ItemStack) object;
+			if (item == null)
+				continue;
+			if (item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_LEGGINGS) {
+				LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+				meta.setColor(color);
+				item.setItemMeta(meta);
 			} else if (potionColors) {
-				if (i.getType() == Material.MAP) {
-					final MapMeta m = (MapMeta) i.getItemMeta();
-					m.setColor(c);
-					i.setItemMeta(m);
-				} else if (i.getType() == Material.POTION || i.getType() == Material.SPLASH_POTION || i.getType() == Material.LINGERING_POTION) {
-					final PotionMeta m = (PotionMeta) i.getItemMeta();
-					m.setColor(c);
-					i.setItemMeta(m);
+				if (item.getType() == Material.MAP) {
+					MapMeta meta = (MapMeta) item.getItemMeta();
+					meta.setColor(color);
+					item.setItemMeta(meta);
+				} else if (item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION) {
+					PotionMeta meta = (PotionMeta) item.getItemMeta();
+					meta.setColor(color);
+					item.setItemMeta(meta);
 				}
 			}
-			if (o instanceof Slot) {
-				((Slot) o).setItem(i);
+			if (object instanceof Slot) {
+				((Slot) object).setItem(item);
 			} else {
-				items.change(e, new ItemStack[] {i}, ChangeMode.SET);
+				items.change(e, new ItemStack[] {item}, ChangeMode.SET);
 				return;
 			}
 		}
 	}
+
 }

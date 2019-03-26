@@ -28,7 +28,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import ch.njol.skript.Skript;
+
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -54,6 +58,7 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
@@ -678,7 +683,68 @@ public class SkriptClasses {
 					public String getVariableNamePattern() {
 						return "[a-z ]+";
 					}
-				}).serializeAs(SkriptColor.class));
+				}).serializer(new Serializer<Color>() {
+					@Override
+					public Fields serialize(Color color) throws NotSerializableException {
+						Fields fields = new Fields();
+						if (color instanceof ColorRGB) {
+							org.bukkit.Color RGB = color.asBukkitColor();
+							fields.putPrimitive("RGB", true);
+							fields.putPrimitive("r", RGB.getRed());
+							fields.putPrimitive("g", RGB.getGreen());
+							fields.putPrimitive("b", RGB.getBlue());
+						} else {
+							fields.putPrimitive("RGB", false);
+							fields.putObject("dye", color.asDyeColor().name());
+						}
+						return fields;
+					}
+
+					@Override
+					public void deserialize(Color color, Fields fields) throws StreamCorruptedException, NotSerializableException {
+						assert false;
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					protected Color deserialize(Fields fields) throws StreamCorruptedException {
+						if (fields.getAndRemovePrimitive("RGB", boolean.class)) {
+							int r = fields.getPrimitive("r", Integer.class);
+							int g = fields.getPrimitive("g", Integer.class);
+							int b = fields.getPrimitive("b", Integer.class);
+							return new ColorRGB(r, g, b);
+						}
+						DyeColor dye = DyeColor.valueOf(fields.getObject("dye", String.class));
+						return SkriptColor.fromDyeColor(dye).orElse(SkriptColor.WHITE);
+					}
+
+					@Override
+					public boolean mustSyncDeserialization() {
+						return false;
+					}
+
+					@Override
+					protected boolean canBeInstantiated() {
+						return false;
+					}
+				}));
+		/*
+		public Fields serialize(Color color) throws NotSerializableException {
+			org.bukkit.Color RGB = color.asBukkitColor();
+			Fields fields = new Fields();
+			fields.putPrimitive("r", RGB.getRed());
+			fields.putPrimitive("g", RGB.getGreen());
+			fields.putPrimitive("b", RGB.getBlue());
+			return fields;
+		}
+
+		protected Color deserialize(Fields fields) throws StreamCorruptedException {
+			int r = fields.getPrimitive("r", Integer.class);
+			int g = fields.getPrimitive("g", Integer.class);
+			int b = fields.getPrimitive("b", Integer.class);
+			return new ColorRGB(r, g, b);
+		}
+		*/
 		
 		Classes.registerClass(new ClassInfo<>(StructureType.class, "structuretype")
 				.user("tree ?types?", "trees?")
@@ -743,8 +809,6 @@ public class SkriptClasses {
 					}
 				})
 				.serializer(new YggdrasilSerializer<EnchantmentType>() {
-//						return o.getType().getId() + ":" + o.getLevel();
-					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
 					public EnchantmentType deserialize(final String s) {

@@ -161,7 +161,7 @@ public class SheepData extends EntityData<Sheep> {
 					final String c = cs[i];
 					assert c != null;
 					assert colors != null;
-					colors[i] = SkriptColor.valueOf(c);
+					colors[i] = SkriptColor.valueOf(c).orElse(SkriptColor.WHITE);
 				} catch (final IllegalArgumentException e) {
 					return false;
 				}

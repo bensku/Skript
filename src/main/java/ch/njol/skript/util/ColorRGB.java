@@ -19,44 +19,44 @@
  */
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 import java.util.Optional;
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.enchantments.Enchantment;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.localization.Adjective;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.yggdrasil.YggdrasilSerializable;
+import ch.njol.skript.bukkitutil.EnchantmentIds;
+import ch.njol.yggdrasil.Fields;
 
-public class ColorRGB implements Color {
-	
-	private org.bukkit.Color bukkit;
+public class ColorRGB extends Color {
+
+	private final org.bukkit.Color bukkit;
+	private final DyeColor dye;
 	private ChatColor chat;
-	private DyeColor dye;
-	
-	private ColorRGB(DyeColor dye, ChatColor chat, org.bukkit.Color bukkit) {
-		this.bukkit = bukkit;
-		this.chat = chat;
-		this.dye = dye;
+
+	@SuppressWarnings("null")
+	public ColorRGB(int red, int green, int blue) {
+		this.bukkit = org.bukkit.Color.fromBGR(blue, green, red);
+		this.dye = DyeColor.getByColor(bukkit);
+		Optional<SkriptColor> color = SkriptColor.fromDyeColor(dye);
+		if (color.isPresent())
+			this.chat = color.get().asChatColor();
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public org.bukkit.Color asBukkitColor() {
 		return dye.getColor();
 	}
-	
+
 	@Override
 	public String getFormattedChat() {
 		return "" + chat;
 	}
-	
+
 	@Override
 	public ChatColor asChatColor() {
 		return chat;
@@ -66,31 +66,22 @@ public class ColorRGB implements Color {
 	public DyeColor asDyeColor() {
 		return dye;
 	}
-	
-	@Override
-	public String getName() {
-		return "RED:" + bukkit.getRed() + ", GREEN:" + bukkit.getGreen() + ", BLUE" + bukkit.getBlue();
-	}
-	
+
 	@Deprecated
 	@Override
 	public byte getWoolData() {
 		return dye.getWoolData();
 	}
-	
+
 	@Deprecated
 	@Override
 	public byte getDyeData() {
 		return (byte) (15 - dye.getWoolData());
 	}
-	
-	/**
-	 * @param name The name of the color defined by Skript's .lang files.
-	 * @return Optional if any Skript Color matched up with the defined name
-	 */
-	@Nullable
-	public static org.bukkit.Color from(int red, int green, int blue) {
-		return org.bukkit.Color.fromBGR(blue, green, red);
+
+	@Override
+	public String getName() {
+		return "RED:" + bukkit.getRed() + ", GREEN:" + bukkit.getGreen() + ", BLUE" + bukkit.getBlue();
 	}
-	
+
 }

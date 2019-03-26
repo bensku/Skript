@@ -36,6 +36,8 @@ import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
@@ -229,10 +231,7 @@ public class DefaultFunctions {
 		}.description("Similar to <a href='#atan'>atan</a>, but requires two coordinates and returns values from -180 to 180.",
 				"The returned angle is measured counterclockwise in a standard mathematical coordinate system (x to the right, y to the top).")
 				.examples("atan2(0, 1) = 0", "atan2(10, 0) = 90", "atan2(-10, 5) = " + s(Math.toDegrees(Math.atan2(-10, 5))))
-				.since("2.2"));
-		
-		// more stuff
-		
+				.since("2.2"));		
 		Functions.registerFunction(new JavaFunction<Number>("sum", numbersParam, numberClass, true) {
 			@Override
 			public Number[] execute(final FunctionEvent e, final Object[][] params) {
@@ -301,6 +300,19 @@ public class DefaultFunctions {
 		}).description("Gets a world from its name.")
 				.examples("set {_nether} to world(\"%{_world}%_nether\")")
 				.since("2.2");
+		Functions.registerFunction(new JavaFunction<Color>("rgb", new Parameter[] {
+				new Parameter<>("r", numberClass, true, null),
+				new Parameter<>("g", numberClass, true, null),
+				new Parameter<>("b", numberClass, true, null)
+		}, Classes.getExactClassInfo(Color.class), true) {
+			@Override
+			@Nullable
+			public Color[] execute(FunctionEvent e, Object[][] params) {
+				return new Color[] {new ColorRGB((int) params[0][0], (int) params[1][0], (int) params[2][0])};
+			}
+		}).description("Gets a Color from an RGB entry numbers.")
+				.examples("set {_color} to rgb(255, 255, 0)")
+				.since("2.3.7");
 		
 		// the location expression doesn't work, so why not make a function for the same purpose
 		// FIXME document on ExprLocation as well

@@ -19,52 +19,57 @@
  */
 package ch.njol.skript.util;
 
-import java.util.Optional;
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.localization.Adjective;
+import ch.njol.skript.classes.Serializer;
+import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable;
+import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-public interface Color extends YggdrasilSerializable {
-	
+public abstract class Color implements YggdrasilSerializable {
+
 	/**
 	 * @return The Bukkit Color of this Color.
 	 */
-	org.bukkit.Color asBukkitColor();
-	
+	public abstract org.bukkit.Color asBukkitColor();
+
+	/**
+	 * @return The ChatColor but formated. Must be returned as a ChatColor String.
+	 */
+	public abstract String getFormattedChat();
+
 	/**
 	 * @return The Bukkit ChatColor of this Color.
 	 */
-	ChatColor asChatColor();
-	
+	public abstract ChatColor asChatColor();
+
 	/**
 	 * @return The Bukkkit DyeColor of this Color.
 	 */
-	DyeColor asDyeColor();
-	
+	public abstract DyeColor asDyeColor();
+
 	/**
 	 * @return The name of the Skript Color.
 	 */
-	String getName();
-	
+	public abstract String getName();
+
 	/**
 	 * @deprecated Bytes contain magic values and is subject to removal by Spigot.
 	 * @return The wool byte data of this color
 	 */
 	@Deprecated
-	byte getWoolData();
-	
+	public abstract byte getWoolData();
+
 	/**
 	 * @deprecated Bytes contain magic values and is subject to removal by Spigot.
 	 * @return The dye byte of this color
 	 */
 	@Deprecated
-	byte getDyeData();
+	public abstract byte getDyeData();
 
-	/**
-	 * @return The ChatColor but formated. Must be returned as a ChatColor String.
-	 */
-	String getFormattedChat();
 }
