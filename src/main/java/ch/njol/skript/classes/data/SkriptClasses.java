@@ -728,23 +728,6 @@ public class SkriptClasses {
 						return false;
 					}
 				}));
-		/*
-		public Fields serialize(Color color) throws NotSerializableException {
-			org.bukkit.Color RGB = color.asBukkitColor();
-			Fields fields = new Fields();
-			fields.putPrimitive("r", RGB.getRed());
-			fields.putPrimitive("g", RGB.getGreen());
-			fields.putPrimitive("b", RGB.getBlue());
-			return fields;
-		}
-
-		protected Color deserialize(Fields fields) throws StreamCorruptedException {
-			int r = fields.getPrimitive("r", Integer.class);
-			int g = fields.getPrimitive("g", Integer.class);
-			int b = fields.getPrimitive("b", Integer.class);
-			return new ColorRGB(r, g, b);
-		}
-		*/
 		
 		Classes.registerClass(new ClassInfo<>(StructureType.class, "structuretype")
 				.user("tree ?types?", "trees?")

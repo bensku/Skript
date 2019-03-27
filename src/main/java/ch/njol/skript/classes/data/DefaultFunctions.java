@@ -308,7 +308,7 @@ public class DefaultFunctions {
 			@Override
 			@Nullable
 			public Color[] execute(FunctionEvent e, Object[][] params) {
-				return new Color[] {new ColorRGB((int) params[0][0], (int) params[1][0], (int) params[2][0])};
+				return new Color[] {new ColorRGB(((Number) params[0][0]).intValue(), ((Number) params[1][0]).intValue(), ((Number) params[2][0]).intValue())};
 			}
 		}).description("Gets a Color from an RGB entry numbers.")
 				.examples("set {_color} to rgb(255, 255, 0)")
