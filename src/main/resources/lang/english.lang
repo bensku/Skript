@@ -279,6 +279,10 @@ potions:
 	dolphins_grace: dolphins grace, dolphin's grace
 	conduit_power: conduit power
 
+	# 1.14 potion effect types
+	bad_omen: bad omen
+	hero_of_the_village: hero of the village
+
 # -- Weather --
 weather:
 	clear:
