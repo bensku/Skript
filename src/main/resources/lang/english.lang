@@ -1287,6 +1287,31 @@ visual effects:
 		pattern: dolphin
 	area_expression: [with [offset of %number%, %number%(,| and) %number%][[and ]speed %number%]]
 
+	sneeze:
+		name: sneeze @-
+		pattern: sneeze
+	campfire_cozy_smoke:
+		name: campfire cozy smoke @-
+		pattern: campfire cozy smoke
+	campfire_signal_smoke:
+		name: campfire signal smoke @-
+		pattern: campfire signal smoke
+	composter:
+		name: composter @-
+		pattern: composter
+	flash:
+		name: flash @-
+		pattern: flash
+	falling_lava:
+		name: falling lava @-
+		pattern: falling lava
+	landing_lava:
+		name: landing lava @-
+		pattern: landing lava
+	falling_water:
+		name: falling water @-
+		pattern: falling water
+
 # -- Inventory Actions --
 inventory actions:
 	nothing: nothing, do nothing
