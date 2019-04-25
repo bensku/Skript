@@ -84,6 +84,7 @@ import org.bukkit.entity.Pillager;
 import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.PufferFish;
+import org.bukkit.entity.Raider;
 import org.bukkit.entity.Ravager;
 import org.bukkit.entity.Salmon;
 import org.bukkit.entity.Shulker;
@@ -280,11 +281,11 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		if (Skript.isRunningMinecraft(1, 14)) {
 			types.add(new SimpleEntityDataInfo("fox", Fox.class));
-			types.add(new SimpleEntityDataInfo("panda", Panda.class));
 			types.add(new SimpleEntityDataInfo("pillager", Pillager.class));
 			types.add(new SimpleEntityDataInfo("ravager", Ravager.class));
-			types.add(new SimpleEntityDataInfo("trader llama", TraderLlama.class));
+			
 			types.add(new SimpleEntityDataInfo("wandering trader", WanderingTrader.class));
+			types.add(new SimpleEntityDataInfo("raider", Raider.class, true));
 			
 			
 		}

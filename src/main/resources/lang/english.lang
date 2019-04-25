@@ -1064,18 +1064,12 @@ entities:
 	fox:
 		name: fox¦es
 		pattern: <age> fox(|1¦s)|(4¦)fox (kid(|1¦s)|child(|1¦ren))
-	panda:
-		name: panda¦s
-		pattern: <age> panda(|1¦s)|(4¦)panda (kid(|1¦s)|child(|1¦ren))
 	pillager:
 		name: pillager¦s
 		pattern: pillager(|1¦s)
 	ravager:
 		name: ravager¦s
 		pattern: ravager(|1¦s)
-	trader llama:
-		name: trader llama¦s
-		pattern: <age> trader llama(|1¦s)|(4¦)trader llama (kid(|1¦s)|child(|1¦ren))
 	wandering trader:
 		name: wandering trader¦s
 		pattern: <age> wandering trader(|1¦s)|(4¦)wandering trader (kid(|1¦s)|child(|1¦ren)) //supposed to be ageable, but not working, spigot bug?
