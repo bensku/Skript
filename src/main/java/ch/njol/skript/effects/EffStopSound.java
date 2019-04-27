@@ -57,12 +57,12 @@ public class EffStopSound extends Effect {
 		if (Skript.methodExists(Player.class, "stopSound", String.class)) {
 			if (SOUND_CATEGORIES_EXIST) {
 				Skript.registerEffect(EffStopSound.class,
-						"stop sound[s] %strings% [(in|from) category %-soundcategory%] [(from playing to|for) %players%]",
-						"stop playing sound[s] %strings% [(in|from) category %-soundcategory%] [(to|for) %players%]");
+						"stop sound[s] %strings% [(in|from) %-soundcategory%] [(from playing to|for) %players%]",
+						"stop playing sound[s] %strings% [(in|from) %-soundcategory%] [(to|for) %players%]");
 			} else {
 				Skript.registerEffect(EffStopSound.class,
-						"stop sound[s] %strings% [(in|from) category %-soundcategory%] [(from playing to|for) %players%]",
-						"stop playing sound[s] %strings% [(in|from) category %-soundcategory%] [(to|for) %players%]");
+						"stop sound[s] %strings% [(in|from) %-soundcategory%] [(from playing to|for) %players%]",
+						"stop playing sound[s] %strings% [(in|from) %-soundcategory%] [(to|for) %players%]");
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class EffStopSound extends Effect {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "stop sound " + sounds.toString(e, debug) +
-				(category != null ? " in category " + category.toString(e, debug) : "") +
+				(category != null ? " in " + category.toString(e, debug) : "") +
 				" from playing to " + players.toString(e, debug);
 	}
 

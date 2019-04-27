@@ -1381,16 +1381,16 @@ resource pack states:
 
 # -- Sound Categories --
 sound categories:
-	ambient: ambient, environment
-	blocks: block, blocks
-	hostile: hostile, hostile creature, hostile creatures, hostile mob, hostile mobs
-	master: master, master volume
-	music: music
-	neutral: neutral, friendly creature, friendly creatures, friendly mob, friendly mobs
-	players: player, players
-	records: record, records, jukebox, jukeboxes, noteblock, noteblocks, note block, note blocks
-	voice: voice, speech
-	weather: weather
+	ambient: ambient category, environment category
+	blocks: block category, blocks category
+	hostile: hostile category, hostile creature category, hostile creatures category, hostile mob category, hostile mobs category
+	master: master category, master volume category
+	music: music category
+	neutral: neutral category, friendly creature category, friendly creatures category, friendly mob category, friendly mobs category
+	players: player category, players category
+	records: record category, records category, jukebox category, jukeboxes category, noteblock category, noteblocks category, note block category, note blocks category
+	voice: voice category, speech category
+	weather: weather category
 
 # -- Boolean --
 boolean:

@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 		"Please note that sound names can get changed in any Minecraft or Spigot version, or even removed from Minecraft itself."})
 @Examples({"play sound \"block.note_block.pling\" # It is block.note.pling in 1.12.2",
 		"play sound \"entity.experience_orb.pickup\" with volume 0.5 to the player",
-		"play sound \"custom.music.1\" in category jukeboxes at {speakerBlock}"})
+		"play sound \"custom.music.1\" in jukebox category at {speakerBlock}"})
 @Since("2.2-dev28, INSERT VERSION (sound categories)")
 @RequiredPlugins("Minecraft 1.11+ (sound categories)")
 public class EffPlaySound extends Effect {
@@ -59,16 +59,16 @@ public class EffPlaySound extends Effect {
 	static {
 		if (SOUND_CATEGORIES_EXIST) {
 			Skript.registerEffect(EffPlaySound.class,
-					"play sound[s] %strings% [(in|from) category %-soundcategory%] " +
-							"[with volume %-number%] [(and|with) pitch %-number%] at %locations% [for %-players%]",
-					"play sound[s] %strings% [(in|from) category %-soundcategory%] " +
-							"[with volume %-number%] [(and|with) pitch %-number%] [(to|for) %players%] [(at|from) %-locations%]");
+					"play sound[s] %strings% [(in|from) %-soundcategory%] " +
+							"[(at|with) volume %-number%] [(and|at|with) pitch %-number%] at %locations% [for %-players%]",
+					"play sound[s] %strings% [(in|from) %-soundcategory%] " +
+							"[(at|with) volume %-number%] [(and|at|with) pitch %-number%] [(to|for) %players%] [(at|from) %-locations%]");
 		} else {
 			Skript.registerEffect(EffPlaySound.class,
-					"play sound[s] %strings% [with volume %-number%] " +
-							"[(and|with) pitch %-number%] at %locations% [for %-players%]",
-					"play sound[s] %strings% [with volume %-number%] " +
-							"[(and|with) pitch %-number%] [(to|for) %players%] [(at|from) %-locations%]");
+					"play sound[s] %strings% [(at|with) volume %-number%] " +
+							"[(and|at|with) pitch %-number%] at %locations% [for %-players%]",
+					"play sound[s] %strings% [(at|with) volume %-number%] " +
+							"[(and|at|with) pitch %-number%] [(to|for) %players%] [(at|from) %-locations%]");
 		}
 	}
 
@@ -200,16 +200,15 @@ public class EffPlaySound extends Effect {
 	public String toString(@Nullable Event e, boolean debug) {
 		if (locations != null)
 			return "play sound " + sounds.toString(e, debug) +
-					(category != null ? " in category " + category.toString(e, debug) : "") +
-					(volume != null ? " with volume " + volume.toString(e, debug) : "") +
-					(pitch != null ? " with pitch " + pitch.toString(e, debug) : "") +
+					(category != null ? " in " + category.toString(e, debug) : "") +
+					(volume != null ? " at volume " + volume.toString(e, debug) : "") +
+					(pitch != null ? " at pitch " + pitch.toString(e, debug) : "") +
 					(locations != null ? " at " + locations.toString(e, debug) : "") +
 					(players != null ? " for " + players.toString(e, debug) : "");
 		else
 			return "play sound " + sounds.toString(e, debug) +
-					(category != null ? " in category " + category.toString(e, debug) : "") +
-					(volume != null ? " with volume " + volume.toString(e, debug) : "") +
-					(pitch != null ? " with pitch " + pitch.toString(e, debug) : "") +
+					(volume != null ? " at volume " + volume.toString(e, debug) : "") +
+					(pitch != null ? " at pitch " + pitch.toString(e, debug) : "") +
 					(players != null ? " to " + players.toString(e, debug) : "");
 	}
 
