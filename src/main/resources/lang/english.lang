@@ -275,10 +275,6 @@ potions:
 	dolphins_grace: dolphins grace, dolphin's grace
 	conduit_power: conduit power
 
-	# 1.14 potion effect types
-	bad_omen: bad omen
-	hero_of_the_village: hero of the village
-
 # -- Weather --
 weather:
 	clear:
@@ -1056,19 +1052,6 @@ entities:
 	leash hitch:
 		name: leash hitch¦es
 		pattern: leash hitch(|1¦es)
-	#1.14 entities
-	fox:
-		name: fox¦es
-		pattern: <age> fox(|1¦s)|(4¦)fox (kid(|1¦s)|child(|1¦ren))
-	pillager:
-		name: pillager¦s
-		pattern: pillager(|1¦s)
-	ravager:
-		name: ravager¦s
-		pattern: ravager(|1¦s)
-	wandering trader:
-		name: wandering trader¦s
-		pattern: <age> wandering trader(|1¦s)|(4¦)wandering trader (kid(|1¦s)|child(|1¦ren)) //supposed to be ageable, but not working, spigot bug?
 
 
 # -- Damage Causes --
@@ -1280,31 +1263,6 @@ visual effects:
 		name: dolphin @-
 		pattern: dolphin
 	area_expression: [with [offset of %number%, %number%(,| and) %number%][[and ]speed %number%]]
-
-	sneeze:
-		name: sneeze @-
-		pattern: sneeze
-	campfire_cozy_smoke:
-		name: campfire cozy smoke @-
-		pattern: campfire cozy smoke
-	campfire_signal_smoke:
-		name: campfire signal smoke @-
-		pattern: campfire signal smoke
-	composter:
-		name: composter @-
-		pattern: composter
-	flash:
-		name: flash @-
-		pattern: flash
-	falling_lava:
-		name: falling lava @-
-		pattern: falling lava
-	landing_lava:
-		name: landing lava @-
-		pattern: landing lava
-	falling_water:
-		name: falling water @-
-		pattern: falling water
 
 # -- Inventory Actions --
 inventory actions:

@@ -56,7 +56,6 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Golem;
@@ -77,15 +76,11 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Mule;
 import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Painting;
-import org.bukkit.entity.Panda;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Pillager;
 import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.PufferFish;
-import org.bukkit.entity.Raider;
-import org.bukkit.entity.Ravager;
 import org.bukkit.entity.Salmon;
 import org.bukkit.entity.Shulker;
 import org.bukkit.entity.ShulkerBullet;
@@ -103,13 +98,11 @@ import org.bukkit.entity.Stray;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.TippedArrow;
-import org.bukkit.entity.TraderLlama;
 import org.bukkit.entity.Trident;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.entity.Turtle;
 import org.bukkit.entity.Vex;
 import org.bukkit.entity.Vindicator;
-import org.bukkit.entity.WanderingTrader;
 import org.bukkit.entity.WaterMob;
 import org.bukkit.entity.Witch;
 import org.bukkit.entity.Wither;
@@ -278,16 +271,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("trident", Trident.class));
 
 
-		}
-		if (Skript.isRunningMinecraft(1, 14)) {
-			types.add(new SimpleEntityDataInfo("fox", Fox.class));
-			types.add(new SimpleEntityDataInfo("pillager", Pillager.class));
-			types.add(new SimpleEntityDataInfo("ravager", Ravager.class));
-			
-			types.add(new SimpleEntityDataInfo("wandering trader", WanderingTrader.class));
-			types.add(new SimpleEntityDataInfo("raider", Raider.class, true));
-			
-			
 		}
 		if (Skript.classExists("org.bukkit.entity.Illusioner")) {
 			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
