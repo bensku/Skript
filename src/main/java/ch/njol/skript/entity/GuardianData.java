@@ -25,16 +25,12 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
-
 public class GuardianData extends EntityData<Guardian> {
 
 	static {
-		if(Skript.classExists("org.bukkit.entity.Guardian") && !Skript.isRunningMinecraft(1, 11)){
+		if (Skript.classExists("org.bukkit.entity.Guardian") && !Skript.isRunningMinecraft(1, 11))
 			EntityData.register(GuardianData.class, "guardian", Guardian.class, 1, "normal guardian", "guardian", "elder guardian");
-		}
 	}
-	
-	
 	
 	private boolean isElder = false;
 	
@@ -47,7 +43,7 @@ public class GuardianData extends EntityData<Guardian> {
 	@SuppressWarnings({"null", "deprecation"})
 	@Override
 	protected boolean init(Class<? extends Guardian> c, Guardian e) {
-		if(e != null)
+		if (e != null)
 			isElder = e.isElder();
 		return true;
 	}
@@ -55,9 +51,8 @@ public class GuardianData extends EntityData<Guardian> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void set(Guardian entity) {
-		if(isElder)
+		if (isElder)
 			entity.setElder(true);
-		
 	}
 
 	@SuppressWarnings("deprecation")

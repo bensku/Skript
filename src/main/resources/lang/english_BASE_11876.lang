@@ -557,9 +557,6 @@ entities:
 	human:
 		name: human¦s
 		pattern: human(|1¦s)
-	tipped arrow:
-		name: tipped arrow¦s
-		pattern: tipped arrow(|1¦s)
 	arrow:
 		name: arrow¦s @an
 		pattern: arrow(|1¦s)
@@ -893,19 +890,7 @@ entities:
 		pattern: <age> any horse(|1¦s)|(4¦)foal(|1¦s)
 	llama:
 		name: llama¦s
-		pattern: (any )?llama(|1¦s)
-	white llama:
-		name: white llama¦s
-		pattern: white <age> llama(|1¦s)|white llama <age>(|1¦s)
-	brown llama:
-		name: brown llama¦s
-		pattern: brown <age> llama(|1¦s)|brown llama <age>(|1¦s)
-	creamy llama:
-		name: creamy llama¦s
-		pattern: creamy <age> llama(|1¦s)|creamy llama <age>(|1¦s)
-	gray llama:
-		name: gray llama¦s
-		pattern: (gray|grey) <age> llama(|1¦s)|(gray|grey) llama <age>(|1¦s
+		pattern: llama(|1¦s)
 	llama spit:
 		name: llama spit¦s
 		pattern: llama spit(|1¦s)
@@ -920,34 +905,34 @@ entities:
 		pattern: normal guardian(|1¦s)
 	rabbit:
 		name: rabbit¦s
-		pattern: <age> (bunny|rabbit)(|1¦s)|(bunny|rabbit) <age>(|1¦s)
+		pattern: <age> rabbit(|1¦s)|rabbit <age>(|1¦s)
 	brown rabbit:
-		name: brown rabbit¦s
-		pattern: brown <age> (bunny|rabbit)(|1¦s)|brown (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: brown <age> rabbit(|1¦s)|brown rabbit <age>(|1¦s)
 	black and white rabbit:
-		name: black and white rabbit¦s
-		pattern: black [and] white <age> (bunny|rabbit)(|1¦s)|black [and] white (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: black [and] white <age> rabbit(|1¦s)|black [and] white rabbit <age>(|1¦s)
 	white rabbit:
-		name: white rabbit¦s
-		pattern: white <age> (bunny|rabbit)(|1¦s)|white (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: white <age> rabbit(|1¦s)|white rabbit <age>(|1¦s)
 	black rabbit:
-		name: black rabbit¦s
-		pattern: black <age> (bunny|rabbit)(|1¦s)|black (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: black <age> rabbit(|1¦s)|black rabbit <age>(|1¦s)
 	gold rabbit:
-		name: gold rabbit¦s
-		pattern: gold <age> (bunny|rabbit)(|1¦s)|gold (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: gold <age> rabbit(|1¦s)|gold rabbit <age>(|1¦s)
 	salt and pepper rabbit:
-		name: salt and pepper rabbit¦s
-		pattern: salt [and] pepper <age> (bunny|rabbit)(|1¦s)|salt [and] pepper (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: salt [and] pepper <age> rabbit(|1¦s)|salt [and] pepper rabbit <age>(|1¦s)
 	killer rabbit:
-		name: killer rabbit¦s
-		pattern: killer <age> (bunny|rabbit)(|1¦s)|killer (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: killer <age> rabbit(|1¦s)|killer rabbit <age>(|1¦s)
 	fish hook:
 		name: fish hook¦s
 		pattern: fish[ ]hook(|1¦s)
 	armor stand:
 		name: armor stand¦s
-		pattern: armo[u]r stand(|1¦s)
+		pattern: armor stand(|1¦s)
 	endermite:
 		name: endermite¦s
 		pattern: endermite(|1¦s)
@@ -1010,7 +995,7 @@ entities:
 		pattern: vindicator(|1¦s)
 	parrot:
 		name: parrot¦s
-		pattern: (any )?parrot(|1¦s)
+		pattern: parrot(|1¦s)
 	red parrot:
 		name: red parrot¦s
 		pattern: red parrot(|1¦s)
@@ -1098,7 +1083,6 @@ damage causes:
 	fly_into_wall: hitting wall while flying, flying into a wall
 	hot_floor: magma, hot floor
 	cramming: cramming
-	dryout: dryout
 	custom: unknown, custom, plugin, a plugin
 
 # -- Teleport Causes --
@@ -1347,7 +1331,7 @@ spawn reasons:
 	cured: cured
 	custom: customized, customised, custom
 	default: default
-	dispense_egg: dispense egg, dispensing egg
+	dispenser_egg: dispense egg, dispensing egg
 	drowned: drowned
 	egg: egg
 	ender_pearl: ender pearl
@@ -1367,7 +1351,6 @@ spawn reasons:
 	trap: trap
 	village_defense: village defense, golem defense, iron golem defense
 	village_invasion: village invasion, village invading
-	sheared: shear, sheared
 	
 # -- Difficulties --
 difficulties:
@@ -1375,21 +1358,6 @@ difficulties:
 	normal: medium, normal
 	hard: hard
 	peaceful: peaceful
-
-# -- Firework types --
-firework types:
-	ball_large: large ball, ball large, large
-	creeper: creeper, creeper face
-	ball: ball, small, small ball
-	star: star, star shaped
-	burst: burst
-
-# -- Resource Pack States --
-resource pack states:
-	accepted: accept, accepted
-	declined: decline, refuse, reject, declined, refused, rejected
-	failed_download: download fail, fail, failed to download, failed
-	successfully_loaded: successfully load, successfully install, success, successfully loaded, successfully installed
 
 # -- Boolean --
 boolean:
@@ -1428,7 +1396,6 @@ types:
 	commandsender: player¦¦s¦/console @a
 	inventoryholder: inventory holder¦s @an
 	gamemode: gamemode¦s @a
-	material: material¦s @a
 	itemstack: item stack¦s @an
 	itementity: dropped item¦s @a # same as entities.dropped item.name
 	biome: biome¦s @a
@@ -1442,10 +1409,7 @@ types:
 	inventorytype: inventory type¦s @an
 	metadataholder: metadata holder¦s @a
 	spawnreason: spawn reason¦s @a
-	cachedservericon: server icon¦s @a
 	difficulty: (difficulty|difficulties) @a
-	fireworkeffect: firework effect¦s @a
-	fireworktype: firework type¦s @a
 	
 	# Skript
 	weathertype: weather type¦s @a
@@ -1465,7 +1429,7 @@ types:
 	experience.pattern: (e?xp|experience( points?)?)
 	classinfo: type¦s @a
 	visualeffect: visual effect¦s @a
-	resourcepackstate: resource pack state¦s @a
+
 	
 	# Hooks
 	money: money
@@ -1475,3 +1439,4 @@ types:
 io exceptions:
 	unknownhostexception: Cannot connect to %s
 	accessdeniedexception: Access denied for %s
+

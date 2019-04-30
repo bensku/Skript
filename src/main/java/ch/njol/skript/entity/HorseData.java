@@ -33,14 +33,14 @@ import ch.njol.skript.variables.Variables;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation") // Until 1.12: use old deprecated methods for backwards compatibility
+@SuppressWarnings("deprecation")
 public class HorseData extends EntityData<Horse> {
+	
 	static {
-		if (Skript.classExists("org.bukkit.entity.Horse")) {
-			if (!Skript.isRunningMinecraft(1, 11)) // For 1.11+ see SimpleEntityData
-				EntityData.register(HorseData.class, "horse", Horse.class, 0,
-						"horse", "donkey", "mule", "undead horse", "skeleton horse");
-			
+		//In 1.11 all these entities were arranged into their own classes rather than under Horse. See SimpleEntityData for those.
+		if (Skript.classExists("org.bukkit.entity.Horse") && !Skript.isRunningMinecraft(1, 11)) {
+			EntityData.register(HorseData.class, "horse", Horse.class, 0,
+					"horse", "donkey", "mule", "undead horse", "skeleton horse");
 			Variables.yggdrasil.registerSingleClass(Variant.class, "Horse.Variant");
 			Variables.yggdrasil.registerSingleClass(Color.class, "Horse.Color");
 			Variables.yggdrasil.registerSingleClass(Style.class, "Horse.Style");
@@ -56,13 +56,13 @@ public class HorseData extends EntityData<Horse> {
 	
 	public HorseData() {}
 	
-	public HorseData(final @Nullable Variant variant) {
+	public HorseData(@Nullable Variant variant) {
 		this.variant = variant;
 	}
 	
 	@Override
-	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
-		switch (matchedPattern) { // If Variant ordering is changed, will not break
+	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+		switch (matchedPattern) {
 			case 0:
 				variant = Variant.HORSE;
 				break;
@@ -79,12 +79,11 @@ public class HorseData extends EntityData<Horse> {
 				variant = Variant.SKELETON_HORSE;
 				break;
 		}
-		
 		return true;
 	}
 	
 	@Override
-	protected boolean init(final @Nullable Class<? extends Horse> c, final @Nullable Horse e) {
+	protected boolean init(@Nullable Class<? extends Horse> c, @Nullable Horse e) {
 		if (e != null) {
 			variant = e.getVariant();
 			color = e.getColor();
@@ -94,7 +93,7 @@ public class HorseData extends EntityData<Horse> {
 	}
 	
 	@Override
-	protected boolean match(final Horse entity) {
+	protected boolean match(Horse entity) {
 		return (variant == null || variant == entity.getVariant())
 				&& (color == null || color == entity.getColor())
 				&& (style == null || style == entity.getStyle());
@@ -106,7 +105,7 @@ public class HorseData extends EntityData<Horse> {
 	}
 	
 	@Override
-	public void set(final Horse entity) {
+	public void set(Horse entity) {
 		if (variant != null)
 			entity.setVariant(variant);
 		if (color != null)
@@ -116,13 +115,13 @@ public class HorseData extends EntityData<Horse> {
 	}
 	
 	@Override
-	public boolean isSupertypeOf(final EntityData<?> e) {
+	public boolean isSupertypeOf(EntityData<?> e) {
 		if (!(e instanceof HorseData))
 			return false;
-		final HorseData d = (HorseData) e;
-		return (variant == null || variant == d.variant)
-				&& (color == null || color == d.color)
-				&& (style == null || style == d.style);
+		HorseData copy = (HorseData) e;
+		return (variant == null || variant == copy.variant)
+				&& (color == null || color == copy.color)
+				&& (style == null || style == copy.style);
 	}
 	
 	@Override
@@ -130,25 +129,9 @@ public class HorseData extends EntityData<Horse> {
 		return Horse.class;
 	}
 	
-//		return (variant == null ? "" : variant.name()) + "," + (color == null ? "" : color.name()) + "," + (style == null ? "" : style.name());
-	@Override
-	protected boolean deserialize(final String s) {
-		final String[] split = s.split(",");
-		if (split.length != 3)
-			return false;
-		try {
-			variant = split[0].isEmpty() ? null : Variant.valueOf(split[0]);
-			color = split[1].isEmpty() ? null : Color.valueOf(split[1]);
-			style = split[2].isEmpty() ? null : Style.valueOf(split[2]);
-		} catch (final IllegalArgumentException e) {
-			return false;
-		}
-		return true;
-	}
-	
 	@Override
 	protected int hashCode_i() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 		result = prime * result + (color != null ? color.hashCode() : 0);
 		result = prime * result + (style != null ? style.hashCode() : 0);
@@ -157,15 +140,15 @@ public class HorseData extends EntityData<Horse> {
 	}
 	
 	@Override
-	protected boolean equals_i(final EntityData<?> obj) {
+	protected boolean equals_i(EntityData<?> obj) {
 		if (!(obj instanceof HorseData))
 			return false;
-		final HorseData other = (HorseData) obj;
-		if (color != other.color)
+		HorseData copy = (HorseData) obj;
+		if (color != copy.color)
 			return false;
-		if (style != other.style)
+		if (style != copy.style)
 			return false;
-		if (variant != other.variant)
+		if (variant != copy.variant)
 			return false;
 		return true;
 	}

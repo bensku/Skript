@@ -19,8 +19,8 @@
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Rabbit;
-import org.bukkit.entity.Rabbit.Type;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Llama.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -28,104 +28,95 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.variables.Variables;
 
-public class RabbitData extends EntityData<Rabbit> {
+public class LlamaData extends EntityData<Llama> {
 	
 	static {
-		if (Skript.classExists("org.bukkit.entity.Rabbit")) {
-			EntityData.register(RabbitData.class, "rabbit", Rabbit.class, 0, "rabbit", "black rabbit", "black and white rabbit",
-					"brown rabbit", "gold rabbit", "salt and pepper rabbit", "killer rabbit", "white rabbit");
-			Variables.yggdrasil.registerSingleClass(Type.class, "Rabbit.Type");
+		if (Skript.classExists("org.bukkit.entity.Llama")) {
+			EntityData.register(LlamaData.class, "llama", Llama.class, 0,
+					"llama", "white llama", "brown llama", "creamy llama", "gray llama");
+			Variables.yggdrasil.registerSingleClass(Color.class, "Llama.Color");
 		}
 	}
 	
 	@Nullable
-	private Type type;
+	private Color color;
 	
-	public RabbitData() {}
+	public LlamaData() {}
 	
-	public RabbitData(@Nullable Type type) {
-		this.type = type;
+	public LlamaData(@Nullable Color color) {
+		this.color = color;
 	}
-
+	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		switch (matchedPattern) {
 			case 0:
 				break;
 			case 1:
-				type = Type.BLACK;
+				color = Color.WHITE;
 				break;
 			case 2:
-				type = Type.BLACK_AND_WHITE;
+				color = Color.BROWN;
 				break;
 			case 3:
-				type = Type.BROWN;
+				color = Color.CREAMY;
 				break;
 			case 4:
-				type = Type.GOLD;
-				break;
-			case 5:
-				type = Type.SALT_AND_PEPPER;
-				break;
-			case 6:
-				type = Type.THE_KILLER_BUNNY;
-				break;
-			case 7:
-				type = Type.WHITE;
+				color = Color.GRAY;
 				break;
 		}
 		return true;
 	}
-
+	
 	@Override
-	protected boolean init(@Nullable Class<? extends Rabbit> c, @Nullable Rabbit rabbit) {
-		if (rabbit != null)
-			type = rabbit.getRabbitType();
+	protected boolean init(@Nullable Class<? extends Llama> clazz, @Nullable Llama entity) {
+		if (entity != null)
+			color = entity.getColor();
 		return true;
 	}
 	
 	@Override
-	protected boolean match(Rabbit entity) {
-		return (type == null || type == entity.getRabbitType());
+	protected boolean match(Llama entity) {
+		return (color == null || color == entity.getColor());
 	}
 	
 	@Override
 	public EntityData getSuperType() {
-		return new RabbitData(type);
+		return new LlamaData(color);
 	}
-
+	
 	@Override
-	public void set(Rabbit entity) {
-		if (type != null)
-			entity.setRabbitType(type);
+	public void set(Llama entity) {
+		if (color != null)
+			entity.setColor(color);
 	}
 	
 	@Override
 	public boolean isSupertypeOf(EntityData<?> data) {
 		return equals_i(data);
 	}
-
+	
 	@Override
-	public Class<? extends Rabbit> getType() {
-		return Rabbit.class;
+	public Class<? extends Llama> getType() {
+		return Llama.class;
 	}
-
+	
 	@Override
 	protected int hashCode_i() {
 		int prime = 31;
 		int result = 1;
-		result = prime * result + (type != null ? type.hashCode() : 0);
+		result = prime * result + (color != null ? color.hashCode() : 0);
 		return result;
 	}
-
+	
 	@Override
 	protected boolean equals_i(final EntityData<?> obj) {
-		if (!(obj instanceof RabbitData))
+		if (!(obj instanceof LlamaData))
 			return false;
-		RabbitData copy = (RabbitData) obj;
-		if (type != copy.type)
+		LlamaData copy = (LlamaData) obj;
+		if (color != copy.color)
 			return false;
 		return true;
 	}
-
+	
 }

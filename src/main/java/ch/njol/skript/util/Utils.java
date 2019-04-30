@@ -47,8 +47,6 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.effects.EffTeleport;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
@@ -672,4 +670,23 @@ public abstract class Utils {
 		}
 	}
 	
+	/**
+	 * Creates a marker pattern with optionals.
+	 * @param patterns The pattern types to include.
+	 * @return The final completed pattern as a string.
+	 */
+	public static String createMarkerPattern(String... patterns) {
+		StringBuilder builder = new StringBuilder();
+		int i = 0;
+		builder.append("(" + i + "¦");
+		for (String pattern : patterns) {
+			i++;
+			builder.append(pattern + "|" + i + "¦");
+		}
+		builder.append(")");
+		String pattern = builder.toString();
+		assert pattern != null;
+		return pattern;
+	}
+
 }

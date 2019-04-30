@@ -893,19 +893,7 @@ entities:
 		pattern: <age> any horse(|1¦s)|(4¦)foal(|1¦s)
 	llama:
 		name: llama¦s
-		pattern: (any )?llama(|1¦s)
-	white llama:
-		name: white llama¦s
-		pattern: white <age> llama(|1¦s)|white llama <age>(|1¦s)
-	brown llama:
-		name: brown llama¦s
-		pattern: brown <age> llama(|1¦s)|brown llama <age>(|1¦s)
-	creamy llama:
-		name: creamy llama¦s
-		pattern: creamy <age> llama(|1¦s)|creamy llama <age>(|1¦s)
-	gray llama:
-		name: gray llama¦s
-		pattern: (gray|grey) <age> llama(|1¦s)|(gray|grey) llama <age>(|1¦s
+		pattern: llama(|1¦s)
 	llama spit:
 		name: llama spit¦s
 		pattern: llama spit(|1¦s)
@@ -920,34 +908,34 @@ entities:
 		pattern: normal guardian(|1¦s)
 	rabbit:
 		name: rabbit¦s
-		pattern: <age> (bunny|rabbit)(|1¦s)|(bunny|rabbit) <age>(|1¦s)
+		pattern: <age> rabbit(|1¦s)|rabbit <age>(|1¦s)
 	brown rabbit:
-		name: brown rabbit¦s
-		pattern: brown <age> (bunny|rabbit)(|1¦s)|brown (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: brown <age> rabbit(|1¦s)|brown rabbit <age>(|1¦s)
 	black and white rabbit:
-		name: black and white rabbit¦s
-		pattern: black [and] white <age> (bunny|rabbit)(|1¦s)|black [and] white (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: black [and] white <age> rabbit(|1¦s)|black [and] white rabbit <age>(|1¦s)
 	white rabbit:
-		name: white rabbit¦s
-		pattern: white <age> (bunny|rabbit)(|1¦s)|white (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: white <age> rabbit(|1¦s)|white rabbit <age>(|1¦s)
 	black rabbit:
-		name: black rabbit¦s
-		pattern: black <age> (bunny|rabbit)(|1¦s)|black (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: black <age> rabbit(|1¦s)|black rabbit <age>(|1¦s)
 	gold rabbit:
-		name: gold rabbit¦s
-		pattern: gold <age> (bunny|rabbit)(|1¦s)|gold (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: gold <age> rabbit(|1¦s)|gold rabbit <age>(|1¦s)
 	salt and pepper rabbit:
-		name: salt and pepper rabbit¦s
-		pattern: salt [and] pepper <age> (bunny|rabbit)(|1¦s)|salt [and] pepper (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: salt [and] pepper <age> rabbit(|1¦s)|salt [and] pepper rabbit <age>(|1¦s)
 	killer rabbit:
-		name: killer rabbit¦s
-		pattern: killer <age> (bunny|rabbit)(|1¦s)|killer (bunny|rabbit) <age>(|1¦s)
+		name: rabbit¦s
+		pattern: killer <age> rabbit(|1¦s)|killer rabbit <age>(|1¦s)
 	fish hook:
 		name: fish hook¦s
 		pattern: fish[ ]hook(|1¦s)
 	armor stand:
 		name: armor stand¦s
-		pattern: armo[u]r stand(|1¦s)
+		pattern: armor stand(|1¦s)
 	endermite:
 		name: endermite¦s
 		pattern: endermite(|1¦s)
@@ -1010,7 +998,7 @@ entities:
 		pattern: vindicator(|1¦s)
 	parrot:
 		name: parrot¦s
-		pattern: (any )?parrot(|1¦s)
+		pattern: parrot(|1¦s)
 	red parrot:
 		name: red parrot¦s
 		pattern: red parrot(|1¦s)
