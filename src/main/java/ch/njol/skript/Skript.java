@@ -336,10 +336,10 @@ public final class Skript extends JavaPlugin implements Listener {
 //						final File af = new File(getDataFolder(), e.getName());
 //						if (!af.exists())
 //							saveTo = af;
-					} else if (e.getName().startsWith("features.sk")) {
-						final File af = new File(getDataFolder(), e.getName());
-						if (!af.exists())
-							saveTo = af;
+//					} else if (e.getName().startsWith("features.sk")) {
+//						final File af = new File(getDataFolder(), e.getName());
+//						if (!af.exists())
+//							saveTo = af;
 					}
 					if (saveTo != null) {
 						final InputStream in = f.getInputStream(e);
