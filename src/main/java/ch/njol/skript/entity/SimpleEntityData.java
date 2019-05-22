@@ -73,6 +73,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.LlamaSpit;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Mule;
 import org.bukkit.entity.MushroomCow;
@@ -295,6 +296,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("human", HumanEntity.class, true));
 		types.add(new SimpleEntityDataInfo("damageable", Damageable.class, true));
 		types.add(new SimpleEntityDataInfo("monster", Monster.class, true)); //I don't know why Njol never included that. I did now ^^
+		types.add(new SimpleEntityDataInfo("mob", Mob.class, true)); //Same goes for this one
 		types.add(new SimpleEntityDataInfo("creature", Creature.class, true));
 		types.add(new SimpleEntityDataInfo("animal", Animals.class, true));
 		types.add(new SimpleEntityDataInfo("golem", Golem.class, true));
