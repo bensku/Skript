@@ -1045,8 +1045,8 @@ entities:
 		name: monster¦s
 		pattern: monster(|1¦s)
 	mob:
-	    name: mob¦s
-	    pattern: mob(|1¦s)
+		name: mob¦s
+		pattern: mob(|1¦s)
 	animal:
 		name: animal¦s
 		pattern: animal(|1¦s)
