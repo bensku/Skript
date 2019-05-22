@@ -239,6 +239,10 @@ enchantments:
 		riptide: Riptide
 		impaling: Impaling
 		loyalty: Loyalty
+		# new 1.14 Enchantments
+		multishot: multishot, multi shot
+		piercing: piercing
+		quick_charge: quick charge
 
 # -- Potion Effects --
 potions:
