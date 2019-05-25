@@ -7,26 +7,20 @@
 
 # This command allows each player to get infinite cakes
 # but the command has a cooldown of one minute (per player)
+
+# Cooldowns became much simpler in Skript 2.3.1
+
 command /cake:
 	description: Recieve a cake, but you can only do this once per minute!
 	permission: cake.is_a_lie
 	executable by: players
+	cooldown: 1 minute
+	cooldown message: You have to wait %remaining time% before you can use this command again!
+	cooldown storage: {cake::%player's uuid%::lastused} # Stores cooldown in a variable that can be accessed
 	trigger:
-		# stores how long it's been since the player last used this command
-		set {_waited} to difference between {cake.%player%.lastused} and now
-		# checks whether the player has used the command within the last minute
-		if {_waited} is less than a minute:
-			message "You have to wait %difference between a minute and {_waited}% before you can use this command again!"
-			stop
-		
-		# some condition which sould not start the cooldown
-		# (if the player doesn't get the cake he should be able to use the command again immediately)
 		player doesn't have space for a cake:
 			message "You do not have enough space in your inventory to hold the cake!"
-			stop
-			
-		# do the action of the command
-		give a cake to the player
-		
-		# and finally start the cooldown
-		set {cake.%player%.lastused} to now
+			cancel the cooldown
+		else:
+			send "The cake is a lie"
+			give a cake to the player
