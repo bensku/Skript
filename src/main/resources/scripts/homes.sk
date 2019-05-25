@@ -8,7 +8,7 @@ command /sethome:
 	permission: skript.home
 	executable by: players
 	trigger:
-		set {homes.%player%.location} to location of player
+		set {home::%player's uuid%} to player's location
 		message "Set your home to <grey>%location of player%<reset>"
 
 command /home:
@@ -16,7 +16,7 @@ command /home:
 	permission: skript.home
 	executable by: players
 	trigger:
-		if {homes.%player%.location} is not set:
+		if {home::%player's uuid%} is not set:
 			message "You have not set your home yet!"
-			stop trigger
-		teleport player to {homes.%player%.location}
+		else:
+			teleport player to {home::%player's uuid%}
