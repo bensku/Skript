@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -43,7 +44,7 @@ import edu.umd.cs.findbugs.ba.bcp.New;
 @Since("1.4")
 public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	static {
-		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemstacks/inventories");
+		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemstacks/inventories/blocks");
 	}
 	
 	@Override
@@ -60,6 +61,8 @@ public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 			return new ItemStack(((ItemStack) o).getType(), 1, ((ItemStack) o).getDurability());
 		} else if (o instanceof Inventory) {
 			return ((Inventory) o).getType();
+		} else if (o instanceof Block) {
+			return new ItemStack(((Block) o).getType(), 1, ((Block) o).getData());
 		}
 		assert false;
 		return null;
