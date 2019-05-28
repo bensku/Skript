@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -62,7 +63,7 @@ public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 		} else if (o instanceof Inventory) {
 			return ((Inventory) o).getType();
 		} else if (o instanceof Block) {
-			return new ItemStack(((Block) o).getType(), 1, ((Block) o).getData());
+			return new ItemType((Block) o);
 		}
 		assert false;
 		return null;
