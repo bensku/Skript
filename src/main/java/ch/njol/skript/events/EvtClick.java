@@ -189,6 +189,13 @@ public class EvtClick extends SkriptEvent {
 				}
 			}
 			
+			if (tools != null && !tools.check(e, t -> {
+				ItemStack mainHand = clickEvent.getPlayer().getInventory().getItemInMainHand();
+				return t.isOfType(mainHand);
+			})) {
+				return false;
+			}
+			
 			entity = clicked;
 			block = null;
 		} else if (e instanceof PlayerInteractEvent) {
