@@ -44,17 +44,17 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The message above and below the player list in the tab menu.")
 @Examples({"set all players tab list header to \"Welcome to the Server!\"",
 			"send \"%the player's tab list header%\" to player",
-			"reset all player's tab list header"})
+			"reset all players's tab list header"})
 @Since("INSERT VERSION")
-@RequiredPlugins("Spigot 1.13 or newer")
+@RequiredPlugins("1.13 or newer")
 public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, String> {
 	
 	static {
 		if (Skript.methodExists(Player.class, "setPlayerListHeaderFooter", String.class, String.class)) //This method is only present if the header and footer methods we use are
-			Skript.registerExpression(ExprPlayerlistHeaderFooter.class, String.class, ExpressionType.PROPERTY, "[the] %players% (player|tab) list (1¦header|2¦footer)");
+			Skript.registerExpression(ExprPlayerlistHeaderFooter.class, String.class, ExpressionType.PROPERTY, "[the] %players%['s] (player|tab)[ ]list (header|1¦footer)[s] [(text|message)[s]]");
 	}
 	
-	private static final int HEADER = 1, FOOTER = 2;
+	private static final int HEADER = 0, FOOTER = 1;
 	
 	private int mark;
 	
@@ -70,11 +70,10 @@ public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, Strin
 	protected String[] get(Event e, Player[] source) {
 		List<String> list = new ArrayList<>();
 		for (Player player : source) {
-			if (mark == HEADER) {
+			if (mark == HEADER)
 				list.add(player.getPlayerListHeader());
-			} else if (mark == FOOTER) {
+			else if (mark == FOOTER)
 				list.add(player.getPlayerListFooter());
-			}
 		}
 		return list.toArray(new String[list.size()]);
 	}
