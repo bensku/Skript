@@ -30,38 +30,26 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 @Name("New Line")
-@Description("Returns a newline separator.")
+@Description("Returns a line break separator.")
 @Examples("send \"Hello%nl%Goodbye!\" to player")
 @Since("INSERT VERSION")
-public class ExprNewLine extends SimpleExpression<String> {
+public class LitNewLine extends SimpleLiteral<String> {
 	
 	static {
-		Skript.registerExpression(ExprNewLine.class, String.class, ExpressionType.SIMPLE, "n[ew]l[ine]", "line[ ]break");
+		Skript.registerExpression(LitNewLine.class, String.class, ExpressionType.SIMPLE, "n[ew]l[ine]", "line[ ]break");
+	}
+	
+	public LitNewLine() {
+		super("\n", false);
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
 		return true;
-	}
-	
-	@Nullable
-	@Override
-	protected String[] get(Event e) {
-		return new String[]{"\n"};
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
 	}
 	
 	@Override
