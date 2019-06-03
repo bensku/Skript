@@ -44,7 +44,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The message above and below the player list in the tab menu.")
 @Examples({"set all players tab list header to \"Welcome to the Server!\"",
 			"send \"%the player's tab list header%\" to player",
-			"reset all players's tab list header"})
+			"reset all players' tab list header"})
 @Since("2.4")
 @RequiredPlugins("Minecraft 1.13 or newer")
 public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, String> {
