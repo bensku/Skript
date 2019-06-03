@@ -42,6 +42,7 @@ import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
@@ -53,7 +54,6 @@ import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
-@NonNullByDefault(false)
 public class BlockStateBlock implements Block {
 	
 	private static final boolean IS_RUNNING_1_13 = Skript.isRunningMinecraft(1, 13);
@@ -172,7 +172,7 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
-	public void setType(final Material type) {
+	public void setType(Material type) {
 		if (delayChanges) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 				@Override
@@ -185,8 +185,9 @@ public class BlockStateBlock implements Block {
 		}
 	}
 	
+	@Nullable
 	@Override
-	public BlockFace getFace(final Block block) {
+	public BlockFace getFace(Block block) {
 		return state.getBlock().getFace(block);
 	}
 	
@@ -311,8 +312,9 @@ public class BlockStateBlock implements Block {
 		return Collections.emptySet();
 	}
 	
+	@Nullable
 	@Override
-	public Location getLocation(final Location loc) {
+	public Location getLocation(final @Nullable Location loc) {
 		if (loc != null) {
 			loc.setWorld(getWorld());
 			loc.setX(getX());
@@ -390,6 +392,7 @@ public class BlockStateBlock implements Block {
 		}
 	}
 	
+	@Nullable
 	@Override
 	public RayTraceResult rayTrace(Location start, Vector direction, double maxDistance, FluidCollisionMode fluidCollisionMode) {
 		return state.getBlock().rayTrace(start, direction, maxDistance, fluidCollisionMode);

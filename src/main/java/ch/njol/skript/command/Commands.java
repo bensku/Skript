@@ -187,7 +187,6 @@ public abstract class Commands {
 	
 	@Nullable
 	private final static Listener pre1_3chatListener = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final PlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -198,7 +197,6 @@ public abstract class Commands {
 	};
 	@Nullable
 	private final static Listener post1_3chatListener = !Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final AsyncPlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -552,7 +550,15 @@ public abstract class Commands {
 	public static void registerListeners() {
 		if (!registeredListeners) {
 			Bukkit.getPluginManager().registerEvents(commandListener, Skript.getInstance());
-			Bukkit.getPluginManager().registerEvents(post1_3chatListener != null ? post1_3chatListener : pre1_3chatListener, Skript.getInstance());
+			
+			Listener post13Listener = post1_3chatListener;
+			Listener pre13Listener = pre1_3chatListener;
+			if (post13Listener != null) {
+				Bukkit.getPluginManager().registerEvents(post13Listener, Skript.getInstance());
+			} else {
+				assert pre13Listener != null;
+				Bukkit.getPluginManager().registerEvents(pre13Listener, Skript.getInstance());
+			}
 			registeredListeners = true;
 		}
 	}
@@ -589,7 +595,7 @@ public abstract class Commands {
 		}
 		
 		@Override
-		public String getFullText(final @Nullable CommandSender forWho) {
+		public String getFullText(final CommandSender forWho) {
 			final StringBuilder sb = new StringBuilder(shortText);
 			final HelpTopic aliasForTopic = helpMap.getHelpTopic(aliasFor);
 			if (aliasForTopic != null) {
@@ -600,7 +606,7 @@ public abstract class Commands {
 		}
 		
 		@Override
-		public boolean canSee(final @Nullable CommandSender commandSender) {
+		public boolean canSee(final CommandSender commandSender) {
 			if (amendedPermission == null) {
 				final HelpTopic aliasForTopic = helpMap.getHelpTopic(aliasFor);
 				if (aliasForTopic != null) {
@@ -609,7 +615,8 @@ public abstract class Commands {
 					return false;
 				}
 			} else {
-				return commandSender != null && commandSender.hasPermission(amendedPermission);
+				assert amendedPermission != null;
+				return commandSender.hasPermission(amendedPermission);
 			}
 		}
 	}

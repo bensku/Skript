@@ -97,9 +97,15 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 					Inventory inventory = ((Inventory) o);
 					Inventory copy;
 					if (inventory.getType() == InventoryType.CHEST) {
-						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getSize(), name);
+						if (name != null)
+							copy = Bukkit.createInventory(inventory.getHolder(), inventory.getSize(), name);
+						else
+							copy = Bukkit.createInventory(inventory.getHolder(), inventory.getSize());
 					} else {
-						copy = Bukkit.createInventory(inventory.getHolder(), inventory.getType(), name);
+						if (name != null)
+							copy = Bukkit.createInventory(inventory.getHolder(), inventory.getType(), name);
+						else
+							copy = Bukkit.createInventory(inventory.getHolder(), inventory.getType());
 					}
 					copy.setContents(inventory.getContents());
 					inventory.getViewers().forEach(human -> human.openInventory(copy));

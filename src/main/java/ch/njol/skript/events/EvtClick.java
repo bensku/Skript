@@ -236,14 +236,25 @@ public class EvtClick extends SkriptEvent {
 			return false;
 		}
 		
-		if (e instanceof PlayerInteractEvent && tools != null && !tools.check(e, new Checker<ItemType>() {
+		if (tools != null && !tools.check(e, new Checker<ItemType>() {
 			@Override
 			public boolean check(final ItemType t) {
-				if (isHolding && twoHanded) {
-					PlayerInventory invi = ((PlayerInteractEvent) e).getPlayer().getInventory();
-					return t.isOfType(invi.getItemInMainHand()) || t.isOfType(invi.getItemInOffHand());
-				} else {
-					return t.isOfType(((PlayerInteractEvent) e).getItem());
+				if (e instanceof PlayerInteractEvent) {
+					if (isHolding) {
+						PlayerInventory invi = ((PlayerInteractEvent) e).getPlayer().getInventory();
+						return t.isOfType(invi.getItemInMainHand()) || t.isOfType(invi.getItemInOffHand());
+					} else {
+						return t.isOfType(((PlayerInteractEvent) e).getItem());
+					}
+				} else { // PlayerInteractEntityEvent doesn't have item associated with it
+					PlayerInventory invi = ((PlayerInteractEntityEvent) e).getPlayer().getInventory();
+					if (isHolding) {
+						return t.isOfType(invi.getItemInMainHand()) || t.isOfType(invi.getItemInOffHand());
+					} else {
+						ItemStack item = ((PlayerInteractEntityEvent) e).getHand() == EquipmentSlot.HAND
+								? invi.getItemInMainHand() : invi.getItemInOffHand();
+						return t.isOfType(item);
+					}
 				}
 			}
 		})) {

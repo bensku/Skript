@@ -98,6 +98,7 @@ public class ExprLore extends SimpleExpression<String> {
 		if (meta == null || !meta.hasLore())
 			return new String[0];
 		final List<String> lore = meta.getLore();
+		assert lore != null; // hasLore() called before
 		if (n == null)
 			return lore.toArray(new String[0]);
 		final int l = n.intValue() - 1;

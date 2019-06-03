@@ -62,11 +62,15 @@ public enum StructureType {
 	}
 	
 	public void grow(final Location loc) {
-		loc.getWorld().generateTree(loc, CollectionUtils.getRandom(types));
+		TreeType tree = CollectionUtils.getRandom(types);
+		assert tree != null; // No enum member causes empty types
+		loc.getWorld().generateTree(loc, tree);
 	}
 	
 	public void grow(final Block b) {
-		b.getWorld().generateTree(b.getLocation(), CollectionUtils.getRandom(types));
+		TreeType tree = CollectionUtils.getRandom(types);
+		assert tree != null; // No enum member causes empty types
+		b.getWorld().generateTree(b.getLocation(), tree);
 	}
 	
 	public TreeType[] getTypes() {

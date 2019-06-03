@@ -94,6 +94,8 @@ public class CondItemInHand extends Condition {
 				en -> types.check(e,
 						type -> {
 							EntityEquipment equipment = en.getEquipment();
+							if (equipment == null)
+								return false; // No equipment -> no item in hand
 							
 							if (Skript.isRunningMinecraft(1, 9)) {
 								return (offTool ? type.isOfType(equipment.getItemInOffHand()) : type.isOfType(equipment.getItemInMainHand()));

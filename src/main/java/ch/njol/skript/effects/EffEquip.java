@@ -129,12 +129,11 @@ public class EffEquip extends Effect implements Testable {
 				}
 				continue;
 			}
-			if (en.getEquipment() == null)
+			EntityEquipment equip = en.getEquipment();
+			if (equip == null)
 				continue;
 			for (final ItemType t : ts) {
 				for (final ItemStack item : t.getAll()) {
-					EntityEquipment equip = en.getEquipment();
-					
 					// Blocks are visible in head slot, too
 					// TODO skulls; waiting for decoration aliases
 					if (helmet.isOfType(item) || item.getType().isBlock())

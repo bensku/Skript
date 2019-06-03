@@ -82,13 +82,13 @@ public class EffMessage extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		for (Expression<? extends String> message : messages) {
-			for (CommandSender sender : recipients.getArray(e)) {
-				if (message instanceof VariableString && sender instanceof Player) { // This could contain json formatting
+			for (CommandSender receiver : recipients.getArray(e)) {
+				if (message instanceof VariableString && receiver instanceof Player) { // This could contain json formatting
 					List<MessageComponent> components = ((VariableString) message).getMessageComponents(e);
-					((Player) sender).spigot().sendMessage(BungeeConverter.convert(components));
+					((Player) receiver).spigot().sendMessage(BungeeConverter.convert(components));
 				} else {
 					for (String string : message.getArray(e)) {
-						sender.sendMessage(string);
+						receiver.sendMessage(string);
 					}
 				}
 			}

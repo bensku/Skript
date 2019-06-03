@@ -71,8 +71,8 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				"%blocks%'[s] (" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]");
 	}
 	
-	private int slot;
-	private boolean isEvent;
+	int slot;
+	boolean isEvent;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -131,10 +131,14 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(),
 						() -> FurnaceEventSlot.super.setItem(item));
 			} else {
-				if (e instanceof FurnaceSmeltEvent && slot == RESULT)
-					((FurnaceSmeltEvent) e).setResult(item);
-				else
+				if (e instanceof FurnaceSmeltEvent && slot == RESULT) {
+					if (item != null)
+						((FurnaceSmeltEvent) e).setResult(item);
+					else
+						((FurnaceSmeltEvent) e).setResult(new ItemStack(Material.AIR));
+				} else {
 					super.setItem(item);
+				}
 			}
 		}
 
@@ -163,14 +167,10 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 					return null;
 				if (isEvent && getTime() > -1 && !Delay.isDelayed(e)) {
 					FurnaceInventory invi = ((Furnace) b.getState()).getInventory();
-					if (invi != null)
-						return new FurnaceEventSlot(e, invi);
-					return null;
+					return new FurnaceEventSlot(e, invi);
 				} else {
 					FurnaceInventory invi = ((Furnace) b.getState()).getInventory();
-					if (invi != null)
-						return new InventorySlot(invi, slot);
-					return null; // In case furnace doesn't have inventory for some reason
+					return new InventorySlot(invi, slot);
 				}
 			}
 		});

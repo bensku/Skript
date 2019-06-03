@@ -279,15 +279,15 @@ public class DefaultChangers {
 					case RESET:
 						assert false;
 				}
-				if (invi.getHolder() instanceof Player) {
-					((Player) invi.getHolder()).updateInventory();
+				InventoryHolder holder = invi.getHolder();
+				if (holder instanceof Player) {
+					((Player) holder).updateInventory();
 				}
 			}
 		}
 	};
 	
 	public final static Changer<Block> blockChanger = new Changer<Block>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -318,8 +318,6 @@ public class DefaultChangers {
 						if (!(state instanceof InventoryHolder))
 							break;
 						final Inventory invi = ((InventoryHolder) state).getInventory();
-						if (invi == null)
-							continue;
 						if (mode == ChangeMode.ADD) {
 							for (final Object d : delta) {
 								if (d instanceof Inventory) {

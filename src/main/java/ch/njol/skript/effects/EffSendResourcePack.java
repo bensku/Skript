@@ -88,15 +88,19 @@ public class EffSendResourcePack extends Effect {
 		String hash = null;
 		if (this.hash != null)
 			hash = this.hash.getSingle(e);
+		String address = url.getSingle(e);
+		if (address == null) {
+			return; // Can't send, URL not valid
+		}
 		for (Player p : recipients.getArray(e)) {
 			try {
 				if (hash == null) {
-					p.setResourcePack(url.getSingle(e));
+					p.setResourcePack(address);
 				} else {
 					if (PAPER_METHOD_EXISTS)
-						p.setResourcePack(url.getSingle(e), hash);
+						p.setResourcePack(address, hash);
 					else
-						p.setResourcePack(url.getSingle(e), StringUtils.hexStringToByteArray(hash));
+						p.setResourcePack(address, StringUtils.hexStringToByteArray(hash));
 				}
 			} catch (Exception ignored) {}
 		}

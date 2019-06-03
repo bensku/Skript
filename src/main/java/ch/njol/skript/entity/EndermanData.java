@@ -93,10 +93,13 @@ public class EndermanData extends EntityData<Enderman> {
 			assert t != null;
 			final ItemStack i = t.getBlock().getRandom();
 			if (i != null) {
-				if (useBlockData) // 1.13: item->block usually keeps only material
+				if (useBlockData) { // 1.13: item->block usually keeps only material
 					entity.setCarriedBlock(Bukkit.createBlockData(i.getType()));
-				else
-					entity.setCarriedMaterial(i.getData());
+				} else {
+					MaterialData data = i.getData();
+					assert data != null;
+					entity.setCarriedMaterial(data);
+				}
 			}
 		}
 		

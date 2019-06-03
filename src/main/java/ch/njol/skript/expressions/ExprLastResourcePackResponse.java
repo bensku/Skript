@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -43,6 +44,7 @@ public class ExprLastResourcePackResponse extends SimplePropertyExpression<Playe
 	}
 
 	@Override
+	@Nullable
 	public Status convert(final Player p) {
 		return p.getResourcePackStatus();
 	}

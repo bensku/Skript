@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -77,9 +78,12 @@ public class EnchantmentUtils {
 	public static String getKey(Enchantment ench) {
 		if (KEY_METHOD_EXISTS)
 			return ench.getKey().getKey();
-		return ENCHANTMENTS.get(ench);
+		String name = ENCHANTMENTS.get(ench);
+		assert name != null;
+		return name;
 	}
 	
+	@Nullable
 	public static Enchantment getByKey(String key) {
 		if (KEY_METHOD_EXISTS)
 			return Enchantment.getByKey(NamespacedKey.minecraft(key));

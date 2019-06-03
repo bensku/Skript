@@ -238,7 +238,9 @@ public class ScriptCommand implements TabExecutor {
 						if (!SkriptConfig.keepLastUsageDates.value())
 							setLastUsage(uuid, event, null);
 					} else {
-						sender.sendMessage(cooldownMessage.getSingle(event));
+						String msg = cooldownMessage.getSingle(event);
+						if (msg != null)
+							sender.sendMessage(msg);
 						return false;
 					}
 				}

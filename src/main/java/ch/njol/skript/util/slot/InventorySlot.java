@@ -62,9 +62,8 @@ public class InventorySlot extends SlotWithIndex {
 	@Override
 	@Nullable
 	public ItemStack getItem() {
-		if (invi == null)
-			return new ItemStack(Material.AIR, 1);
-		return invi.getItem(index) == null  ? new ItemStack(Material.AIR, 1) : invi.getItem(index).clone();
+		ItemStack item = invi.getItem(index);
+		return item == null  ? new ItemStack(Material.AIR, 1) : item.clone();
 	}
 	
 	@Override

@@ -21,6 +21,7 @@ package ch.njol.skript.effects;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -65,10 +66,15 @@ public class EffBreakNaturally extends Effect {
 	protected void execute(final Event e) {
 		ItemType tool = this.tool != null ? this.tool.getSingle(e) : null;
 		for (Block block : this.blocks.getArray(e)) {
-			if (tool != null)
-				block.breakNaturally(tool.getRandom());
-			else
+			if (tool != null) {
+				ItemStack is = tool.getRandom();
+				if (is != null)
+					block.breakNaturally(is);
+				else
+					block.breakNaturally();
+			} else {
 				block.breakNaturally();
+			}
 		}
 	}
 	

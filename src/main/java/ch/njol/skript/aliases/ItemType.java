@@ -812,8 +812,6 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	public boolean addTo(final Inventory invi) {
 		// important: don't use inventory.add() - it ignores max stack sizes
 		ItemStack[] buf = invi.getContents();
-		if (buf == null)
-			return false;
 		
 		ItemStack[] tBuf = buf.clone();
 		if (invi instanceof PlayerInventory) {
@@ -832,6 +830,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			}
 		}
 		
+		assert buf != null;
 		invi.setContents(buf);
 		return b;
 	}
@@ -1137,6 +1136,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		ItemMeta meta = getItemMeta();
 		
 		for (Enchantment enchantment : enchantments) {
+			assert enchantment != null;
 			if (meta.hasEnchant(enchantment))
 				return true;
 		}
@@ -1151,10 +1151,10 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		if (!hasEnchantments())
 			return false;
 		ItemMeta meta = getItemMeta();
-		
 		for (EnchantmentType enchantment : enchantments) {
-			assert meta != null;
-			if (!meta.hasEnchant(enchantment.getType()))
+			Enchantment type = enchantment.getType();
+			assert type != null; // Bukkit working different than we expect
+			if (!meta.hasEnchant(type))
 				return false;
 		}
 		return true;
@@ -1168,7 +1168,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		ItemMeta meta = getItemMeta();
 		
 		for (EnchantmentType enchantment : enchantments) {
-			meta.addEnchant(enchantment.getType(), enchantment.getLevel(), true);
+			Enchantment type = enchantment.getType();
+			assert type != null; // Bukkit working different than we expect
+			meta.addEnchant(type, enchantment.getLevel(), true);
 		}
 		setItemMeta(meta);
 	}
@@ -1181,7 +1183,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		ItemMeta meta = getItemMeta();
 		
 		for (EnchantmentType enchantment : enchantments) {
-			meta.removeEnchant(enchantment.getType());
+			Enchantment type = enchantment.getType();
+			assert type != null; // Bukkit working different than we expect
+			meta.removeEnchant(type);
 		}
 		setItemMeta(meta);
 	}
@@ -1195,6 +1199,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		
 		Set<Enchantment> enchants = meta.getEnchants().keySet();
 		for (Enchantment ench : enchants) {
+			assert ench != null;
 			meta.removeEnchant(ench);
 		}
 		setItemMeta(meta);

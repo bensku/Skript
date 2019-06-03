@@ -224,8 +224,8 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public Direction get(final BlockPlaceEvent e) {
-				if (e.getBlock() != null) {
-					BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
+				BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
+				if (bf != null) {
 					return new Direction(new double[] {bf.getModX(), bf.getModY(), bf.getModZ()});
 				}
 				return Direction.ZERO;

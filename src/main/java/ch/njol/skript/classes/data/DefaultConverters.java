@@ -66,7 +66,9 @@ public class DefaultConverters {
 			public PlayerInventory convert(final OfflinePlayer p) {
 				if (!p.isOnline())
 					return null;
-				return p.getPlayer().getInventory();
+				Player online = p.getPlayer();
+				assert online != null;
+				return online.getInventory();
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
 		// OfflinePlayer - Player
@@ -252,8 +254,6 @@ public class DefaultConverters {
 			@Override
 			@Nullable
 			public InventoryHolder convert(final Block b) {
-				if (b.getState() == null)
-					return null;
 				final BlockState s = b.getState();
 				if (s instanceof InventoryHolder)
 					return (InventoryHolder) s;
@@ -265,8 +265,6 @@ public class DefaultConverters {
 			@Override
 			@Nullable
 			public Block convert(final InventoryHolder holder) {
-				if (holder == null)
-					return null;
 				if (holder instanceof BlockState)
 					return new BlockInventoryHolder((BlockState) holder);
 				return null;

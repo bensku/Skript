@@ -45,8 +45,8 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set all players tab list header to \"Welcome to the Server!\"",
 			"send \"%the player's tab list header%\" to player",
 			"reset all players's tab list header"})
-@Since("INSERT VERSION")
-@RequiredPlugins("1.13 or newer")
+@Since("2.4")
+@RequiredPlugins("Minecraft 1.13 or newer")
 public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, String> {
 	
 	static {

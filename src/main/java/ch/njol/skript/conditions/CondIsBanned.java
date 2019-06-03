@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.conditions;
 
+import java.net.InetSocketAddress;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -67,7 +69,10 @@ public class CondIsBanned extends PropertyCondition<Object> {
 	public boolean check(Object obj) {
 		if (obj instanceof Player) {
 			if (ipBanned) {
-				return Bukkit.getIPBans().contains(((Player) obj).getAddress().getAddress().getHostAddress());
+				InetSocketAddress sockAddr = ((Player) obj).getAddress();
+				if (sockAddr == null)
+					return false; // Assume not banned, they've never played here
+				return Bukkit.getIPBans().contains(sockAddr.getAddress().getHostAddress());
 			} else {
 				return ((Player) obj).isBanned();
 			}

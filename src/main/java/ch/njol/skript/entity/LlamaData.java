@@ -70,7 +70,9 @@ public class LlamaData extends EntityData<Llama> {
 	
 	@Override
 	public void set(Llama entity) {
-		entity.setColor(color == null ? CollectionUtils.getRandom(Color.values()) : color);
+		Color randomColor = color == null ? CollectionUtils.getRandom(Color.values()) : color;
+		assert randomColor != null;
+		entity.setColor(randomColor);
 	}
 	
 	@Override

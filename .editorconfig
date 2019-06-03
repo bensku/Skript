@@ -1,0 +1,9 @@
+# Helps Github UI and some editors to work with Skript code
+# Note: Eclipse reads its own config, not this file
+root = true
+
+[*]
+end_of_line = lf
+indent_style = tab
+indent_size = 4
+charset = utf-8

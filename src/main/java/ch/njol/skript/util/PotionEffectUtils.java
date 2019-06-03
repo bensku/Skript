@@ -99,7 +99,9 @@ public abstract class PotionEffectUtils {
 	public static short guessData(final ThrownPotion p) {
 		if (p.getEffects().size() == 1) {
 			final PotionEffect e = p.getEffects().iterator().next();
-			final Potion d = new Potion(PotionType.getByEffect(e.getType())).splash();
+			PotionType type = PotionType.getByEffect(e.getType());
+			assert type != null;
+			final Potion d = new Potion(type).splash();
 			return d.toDamageValue();
 		}
 		return 0;

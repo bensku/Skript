@@ -80,11 +80,14 @@ public class EffEnchant extends Effect {
 			if (types.length == 0)
 				return;
 			for (final EnchantmentType type : types) {
-				i.addUnsafeEnchantment(type.getType(), type.getLevel());
+				Enchantment ench = type.getType();
+				assert ench != null;
+				i.addUnsafeEnchantment(ench, type.getLevel());
 			}
 			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
 		} else {
 			for (final Enchantment ench : i.getEnchantments().keySet()) {
+				assert ench != null;
 				i.removeEnchantment(ench);
 			}
 			item.change(e, new ItemStack[] {i}, ChangeMode.SET);

@@ -53,7 +53,6 @@ import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
  * depending on which constructor is used.
  * 
  */
-@NonNullByDefault(false)
 public class DelayedChangeBlock implements Block {
 	
 	private static final boolean ISPASSABLE_METHOD_EXISTS = Skript.methodExists(Block.class, "isPassable");
@@ -67,7 +66,7 @@ public class DelayedChangeBlock implements Block {
 		this(b, null);
 	}
 	
-	public DelayedChangeBlock(final Block b, final BlockState newState) {
+	public DelayedChangeBlock(final Block b, final @Nullable BlockState newState) {
 		assert b != null;
 		this.b = b;
 		this.newState = newState;
@@ -186,6 +185,7 @@ public class DelayedChangeBlock implements Block {
 		}
 	}
 	
+	@Nullable
 	@Override
 	public BlockFace getFace(final Block block) {
 		return b.getFace(block);
@@ -310,8 +310,9 @@ public class DelayedChangeBlock implements Block {
 		return b.getDrops(tool);
 	}
 	
+	@Nullable
 	@Override
-	public Location getLocation(final Location loc) {
+	public Location getLocation(final @Nullable Location loc) {
 		if (loc != null) {
 			loc.setWorld(getWorld());
 			loc.setX(getX());
@@ -356,6 +357,7 @@ public class DelayedChangeBlock implements Block {
 		}
 	}
 	
+	@Nullable
 	@Override
 	public RayTraceResult rayTrace(Location start, Vector direction, double maxDistance, FluidCollisionMode fluidCollisionMode) {
 		return b.rayTrace(start, direction, maxDistance, fluidCollisionMode);

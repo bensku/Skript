@@ -21,6 +21,7 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -69,7 +70,10 @@ public class CondIsWearing extends Condition {
 		return entities.check(e,
 				en -> types.check(e,
 						t -> {
-							for (final ItemStack is : en.getEquipment().getArmorContents()) {
+							EntityEquipment equip = en.getEquipment();
+							if (equip == null)
+								return false; // No equipment -> not wearing anything
+							for (final ItemStack is : equip.getArmorContents()) {
 								if (t.isOfType(is) ^ t.isAll())
 									return !t.isAll();
 							}

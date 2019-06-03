@@ -104,7 +104,10 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		if (types != null) {
 			final ItemType t = CollectionUtils.getRandom(types);
 			assert t != null;
-			entity.setItem(t.getRandom());
+			ItemStack i = t.getRandom();
+			if (i == null)
+				return; // Missing item, can't make thrown potion of it
+			entity.setItem(i);
 		}
 	}
 	

@@ -20,6 +20,7 @@
 package ch.njol.skript.expressions;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.stream.Stream;
 
 import org.bukkit.entity.Player;
@@ -98,7 +99,7 @@ public class ExprIP extends SimpleExpression<String> {
 			else
 				// Return IP address of the pinger in server list ping event
 				address = ((ServerListPingEvent) e).getAddress();
-			return CollectionUtils.array(address == null ? "unknown" : address.getHostAddress());
+			return CollectionUtils.array(address.getHostAddress());
 		}
 
 		return Stream.of(players.getArray(e))
@@ -113,10 +114,13 @@ public class ExprIP extends SimpleExpression<String> {
 		InetAddress address;
 		// The player has no IP yet in a connect event, but the event has it
 		// It is a "feature" of Spigot, apparently
-		if (isConnectEvent && ((PlayerLoginEvent) e).getPlayer().equals(player))
+		if (isConnectEvent && ((PlayerLoginEvent) e).getPlayer().equals(player)) {
 			address = ((PlayerLoginEvent) e).getAddress();
-		else
-			address = player.getAddress().getAddress();
+		} else {
+			InetSocketAddress sockAddr = player.getAddress();
+			assert sockAddr != null; // Not in connect event
+			address = sockAddr.getAddress();
+		}
 		
 		String hostAddress = address == null ? "unknown" : address.getHostAddress();
 		assert hostAddress != null;

@@ -83,7 +83,7 @@ public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 			icon = ((PaperServerListPingEvent) e).getServerIcon();
 		else
 			icon = Bukkit.getServerIcon();
-		if (icon.getData() == null)
+		if (icon == null || icon.getData() == null)
 			return null;
 		return CollectionUtils.array(icon);
 	}

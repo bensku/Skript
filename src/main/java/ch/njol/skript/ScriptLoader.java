@@ -44,10 +44,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
-import org.eclipse.jdt.annotation.NonNull;
 
 import ch.njol.skript.aliases.Aliases;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.aliases.ScriptAliases;
 import ch.njol.skript.bukkitutil.CommandReloader;
 import ch.njol.skript.classes.ClassInfo;
@@ -78,7 +76,6 @@ import ch.njol.skript.lang.While;
 import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Signature;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.PluralizingArgsMessage;
@@ -231,7 +228,7 @@ final public class ScriptLoader {
 		
 		/**
 		 * Copy constructor.
-		 * @param loadedscripts
+		 * @param o
 		 */
 		public ScriptInfo(ScriptInfo o) {
 			files = o.files;
@@ -945,7 +942,7 @@ final public class ScriptLoader {
 	 * @param script
 	 * @return Info on the unloaded script
 	 */
-	static ScriptInfo unloadScript(final File script) {
+	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
 		Functions.clearFunctions(script);
 		Functions.validateFunctions();

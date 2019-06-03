@@ -30,7 +30,7 @@ import ch.njol.skript.doc.Since;
 @Name("Is Block")
 @Description("Checks whether an item is a block.")
 @Examples({"player's held item is a block", "{list::*} are blocks"})
-@Since("INSERT VERSION")
+@Since("2.4")
 public class CondIsBlock extends PropertyCondition<ItemStack> {
 	
 	static {

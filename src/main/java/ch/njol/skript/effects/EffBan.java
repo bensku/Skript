@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.effects;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Date;
 
 import org.bukkit.BanList;
@@ -83,7 +85,10 @@ public class EffBan extends Effect {
 		for (final Object o : players.getArray(e)) {
 			if (o instanceof Player) {
 				if (ipBan) {
-					final String ip = ((Player) o).getAddress().getAddress().getHostAddress();
+					InetSocketAddress addr = ((Player) o).getAddress();
+					if (addr == null)
+						return; // Can't ban unknown IP
+					final String ip = addr.getAddress().getHostAddress();
 					if (ban)
 						Bukkit.getBanList(BanList.Type.IP).addBan(ip, reason, expires, source);
 					else
@@ -95,10 +100,13 @@ public class EffBan extends Effect {
 						Bukkit.getBanList(BanList.Type.NAME).pardon(((Player) o).getName());
 				}
 			} else if (o instanceof OfflinePlayer) {
+				String name = ((OfflinePlayer) o).getName();
+				if (name == null)
+					return; // Can't ban, name unknown
 				if (ban)
-					Bukkit.getBanList(BanList.Type.NAME).addBan(((OfflinePlayer) o).getName(), reason, expires, source);
+					Bukkit.getBanList(BanList.Type.NAME).addBan(name, reason, expires, source);
 				else
-					Bukkit.getBanList(BanList.Type.NAME).pardon(((OfflinePlayer) o).getName());
+					Bukkit.getBanList(BanList.Type.NAME).pardon(name);
 			} else if (o instanceof String) {
 				final String s = (String) o;
 				if (ban) {
