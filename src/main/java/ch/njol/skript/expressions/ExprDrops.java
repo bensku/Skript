@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.util.List;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -91,34 +90,18 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			case REMOVE:
 			case REMOVE_ALL:
 			case SET:
-			case DELETE:
 				return CollectionUtils.array(ItemType[].class, Inventory[].class, Experience[].class);
+			case DELETE:
+			case RESET:
 			default:
+				assert false;
 				return null;
 		}
 	}
 
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		assert mode != ChangeMode.RESET;
-		if (e instanceof BlockBreakEvent) {
-			if (mode == ChangeMode.DELETE) {
-				((BlockBreakEvent) e).setDropItems(false);
-				return;
-			}
-		}
-		if (!(e instanceof EntityDeathEvent)) {
-			assert false;
-			return;
-		}
-
-		final List<ItemStack> drops = ((EntityDeathEvent) e).getDrops();
-		if (mode == ChangeMode.DELETE) {
-			drops.clear();
-			return;
-		}
-		boolean cleared = false;
-
+		List<ItemStack> drops = ((EntityDeathEvent) e).getDrops();
 		assert delta != null;
 		for (Object o : delta) {
 			if (o instanceof Experience) {
@@ -132,14 +115,11 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			} else {
 				switch (mode) {
 					case SET:
-						if (!cleared) {
-							drops.clear();
-							cleared = true;
-						}
+						drops.clear();
 						//$FALL-THROUGH$
 					case ADD:
 						if (o instanceof Inventory) {
-							for (final ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
+							for (ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
 								if (is != null)
 									drops.add(is);
 							}
@@ -150,7 +130,7 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 					case REMOVE:
 					case REMOVE_ALL:
 						if (o instanceof Inventory) {
-							for (final ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
+							for (ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
 								if (is == null)
 									continue;
 								if (mode == ChangeMode.REMOVE)
