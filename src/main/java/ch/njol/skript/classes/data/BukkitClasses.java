@@ -916,8 +916,8 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")
 				.name("Game Mode")
-				.description("The game modes survival, creative and adventure.")
-				.usage("creative/survival/adventure")
+				.description("The game modes survival, creative, adventure and spectator.")
+				.usage("creative/survival/adventure/spectator")
 				.examples("player's gamemode is survival",
 						"set the player argument's game mode to creative")
 				.since("1.0")
@@ -1254,7 +1254,7 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(Enchantment.class, "enchantment")
 				.user("enchantments?")
 				.name("Enchantment")
-				.description("An enchantment, e.g. 'sharpness' or 'furtune'. Unlike <a href='#enchantmenttype'>enchantment type</a> " +
+				.description("An enchantment, e.g. 'sharpness' or 'fortune'. Unlike <a href='#enchantmenttype'>enchantment type</a> " +
 						"this type has no level, but you usually don't need to use this type anyway.")
 				.usage(StringUtils.join(EnchantmentType.getNames(), ", "))
 				.examples("")
