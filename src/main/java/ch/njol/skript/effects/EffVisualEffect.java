@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Play Effect")
-@Description({"Plays a <a href='../classes.html#visualeffect'>visual effect</a> at a given location or on a given entity.",
+@Description({"Plays a <a href='classes.html#visualeffect'>visual effect</a> at a given location or on a given entity.",
 		"Please note that some effects can only be played on entities, e.g. wolf hearts or the hurt effect, and that these are always visible to all players."})
 @Examples({"play wolf hearts on the clicked wolf",
 		"show mob spawner flames at the targeted block to the player"})
