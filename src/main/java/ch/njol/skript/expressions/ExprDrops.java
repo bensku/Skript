@@ -41,7 +41,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -57,10 +56,10 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 		"remove 4 planks from the drops"})
 @Since("1.0")
 @Events("death")
-public class ExprDrops extends SimpleExpression<ItemStack> {
+public class ExprDrops extends SimpleExpression<ItemType> {
 
 	static {
-		Skript.registerExpression(ExprDrops.class, ItemStack.class, ExpressionType.SIMPLE, "[the] drops");
+		Skript.registerExpression(ExprDrops.class, ItemType.class, ExpressionType.SIMPLE, "[the] drops");
 	}
 
 	@Override
@@ -74,8 +73,11 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 
 	@Override
 	@Nullable
-	protected ItemStack[] get(Event e) {
-		return ((EntityDeathEvent) e).getDrops().toArray(new ItemStack[0]);
+	protected ItemType[] get(Event e) {
+		return ((EntityDeathEvent) e).getDrops()
+			.stream()
+			.map(ItemType::new)
+			.toArray(ItemType[]::new);
 	}
 
 	@Override
@@ -159,15 +161,13 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 	}
 
 	@Override
-	public Class<? extends ItemStack> getReturnType() {
-		return ItemStack.class;
+	public Class<? extends ItemType> getReturnType() {
+		return ItemType.class;
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (e == null)
-			return "the drops";
-		return Classes.getDebugMessage(getAll(e));
+		return "the drops";
 	}
 
 }
