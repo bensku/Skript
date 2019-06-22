@@ -19,9 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -34,8 +31,8 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -47,35 +44,32 @@ import ch.njol.util.coll.CollectionUtils;
 			"reset all players' tab list header"})
 @Since("2.4")
 @RequiredPlugins("Minecraft 1.13 or newer")
-public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, String> {
+public class ExprPlayerlistHeaderFooter extends SimplePropertyExpression<Player, String> {
 	
 	static {
 		if (Skript.methodExists(Player.class, "setPlayerListHeaderFooter", String.class, String.class)) //This method is only present if the header and footer methods we use are
-			Skript.registerExpression(ExprPlayerlistHeaderFooter.class, String.class, ExpressionType.PROPERTY, "[the] %players%['][s] (player|tab)[ ]list (header|1¦footer)[s] [(text|message)[s]]");
+			PropertyExpression.register(ExprPlayerlistHeaderFooter.class, String.class, "(player|tab)[ ]list (header|1¦footer) [(text|message)]", "players");
 	}
 	
 	private static final int HEADER = 0, FOOTER = 1;
 	
 	private int mark;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		mark = parseResult.mark;
-		setExpr((Expression<Player>) exprs[0]);
-		return true;
+		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 	
+	@Nullable
 	@Override
-	protected String[] get(Event e, Player[] source) {
-		List<String> list = new ArrayList<>();
-		for (Player player : source) {
-			if (mark == HEADER)
-				list.add(player.getPlayerListHeader());
-			else if (mark == FOOTER)
-				list.add(player.getPlayerListFooter());
-		}
-		return list.toArray(new String[list.size()]);
+	public String convert(Player player) {
+		if (mark == HEADER)
+			return player.getPlayerListHeader();
+		else if (mark == FOOTER)
+			return player.getPlayerListFooter();
+		assert false;
+		return null;
 	}
 	
 	@Override
@@ -108,7 +102,7 @@ public class ExprPlayerlistHeaderFooter extends PropertyExpression<Player, Strin
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "the " + getExpr().toString(e, debug) + " player list " + (mark == HEADER ? "header" : mark == FOOTER ? "footer" : "");
+	protected String getPropertyName() {
+		return "player list " + (mark == HEADER ? "header" : mark == FOOTER ? "footer" : "");
 	}
 }
