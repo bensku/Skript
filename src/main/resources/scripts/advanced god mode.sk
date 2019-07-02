@@ -1,0 +1,38 @@
+#
+# Toggleable god mode
+#
+
+options:
+    permission: command.god # the permission required to use /god
+    disable on join: true # if god mode should be disabled when the user joins
+    disallow pvp: true # if users in god mode shouldn't be allowed to pvp
+
+    enabled: &7Enabled god mode. # when the user enables god mode
+    disabled: &7Disabled god mode. # when the user disables god mode
+    currently enabled: &7You have god mode enabled so you can't hit other users. # when the user tries to pvp in god mode while <disallow pvp> is true
+
+on join:
+    if "{@disable on join}" is "true" or "yes":
+        delete {god::%player%}
+        send "{@disabled}" to player
+
+on damage of player:
+    if "{@disallow pvp}" is "true" or "yes":
+        {god::%attacker%} is set
+        send "{@currently enabled}" to attacker
+        cancel event
+    {god::%victim%} is set
+    cancel event
+
+command /god [<offlineplayer>]:
+    description: Toggle god mode
+    executable by: players
+    permission: {@permission}
+    trigger:
+        set {_p} to arg ? player
+        if {god::%{_p}%} is not set:
+            send "{@enabled}" to {_p}
+            set {god::%{_p}%} to true
+        else if {god::%{_p}%} is set:
+            send "{@disabled}" to {_p}
+            delete {god::%{_p}%}
