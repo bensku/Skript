@@ -21,8 +21,8 @@ on damage of player:
         {god::%attacker%} is set
         send "{@currently enabled}" to attacker
         cancel event
-    {god::%victim%} is set
-    cancel event
+    if {god::%victim%} is set:
+    	cancel event
 
 command /god <offline player=%player%>:
     description: Toggle god mode
