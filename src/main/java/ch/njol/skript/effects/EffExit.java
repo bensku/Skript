@@ -124,6 +124,9 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 			if (type == EVERYTHING || type == CONDITIONALS && n instanceof Conditional || type == LOOPS && (n instanceof Loop || n instanceof While))
 				i--;
 		}
+		if (n instanceof Loop) {
+			((Loop) n).getCurrentIter().remove(e);
+		}
 		return n instanceof Loop ? ((Loop) n).getActualNext() : n instanceof While ? ((While) n).getActualNext() : n.getNext();
 	}
 	
