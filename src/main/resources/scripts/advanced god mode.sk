@@ -28,9 +28,9 @@ command /god <offline player=%player%>:
     description: Toggle god mode
     permission: {@permission}
     trigger:
-        if {god::%{_p}%} is not set:
-            send "{@enabled}" to {_p}
-            set {god::%{_p}%} to true
-        else if {god::%{_p}%} is set:
-            send "{@disabled}" to {_p}
-            delete {god::%{_p}%}
+        if {god::%arg%} is not set:
+            send "{@enabled}" to arg
+            set {god::%arg%} to true
+        else if {god::%arg%} is set:
+            send "{@disabled}" to arg
+            delete {god::arg%}
