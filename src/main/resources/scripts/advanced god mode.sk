@@ -12,7 +12,7 @@ options:
     currently enabled: &7You have god mode enabled so you can't hit other users. # when the user tries to pvp in god mode while <disallow pvp> is true
 
 on join:
-    if "{@disable on join}" is "true" or "yes":
+    if {@disable on join} is true:
         delete {god::%player%}
         send "{@disabled}" to player
 
