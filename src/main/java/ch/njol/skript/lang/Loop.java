@@ -120,4 +120,7 @@ public class Loop extends TriggerSection {
 		return actualNext;
 	}
 	
+	public Map<Event, Iterator<?>> getCurrentIter() {
+		return currentIter;
+	}
 }
