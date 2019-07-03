@@ -24,7 +24,7 @@ on damage of player:
     {god::%victim%} is set
     cancel event
 
-command /god [<offlineplayer>]:
+command /god <offline player=%player%>:
     description: Toggle god mode
     executable by: players
     permission: {@permission}
