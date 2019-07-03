@@ -17,7 +17,7 @@ on join:
         send "{@disabled}" to player
 
 on damage of player:
-    if "{@disallow pvp}" is "true" or "yes":
+    if {@disallow pvp} is true:
         {god::%attacker%} is set
         send "{@currently enabled}" to attacker
         cancel event
@@ -26,10 +26,8 @@ on damage of player:
 
 command /god <offline player=%player%>:
     description: Toggle god mode
-    executable by: players
     permission: {@permission}
     trigger:
-        set {_p} to arg ? player
         if {god::%{_p}%} is not set:
             send "{@enabled}" to {_p}
             set {god::%{_p}%} to true
