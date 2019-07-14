@@ -107,7 +107,7 @@ public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
 				.description("Called when a player rightclicks on a block while holding a block or a placeable item. You can either cancel the event to prevent the block from being built, or uncancel it to allow it.",
-						"Please note that the <a href='../expressions.html#ExprDurability'>data value</a> of the block to be placed is not available in this event, only its <a href='../expressions/#ExprIdOf'>ID</a>.")
+						"Please note that the <a href='expressions.html#ExprDurability'>data value</a> of the block to be placed is not available in this event, only its <a href='expressions/#ExprIdOf'>ID</a>.")
 				.examples("on block can build check:",
 						"\tcancel event")
 				.since("1.0 (basic), 2.0 ([un]cancellable)");
@@ -210,11 +210,11 @@ public class SimpleEvents {
 				.examples("on food bar change:")
 				.since("1.4.4");
 		Skript.registerEvent("Fuel Burn", SimpleEvent.class, FurnaceBurnEvent.class, "fuel burn[ing]")
-				.description("Called when a furnace burns an item from its <a href='../expressions.html#ExprFurnaceSlot'>fuel slot</a>.")
+				.description("Called when a furnace burns an item from its <a href='expressions.html#ExprFurnaceSlot'>fuel slot</a>.")
 				.examples("on fuel burning:")
 				.since("1.0");
 		Skript.registerEvent("Smelt", SimpleEvent.class, FurnaceSmeltEvent.class, "[ore] smelt[ing]", "smelt[ing] of ore") //TODO SkriptEvent for "smelt[ing] of %itemtype%"
-		.description("Called when a furnace smelts an item in its <a href='../expressions.html#ExprFurnaceSlot'>ore slot</a>.")
+		.description("Called when a furnace smelts an item in its <a href='expressions.html#ExprFurnaceSlot'>ore slot</a>.")
 				.examples("on smelt:")
 				.since("1.0");
 		Skript.registerEvent("Leaves Decay", SimpleEvent.class, LeavesDecayEvent.class, "leaves decay[ing]")
@@ -281,23 +281,23 @@ public class SimpleEvents {
 						"	kick the player due to \"The last 5 slots are reserved for VIP players.\"")
 				.since("2.0");
 		Skript.registerEvent("Kick", SimpleEvent.class, PlayerKickEvent.class, "[player] (kick|being kicked)")
-				.description("Called when a player is kicked from the server. You can change the <a href='../expressions.html#ExprMessage'>kick message</a> or <a href='../effects/#EffCancelEvent'>cancel the event</a> entirely.")
+				.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects/#EffCancelEvent'>cancel the event</a> entirely.")
 				.examples("on kick:")
 				.since("1.0");
 		// TODO level up/down
 		Skript.registerEvent("Level Change", SimpleEvent.class, PlayerLevelChangeEvent.class, "[player] level [change]")
-				.description("Called when a player's <a href='../expressions.html#ExprLevel'>level</a> changes, e.g. by gathering experience or by enchanting something.")
+				.description("Called when a player's <a href='expressions.html#ExprLevel'>level</a> changes, e.g. by gathering experience or by enchanting something.")
 				.examples("on level change:")
 				.since("1.0");
 		Skript.registerEvent("Portal", SimpleEvent.class, PlayerPortalEvent.class, "[player] portal")
-				.description("Called when a player uses a nether or end portal. <a href='../effects.html#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
+				.description("Called when a player uses a nether or end portal. <a href='effects.html#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
 				.examples("on player portal:")
 				.since("1.0");
 		Skript.registerEvent("Quit", SimpleEvent.class, new Class[] {PlayerQuitEvent.class, PlayerKickEvent.class}, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
-				.description("Called when a player leaves the server. Starting with Skript 2.0 this also includes kicked players.")
+				.description("Called when a player leaves the server.")
 				.examples("on quit:",
 						"on disconnect:")
-				.since("1.0");
+				.since("1.0 (simple disconnection), 2.0 (kicked players)");
 		Skript.registerEvent("Respawn", SimpleEvent.class, PlayerRespawnEvent.class, "[player] respawn[ing]")
 				.description("Called when a player respawns. You should prefer this event over the <a href='#death'>death event</a> as the player is technically alive when this event is called.")
 				.examples("on respawn:")
@@ -307,34 +307,34 @@ public class SimpleEvents {
 				.examples("on teleport:")
 				.since("1.0");
 		Skript.registerEvent("Sneak Toggle", SimpleEvent.class, PlayerToggleSneakEvent.class, "[player] toggl(e|ing) sneak", "[player] sneak toggl(e|ing)")
-				.description("Called when a player starts or stops sneaking. Use <a href='../conditions.html#CondIsSneaking'>is sneaking</a> to get whether the player was sneaking before the event was called.")
+				.description("Called when a player starts or stops sneaking. Use <a href='conditions.html#CondIsSneaking'>is sneaking</a> to get whether the player was sneaking before the event was called.")
 				.examples("# make players that stop sneaking jump",
 						"on sneak toggle:",
 						"	player was sneaking",
 						"	push the player upwards at speed 0.5")
 				.since("1.0");
 		Skript.registerEvent("Sprint Toggle", SimpleEvent.class, PlayerToggleSprintEvent.class, "[player] toggl(e|ing) sprint", "[player] sprint toggl(e|ing)")
-				.description("Called when a player starts or stops sprinting. Use <a href='../conditions.html#CondIsSprinting'>is sprinting</a> to get whether the player was sprinting before the event was called.")
+				.description("Called when a player starts or stops sprinting. Use <a href='conditions.html#CondIsSprinting'>is sprinting</a> to get whether the player was sprinting before the event was called.")
 				.examples("on sprint toggle:",
 						"	player is not sprinting",
 						"	send \"Run!\"")
 				.since("1.0");
 		Skript.registerEvent("Portal Create", SimpleEvent.class, PortalCreateEvent.class, "portal creat(e|ion)")
 				.description("Called when a portal is created, either by a player or mob lighting an obsidian frame on fire, or by a nether portal creating its teleportation target in the nether/overworld.",
-						"Please note that it's not possible to use <a href='../expressions.html#ExprEntity'>the player</a> in this event.")
+						"Please note that it's not possible to use <a href='expressions.html#ExprEntity'>the player</a> in this event.")
 				.examples("on portal create:")
 				.since("1.0");
 		Skript.registerEvent("Projectile Hit", SimpleEvent.class, ProjectileHitEvent.class, "projectile hit")
 				.description("Called when a projectile hits an entity or a block.",
-						"Use the <a href='#damage'>damage event</a> with a <a href='../conditions.html#CondIsSet'>check</a> for a <a href='../expressions/#ExprEntity'>projectile</a> " +
-								"to be able to use the <a href='../expressions.html#ExprAttacked'>entity that got hit</a> in the case when the projectile hit a living entity.",
+						"Use the <a href='#damage'>damage event</a> with a <a href='conditions.html#CondIsSet'>check</a> for a <a href='expressions/#ExprEntity'>projectile</a> " +
+								"to be able to use the <a href='expressions.html#ExprAttacked'>entity that got hit</a> in the case when the projectile hit a living entity.",
 						"A damage event will even be fired if the damage is 0, e.g. when throwing snowballs at non-nether mobs.")
 				.examples("on projectile hit:",
 						"\tevent-projectile is arrow",
 						"\tdelete event-projectile")
 				.since("1.0");
 		Skript.registerEvent("Shoot", SimpleEvent.class, ProjectileLaunchEvent.class, "[projectile] shoot")
-				.description("Called whenever a <a href='../classes.html#projectile'>projectile</a> is shot. Use the <a href='../expressions/#ExprShooter'>shooter expression</a> to get who shot the projectile.")
+				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions/#ExprShooter'>shooter expression</a> to get who shot the projectile.")
 				.examples("on shoot:",
 						"\tif projectile is an arrow:",
 						"\t\tsend \"you shot an arrow!\" to shooter")
@@ -359,12 +359,12 @@ public class SimpleEvents {
 				.examples("on vehicle damage:")
 				.since("1.0");
 		Skript.registerEvent("Vehicle Destroy", SimpleEvent.class, VehicleDestroyEvent.class, "vehicle destroy", "destr(oy[ing]|uction of) [a] vehicle")
-				.description("Called when a vehicle is destroyed. Any <a href='../expressions.html#ExprPassenger'>passenger</a> will be ejected and the vehicle might drop some item(s).")
+				.description("Called when a vehicle is destroyed. Any <a href='expressions.html#ExprPassenger'>passenger</a> will be ejected and the vehicle might drop some item(s).")
 				.examples("on vehicle destroy:",
 						"\tcancel event")
 				.since("1.0");
 		Skript.registerEvent("Vehicle Enter", SimpleEvent.class, VehicleEnterEvent.class, "vehicle enter", "enter[ing] [a] vehicle")
-				.description("Called when an <a href='../classes.html#entity'>entity</a> enters a vehicle, either deliberately (players) or by falling into them (mobs).")
+				.description("Called when an <a href='classes.html#entity'>entity</a> enters a vehicle, either deliberately (players) or by falling into them (mobs).")
 				.examples("on vehicle enter:",
 						"\tentity is a player",
 						"\tcancel event")
@@ -414,12 +414,12 @@ public class SimpleEvents {
 							"	cancel the event # bad idea, but you CAN do it!")
 					.since("2.2-dev21");
 			Skript.registerEvent("AoE Cloud Effect", SimpleEvent.class, AreaEffectCloudApplyEvent.class, "(area|AoE) [cloud] effect")
-					.description("Called when area effect cloud applies it's potion effect. This happens every 5 ticks by default.")
+					.description("Called when area effect cloud applies its potion effect. This happens every 5 ticks by default.")
 					.examples("on area cloud effect:")
 					.since("2.2-dev21");
 		}
 		Skript.registerEvent("Sheep Regrow Wool", SimpleEvent.class, SheepRegrowWoolEvent.class, "sheep [re]grow[ing] wool")
-				.description("Called when sheep regrows it's sheared wool back.")
+				.description("Called when sheep regrows its sheared wool back.")
 				.examples("on sheep grow wool:",
 						"\tcancel event")
 				.since("2.2-dev21");
@@ -440,7 +440,7 @@ public class SimpleEvents {
 				.since("2.2-dev26");
 		if (Skript.classExists("org.bukkit.event.entity.EntityResurrectEvent")) {
 			Skript.registerEvent("Resurrect Attempt", SimpleEvent.class, EntityResurrectEvent.class, "[entity] resurrect[ion] [attempt]")
-					.description("Called when an entity dies, always. If they are not holding a totem, this is calcelled - you can, however, uncancel it.")
+					.description("Called when an entity dies, always. If they are not holding a totem, this is cancelled - you can, however, uncancel it.")
 					.examples("on resurrect attempt:",
 							"	entity is player",
 							"	entity has permission \"admin.undying\"",
@@ -471,8 +471,8 @@ public class SimpleEvents {
 		}
 		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerJumpEvent")) {
 			Skript.registerEvent("Jump", SimpleEvent.class, PlayerJumpEvent.class, "[player] jump[ing]")
-					.description("Called whenever a player jumps",
-							"This event requires PaperSpigot")
+					.description("Called whenever a player jumps.",
+							"This event requires PaperSpigot.")
 					.examples("on jump:",
 							"	event-player does not have permission \"jump\"",
 							"	cancel event")
@@ -509,7 +509,7 @@ public class SimpleEvents {
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
 					"[entity] swim toggl(e|ing)")
-					.description("Called when an entity swims or stops swimming")
+					.description("Called when an entity swims or stops swimming.")
 					.requiredPlugins("1.13 or newer")
 					.examples("on swim toggle:",
 							"	event-entity does not have permission \"swim\"",
