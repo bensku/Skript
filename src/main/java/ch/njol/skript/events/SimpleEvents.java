@@ -107,7 +107,7 @@ public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
 				.description("Called when a player rightclicks on a block while holding a block or a placeable item. You can either cancel the event to prevent the block from being built, or uncancel it to allow it.",
-						"Please note that the <a href='expressions.html#ExprDurability'>data value</a> of the block to be placed is not available in this event, only its <a href='expressions/#ExprIdOf'>ID</a>.")
+						"Please note that the <a href='expressions.html#ExprDurability'>data value</a> of the block to be placed is not available in this event, only its <a href='expressions#ExprIdOf'>ID</a>.")
 				.examples("on block can build check:",
 						"\tcancel event")
 				.since("1.0 (basic), 2.0 ([un]cancellable)");
@@ -281,7 +281,7 @@ public class SimpleEvents {
 						"	kick the player due to \"The last 5 slots are reserved for VIP players.\"")
 				.since("2.0");
 		Skript.registerEvent("Kick", SimpleEvent.class, PlayerKickEvent.class, "[player] (kick|being kicked)")
-				.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects/#EffCancelEvent'>cancel the event</a> entirely.")
+				.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects#EffCancelEvent'>cancel the event</a> entirely.")
 				.examples("on kick:")
 				.since("1.0");
 		// TODO level up/down
@@ -326,7 +326,7 @@ public class SimpleEvents {
 				.since("1.0");
 		Skript.registerEvent("Projectile Hit", SimpleEvent.class, ProjectileHitEvent.class, "projectile hit")
 				.description("Called when a projectile hits an entity or a block.",
-						"Use the <a href='#damage'>damage event</a> with a <a href='conditions.html#CondIsSet'>check</a> for a <a href='expressions/#ExprEntity'>projectile</a> " +
+						"Use the <a href='#damage'>damage event</a> with a <a href='conditions.html#CondIsSet'>check</a> for a <a href='expressions#ExprEntity'>projectile</a> " +
 								"to be able to use the <a href='expressions.html#ExprAttacked'>entity that got hit</a> in the case when the projectile hit a living entity.",
 						"A damage event will even be fired if the damage is 0, e.g. when throwing snowballs at non-nether mobs.")
 				.examples("on projectile hit:",
@@ -334,7 +334,7 @@ public class SimpleEvents {
 						"\tdelete event-projectile")
 				.since("1.0");
 		Skript.registerEvent("Shoot", SimpleEvent.class, ProjectileLaunchEvent.class, "[projectile] shoot")
-				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions/#ExprShooter'>shooter expression</a> to get who shot the projectile.")
+				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions#ExprShooter'>shooter expression</a> to get who shot the projectile.")
 				.examples("on shoot:",
 						"\tif projectile is an arrow:",
 						"\t\tsend \"you shot an arrow!\" to shooter")
