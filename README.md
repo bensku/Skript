@@ -20,7 +20,7 @@ Minecraft 1.8 and earlier are not, and will not be supported. New Minecraft
 versions will be supported as soon as possible.
 
 ## Download
-You can find the downloads for each version with their release notes in the [Releases](https://github.com/SkriptLang/Skript/releases) page.
+You can find the downloads for each version with their release notes in the [releases page](https://github.com/SkriptLang/Skript/releases).
 
 ## Documentation
 Documentation is available [here](https://skriptlang.github.io/Skript) for the
@@ -44,7 +44,7 @@ and package Skript for you:
 gradlew clean build # on Windows
 ```
 
-You can get source code from the [Releases](https://github.com/SkriptLang/Skript/releases) page.
+You can get source code from the [releases page](https://github.com/SkriptLang/Skript/releases).
 You may also clone this repository, but that code may or may not be stable.
 
 ### Compiling Modules
