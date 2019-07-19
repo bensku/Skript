@@ -173,7 +173,7 @@ public class SkriptCommand implements CommandExecutor {
 						return true;
 					if (!f.isDirectory()) {
 						if (f.getName().startsWith("-")) {
-							info(sender, "reload.script disabled", f.getName().substring(1));
+							info(sender, "reload.script disabled", f.getName().substring(1), StringUtils.join(args, " ", 1, args.length));
 							return true;
 						}
 						reloading(sender, "script", f.getName());
