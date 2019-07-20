@@ -207,7 +207,7 @@ public class FunctionReference<T> {
 				params[i] = parameters[i].getArray(e); // TODO what if an argument is not available? pass null or abort?
 				// Don't allow mutating across function boundary; same hack is applied to variables
 				for (int j = 0; j < params[i].length; j++) {
-					if (params[i][i] instanceof Location)
+					if (params[i][j] instanceof Location)
 						params[i][j] = ((Location) params[i][j]).clone();
 				}
 			}
