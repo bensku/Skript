@@ -1660,7 +1660,6 @@ types:
 	fishingstate: fishing state¦s @a
 	genes: panda genes¦s @a
 	cattype: cat type¦s @a
-	fishingstate: fishing state¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a
