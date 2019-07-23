@@ -1577,6 +1577,30 @@ genes:
 	weak: weak
 	aggressive: aggressive, savage, wild
 
+# -- Cat Types --
+cat types:
+	all_black: all black
+	black: black
+	british_shorthair: british shorthair, shorthair
+	calico: calico
+	jellie: jellie
+	persian: persian
+	ragdoll: ragdoll
+	red: red
+	siamese: siamese
+	tabby: tabby
+	white: white
+
+# -- Fishing States --
+fishing states:
+	bite: bite
+	caught_entity: caught entity, caught loot, loot
+	caught_fish: caught, caught fish
+	failed_attempt: failed, failed attempt, failure
+	fishing: cast, fishing, cast rod
+	in_ground: in ground, in the ground, ground, grounded
+	reel_in: reel in
+
 # -- Boolean --
 boolean:
 	true:
@@ -1633,6 +1657,10 @@ types:
 	fireworkeffect: firework effect¦s @a
 	fireworktype: firework type¦s @a
 	soundcategory: sound categor¦y¦ies @a
+	fishingstate: fishing state¦s @a
+	genes: panda genes¦s @a
+	cattype: cat type¦s @a
+	fishingstate: fishing state¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a

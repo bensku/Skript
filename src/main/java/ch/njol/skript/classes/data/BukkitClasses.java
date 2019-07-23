@@ -54,6 +54,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
@@ -1562,7 +1563,7 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(Difficulty.class)));
-		
+
 		EnumUtils<Status> resourcePackStates = new EnumUtils<>(Status.class, "resource pack states");
 		Classes.registerClass(new ClassInfo<>(Status.class, "resourcepackstate")
 				.user("resource ?pack ?states?")
@@ -1594,7 +1595,7 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(Status.class)));
-		
+
 		if (Skript.classExists("org.bukkit.SoundCategory")) {
 			EnumUtils<SoundCategory> soundCategories = new EnumUtils<>(SoundCategory.class, "sound categories");
 			Classes.registerClass(new ClassInfo<>(SoundCategory.class, "soundcategory")
@@ -1611,18 +1612,18 @@ public class BukkitClasses {
 						public SoundCategory parse(final String s, final ParseContext context) {
 							return soundCategories.parse(s);
 						}
-						
+
 						@Override
 						public String toString(SoundCategory state, int flags) {
 							return soundCategories.toString(state, flags);
 						}
-						
+
 						@SuppressWarnings("null")
 						@Override
 						public String toVariableNameString(SoundCategory category) {
 							return category.name();
 						}
-						
+
 						@Override
 						public String getVariableNamePattern() {
 							return "\\S+";
@@ -1630,6 +1631,7 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(SoundCategory.class)));
 		}
+
 		if (Skript.classExists("org.bukkit.entity.Panda$Gene")) {
 			EnumUtils<Gene> genes = new EnumUtils<>(Gene.class, "genes");
 			Classes.registerClass(new ClassInfo<>(Gene.class, "gene")
@@ -1646,17 +1648,18 @@ public class BukkitClasses {
 						public Gene parse(String expr, ParseContext context) {
 							return genes.parse(expr);
 						}
-						
+
 						@Override
 						public String toString(Gene gene, int flags) {
 							return genes.toString(gene, flags);
 						}
-						
+
+						@SuppressWarnings("null")
 						@Override
 						public String toVariableNameString(Gene gene) {
 							return gene.name();
 						}
-						
+
 						@Override
 						public String getVariableNamePattern() {
 							return "\\S+";
@@ -1664,6 +1667,7 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Gene.class)));
 		}
+
 		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
 			EnumUtils<Cat.Type> races = new EnumUtils<>(Cat.Type.class, "cat types");
 			Classes.registerClass(new ClassInfo<>(Cat.Type.class, "cattype")
@@ -1679,17 +1683,18 @@ public class BukkitClasses {
 						public Cat.Type parse(String expr, ParseContext context) {
 							return races.parse(expr);
 						}
-						
+
 						@Override
 						public String toString(Cat.Type race, int flags) {
 							return races.toString(race, flags);
 						}
-						
+
+						@SuppressWarnings("null")
 						@Override
 						public String toVariableNameString(Cat.Type race) {
 							return race.name();
 						}
-						
+
 						@Override
 						public String getVariableNamePattern() {
 							return "\\S+";
@@ -1697,6 +1702,39 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+
+		EnumUtils<PlayerFishEvent.State> fishingStates = new EnumUtils<>(PlayerFishEvent.State.class, "fishing states");
+		Classes.registerClass(new ClassInfo<>(PlayerFishEvent.State.class, "fishingstate")
+				.user("fish(ing)? states?")
+				.name("Fishing State")
+				.description("The fishing state in a <a href='events.html#fishing'>fishing</a> event.")
+				.examples(fishingStates.getAllNames())
+				.since("2.4")
+				.parser(new Parser<PlayerFishEvent.State>() {
+					@Nullable
+					@Override
+					public PlayerFishEvent.State parse(String input, ParseContext context) {
+						return fishingStates.parse(input);
+					}
+
+					@Override
+					public String toString(PlayerFishEvent.State state, int flags) {
+						return fishingStates.toString(state, flags);
+					}
+
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(PlayerFishEvent.State state) {
+						return state.name();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(PlayerFishEvent.State.class)));
+
 	}
 
 }

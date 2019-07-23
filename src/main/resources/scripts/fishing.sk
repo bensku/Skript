@@ -1,0 +1,13 @@
+
+on fishing states caught entity and caught fish:
+	launch a trailing large ball firework coloured red, purple and lime at entity timed 0
+	message "&aCongrats you caught something!"
+
+# A fun grappling hook.
+on fishing failure and in ground:
+	player is holding a fishing rod
+	name of player's tool is "&6Grappling hook"
+	push player direction from player to fishing hook at speed 2.5
+
+on fish:
+	message "You just did something relating to fishing! %fishing state%" to player
