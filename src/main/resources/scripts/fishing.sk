@@ -1,7 +1,8 @@
 
 on fishing states caught entity and caught fish:
 	launch a trailing large ball firework coloured red, purple and lime at entity timed 0
-	message "&aCongrats you caught something!"
+	# Since there is the fish entity and player in this event, you must define where to send this message to.
+	message "&aCongrats you caught something!" to player
 
 # A fun grappling hook.
 on fishing failure and in ground:
