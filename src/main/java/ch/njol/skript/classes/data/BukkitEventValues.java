@@ -1010,6 +1010,7 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
+		//HorseJumpEvent
 		EventValues.registerEventValue(HorseJumpEvent.class, Entity.class, new Getter<Entity, HorseJumpEvent>() {
 			@Override
 			@Nullable
