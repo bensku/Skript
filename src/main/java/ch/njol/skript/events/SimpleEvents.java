@@ -43,6 +43,7 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.HorseJumpEvent;
 import org.bukkit.event.entity.PigZapEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -516,5 +517,10 @@ public class SimpleEvents {
 							"	cancel event")
 					.since("2.3");
 		}
+		Skript.registerEvent("Horse Jump", SimpleEvent.class, HorseJumpEvent.class, "horse jump[ing]")
+				.description("Called when a horse jumps.")
+				.examples("on horse jump:",
+						"\tcancel event")
+				.since("2.4");
 	}
 }
