@@ -97,10 +97,41 @@ public class ExprPower extends SimpleExpression<Number> {
 		if (delta == null)
 			return;
 		Number power = (Number) delta[0];
-		if (e instanceof FireworkExplodeEvent)
-			((HorseJumpEvent)e).setPower(power.floatValue());
-		else
-			((FireworkExplodeEvent)e).getEntity().getFireworkMeta().setPower(power.intValue());
+		switch (mode) {
+			case ADD:
+				if (e instanceof HorseJumpEvent) {
+					HorseJumpEvent event = (HorseJumpEvent) e;
+					float old = event.getPower();
+					event.setPower(old + power.floatValue());
+				} else {
+					FireworkExplodeEvent event = (FireworkExplodeEvent) e;
+					int old = event.getEntity().getFireworkMeta().getPower();
+					event.getEntity().getFireworkMeta().setPower(old + power.intValue());
+				}
+				break;
+			case REMOVE:
+				if (e instanceof HorseJumpEvent) {
+					HorseJumpEvent event = (HorseJumpEvent) e;
+					float old = event.getPower();
+					event.setPower(old - power.floatValue());
+				} else {
+					FireworkExplodeEvent event = (FireworkExplodeEvent) e;
+					int old = event.getEntity().getFireworkMeta().getPower();
+					event.getEntity().getFireworkMeta().setPower(old - power.intValue());
+				}
+				break;
+			case SET:
+				if (e instanceof HorseJumpEvent)
+					((HorseJumpEvent)e).setPower(power.floatValue());
+				else
+					((FireworkExplodeEvent)e).getEntity().getFireworkMeta().setPower(power.intValue());
+				break;
+			case REMOVE_ALL:
+			case DELETE:
+			case RESET:
+			default:
+				break;
+		}
 	}
 
 }
