@@ -45,7 +45,8 @@ import ch.njol.util.Kleenean;
  */
 @Name("Ban")
 @Description({"Bans/unbans a player or an IP address.",
-		"Starting with Skript 2.1.1 and Bukkit 1.7.2 R0.4, one can also ban players with a reason."})
+		"Starting with Skript 2.1.1 and Bukkit 1.7.2 R0.4, one can also ban players with a reason.",
+		"Note that banning a player will not automatically remove them from the server (use the kick effect for that)."})
 @Examples({"unban player",
 		"ban \"127.0.0.1\"",
 		"IP-ban the player because \"he is an idiot\""})
