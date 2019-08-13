@@ -7,8 +7,11 @@ command /cake:
 	description: Give the command sender some cake!
 	cooldown: 1 minute
 	cooldown message: You need to wait &l%remaining time% &rto use this command again!
+	cooldown bypass: cake.nocooldown
+	
 	#See https://skriptlang.github.io/Skript/expressions.html#ExprCmdCooldownInfo for more info
 	#on the expressions you can use in a cooldown message.
+	
 	trigger:
 		if the player's inventory doesn't have space for cake:
 			send "&cYou don't have space for cake in your inventory! :("
@@ -18,5 +21,3 @@ command /cake:
 		else:
 			give cake to the player
 			send "Here you go!"
-	  
-		cancel the command cooldown if the player has the permission "cake.nocooldown"
