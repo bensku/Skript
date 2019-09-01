@@ -164,19 +164,21 @@ public class EffPlaySound extends Effect {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
-				if (soundEnum == null)
+				if (soundEnum == null) {
 					if (!sound.matches(SOUND_VALID_CHARACTERS))
 						continue;
 					p.playSound(location, sound, category, volume, pitch);
-				else
+				} else {
 					p.playSound(location, soundEnum, category, volume, pitch);
+				}
 			} else {
-				if (soundEnum == null)
+				if (soundEnum == null) {
 					if (!sound.matches(SOUND_VALID_CHARACTERS))
 						continue;
 					p.playSound(location, sound, volume, pitch);
-				else
+				} else {
 					p.playSound(location, soundEnum, volume, pitch);
+				}
 			}
 		}
 	}
@@ -190,19 +192,21 @@ public class EffPlaySound extends Effect {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
-				if (soundEnum == null)
+				if (soundEnum == null) {
 					if (!sound.matches(SOUND_VALID_CHARACTERS))
 						continue;
 					w.playSound(location, sound, category, volume, pitch);
-				else
+				} else {
 					w.playSound(location, soundEnum, category, volume, pitch);
+				}
 			} else {
-				if (soundEnum == null)
+				if (soundEnum == null) {
 					if (!sound.matches(SOUND_VALID_CHARACTERS))
 						continue;
 					w.playSound(location, sound, volume, pitch);
-				else
+				} else {
 					w.playSound(location, soundEnum, volume, pitch);
+				}
 			}
 		}
 	}
