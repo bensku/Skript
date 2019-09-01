@@ -157,7 +157,7 @@ public class EffPlaySound extends Effect {
 
 	private static void playSound(Player p, Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		for (String sound : sounds) {
-			if(!sound.matches("[a-z0-9/._-]")) //Minecraft only accepts these characters
+			if (!sound.matches("[a-z0-9\\/._-]+")) //Minecraft only accepts these characters 
 				continue;
 			Sound soundEnum = null;
 			try {
@@ -180,7 +180,7 @@ public class EffPlaySound extends Effect {
 	private static void playSound(Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		World w = location.getWorld();
 		for (String sound : sounds) {
-			if(!sound.matches("[a-z0-9/._-]")) //Minecraft only accepts these characters
+			if (!sound.matches("[a-z0-9\\/._-]+")) //Minecraft only accepts these characters 
 				continue;
 			Sound soundEnum = null;
 			try {
