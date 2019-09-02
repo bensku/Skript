@@ -61,7 +61,7 @@ public class CondAlphanumeric extends Condition {
 	
 	@Override
 	public boolean check(Event e) {
-		return isNegated() ^ strings.check(e, string -> StringUtils.isAlphanumeric(string));
+		return isNegated() ^ strings.check(e, StringUtils::isAlphanumeric);
 	}
 	
 	@Override
