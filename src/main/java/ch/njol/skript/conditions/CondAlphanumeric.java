@@ -66,7 +66,7 @@ public class CondAlphanumeric extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return strings.toString(e, debug) + " is" + (isNegated() ? "n't" : "") + "alphanumeric";
+		return strings.toString(e, debug) + " is" + (isNegated() ? "n't" : "") + " alphanumeric";
 	}
 	
 }
