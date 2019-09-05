@@ -52,7 +52,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityType> {
 	@Override
 	@Nullable
 	public EntityType convert(final Block b) {
-		if (b.getType() != Material.SPAWNER)
+		if (b.getType() != (Skript.isRunningMinecraft(1, 13) ? Material.SPAWNER : Material.LEGACY_MOB_SPAWNER))
 			return null;
 		return toSkriptEntityType(((CreatureSpawner)b.getState()).getSpawnedType());
 	}
@@ -69,7 +69,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityType> {
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		for (Block b : getExpr().getArray(e)) {
-			if (b.getType() != Material.SPAWNER)
+			if (b.getType() != (Skript.isRunningMinecraft(1, 13) ? Material.SPAWNER : Material.LEGACY_MOB_SPAWNER))
 				continue;
 			CreatureSpawner s = (CreatureSpawner) b.getState();
 			switch (mode) {
