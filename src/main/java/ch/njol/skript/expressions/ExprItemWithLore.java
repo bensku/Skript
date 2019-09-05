@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 
 @Name("Item with Lore")
-@Description({"Returns the given item type with the specified lore added to it.",
+@Description({"Returns the given item stack with the specified lore added to it.",
 		"If multiple strings are passed, each of them will be a separate line in the lore."})
 @Examples({"set {_test} to stone with lore \"line 1\" and \"line 2\"",
 		"give {_test} to player"})
