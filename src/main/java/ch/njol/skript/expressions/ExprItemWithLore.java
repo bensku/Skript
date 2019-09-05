@@ -25,11 +25,11 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -47,11 +47,11 @@ import ch.njol.util.StringUtils;
 @Examples({"set {_test} to stone with lore \"line 1\" and \"line 2\"",
 		"give {_test} to player"})
 @Since("2.3")
-public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
+public class ExprItemWithLore extends PropertyExpression<ItemStack, ItemStack> {
 
 	static {
-		Skript.registerExpression(ExprItemWithLore.class, ItemType.class, ExpressionType.PROPERTY,
-				"%itemtype% with [(a|the)] lore %strings%");
+		Skript.registerExpression(ExprItemWithLore.class, ItemStack.class, ExpressionType.PROPERTY,
+				"%itemstack% with [(a|the)] lore %strings%");
 	}
 
 	@SuppressWarnings("null")
@@ -60,13 +60,13 @@ public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
-		setExpr((Expression<ItemType>) exprs[0]);
+		setExpr((Expression<ItemStack>) exprs[0]);
 		lore = (Expression<String>) exprs[1];
 		return true;
 	}
 
 	@Override
-	protected ItemType[] get(Event e, ItemType[] source) {
+	protected ItemStack[] get(Event e, ItemStack[] source) {
 		String[] lore = this.lore.getArray(e);
 		return get(source, item -> {
 			ItemMeta meta = item.getItemMeta();
@@ -78,8 +78,8 @@ public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 
 
 	@Override
-	public Class<? extends ItemType> getReturnType() {
-		return ItemType.class;
+	public Class<? extends ItemStack> getReturnType() {
+		return ItemStack.class;
 	}
 
 	@Override
