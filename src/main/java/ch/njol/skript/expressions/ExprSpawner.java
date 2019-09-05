@@ -28,7 +28,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
-import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -53,7 +53,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityType> {
 	@Override
 	@Nullable
 	public EntityType convert(final Block b) {
-		if (b.getType() != (Skript.isRunningMinecraft(1, 13) ? Material.SPAWNER : Material.LEGACY_MOB_SPAWNER))
+		if (b.getType() != Aliases.javaItemType("spawner").getMaterial())
 			return null;
 		return toSkriptEntityType(((CreatureSpawner)b.getState()).getSpawnedType());
 	}
@@ -70,7 +70,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityType> {
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		for (Block b : getExpr().getArray(e)) {
-			if (b.getType() != (Skript.isRunningMinecraft(1, 13) ? Material.SPAWNER : Material.LEGACY_MOB_SPAWNER))
+			if (b.getType() != Aliases.javaItemType("spawner").getMaterial())
 				continue;
 			CreatureSpawner s = (CreatureSpawner) b.getState();
 			switch (mode) {
