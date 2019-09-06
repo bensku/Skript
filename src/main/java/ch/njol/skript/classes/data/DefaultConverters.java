@@ -91,6 +91,14 @@ public class DefaultConverters {
 				return null;
 			}
 		});
+		// BlockCommandSender - Block
+		Converters.registerConverter(BlockCommandSender.class, Block.class, new Converter<BlockCommandSender, Block>() {
+			@Override
+			@Nullable
+			public Block convert(final BlockCommandSender s) {
+				return s.getBlock();
+			}
+		});
 		// Entity - Player
 		Converters.registerConverter(Entity.class, Player.class, new Converter<Entity, Player>() {
 			@Override
