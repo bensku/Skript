@@ -919,7 +919,7 @@ entities:
 		pattern: <age> chested horse(|1¦s)
 	undead horse:
 		name: undead horse¦s @an
-		pattern: <age> undead horse(|1¦s)|undead <age> horse(|1¦s)|undead (4¦)foal(|1¦s)
+		pattern: <age> (zombie|undead) horse(|1¦s)|(zombie|undead) <age> horse(|1¦s)|(zombie|undead) (4¦)foal(|1¦s)
 	skeleton horse:
 		name: skeleton horse¦s
 		pattern: <age> skeleton horse(|1¦s)|skeleton <age> horse(|1¦s)|skeleton (4¦)foal(|1¦s)
