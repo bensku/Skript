@@ -56,7 +56,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	static {
 		//Cache Bukkit EntityType -> Skript EntityType 
 		for(org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
-			//Replace underscores with spaces to comply with Skript Alias format 
+			//Replace underscores with spaces to comply with Skript's Alias format 
 			CACHE.put(EntityType.parse(e.toString().replaceAll("_", " ")), e);
 		}
 		register(ExprSpawner.class, EntityData.class, "entity type", "blocks");
@@ -108,8 +108,8 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	}
 	
 	/**
-	 * Convert from Skript's EntityData to Bukkit's EntityType
-	 * @param e Skript's EntityData
+	 * Convert from Skript's EntityType to Bukkit's EntityType
+	 * @param e Skript's EntityType
 	 * @return Bukkit's EntityType
 	 */
 	@SuppressWarnings({"null"})
