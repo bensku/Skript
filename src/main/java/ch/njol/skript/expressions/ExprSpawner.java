@@ -124,7 +124,8 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	 */
 	@SuppressWarnings("null")
 	public static EntityData toSkriptEntityData(org.bukkit.entity.EntityType e){
-		return EntityData.parse(e.toString());
+		//Replace underscores with spaces to comply with Skript's Alias format 
+		return EntityData.parse(e.toString().replaceAll("_", " "));
 	}
 	
 }
