@@ -60,7 +60,7 @@ import ch.njol.util.Kleenean;
 public class ExprSkull extends SimplePropertyExpression<Object, ItemType> {
 	
 	static {
-		register(ExprSkull.class, ItemType.class, "skull", "offlineplayers");
+		register(ExprSkull.class, ItemType.class, "(head|skull)", "offlineplayers");
 	}
 	
 	private static final ItemType playerSkull = Aliases.javaItemType("player skull");
