@@ -48,18 +48,17 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("Retrieves, sets, or resets the spawner's entity type")
 @Examples({"broadcast \"%spawner's entity type%\""})
 @Since("INSERT VERSION")
-public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
+public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData> {
 	
 	private static final Material MATERIAL_SPAWNER = Aliases.javaItemType("spawner").getMaterial();
 	private static final Map<EntityType, org.bukkit.entity.EntityType> CACHE = new HashMap<EntityType, org.bukkit.entity.EntityType>();
 	
 	static {
-		//Cache Bukkit EntityType -> Skript EntityType 
-		for(org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
-			//Replace underscores with spaces to comply with Skript's Alias format 
-			CACHE.put(EntityType.parse(e.toString().replaceAll("_", " ")), e);
+		// Cache Bukkit EntityType -> Skript EntityType 
+		for (org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
+			CACHE.put(new EntityType(e.getEntityClass(), 1), e);
 		}
-		register(ExprSpawner.class, EntityData.class, "entity type", "blocks");
+		register(ExprSpawnerType.class, EntityData.class, "entity type", "blocks");
 	}
 	
 	@Override
@@ -67,7 +66,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	public EntityData convert(final Block b) {
 		if (b.getType() != MATERIAL_SPAWNER)
 			return null;
-		return toSkriptEntityData(((CreatureSpawner)b.getState()).getSpawnedType());
+		return toSkriptEntityData(((CreatureSpawner) b.getState()).getSpawnedType());
 	}
 	
 	@Nullable
@@ -93,7 +92,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 					s.setSpawnedType(org.bukkit.entity.EntityType.PIG);
 					break;
 			}
-			s.update(); //Actually trigger the spawner's update 
+			s.update(); // Actually trigger the spawner's update 
 		}
 	}
 	
@@ -113,7 +112,7 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	 * @return Bukkit's EntityType
 	 */
 	@SuppressWarnings({"null"})
-	public static org.bukkit.entity.EntityType toBukkitEntityType(EntityType e){
+	private static org.bukkit.entity.EntityType toBukkitEntityType(EntityType e){
 		return CACHE.get(e);
 	}
 	
@@ -123,8 +122,8 @@ public class ExprSpawner extends SimplePropertyExpression<Block, EntityData> {
 	 * @return Skript's EntityData
 	 */
 	@SuppressWarnings("null")
-	public static EntityData toSkriptEntityData(org.bukkit.entity.EntityType e){
-		//Replace underscores with spaces to comply with Skript's Alias format 
+	private static EntityData toSkriptEntityData(org.bukkit.entity.EntityType e){
+		// Replace underscores with spaces to comply with Skript's Alias format 
 		return EntityData.parse(e.toString().replaceAll("_", " "));
 	}
 	
