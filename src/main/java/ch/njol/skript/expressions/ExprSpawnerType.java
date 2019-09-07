@@ -58,8 +58,11 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	
 	static {
 		for (org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
-			CACHE.put(new EntityType(e.getEntityClass(), 1), e); // Cache Skript EntityType -> Bukkit EntityType 
-			CACHE_2.put(e, EntityData.fromClass(e.getEntityClass())); // Cache Bukkit EntityType -> Skript EntityData
+			Class<? extends Entity> c = e.getEntityClass();
+			if (c != null) {
+				CACHE.put(new EntityType(e.getEntityClass(), 1), e); // Cache Skript EntityType -> Bukkit EntityType 
+				CACHE_2.put(e, EntityData.fromClass(e.getEntityClass())); // Cache Bukkit EntityType -> Skript EntityData
+			}
 		}
 		register(ExprSpawnerType.class, EntityData.class, "(entity|creature) type[s]", "blocks");
 	}
