@@ -46,19 +46,22 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Spawner Type")
 @Description("Retrieves, sets, or resets the spawner's entity type")
-@Examples({"broadcast \"%spawner's entity type%\""})
+@Examples({"on right click:",
+		"	if event-block is spawner:",
+		"		send \"Spawner's type is %target block's entity type%\""})
 @Since("INSERT VERSION")
 public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData> {
 	
 	private static final Material MATERIAL_SPAWNER = Aliases.javaItemType("spawner").getMaterial();
 	private static final Map<EntityType, org.bukkit.entity.EntityType> CACHE = new HashMap<EntityType, org.bukkit.entity.EntityType>();
+	private static final Map<org.bukkit.entity.EntityType, EntityData> CACHE_2 = new HashMap<org.bukkit.entity.EntityType, EntityData>();
 	
 	static {
-		// Cache Bukkit EntityType -> Skript EntityType 
 		for (org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
-			CACHE.put(new EntityType(e.getEntityClass(), 1), e);
+			CACHE.put(new EntityType(e.getEntityClass(), 1), e); // Cache Skript EntityType -> Bukkit EntityType 
+			CACHE_2.put(e, EntityData.fromClass(e.getEntityClass())); // Cache Bukkit EntityType -> Skript EntityData
 		}
-		register(ExprSpawnerType.class, EntityData.class, "entity type", "blocks");
+		register(ExprSpawnerType.class, EntityData.class, "(entity|creature) type[s]", "blocks");
 	}
 	
 	@Override
@@ -123,8 +126,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	 */
 	@SuppressWarnings("null")
 	private static EntityData toSkriptEntityData(org.bukkit.entity.EntityType e){
-		// Replace underscores with spaces to comply with Skript's Alias format 
-		return EntityData.parse(e.toString().replaceAll("_", " "));
+		return CACHE_2.get(e);
 	}
 	
 }
