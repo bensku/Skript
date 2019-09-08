@@ -48,7 +48,7 @@ import ch.njol.util.Kleenean;
 		"	loop portal blocks:",
 		"		broadcast \"%loop-block% is part of a portal!\""})
 @Since("INSERT VERSION")
-@Events("portal creation")
+@Events("portal_create")
 public class ExprPortal extends SimpleExpression<Block> {
 
 	// 1.14+ returns List<BlockState>, 1.13.2 and below returns ArrayList<Block> 
