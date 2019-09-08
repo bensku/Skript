@@ -32,6 +32,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -47,8 +48,12 @@ import ch.njol.util.Kleenean;
 		"	loop portal blocks:",
 		"		broadcast \"%loop-block% is part of a portal!\""})
 @Since("INSERT VERSION")
+@Events("portal creation")
 public class ExprPortal extends SimpleExpression<Block> {
 
+	// 1.14+ returns List<BlockState>, 1.13.2 and below returns ArrayList<Block> 
+	private static final boolean USING_BLOCKSTATE = Skript.isRunningMinecraft(1, 14);
+	
 	static {
 		Skript.registerExpression(ExprPortal.class, Block.class, ExpressionType.SIMPLE, 
 				"[the] portal['s] blocks",
@@ -67,33 +72,23 @@ public class ExprPortal extends SimpleExpression<Block> {
 	@Override
 	protected Block[] get(Event e) {
 		List<?> blocks = ((PortalCreateEvent) e).getBlocks();
-		if (Skript.isRunningMinecraft(1, 14)) { // 1.14+ returns List<BlockState> 
-			Block[] arr = new Block[blocks.size()];
-			for(int i = 0; i < blocks.size(); i++) {
-				arr[i] = ((BlockState) blocks.get(i)).getBlock();
-			}
-			return arr;
-		}
-		// 1.13.2 and below returns ArrayList<Block> 
-		Block[] arr = new Block[blocks.size()];
-		for(int i = 0; i < blocks.size(); i++) {
-			arr[i] = (Block) blocks.get(i);
-		}
-		return arr;
+		if (USING_BLOCKSTATE)
+			return blocks.stream()
+				    .map(block -> ((BlockState) block).getBlock())
+				    .toArray(Block[]::new);
+		return blocks.stream()
+			    .map(Block.class::cast)
+			    .toArray(Block[]::new);
 	}
 
 	@Nullable
 	@Override
 	public Iterator<Block> iterator(Event e) {
 		List<?> blocks = ((PortalCreateEvent) e).getBlocks();
-		if (Skript.isRunningMinecraft(1, 14)) { // 1.14+ returns List<BlockState> 
-			List<Block> list = new ArrayList<>(blocks.size());
-			for(int i = 0; i < blocks.size(); i++) {
-				list.add(i, ((BlockState) blocks.get(i)).getBlock());
-			}
-			return list.iterator();
-		}
-		// 1.13.2 and below returns ArrayList<Block> 
+		if (USING_BLOCKSTATE) 
+			return blocks.stream()
+					.map(block -> ((BlockState) block).getBlock())
+					.iterator();
 		return (Iterator<Block>) blocks.iterator();
 	}
 
