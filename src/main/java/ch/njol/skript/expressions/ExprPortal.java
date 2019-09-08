@@ -51,7 +51,7 @@ public class ExprPortal extends SimpleExpression<Block> {
 
 	static {
 		Skript.registerExpression(ExprPortal.class, Block.class, ExpressionType.SIMPLE, 
-				"[the] portal's blocks",
+				"[the] portal['s] blocks",
 				"[the] blocks of [the] portal");
 	}
 
@@ -66,10 +66,18 @@ public class ExprPortal extends SimpleExpression<Block> {
 	@Nullable
 	@Override
 	protected Block[] get(Event e) {
-		List<BlockState> blocks = ((PortalCreateEvent) e).getBlocks();
+		List<?> blocks = ((PortalCreateEvent) e).getBlocks();
+		if (Skript.isRunningMinecraft(1, 14)) { // 1.14+ returns List<BlockState> 
+			Block[] arr = new Block[blocks.size()];
+			for(int i = 0; i < blocks.size(); i++) {
+				arr[i] = ((BlockState) blocks.get(i)).getBlock();
+			}
+			return arr;
+		}
+		// 1.13.2 and below returns ArrayList<Block> 
 		Block[] arr = new Block[blocks.size()];
 		for(int i = 0; i < blocks.size(); i++) {
-			arr[i] = blocks.get(i).getBlock();
+			arr[i] = (Block) blocks.get(i);
 		}
 		return arr;
 	}
@@ -77,12 +85,16 @@ public class ExprPortal extends SimpleExpression<Block> {
 	@Nullable
 	@Override
 	public Iterator<Block> iterator(Event e) {
-		List<BlockState> blocks = ((PortalCreateEvent) e).getBlocks();
-		List<Block> list = new ArrayList<>(blocks.size());
-		for(int i = 0; i < blocks.size(); i++) {
-			list.add(i, blocks.get(i).getBlock());
+		List<?> blocks = ((PortalCreateEvent) e).getBlocks();
+		if (Skript.isRunningMinecraft(1, 14)) { // 1.14+ returns List<BlockState> 
+			List<Block> list = new ArrayList<>(blocks.size());
+			for(int i = 0; i < blocks.size(); i++) {
+				list.add(i, ((BlockState) blocks.get(i)).getBlock());
+			}
+			return list.iterator();
 		}
-		return list.iterator();
+		// 1.13.2 and below returns ArrayList<Block> 
+		return (Iterator<Block>) blocks.iterator();
 	}
 
 	@Override
