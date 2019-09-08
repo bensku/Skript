@@ -20,15 +20,16 @@
 
 package ch.njol.skript.expressions;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
@@ -39,7 +40,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -54,16 +54,13 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData> {
 	
 	private static final Material MATERIAL_SPAWNER = Aliases.javaItemType("spawner").getMaterial();
-	private static final Map<EntityType, org.bukkit.entity.EntityType> CACHE = new HashMap<EntityType, org.bukkit.entity.EntityType>();
-	private static final Map<org.bukkit.entity.EntityType, EntityData> CACHE_2 = new HashMap<org.bukkit.entity.EntityType, EntityData>();
+	private static final BiMap<EntityData, org.bukkit.entity.EntityType> CACHE = HashBiMap.create();
 	
 	static {
 		for (org.bukkit.entity.EntityType e : org.bukkit.entity.EntityType.values()) {
 			Class<? extends Entity> c = e.getEntityClass();
-			if (c != null) {
-				CACHE.put(new EntityType(c, 1), e); // Cache Skript EntityType -> Bukkit EntityType 
-				CACHE_2.put(e, EntityData.fromClass(c)); // Cache Bukkit EntityType -> Skript EntityData
-			}
+			if (c != null)
+				CACHE.put(EntityData.fromClass(c), e); // Cache Skript EntityData -> Bukkit EntityType 
 		}
 		register(ExprSpawnerType.class, EntityData.class, "(entity|creature) type[s]", "blocks");
 	}
@@ -80,7 +77,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET) 
-			return CollectionUtils.array(EntityType.class);
+			return CollectionUtils.array(EntityData.class);
 		return null;
 	}
 	
@@ -93,7 +90,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 			CreatureSpawner s = (CreatureSpawner) b.getState();
 			switch (mode) {
 				case SET:
-					s.setSpawnedType(toBukkitEntityType((EntityType) delta[0]));
+					s.setSpawnedType(toBukkitEntityType((EntityData) delta[0]));
 					break;
 				case RESET:
 					s.setSpawnedType(org.bukkit.entity.EntityType.PIG);
@@ -114,13 +111,12 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	}
 	
 	/**
-	 * Convert from Skript's EntityType to Bukkit's EntityType
-	 * @param e Skript's EntityType
+	 * Convert from Skript's EntityData to Bukkit's EntityType
+	 * @param e Skript's EntityData
 	 * @return Bukkit's EntityType
 	 */
-	@SuppressWarnings({"null"})
-	private static org.bukkit.entity.EntityType toBukkitEntityType(EntityType e){
-		return CACHE.get(e);
+	private static org.bukkit.entity.EntityType toBukkitEntityType(EntityData e){
+		return CACHE.get(EntityData.fromClass(e.getType())); // Fix Comparison Issues 
 	}
 	
 	/**
@@ -128,9 +124,8 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 	 * @param e Bukkit's EntityType
 	 * @return Skript's EntityData
 	 */
-	@SuppressWarnings("null")
 	private static EntityData toSkriptEntityData(org.bukkit.entity.EntityType e){
-		return CACHE_2.get(e);
+		return CACHE.inverse().get(e);
 	}
 	
 }
