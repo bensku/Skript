@@ -1,0 +1,108 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.expressions;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.event.Event;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.ScriptLoader;
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.util.Kleenean;
+
+@Name("Portal")
+@Description("The blocks associated with a portal in the portal creation event.")
+@Examples({"on portal creation:",
+		"	loop portal blocks:",
+		"		broadcast \"%loop-block% is part of a portal!\""})
+@Since("INSERT VERSION")
+public class ExprPortal extends SimpleExpression<Block> {
+
+	static {
+		Skript.registerExpression(ExprPortal.class, Block.class, ExpressionType.SIMPLE, 
+				"[the] portal's blocks",
+				"[the] blocks of [the] portal");
+	}
+
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		if (ScriptLoader.isCurrentEvent(PortalCreateEvent.class))
+			return true;
+		Skript.error("The 'portal' expression may only be used in a portal creation event.");
+		return false;
+	}
+
+	@Nullable
+	@Override
+	protected Block[] get(Event e) {
+		List<BlockState> blocks = ((PortalCreateEvent) e).getBlocks();
+		Block[] arr = new Block[blocks.size()];
+		for(int i = 0; i < blocks.size(); i++) {
+			arr[i] = blocks.get(i).getBlock();
+		}
+		return arr;
+	}
+
+	@Nullable
+	@Override
+	public Iterator<Block> iterator(Event e) {
+		List<BlockState> blocks = ((PortalCreateEvent) e).getBlocks();
+		List<Block> list = new ArrayList<>(blocks.size());
+		for(int i = 0; i < blocks.size(); i++) {
+			list.add(i, blocks.get(i).getBlock());
+		}
+		return list.iterator();
+	}
+
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
+
+	@Override
+	public boolean isDefault() {
+		return true;
+	}
+
+	@Override
+	public Class<Block> getReturnType() {
+		return Block.class;
+	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "the portal blocks";
+	}
+
+}
