@@ -74,11 +74,11 @@ public class ExprPortal extends SimpleExpression<Block> {
 		List<?> blocks = ((PortalCreateEvent) e).getBlocks();
 		if (USING_BLOCKSTATE)
 			return blocks.stream()
-				    .map(block -> ((BlockState) block).getBlock())
-				    .toArray(Block[]::new);
+					.map(block -> ((BlockState) block).getBlock())
+					.toArray(Block[]::new);
 		return blocks.stream()
-			    .map(Block.class::cast)
-			    .toArray(Block[]::new);
+				.map(Block.class::cast)
+				.toArray(Block[]::new);
 	}
 
 	@Nullable
