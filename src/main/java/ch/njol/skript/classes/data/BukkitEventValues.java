@@ -925,20 +925,6 @@ public final class BukkitEventValues {
 				return e.getWorld();
 			}
 		}, 0);
-		EventValues.registerEventValue(PortalCreateEvent.class, String.class, new Getter<String, PortalCreateEvent>() {
-			@Override
-			@Nullable
-			public String get(final PortalCreateEvent e) {
-				for (BlockState b : e.getBlocks()) { // Gets blocks prior to actual portal creation
-					Material m = b.getType();
-					if (m == Material.OBSIDIAN)
-						return "Nether";
-					else if (m == Material.END_PORTAL_FRAME)
-						return "End";
-				}
-				return null; // Unknown portal type 
-			}
-		}, 0);
 		//PlayerEditBookEvent
 		EventValues.registerEventValue(PlayerEditBookEvent.class, ItemStack.class, new Getter<ItemStack, PlayerEditBookEvent>() {
 			@Override
