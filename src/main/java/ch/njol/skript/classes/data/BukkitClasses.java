@@ -121,11 +121,11 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public Entity parse(final String s, final ParseContext context) {
-						if (CAN_PARSE_ENTITY_UUID) {
-							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
-								return Bukkit.getEntity(UUID.fromString(s));
+						try {
+							return Bukkit.getEntity(UUID.fromString(s));
+						} catch (IllegalArgumentException iae) {
+							return null;
 						}
-						return null;
 					}
 					
 					@Override
