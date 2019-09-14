@@ -102,6 +102,7 @@ public class BukkitClasses {
 	public BukkitClasses() {}
 
 	static {
+		final boolean CAN_PARSE_ENTITY_UUID = Skript.methodExists(Bukkit.class, "getEntity", UUID.class);
 		Classes.registerClass(new ClassInfo<>(Entity.class, "entity")
 				.user("entit(y|ies)")
 				.name("Entity")
@@ -120,11 +121,17 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public Entity parse(final String s, final ParseContext context) {
+						if (CAN_PARSE_ENTITY_UUID) {
+							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
+								return Bukkit.getEntity(UUID.fromString(s));
+						}
 						return null;
 					}
 					
 					@Override
 					public boolean canParse(final ParseContext context) {
+						if (CAN_PARSE_ENTITY_UUID)
+							return context == ParseContext.COMMAND;
 						return false;
 					}
 					
