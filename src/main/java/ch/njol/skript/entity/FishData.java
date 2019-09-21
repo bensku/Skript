@@ -40,10 +40,14 @@ public class FishData extends EntityData<Fish> {
 					"fish", "cod", "puffer fish", "salmon", "tropical fish");
 	}
 	
+	private boolean init = true;
+	private boolean wildcard = false;
 	private int pattern = -1;
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
+		if (matchedPattern == 0)
+			wildcard = true;
 		pattern = (matchedPattern == 0) ? ThreadLocalRandom.current().nextInt(1, 5) : matchedPattern;
 		return true;
 	}
@@ -51,6 +55,8 @@ public class FishData extends EntityData<Fish> {
 	@Override
 	protected boolean init(@Nullable Class<? extends Fish> c, @Nullable Fish e) {
 		int matchedPattern = getInitPattern(e);
+		if (matchedPattern == 0)
+			wildcard = true;
 		pattern = (matchedPattern == 0) ? ThreadLocalRandom.current().nextInt(1, 5) : matchedPattern;
 		return true;
 	}
@@ -62,19 +68,24 @@ public class FishData extends EntityData<Fish> {
 
 	@Override
 	protected boolean match(Fish entity) {
-		return getPattern(entity) == pattern;
+		return wildcard ? true : getPattern(entity) == pattern;
 	}
 
 	@Override
 	public Class<? extends Fish> getType() {
-		if(pattern == 1)
-			return Cod.class;
-		else if(pattern == 2)
-			return PufferFish.class;
-		else if(pattern == 3)
-			return Salmon.class;
-		else if(pattern == 4)
-			return TropicalFish.class;
+		if(!init && wildcard)
+			return Fish.class;
+		init = false;
+		switch (pattern) {
+			case 1:
+				return Cod.class;
+			case 2:
+				return PufferFish.class;
+			case 3:
+				return Salmon.class;
+			case 4:
+				return TropicalFish.class;
+		}
 		return Fish.class;
 	}
 
@@ -85,38 +96,36 @@ public class FishData extends EntityData<Fish> {
 
 	@Override
 	protected int hashCode_i() {
-		return pattern;
+		return wildcard ? 0 : pattern;
 	}
 
 	@Override
 	protected boolean equals_i(EntityData<?> obj) {
-		return obj instanceof Fish ? getPattern((Fish) obj) == pattern : false;
+		return obj instanceof Fish ? (wildcard ? true : getPattern((Fish) obj) == pattern) : false;
 	}
 
 	@Override
 	public boolean isSupertypeOf(EntityData<?> e) {
-		return e instanceof Fish ? getPattern((Fish) e) == pattern : false;
+		return e instanceof Fish ? (wildcard ? true : getPattern((Fish) e) == pattern) : false;
 	}
 	
 	private static int getInitPattern(@Nullable Fish f) {
-		if(f == null)
+		if (f == null)
 			return 0;
-		else if(f instanceof Cod)
+		else if (f instanceof Cod)
 			return 1;
-		else if(f instanceof PufferFish)
+		else if (f instanceof PufferFish)
 			return 2;
-		else if(f instanceof Salmon)
+		else if (f instanceof Salmon)
 			return 3;
-		else if(f instanceof TropicalFish)
+		else if (f instanceof TropicalFish)
 			return 4;
 		return 0;
 	}
 	
 	private int getPattern(@Nullable Fish f) {
 		int p = getInitPattern(f);
-		if(p == 0)
-			return pattern;
-		return p;
+		return p == 0 ? pattern : p;
 	}
 	
 }
