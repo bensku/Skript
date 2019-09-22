@@ -55,6 +55,7 @@ import ch.njol.util.Kleenean;
 public class EffPlaySound extends Effect {
 
 	private static final boolean SOUND_CATEGORIES_EXIST = Skript.classExists("org.bukkit.SoundCategory");
+	private static final String SOUND_VALID_CHARACTERS = "[a-z0-9\\/._-]+"; // Minecraft only accepts these characters 
 	
 	static {
 		if (SOUND_CATEGORIES_EXIST) {
@@ -157,25 +158,24 @@ public class EffPlaySound extends Effect {
 
 	private static void playSound(Player p, Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		for (String sound : sounds) {
+			sound = sound.toLowerCase();
 			Sound soundEnum = null;
 			try {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
 				if (soundEnum == null) {
-					// It may throw an exception if there are invalid characters in the sound name
-					try {
-						p.playSound(location, sound, category, volume, pitch);
-					} catch (Exception ignored) {}
+					if (!sound.matches(SOUND_VALID_CHARACTERS))
+						continue;
+					p.playSound(location, sound, category, volume, pitch);
 				} else {
 					p.playSound(location, soundEnum, category, volume, pitch);
 				}
 			} else {
 				if (soundEnum == null) {
-					// It may throw an exception if there are invalid characters in the sound name
-					try {
-						p.playSound(location, sound, volume, pitch);
-					} catch (Exception ignored) {}
+					if (!sound.matches(SOUND_VALID_CHARACTERS))
+						continue;
+					p.playSound(location, sound, volume, pitch);
 				} else {
 					p.playSound(location, soundEnum, volume, pitch);
 				}
@@ -186,25 +186,24 @@ public class EffPlaySound extends Effect {
 	private static void playSound(Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		World w = location.getWorld();
 		for (String sound : sounds) {
+			sound = sound.toLowerCase();
 			Sound soundEnum = null;
 			try {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
 				if (soundEnum == null) {
-					// It may throw an exception if there are invalid characters in the sound name
-					try {
-						w.playSound(location, sound, category, volume, pitch);
-					} catch (Exception ignored) {}
+					if (!sound.matches(SOUND_VALID_CHARACTERS))
+						continue;
+					w.playSound(location, sound, category, volume, pitch);
 				} else {
 					w.playSound(location, soundEnum, category, volume, pitch);
 				}
 			} else {
 				if (soundEnum == null) {
-					// It may throw an exception if there are invalid characters in the sound name
-					try {
-						w.playSound(location, sound, volume, pitch);
-					} catch (Exception ignored) {}
+					if (!sound.matches(SOUND_VALID_CHARACTERS))
+						continue;
+					w.playSound(location, sound, volume, pitch);
 				} else {
 					w.playSound(location, soundEnum, volume, pitch);
 				}
