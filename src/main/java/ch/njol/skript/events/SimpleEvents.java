@@ -93,6 +93,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import ch.njol.skript.Skript;
@@ -516,5 +517,15 @@ public class SimpleEvents {
 							"	cancel event")
 					.since("2.3");
 		}
+		if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
+			Skript.registerEvent("Pathfind", SimpleEvent.class, EntityPathfindEvent.class, "[entity] path[ ]find[ing]")
+					.description("Called whenever an entity pathfinds.",
+							"This event requires PaperSpigot.")
+					.examples("on pathfinding:",
+							"	event-entity is zombie",
+							"	cancel event")
+					.since("INSERT VERSION");
+		}
+		
 	}
 }
