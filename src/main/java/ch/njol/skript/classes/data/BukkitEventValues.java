@@ -110,6 +110,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
+
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -1009,6 +1012,24 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
+		//EntityPathfindEvent
+		if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
+			EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<Location, EntityPathfindEvent>() {
+				@Override
+				@Nullable
+				public Location get(EntityPathfindEvent e) {
+					return e.getLoc();
+				}
+			}, 0);
+			EventValues.registerEventValue(EntityPathfindEvent.class, Entity.class, new Getter<Entity, EntityPathfindEvent>() {
+				@Override
+				@Nullable
+				public Entity get(EntityPathfindEvent e) {
+					return e.getEntity();
+				}
+			}, 0);
+		}
+
 
 	}
 }
