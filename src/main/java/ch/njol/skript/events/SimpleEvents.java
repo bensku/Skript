@@ -519,8 +519,9 @@ public class SimpleEvents {
 		}
 		if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
 			Skript.registerEvent("Pathfind", SimpleEvent.class, EntityPathfindEvent.class, "[entity] path[ ]find[ing]")
-					.description("Called whenever an entity pathfinds.",
+					.description("Called whenever an entity decides to start moving to a location.",
 							"This event requires PaperSpigot.")
+					.requiredPlugins("Paper")
 					.examples("on pathfinding:",
 							"	event-entity is zombie",
 							"	cancel event")
