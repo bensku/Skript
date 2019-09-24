@@ -22,10 +22,15 @@ package ch.njol.skript.expressions;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.entity.Pathfinder;
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
+
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
@@ -60,12 +65,17 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 				"%livingentities%'[s] target[[ed] %-*entitydata%]");
 	}
 	
+	private static final boolean PATHFIND_EXISTS = Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent");
+	private boolean PATHFIND_TARGET = false;
+	
 	@Nullable
 	EntityData<?> type;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		if (PATHFIND_EXISTS && ScriptLoader.isCurrentEvent(EntityPathfindEvent.class))
+			PATHFIND_TARGET = true;
 		type = exprs[matchedPattern] == null ? null : (EntityData<?>) exprs[matchedPattern].getSingle(null);
 		setExpr((Expression<? extends LivingEntity>) exprs[1 - matchedPattern]);
 		return true;
@@ -73,6 +83,8 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	
 	@Override
 	protected Entity[] get(final Event e, final LivingEntity[] source) {
+		if (PATHFIND_TARGET)
+			return new Entity[] {((EntityPathfindEvent) e).getTargetEntity()};
 		return get(source, new Converter<LivingEntity, Entity>() {
 			@Override
 			@Nullable
@@ -119,8 +131,17 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
 			final LivingEntity target = delta == null ? null : (LivingEntity) delta[0];
 			for (final LivingEntity entity : getExpr().getArray(e)) {
-				if (getTime() >= 0 && e instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) e).getEntity()) && !Delay.isDelayed(e)) {
-					((EntityTargetEvent) e).setTarget(target);
+				if (getTime() >= 0 && !Delay.isDelayed(e)) {
+					if (e instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) e).getEntity())) {
+						((EntityTargetEvent) e).setTarget(target);
+					} else if (PATHFIND_TARGET && entity instanceof Mob){
+						EntityPathfindEvent pathfindEvent = (EntityPathfindEvent) e;
+						if (entity.equals(((EntityPathfindEvent) e).getEntity())){
+							pathfindEvent.setCancelled(true);
+							if (target != null)
+								((Mob) entity).getPathfinder().moveTo(target);
+						}
+					}
 				} else {
 					if (entity instanceof Creature)
 						((Creature) entity).setTarget(target);
