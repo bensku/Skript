@@ -53,7 +53,8 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 @Name("Target")
-@Description("For players this is the entity at the crosshair, while for mobs and experience orbs it represents the entity they are attacking/following (if any).")
+@Description({"For players this is the entity at the crosshair, while for mobs and experience orbs it represents the entity they are attacking/following (if any).",
+			"Using 'target' in a pathfind event will return the pathfinding entity's target, which can be set on 1.13+"})
 @Examples({"on entity target:",
 			"\tentity's target is a player",
 			"\tsend \"You're being followed by an %entity%!\" to target of entity"})
@@ -62,10 +63,13 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	static {
 		Skript.registerExpression(ExprTarget.class, Entity.class, ExpressionType.PROPERTY,
 				"[the] target[[ed] %-*entitydata%] [of %livingentities%]",
-				"%livingentities%'[s] target[[ed] %-*entitydata%]");
+				"%livingentities%'[s] target[[ed] %-*entitydata%]",
+				"[the] target[[ed] %-*entitydata%]");
 	}
 	
 	private static final boolean PATHFIND_EXISTS = Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent");
+	private static final boolean MOB_EXISTS = Skript.isRunningMinecraft(1, 13);
+	private static final boolean PATHFIND_CHANGER_VALID = PATHFIND_EXISTS && MOB_EXISTS;
 	private boolean PATHFIND_TARGET = false;
 	
 	@Nullable
@@ -74,10 +78,10 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (PATHFIND_EXISTS && ScriptLoader.isCurrentEvent(EntityPathfindEvent.class))
+		if (matchedPattern == 2 && PATHFIND_EXISTS && ScriptLoader.isCurrentEvent(EntityPathfindEvent.class))
 			PATHFIND_TARGET = true;
 		type = exprs[matchedPattern] == null ? null : (EntityData<?>) exprs[matchedPattern].getSingle(null);
-		setExpr((Expression<? extends LivingEntity>) exprs[1 - matchedPattern]);
+		setExpr((Expression<? extends LivingEntity>) exprs[2 - matchedPattern]);
 		return true;
 	}
 	
@@ -134,7 +138,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 				if (getTime() >= 0 && !Delay.isDelayed(e)) {
 					if (e instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) e).getEntity())) {
 						((EntityTargetEvent) e).setTarget(target);
-					} else if (PATHFIND_TARGET && entity instanceof Mob){
+					} else if (PATHFIND_CHANGER_VALID && entity instanceof Mob){
 						EntityPathfindEvent pathfindEvent = (EntityPathfindEvent) e;
 						if (entity.equals(((EntityPathfindEvent) e).getEntity())){
 							pathfindEvent.setCancelled(true);
