@@ -160,13 +160,13 @@ public class EffPlaySound extends Effect {
 
 	private static void playSound(Player p, Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		for (String sound : sounds) {
-			sound = sound.toLowerCase();
 			Sound soundEnum = null;
 			try {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
 				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
 					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
 						continue;
 					p.playSound(location, sound, category, volume, pitch);
@@ -175,6 +175,7 @@ public class EffPlaySound extends Effect {
 				}
 			} else {
 				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
 					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
 						continue;
 					p.playSound(location, sound, volume, pitch);
@@ -188,13 +189,13 @@ public class EffPlaySound extends Effect {
 	private static void playSound(Location location, String[] sounds, SoundCategory category, float volume, float pitch) {
 		World w = location.getWorld();
 		for (String sound : sounds) {
-			sound = sound.toLowerCase();
 			Sound soundEnum = null;
 			try {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
 				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
 					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
 						continue;
 					w.playSound(location, sound, category, volume, pitch);
@@ -203,6 +204,7 @@ public class EffPlaySound extends Effect {
 				}
 			} else {
 				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
 					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
 						continue;
 					w.playSound(location, sound, volume, pitch);
