@@ -103,10 +103,10 @@ public class ExprAmount extends SimpleExpression<Integer> {
 	protected Integer[] get(final Event e) {
 		if (recursive) {
 			boolean local = exprString.charAt(1) == '_';
-			// Local Variables: {_...}, Global Variables: {...}
+			// Local Variables: {_x}, Global Variables: {x}, substr will contain the value of x 
 			String substr = exprString.substring((local ? 2 : 1), exprString.length() - 1);
 			assert substr != null;
-			Object var = Variables.getVariable(substr, e, local);
+			Object var = Variables.getVariable(substr, e, local); // We have to expose the entire variable with sublists included 
 			if (var != null && var instanceof TreeMap)
 				return new Integer[] {getRecursiveSize((TreeMap<String, Object>) var)};
 		}
