@@ -19,6 +19,9 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -32,6 +35,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 
 /**
@@ -41,13 +45,19 @@ import ch.njol.util.Kleenean;
  */
 @Name("Amount")
 @Description({"The amount of something.",
-		"Please note that <code>amount of %items%</code> will not return the number of items, but the number of stacks, e.g. 1 for a stack of 64 torches. To get the amount of items in a stack, see the <a href='#ExprItemAmount'>item amount</a> expression."})
+		"Please note that <code>amount of %items%</code> will not return the number of items, but the number of stacks, e.g. 1 for a stack of 64 torches. To get the amount of items in a stack, see the <a href='#ExprItemAmount'>item amount</a> expression.",
+		"Also please note that getting a list's recursive size can cause lag if the list is large."})
 @Examples({"message \"There are %number of all players% players online!\""})
 @Since("1.0")
 public class ExprAmount extends SimpleExpression<Integer> {
 	static {
-		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, "(amount|number|size) of %objects%");
+		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, 
+				"(amount|number|size) of %objects%",
+				"(recursive|total) (amount|number|size) of %objects%");
 	}
+	
+	private String exprString = "";
+	private boolean recursive = false;
 	
 	@SuppressWarnings("null")
 	private Expression<?> expr;
@@ -61,6 +71,14 @@ public class ExprAmount extends SimpleExpression<Integer> {
 		if (expr.isSingle()) {
 			Skript.error("'" + expr.toString(null, false) + "' can only ever have one value at most, thus the 'amount of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
 			return false;
+		}
+		if (matchedPattern == 1) {
+			exprString = expr.toString();
+			if (exprString.charAt(0) != '{') {
+				Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + exprString + "' expression is useless.");
+				return false;
+			}
+			recursive = true;
 		}
 		return true;
 	}
@@ -80,9 +98,31 @@ public class ExprAmount extends SimpleExpression<Integer> {
 		return "amount of " + expr.toString(e, debug);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Integer[] get(final Event e) {
+		if (recursive) {
+			boolean local = exprString.charAt(1) == '_';
+			String substr = exprString.substring((local ? 2 : 1), exprString.length() - 1);
+			assert substr != null;
+			Object var = Variables.getVariable(substr, e, local);
+			if (var != null && var instanceof TreeMap)
+				return new Integer[] {getRecursiveSize((TreeMap<String, Object>) var)};
+		}
 		return new Integer[] {expr.getArray(e).length};
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static int getRecursiveSize(TreeMap<String, Object> map) {
+		int count = 0;
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			Object value = entry.getValue();
+			if (value instanceof TreeMap)
+				count += getRecursiveSize((TreeMap<String, Object>) value);
+			else
+				count++;
+		}
+		return count;
 	}
 	
 }
