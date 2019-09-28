@@ -107,8 +107,8 @@ public class ExprAmount extends SimpleExpression<Integer> {
 			String substr = exprString.substring((local ? 2 : 1), exprString.length() - 1);
 			assert substr != null;
 			Object var = Variables.getVariable(substr, e, local); // We have to expose the entire variable with sublists included 
-			if (var != null && var instanceof TreeMap)
-				return new Integer[] {getRecursiveSize((TreeMap<String, Object>) var)};
+			if (var != null)
+				return new Integer[] {getRecursiveSize((TreeMap<String, Object>) var)}; // Should already be a TreeMap 
 		}
 		return new Integer[] {expr.getArray(e).length};
 	}
@@ -118,10 +118,7 @@ public class ExprAmount extends SimpleExpression<Integer> {
 		int count = 0;
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			Object value = entry.getValue();
-			if (value instanceof TreeMap)
-				count += getRecursiveSize((TreeMap<String, Object>) value);
-			else
-				count++;
+			count += (value instanceof TreeMap) ? getRecursiveSize((TreeMap<String, Object>) value) : 1;
 		}
 		return count;
 	}
