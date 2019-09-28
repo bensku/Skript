@@ -95,7 +95,7 @@ public class ExprAmount extends SimpleExpression<Integer> {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "amount of " + expr.toString(e, debug);
+		return (recursive ? "recursize size of " : "amount of ") + expr.toString(e, debug);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -103,6 +103,7 @@ public class ExprAmount extends SimpleExpression<Integer> {
 	protected Integer[] get(final Event e) {
 		if (recursive) {
 			boolean local = exprString.charAt(1) == '_';
+			// Local Variables: {_...}, Global Variables: {...}
 			String substr = exprString.substring((local ? 2 : 1), exprString.length() - 1);
 			assert substr != null;
 			Object var = Variables.getVariable(substr, e, local);
