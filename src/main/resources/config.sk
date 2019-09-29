@@ -289,6 +289,15 @@ databases:
 		file: ./plugins/Skript/variables.csv
 
 		backup interval: 2 hours
+		
+		variable re-save threshold: 1000
+		# The number of variables that are required to change in order for a re-save to occur.
+		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
+		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
+		
+		file re-write duration in ticks: 6000
+		# The number of ticks that should pass before the database file is re-written.
+		# Setting this value lower is not recommended as saving large database files may cause server lag.
 
 	# PS: If you don't want some variables to be saved in any database (e.g. variables that contain an %entity% which usually despawn when the server is shut down)
 	# you can modify the last database's pattern to not match all variables, e.g. use '(?!x_).*' to match all variables that don't start with 'x_'.
