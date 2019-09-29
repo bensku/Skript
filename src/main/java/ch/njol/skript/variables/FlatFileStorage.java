@@ -73,7 +73,7 @@ public class FlatFileStorage extends VariablesStorage {
 	
 	private int REQUIRED_CHANGES_FOR_RESAVE = 1000;
 	
-	private int FILE_REWRITE_TICKS = 20 * 60 * 5;
+	private int FILE_REWRITE_FREQUENCY_TICKS = 20 * 60 * 5;
 	
 	@Nullable
 	private Task saveTask;
@@ -195,32 +195,36 @@ public class FlatFileStorage extends VariablesStorage {
 		}
 		
 		String thresholdRaw = getValue(n, "variable re-save threshold");
-		try {
-			final Integer threshold = Integer.valueOf(thresholdRaw);
-			if (threshold < 0)
-				Skript.error("The variable re-save threshold cannot be negative!");
-			else
-				REQUIRED_CHANGES_FOR_RESAVE = threshold;
-		} catch (NumberFormatException e) {
-			Skript.error("Invalid integer '" + thresholdRaw);
+		if (thresholdRaw != null) {
+			try {
+				final Integer threshold = Integer.valueOf(thresholdRaw);
+				if (threshold < 0)
+					Skript.error("The variable re-save threshold cannot be negative!");
+				else
+					REQUIRED_CHANGES_FOR_RESAVE = threshold;
+			} catch (NumberFormatException e) {
+				Skript.error("Invalid integer '" + thresholdRaw);
+			}
 		}
 		
-		String rewriteRaw = getValue(n, "file re-write duration in ticks");
-		try {
-			final Integer rewrite = Integer.valueOf(rewriteRaw);
-			if (rewrite < 1)
-				Skript.error("The file re-write duration cannot be less than 1 tick!");
-			else
-				FILE_REWRITE_TICKS = rewrite;
-			if (rewrite <= 20 * 60)
-				Skript.warning("It is not recommended for the file re-write duration to be less than a minute!");
-		} catch (NumberFormatException e) {
-			Skript.error("Invalid integer '" + rewriteRaw);
+		String rewriteRaw = getValue(n, "file re-write frequency in ticks");
+		if (rewriteRaw != null) {
+			try {
+				final Integer rewrite = Integer.valueOf(rewriteRaw);
+				if (rewrite < 1)
+					Skript.error("The file re-write frequency cannot be less than 1 tick!");
+				else
+					FILE_REWRITE_TICKS = rewrite;
+				if (rewrite <= 20 * 60)
+					Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
+			} catch (NumberFormatException e) {
+				Skript.error("Invalid integer '" + rewriteRaw);
+			}
 		}
 		
 		connect();
 		
-		saveTask = new Task(Skript.getInstance(), FILE_REWRITE_TICKS, FILE_REWRITE_TICKS, true) {
+		saveTask = new Task(Skript.getInstance(), FILE_REWRITE_FREQUENCY_TICKS, FILE_REWRITE_FREQUENCY_TICKS, true) {
 			@Override
 			public void run() {
 				if (changes.get() >= REQUIRED_CHANGES_FOR_RESAVE) {
