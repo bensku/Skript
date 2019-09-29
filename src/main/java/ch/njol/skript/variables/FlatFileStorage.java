@@ -211,12 +211,13 @@ public class FlatFileStorage extends VariablesStorage {
 		if (rewriteRaw != null) {
 			try {
 				final Integer rewrite = Integer.valueOf(rewriteRaw);
-				if (rewrite < 1)
+				if (rewrite < 1) {
 					Skript.error("The file re-write frequency cannot be less than 1 tick!");
-				else
+				} else {
+					if (rewrite <= 20 * 60)
+						Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
 					FILE_REWRITE_FREQUENCY_TICKS = rewrite;
-				if (rewrite <= 20 * 60)
-					Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
+				}
 			} catch (NumberFormatException e) {
 				Skript.error("Invalid integer '" + rewriteRaw);
 			}
