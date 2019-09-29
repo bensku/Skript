@@ -276,6 +276,10 @@ databases:
 		backup interval: 0 # 0 = don't create backups
 		monitor changes: false
 		monitor interval: 20 seconds
+		
+		variable re-save threshold: 1000
+		
+		file re-write frequency in ticks: 6000
 
 	default:
 		# The default "database" is a simple text file, with each variable on a separate line and the variable's name, type, and value separated by commas.
@@ -295,7 +299,7 @@ databases:
 		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
 		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
 		
-		file re-write duration in ticks: 6000
+		file re-write frequency in ticks: 6000
 		# The number of ticks that should pass before the database file is re-written.
 		# Setting this value lower is not recommended as saving large database files may cause server lag.
 
