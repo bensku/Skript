@@ -1,0 +1,183 @@
+#============================================================================
+#|                                                                           |
+#|                          API EXPLAINATIONS                                |
+#|                                                                           |
+#============================================================================
+
+# Functions:
+#
+#	- loadTest(testName: string, command: string, testerName: string = "*")
+#		===> Will load your test and add the command to execute
+#			 Args:
+#				 * testName: is the path to your script.
+#				 * command: is the command that the test will make execute to the user. You can add multiple commands.
+#				 * testerName: is the tester's name of this test. Use "*" to use console instead of player. Default: *
+#
+#	- unloadTest(testName: string)
+#		===> Will unload your test.
+#			Args:
+#				 * testName: is the name to your script. Can be "*" to unload all tests.
+#
+#	- startTest(testName: string)
+#		===> Will start your test. Can be "*" to start all tests.
+#			Args:
+#				 * testName: is the name to your script.
+#
+#	- stopTest(testName: string)
+#		===> Will stop your test.
+#			Args:
+#				 * testName: is the name to your script.
+#
+#	- successTest(testName: string)
+#		===> Will make your test a success.
+#			Args:
+#				 * testName: is the path to your script.
+#
+#	- failureTest(testName: string, error: string)
+#		===> Will make your test a failure.
+#			Args:
+#				 * testName: is the path to your script.
+#				 * error: is the error of your test. Why your test is a failure?
+#
+#	- regularTestName(testName: string)
+#		===> Will regular test name. This function is just an utility.
+#			Args:
+#				 * testName: is the path to your script.
+#
+# Commands:
+#
+#	- /loadTest <string> <string> [<string="*">]
+#		===> Will load a test.
+#			Args:
+#				 * arg-1: is the path to your script.
+#				 * arg-2: is the command that you want to add to tests.
+#				 * arg-3: is the name of the tester (player) if your command require a player anywhere. Default: *
+#
+#	- /unloadTest [<string="*">]
+#		===> Will unload a test.
+#			Args:
+#				 * arg-1: is the path to your script.
+#
+#	- /startTest [<string="*">]
+#		===> Will start a test. Let empty to make all tests. Use "*" as argument to make every available tests (default).
+#			Args:
+#				 * arg-1: is the path to your script.
+#
+#	- /stopTest <string="*">
+#		===> Will stop a test. Let empty to stop all tests or use "*" as argument.
+#			Args:
+#				 * arg-1: is the naùe of your script.
+
+options:
+	testErrorPrefix: [testScripts]
+
+function regularTestName(testName: string) :: string:
+	set {_split::*} to {_testName} split at "\"
+	set {_index} to amount of {_split::*}
+	set {_testName} to {_split::%{_index}%}
+	replace all ".tests.sk" with "" in {_testName}
+	replace all ".sk" with "" in {_testName}
+	return "testScripts\%{_testName}%.tests"
+
+function unloadTest(testName: string):
+	if {_testName} is "*":
+		clear {testScripts::*}
+	else:
+		set {_testName} to regularTestName({_testName})
+		clear {testScripts::%{_testName}%::isFinishedWith}
+		clear {testScripts::%{_testName}%::testerName}
+		clear {testScripts::%{_testName}%::commands::*}
+		remove {_testName} from {testScripts::*}
+
+function loadTest(testName: string, command: string, testerName: string = "*"):
+	replace all "\" with "/" in {_testName}
+	set {_dirs::*} to {_testName} split at "/"
+	if {_dirs::1} is "testScripts":
+		replace all "/" with "\" in {_testName}
+		{testScripts::*} does not contain {_testName}
+		add {_testName} to {testScripts::*}
+		if {testScripts::%{_testName}%::commands::*} does not contain {_command}:
+			add {_command} to {testScripts::%{_testName}%::commands::*}
+		set {testScripts::%{_testName}%::isFinishedWith} to "didn't start"
+		set {testScripts::%{_testName}%::testerName} to {_testerName}
+	else:
+		broadcast "&c{@testErrorPrefix} Tests must be in the ""testScripts"" directory. (test: ""%{_testName}%"")"
+
+function startTest(testName: string):
+	if {_testName} is "*":
+		loop {testScripts::*}:
+			loop {testScripts::%loop-value%::commands::*}:
+				if {testScripts::%loop-value-1%::mustBeInGame} is not "*":
+					make ({testScripts::%loop-value-1%::testerName} parsed as player) execute command loop-value-2
+				else:
+					make console execute command loop-value-2
+				while {testScripts::%loop-value-1%::isFinishedWith} is "didn't start":
+					wait 1 second
+				if {testScripts::%loop-value-1%::isFinishedWith} is "success":
+					broadcast "&aTest ""%loop-value-1%"" ended with success!"
+				else:
+					broadcast "&cTest ""%loop-value-1%"" ended with failure: %{testScripts::%loop-value-1%::isFinishedWith::message}%"
+			clear {testScripts::%loop-value%::isFinishedWith::message}
+			set {testScripts::%loop-value%::isFinishedWith} to "didn't start"
+	else:
+		set {_testName} to regularTestName({_testName})
+		if {testScripts::*} contains {_testName}:
+			loop {testScripts::%{_testName}%::commands::*}:
+				if {testScripts::%{_testName}%::testerName} is not "*":
+					broadcast "1"
+					make ({testScripts::%{_testName}%::testerName} parsed as player) execute command loop-value
+				else:
+					make console execute command loop-value
+				while {testScripts::%{_testName}%::isFinishedWith} is "didn't start":
+					wait 1 second
+				if {testScripts::%{_testName}%::isFinishedWith} is "success":
+					broadcast "&a{@testErrorPrefix} Test ""%{_testName}%"" ended with success!"
+				else:
+					broadcast "&c{@testErrorPrefix} Test ""%{_testName}%"" ended with failure: %{testScripts::%{_testName}%::isFinishedWith::message}%"
+			clear {testScripts::%{_testName}%::isFinishedWith::message}
+			set {testScripts::%{_testName}%::isFinishedWith} to "didn't start"
+		else:
+			broadcast "&c{@testErrorPrefix} Can't test ""%{_testName}%"": not found."
+
+function stopTest(testName: string = "*"):
+	if {_testName} is "*":
+		loop {testScripts::*}:
+			successTest(loop-value)
+	else:
+		successTest({_testName})
+
+
+function successTest(testName: string):
+	set {testScripts::%{_testName}%::isFinishedWith} to "success"
+
+#function warningTest(testName: string, warning: string):
+#	broadcast "&c%{_warning}% (test: ""%{_testName}%"")"
+
+function failureTest(testName: string, error: string):
+	set {testScripts::%{_testName}%::isFinishedWith} to "failure"
+	set {testScripts::%{_testName}%::isFinishedWith::message} to "&c%{_error}% (test: ""%{_testName}%"")"
+
+command /loadTest <string> <string> [<string="*">]:
+	trigger:
+		loadTest(arg-1, arg-2, arg-3)
+
+command /unloadTest [<string="*">]:
+	trigger:
+		unloadTest(arg-1)
+
+command /startTest [<string="*">]:
+	trigger:
+		set {_testName} to regularTestName(arg-1)
+		if {testScripts::%{_testName}%::testerName} is not "*":
+			sender is player
+			startTest(arg-1)
+		else:
+			startTest(arg-1)
+
+command /stopTest <string="*">:
+	trigger:
+		stopTest(arg-1)
+
+command test:
+	trigger:
+		broadcast "%{testScripts::*}%"
