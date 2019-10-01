@@ -31,7 +31,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("AI")
+@Name("Entity AI")
 @Description("Returns whether an entity has AI.")
 @Examples("set artificial intelligence of target entity to false")
 @Since("INSERT VERSION")
@@ -39,16 +39,6 @@ public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 	
 	static {
 		register(ExprAI.class, Boolean.class, "(ai|artificial intelligence)", "livingentities");
-	}
-	
-	@Override
-	public Class<? extends Boolean> getReturnType() {
-		return Boolean.class;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "artificial intelligence";
 	}
 	
 	@Override
@@ -72,6 +62,16 @@ public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 		for (LivingEntity entity : getExpr().getArray(event)) {
 			entity.setAI(value);
 		}
+	}
+	
+	@Override
+	public Class<? extends Boolean> getReturnType() {
+		return Boolean.class;
+	}
+	
+	@Override
+	protected String getPropertyName() {
+		return "artificial intelligence";
 	}
 	
 }

@@ -27,7 +27,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 
-@Name("AI")
+@Name("Has AI")
 @Description("Checks whether an entity has AI.")
 @Examples("target entity has ai")
 @Since("INSERT VERSION")
