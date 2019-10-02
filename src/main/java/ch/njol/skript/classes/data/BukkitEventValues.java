@@ -1012,10 +1012,10 @@ public final class BukkitEventValues {
 		}
 		//PlayerRiptideEvent
 		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
-			EventValues.registerEventValue(PlayerRiptideEvent.class, ItemStack.class, new Getter<ItemStack, PlayerRiptideEvent>() {
+			EventValues.registerEventValue(PlayerRiptideEvent.class, ItemType.class, new Getter<ItemType, PlayerRiptideEvent>() {
 				@Override
-				public ItemStack get(PlayerRiptideEvent e) {
-					return e.getItem();
+				public ItemType get(PlayerRiptideEvent e) {
+					return new ItemType(e.getItem());
 				}
 			}, 0);
 		}
