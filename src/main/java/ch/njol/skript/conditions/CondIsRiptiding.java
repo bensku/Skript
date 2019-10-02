@@ -27,7 +27,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.util.Version;
 
 @Name("Is Riptiding")
 @Description("Checks to see if an entity is currently using the Riptide enchantment.")
@@ -36,7 +35,7 @@ import ch.njol.skript.util.Version;
 public class CondIsRiptiding extends PropertyCondition<LivingEntity> {
 	
 	static {
-		if (!Skript.getMinecraftVersion().isSmallerThan(new Version(1, 13))) {
+		if (Skript.methodExists(LivingEntity.class, "isRiptiding")) {
 			register(CondIsRiptiding.class, PropertyType.BE, "riptiding", "livingentities");
 		}
 	}
