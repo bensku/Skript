@@ -39,7 +39,7 @@ public class ExprClientViewDistance extends SimplePropertyExpression<Player, Num
 	
 	static {
 		if (Skript.methodExists(Player.class, "getClientViewDistance")) {
-			register(ExprClientViewDistance.class, Number.class, "client view distance", "player");
+			register(ExprClientViewDistance.class, Number.class, "client view distance[s]", "players");
 		}
 	}
 	
