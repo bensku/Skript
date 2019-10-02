@@ -33,7 +33,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Item with CustomModelData")
@@ -56,7 +56,7 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
 		setExpr((Expression<ItemType>) exprs[0]);
 		data = (Expression<Number>) exprs[1];
 		return true;
@@ -74,18 +74,6 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 			return item;
 		});
 	}
-	/*
-	@Override
-	protected ItemType[] get(Event e, ItemType[] source) {
-		Number damage = this.damage.getSingle(e);
-		if (damage == null)
-			return source;
-		return get(source.clone(), item -> {
-			item.iterator().forEachRemaining(i -> i.setDurability(damage.intValue()));
-			return item;
-		});
-	}
-	 */
 	
 	@Override
 	public Class<? extends ItemType> getReturnType() {
