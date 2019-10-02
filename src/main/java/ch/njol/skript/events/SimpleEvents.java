@@ -68,6 +68,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -499,7 +500,6 @@ public class SimpleEvents {
 						"	set the fake max players count to (online players count + 1)",
 						"	set the shown icon to a random server icon out of {server-icons::*}")
 				.since("2.3");
-		
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
 					"[entity] swim toggl(e|ing)")
@@ -509,6 +509,14 @@ public class SimpleEvents {
 							"	event-entity does not have permission \"swim\"",
 							"	cancel event")
 					.since("2.3");
+		}
+		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
+			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchantment]")
+				.description("Called when the player activates the riptide enchantment, using their trident to propel them through the air.",
+					"Note: the riptide action is performed client side, so manipulating the player in this event may have undesired effects.")
+				.examples("on riptide:",
+					"	send \"You are riptiding!\"")
+				.since("INSERT VERSION");
 		}
 	}
 }
