@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -29,58 +28,35 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.util.Kleenean;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("View Distance of Client")
 @Description("The view distance of the client. (Can not be changed)")
 @Examples({"set {_clientView} to the client view distance of player", "set view distance of player to client view distance of player"})
 @RequiredPlugins("1.13.2+")
 @Since("INSERT VERSION")
-public class ExprClientViewDistance extends SimpleExpression<Number> {
+public class ExprClientViewDistance extends SimplePropertyExpression<Player, Number> {
 	
 	static {
 		if (Skript.methodExists(Player.class, "getClientViewDistance")) {
-			Skript.registerExpression(ExprClientViewDistance.class, Number.class, ExpressionType.PROPERTY,
-				"[the] client view distance of %player%");
+			register(ExprClientViewDistance.class, Number.class, "client view distance", "player");
 		}
 	}
 	
-	@SuppressWarnings("null")
-	private Expression<Player> player;
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		player = (Expression<Player>) exprs[0];
-		return true;
-	}
-	
-	@Override
 	@Nullable
-	protected Number[] get(Event e) {
-		final Player player = this.player.getSingle(e);
-		if (player == null)
-			return new Number[0];
-		return new Number[] {player.getClientViewDistance()};
+	@Override
+	public Number convert(Player player) {
+		return player.getClientViewDistance();
 	}
 	
 	@Override
-	public boolean isSingle() {
-		return true;
+	protected String getPropertyName() {
+		return "client view distance";
 	}
 	
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
-	}
-	
-	@Override
-	public String toString(@Nullable Event e, boolean d) {
-		return "client view distance of " + player.toString(e, d);
 	}
 	
 }
