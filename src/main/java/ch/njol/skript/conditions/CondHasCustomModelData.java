@@ -19,10 +19,10 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,17 +35,17 @@ import ch.njol.skript.doc.Since;
 @Examples("player's tool has custom model data")
 @RequiredPlugins("1.14+")
 @Since("INSERT VERSION")
-public class CondHasCustomModelData extends PropertyCondition<ItemStack> {
+public class CondHasCustomModelData extends PropertyCondition<ItemType> {
 	
 	static {
 		if (Skript.methodExists(ItemMeta.class, "hasCustomModelData")) {
-			register(CondHasCustomModelData.class, PropertyType.HAVE, "[custom] model data", "itemstacks");
+			register(CondHasCustomModelData.class, PropertyType.HAVE, "[custom] model data", "itemtypes");
 		}
 	}
 	
 	@Override
-	public boolean check(ItemStack itemStack) {
-		return itemStack.getItemMeta().hasCustomModelData();
+	public boolean check(ItemType item) {
+		return item.getItemMeta().hasCustomModelData();
 	}
 	
 	@Override
