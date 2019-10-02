@@ -20,11 +20,11 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -40,20 +40,20 @@ import ch.njol.util.coll.CollectionUtils;
 	"set {_model} to custom model data of player's tool"})
 @RequiredPlugins("1.14+")
 @Since("INSERT VERSION")
-public class ExprCustomModelData extends SimplePropertyExpression<ItemStack, Long> {
+public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long> {
 	
 	static {
 		if (Skript.methodExists(ItemMeta.class, "hasCustomModelData")) {
-			register(ExprCustomModelData.class, Long.class, "[custom] model data", "itemstack");
+			register(ExprCustomModelData.class, Long.class, "[custom] model data", "itemtypes");
 		}
 	}
 	
 	@SuppressWarnings("null")
 	@Override
-	public Long convert(ItemStack itemStack) {
-		assert itemStack.getItemMeta() != null;
-		if (itemStack.getItemMeta().hasCustomModelData())
-			return (long) itemStack.getItemMeta().getCustomModelData();
+	public Long convert(ItemType item) {
+		assert item.getItemMeta() != null;
+		if (item.getItemMeta().hasCustomModelData())
+			return (long) item.getItemMeta().getCustomModelData();
 		else
 			return 0L;
 	}
@@ -77,25 +77,26 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemStack, Lon
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		long data = delta == null ? 0 : ((Number) delta[0]).intValue();
 		if (data > 99999999 || data < 0) data = 0;
-		long oldData = 0;
-		ItemMeta meta = getExpr().getSingle(e).getItemMeta();
-		assert meta != null;
-		if (meta.hasCustomModelData())
-			oldData = meta.getCustomModelData();
-		switch (mode) {
-			case ADD:
-				data = oldData + data;
-				break;
-			case REMOVE:
-				data = oldData - data;
-				break;
-			case DELETE:
-			case RESET:
-			case REMOVE_ALL:
-				data = 0;
+		for (ItemType item : getExpr().getArray(e)) {
+			long oldData = 0;
+			ItemMeta meta = item.getItemMeta();
+			if (meta.hasCustomModelData())
+				oldData = meta.getCustomModelData();
+			switch (mode) {
+				case ADD:
+					data = oldData + data;
+					break;
+				case REMOVE:
+					data = oldData - data;
+					break;
+				case DELETE:
+				case RESET:
+				case REMOVE_ALL:
+					data = 0;
+			}
+			meta.setCustomModelData((int) data);
+			item.setItemMeta(meta);
 		}
-		meta.setCustomModelData((int) data);
-		getExpr().getSingle(e).setItemMeta(meta);
 	}
 	
 	@Override
