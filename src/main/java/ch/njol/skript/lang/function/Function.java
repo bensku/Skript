@@ -87,7 +87,7 @@ public abstract class Function<T> {
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(final Object[][] params) {
-		if (params[0].length == 0) // Parameters are not of the correct type 
+		if (params.length > 0 && params[0].length == 0) // Parameters exist, but parameters are not of the correct type 
 			return null;
 		
 		final FunctionEvent<? extends T> e = new FunctionEvent<>(this);
