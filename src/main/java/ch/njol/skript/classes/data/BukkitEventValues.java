@@ -644,7 +644,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public ItemType get(final PlayerInteractEvent e) {
 				ItemStack item = e.getItem();
-				return item == null ? null : new ItemType(e.getItem());
+				return item == null ? null : new ItemType(item);
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, Direction.class, new Getter<Direction, PlayerInteractEvent>() {
