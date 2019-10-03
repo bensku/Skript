@@ -643,7 +643,8 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public ItemType get(final PlayerInteractEvent e) {
-				return new ItemType(e.getItem());
+				ItemStack item = e.getItem();
+				return item == null ? null : new ItemType(e.getItem());
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, Direction.class, new Getter<Direction, PlayerInteractEvent>() {
@@ -817,7 +818,8 @@ public final class BukkitEventValues {
 			public ItemType get(final InventoryClickEvent e) {
 				if (e instanceof CraftItemEvent)
 					return new ItemType(((CraftItemEvent) e).getRecipe().getResult());
-				return new ItemType(e.getCurrentItem());
+				ItemStack item = e.getCurrentItem();
+				return item == null ? null : new ItemType(item);
 			}
 		}, 0);
 		EventValues.registerEventValue(InventoryClickEvent.class, Slot.class, new Getter<Slot, InventoryClickEvent>() {
