@@ -35,7 +35,7 @@ import ch.njol.skript.doc.Since;
 public class CondIsBlock extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsBlock.class, "([a] block|blocks)", "items");
+		register(CondIsBlock.class, "([a] block|blocks)", "itemtypes");
 	}
 	
 	@Override
