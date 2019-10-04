@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Locale;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -41,76 +43,46 @@ import ch.njol.util.Kleenean;
 /**
  * @author bensku
  */
-@Name("Upper/lower Case Text")
-@Description("Copy of given text in upper or lower case.")
+@Name("Lower/Upper Case Text")
+@Description("Copy of given text in lower or upper case.")
 @Examples("\"oops!\" in upper case # OOPS!")
 @Since("2.2-dev16")
 public class ExprStringCase extends SimpleExpression<String> {
-
-	private final static int UPPER = 0, LOWER = 1;
-	
-	/**
-	 * Helper function which takes nullable string and
-	 * uses given mode to it.
-	 * @param str Original string.
-	 * @param mode See above, UPPER or LOWER.
-	 * @return Changed string.
-	 */
-	@SuppressWarnings("null")
-	private static String changeCase(@Nullable String str, int mode) {
-		if (str == null)
-			return "";
-		else if (mode == UPPER)
-			return str.toUpperCase();
-		else if (mode == LOWER)
-			return str.toLowerCase();
-		else
-			return str;
-	}
 	
 	static {
 		Skript.registerExpression(ExprStringCase.class, String.class, ExpressionType.SIMPLE,
-				"%string% in (0¦upper|1¦lower) case", "capitalized %string%");
+				"%strings% in (0¦upper|1¦lower)[ ]case", 
+				"(0¦upper|1¦lower)[ ]case %strings%",
+				"capitali(s|z)ed %strings%");
 	}
 	
-	@Nullable
-	private Expression<String> origin;
-	@Nullable
-	private String literal;
-	private int mode;
+	@SuppressWarnings("null")
+	private Expression<String> expr;
 	
-	@SuppressWarnings({"unchecked"})
+	private boolean uppercase = true;
+	
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (exprs[0] instanceof Literal)
-			literal = ((Literal<String>) exprs[0]).getSingle();
-		else
-			origin = (Expression<String>) exprs[0];
-		if (matchedPattern == 1)
-			mode = UPPER;
-		else
-			mode = parseResult.mark;
-		
+		expr = (Expression<String>) exprs[0];
+		uppercase = (matchedPattern == 2) ? true : ((parseResult.mark == 0) ? true : false);
 		return true;
 	}
 	
 	@Override
 	@Nullable
 	protected String[] get(Event e) {
-		String str;
-		if (literal != null)
-			str = changeCase(literal, mode);
-		else if (origin != null)
-			str = changeCase(origin.getSingle(e), mode);
-		else
-			str = "";
-		
-		return new String[] {str};
+		String[] strs = expr.getAll(e);
+		for (int i = 0; i < strs.length; i++) {
+			if (strs[i] != null)
+				strs[i] = uppercase ? strs[i].toUpperCase(Locale.ENGLISH) : strs[i].toLowerCase(Locale.ENGLISH);
+		}
+		return strs;
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -120,12 +92,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (literal != null)
-			return changeCase(literal, mode);
-		else if (origin != null && e != null)
-			return changeCase(origin.getSingle(e), mode);
-		
-		return "";
+		return uppercase ? "uppercase" : "lowercase";
 	}
 	
 }
