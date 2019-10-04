@@ -41,7 +41,9 @@ import ch.njol.util.Kleenean;
 
 @Name("Exploded Blocks")
 @Description("Get all the blocks that were destroyed in an explode event")
-@Examples({"on explode:", "\tloop exploded blocks:", "\t\tadd loop-block to {exploded::blocks::*}"})
+@Examples({"on explode:",
+	"\tloop exploded blocks:",
+	"\t\tadd loop-block to {exploded::blocks::*}"})
 @Events("explode")
 @Since("INSERT VERSION")
 public class ExprExplodedBlocks extends SimpleExpression<Block> {
