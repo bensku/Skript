@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
 public class CondIsFlammable extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsFlammable.class, "flammable", "items");
+		register(CondIsFlammable.class, "flammable", "itemtypes");
 	}
 	
 	@Override
