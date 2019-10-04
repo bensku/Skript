@@ -1,0 +1,8 @@
+{
+	"background_color": "#ffffff",
+	"theme_color": "#d6de79",
+	"name": "Skript documentation",
+	"short_name": "Skript doc",
+	"display": "minimal-ui",
+	"start_url": "/"
+}

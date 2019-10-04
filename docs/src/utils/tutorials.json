@@ -1,0 +1,14 @@
+{
+    "Text": {
+        "description": "A fast tutorial about texts in skript."
+    },
+    "Loops": {
+        "description": "What is a loop? And how make loops in Skript? Look here!"
+    },
+    "Functions": {
+        "description": "The most usefull thing in any language: functions!"
+    },
+    "Custom Commands": {
+        "description": "The most usefull thing in Skript: custom commands!"
+    }
+}

@@ -1,0 +1,18 @@
+.has-yellow-border {
+	border-style: solid;
+	border-width: 5px;
+	border-color:#d6de79;
+}
+
+.is-white { background-color: white; }
+.is-list { list-style: disc; margin-left: 4%; }
+.is-yellow { background-color: #d6de79 }
+.small-section { padding: 1rem 2rem; }
+
+.skript-code {
+	background-color: #f5f5f5;
+}
+
+p, a {
+	font-size: 17px;
+}

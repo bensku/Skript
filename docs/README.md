@@ -1,28 +1,31 @@
-# Skript Documentation Templates
+# Skript Documentation
 
-Skript's features are documented directly in it's Java code. But we still need
+Here is the source code of [Skript website](https://skriptlang.github.io/Skript/).
 
-1. HTML, CSS and (possible) Javascript code to create website out of these
-2. Clear tutorials, not just "you can check the syntax pattern"
-3. Examples explained, if needed
+What the website uses:
 
-When generating final result, each HTML file is surrounded by template.html,
-which provides head element, navigation bar and so on.
+ * Bulma
+ * FontAwesome
+ * Svelte
+ * Sapper
 
-## Template Patterns
+## Contribute
 
-Patterns have syntax of ${pattern_here}. For example, ${skript.version} is replaced with
-current Skript version. Please see below for more...
+### Edit documentation
 
-You can also include other files by using ${include <filename>}. Just please make
-sure that those included files don't have tags which are not allowed in position
-where include is called.
+ 1. Replace ``/src/utils/docs.json`` file with the new one
+ 2. Enjoy!
 
-## Pattern Reference
-```
-skript.* - Information of Skript
-version - Skript's version
-include <filename> - Load given file and place them here
-generate <expressions/effects/events/types/functions> <loop template file> - Generated reference
-content - In template.html, marks the point where other file is placed
-```
+### Add a contributor
+
+ 1. Go in the ``/src/utils/developers.json`` file
+ 2. Like others, add yours
+ 3. Enjoy!
+
+### Add a tutorial
+
+ 1. Go in the ``/src/utils/tutorials.json`` file
+ 2. Like others, add yours
+ 3. Go in the ``/src/routes/tutorials`` directory
+ 4. Like others, write your tutorial page
+ 5. Enjoy!
