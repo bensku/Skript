@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.inventory.ItemStack;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -34,9 +35,9 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Description("The maximum stack size of the specified material, e.g. 64 for torches, 16 for buckets, and 1 for swords.")
 @Examples("send \"You can only pick up %max stack size of player's tool% of %type of (player's tool)%\" to player")
 @Since("2.1")
-public class ExprMaxStack extends SimplePropertyExpression<ItemStack, Integer> {
+public class ExprMaxStack extends SimplePropertyExpression<ItemType, Integer> {
 	static {
-		register(ExprMaxStack.class, Integer.class, "max[imum] stack[[ ]size]", "itemstack");
+		register(ExprMaxStack.class, Integer.class, "max[imum] stack[[ ]size]", "itemtype");
 	}
 	
 	@Override
@@ -51,7 +52,7 @@ public class ExprMaxStack extends SimplePropertyExpression<ItemStack, Integer> {
 	
 	@SuppressWarnings("null")
 	@Override
-	public Integer convert(final ItemStack i) {
-		return Integer.valueOf(i.getMaxStackSize());
+	public Integer convert(final ItemType i) {
+		return Integer.valueOf(i.getRandom().getMaxStackSize());
 	}
 }
