@@ -35,7 +35,7 @@ import ch.njol.skript.doc.Since;
 public class CondIsSolid extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsSolid.class, "solid", "items");
+		register(CondIsSolid.class, "solid", "itemtypes");
 	}
 	
 	@Override
