@@ -41,10 +41,10 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on book sign:",
 			"\tmessage \"Book Title: %author of event-item%\""})
 @Since("2.2-dev31")
-public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> {
+public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	
 	static {
-		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemstack");
+		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemtype");
 	}
 	
 	private static final ItemType book = Aliases.javaItemType("book with text");
@@ -56,7 +56,9 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> 
 	
 	@Nullable
 	@Override
-	public String convert(ItemStack itemStack) {
+	public String convert(ItemType item) {
+		ItemStack itemStack = item.getRandom();
+		assert itemStack != null;
 		if (!book.isOfType(itemStack))
 			return null;
 		return ((BookMeta) itemStack.getItemMeta()).getAuthor();
@@ -75,9 +77,10 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> 
 		return null;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		ItemStack itemStack = getExpr().getSingle(e);
+		ItemStack itemStack = getExpr().getSingle(e).getRandom();
 		if (itemStack == null || !book.isOfType(itemStack))
 			return;
 		BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
