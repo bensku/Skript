@@ -9,6 +9,26 @@ What the website uses:
  * Svelte
  * Sapper
 
+## Export Documentation
+
+To export the documentation, run these commands in your terminal:
+
+**Using NPM:**
+
+```
+npm install
+npm run export
+```
+
+**Using YARN (recommanded):**
+
+```
+yarn
+yarn export
+```
+
+It will generate the website as static website at ``__sapper__/export``.
+
 ## Contribute
 
 ### Edit documentation
