@@ -21,6 +21,7 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.inventory.ItemStack;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,15 +32,16 @@ import ch.njol.skript.doc.Since;
 @Description("Checks whether an item is transparent.")
 @Examples({"glass is transparent", "player's tool is transparent."})
 @Since("2.2-dev36")
-public class CondIsTransparent extends PropertyCondition<ItemStack> {
+public class CondIsTransparent extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsTransparent.class, "transparent", "itemstacks");
+		register(CondIsTransparent.class, "transparent", "items");
 	}
 	
 	@Override
-	public boolean check(ItemStack i) {
-		return i.getType().isTransparent();
+	public boolean check(ItemType i) {
+		ItemStack stack = i.getRandom();
+		return stack == null ? false : stack.getType().isTransparent();
 	}
 	
 	@Override
