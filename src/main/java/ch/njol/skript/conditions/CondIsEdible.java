@@ -37,7 +37,7 @@ import org.bukkit.inventory.ItemStack;
 public class CondIsEdible extends PropertyCondition<ItemType> {
 
 	static {
-		PropertyCondition.register(CondIsEdible.class, "edible", "items");
+		PropertyCondition.register(CondIsEdible.class, "edible", "itemtypes");
 	}
 
 	@Override
