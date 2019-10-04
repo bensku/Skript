@@ -21,6 +21,7 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.inventory.ItemStack;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -31,15 +32,16 @@ import ch.njol.skript.doc.Since;
 @Description("Checks whether an item is a block.")
 @Examples({"player's held item is a block", "{list::*} are blocks"})
 @Since("2.4")
-public class CondIsBlock extends PropertyCondition<ItemStack> {
+public class CondIsBlock extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsBlock.class, "([a] block|blocks)", "itemstacks");
+		register(CondIsBlock.class, "([a] block|blocks)", "items");
 	}
 	
 	@Override
-	public boolean check(ItemStack i) {
-		return i.getType().isBlock();
+	public boolean check(ItemType i) {
+		ItemStack stack = i.getRandom();
+		return stack == null ? false : stack.getType().isBlock();
 	}
 	
 	@Override
