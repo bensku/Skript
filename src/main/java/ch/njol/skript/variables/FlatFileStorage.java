@@ -90,7 +90,7 @@ public class FlatFileStorage extends VariablesStorage {
 	/**
 	 * Doesn'ts lock the connection as required by {@link Variables#variableLoaded(String, Object, VariablesStorage)}.
 	 */
-	@SuppressWarnings({"deprecation"})
+	@SuppressWarnings({"deprecation", "null"})
 	@Override
 	protected boolean load_i(final SectionNode n) {
 		SkriptLogger.setNode(null);
