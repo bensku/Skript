@@ -322,6 +322,21 @@ public class DefaultFunctions {
 				.examples("location(0, 128, 0)", "location(player's x-coordinate, player's y-coordinate + 5, player's z-coordinate, player's world, 0, 90)")
 				.since("2.2"));
 		
+		Functions.registerFunction(new JavaFunction<Location>("relative", new Parameter[] {
+			new Parameter<>("location", Classes.getExactClassInfo(Location.class), true, null),
+			new Parameter<>("x", numberClass, true, null),
+			new Parameter<>("y", numberClass, true, null),
+			new Parameter<>("z", numberClass, true, null)
+		}, Classes.getExactClassInfo(Location.class), true) {
+			@Override
+			public Location[] execute(FunctionEvent e, Object[][] params) {
+				return new Location[] {((Location)params[0][0]).add(((Number) params[1][0]).doubleValue(),
+					((Number) params[2][0]).doubleValue(), ((Number) params[3][0]).doubleValue())};
+			}
+		}.description("Creates a location from a relative position in correlation to the input location.")
+			.examples("relative({loc}, 1, 0, -1)", "relative(location of player, -10, 0, 10")
+			.since("INSERT VERSION"));
+		
 		Functions.registerFunction(new JavaFunction<Date>("date", new Parameter[] {
 				new Parameter<>("year", numberClass, true, null), new Parameter<>("month", numberClass, true, null), new Parameter<>("day", numberClass, true, null),
 				new Parameter<>("hour", numberClass, true, new SimpleLiteral<Number>(0, true)), new Parameter<>("minute", numberClass, true, new SimpleLiteral<Number>(0, true)), new Parameter<>("second", numberClass, true, new SimpleLiteral<Number>(0, true)), new Parameter<>("millisecond", numberClass, true, new SimpleLiteral<Number>(0, true)),
