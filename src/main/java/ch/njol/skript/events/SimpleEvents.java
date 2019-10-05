@@ -291,7 +291,7 @@ public class SimpleEvents {
 				.description("Called when a player leaves the server.")
 				.examples("on quit:",
 						"on disconnect:")
-				.since("1.0 (simple disconnection)");
+				.since("1.0");
 		Skript.registerEvent("Respawn", SimpleEvent.class, PlayerRespawnEvent.class, "[player] respawn[ing]")
 				.description("Called when a player respawns. You should prefer this event over the <a href='#death'>death event</a> as the player is technically alive when this event is called.")
 				.examples("on respawn:")
