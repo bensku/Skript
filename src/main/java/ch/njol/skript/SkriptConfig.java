@@ -46,6 +46,7 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseChannel;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.Version;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
 import ch.njol.skript.variables.Variables;
