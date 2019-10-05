@@ -511,7 +511,7 @@ public class SimpleEvents {
 					.since("2.3");
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
-			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchantment]")
+			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchant[ment]]")
 				.description("Called when the player activates the riptide enchantment, using their trident to propel them through the air.",
 					"Note: the riptide action is performed client side, so manipulating the player in this event may have undesired effects.")
 				.examples("on riptide:",
