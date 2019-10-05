@@ -333,10 +333,8 @@ public final class Skript extends JavaPlugin implements Listener {
 						continue;
 					File saveTo = null;
 					if (e.getName().startsWith(SCRIPTSFOLDER + "/") && populateExamples) {
-						String fileName = e.getName().replaceAll("^scripts\\/", "");
-						if (!fileName.contains("/"))
-							fileName = (fileName.startsWith("-") ? "" : "-") + fileName;
-						saveTo = new File(scripts, fileName);
+						final String fileName = e.getName().substring(e.getName().lastIndexOf('/') + 1);
+						saveTo = new File(scripts, (fileName.startsWith("-") ? "" : "-") + fileName);
 					} else if (e.getName().equals("config.sk")) {
 						if (!config.exists())
 							saveTo = config;

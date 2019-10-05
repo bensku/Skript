@@ -1,6 +1,0 @@
-options:
-	testerName: YOUR MINECRAFT USERNAME
-
-on load:
-	loadTest("testScripts/inventory.tests", "inventory.test", "{@testerName}")
-	loadTest("testScripts/helloSkript.tests", "helloSkript.test")

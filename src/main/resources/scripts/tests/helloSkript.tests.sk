@@ -1,4 +1,0 @@
-command /helloSkript.test:
-	trigger:
-		broadcast "Hello Skript!"
-		successTest(script)
