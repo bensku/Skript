@@ -61,14 +61,14 @@
 					{#if documentation[docType][element].patterns}
 						<label class="label">Patterns</label>
 						<div class="small-section skript-code">
-							<p>{documentation[docType][element].patterns.join('\n')}</p>
+							<pre>{documentation[docType][element].patterns.join('\n')}</pre>
 						</div>
 					{/if}
 
 					{#if documentation[docType][element].examples}
 						<label class="label">Example</label>
 						<div class="small-section skript-code">
-							<p>{documentation[docType][element].examples.join('\n')}</p>
+							<pre>{documentation[docType][element].examples.join('\n')}</pre>
 						</div>
 					{/if}
 
