@@ -51,9 +51,10 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 	@SuppressWarnings("null")
 	@Override
 	public Long convert(ItemType item) {
-		assert item.getItemMeta() != null;
-		if (item.getItemMeta().hasCustomModelData())
-			return (long) item.getItemMeta().getCustomModelData();
+		ItemMeta meta = item.getItemMeta();
+		assert meta != null;
+		if (meta.hasCustomModelData())
+			return (long) meta.getCustomModelData();
 		else
 			return 0L;
 	}
