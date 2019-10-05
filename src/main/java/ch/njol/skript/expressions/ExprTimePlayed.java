@@ -38,9 +38,10 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Time Played")
-@Description("The timespan a player has played for on the server.")
+@Description("The amount of time a player has played for on the server.")
 @Examples({"set {_t} to time played of player",
 	"if player's time played is greater than 10 minutes:",
+	"\tgive player a diamond sword",
 	"set player's time played to 0 seconds"})
 @Since("INSERT VERSION")
 public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
