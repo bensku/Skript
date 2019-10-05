@@ -120,7 +120,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	protected String[] get(Event e) {
-		String[] strs = expr.getAll(e);
+		String[] strs = expr.getArray(e);
 		for (int i = 0; i < strs.length; i++) {
 			if (strs[i] != null) {
 				switch (type) {
