@@ -1,10 +1,11 @@
 <script>
 
 	import { onMount } from 'svelte';
-	import { setupColors } from 'utils';
+	import { setupColors, setupScroll } from 'utils';
 
 	onMount(async () => {
 		setupColors();
+		setupScroll();
 	})
 
 </script>

@@ -1,3 +1,14 @@
+<script>
+
+	import { onMount } from 'svelte';
+	import { setupScroll } from 'utils';
+
+	onMount(async () => {
+		setupScroll();
+	})
+
+</script>
+
 <div class="is-white">
 
 	<div class="section">

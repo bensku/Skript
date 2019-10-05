@@ -1,18 +1,26 @@
 <script>
 
 	import { onMount } from 'svelte';
-	import { setupColors, clicked, search, firstLetterUpperCase } from 'utils';
+	import { setupColors, setupScroll, search, firstLetterUpperCase } from 'utils';
 	import documentation from '../../utils/docs.json';
 	import Card from '../Card.svelte';
 
 	export let docType;
 
 	let searchValue = '';
+	let loadedElements = 0;
 
 	async function setupListeners() {
 		document.getElementsByClassName('search-input')[0].addEventListener('keyup', async () => {
 			search(searchValue);
 		})
+	}
+
+	async function loaded() {
+		loadedElements ++
+		if (loadedElements === Object.keys(documentation[docType]).length) {
+			setupScroll();
+		}
 	}
 
 	onMount(async () => {
@@ -38,7 +46,7 @@
 			
 			<div class="small-section" id="{documentation[docType][element].id}">
 
-				<Card>
+				<Card on:mount={loaded}>
 
 					<h1 slot="title" class="subtitle">
 						<strong>{documentation[docType][element].name}</strong>

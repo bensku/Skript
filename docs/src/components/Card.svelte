@@ -1,8 +1,18 @@
 <script>
+
+	import { onMount, createEventDispatcher } from 'svelte'
+
 	let clazz = ""
 	export let image = "";
 	export let withoutTitle = false;
 	export { clazz as class };
+
+	const dispatch = createEventDispatcher();
+
+	onMount(async () => {
+		dispatch('mount');
+	})
+
 </script>
 
 <div class="card {clazz}">
