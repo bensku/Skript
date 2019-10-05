@@ -115,13 +115,12 @@ public abstract class Utils {
 		double targetDistanceSquared = 0;
 		final double radiusSquared = 1;
 		final Vector l = entity.getEyeLocation().toVector(), n = entity.getLocation().getDirection().normalize();
-		final double cos45 = Math.cos(Math.PI / 4);
 		for (final T other : type == null ? (List<T>) entity.getWorld().getEntities() : entity.getWorld().getEntitiesByClass(type.getType())) {
 			if (other == null || other == entity || type != null && !type.isInstance(other))
 				continue;
 			if (target == null || targetDistanceSquared > other.getLocation().distanceSquared(entity.getLocation())) {
 				final Vector t = other.getLocation().add(0, 1, 0).toVector().subtract(l);
-				if (n.clone().crossProduct(t).lengthSquared() < radiusSquared && t.normalize().dot(n) >= cos45) {
+				if (n.clone().crossProduct(t).lengthSquared() < radiusSquared && t.normalize().dot(n) >= 0.5) {
 					target = other;
 					targetDistanceSquared = target.getLocation().distanceSquared(entity.getLocation());
 				}
