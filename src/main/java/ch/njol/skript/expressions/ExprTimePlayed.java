@@ -38,8 +38,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Time Played")
-@Description("The amount of time a player has played for on the server. This info is stored on the server as a player statistic. " +
-	"The player can see the same information in the client's statistics menu.")
+@Description("The amount of time a player has played for on the server. This info is stored in the player's statistics in " +
+	"the main world's data folder. Changing this will also change the player's stats which can be views in the client's statistics menu.")
 @Examples({"set {_t} to time played of player",
 	"if player's time played is greater than 10 minutes:",
 	"\tgive player a diamond sword",
