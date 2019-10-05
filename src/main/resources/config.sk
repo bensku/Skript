@@ -266,6 +266,15 @@ databases:
 		type: disabled # change to line below to enable this database
 		# type: SQLite
 
+		variable re-save threshold: 1000
+		# The number of variables that are required to change in order for a re-save to occur.
+		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
+		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
+
+		file re-write frequency in ticks: 6000
+		# The number of ticks that should pass before the database file is re-written.
+		# Setting this value lower is not recommended as saving large database files may cause server lag.
+
 		pattern: db_.* # this pattern will save all variables that start with 'db_' in this SQLite database.
 
 		file: ./plugins/Skript/variables.db
