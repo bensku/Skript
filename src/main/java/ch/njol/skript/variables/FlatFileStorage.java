@@ -194,38 +194,30 @@ public class FlatFileStorage extends VariablesStorage {
 			Skript.info(file.getName() + " successfully updated.");
 		}
 		
-		String thresholdRaw = getValue(n, "variable re-save threshold");
-		if (thresholdRaw != null) {
-			try {
-				final Integer threshold = Integer.valueOf(thresholdRaw);
-				if (threshold < 0)
-					Skript.error("The variable re-save threshold cannot be negative!");
-				else
-					REQUIRED_CHANGES_FOR_RESAVE = threshold;
-			} catch (NumberFormatException e) {
-				Skript.error("Invalid integer '" + thresholdRaw);
-			}
+		//TODO: Generate these entries if absent
+		Integer threshold = getValue(n, "variable re-save threshold", Integer.class);
+		if (threshold != null) {
+			if (threshold < 0)
+				Skript.error("The variable re-save threshold cannot be negative!");
+			else
+				REQUIRED_CHANGES_FOR_RESAVE = threshold;
 		}
 		
-		String rewriteRaw = getValue(n, "file re-write frequency in ticks");
-		if (rewriteRaw != null) {
-			try {
-				final Integer rewrite = Integer.valueOf(rewriteRaw);
-				if (rewrite < 1) {
-					Skript.error("The file re-write frequency cannot be less than 1 tick!");
-				} else {
-					if (rewrite <= 20 * 60)
-						Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
-					FILE_REWRITE_FREQUENCY_TICKS = rewrite;
-				}
-			} catch (NumberFormatException e) {
-				Skript.error("Invalid integer '" + rewriteRaw);
+		Integer rewrite = getValue(n, "file re-write frequency in ticks", Integer.class);
+		if (rewrite != null) {
+			if (rewrite < 1) {
+				Skript.error("The file re-write frequency cannot be less than 1 tick!");
+			} else {
+				if (rewrite <= 20 * 60)
+					Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
+				FILE_REWRITE_FREQUENCY_TICKS = rewrite;
 			}
 		}
 		
 		connect();
 		
 		saveTask = new Task(Skript.getInstance(), FILE_REWRITE_FREQUENCY_TICKS, FILE_REWRITE_FREQUENCY_TICKS, true) {
+			@SuppressWarnings("synthetic-access")
 			@Override
 			public void run() {
 				if (changes.get() >= REQUIRED_CHANGES_FOR_RESAVE) {
