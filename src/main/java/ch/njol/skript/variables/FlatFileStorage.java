@@ -102,6 +102,7 @@ public class FlatFileStorage extends VariablesStorage {
 		boolean update2_0_beta3 = false;
 		final Version v2_1 = new Version(2, 1);
 		boolean update2_1 = false;
+		final Version v_2_4_beta9 = new Version(2, 4, "beta 9");
 		
 		BufferedReader r = null;
 		try {
@@ -194,23 +195,55 @@ public class FlatFileStorage extends VariablesStorage {
 			Skript.info(file.getName() + " successfully updated.");
 		}
 		
-		//TODO: Generate these entries if absent
-		Integer threshold = getValue(n, "variable re-save threshold", Integer.class);
-		if (threshold != null) {
-			if (threshold < 0)
-				Skript.error("The variable re-save threshold cannot be negative!");
-			else
-				REQUIRED_CHANGES_FOR_RESAVE = threshold;
-		}
-		
-		Integer rewrite = getValue(n, "file re-write frequency in ticks", Integer.class);
-		if (rewrite != null) {
-			if (rewrite < 1) {
-				Skript.error("The file re-write frequency cannot be less than 1 tick!");
-			} else {
-				if (rewrite <= 20 * 60)
-					Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
-				FILE_REWRITE_FREQUENCY_TICKS = rewrite;
+		if (SkriptConfig.getPreviousConfigVersion().isSmallerThan(v_2_4_beta9)) {
+			try {
+				Skript.info("Updating your config to version 2.4-beta9...");
+				r = new BufferedReader(new InputStreamReader(new FileInputStream(SkriptConfig.getConfig().getFile()), UTF_8));
+				List<String> convertedCfg = new ArrayList<>();
+				String line = null;
+				while((line = r.readLine()) != null) {
+					convertedCfg.add(line);
+					if (line.contains("type: CSV") || line.contains("type: SQLite")) {
+						convertedCfg.add("");
+						convertedCfg.add("		variable re-save threshold: 1000");
+						convertedCfg.add("		# The number of variables that are required to change in order for a re-save to occur.");
+						convertedCfg.add("		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower");
+						convertedCfg.add("		# this threshold to ensure that variables are always saved (prevents data loss during a crash).");
+						convertedCfg.add("");
+						convertedCfg.add("		file re-write frequency in ticks: 6000");
+						convertedCfg.add("		# The number of ticks that should pass before the database file is re-written.");
+						convertedCfg.add("		# Setting this value lower is not recommended as saving large database files may cause server lag.");
+					}
+				}
+				r.close();
+				BufferedWriter w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(SkriptConfig.getConfig().getFile()), UTF_8));
+				for (String str : convertedCfg) {
+					w.write(str + "\n");
+				}
+				w.close();
+				Skript.info("Successfully updated your config to version 2.4-beta9!");
+			} catch (IOException e) {
+				Skript.error("Could not update config to the version 2.4-beta9!");
+				ioEx = e;
+			}
+		} else { // Valid Config Version
+			Integer threshold = getValue(n, "variable re-save threshold", Integer.class);
+			if (threshold != null) {
+				if (threshold < 0)
+					Skript.error("The variable re-save threshold cannot be negative!");
+				else
+					REQUIRED_CHANGES_FOR_RESAVE = threshold;
+			}
+			
+			Integer rewrite = getValue(n, "file re-write frequency in ticks", Integer.class);
+			if (rewrite != null) {
+				if (rewrite < 1) {
+					Skript.error("The file re-write frequency cannot be less than 1 tick!");
+				} else {
+					if (rewrite <= 20 * 60)
+						Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
+					FILE_REWRITE_FREQUENCY_TICKS = rewrite;
+				}
 			}
 		}
 		
