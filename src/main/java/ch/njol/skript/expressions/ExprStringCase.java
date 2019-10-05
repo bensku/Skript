@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Locale;
-
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,9 +39,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-/**
- * @author bensku
- */
 @Name("Case Text")
 @Description("Copy of given text in Lowercase, Uppercase, Proper Case, camelCase, PascalCase, Snake_Case, and Kebab-Case")
 @Examples({"\"Oops!\" in lowercase # oops!",
@@ -130,7 +125,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 			if (strs[i] != null) {
 				switch (type) {
 					case 0: // Basic Case Change 
-						strs[i] = (casemode == 1) ? strs[i].toUpperCase(Locale.ENGLISH) : strs[i].toLowerCase(Locale.ENGLISH);
+						strs[i] = (casemode == 1) ? strs[i].toUpperCase() : strs[i].toLowerCase();
 						break;
 					case 1: // Proper Case 
 						strs[i] = (casemode == 3) ? WordUtils.capitalizeFully(strs[i]) : WordUtils.capitalize(strs[i]);
@@ -155,7 +150,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	
 	@Override
 	public boolean isSingle() {
-		return false;
+		return expr.isSingle();
 	}
 
 	@Override
@@ -185,7 +180,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	private static String toCamelCase(String str, boolean strict) {
 		String[] words = str.split(" "); // Splits at spaces 
-		String buf = words.length > 0 ? (strict ? words[0].toLowerCase(Locale.ENGLISH) : WordUtils.uncapitalize(words[0])) : "";
+		String buf = words.length > 0 ? (strict ? words[0].toLowerCase() : WordUtils.uncapitalize(words[0])) : "";
 		for (int i = 1; i < words.length; i++)
 			buf += strict ? WordUtils.capitalizeFully(words[i]) : WordUtils.capitalize(words[i]);
 		return buf;
