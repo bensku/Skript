@@ -38,7 +38,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Time Played")
-@Description("The amount of time a player has played for on the server.")
+@Description("The amount of time a player has played for on the server. This info is stored on the server as a player statistic. " +
+	"The player can see the same information in the client's statistics menu.")
 @Examples({"set {_t} to time played of player",
 	"if player's time played is greater than 10 minutes:",
 	"\tgive player a diamond sword",
@@ -51,7 +52,7 @@ public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	static {
 		register(ExprTimePlayed.class, Timespan.class, "time played", "players");
 		if (Skript.isRunningMinecraft(1, 13)) {
-			TIME_PLAYED = Statistic.PLAY_ONE_MINUTE;
+			TIME_PLAYED = Statistic.PLAY_ONE_MINUTE; // Statistic name is misleading, it's actually measured in ticks
 		} else {
 			TIME_PLAYED = Statistic.valueOf("PLAY_ONE_TICK");
 		}
@@ -67,7 +68,7 @@ public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	@Nullable
 	@Override
 	public Timespan convert(Player player) {
-		return new Timespan((long) player.getStatistic(TIME_PLAYED) * 50);
+		return Timespan.fromTicks_i((long) player.getStatistic(TIME_PLAYED) * 50);
 	}
 	
 	@Nullable
@@ -101,18 +102,13 @@ public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	}
 	
 	@Override
-	protected String getPropertyName() {
-		return "time played";
-	}
-	
-	@Override
 	public Class<? extends Timespan> getReturnType() {
 		return Timespan.class;
 	}
 	
 	@Override
-	public String toString(@Nullable Event e, boolean d) {
-		return "time played of " + getExpr().toString(e, d);
+	protected String getPropertyName() {
+		return "time played";
 	}
 	
 }
