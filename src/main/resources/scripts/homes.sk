@@ -17,7 +17,7 @@ command /delhome <string>:
 	executable by: players
 	trigger:
 		clear {homes::%uuid of player%::%arg-1%}
-		message "Delete your home <green>%arg-1%<reset>"
+		message "Deleted your home <green>%arg-1%<reset>"
 
 command /home <string>:
 	description: Teleport yourself to your home
