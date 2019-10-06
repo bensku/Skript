@@ -35,7 +35,7 @@ import ch.njol.skript.doc.Since;
 public class CondIsGlowing extends PropertyCondition<Entity> {
 	
 	static {
-		register(CondIsPoisoned.class, "glowing", "entities");
+		register(CondIsGlowing.class, "glowing", "entities");
 	}
 	
 	@Override
