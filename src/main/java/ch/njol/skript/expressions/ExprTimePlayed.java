@@ -68,7 +68,7 @@ public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	@Nullable
 	@Override
 	public Timespan convert(Player player) {
-		return Timespan.fromTicks_i((long) player.getStatistic(TIME_PLAYED) * 50);
+		return Timespan.fromTicks_i(player.getStatistic(TIME_PLAYED));
 	}
 	
 	@Nullable
