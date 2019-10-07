@@ -67,7 +67,7 @@ public class EffGlow extends Effect {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "make " + (glow ? "" : "not ") + "glow";
+		return "make " + expr.toString(e, debug) + " " + (glow ? "" : "not ") + "glow";
 	}
 	
 }
