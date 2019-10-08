@@ -1,0 +1,4 @@
+test "entity data mooshroom":
+	spawn brown mooshroom at location(0, 64, 0, world "world")
+	spawn 3 red mooshrooms at location(0, 64, 0, world "world")
+	delete all mooshrooms
