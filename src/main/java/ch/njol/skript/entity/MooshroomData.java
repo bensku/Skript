@@ -27,7 +27,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
-public class MooshroomData extends EntityData<MushroomCow>{
+public class MooshroomData extends EntityData<MushroomCow> {
 	
 	static {
 		if (Skript.methodExists(MushroomCow.class, "getVariant")) {
