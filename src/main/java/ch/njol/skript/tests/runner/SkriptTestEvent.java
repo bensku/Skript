@@ -17,30 +17,25 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.tests.runner;
 
-import org.bukkit.DyeColor;
-import org.eclipse.jdt.annotation.Nullable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
+/**
+ * Raised by Skript when tests are run.
+ */
+public class SkriptTestEvent extends Event {
 
-public interface Color extends YggdrasilExtendedSerializable {
+	private static final HandlerList handlers = new HandlerList();
 	
-	/**
-	 * @return The Bukkit Color of this Color.
-	 */
-	org.bukkit.Color asBukkitColor();
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 	
-	
-	/**
-	 * @return The Bukkkit DyeColor of this Color.
-	 */
-	@Nullable
-	DyeColor asDyeColor();
-	
-	/**
-	 * @return The name of the Skript Color.
-	 */
-	String getName();
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 	
 }
