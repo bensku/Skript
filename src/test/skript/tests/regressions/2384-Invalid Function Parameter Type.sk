@@ -1,2 +1,3 @@
 test "invalid function parameter type":
 	set {_test} to max("hello", "bye") # This code should not throw an ArrayIndexOutOfBoundException 
+	assert {_test} is not set with "invalid function parameter type failed" # Shouldn't return anything... 
