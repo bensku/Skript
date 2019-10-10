@@ -186,8 +186,8 @@ void createTestTask(String name, String environments, boolean devMode) {
 createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.14.4.json', false)
 createTestTask('skriptTest', 'src/test/skript/environments/main', false)
 createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
-createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + System.getenv('skript.testEnv') == null
-		? 'paper-1.14.4.json' : System.getenv('skript.testEnv'), true)
+createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (System.getProperty('skript.testEnv') == null
+		? 'paper-1.14.4.json' : System.getProperty('skript.testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
