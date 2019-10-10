@@ -1,5 +1,0 @@
-test "entity data mooshroom":
-	spawn brown mooshroom at location(0, 64, 0, world "world")
-	spawn 3 red mooshrooms at location(0, 64, 0, world "world")
-	delete all mooshrooms
-	assert size of all mooshrooms = 0 with "all mooshrooms not deleted:%size of all mooshrooms%"
