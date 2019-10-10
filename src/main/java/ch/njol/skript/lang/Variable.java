@@ -122,13 +122,36 @@ public class Variable<T> implements Expression<T> {
 				Skript.error("A variable's name must neither start nor end with the separator '" + SEPARATOR + "' (error in variable {" + name + "})");
 			return false;
 		} else if (name.contains("*") && (!allowListVariable || name.indexOf("*") != name.length() - 1 || !name.endsWith(SEPARATOR + "*"))) {
-			if (printErrors) {
-				if (name.indexOf("*") == 0)
-					Skript.error("[2.0] Local variables now start with an underscore, e.g. {_local variable}. The asterisk is reserved for list variables. (error in variable {" + name + "})");
-				else
-					Skript.error("A variable's name must not contain any asterisks except at the end after '" + SEPARATOR + "' to denote a list variable, e.g. {variable" + SEPARATOR + "*} (error in variable {" + name + "})");
+			List<Integer> asterisks = new ArrayList<>();
+			List<Integer> percents = new ArrayList<>();
+			for (int i = 0; i < name.length(); i++) {
+				char c = name.charAt(i);
+				if (c == '*')
+					asterisks.add(i);
+				else if (c == '%')
+					percents.add(i);
 			}
-			return false;
+			int count = asterisks.size();
+			int index = 0;
+			for (int i = 0; i < percents.size(); i += 2) {
+				if (index == asterisks.size() || i+1 == percents.size()) // Out of bounds 
+					break;
+				int lb = percents.get(i), ub = percents.get(i+1);
+				// Continually decrement asterisk count by checking if any asterisks in current range 
+				while (index < asterisks.size() && lb < asterisks.get(index) && asterisks.get(index) < ub) {
+					count--;
+					index++;
+				}
+			}
+			if (!(count == 0 || (count == 1 && name.endsWith(SEPARATOR + "*")))) {
+				if (printErrors) {
+					if (name.indexOf("*") == 0)
+						Skript.error("[2.0] Local variables now start with an underscore, e.g. {_local variable}. The asterisk is reserved for list variables. (error in variable {" + name + "})");
+					else
+						Skript.error("A variable's name must not contain any asterisks except at the end after '" + SEPARATOR + "' to denote a list variable, e.g. {variable" + SEPARATOR + "*} (error in variable {" + name + "})");
+				}
+				return false;
+			}
 		} else if (name.contains(SEPARATOR + SEPARATOR)) {
 			if (printErrors)
 				Skript.error("A variable's name must not contain the separator '" + SEPARATOR + "' multiple times in a row (error in variable {" + name + "})");

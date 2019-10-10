@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 @Examples({"on death of a player:",
 		"\tif the victim is an op:",
 		"\t\tkeep the inventory and experiences"})
-@Since("INSERT VERSION")
+@Since("2.4")
 @Events("death")
 public class EffKeepInventory extends Effect {
 

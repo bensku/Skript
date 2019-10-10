@@ -50,7 +50,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on right click:",
 		"	if event-block is spawner:",
 		"		send \"Spawner's type is %target block's entity type%\""})
-@Since("INSERT VERSION")
+@Since("2.4")
 public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData> {
 	
 	private static final Material MATERIAL_SPAWNER = Aliases.javaItemType("spawner").getMaterial();

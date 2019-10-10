@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 		"",
 		"on break of a coal ore:",
 		"\tcancel the experience drops"})
-@Since("INSERT VERSION")
+@Since("2.4")
 @RequiredPlugins("1.12.2 or newer (cancelling item drops of blocks)")
 @Events({"death", "break / mine"})
 public class EffCancelDrops extends Effect {

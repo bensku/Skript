@@ -60,9 +60,10 @@ public class SheepData extends EntityData<Sheep> {
 	@SuppressWarnings("null")
 	@Override
 	protected boolean init(@Nullable Class<? extends Sheep> c, @Nullable Sheep e) {
-		sheared = e == null ? 0 : e.isSheared() ? 1 : -1;
-		Optional<SkriptColor> color = SkriptColor.fromDyeColor(e.getColor());
-		colors = (e == null || !color.isPresent()) ? null : new Color[] {color.get()};
+		if (e != null) {
+			sheared = e.isSheared() ? 1 : -1;
+			colors = CollectionUtils.array(SkriptColor.fromDyeColor(e.getColor()));
+		}
 		return true;
 	}
 	
@@ -78,12 +79,7 @@ public class SheepData extends EntityData<Sheep> {
 	@Override
 	public boolean match(final Sheep entity) {
 		return (sheared == 0 || entity.isSheared() == (sheared == 1))
-				&& (colors == null || SimpleExpression.check(colors, new Checker<Color>() {
-					@Override
-					public boolean check(final @Nullable Color c) {
-						return c != null && entity.getColor() == c.asDyeColor();
-					}
-				}, false, false));
+				&& (colors == null || SimpleExpression.check(colors, c -> c != null && entity.getColor() == c.asDyeColor(), false, false));
 	}
 	
 	@Override

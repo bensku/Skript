@@ -17,49 +17,53 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.events;
+package ch.njol.skript.tests.runner;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.bukkit.event.player.PlayerEditBookEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
+import ch.njol.skript.lang.SkriptParser;
 
-public class EvtLevel extends SkriptEvent {
+public class EvtTestCase extends SkriptEvent {
 	
 	static {
-		Skript.registerEvent("Level Change", EvtLevel.class, PlayerLevelChangeEvent.class, "[player] level (change|1¦up|-1¦down)")
-			.description("Called when a player's <a href='expressions.html#ExprLevel'>level</a> changes, e.g. by gathering experience or by enchanting something.")
-			.examples("on level change:")
-			.since("1.0, 2.4 (level up/down)");
+		if (TestMode.ENABLED)
+			Skript.registerEvent("Test Case", EvtTestCase.class, SkriptTestEvent.class, "test %string%")
+				.description("Contents represent one test case.")
+				.examples("")
+				.since("INSERT VERSION");
 	}
 	
 	@SuppressWarnings("null")
-	private Kleenean leveling;
+	private Expression<String> name;
 	
+	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
-		leveling = Kleenean.get(parseResult.mark);
+	public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
+		name = (Expression<String>) args[0];
 		return true;
 	}
 	
 	@Override
 	public boolean check(Event e) {
-		PlayerLevelChangeEvent event = (PlayerLevelChangeEvent) e;
-		if (leveling.isTrue())
-			return event.getNewLevel() > event.getOldLevel();
-		else if (leveling.isFalse())
-			return event.getNewLevel() < event.getOldLevel();
-		else
-			return true;
+		String n = name.getSingle(e);
+		if (n == null) {
+			return false;
+		}
+		Skript.info("Running test case " + n);
+		TestTracker.testStarted(n);
+		return true;
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "level " + (leveling.isTrue() ? "up" : leveling.isFalse() ? "down" : "change");
+		if (e != null)
+			return "test " + name.getSingle(e);
+		return "test case";
 	}
 }

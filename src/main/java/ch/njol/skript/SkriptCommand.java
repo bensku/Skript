@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,9 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.PluralizingArgsMessage;
 import ch.njol.skript.log.RedirectingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.tests.runner.SkriptTestEvent;
+import ch.njol.skript.tests.runner.TestMode;
+import ch.njol.skript.tests.runner.TestTracker;
 import ch.njol.skript.update.ReleaseStatus;
 import ch.njol.skript.update.UpdaterState;
 import ch.njol.skript.util.Color;
@@ -103,6 +107,9 @@ public class SkriptCommand implements CommandExecutor {
 	static {
 		if (new File(Skript.getInstance().getDataFolder() + "/doc-templates").exists()) {
 			skriptCommandHelp.add("gen-docs");
+		}
+		if (TestMode.DEV_MODE) { // Add command to run individual tests
+			skriptCommandHelp.add("test");
 		}
 	}
 	
@@ -339,6 +346,19 @@ public class SkriptCommand implements CommandExecutor {
 				Skript.info(sender, "Generating docs...");
 				generator.generate(); // Try to generate docs... hopefully
 				Skript.info(sender, "Documentation generated!");
+			} else if (args[0].equalsIgnoreCase("test") && TestMode.DEV_MODE) {
+				File script = TestMode.TEST_DIR.resolve(args[1] + ".sk").toFile();
+				assert script != null;
+				ScriptLoader.loadScripts(ScriptLoader.loadStructure(script)); // Load test
+				Bukkit.getPluginManager().callEvent(new SkriptTestEvent()); // Run it
+				ScriptLoader.unloadScript(script); // Unload it
+				
+				// Get results and show them
+				String[] lines = TestTracker.collectResults().createReport().split("\n");
+				for (String line : lines) {
+					assert line != null;
+					Skript.info(sender, line);
+				}
 			}
 		} catch (final Exception e) {
 			Skript.exception(e, "Exception occurred in Skript's main command", "Used command: /" + label + " " + StringUtils.join(args, " "));
