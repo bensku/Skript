@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -34,6 +33,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
@@ -47,14 +47,14 @@ import ch.njol.util.Kleenean;
 @Description({"The amount of something.",
 		"Please note that <code>amount of %items%</code> will not return the number of items, but the number of stacks, e.g. 1 for a stack of 64 torches. To get the amount of items in a stack, see the <a href='#ExprItemAmount'>item amount</a> expression.",
 		"",
-		"Also, you can get the recursive size of a list, which will return the total size of the list with sublists included, e.g.",
+		"Also, you can get the recursive size of a list, which will return the recursive size of the list with sublists included, e.g.",
 		"{list::*} Structure",
-		"    ├──── {list::1}",
-		"    ├──── {list::2}",
-		"    │         ├──── {list::2::1}",
-		"    │         │           └──── {list::2::1::1}",
-		"    │         └──── {list::2::2}",
-		"    └──── {list::3}",
+		"    ├──── {list::1}: 1",
+		"    ├──── {list::2}: 2",
+		"    │         ├──── {list::2::1}: 3",
+		"    │         │           └──── {list::2::1::1}: 4",
+		"    │         └──── {list::2::2}: 5",
+		"    └──── {list::3}: 6",
 		"Where using %size of {list::*}% will only return 3 (the first layer of indices only), while %recursive size of {list::*}% will return 6 (the entire list)",
 		"Please note that getting a list's recursive size can cause lag if the list is large, so only use this expression if you need to!"})
 @Examples({"message \"There are %number of all players% players online!\""})
@@ -63,11 +63,10 @@ public class ExprAmount extends SimpleExpression<Integer> {
 	static {
 		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, 
 				"(amount|number|size) of %objects%",
-				"(recursive|total) (amount|number|size) of %objects%");
+				"recursive (amount|number|size) of %objects%");
 	}
 	
-	private String exprString = "";
-	private boolean recursive = false;
+	private boolean recursive;
 	
 	@SuppressWarnings("null")
 	private Expression<?> expr;
@@ -82,13 +81,10 @@ public class ExprAmount extends SimpleExpression<Integer> {
 			Skript.error("'" + expr.toString(null, false) + "' can only ever have one value at most, thus the 'amount of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
 			return false;
 		}
-		if (matchedPattern == 1) {
-			exprString = expr.toString();
-			if (exprString.charAt(0) != '{') {
-				Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + exprString + "' expression is useless.");
-				return false;
-			}
-			recursive = true;
+		this.recursive = matchedPattern == 1;
+		if (recursive && !(expr instanceof Variable<?>)) {
+			Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + expr.toString(null, false) + "' expression is useless.");
+			return false;
 		}
 		return true;
 	}
@@ -112,23 +108,22 @@ public class ExprAmount extends SimpleExpression<Integer> {
 	@Override
 	protected Integer[] get(final Event e) {
 		if (recursive) {
-			boolean local = exprString.charAt(1) == '_';
-			// Local Variables: {_x}, Global Variables: {x}, substr will contain the value of x 
-			String substr = exprString.substring((local ? 2 : 1), exprString.length() - 1);
-			assert substr != null;
-			Object var = Variables.getVariable(substr, e, local); // We have to expose the entire variable with sublists included 
+			Object var = ((Variable<?>) expr).getRaw(e);
 			if (var != null)
-				return new Integer[] {getRecursiveSize((TreeMap<String, Object>) var)}; // Should already be a TreeMap 
+				return new Integer[] {getRecursiveSize((Map<String, ?>) var)}; // Should already be a Map 
 		}
 		return new Integer[] {expr.getArray(e).length};
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static int getRecursiveSize(TreeMap<String, Object> map) {
+	private static int getRecursiveSize(Map<String, ?> map) {
 		int count = 0;
-		for (Map.Entry<String, Object> entry : map.entrySet()) {
+		for (Map.Entry<String, ?> entry : map.entrySet()) {
 			Object value = entry.getValue();
-			count += (value instanceof TreeMap) ? getRecursiveSize((TreeMap<String, Object>) value) : 1;
+			if (value instanceof Map)
+				count += getRecursiveSize((Map<String, ?>) value);
+			else
+				count++;
 		}
 		return count;
 	}
