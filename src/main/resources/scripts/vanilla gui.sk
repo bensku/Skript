@@ -1,6 +1,6 @@
 #
 # A vanilla example of a gui creation using Skript only
-# Requiert Skript 2.3+
+# Requires Skript 2.3+
 #
 
 command /gui:
