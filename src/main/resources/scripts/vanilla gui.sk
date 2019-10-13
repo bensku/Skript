@@ -5,8 +5,9 @@
 
 command /gui:
 	trigger:
-		open chest inventory with 6 row with name "Gui Test" to player
-		set slot 0 of open inventory of player to stone
+		set {_gui} to a new chest inventory with 6 row with name "Gui Test"
+		set slot 0 of {_gui} to stone
+		open {_gui} to player
  
 on inventory click:
 	if name of event-inventory is "Gui Test":
