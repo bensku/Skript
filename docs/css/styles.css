@@ -27,7 +27,7 @@ a:visited {
   position: sticky;
   top: 0em;
   
-  background-color: lightblue;
+  background-color: skyblue;
   padding: 1em;
   padding-left: 0em;
   height: 1.37em;
@@ -46,8 +46,8 @@ a:visited {
 
 #global-navigation > a:hover {
   color: black;
-  background-color: skyblue;
-}
+  background-color: deepskyblue;
+  }
 
 #side-nav {
   grid-row-start: 1;
@@ -67,7 +67,7 @@ a:visited {
   top: 0em;
   
   text-decoration: none;
-  background-color: lightblue;
+  background-color: skyblue;
   font-size: 130%;
   font-weight: bold;
 
@@ -215,7 +215,7 @@ ul > .skript-code-block {
 
 .box {
   border-style: solid;
-  border-color: lightblue;
+  border-color: skyblue;
   border-width: 2px;
   border-top-width: 1em;
   border-radius: 3px;
