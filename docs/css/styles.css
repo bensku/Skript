@@ -5,7 +5,7 @@
 
 body {
   font-family: arial;
-  background-color: oldlace;
+  background-color: white;
   display: grid;
   grid-template-rows: 100vh 100vh;
   grid-template-columns: minmax(15em, 18em) minmax(80%, 100%);
@@ -27,11 +27,12 @@ a:visited {
   position: sticky;
   top: 0em;
   
-  background-color: tan;
+  background-color: lightblue;
   padding: 1em;
   padding-left: 0em;
   height: 1.37em;
   z-index: 9999;
+
 }
 
 #global-navigation > a {
@@ -45,7 +46,7 @@ a:visited {
 
 #global-navigation > a:hover {
   color: black;
-  background-color: #c1a97c;
+  background-color: skyblue;
 }
 
 #side-nav {
@@ -66,7 +67,7 @@ a:visited {
   top: 0em;
   
   text-decoration: none;
-  background-color: tan;
+  background-color: lightblue;
   font-size: 130%;
   font-weight: bold;
 
@@ -89,7 +90,7 @@ a:visited {
   display: inline-block;
   width: 100%;
   font-size: 110%;
-  background-color: navajowhite;
+  background-color: lightblue;
   text-decoration: none;
   color: #403200;
 
@@ -99,7 +100,7 @@ a:visited {
 
 #nav-contents > a:hover {
   color: black;
-  background-color: #c1a97c;
+  background-color: skyblue;
 }
 
 #content {
@@ -139,8 +140,8 @@ table {
 }
 
 .item-table-label {
-  background-color: burlywood;
-  border-color: burlywood;
+  background-color: lightblue;
+  border-color: lightblue;
   border-style: solid;
   border-right-style: none;
   border-width: 1px;
@@ -157,7 +158,7 @@ table {
 .item-details td:nth-child(2) {
   border-style: solid;
   border-left-style: none;
-  border-color: burlywood;
+  border-color: lightblue;
   border-width: 1px;
   width: 80%;
   max-width: 20em;
@@ -214,11 +215,11 @@ ul > .skript-code-block {
 
 .box {
   border-style: solid;
-  border-color: burlywood;
+  border-color: lightblue;
   border-width: 2px;
   border-top-width: 1em;
   border-radius: 3px;
   padding: 0.8em;
   
-  background-color: wheat;
+  background-color: lightblue;
 }
