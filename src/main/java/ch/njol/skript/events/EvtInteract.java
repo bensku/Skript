@@ -21,6 +21,7 @@ package ch.njol.skript.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -72,7 +73,8 @@ public class EvtInteract extends SkriptEvent {
 	
 	@Override
 	public boolean check(Event e) {
-		boolean player = e instanceof PlayerInteractEvent;
+		boolean player = e instanceof PlayerInteractEvent && ((PlayerInteractEvent) e).getAction() == Action.PHYSICAL;
+		if (!player && !(e instanceof EntityInteractEvent)) return false;
 		if (types != null) {
 			for (ItemType type : types.getAll()) {
 				if (player)
