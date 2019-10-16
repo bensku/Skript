@@ -37,9 +37,9 @@ import ch.njol.skript.util.Getter;
 public class EvtInteract extends SkriptEvent {
 	
 	static {
-		Skript.registerEvent("Entity Interact", EvtInteract.class, new Class[]{EntityInteractEvent.class, PlayerInteractEvent.class},
+		Skript.registerEvent("Entity Physical Interact", EvtInteract.class, new Class[]{EntityInteractEvent.class, PlayerInteractEvent.class},
 			"(0¦entity|1¦player) (interact[ing]|trampl(e|ing)|trip[ping]|trigger[ing]) [[(with|on|of)] %itemtypes%]")
-			.description("Called when an entity interacts with a block, such as a player trampling farmland, a villager opening a door " +
+			.description("Called when an entity physically interacts with a block, such as a player trampling farmland, a villager opening a door " +
 				"or a zombie breaking turtle eggs.")
 			.examples("on entity trampling farmland:",
 				"\tif event-entity is a villager:",
