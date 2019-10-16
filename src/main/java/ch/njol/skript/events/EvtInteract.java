@@ -21,7 +21,6 @@ package ch.njol.skript.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -38,16 +37,18 @@ public class EvtInteract extends SkriptEvent {
 	
 	static {
 		Skript.registerEvent("Entity Physical Interact", EvtInteract.class, new Class[]{EntityInteractEvent.class, PlayerInteractEvent.class},
-			"(0¦entity|1¦player) (interact[ing]|trampl(e|ing)|trip[ping]|trigger[ing]) [[(with|on|of)] %itemtypes%]")
+			"(interact[ing]|trampl(e|ing)|trip[ping]|trigger[ing]) [[(with|on|of)] %itemtypes%]")
 			.description("Called when an entity physically interacts with a block, such as a player trampling farmland, a villager opening a door " +
 				"or a zombie breaking turtle eggs.")
-			.examples("on entity trampling farmland:",
+			.examples("on trampling farmland:",
+				"\tif event-entity is not a player:",
+				"\t\tcancel event",
+				"on interacting with any door:",
 				"\tif event-entity is a villager:",
 				"\t\tcancel event",
-				"on entity interacting with any door:",
-				"\tcancel event",
-				"on player triggering an oak pressure plate:",
-				"\tteleport player to spawn")
+				"on triggering an oak pressure plate:",
+				"\tif event-entity is a player:",
+				"\t\tteleport player to spawn")
 			.since("INSERT VERSION");
 		
 		EventValues.registerEventValue(EntityInteractEvent.class, Block.class, new Getter<Block, EntityInteractEvent>() {
@@ -61,39 +62,31 @@ public class EvtInteract extends SkriptEvent {
 	
 	@Nullable
 	private Literal<ItemType> types;
-	private boolean entity;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
 		types = (Literal<ItemType>) args[0];
-		entity = parseResult.mark == 0;
 		return true;
 	}
 	
 	@Override
 	public boolean check(Event e) {
-		if (entity && e instanceof EntityInteractEvent) {
-			if (types != null) {
-				for (ItemType type : types.getAll()) {
-					return type.isOfType(((EntityInteractEvent) e).getBlock());
-				}
-			}
-			return true;
-		} else if (!entity && e instanceof PlayerInteractEvent && ((PlayerInteractEvent) e).getAction() == Action.PHYSICAL) {
-			if (types != null) {
-				for (ItemType type : types.getAll()) {
+		boolean player = e instanceof PlayerInteractEvent;
+		if (types != null) {
+			for (ItemType type : types.getAll()) {
+				if (player)
 					return type.isOfType(((PlayerInteractEvent) e).getClickedBlock());
-				}
+				else
+					return type.isOfType(((EntityInteractEvent) e).getBlock());
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean d) {
-		return (entity ? "entity" : "player") + " interact" + (types != null ? " on " + types.toString(e, d) : "");
+		return "Interact" + (types != null ? " on " + types.toString(e, d) : "");
 	}
 	
 }
