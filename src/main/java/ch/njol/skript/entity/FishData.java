@@ -73,7 +73,7 @@ public class FishData extends EntityData<Fish> {
 
 	@Override
 	public Class<? extends Fish> getType() {
-		if(!init && wildcard)
+		if (!init && wildcard)
 			return Fish.class;
 		init = false;
 		switch (pattern) {
