@@ -1,10 +1,10 @@
 #
 # A simple home script which allows players with the permission 'skript.home' to
-# define a home location with /sethome, delete home with /delhome and teleport to that location whenever they want to with /home.
+# define a home location with /sethome, delete a home with /delhome and teleport to that location whenever they want to with /home.
 #
 
 command /sethome <string>:
-	description: Set your home
+	description: Sets your home
 	permission: skript.home
 	executable by: players
 	trigger:
@@ -12,15 +12,15 @@ command /sethome <string>:
 		message "Set your home <green>%arg-1%<reset> to <grey>%location of player%<reset>"
 
 command /delhome <string>:
-	description: Delete your home
+	description: Deletes your home
 	permission: skript.home
 	executable by: players
 	trigger:
 		clear {homes::%uuid of player%::%arg-1%}
-		message "Delete your home <green>%arg-1%<reset>"
+		message "Deleted your home <green>%arg-1%<reset>"
 
 command /home <string>:
-	description: Teleport yourself to your home
+	description: Teleports yourself to your home
 	permission: skript.home
 	executable by: players
 	trigger:

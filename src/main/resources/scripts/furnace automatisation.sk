@@ -1,7 +1,7 @@
 #
-# This file automates furnaces.
-# They store smelted items, refuel and restock automatically in/from surrounding chests
-# But only as long as they have fuel and something to smelt, and there's storage space for the smolten item(s).,
+# This script automates furnaces.
+# They store smelted items and restock/refuel automatically from surrounding chests
+# But only as long as they have fuel and something to smelt, and there's storage space for the smelted items,
 # I.e. if a furnace stops burning it won't resume automatically, but has to be lit manually again.
 #
 
