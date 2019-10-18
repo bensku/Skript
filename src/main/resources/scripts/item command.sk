@@ -8,6 +8,7 @@
 #
 
 aliases:
+	# Items that the user cannot give himself
 	blacklisted = TNT, bedrock, obsidian, mob spawner, lava, lava bucket
 
 # This version of the command requires that the player has the permission skript.give,
