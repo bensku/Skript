@@ -4,7 +4,6 @@
 #
 
 on rightclick with compass:
-	player has permission "skript.teleport"
 	loop blocks above targeted block:
 		teleport player to loop-block
 		stop trigger

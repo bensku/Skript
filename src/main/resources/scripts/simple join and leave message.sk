@@ -3,7 +3,7 @@
 #
 
 command /set <string> message <string>:
-	permission: skript.set.join message
+	permission: skript.set.join_message
 	description: Sets message when player joins
 	trigger:
 		if argument-1 is "join" or "leave":
