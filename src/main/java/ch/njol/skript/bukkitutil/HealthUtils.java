@@ -19,15 +19,14 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import ch.njol.skript.Skript;
 import ch.njol.util.Math2;
 
 /**
@@ -36,110 +35,49 @@ import ch.njol.util.Math2;
 
 @SuppressWarnings("null")
 public abstract class HealthUtils {
+	
 	private HealthUtils() {}
 	
-	private final static boolean supportsDoubles = Skript.methodExists(Damageable.class, "setHealth", double.class);
-	private static Method getHealth, setHealth, getMaxHealth, setMaxHealth, damage;
-	static {
-		if (!supportsDoubles) {
-			try {
-				getHealth = Damageable.class.getDeclaredMethod("getHealth");
-				setHealth = Damageable.class.getDeclaredMethod("setHealth", int.class);
-				getMaxHealth = Damageable.class.getDeclaredMethod("getMaxHealth");
-				setMaxHealth = Damageable.class.getDeclaredMethod("setMaxHealth", int.class);
-				damage = Damageable.class.getDeclaredMethod("damage", int.class);
-			} catch (final NoSuchMethodException e) {
-				Skript.outdatedError(e);
-			} catch (final SecurityException e) {
-				Skript.exception(e);
-			}
-		}
-	}
-	
-	/**
-	 * @param e
+	/** Get the health of an entity
+	 * @param e Entity to get health from
 	 * @return The amount of hearts the entity has left
 	 */
 	public static double getHealth(final Damageable e) {
 		if (e.isDead())
 			return 0;
-		if (supportsDoubles)
-			return e.getHealth() / 2;
-		try {
-			return ((Number) getHealth.invoke(e)).doubleValue() / 2;
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
-		return 0;
+		return e.getHealth() / 2;
 	}
 	
-	/**
-	 * @param e
+	/** Set the health of an entity
+	 * @param e Entity to set health for
 	 * @param health The amount of hearts to set
 	 */
 	public static void setHealth(final Damageable e, final double health) {
-		if (supportsDoubles) {
-			e.setHealth(Math2.fit(0, health, getMaxHealth(e)) * 2);
-			return;
-		}
-		try {
-			setHealth.invoke(e, (int) Math.round(Math2.fit(0, health, getMaxHealth(e)) * 2));
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
+		e.setHealth(Math2.fit(0, health, getMaxHealth(e)) * 2);
 	}
 	
-	/**
-	 * @param e
+	/** Get the max health an entity has
+	 * @param e Entity to get max health from
 	 * @return How many hearts the entity can have at most
 	 */
-	@SuppressWarnings("deprecation") // Why is getMaxHealth deprected WITHOUT universal alternative?
 	public static double getMaxHealth(final Damageable e) {
-		if (supportsDoubles)
-			return e.getMaxHealth() / 2;
-		try {
-			return ((Number) getMaxHealth.invoke(e)).doubleValue() / 2;
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
-		return 0;
+		AttributeInstance attributeInstance = ((Attributable) e).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		assert attributeInstance != null;
+		return attributeInstance.getValue() / 2;
 	}
 	
-	/**
-	 * @param e
+	/** Set the max health an entity can have
+	 * @param e Entity to set max health for
 	 * @param health How many hearts the entity can have at most
 	 */
-	@SuppressWarnings("deprecation") // Why is setMaxHealth deprected WITHOUT universal alternative?
 	public static void setMaxHealth(final Damageable e, final double health) {
-		if (supportsDoubles) {
-			e.setMaxHealth(Math.max(Skript.EPSILON / 2, health * 2)); // 0 is not allowed, so just use a small value - smaller than Skript.EPSILON though to compare as 0
-			return;
-		}
-		try {
-			setMaxHealth.invoke(e, Math.max(1, (int) Math.round(health * 2)));
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
+		AttributeInstance attributeInstance = ((Attributable) e).getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		assert attributeInstance != null;
+		attributeInstance.setBaseValue(health * 2);
 	}
 	
-	/**
-	 * @param e
+	/** Apply damage to an entity
+	 * @param e Entity to apply damage to
 	 * @param d Amount of hearts to damage
 	 */
 	public static void damage(final Damageable e, final double d) {
@@ -147,26 +85,14 @@ public abstract class HealthUtils {
 			heal(e, -d);
 			return;
 		}
-		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d*2);
+		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return;
-
-		if (supportsDoubles) {
-			e.damage(event.getDamage());
-			return;
-		}
-		try {
-			damage.invoke(e, (int) Math.round(event.getDamage()));
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
+		
+		e.damage(event.getDamage());
 	}
-	/**
-	 * @param e
+	/** Heal an entity
+	 * @param e Entity to heal
 	 * @param h Amount of hearts to heal
 	 */
 	public static void heal(final Damageable e, final double h) {
@@ -177,55 +103,16 @@ public abstract class HealthUtils {
 		setHealth(e, Math2.fit(0, getHealth(e) + h, getMaxHealth(e)));
 	}
 	
-	private static Method getDamage, setDamage;
-	static {
-		if (!supportsDoubles) {
-			try {
-				getDamage = EntityDamageEvent.class.getDeclaredMethod("getDamage");
-				setDamage = EntityDamageEvent.class.getDeclaredMethod("setDamage", int.class);
-			} catch (final NoSuchMethodException e) {
-				Skript.outdatedError(e);
-			} catch (final SecurityException e) {
-				Skript.exception(e);
-			}
-		}
-	}
-	
 	public static double getDamage(final EntityDamageEvent e) {
-		if (supportsDoubles)
-			return e.getDamage() / 2;
-		try {
-			return ((Number) getDamage.invoke(e)).doubleValue() / 2;
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
-		return 0;
+		return e.getDamage() / 2;
 	}
 	
 	public static double getFinalDamage(final EntityDamageEvent e) {
-		if (supportsDoubles)
-			return e.getFinalDamage() / 2;
-		return 0;
+		return e.getFinalDamage() / 2;
 	}
 	
 	public static void setDamage(final EntityDamageEvent e, final double damage) {
-		if (supportsDoubles) {
-			e.setDamage(damage * 2);
-			return;
-		}
-		try {
-			setDamage.invoke(e, (int) Math.round(damage * 2));
-		} catch (final IllegalAccessException ex) {
-			Skript.exception(ex);
-		} catch (final IllegalArgumentException ex) {
-			Skript.outdatedError(ex);
-		} catch (final InvocationTargetException ex) {
-			Skript.exception(ex);
-		}
+		e.setDamage(damage * 2);
 	}
 	
 	@SuppressWarnings("deprecation")
