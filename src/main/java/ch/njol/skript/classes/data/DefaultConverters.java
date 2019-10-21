@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -89,6 +90,14 @@ public class DefaultConverters {
 				if (s instanceof Player)
 					return (Player) s;
 				return null;
+			}
+		});
+		// BlockCommandSender - Block
+		Converters.registerConverter(BlockCommandSender.class, Block.class, new Converter<BlockCommandSender, Block>() {
+			@Override
+			@Nullable
+			public Block convert(final BlockCommandSender s) {
+				return s.getBlock();
 			}
 		});
 		// Entity - Player

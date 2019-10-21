@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -45,6 +46,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Maps;
@@ -427,7 +430,23 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			quality = !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
 		}
 		
-		// TODO other important meta contents
+		// Item flags
+		Set<ItemFlag> ourFlags = first.getItemFlags();
+		Set<ItemFlag> theirFlags = second.getItemFlags();
+		if (!Objects.equals(ourFlags, theirFlags)) {
+			quality = !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
+		}
+		
+		// Potion data
+		if (second instanceof PotionMeta) {
+			if (!(first instanceof PotionMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a potion, first is clearly not
+			}
+			// Compare potion type, including extended and level 2 attributes
+			PotionData ourPotion = ((PotionMeta) first).getBasePotionData();
+			PotionData theirPotion = ((PotionMeta) second).getBasePotionData();
+			return Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_ITEM : MatchQuality.SAME_MATERIAL;
+		}
 		
 		return quality;
 	}

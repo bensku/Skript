@@ -1,0 +1,161 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.effects;
+
+import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
+import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
+
+@Name("Colour Items")
+@Description("Colours items in a given <a href='classes.html#color'>colour</a>. " +
+		"You can also use RGB codes if you feel limited with the 16 default colours. " +
+		"RGB codes are three numbers from 0 to 255 in the order <code>(red, green, blue)</code>, where <code>(0,0,0)</code> is black and <code>(255,255,255)</code> is white. " +
+		"Armor is colourable for all Minecraft versions. With Minecraft 1.11 or newer you can also colour potions and maps. Note that the colours might not look exactly how you'd expect.")
+@Examples({"dye player's helmet blue",
+		"colour the player's tool red"})
+@Since("2.0, 2.2-dev26 (maps and potions)")
+public class EffColorItems extends Effect {
+	
+	private static final boolean MAPS_AND_POTIONS_COLORS = Skript.methodExists(PotionMeta.class, "setColor");
+	
+	static {
+		Skript.registerEffect(EffColorItems.class,
+				"(dye|colo[u]r|paint) %itemtypes% %color%",
+				"(dye|colo[u]r|paint) %itemtypes% \\(%number%, %number%, %number%\\)");
+	}
+	
+	@SuppressWarnings("null")
+	private Expression<ItemType> items;
+	@SuppressWarnings("null")
+	private Expression<Color> color;
+	
+	@SuppressWarnings({"unchecked", "null"})
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		items = (Expression<ItemType>) exprs[0];
+		if (matchedPattern == 0) {
+			color = (Expression<Color>) exprs[1];
+		} else {
+			color = new SimpleExpression<Color>() {
+				
+				private Expression<Number> red;
+				private Expression<Number> green;
+				private Expression<Number> blue;
+				
+				@Override
+				public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+					red = (Expression<Number>) exprs[0];
+					green = (Expression<Number>) exprs[1];
+					blue = (Expression<Number>) exprs[2];
+					return true;
+				}
+				
+				@Nullable
+				@Override
+				protected Color[] get(Event e) {
+					Number r = red.getSingle(e),
+						g = green.getSingle(e),
+						b = blue.getSingle(e);
+					
+					if (r == null || g == null || b == null)
+						return null;
+					
+					return CollectionUtils.array(new ColorRGB(r.intValue(), g.intValue(), b.intValue()));
+				}
+				
+				@Override
+				public boolean isSingle() {
+					return true;
+				}
+				
+				@Override
+				public Class<? extends Color> getReturnType() {
+					return ColorRGB.class;
+				}
+				
+				@Override
+				public String toString(@Nullable Event e, boolean debug) {
+					return "RED: " + red.toString(e, debug) + ", GREEN: " + green.toString(e, debug) + "BLUE: " + blue.toString(e, debug);
+				}
+			};
+			color.init(CollectionUtils.array(exprs[1], exprs[2], exprs[3]), 0, isDelayed, parser);
+		}
+		return true;
+	}
+	
+	@Override
+	protected void execute(Event e) {
+		Color color = this.color.getSingle(e);
+		ItemType[] items = this.items.getArray(e);
+		org.bukkit.Color c;
+		
+		if (color == null) {
+			return;
+		}
+		
+		c = color.asBukkitColor();
+		
+		for (ItemType item : items) {
+			ItemMeta meta = item.getItemMeta();
+			
+			if (meta instanceof LeatherArmorMeta) {
+				final LeatherArmorMeta m = (LeatherArmorMeta) meta;
+				m.setColor(c);
+				item.setItemMeta(m);
+			} else if (MAPS_AND_POTIONS_COLORS) {
+				
+				if (meta instanceof MapMeta) {
+					final MapMeta m = (MapMeta) meta;
+					m.setColor(c);
+					item.setItemMeta(m);
+				} else if (meta instanceof PotionMeta) {
+					final PotionMeta m = (PotionMeta) meta;
+					m.setColor(c);
+					item.setItemMeta(m);
+				}
+			}
+		}
+		this.items.change(e, items, ChangeMode.SET);
+	}
+	
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "dye " + items.toString(e, debug) + " " + color.toString(e, debug);
+	}
+}

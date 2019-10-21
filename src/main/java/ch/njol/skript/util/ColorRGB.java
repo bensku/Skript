@@ -19,50 +19,38 @@
  */
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 
-import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.localization.Adjective;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.yggdrasil.YggdrasilSerializable;
+import ch.njol.skript.variables.Variables;
+import ch.njol.util.Math2;
+import ch.njol.yggdrasil.Fields;
 
 public class ColorRGB implements Color {
 	
 	private org.bukkit.Color bukkit;
-	private ChatColor chat;
+	@Nullable
 	private DyeColor dye;
 	
-	private ColorRGB(DyeColor dye, ChatColor chat, org.bukkit.Color bukkit) {
-		this.bukkit = bukkit;
-		this.chat = chat;
-		this.dye = dye;
+	public ColorRGB(int red, int green, int blue) {
+		this.bukkit = org.bukkit.Color.fromRGB(
+			Math2.fit(0, red, 255),
+			Math2.fit(0, green, 255),
+			Math2.fit(0, blue, 255));
+		this.dye = DyeColor.getByColor(bukkit);
 	}
 	
 	@SuppressWarnings("null")
 	@Override
 	public org.bukkit.Color asBukkitColor() {
-		return dye.getColor();
+		return bukkit;
 	}
 	
 	@Override
-	public String getFormattedChat() {
-		return "" + chat;
-	}
-	
-	@Override
-	public ChatColor asChatColor() {
-		return chat;
-	}
-
-	@Override
+	@Nullable
 	public DyeColor asDyeColor() {
 		return dye;
 	}
@@ -72,25 +60,22 @@ public class ColorRGB implements Color {
 		return "RED:" + bukkit.getRed() + ", GREEN:" + bukkit.getGreen() + ", BLUE" + bukkit.getBlue();
 	}
 	
-	@Deprecated
+	
 	@Override
-	public byte getWoolData() {
-		return dye.getWoolData();
+	public Fields serialize() throws NotSerializableException {
+		return new Fields(this, Variables.yggdrasil);
 	}
 	
-	@Deprecated
 	@Override
-	public byte getDyeData() {
-		return (byte) (15 - dye.getWoolData());
+	public void deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
+		org.bukkit.Color b = fields.getObject("bukkit", org.bukkit.Color.class);
+		DyeColor d = fields.getObject("dye", DyeColor.class);
+		if (b == null)
+			return;
+		if (d == null)
+			dye = DyeColor.getByColor(b);
+		else
+			dye = d;
+		bukkit = b;
 	}
-	
-	/**
-	 * @param name The name of the color defined by Skript's .lang files.
-	 * @return Optional if any Skript Color matched up with the defined name
-	 */
-	@Nullable
-	public static org.bukkit.Color from(int red, int green, int blue) {
-		return org.bukkit.Color.fromBGR(blue, green, red);
-	}
-	
 }

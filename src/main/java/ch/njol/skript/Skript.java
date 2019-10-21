@@ -127,6 +127,9 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.tests.runner.SkriptTestEvent;
+import ch.njol.skript.tests.runner.TestMode;
+import ch.njol.skript.tests.runner.TestTracker;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseManifest;
 import ch.njol.skript.update.ReleaseStatus;
@@ -472,6 +475,17 @@ public final class Skript extends JavaPlugin implements Listener {
 				
 				Language.setUseLocal(false);
 				
+				if (TestMode.ENABLED) {
+					info("Preparing Skript for testing...");
+					tainted = true;
+					try {
+						getAddonInstance().loadClasses("ch.njol.skript", "tests");
+					} catch (IOException e) {
+						Skript.exception("Failed to load testing environment.");
+						Bukkit.getServer().shutdown();
+					}
+				}
+				
 				stopAcceptingRegistrations();
 				
 				
@@ -525,6 +539,50 @@ public final class Skript extends JavaPlugin implements Listener {
 				} finally {
 					c.stop();
 					h.stop();
+				}
+				
+				// Skript initialization done
+				debug("Early init done");
+				if (TestMode.ENABLED) { // Ignore late init (scripts, etc.) in test mode
+					if (TestMode.DEV_MODE) { // Run tests NOW!
+						info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
+					} else {
+						info("Running all tests from " + TestMode.TEST_DIR);
+						
+						// Treat parse errors as fatal testing failure
+						@SuppressWarnings("null")
+						CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
+						try {
+							SkriptLogger.startLogHandler(errorCounter);
+							File testDir = TestMode.TEST_DIR.toFile();
+							assert testDir != null;
+							ScriptLoader.loadScripts(ScriptLoader.loadStructures(testDir));
+						} finally {
+							errorCounter.stop();
+						}
+						
+						Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
+						
+						info("Collecting results to " + TestMode.RESULTS_FILE);
+						if (errorCounter.getCount() > 0) {
+							TestTracker.testStarted("parse scripts");
+							TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
+						}
+						if (errored) { // Check for exceptions thrown while script was executing
+							TestTracker.testStarted("run scripts");
+							TestTracker.testFailed("exception was thrown during execution");
+						}
+						String results = new Gson().toJson(TestTracker.collectResults());
+						try {
+							Files.write(TestMode.RESULTS_FILE, results.getBytes(StandardCharsets.UTF_8));
+						} catch (IOException e) {
+							Skript.exception(e, "Failed to write test results.");
+						}
+						info("Testing done, shutting down the server.");
+						Bukkit.getServer().shutdown();
+					}
+					
+					return;
 				}
 				
 				final long vld = System.currentTimeMillis() - vls;
@@ -726,6 +784,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		 */
 		String burgerEnabled = System.getProperty("skript.burger.enable");
 		if (burgerEnabled != null) {
+			tainted = true;
 			String version = System.getProperty("skript.burger.version");
 			String burgerInput;
 			if (version == null) { // User should have provided JSON file path
@@ -1430,6 +1489,16 @@ public final class Skript extends JavaPlugin implements Listener {
 	private static boolean checkedPlugins = false;
 	
 	/**
+	 * Set by Skript when doing something that users shouldn't do.
+	 */
+	private static boolean tainted = false;
+	
+	/**
+	 * Set to true when an exception is thrown.
+	 */
+	private static boolean errored = false;
+	
+	/**
 	 * Used if something happens that shouldn't happen
 	 * 
 	 * @param cause exception that shouldn't occur
@@ -1437,6 +1506,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
 	public static EmptyStacktraceException exception(@Nullable Throwable cause, final @Nullable Thread thread, final @Nullable TriggerItem item, final String... info) {
+		errored = true;
 		// First error: gather plugin package information
 		if (!checkedPlugins) { 
 			for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -1468,8 +1538,10 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("[Skript] Severe Error:");
 		logEx(info);
 		logEx();
-		logEx("Something went horribly wrong with Skript.");
-		logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
+		if (!tainted) {
+			logEx("Something went horribly wrong with Skript.");
+			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
+		}
 		
 		// Parse something useful out of the stack trace
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -1484,7 +1556,10 @@ public final class Skript extends JavaPlugin implements Listener {
 		SkriptUpdater updater = Skript.getInstance().getUpdater();
 		
 		// Check if server platform is supported
-		if (!isRunningMinecraft(1, 9)) {
+		if (tainted) {
+			logEx("Skript is running with developer command-line options.");
+			logEx("If you are not a developer, consider disabling them.");
+		} else if (!isRunningMinecraft(1, 9)) {
 			logEx("You are running an outdated Minecraft version not supported by Skript.");
 			logEx("Please update to Minecraft 1.9.4 or later or fix this yourself and send us a pull request.");
 			logEx("Alternatively, use an older Skript version; do note that those are also unsupported by us.");
@@ -1493,7 +1568,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		} else if (!serverPlatform.supported){
 			logEx("Your server platform appears to be unsupported by Skript. It might not work reliably.");
 			logEx("You can report this at " + issuesUrl + ". However, we may be unable to fix the issue.");
-			logEx("It is recommended that you switch to Paper or Spigot, should you encounter problems.");
+			logEx("It is recommended that you switch to Paper or Spigot, should you encounter more problems.");
 		} else if (updater != null && updater.getReleaseStatus() == ReleaseStatus.OUTDATED) {
 			logEx("You're running outdated version of Skript! Please try updating it NOW; it might fix this.");
 			logEx("Run /sk update check to get a download link to latest Skript!");
