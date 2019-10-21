@@ -502,7 +502,7 @@ public abstract class Utils {
 	
 	@Nullable
 	public static String getChatStyle(final String s) {
-		Color color = SkriptColor.fromName(s);
+		SkriptColor color = SkriptColor.fromName(s);
 		
 		if (color != null)
 			return color.getFormattedChat();
@@ -523,7 +523,7 @@ public abstract class Utils {
 		String m = StringUtils.replaceAll("" + message.replace("<<none>>", ""), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
-				Color color = SkriptColor.fromName("" + m.group(1));
+				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
 				final String f = chat.get(m.group(1).toLowerCase());
@@ -550,7 +550,7 @@ public abstract class Utils {
 		String m = StringUtils.replaceAll(message, stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
-				Color color = SkriptColor.fromName("" + m.group(1));
+				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
 				final String f = englishChat.get(m.group(1).toLowerCase());
