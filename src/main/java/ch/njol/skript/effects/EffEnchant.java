@@ -49,8 +49,8 @@ import ch.njol.util.Kleenean;
 public class EffEnchant extends Effect {
 	static {
 		Skript.registerEffect(EffEnchant.class,
-				"enchant %~itemtype% with %enchantmenttypes%",
-				"disenchant %~itemtype%");
+				"enchant %~itemtypes% with %enchantmenttypes%",
+				"disenchant %~itemtypes%");
 	}
 	
 	@SuppressWarnings("null")
