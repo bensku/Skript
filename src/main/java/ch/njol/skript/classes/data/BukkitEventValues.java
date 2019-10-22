@@ -933,7 +933,7 @@ public final class BukkitEventValues {
 			public ItemType get(PlayerEditBookEvent e) {
 				ItemStack book = new ItemStack(e.getPlayer().getItemInHand().getType());
 				book.setItemMeta(e.getNewBookMeta());
-				return new ItemType(book);
+				return new ItemType(book); //TODO: Find better way to derive this event value 
 			}
 		}, 0);
 		//ItemDespawnEvent
