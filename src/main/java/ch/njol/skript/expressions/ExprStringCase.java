@@ -91,7 +91,7 @@ public class ExprStringCase extends SimpleExpression<String> {
 		if (matchedPattern <= 1) { // Basic Case Change 
 			casemode = (parseResult.mark == 0) ? 1 : 2;
 		} else if (matchedPattern == 2) { // Basic Case Change 
-			casemode = 2;
+			casemode = 1;
 		} else if (matchedPattern <= 4) { // Proper Case 
 			type = 1;
 			if (parseResult.mark != 0)
@@ -198,20 +198,22 @@ public class ExprStringCase extends SimpleExpression<String> {
 	private static String toSnakeCase(String str, int mode) {
 		if (mode == 0)
 			return str.replace(' ', '_');
-		char[] arr = str.toCharArray();
-		for (int i = 0; i < arr.length; i++)
-			arr[i] = (arr[i] == ' ') ? '_' : ((mode == 1) ? Character.toUpperCase(arr[i]) : Character.toLowerCase(arr[i]));
-		return String.copyValueOf(arr);
+		StringBuilder sb = new StringBuilder();
+		for (int c : (Iterable<Integer>) str.codePoints()::iterator) { // Handles Unicode ! 
+			sb.appendCodePoint((c == ' ') ? '_' : ((mode == 1) ? Character.toUpperCase(c) : Character.toLowerCase(c)));
+		}
+		return sb.toString();
 	}
 	
 	@SuppressWarnings("null")
 	private static String toKebabCase(String str, int mode) {
 		if (mode == 0)
 			return str.replace(' ', '-');
-		char[] arr = str.toCharArray();
-		for (int i = 0; i < arr.length; i++)
-			arr[i] = (arr[i] == ' ') ? '-' : ((mode == 1) ? Character.toUpperCase(arr[i]) : Character.toLowerCase(arr[i]));
-		return String.copyValueOf(arr);
+		StringBuilder sb = new StringBuilder();
+		for (int c : (Iterable<Integer>) str.codePoints()::iterator) { // Handles Unicode! 
+			sb.appendCodePoint((c == ' ') ? '-' : ((mode == 1) ? Character.toUpperCase(c) : Character.toLowerCase(c)));
+		}
+		return sb.toString();
 	}
 	
 }
