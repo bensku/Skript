@@ -57,11 +57,9 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	@Nullable
 	@Override
 	public String convert(ItemType item) {
-		ItemStack itemStack = item.getRandom();
-		assert itemStack != null;
-		if (!book.isOfType(itemStack))
+		if (!book.isOfType(item.getMaterial()))
 			return null;
-		return ((BookMeta) itemStack.getItemMeta()).getAuthor();
+		return ((BookMeta) item.getItemMeta()).getAuthor();
 	}
 	
 	@Override
@@ -99,3 +97,4 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 		itemStack.setItemMeta(bookMeta);
 	}
 }
+
