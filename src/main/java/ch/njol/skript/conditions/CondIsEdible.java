@@ -42,8 +42,7 @@ public class CondIsEdible extends PropertyCondition<ItemType> {
 
 	@Override
 	public boolean check(ItemType i) {
-		ItemStack stack = i.getRandom();
-		return stack == null ? false : stack.getType().isEdible();
+		return i.getMaterial().isEdible();
 	}
 
 	@Override
