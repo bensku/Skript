@@ -103,7 +103,7 @@ public class EffHealth extends Effect {
 				ItemUtils.setDamage(stack, 0);
 			} else {
 				ItemUtils.setDamage(stack, (int) Math.max(0, ItemUtils.getDamage(stack) + (heal ? -damage : damage)));
-				if (ItemUtils.getDamage(stack) >= stack.getType().getMaxDurability())
+				if (ItemUtils.getDamage(stack) >= i.getMaterial().getMaxDurability())
 					i = null;
 			}
 			damageables.change(e, new ItemType[] {new ItemType(stack)}, ChangeMode.SET);
