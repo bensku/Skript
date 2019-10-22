@@ -52,10 +52,10 @@ public class ExprBookPages extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprBookPages.class, String.class, ExpressionType.PROPERTY,
-				"[all] [the] [book] (pages|content) of %itemtype%",
-				"%itemtype%'s [book] (pages|content)",
-				"[book] page %number% of %itemtype%", 
-				"%itemtype%'s [book] page %number%");
+				"[all] [the] [book] (pages|content) of %itemtypes%",
+				"%itemtypes%'s [book] (pages|content)",
+				"[book] page %number% of %itemtypes%", 
+				"%itemtypes%'s [book] page %number%");
 	}
 	
 	private static final ItemType bookItem = Aliases.javaItemType("book with text");
