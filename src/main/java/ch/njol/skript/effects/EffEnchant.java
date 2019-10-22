@@ -76,8 +76,6 @@ public class EffEnchant extends Effect {
 		final ItemType i = item.getSingle(e);
 		if (i == null)
 			return;
-		ItemStack stack = i.getRandom();
-		assert stack != null;
 		if (enchs != null) {
 			final EnchantmentType[] types = enchs.getArray(e);
 			if (types.length == 0)
@@ -86,15 +84,19 @@ public class EffEnchant extends Effect {
 			for (final EnchantmentType type : types) {
 				Enchantment ench = type.getType();
 				assert ench != null;
-				stack.addUnsafeEnchantment(ench, type.getLevel());
+				i.addEnchantments(new EnchantmentType(ench, type.getLevel()));
 			}
-			item.change(e, new ItemType[] {new ItemType(stack)}, ChangeMode.SET);
+			item.change(e, new ItemType[] {i}, ChangeMode.SET);
 		} else {
-			for (final Enchantment ench : stack.getEnchantments().keySet()) {
+			final EnchantmentType[] types = i.getEnchantmentTypes();
+			if (types == null)
+				return;
+			
+			for (final EnchantmentType ench : types) {
 				assert ench != null;
-				stack.removeEnchantment(ench);
+				i.removeEnchantments(ench);
 			}
-			item.change(e, new ItemType[] {new ItemType(stack)}, ChangeMode.SET);
+			item.change(e, new ItemType[] {i}, ChangeMode.SET);
 		}
 	}
 	
