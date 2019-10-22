@@ -75,12 +75,13 @@ public class EffSendBlockChange extends Effect {
 			return;
 		for (Player player : players.getArray(e)) {
 			for (Block block : blocks.getArray(e)) {
+				Material m = as.getMaterial();
 				ItemStack stack = as.getRandom();
 				assert stack != null;
 				if (Skript.isRunningMinecraft(1, 13))
-					player.sendBlockChange(block.getLocation(), stack.getType().createBlockData());
+					player.sendBlockChange(block.getLocation(), m.createBlockData());
 				else
-					player.sendBlockChange(block.getLocation(), stack.getType(), (byte) stack.getDurability());
+					player.sendBlockChange(block.getLocation(), m, (byte) stack.getDurability());
 			}
 		}
 	}
