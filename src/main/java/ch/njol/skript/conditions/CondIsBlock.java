@@ -40,8 +40,7 @@ public class CondIsBlock extends PropertyCondition<ItemType> {
 	
 	@Override
 	public boolean check(ItemType i) {
-		ItemStack stack = i.getRandom();
-		return stack == null ? false : stack.getType().isBlock();
+		return i.getMaterial().isBlock();
 	}
 	
 	@Override
