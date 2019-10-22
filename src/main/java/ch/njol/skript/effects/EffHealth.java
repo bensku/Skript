@@ -54,9 +54,9 @@ public class EffHealth extends Effect {
 	
 	static {
 		Skript.registerEffect(EffHealth.class,
-				"damage %slots/livingentities/itemtype% by %number% [heart[s]][ with fake cause %-damagecause%]",
+				"damage %livingentities/itemtype% by %number% [heart[s]][ with fake cause %-damagecause%]",
 				"heal %livingentities% [by %-number% [heart[s]]]",
-				"repair %slots/itemtype% [by %-number%]");
+				"repair %itemtype% [by %-number%]");
 	}
 	
 	@SuppressWarnings("null")
