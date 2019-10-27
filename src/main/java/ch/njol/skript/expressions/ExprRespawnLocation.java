@@ -91,7 +91,7 @@ public class ExprRespawnLocation extends SimpleExpression<Location> {
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
 		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(Number.class);
+			return CollectionUtils.array(Location.class);
 		return null;
 	}
 
