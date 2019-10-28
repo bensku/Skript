@@ -339,10 +339,11 @@ public abstract class SkriptConfig {
 		return mainConfig;
 	}
 	
-	private static Version previousConfigVersion = Skript.getVersion();
+	@SuppressWarnings("null")
+	private static Version previousConfigVersion = null;
 	
 	/**
-	 * Stores the previous config file version, before Skript automatically updates the version number
+	 * Returns the previous config file version, before Skript automatically updates the version number
 	 */
 	public static Version getPreviousConfigVersion() {
 		return previousConfigVersion;
@@ -379,8 +380,8 @@ public abstract class SkriptConfig {
 			}
 			mainConfig = mc;
 			String rawPreviousConfigVersion = mc.getMainNode().getValue(version.key);
-			assert rawPreviousConfigVersion != null;
-			previousConfigVersion = new Version(rawPreviousConfigVersion);
+			if (rawPreviousConfigVersion != null)
+				previousConfigVersion = new Version(rawPreviousConfigVersion);
 			if (!Skript.getVersion().toString().equals(mc.get(version.key))) {
 				try {
 					final InputStream in = Skript.getInstance().getResource("config.sk");
