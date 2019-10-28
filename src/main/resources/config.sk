@@ -1,4 +1,4 @@
-﻿#     __________________________________________________________
+#     __________________________________________________________
 #    / /                                                   / /\ \
 #    \_\___________________________________________________\_\/ /
 #        / /    _____    __            __                    / /
@@ -266,14 +266,16 @@ databases:
 		type: disabled # change to line below to enable this database
 		# type: SQLite
 
-		variable re-save threshold: 1000
-		# The number of variables that are required to change in order for a re-save to occur.
+		required variable changes for save: 1000
+		# The number of variables that are needed to be updated in order for a re-writing of a flat file database to occur.
 		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
 		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
 
-		file re-write frequency in ticks: 6000
-		# The number of ticks that should pass before the database file is re-written.
+		variable save interval: 6000
+		# The number of ticks that should pass before the flat file database file is re-written.
 		# Setting this value lower is not recommended as saving large database files may cause server lag.
+		# It is not advisable for the value set to be 1200 ticks (1 minute) or lower, as this may cause bad things to happen
+		# if a database save has not succeeded before next one starts.
 
 		pattern: db_.* # this pattern will save all variables that start with 'db_' in this SQLite database.
 
@@ -286,16 +288,15 @@ databases:
 		monitor changes: false
 		monitor interval: 20 seconds
 
-		variable re-save threshold: 1000
-
-		file re-write frequency in ticks: 6000
-
 	default:
 		# The default "database" is a simple text file, with each variable on a separate line and the variable's name, type, and value separated by commas.
 		# This is the last database in this list to catch all variables that have not been saved anywhere else.
 		# You can modify this database freely, but make sure to know what you're doing if you don't want to loose any variables.
 
 		type: CSV
+		
+		required variable changes for save: 1000
+		# The number of variables that are needed to be updated in order for a re-writing of a flat file database to occur.
 
 		pattern: .*
 
@@ -307,10 +308,12 @@ databases:
 		# The number of variables that are required to change in order for a re-save to occur.
 		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
 		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
-		
-		file re-write frequency in ticks: 6000
-		# The number of ticks that should pass before the database file is re-written.
+
+		variable save interval: 6000
+		# The number of ticks that should pass before the flat file database file is re-written.
 		# Setting this value lower is not recommended as saving large database files may cause server lag.
+		# It is not advisable for the value set to be 1200 ticks (1 minute) or lower, as this may cause bad things to happen
+		# if a database save has not succeeded before next one starts.
 
 	# PS: If you don't want some variables to be saved in any database (e.g. variables that contain an %entity% which usually despawn when the server is shut down)
 	# you can modify the last database's pattern to not match all variables, e.g. use '(?!x_).*' to match all variables that don't start with 'x_'.
