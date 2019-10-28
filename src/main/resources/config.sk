@@ -266,14 +266,16 @@ databases:
 		type: disabled # change to line below to enable this database
 		# type: SQLite
 		
-		variable re-save threshold: 1000
-		# The number of variables that are required to change in order for a re-save to occur.
+		required variable changes for save: 1000
+		# The number of variables that are needed to be updated in order for a re-writing of a flat file database to occur.
 		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
 		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
-		
-		file re-write frequency in ticks: 6000
-		# The number of ticks that should pass before the database file is re-written.
+
+		variable save interval: 6000
+		# The number of ticks that should pass before the flat file database file is re-written.
 		# Setting this value lower is not recommended as saving large database files may cause server lag.
+		# It is not advisable for the value set to be 1200 ticks (1 minute) or lower, as this may cause bad things to happen
+		# if a database save has not succeeded before next one starts.
 
 		pattern: db_.* # this pattern will save all variables that start with 'db_' in this SQLite database.
 
@@ -293,14 +295,16 @@ databases:
 
 		type: CSV
 		
-		variable re-save threshold: 1000
-		# The number of variables that are required to change in order for a re-save to occur.
+		required variable changes for save: 1000
+		# The number of variables that are needed to be updated in order for a re-writing of a flat file database to occur.
 		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower
 		# this threshold to ensure that variables are always saved (prevents data loss during a crash).
-		
-		file re-write frequency in ticks: 6000
-		# The number of ticks that should pass before the database file is re-written.
+
+		variable save interval: 6000
+		# The number of ticks that should pass before the flat file database file is re-written.
 		# Setting this value lower is not recommended as saving large database files may cause server lag.
+		# It is not advisable for the value set to be 1200 ticks (1 minute) or lower, as this may cause bad things to happen
+		# if a database save has not succeeded before next one starts.
 
 		pattern: .*
 
