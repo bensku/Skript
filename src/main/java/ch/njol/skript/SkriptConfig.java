@@ -345,6 +345,7 @@ public abstract class SkriptConfig {
 	/**
 	 * Returns the previous config file version, before Skript automatically updates the version number
 	 */
+	@Nullable
 	public static Version getPreviousConfigVersion() {
 		return previousConfigVersion;
 	}
