@@ -19,76 +19,77 @@
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Fox;
-import org.bukkit.entity.Fox.Type;
+import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.MushroomCow.Variant;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
-public class FoxData extends EntityData<Fox> {
+public class MooshroomData extends EntityData<MushroomCow> {
 	
 	static {
-		if (Skript.classExists("org.bukkit.entity.Fox"))
-			EntityData.register(FoxData.class, "fox", Fox.class, 1,
-					"fox", "red fox", "snow fox");
+		if (Skript.methodExists(MushroomCow.class, "getVariant")) {
+			EntityData.register(MooshroomData.class, "mooshroom", MushroomCow.class, 1,
+				"mooshroom", "red mooshroom", "brown mooshroom");
+		}
 	}
 	
 	@Nullable
-	private Type type = null;
+	private Variant variant = null;
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern > 0)
-			type = Type.values()[matchedPattern - 1];
+			variant = Variant.values()[matchedPattern - 1];
 		return true;
 	}
 	
 	@Override
-	protected boolean init(@Nullable Class<? extends Fox> c, @Nullable Fox fox) {
-		if (fox != null)
-			type = fox.getFoxType();
+	protected boolean init(@Nullable Class<? extends MushroomCow> c, @Nullable MushroomCow mushroomCow) {
+		if (mushroomCow != null)
+			variant = mushroomCow.getVariant();
 		return true;
 	}
 	
 	@Override
-	public void set(Fox entity) {
-		if (type != null)
-			entity.setFoxType(type);
+	public void set(MushroomCow entity) {
+		if (variant != null)
+			entity.setVariant(variant);
 	}
 	
 	@Override
-	protected boolean match(Fox entity) {
-		return type == null || type == entity.getFoxType();
+	protected boolean match(MushroomCow entity) {
+		return variant == null || variant == entity.getVariant();
 	}
 	
 	@Override
-	public Class<? extends Fox> getType() {
-		return Fox.class;
+	public Class<? extends MushroomCow> getType() {
+		return MushroomCow.class;
 	}
 	
 	@Override
 	public EntityData getSuperType() {
-		return new FoxData();
+		return new MooshroomData();
 	}
 	
 	@Override
 	protected int hashCode_i() {
-		return type != null ? type.hashCode() : 0;
+		return variant != null ? variant.hashCode() : 0;
 	}
 	
 	@Override
 	protected boolean equals_i(EntityData<?> data) {
-		if (!(data instanceof FoxData))
+		if (!(data instanceof MooshroomData))
 			return false;
-		return type == ((FoxData) data).type;
+		return variant == ((MooshroomData) data).variant;
 	}
 	
 	@Override
 	public boolean isSupertypeOf(EntityData<?> data) {
-		if (!(data instanceof FoxData))
+		if (!(data instanceof MooshroomData))
 			return false;
-		return type == null || type == ((FoxData) data).type;
+		return variant == null || variant == ((MooshroomData) data).variant;
 	}
 }

@@ -91,6 +91,7 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -1006,6 +1007,15 @@ public final class BukkitEventValues {
 					if (effects == null || effects.size() == 0)
 						return null;
 					return effects.get(0);
+				}
+			}, 0);
+		}
+		//PlayerRiptideEvent
+		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
+			EventValues.registerEventValue(PlayerRiptideEvent.class, ItemType.class, new Getter<ItemType, PlayerRiptideEvent>() {
+				@Override
+				public ItemType get(PlayerRiptideEvent e) {
+					return new ItemType(e.getItem());
 				}
 			}, 0);
 		}

@@ -17,32 +17,33 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.conditions;
 
-import org.bukkit.DyeColor;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import org.bukkit.entity.LivingEntity;
 
-import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
+@Name("Is Leashed")
+@Description("Checks to see if an entity is currently leashed.")
+@Examples("target entity is leashed")
+@Since("INSERT VERSION")
+public class CondLeashed extends PropertyCondition<LivingEntity> {
 
-public interface Color extends YggdrasilExtendedSerializable {
-	
-	/**
-	 * Gets Bukkit color representing this color.
-	 * @return Bukkit color.
-	 */
-	org.bukkit.Color asBukkitColor();
-	
-	
-	/**
-	 * Gets Bukkit dye color representing this color, if one exists.
-	 * @return Dye color or null.
-	 */
-	@Nullable
-	DyeColor asDyeColor();
-	
-	/**
-	 * @return Name of the color.
-	 */
-	String getName();
-	
+	static {
+		register(CondLeashed.class, PropertyType.BE, "leashed", "livingentities");
+	}
+
+	@Override
+	public boolean check(LivingEntity entity) {
+		return entity.isLeashed();
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "leashed";
+	}
+
 }

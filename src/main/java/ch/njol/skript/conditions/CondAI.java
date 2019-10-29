@@ -17,32 +17,34 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.conditions;
 
-import org.bukkit.DyeColor;
-import org.eclipse.jdt.annotation.Nullable;
+import org.bukkit.entity.LivingEntity;
 
-import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 
-public interface Color extends YggdrasilExtendedSerializable {
+@Name("Has AI")
+@Description("Checks whether an entity has AI.")
+@Examples("target entity has ai")
+@Since("INSERT VERSION")
+public class CondAI extends PropertyCondition<LivingEntity> {
 	
-	/**
-	 * Gets Bukkit color representing this color.
-	 * @return Bukkit color.
-	 */
-	org.bukkit.Color asBukkitColor();
+	static {
+		register(CondAI.class, PropertyType.HAVE, "(ai|artificial intelligence)", "livingentities");
+	}
 	
+	@Override
+	public boolean check(LivingEntity entity) {
+		return entity.hasAI();
+	}
 	
-	/**
-	 * Gets Bukkit dye color representing this color, if one exists.
-	 * @return Dye color or null.
-	 */
-	@Nullable
-	DyeColor asDyeColor();
-	
-	/**
-	 * @return Name of the color.
-	 */
-	String getName();
+	@Override
+	protected String getPropertyName() {
+		return "artificial intelligence";
+	}
 	
 }

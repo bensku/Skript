@@ -1,0 +1,9 @@
+test "list sizes":
+	set {_test::1} to 1
+	set {_test::2} to 2
+	set {_test::2::1} to 3
+	set {_test::2::1::1} to 4
+	set {_test::2::2} to 5
+	set {_test::3} to 6
+	assert size of {_test::*} is 3 with "default list size failed"
+	assert recursive size of {_test::*} is 6 with "recursive list size failed"
