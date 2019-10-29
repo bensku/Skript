@@ -60,9 +60,11 @@ public class DefaultFunctions {
 		
 		final ClassInfo<Number> numberClass = Classes.getExactClassInfo(Number.class);
 		final ClassInfo<Long> longClass = Classes.getExactClassInfo(Long.class);
+		final ClassInfo<String> stringClass = Classes.getExactClassInfo(String.class);
 		
 		final Parameter<?>[] numberParam = new Parameter[] {new Parameter<>("n", numberClass, true, null)};
 		final Parameter<?>[] numbersParam = new Parameter[] {new Parameter<>("ns", numberClass, false, null)};
+		final Parameter<?>[] stringsParam = new Parameter[] {new Parameter<>("strs", stringClass, false, null)};
 		
 		// basic math functions
 		
@@ -428,6 +430,21 @@ public class DefaultFunctions {
 		}).description("Returns a RGB color from the given red, green and blue parameters.")
 			.examples("dye player's leggings rgb(120, 30, 45)")
 			.since("INSERT VERSION");
+		
+		Functions.registerFunction(new JavaFunction<Boolean>("caseEquals", stringsParam, Classes.getExactClassInfo(Boolean.class), true) {
+			@Override
+			public Boolean[] execute(final FunctionEvent e, final Object[][] params) {
+				final Object[] strs = params[0];
+				for (int i = 0; i < strs.length - 1; i++)
+					if (!strs[i].equals(strs[i+1]))
+						return new Boolean[] {false};
+				return new Boolean[] {true};
+			}
+		}.description("Checks if the contents of a list of strings are strictly equal with case sensitivity.")
+				.examples("caseEquals(\"hi\", \"Hi\") = false", 
+						"caseEquals(\"text\", \"text\", \"text\") = true", 
+						"caseEquals({some list variable::*})")
+				.since("INSERT VERSION"));
 	}
 	
 }
