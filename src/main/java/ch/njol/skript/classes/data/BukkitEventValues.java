@@ -114,6 +114,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
@@ -1019,6 +1021,16 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
-
+		//PlayerArmorChangeEvent
+		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
+			EventValues.registerEventValue(PlayerArmorChangeEvent.class, ItemType.class, new Getter<ItemType, PlayerArmorChangeEvent>() {
+				@Override
+				@Nullable
+				public ItemType get(PlayerArmorChangeEvent e) {
+					ItemStack stack = e.getNewItem();
+					return stack == null ? null : new ItemType(stack);
+				}
+			}, 0);
+		}
 	}
 }
