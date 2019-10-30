@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -87,10 +86,13 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		
 		
 		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
-		final BigDecimal decimals = BigDecimal.valueOf(s.doubleValue());
-		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + (10 ^ (decimals.scale() * -1));
+		double decimalCheck = s.doubleValue() % 1;
 		
-		for (int i = 0; i < amount; i+= 10 ^ (decimals.scale() * -1)) {
+		final int decimals = decimalCheck == 0 ? 0 : Double.toString(decimalCheck).length() - 2;
+		
+		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + (10 ^ (decimals * -1));
+		
+		for (int i = 0; i < amount; i+= 10 ^ (decimals * -1)) {
 			if (integer)
 				list.add((long) low + i);
 			else
