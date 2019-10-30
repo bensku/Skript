@@ -92,7 +92,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		
 		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + (10 ^ (decimals * -1));
 		
-		for (int i = 0; i < amount; i+= 10 ^ (decimals * -1)) {
+		for (double i = 0; i < amount; i+= 10 ^ (decimals * -1)) {
 			if (integer)
 				list.add((long) low + i);
 			else

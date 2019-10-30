@@ -1,9 +1,8 @@
 test "altern numbers expression":
 	set {_test::*} to integers between 1 and 5
-	assert {_test::*} contains 2 with "integer part of numbers failure"
+	set {_test::2*} to (1, 2, 3, 4 and 5)
+	assert {_test::*} = {_test2::*} with "integer part of numbers expr failure"
 	
-	set {_test2::*} to numbers between 1 and 5.1
-	assert {_test2::*} doesn't contain 5.1 with "numbers part of numbers failure, end included"
-	
-	set {_test3::*} to numbers between 1.1 and 4.7
-	assert {_test3::*} contains 2.7 with "numbers part of numbers failure, start precision excluded"
+	set {_test3::*} to numbers between 1.12 and 1.19
+	set {_test4::*} to (1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.18 and 1.19)
+	assert {_test3::*} = {_test4::*} with "numbers part of numbers expr failure, wrong increment?"
