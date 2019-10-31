@@ -82,7 +82,7 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	private String[] requiredPlugins = null;
 	@Nullable
-	private String documentationID;
+	private String documentationID = null;
 	
 	/**
 	 * @param c The class
