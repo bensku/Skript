@@ -81,6 +81,8 @@ public class ClassInfo<T> implements Debuggable {
 	private String since = null;
 	@Nullable
 	private String[] requiredPlugins = null;
+	@Nullable
+	private String documentationID;
 	
 	/**
 	 * @param c The class
@@ -251,6 +253,20 @@ public class ClassInfo<T> implements Debuggable {
 		return this;
 	}
 	
+	/**
+	 * A non critical ID remapping for ClassInfo.
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param id
+	 * @return This ClassInfo object
+	 */
+	public ClassInfo<T> documentationID(final String id) {
+		assert this.documentationID == null;
+		this.documentationID = id;
+		return this;
+	}
+	
 	// === GETTERS ===
 	
 	public Class<T> getC() {
@@ -333,6 +349,11 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public String getDocName() {
 		return docName;
+	}
+	
+	@Nullable
+	public String getDocumentationID() {
+		return documentationID;
 	}
 	
 	// === ORDERING ===
