@@ -85,7 +85,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
 		double decimalCheck = s.doubleValue() % 1;
 		final int decimals = decimalCheck == 0 ? 0 : Double.toString(decimalCheck).length() - 2;
-		final double increment = Math.pow(10, -1 * decimals);
+		final double increment = Math.pow(10, -decimals);
 		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + increment;
 
 		for (double i = 0; i < amount; i+= increment) {
