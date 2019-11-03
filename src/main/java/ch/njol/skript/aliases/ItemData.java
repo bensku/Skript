@@ -413,28 +413,28 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
 		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
 		if (!Objects.equals(ourName, theirName)) {
-			quality = theirName != null ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
+			quality = theirName != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Lore
 		List<String> ourLore = first.hasLore() ? first.getLore() : null;
 		List<String> theirLore = second.hasLore() ? second.getLore() : null;
 		if (!Objects.equals(ourLore, theirLore)) {
-			quality = theirLore != null ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
+			quality = theirLore != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Enchantments
 		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
 		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
 		if (!Objects.equals(ourEnchants, theirEnchants)) {
-			quality = !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
+			quality = !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Item flags
 		Set<ItemFlag> ourFlags = first.getItemFlags();
 		Set<ItemFlag> theirFlags = second.getItemFlags();
 		if (!Objects.equals(ourFlags, theirFlags)) {
-			quality = !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM;
+			quality = !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Potion data
@@ -445,7 +445,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			// Compare potion type, including extended and level 2 attributes
 			PotionData ourPotion = ((PotionMeta) first).getBasePotionData();
 			PotionData theirPotion = ((PotionMeta) second).getBasePotionData();
-			return Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_ITEM : MatchQuality.SAME_MATERIAL;
+			return !Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		return quality;
