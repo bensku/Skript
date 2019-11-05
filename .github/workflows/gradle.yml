@@ -14,7 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@2.0.0
+      run: git submodule init
+      run: git submodule update
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
