@@ -155,27 +155,11 @@ public class ExprLore extends SimpleExpression<String> {
 			switch (mode) {
 				case SET:
 					assert stringDelta != null;
-					List<String> newLore = new ArrayList<>();
-					for (String line : stringDelta) {
-						if (line.contains("\n")) {
-							Collections.addAll(newLore, line.split("\n"));
-							continue;
-						}
-						newLore.add(line);
-					}
-					lore = newLore;
+					lore = Arrays.asList(stringDelta);
 					break;
 				case ADD:
 					assert stringDelta != null;
-					List<String> addLore = new ArrayList<>();
-					for (String line : stringDelta) {
-						if (line.contains("\n")) {
-							Collections.addAll(addLore, line.split("\n"));
-							continue;
-						}
-						addLore.add(line);
-					}
-					lore.addAll(addLore);
+					lore.addAll(Arrays.asList(stringDelta));
 					break;
 				case DELETE:
 					lore = null;
