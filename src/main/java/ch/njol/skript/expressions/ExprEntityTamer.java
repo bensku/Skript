@@ -62,8 +62,10 @@ public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePla
 			@Nullable
 			@Override
 			public OfflinePlayer get(LivingEntity entity) {
-				if (entity instanceof Tameable && ((Tameable) entity).isTamed()) {
-					return ((OfflinePlayer) ((Tameable) entity).getOwner());
+				if (entity instanceof Tameable) {
+					Tameable t = ((Tameable) entity);
+					if (t.isTamed())
+					return (OfflinePlayer) t.getOwner();
 				}
 				return null;
 			}
