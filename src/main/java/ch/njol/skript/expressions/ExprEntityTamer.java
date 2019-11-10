@@ -65,7 +65,7 @@ public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePla
 				if (entity instanceof Tameable) {
 					Tameable t = ((Tameable) entity);
 					if (t.isTamed())
-					return (OfflinePlayer) t.getOwner();
+						return (OfflinePlayer) t.getOwner();
 				}
 				return null;
 			}
