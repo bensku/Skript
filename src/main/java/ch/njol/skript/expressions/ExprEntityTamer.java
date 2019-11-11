@@ -31,9 +31,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Entity Owner")
@@ -46,13 +43,6 @@ public class ExprEntityTamer extends SimplePropertyExpression<LivingEntity, Offl
 	
 	static {
 		register(ExprEntityTamer.class, OfflinePlayer.class, "(owner|tamer)", "livingentities");
-	}
-	
-	@SuppressWarnings({"unchecked", "null"})
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
-		setExpr((Expression<LivingEntity>) exprs[0]);
-		return true;
 	}
 	
 	@Nullable
