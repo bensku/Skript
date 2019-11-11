@@ -30,10 +30,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -43,7 +42,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"delete owner of target entity",
 	"set {_t} to uuid of tamer of target entity"})
 @Since("INSERT VERSION")
-public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePlayer> {
+public class ExprEntityTamer extends SimplePropertyExpression<LivingEntity, OfflinePlayer> {
 	
 	static {
 		register(ExprEntityTamer.class, OfflinePlayer.class, "(owner|tamer)", "livingentities");
@@ -51,32 +50,28 @@ public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePla
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		setExpr((Expression<LivingEntity>) exprs[0]);
 		return true;
-	}
-	
-	@Override
-	protected OfflinePlayer[] get(Event e, LivingEntity[] source) {
-		return get(source, new Getter<OfflinePlayer, LivingEntity>() {
-			@Nullable
-			@Override
-			public OfflinePlayer get(LivingEntity entity) {
-				if (entity instanceof Tameable) {
-					Tameable t = ((Tameable) entity);
-					if (t.isTamed())
-						return (OfflinePlayer) t.getOwner();
-				}
-				return null;
-			}
-		});
 	}
 	
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
+		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE || mode == ChangeMode.RESET)
 			return CollectionUtils.array(OfflinePlayer.class);
+		return null;
+	}
+	
+	@Nullable
+	@Override
+	public OfflinePlayer convert(LivingEntity entity) {
+		if (entity instanceof Tameable) {
+			Tameable t = ((Tameable) entity);
+			if (t.isTamed()) {
+				return ((OfflinePlayer) t.getOwner());
+			}
+		}
 		return null;
 	}
 	
@@ -92,6 +87,7 @@ public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePla
 				}
 				break;
 			case DELETE:
+			case RESET:
 				for (LivingEntity entity : getExpr().getAll(e)) {
 					if (!(entity instanceof Tameable))
 						continue;
@@ -103,6 +99,11 @@ public class ExprEntityTamer extends PropertyExpression<LivingEntity, OfflinePla
 	@Override
 	public Class<? extends OfflinePlayer> getReturnType() {
 		return OfflinePlayer.class;
+	}
+	
+	@Override
+	protected String getPropertyName() {
+		return "entity owner";
 	}
 	
 	@Override
