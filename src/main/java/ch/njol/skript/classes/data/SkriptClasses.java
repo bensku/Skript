@@ -195,13 +195,10 @@ public class SkriptClasses {
 				.name("Item Type")
 				.description("An item type is an alias, e.g. 'a pickaxe', 'all plants', etc., and can result in different items when added to an inventory, " +
 						"and unlike <a href='#itemstack'>items</a> they are well suited for checking whether an inventory contains a certain item or whether a certain item is of a certain type.",
-						"An item type can also have one or more <a href='#enchantmenttype'>enchantments</a> with or without a specific level defined, " +
-								"and can optionally start with 'all' or 'every' to make this item type represent <i>all</i> types that the alias represents, including data ranges.")
-				.usage("<code>[&lt;number&gt; [of]] [all/every] &lt;alias&gt; [of &lt;enchantment&gt; [&lt;level&gt;] [,/and &lt;more enchantments...&gt;]]</code>")
+						"An item type can optionally start with 'all' or 'every' to make this item type represent <i>all</i> types that the alias represents, including data ranges.")
+				.usage("<code>[&lt;number&gt; [of]] [all/every] &lt;alias&gt;]</code>")
 				.examples("give 4 torches to the player",
 						"add all slabs to the inventory of the block",
-						"player's tool is a diamond sword of sharpness",
-						"remove a pickaxes of fortune 4 from {stored items::*}",
 						"set {_item} to 10 of every upside-down stair",
 						"block is dirt or farmland")
 				.since("1.0")
@@ -232,17 +229,6 @@ public class SkriptClasses {
 						// TODO this is missing information
 						for (final ItemData d : t.getTypes()) {
 							b.append("," + d.getType());
-						}
-						final EnchantmentType[] enchs = t.getEnchantmentTypes();
-						if (enchs != null) {
-							b.append("|");
-							for (final EnchantmentType ench : enchs) {
-								Enchantment e = ench.getType();
-								if (e == null)
-									continue;
-								b.append("#" + EnchantmentUtils.getKey(e));
-								b.append(":" + ench.getLevel());
-							}
 						}
 						return "" + b.toString();
 					}
