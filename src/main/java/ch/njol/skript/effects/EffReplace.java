@@ -129,9 +129,8 @@ public class EffReplace extends Effect {
 		if (replaceFirst)
 			return "replace first " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug)
 					+ "(case sensitive: " + caseSensitive + ")";
-		else
-			return "replace " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug)
-					+ "(case sensitive: " + caseSensitive + ")";
+		return "replace " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug)
+				+ "(case sensitive: " + caseSensitive + ")";
 	}
 	
 }
