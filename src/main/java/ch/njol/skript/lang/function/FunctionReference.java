@@ -97,9 +97,9 @@ public class FunctionReference<T> {
 	 * safety checks.
 	 */
 	@Nullable
-	public final File script;
+	public final String script;
 	
-	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
+	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final String script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
 		this.functionName = functionName;
 		this.node = node;
 		this.script = script;

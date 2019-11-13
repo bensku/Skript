@@ -96,7 +96,6 @@ public enum SkriptColor implements Color {
 	}
 	
 	@Override
-	@Nullable
 	public DyeColor asDyeColor() {
 		return dye;
 	}

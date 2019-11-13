@@ -731,6 +731,12 @@ entities:
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
+	red mooshroom:
+		name: red mooshroom¦s
+		pattern: <age> red mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
+	brown mooshroom:
+		name: brown mooshroom¦s
+		pattern: <age> brown mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
 	ocelot:
 		name: ocelot¦s @an
 		pattern: <age> ocelot(|1¦s)
@@ -806,7 +812,7 @@ entities:
 		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
 	normal:
 		name: villager¦s
-		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> [unemployed] villager(|1¦s)|(4¦)[[unemployed] villager] (kid(|1¦s)|child(|1¦ren))
 	armorer:
 		name: armorer¦s
 		pattern: <age> armorer(|1¦s)|(4¦)armorer (kid(|1¦s)|child(|1¦ren))
@@ -929,21 +935,33 @@ entities:
 	llama:
 		name: llama¦s
 		pattern: llama(|1¦s)|llama (4¦)cria(|1¦s)
+	creamy llama:
+		name: creamy llama¦s
+		pattern: creamy llama(|1¦s)|creamy llama (4¦)cria(|1¦s)
+	white llama:
+		name: white llama¦s
+		pattern: white llama(|1¦s)|white llama (4¦)cria(|1¦s)
+	brown llama:
+		name: brown llama¦s
+		pattern: brown llama(|1¦s)|brown llama (4¦)cria(|1¦s)
+	gray llama:
+		name: gray llama¦s
+		pattern: gray llama(|1¦s)|gray llama (4¦)cria(|1¦s)
 	trader llama:
 		name: trader llama¦s
 		pattern: trader llama(|1¦s)|trader llama (4¦)cria(|1¦s)
-	creamy llama:
-		name: creamy llama¦s
-		pattern: creamy [(2¦trader)] llama(|1¦s)|creamy [(2¦trader)] llama (4¦)cria(|1¦s)
-	white llama:
-		name: white llama¦s
-		pattern: white [(2¦trader)] llama(|1¦s)|white [(2¦trader)] llama (4¦)cria(|1¦s)
-	brown llama:
-		name: brown llama¦s
-		pattern: brown [(2¦trader)] llama(|1¦s)|brown [(2¦trader)] llama (4¦)cria(|1¦s)
-	gray llama:
-		name: gray llama¦s
-		pattern: gray [(2¦trader)] llama(|1¦s)|gray [(2¦trader)] llama (4¦)cria(|1¦s)
+	creamy trader llama:
+		name: creamy trader llama¦s
+		pattern: creamy trader llama(|1¦s)|creamy trader llama (4¦)cria(|1¦s)
+	white trader llama:
+		name: white trader llama¦s
+		pattern: white trader llama(|1¦s)|white trader llama (4¦)cria(|1¦s)
+	brown trader llama:
+		name: brown trader llama¦s
+		pattern: brown trader llama(|1¦s)|brown trader llama (4¦)cria(|1¦s)
+	gray trader llama:
+		name: gray trader llama¦s
+		pattern: gray trader llama(|1¦s)|gray trader llama (4¦)cria(|1¦s)
 	llama spit:
 		name: llama spit¦s
 		pattern: llama spit(|1¦s)

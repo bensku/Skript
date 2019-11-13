@@ -55,12 +55,12 @@ public class EvtItem extends SkriptEvent {
 						"\tsend \"that'd be 19.99 please!\"")
 				.since("<i>unknown</i> (before 2.1)");
 		Skript.registerEvent("Item Spawn", EvtItem.class, ItemSpawnEvent.class, "item spawn[ing] [[of] %itemtypes%]")
-				.description("Called whenever an item stack is spawned in a world, e.g. as drop of a block or mob, a player throwing items out of his inventory, or a dispenser dispensing an item (not shooting it).")
+				.description("Called whenever an item stack is spawned in a world, e.g. as drop of a block or mob, a player throwing items out of their inventory, or a dispenser dispensing an item (not shooting it).")
 				.examples("on item spawn of iron sword:",
 						"\tbroadcast \"Someone dropped an iron sword!\"")
 				.since("<i>unknown</i> (before 2.1)");
 		Skript.registerEvent("Drop", EvtItem.class, PlayerDropItemEvent.class, "[player] drop[ing] [[of] %itemtypes%]")
-				.description("Called when a player drops an item from his inventory.")
+				.description("Called when a player drops an item from their inventory.")
 				.examples("on drop:")
 				.since("<i>unknown</i> (before 2.1)");
 		// TODO limit to InventoryAction.PICKUP_* and similar (e.g. COLLECT_TO_CURSOR)

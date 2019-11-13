@@ -29,8 +29,12 @@ improve existing tests.
 ### Regression tests
 Under <code>regressions</code>, there are regression tests. Such tests are
 created when bugs are fixed to ensure they do not come back in future.
-File names should contain respective issue (or PR) number and its title.
-For example, <code>1234-Item comparison issues.sk</code>.
+File names should contain respective issue number and its title. If no issue
+is available, PR number and title can be used in place of them.
+
+For example, <code>2381-multiplication in list index.sk</code>. Use only
+lower case letters in names, because issue titles are not consistent with
+their capitalization.
 
 Contributors should not add regression tests unless they also fix bugs in
 Skript. Those who do fix bugs *should* write regression tests.
@@ -50,8 +54,9 @@ Aside these things, pretty much anything goes.
 Test scripts have all normal Skript syntaxes available. In addition to that,
 some syntaxes for test development are available.
 
-* Test cases are events: <code>test "test name"</code>
-* Assertions are available as effects: <code>assert \<condition\> with </code>
+* Test cases are events: <code>test "test name" [when \<condition\>]</code>
+  * Contents of tests are not parsed when conditions are not met
+* Assertions are available as effects: <code>assert \<condition\> with "failure message"</code>
 * Take a look at existing tests for examples; in particular,
   <code>misc/dummy.sk</code> is useful for beginners
 
@@ -59,10 +64,12 @@ some syntaxes for test development are available.
 Use Gradle to launch a test development server:
 
 ```
-./gradlew skriptTestDev
+TERM=dumb ./gradlew skriptTestDev
 ```
 
 The server launched will be running at localhost:25555. You can use console
-as normal, although it may look a bit ugly.
+as normal, though there is some lag due to Gradle. If you're having trouble,
+try without <code>TERM=dumb</code>.
 
-To run individual test files, use <code>/sk test \<file\></code>.
+To run individual test files, use <code>/sk test \<file\></code>. To run last
+used file again, just use <code>/sk test</code>.

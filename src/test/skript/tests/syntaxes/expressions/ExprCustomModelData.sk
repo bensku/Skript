@@ -1,0 +1,7 @@
+test "custom model data expressions/condition" when minecraft version is "1.14.4":
+	set {_item} to a diamond sword with custom model data 456
+	assert {_item} has custom model data with "{_item} does not have custom model data"
+	if {_item} has custom model data:
+		assert custom model data of {_item} = 456 with "{_item}'s custom model data != 456: %custom model data of {_item}%"
+		set custom model data of {_item} to 987
+		assert custom model data of {_item} = 987 with "{_item}'s custom model data != 987: %custom model data of {_item}%"
