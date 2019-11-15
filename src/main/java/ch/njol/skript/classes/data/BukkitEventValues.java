@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.lang.Integer;
 import java.util.List;
 
 import org.bukkit.Chunk;
@@ -857,13 +856,6 @@ public final class BukkitEventValues {
 			@Nullable
 			public Inventory get(final InventoryClickEvent e) {
 				return e.getClickedInventory();
-			}
-		}, 0);
-		EventValues.registerEventValue(InventoryClickEvent.class, Integer.class, new Getter<Integer, InventoryClickEvent>() {
-			@Override
-			@Nullable
-			public Integer get(final InventoryClickEvent e) {
-				return e.getHotbarButton();
 			}
 		}, 0);
 		// CraftItemEvent REMIND maybe re-add this when Skript parser is reworked?
