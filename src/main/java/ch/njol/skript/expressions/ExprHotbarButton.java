@@ -19,11 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Iterator;
-
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
