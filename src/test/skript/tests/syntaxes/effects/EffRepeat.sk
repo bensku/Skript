@@ -5,6 +5,6 @@ test "repeat effect":
 	repeat effect add 1 to {_add} 3 times
 	subtract 1 from {_subtract} 5 times
 	run effect set {_multiply} to {_multiply}*5 3 times
-	assert {_add} = 3
-	assert {_subtract} = 5
-	assert {_multiply} = 625
+	assert {_add} = 3 with "add = 3 failed: %{_add}% != 3"
+	assert {_subtract} = 5 with "subtract = 5 failed: %{_subtract}% != 5"
+	assert {_multiply} = 625 with "multiply = 625 failed: %{_multiply}% != 625"
