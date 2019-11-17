@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 public class EffRepeat extends Effect  {
 
 	static {
-		Skript.registerEffect(EffRepeat.class, "(repeat|run) [effect] <.+> %number% times");
+		Skript.registerEffect(EffRepeat.class, "[(repeat|run) [effect]] <.+> %number% times");
 	}
 
 	@SuppressWarnings("null")
