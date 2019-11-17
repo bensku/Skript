@@ -1,0 +1,10 @@
+test "repeat effect":
+	set {_add} to 0
+	set {_subtract} to 10
+	set {_multiply} to 5
+	repeat effect add 1 to {_add} 3 times
+	subtract 1 from {_subtract} 5 times
+	run effect set {_multiply} to {_multiply}*5 3 times
+	assert {_add} = 3
+	assert {_subtract} = 5
+	assert {_multiply} = 625

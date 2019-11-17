@@ -34,7 +34,7 @@ import ch.njol.util.Kleenean;
 
 @Name("Repeat Effect")
 @Description("Runs an effect x number of times.")
-@Examples({"send \"<red>Server will restart in 1 minute!\" to all players 3 times! "})
+@Examples({"repeat effect send \"<red>Server will restart in 1 minute!\" to all players 3 times"})
 @Since("INSERT VERSION")
 public class EffRepeat extends Effect  {
 
@@ -66,7 +66,7 @@ public class EffRepeat extends Effect  {
 			if (n == null)
 				return;
 			max = n.intValue();
-	}
+		}
 		for (int i=1; i<=max; i++) {
 			effect.run(e);
 		}
@@ -76,5 +76,4 @@ public class EffRepeat extends Effect  {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "repeat " + effect.toString(e, debug) + " " + (amount != null ? amount.toString(e, debug) : "") + " times";
 	}
-
 }
