@@ -19,42 +19,23 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.Math2;
-import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Attribute")
@@ -67,8 +48,8 @@ public class ExprAttribute extends SimpleExpression<Number> {
 	
 	static {
 		Skript.registerExpression(ExprAttribute.class, Number.class, ExpressionType.PROPERTY,
-				"attribute %string% of %entity%",
-				"%entity%'s attribute %string%");
+				"attribute %string% of %entities%",
+				"%entities%'s attribute %string%");
 	}
 	
 	@Nullable
@@ -95,7 +76,13 @@ public class ExprAttribute extends SimpleExpression<Number> {
 	@Nullable
 	protected Number[] get(final Event e) {
 		try {
-			return new Number[] {((Attributable) exprEntity.getSingle(e)).getAttribute(Attribute.valueOf(exprString.getSingle(e))).getValue()};
+			Attribute a = Attribute.valueOf(exprString.getSingle(e));
+			Entity[] entities = exprEntity.getAll(e);
+			Number[] arr = new Number[entities.length];
+			for(int i = 0; i < entities.length; i++) {
+				arr[i] = ((Attributable) entities[i]).getAttribute(a).getValue();
+			}
+			return arr;
 		} catch (IllegalArgumentException | NullPointerException ex) {}
 		return null;
 	}
@@ -113,18 +100,20 @@ public class ExprAttribute extends SimpleExpression<Number> {
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		try {
 			Attribute a = Attribute.valueOf(exprString.getSingle(e));
+			double d = ((Number) delta[0]).doubleValue();
 			for(Entity entity : exprEntity.getAll(e)) {
 				if (mode == ChangeMode.SET) {
-					((Attributable) entity).getAttribute(a).setBaseValue(((Number) delta[0]).doubleValue());
+					((Attributable) entity).getAttribute(a).setBaseValue(d);
 				}
 			}
 		} catch (IllegalArgumentException | NullPointerException ex) {}
 		return;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public boolean isSingle() {
-		return true;
+		return exprEntity.isSingle();
 	}
 
 	@Override
