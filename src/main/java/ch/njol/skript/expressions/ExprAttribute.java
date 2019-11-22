@@ -79,7 +79,7 @@ public class ExprAttribute extends SimpleExpression<Number> {
 			Attribute a = Attribute.valueOf(exprString.getSingle(e));
 			Entity[] entities = exprEntity.getAll(e);
 			Number[] arr = new Number[entities.length];
-			for(int i = 0; i < entities.length; i++) {
+			for (int i = 0; i < entities.length; i++) {
 				arr[i] = ((Attributable) entities[i]).getAttribute(a).getValue();
 			}
 			return arr;
@@ -101,7 +101,7 @@ public class ExprAttribute extends SimpleExpression<Number> {
 		try {
 			Attribute a = Attribute.valueOf(exprString.getSingle(e));
 			double d = ((Number) delta[0]).doubleValue();
-			for(Entity entity : exprEntity.getAll(e)) {
+			for (Entity entity : exprEntity.getAll(e)) {
 				if (mode == ChangeMode.SET) {
 					((Attributable) entity).getAttribute(a).setBaseValue(d);
 				}
