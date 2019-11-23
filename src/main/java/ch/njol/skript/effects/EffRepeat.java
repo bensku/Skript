@@ -33,7 +33,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 
 @Name("Repeat Effect")
-@Description("Runs an effect x number of times.")
+@Description("Runs an effect x number of times. Note that this effect has the same functionality as using a loop.")
 @Examples({"repeat effect send \"<red>Server will restart in 1 minute!\" to all players 3 times"})
 @Since("INSERT VERSION")
 public class EffRepeat extends Effect  {
