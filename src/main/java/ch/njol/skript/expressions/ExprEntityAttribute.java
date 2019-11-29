@@ -99,14 +99,11 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		try {
-			System.out.println("CHANGE " + mode.toString());
 			Attribute a = exprAttribute.getSingle(e);
 			double d = ((Number) delta[0]).doubleValue();
 			for(Entity entity : exprEntity.getAll(e)) {
 				if (mode == ChangeMode.SET) {
-					System.out.print("SETTING");
 					((Attributable) entity).getAttribute(a).setBaseValue(d);
-					System.out.print("SET");
 				}
 			}
 		} catch (IllegalArgumentException | NullPointerException ex) {}
