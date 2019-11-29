@@ -42,14 +42,14 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The attribute value of an entity.")
 @Examples({"on damage of player:",
 		"	send \"You are wounded!\"",
-		"	set victim's attribute \"GENERIC_ATTACK_SPEED\" value to 2"})
+		"	set victim's attack speed attribute to 2"})
 @Since("INSERT VERSION")
 public class ExprEntityAttribute extends SimpleExpression<Number> {
 	
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.PROPERTY,
-				"%attributetype% value of %entities%",
-				"%entities%'s %attributetype% value");
+				"%attributetype% [value] of %entities%",
+				"%entities%'s %attributetype% [value]");
 	}
 	
 	@Nullable
