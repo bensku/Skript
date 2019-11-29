@@ -1719,39 +1719,37 @@ public class BukkitClasses {
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
 		
+		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
 		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
 				.user("attribute ?types?")
 				.name("Attribute Type")
 				.description("The attribute type of an entity. Note that this type does not contain any numerical values."
 						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
 				.defaultExpression(new EventValueExpression<>(Attribute.class))
+				.examples(attributes.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<Attribute>() {
 					@Override
 					@Nullable
 					public Attribute parse(String input, ParseContext context) {
-						return null;
-					}
-					
-					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
+						return attributes.parse(input);
 					}
 					
 					@Override
 					public String toString(Attribute a, int flags) {
-						return "Attribute Type " + a.toString();
+						return attributes.toString(a, flags);
 					}
 					
 					@Override
 					public String toVariableNameString(Attribute a) {
-						return "attribute type " + a.toString();
+						return a.toString();
 					}
 					
 					@Override
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-				}));
+				})
+				.serializer(new EnumSerializer<>(Attribute.class)));
 	}
 }
