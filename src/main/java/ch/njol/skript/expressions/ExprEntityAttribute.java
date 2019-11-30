@@ -47,27 +47,22 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEntityAttribute extends SimpleExpression<Number> {
 	
 	static {
-		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
 				"%attributetype% [value] of %entities%",
 				"%entities%'s %attributetype% [value]");
 	}
 	
 	@Nullable
-	private Expression<Attribute> exprAttribute = null;
+	private Expression<Attribute> attributes = null;
 	
 	@Nullable
-	private Expression<Entity> exprEntity = null;
+	private Expression<Entity> entities = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (matchedPattern == 0) {
-			exprAttribute = (Expression<Attribute>) exprs[0];
-			exprEntity = (Expression<Entity>) exprs[1];
-		} else {
-			exprAttribute = (Expression<Attribute>) exprs[1];
-			exprEntity = (Expression<Entity>) exprs[0];
-		}
+		attributes = (Expression<Attribute>) exprs[matchedPattern];
+		entities = (Expression<Entity>) exprs[matchedPattern ^ 1];
 		return true;
 	}
 
@@ -75,16 +70,13 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		try {
-			Attribute a = exprAttribute.getSingle(e);
-			Entity[] entities = exprEntity.getAll(e);
-			Number[] arr = new Number[entities.length];
-			for (int i = 0; i < entities.length; i++) {
-				arr[i] = ((Attributable) entities[i]).getAttribute(a).getValue();
-			}
-			return arr;
-		} catch (IllegalArgumentException | NullPointerException ex) {}
-		return null;
+		Attribute a = attributes.getSingle(e);
+		Entity[] ea = entities.getArray(e);
+		Number[] arr = new Number[ea.length];
+		for (int i = 0; i < ea.length; i++) {
+			arr[i] = ((Attributable) ea[i]).getAttribute(a).getValue();
+		}
+		return arr;
 	}
 
 	@Override
@@ -98,22 +90,20 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		try {
-			Attribute a = exprAttribute.getSingle(e);
-			double d = ((Number) delta[0]).doubleValue();
-			for (Entity entity : exprEntity.getAll(e)) {
-				if (mode == ChangeMode.SET) {
-					((Attributable) entity).getAttribute(a).setBaseValue(d);
-				}
+		Attribute a = attributes.getSingle(e);
+		double d = ((Number) delta[0]).doubleValue();
+		for (Entity entity : entities.getArray(e)) {
+			if (mode == ChangeMode.SET) {
+				((Attributable) entity).getAttribute(a).setBaseValue(d);
 			}
-		} catch (IllegalArgumentException | NullPointerException ex) {}
+		}
 		return;
 	}
 
 	@SuppressWarnings("null")
 	@Override
 	public boolean isSingle() {
-		return exprEntity.isSingle();
+		return entities.isSingle();
 	}
 
 	@Override
