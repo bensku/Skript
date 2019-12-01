@@ -49,7 +49,7 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
 				"%attributetype% [value] of %entities%",
-				"%entities%'s %attributetype% [value]");
+				"%entities%'[s] %attributetype% [value]");
 	}
 	
 	@Nullable
