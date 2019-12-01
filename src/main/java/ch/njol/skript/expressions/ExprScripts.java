@@ -53,9 +53,9 @@ public class ExprScripts extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprScripts.class, String.class, ExpressionType.SIMPLE,
-				"[all [of the]] scripts",
-				"[all [of the]] (enabled|loaded) scripts",
-				"[all [of the]] (disabled|unloaded) scripts");
+				"[all [of the]] scripts [(1¦without [subdirectory] paths)]",
+				"[all [of the]] (enabled|loaded) scripts [(1¦without [subdirectory] paths)]",
+				"[all [of the]] (disabled|unloaded) scripts [(1¦without [subdirectory] paths)]");
 	}
 
 	private final static FileFilter allFilter = new FileFilter() {
@@ -78,6 +78,7 @@ public class ExprScripts extends SimpleExpression<String> {
 	};
 
 	private static FileFilter filter = allFilter;
+	private boolean noPaths;
 
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -86,6 +87,7 @@ public class ExprScripts extends SimpleExpression<String> {
 		} else if (matchedPattern == 2) {
 			filter = disabledFilter;
 		}
+		noPaths = parseResult.mark == 1;
 		return true;
 	}
 
@@ -95,17 +97,21 @@ public class ExprScripts extends SimpleExpression<String> {
 		if (!scriptsFolder.isDirectory()) {
 			return new String[0];
 		}
-		return getScripts(scriptsFolder).toArray(new String[0]);
+		return getScripts(scriptsFolder, noPaths).toArray(new String[0]);
 	}
 
-	private static List<String> getScripts(File directory) {
-		List<String> scripts = new ArrayList<String>();
+	private static List<String> getScripts(File directory, boolean noPaths) {
+		List<String> scripts = new ArrayList<>();
 		File[] files = directory.listFiles(filter);
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) {
-				scripts.addAll(getScripts(files[i]));
+				scripts.addAll(getScripts(files[i], noPaths));
 			} else {
-				scripts.add(files[i].getName());
+				if (noPaths) {
+					scripts.add(files[i].getName());
+				} else {
+					scripts.add(files[i].getPath().split("scripts/")[1]);
+				}
 			}
 		}
 		return scripts;
