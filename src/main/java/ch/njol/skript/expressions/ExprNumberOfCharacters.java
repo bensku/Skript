@@ -70,16 +70,16 @@ public class ExprNumberOfCharacters extends SimpleExpression<Number> {
 		String str = expr.getSingle(e);
 		int size = 0;
 		if (pattern == 0) {
-			for (int i = 0; i < str.length(); i++) {
-				if (Character.isUpperCase(str.charAt(i))) size++;
+			for (int c : (Iterable<Integer>) str.codePoints()::iterator) {
+				if (Character.isUpperCase(c)) size++;
 			}
 		} else if (pattern == 1) {
-			for (int i = 0; i < str.length(); i++) {
-				if (Character.isLowerCase(str.charAt(i))) size++;
+			for (int c : (Iterable<Integer>) str.codePoints()::iterator) {
+				if (Character.isLowerCase(c)) size++;
 			}
 		} else {
-			for (int i = 0; i < str.length(); i++) {
-				if (Character.isDigit(str.charAt(i))) size++;
+			for (int c : (Iterable<Integer>) str.codePoints()::iterator) {
+				if (Character.isDigit(c)) size++;
 			}
 		}
 		return new Number[]{size};
