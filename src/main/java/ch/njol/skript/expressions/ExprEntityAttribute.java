@@ -39,7 +39,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Entity Attribute")
-@Description("The attribute value of an entity.")
+@Description({"The attribute value of an entity.",
+			 "Note that the movement speed attribute cannot be reliably used for players. For that purpose, use the speed expression instead."})
 @Examples({"on damage of player:",
 		"	send \"You are wounded!\"",
 		"	set victim's attack speed attribute to 2"})
