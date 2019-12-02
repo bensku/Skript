@@ -42,7 +42,6 @@ import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 
-@NoDoc
 public class ExprOffTool extends ExprTool {
 	static {
 		if (Skript.isRunningMinecraft(1, 9)) {
