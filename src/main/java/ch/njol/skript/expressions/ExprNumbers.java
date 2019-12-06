@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -46,8 +47,10 @@ import ch.njol.util.Kleenean;
 @Name("Numbers")
 @Description({"All numbers between two given numbers, useful for looping.",
 		"Use 'numbers' if your start is not an integer and you want to keep the fractional part of the start number constant, or use 'integers' if you only want to loop integers.",
+		"When using 'numbers', the precision of the first number will be taken into account.",
 		"You may want to use the 'times' expression instead, for instance 'loop 5 times:'"})
 @Examples({"loop numbers from 2.5 to 5.5: # loops 2.5, 2.6, 2.7, ..., 5.4 and 5.5",
+		"loop numbers from 2.21 to 2.3: # loops 2.21, 2.22, ..., 2.29 and 2.3, because we use the precision of the first value!",
 		"loop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5"})
 @Since("1.4.6")
 public class ExprNumbers extends SimpleExpression<Number> {
@@ -83,10 +86,8 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		}
 		final List<Number> list = new ArrayList<>();
 		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
-		final boolean decimalCheck = s.doubleValue() == Math.rint(s.doubleValue());
-		final int lengthNoDecimals = Integer.toString((int) Math.round(s.doubleValue())).length();
-		final int decimals = decimalCheck ? 0 : Double.toString(decimalCheck).length() - 2;
-		final double increment = Math.pow(10, -decimals);
+		final BigDecimal decimals = BigDecimal.valueOf(s.doubleValue());
+		final double increment = Math.pow(10, -decimals.scale());
 		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + increment;
 
 		for (double i = 0; i < amount; i+= increment) {
