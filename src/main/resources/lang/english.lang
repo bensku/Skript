@@ -699,7 +699,7 @@ entities:
 		name: giant¦s
 		pattern: giant(|1¦s)
 	iron golem:
-		name: iron golems¦s @an
+		name: iron golem¦s @an
 		pattern: iron golem(|1¦s)
 	item frame:
 		name: item frame¦s @an
