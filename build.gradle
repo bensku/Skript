@@ -132,13 +132,13 @@ task checkAliases {
 
 	doLast {
 		def aliasFolder = new File('skript-aliases')
-		if (!aliasFolder.exists()) {
-			throw new Exception("Aliases do not exist. Maybe update submodules using `git submodule update --init`?")
+		if (!aliasFolder.exists() || aliasFolder.listFiles().length == 0) {
+			throw new InvalidUserDataException("Aliases are missing from 'skript-aliases' folder. Consider fetching submodules with 'git submodule update --init'.")
 		}
 	}
 }
 
-build.dependsOn(checkAliases)
+jar.dependsOn checkAliases
 
 task sourceJar(type: Jar) {
 	from sourceSets.main.allJava
@@ -166,10 +166,54 @@ publishing {
 	}
 }
 
-
 // Set compile encoding to UTF-8 (#850)
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
+
+// Task to check that test scripts are named correctly
+tasks.create('testNaming') {
+	doLast {
+		// Regression tests
+		for (def file : project.file('src/test/skript/tests/regressions').listFiles()) {
+			def name = file.getName()
+			if (!name.toLowerCase().equals(name)) {
+				throw new InvalidUserDataException('invalid test name: ' + name)
+			}
+		}
+		
+		// Syntax tests
+		for (def dir : project.file('src/test/skript/tests/syntaxes').listFiles()) {
+			for (def file : dir.listFiles()) {
+				def name = file.getName()
+				if (!name.startsWith('.') && !Character.isJavaIdentifierStart(name.codePointAt(0))) {
+					throw new InvalidUserDataException('invalid test name: ' + name)
+				}
+			}
+		}
+	}
+}
+
+// Create a test task with given name, environments dir/file and is it development mode task
+void createTestTask(String name, String environments, boolean devMode) {
+	tasks.create(name, Exec) {
+		// Execute JUnit tests, compile Skript and check test naming
+		dependsOn(test, jar, testNaming)
+		if (devMode) {
+			standardInput = System.in
+		}
+		commandLine 'java', '-cp',
+				'build/libs/Skript.jar:' + project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
+				'ch.njol.skript.tests.platform.PlatformMain',
+				'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, "" + devMode
+	}
+}
+
+// Register different Skript testing tasks
+createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.14.4.json', false)
+createTestTask('skriptTest', 'src/test/skript/environments/main', false)
+createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
+createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (System.getProperty('skript.testEnv') == null
+		? 'paper-1.14.4.json' : System.getProperty('skript.testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {

@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.classes.data;
 
+import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Locale;
 import java.util.Optional;
@@ -675,7 +676,7 @@ public class SkriptClasses {
 					public String getVariableNamePattern() {
 						return "[a-z ]+";
 					}
-				}).serializer(new YggdrasilSerializer<>()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(StructureType.class, "structuretype")
 				.user("tree ?types?", "trees?")

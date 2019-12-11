@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -38,79 +39,118 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-/**
- * @author bensku
- */
-@Name("Upper/lower Case Text")
-@Description("Copy of given text in upper or lower case.")
-@Examples("\"oops!\" in upper case # OOPS!")
-@Since("2.2-dev16")
+@Name("Case Text")
+@Description("Copy of given text in Lowercase, Uppercase, Proper Case, camelCase, PascalCase, Snake_Case, and Kebab-Case")
+@Examples({"\"Oops!\" in lowercase # oops!",
+	"\"oops!\" in uppercase # OOPS!",
+	"\"hellO i'm steve!\" in proper case # HellO I'm Steve!",
+	"\"hellO i'm steve!\" in strict proper case # Hello I'm Steve!",
+	"\"spAwn neW boSs ()\" in camel case # spAwnNeWBoSs()",
+	"\"spAwn neW boSs ()\" in strict camel case # spawnNewBoss()",
+	"\"geneRate ranDom numBer ()\" in pascal case # GeneRateRanDomNumBer()",
+	"\"geneRate ranDom numBer ()\" in strict pascal case # GenerateRandomNumber()",
+	"\"Hello Player!\" in snake case # Hello_Player!",
+	"\"Hello Player!\" in lower snake case # hello_player!",
+	"\"Hello Player!\" in upper snake case # HELLO_PLAYER!",
+	"\"What is your name?\" in kebab case # What-is-your-name?",
+	"\"What is your name?\" in lower kebab case # what-is-your-name?",
+	"\"What is your name?\" in upper kebab case # WHAT-IS-YOUR-NAME?"})
+@Since("2.2-dev16 (lowercase and uppercase), INSERT VERSION (advanced cases)")
 public class ExprStringCase extends SimpleExpression<String> {
-
-	private final static int UPPER = 0, LOWER = 1;
-	
-	/**
-	 * Helper function which takes nullable string and
-	 * uses given mode to it.
-	 * @param str Original string.
-	 * @param mode See above, UPPER or LOWER.
-	 * @return Changed string.
-	 */
-	@SuppressWarnings("null")
-	private static String changeCase(@Nullable String str, int mode) {
-		if (str == null)
-			return "";
-		else if (mode == UPPER)
-			return str.toUpperCase();
-		else if (mode == LOWER)
-			return str.toLowerCase();
-		else
-			return str;
-	}
 	
 	static {
 		Skript.registerExpression(ExprStringCase.class, String.class, ExpressionType.SIMPLE,
-				"%string% in (0¦upper|1¦lower) case", "capitalized %string%");
+				"%strings% in (0¦upper|1¦lower)[ ]case", 
+				"(0¦upper|1¦lower)[ ]case %strings%",
+				"capitali(s|z)ed %strings%",
+				"%strings% in [(0¦lenient|1¦strict) ](proper|title)[ ]case",
+				"[(0¦lenient|1¦strict) ](proper|title)[ ]case %strings%",
+				"%strings% in [(0¦lenient|1¦strict) ]camel[ ]case",
+				"[(0¦lenient|1¦strict) ]camel[ ]case %strings%",
+				"%strings% in [(0¦lenient|1¦strict) ]pascal[ ]case",
+				"[(0¦lenient|1¦strict) ]pascal[ ]case %strings%",
+				"%strings% in [(1¦lower|2¦upper|3¦capital|4¦screaming)[ ]]snake[ ]case",
+				"[(1¦lower|2¦upper|3¦capital|4¦screaming)[ ]]snake[ ]case %strings%",
+				"%strings% in [(1¦lower|2¦upper|3¦capital)[ ]]kebab[ ]case",
+				"[(1¦lower|2¦upper|3¦capital)[ ]]kebab[ ]case %strings%");
 	}
 	
-	@Nullable
-	private Expression<String> origin;
-	@Nullable
-	private String literal;
-	private int mode;
+	@SuppressWarnings("null")
+	private Expression<String> expr;
 	
-	@SuppressWarnings({"unchecked"})
+	/* 0: No Change, 1: Upper Case, 2: Lower Case, 3: Strict */
+	private int casemode = 0; // Defaults to No Change 
+	
+	/* 0: Basic Case Change, 1: Proper Case, 2: Camel Case, 3: Pascal Case, 4: Snake Case, 5: Kebab Case */
+	private int type = 0; // Defaults to Basic Case Change 
+	
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (exprs[0] instanceof Literal)
-			literal = ((Literal<String>) exprs[0]).getSingle();
-		else
-			origin = (Expression<String>) exprs[0];
-		if (matchedPattern == 1)
-			mode = UPPER;
-		else
-			mode = parseResult.mark;
-		
+		expr = (Expression<String>) exprs[0];
+		if (matchedPattern <= 1) { // Basic Case Change 
+			casemode = (parseResult.mark == 0) ? 1 : 2;
+		} else if (matchedPattern == 2) { // Basic Case Change 
+			casemode = 1;
+		} else if (matchedPattern <= 4) { // Proper Case 
+			type = 1;
+			if (parseResult.mark != 0)
+				casemode = 3;
+		} else if (matchedPattern <= 6) { // Camel Case 
+			type = 2;
+			if (parseResult.mark != 0)
+				casemode = 3;
+		} else if (matchedPattern <= 8) { // Pascal Case 
+			type = 3;
+			if (parseResult.mark != 0)
+				casemode = 3;
+		} else if (matchedPattern <= 10) { // Snake Case 
+			type = 4;
+			if (parseResult.mark != 0)
+				casemode = (parseResult.mark == 1) ? 2 : 1;
+		} else if (matchedPattern <= 12) { // Kebab Case 
+			type = 5;
+			if (parseResult.mark != 0)
+				casemode = (parseResult.mark == 1) ? 2 : 1;
+		}
 		return true;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	protected String[] get(Event e) {
-		String str;
-		if (literal != null)
-			str = changeCase(literal, mode);
-		else if (origin != null)
-			str = changeCase(origin.getSingle(e), mode);
-		else
-			str = "";
-		
-		return new String[] {str};
+		String[] strs = expr.getArray(e);
+		for (int i = 0; i < strs.length; i++) {
+			if (strs[i] != null) {
+				switch (type) {
+					case 0: // Basic Case Change 
+						strs[i] = (casemode == 1) ? strs[i].toUpperCase() : strs[i].toLowerCase();
+						break;
+					case 1: // Proper Case 
+						strs[i] = (casemode == 3) ? WordUtils.capitalizeFully(strs[i]) : WordUtils.capitalize(strs[i]);
+						break;
+					case 2: // Camel Case 
+						strs[i] = toCamelCase(strs[i], casemode == 3);
+						break;
+					case 3: // Pascal Case 
+						strs[i] = toPascalCase(strs[i], casemode == 3);
+						break;
+					case 4: // Snake Case 
+						strs[i] = toSnakeCase(strs[i], casemode);
+						break;
+					case 5: // Kebab Case 
+						strs[i] = toKebabCase(strs[i], casemode);
+						break;
+				}
+			}
+		}
+		return strs;
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return true;
+		return expr.isSingle();
 	}
 
 	@Override
@@ -120,12 +160,60 @@ public class ExprStringCase extends SimpleExpression<String> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (literal != null)
-			return changeCase(literal, mode);
-		else if (origin != null && e != null)
-			return changeCase(origin.getSingle(e), mode);
-		
-		return "";
+		switch (type) {
+			case 0: // Basic Case Change 
+				return (casemode == 1) ? "uppercase" : "lowercase";
+			case 1: // Proper Case 
+				return ((casemode == 3) ? "strict" : "lenient") + " proper case";
+			case 2: // Camel Case 
+				return ((casemode == 3) ? "strict" : "lenient") + " camel case";
+			case 3: // Pascal Case 
+				return ((casemode == 3) ? "strict" : "lenient") + " pascal case";
+			case 4: // Snake Case 
+				return ((casemode == 0) ? "" : ((casemode == 1)) ? "upper " : "lower ") + "snake case";
+			case 5: // Kebab Case 
+				return ((casemode == 0) ? "" : ((casemode == 1)) ? "upper " : "lower ") + "kebab case";
+		}
+		return ""; // Shouldn't reach here anyways 
+	}
+	
+	@SuppressWarnings("null")
+	private static String toCamelCase(String str, boolean strict) {
+		String[] words = str.split(" "); // Splits at spaces 
+		String buf = words.length > 0 ? (strict ? words[0].toLowerCase() : WordUtils.uncapitalize(words[0])) : "";
+		for (int i = 1; i < words.length; i++)
+			buf += strict ? WordUtils.capitalizeFully(words[i]) : WordUtils.capitalize(words[i]);
+		return buf;
+	}
+	
+	private static String toPascalCase(String str, boolean strict) {
+		String[] words = str.split(" "); // Splits at spaces 
+		String buf = "";
+		for (int i = 0; i < words.length; i++)
+			buf += strict ? WordUtils.capitalizeFully(words[i]) : WordUtils.capitalize(words[i]);
+		return buf;
+	}
+	
+	@SuppressWarnings("null")
+	private static String toSnakeCase(String str, int mode) {
+		if (mode == 0)
+			return str.replace(' ', '_');
+		StringBuilder sb = new StringBuilder();
+		for (int c : (Iterable<Integer>) str.codePoints()::iterator) { // Handles Unicode ! 
+			sb.appendCodePoint((c == ' ') ? '_' : ((mode == 1) ? Character.toUpperCase(c) : Character.toLowerCase(c)));
+		}
+		return sb.toString();
+	}
+	
+	@SuppressWarnings("null")
+	private static String toKebabCase(String str, int mode) {
+		if (mode == 0)
+			return str.replace(' ', '-');
+		StringBuilder sb = new StringBuilder();
+		for (int c : (Iterable<Integer>) str.codePoints()::iterator) { // Handles Unicode! 
+			sb.appendCodePoint((c == ' ') ? '-' : ((mode == 1) ? Character.toUpperCase(c) : Character.toLowerCase(c)));
+		}
+		return sb.toString();
 	}
 	
 }

@@ -55,10 +55,10 @@ public class VillagerData extends EntityData<Villager> {
 		
 		if (Skript.isRunningMinecraft(1, 14)) {
 			EntityData.register(VillagerData.class, "villager", Villager.class, 0,
-					"villager", "armorer", "butcher", "cartographer",
+					"villager", "normal", "armorer", "butcher", "cartographer",
 					"cleric", "farmer", "fisherman", "fletcher",
 					"leatherworker", "librarian", "mason", "nitwit",
-					"normal", "shepherd", "toolsmith", "weaponsmith");
+					"shepherd", "toolsmith", "weaponsmith");
 			professions = Arrays.asList(Profession.values());
 		} else if (Skript.isRunningMinecraft(1, 10)) { // Post 1.10: Not all professions go for villagers
 			EntityData.register(VillagerData.class, "villager", Villager.class, 0,
