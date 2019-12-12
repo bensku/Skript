@@ -26,7 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 
 public class BeeData extends EntityData<Bee> {
 	
@@ -41,7 +41,7 @@ public class BeeData extends EntityData<Bee> {
 	private int angry = 0;
 	
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedPattern, SkriptParser.ParseResult parseResult) {
+	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern > 3)
 			angry = 1;
 		else if (matchedPattern < 2)
@@ -96,9 +96,7 @@ public class BeeData extends EntityData<Bee> {
 	
 	@Override
 	public boolean isSupertypeOf(EntityData<?> e) {
-		if (e instanceof BeeData)
-			return (angry == 0 || ((BeeData) e).angry == angry) && (nectar == 0 || ((BeeData) e).nectar == nectar);
-		return false;
+		return (e instanceof BeeData) && (angry == 0 || ((BeeData) e).angry == angry) && (nectar == 0 || ((BeeData) e).nectar == nectar);
 	}
 	
 	@Override
