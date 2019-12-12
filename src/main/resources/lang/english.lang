@@ -1465,6 +1465,20 @@ visual effects:
 		name: falling water @-
 		pattern: falling water
 
+	// 1.15 particles
+	dripping_honey:
+		name: dripping honey @-
+		pattern: dripping honey
+	falling_honey:
+		name: falling honey @-
+		pattern: falling honey
+	landing_honey:
+		name: landing honey @-
+		pattern: landing honey
+	falling_nectar:
+		name: falling nectar @-
+		pattern: falling nectar
+
 # -- Inventory Actions --
 inventory actions:
 	nothing: nothing, do nothing
