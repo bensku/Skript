@@ -1146,6 +1146,25 @@ entities:
 	panda:
 		name: panda¦s
 		pattern: <age> [%-gene%[%-gene%]] panda(|1¦s)
+	#1.15 entity
+	no nectar bee:
+		name: no nectar bee¦s
+		pattern: <age> bee(|1¦s) without nectar
+	happy bee:
+		name: happy bee¦s
+		pattern: <age> happy bee(|1¦s)
+	bee:
+		name: bee¦s
+		pattern: <age> bee(|1¦s)
+	nectar bee:
+		name: nectar bee¦s
+		pattern: <age> bee(|1¦s) with nectar
+	angry bee:
+		name: angry bee¦s
+		pattern: <age> angry bee(|1¦s)
+	angry nectar bee:
+		name: angry nectar bee¦s
+		pattern: <age> angry bee(|1¦s) with nectar
 
 
 # -- Damage Causes --
