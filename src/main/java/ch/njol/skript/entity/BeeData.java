@@ -91,11 +91,7 @@ public class BeeData extends EntityData<Bee> {
 		if (!(obj instanceof BeeData))
 			return false;
 		final BeeData other = (BeeData) obj;
-		if (angry != other.angry)
-			return false;
-		if (nectar != other.nectar)
-			return false;
-		return true;
+		return (angry == other.angry) && (nectar == other.nectar);
 	}
 	
 	@Override
