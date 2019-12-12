@@ -253,6 +253,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		LANDING_HONEY("LANDING_HONEY"),
 		FALLING_NECTAR("FALLING_NECTAR");
 		
+		
 		@Nullable
 		final Object effect;
 		@Nullable
@@ -408,7 +409,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 					/*
 					 * Colored particles use dX, dY and dZ as RGB values which
 					 * have range from 0 to 1.
-					 * 
+					 *
 					 * For now, only speed exactly 1 is allowed.
 					 */
 					dX = color.getRed() / 255.0f + 0.00001f;
