@@ -253,7 +253,6 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		LANDING_HONEY("LANDING_HONEY"),
 		FALLING_NECTAR("FALLING_NECTAR");
 		
-		
 		@Nullable
 		final Object effect;
 		@Nullable
