@@ -24,14 +24,17 @@ import java.util.Random;
 import org.bukkit.entity.Bee;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser;
 
 public class BeeData extends EntityData<Bee> {
 	
 	static {
-		EntityData.register(BeeData.class, "bee", Bee.class, 2,
-			"no nectar bee", "happy bee", "bee", "nectar bee", "angry bee", "angry nectar bee");
+		if (Skript.classExists("org.bukkit.entity.Bee")) {
+			EntityData.register(BeeData.class, "bee", Bee.class, 2,
+				"no nectar bee", "happy bee", "bee", "nectar bee", "angry bee", "angry nectar bee");
+		}
 	}
 	
 	private int nectar = 0;
