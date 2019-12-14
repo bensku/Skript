@@ -109,14 +109,14 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
+		if (mode == ChangeMode.SET)
 			return CollectionUtils.array(LivingEntity.class);
 		return super.acceptChange(mode);
 	}
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
+		if (mode == ChangeMode.SET) {
 			final LivingEntity target = delta == null ? null : (LivingEntity) delta[0];
 			for (final LivingEntity entity : getExpr().getArray(e)) {
 				if (getTime() >= 0 && e instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) e).getEntity()) && !Delay.isDelayed(e)) {
