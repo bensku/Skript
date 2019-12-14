@@ -135,3 +135,5 @@ public class EffBan extends Effect {
 		return (ipBan ? "IP-" : "") + (ban ? "" : "un") + "ban " + players.toString(e, debug) + (reason != null ? " on account of " + reason.toString(e, debug) : "");
 	}	
 }
+
+// Imagine you had 1 cookie for every friend you had. Despite what you think, you'd have quite a lot of cookies.
