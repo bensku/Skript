@@ -110,9 +110,8 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
+		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
 			return CollectionUtils.array(LivingEntity.class);
-		}
 		return super.acceptChange(mode);
 	}
 	
