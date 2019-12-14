@@ -55,9 +55,9 @@ public class EffBan extends Effect {
 	
 	static {
 		Skript.registerEffect(EffBan.class,
-				"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%]", "unban %strings/offlineplayers%",
-				"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%]", "unban %players% by IP",
-				"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
+				"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%] [for %timespan%]", "unban %strings/offlineplayers%",
+				"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%] [for %timespan%]", "unban %players% by IP",
+				"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%] [for %timespan%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
 	}
 	
 	@SuppressWarnings("null")
@@ -73,6 +73,7 @@ public class EffBan extends Effect {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = exprs[0];
 		reason = exprs.length > 1 ? (Expression<String>) exprs[1] : null;
+		duration = exprs.length > 2 ? (Expression<String>) exprs[2] : null;
 		ban = matchedPattern % 2 == 0;
 		ipBan = matchedPattern >= 2;
 		return true;
@@ -81,7 +82,7 @@ public class EffBan extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
-		final Date expires = null;
+		final Date expires = duration; // pseudo code
 		final String source = "Skript ban effect";
 		for (final Object o : players.getArray(e)) {
 			if (o instanceof Player) {
