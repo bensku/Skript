@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -38,6 +39,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 /**
@@ -64,6 +66,7 @@ public class EffBan extends Effect {
 	private Expression<?> players;
 	@Nullable
 	private Expression<String> reason;
+	private Expression<Timespan> duration;
 	
 	private boolean ban;
 	private boolean ipBan;
@@ -73,7 +76,7 @@ public class EffBan extends Effect {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = exprs[0];
 		reason = exprs.length > 1 ? (Expression<String>) exprs[1] : null;
-		duration = exprs.length > 2 ? (Expression<String>) exprs[2] : null;
+		duration = exprs.length > 2 ? (Expression<Timespan>) exprs[2] : null;
 		ban = matchedPattern % 2 == 0;
 		ipBan = matchedPattern >= 2;
 		return true;
@@ -127,6 +130,5 @@ public class EffBan extends Effect {
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return (ipBan ? "IP-" : "") + (ban ? "" : "un") + "ban " + players.toString(e, debug) + (reason != null ? " on account of " + reason.toString(e, debug) : "");
-	}
-	
+	}	
 }
