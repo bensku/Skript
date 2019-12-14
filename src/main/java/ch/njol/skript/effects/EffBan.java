@@ -88,7 +88,7 @@ public class EffBan extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
-		final Date expires = new Date(System.currentTimeMillis() + this.duration.getSingle(e).getMilliSeconds());
+		final Date expires = this.duration != null ? new Date(System.currentTimeMillis() + this.duration.getSingle(e).getMilliSeconds()) : null;
 		final String source = "Skript ban effect";
 		for (final Object o : players.getArray(e)) {
 			if (o instanceof Player) {
