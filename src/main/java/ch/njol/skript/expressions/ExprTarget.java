@@ -19,9 +19,12 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -35,6 +38,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.entity.PlayerData;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -109,18 +113,23 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET)
+		if ((mode == ChangeMode.SET || mode == ChangeMode.DELETE)) {
 			return CollectionUtils.array(LivingEntity.class);
+		}
 		return super.acceptChange(mode);
 	}
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		if (mode == ChangeMode.SET) {
+		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
 			final LivingEntity target = delta == null ? null : (LivingEntity) delta[0];
 			for (final LivingEntity entity : getExpr().getArray(e)) {
 				if (getTime() >= 0 && e instanceof EntityTargetEvent && entity.equals(((EntityTargetEvent) e).getEntity()) && !Delay.isDelayed(e)) {
 					((EntityTargetEvent) e).setTarget(target);
+				} else if (entity instanceof Player && mode == ChangeMode.DELETE) {
+					Entity targ = Utils.getTarget(entity, type);
+					if (targ != null)
+						targ.remove();
 				} else {
 					if (entity instanceof Creature)
 						((Creature) entity).setTarget(target);
