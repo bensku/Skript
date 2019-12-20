@@ -264,7 +264,7 @@ public class SimpleEvents {
 					.examples("on tool break:")
 					.since("2.1.1");
 		}
-		Skript.registerEvent("Item Damage", SimpleEvent.class, PlayerItemDamageEvent.class, "[player] tool damag(e|ing)", "[player] damag(e|ing) (a|the|) tool")
+		Skript.registerEvent("Item Damage", SimpleEvent.class, PlayerItemDamageEvent.class, "[player] (tool|item) damag(e|ing)", "[player] damag(e|ing) [(a|the)] (tool|item)")
 				.description("Called when a player damages their tool by using it, ie: mining, chopping wood or using shears on a sheep.")
 				.examples("on tool damage:",
 						"\tcancel event")
