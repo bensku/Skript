@@ -1,0 +1,4 @@
+test "flammable condition":
+	assert air isn't flammable with "air is flammable"
+	assert sand isn't flammable with "sand is flammable"
+	assert oak plank is flammable with "oak plank isn't flammable"
