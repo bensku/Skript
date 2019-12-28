@@ -1,4 +1,4 @@
 test "edible condition":
-	assert diamond isn't edible = true with "diamond is edible"
-	assert golden apple is edible = true with "golden apple isn't edible"
-	assert steak is edible = true with "steak isn't edible"
+	assert diamond isn't edible with "diamond is edible"
+	assert golden apple is edible with "golden apple isn't edible"
+	assert steak is edible with "steak isn't edible"
