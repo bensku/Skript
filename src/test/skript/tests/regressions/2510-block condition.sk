@@ -1,0 +1,3 @@
+test "block condition":
+	assert air isn't a block = true with "air is a block"
+	assert sand is a block = true with "sand is not a block"
