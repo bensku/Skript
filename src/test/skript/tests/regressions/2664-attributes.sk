@@ -1,0 +1,5 @@
+test "attributes":
+	spawn cow at location(0, 64, 0, world "world")
+	set {_x} to 3.14
+	set movement speed attribute of last spawned cow to {_x}
+	assert movement speed attribute of last spawned cow is {_x} with "attribute failed"
