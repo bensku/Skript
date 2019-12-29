@@ -95,7 +95,9 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 		double d = ((Number) delta[0]).doubleValue();
 		for (Entity entity : entities.getArray(e)) {
 			if (mode == ChangeMode.SET) {
-				((Attributable) entity).getAttribute(a).setBaseValue(d);
+				try {
+					((Attributable) entity).getAttribute(a).setBaseValue(d);
+				} catch (NullPointerException ex) {} // NullPointerException could be thrown if you put horse jump attributes on a cow, etc.
 			}
 		}
 		return;
