@@ -57,7 +57,7 @@ public class EffPotion extends Effect {
 	}
 	
 	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds, same as EffPoison
-	private int mark;
+	private boolean replaceExisting;
 	
 	@SuppressWarnings("null")
 	private Expression<PotionEffectType> potions;
@@ -75,7 +75,7 @@ public class EffPotion extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		apply = matchedPattern < 3;
-		this.mark = parseResult.mark;
+		replaceExisting = parseResult.mark == 1;
 		if (apply) {
 			potions = (Expression<PotionEffectType>) exprs[0];
 			tier = (Expression<Number>) exprs[1];
@@ -134,7 +134,9 @@ public class EffPotion extends Effect {
 		for (final LivingEntity en : entities.getArray(e)) {
 			for (final PotionEffectType t : ts) {
 				int duration = d;
-				if (mark != 1) {
+				if (replaceExisting) {
+					en.addPotionEffect(new PotionEffect(t, duration, a, ambient, particles), true);
+				} else {
 					if (en.hasPotionEffect(t)) {
 						for (final PotionEffect eff : en.getActivePotionEffects()) {
 							if (eff.getType() == t) {
@@ -144,7 +146,6 @@ public class EffPotion extends Effect {
 						}
 					}
 				}
-				en.addPotionEffect(new PotionEffect(t, duration, a, ambient, particles), true);
 			}
 		}
 	}
