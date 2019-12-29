@@ -1742,7 +1742,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toVariableNameString(Attribute a) {
-						return a.toString();
+						return a.name();
 					}
 					
 					@Override
