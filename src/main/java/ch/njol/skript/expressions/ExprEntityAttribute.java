@@ -54,10 +54,10 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	}
 	
 	@Nullable
-	private Expression<Attribute> attributes = null;
+	private Expression<Attribute> attributes;
 	
 	@Nullable
-	private Expression<Entity> entities = null;
+	private Expression<Entity> entities;
 	
 	@SuppressWarnings("unchecked")
 	@Override
