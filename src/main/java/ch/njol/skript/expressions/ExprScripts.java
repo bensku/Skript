@@ -22,6 +22,7 @@ package ch.njol.skript.expressions;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.doc.Description;
@@ -39,6 +40,7 @@ import ch.njol.util.StringUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Name("All Scripts")
@@ -50,7 +52,7 @@ import java.util.List;
 		"\t\tsend \"Unloaded Scripts: %disabled scripts%\" to player"})
 @Since("INSERT VERSION")
 public class ExprScripts extends SimpleExpression<String> {
-	
+
 	static {
 		Skript.registerExpression(ExprScripts.class, String.class, ExpressionType.SIMPLE,
 				"[all [of the]] scripts [(1¦without [subdirectory] paths)]",
@@ -58,60 +60,35 @@ public class ExprScripts extends SimpleExpression<String> {
 				"[all [of the]] (disabled|unloaded) scripts [(1¦without [subdirectory] paths)]");
 	}
 
-	private final static FileFilter allFilter = new FileFilter() {
-		@Override
-		public boolean accept(final @Nullable File f) {
-			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk"));
-		}
-	};
-	private final static FileFilter enabledFilter = new FileFilter() {
-		@Override
-		public boolean accept(final @Nullable File f) {
-			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && !f.getName().startsWith("-");
-		}
-	};
-	private final static FileFilter disabledFilter = new FileFilter() {
-		@Override
-		public boolean accept(final @Nullable File f) {
-			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
-		}
-	};
-
-	private static FileFilter filter = allFilter;
+	private boolean includeEnabled;
+	private boolean includeDisabled;
 	private boolean noPaths;
 
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (matchedPattern == 1) {
-			filter = enabledFilter;
-		} else if (matchedPattern == 2) {
-			filter = disabledFilter;
-		}
+		includeEnabled = matchedPattern <= 1;
+		includeDisabled = matchedPattern != 1;
 		noPaths = parseResult.mark == 1;
 		return true;
 	}
 
 	@Override
 	protected String[] get(Event event) {
-		File scriptsFolder = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER + File.separator);
-		if (!scriptsFolder.isDirectory()) {
-			return new String[0];
-		}
-		return getScripts(scriptsFolder, noPaths).toArray(new String[0]);
+		List<File> scripts = new ArrayList<>();
+		if (includeEnabled)
+			scripts.addAll(ScriptLoader.getLoadedFiles());
+		if (includeDisabled)
+			scripts.addAll(ScriptLoader.getDisabledFiles());
+		return formatFiles(scripts).toArray(new String[0]);
 	}
 
-	private static List<String> getScripts(File directory, boolean noPaths) {
+	private List<String> formatFiles(List<File> files) {
 		List<String> scripts = new ArrayList<>();
-		File[] files = directory.listFiles(filter);
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory()) {
-				scripts.addAll(getScripts(files[i], noPaths));
+		for (File f : files) {
+			if (noPaths) {
+				scripts.add(f.getName());
 			} else {
-				if (noPaths) {
-					scripts.add(files[i].getName());
-				} else {
-					scripts.add(files[i].getPath().split("scripts/")[1]);
-				}
+				scripts.add(f.getPath().split("scripts/")[1]);
 			}
 		}
 		return scripts;

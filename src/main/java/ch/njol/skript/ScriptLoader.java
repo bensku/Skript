@@ -306,6 +306,37 @@ final public class ScriptLoader {
 		return Collections.unmodifiableCollection(loadedFiles);
 	}
 	
+	/**
+	 * All disabled script files.
+	 */
+	@SuppressWarnings("null")
+	static final Set<File> disabledFiles = Collections.synchronizedSet(new HashSet<>());
+	
+	@SuppressWarnings("null")
+	public static Collection<File> getDisabledFiles() {
+		return Collections.unmodifiableCollection(disabledFiles);
+	}
+
+	/**
+	 * Filter for disabled scripts & folders.
+	 */
+	private final static FileFilter disabledFilter = new FileFilter() {
+		@Override
+		public boolean accept(final @Nullable File f) {
+			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
+		}
+	};
+
+	private static void updateDisabledScripts(File directory) {
+		File[] files = directory.listFiles(disabledFilter);
+		for (File f : files) {
+			if (f.isDirectory())
+				updateDisabledScripts(f);
+			else
+				disabledFiles.add(f);
+		}
+	}
+	
 	// Initialize and start load thread
 	static {
 		loaderThread = new AsyncLoaderThread();
@@ -334,6 +365,8 @@ final public class ScriptLoader {
 			scriptsFolder.mkdirs();
 		
 		final Date start = new Date();
+
+		updateDisabledScripts(scriptsFolder);
 		
 		Runnable task = () -> {
 			final Set<File> oldLoadedFiles = new HashSet<>(loadedFiles);
@@ -759,6 +792,12 @@ final public class ScriptLoader {
 					deleteCurrentEvent();
 				}
 				
+				// Remove the script from the disabled scripts list
+				@SuppressWarnings("null")
+				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
+				if (disabledFiles.contains(disabledFile))
+					disabledFiles.remove(disabledFile);
+				
 				// Add to loaded files to use for future reloads
 				loadedFiles.add(file);
 				
@@ -964,6 +1003,7 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			disabledFiles.add(new File(script.getParentFile(), "-" + script.getName()));
 			return info; // Return how much we unloaded
 		}
 		
