@@ -1747,7 +1747,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String getVariableNamePattern() {
-						return "[\sA-Za-z]+";
+						return "[\\sA-Za-z]+";
 					}
 				})
 				.serializer(new EnumSerializer<>(Attribute.class)));
