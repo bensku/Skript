@@ -75,7 +75,9 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 		Entity[] ea = entities.getArray(e);
 		Number[] arr = new Number[ea.length];
 		for (int i = 0; i < ea.length; i++) {
-			arr[i] = ((Attributable) ea[i]).getAttribute(a).getValue();
+			if (ea[i] instanceof Attributable) {
+				arr[i] = ((Attributable) ea[i]).getAttribute(a).getValue();
+			}
 		}
 		return arr;
 	}
