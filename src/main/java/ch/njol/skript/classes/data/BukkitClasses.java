@@ -1742,12 +1742,12 @@ public class BukkitClasses {
 					
 					@Override
 					public String toVariableNameString(Attribute a) {
-						return a.name();
+						return toString(a, 0);
 					}
 					
 					@Override
 					public String getVariableNamePattern() {
-						return "\\S+";
+						return "[\sA-Za-z]+";
 					}
 				})
 				.serializer(new EnumSerializer<>(Attribute.class)));
