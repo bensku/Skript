@@ -19,8 +19,9 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -98,9 +99,9 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 		for (Entity entity : entities.getArray(e)) {
 			if (mode == ChangeMode.SET) {
 				if (entity instanceof Attributable) {
-					Attribute a2 = ((Attributable) entity).getAttribute(a);
-					if (a2 != null) { // a2 will be null if you put horse jump attributes on a cow, etc.
-						a2.setBaseValue(d);
+					AttributeInstance ai = ((Attributable) entity).getAttribute(a);
+					if (ai != null) { // ai will be null if you put horse jump attributes on a cow, etc.
+						ai.setBaseValue(d);
 					}
 				}
 			}
