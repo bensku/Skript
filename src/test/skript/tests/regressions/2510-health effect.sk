@@ -1,0 +1,6 @@
+test "health effect":
+	set {_i} to diamond sword
+	damage {_i} by 50
+	assert {_i}'s damage value is 1511 with "damage item failed"
+	repair {_i} by 49
+	assert {_i}'s damage value is 1560 with "repair item failed"
