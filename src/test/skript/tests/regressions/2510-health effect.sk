@@ -1,6 +1,7 @@
 test "health effect":
 	set {_i} to diamond sword
+	assert {_i}'s damage value is 0 with "new item durability failed"
 	damage {_i} by 50
-	assert {_i}'s damage value is 1511 with "damage item failed"
+	assert {_i}'s damage value is 50 with "damage item failed"
 	repair {_i} by 49
-	assert {_i}'s damage value is 1560 with "repair item failed"
+	assert {_i}'s damage value is 1 with "repair item failed"
