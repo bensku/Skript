@@ -1,4 +1,4 @@
 test "block condition":
 	assert air is transparent with "air isn't transparent"
-	assert glass is transparent with "glass isn't transparent"
+	assert glass block is transparent with "glass isn't transparent"
 	assert dirt isn't transparent with "dirt is transparent"
