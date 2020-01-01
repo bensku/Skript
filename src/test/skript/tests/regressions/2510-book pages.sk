@@ -1,0 +1,10 @@
+test "book pages":
+	set {_i} to book with text
+	assert {_i}'s book pages is not set with "empty book pages are set"
+	set page 1 of {_i} to "aB1$😀"
+	assert caseEquals(page 1 of {_i}, "aB1$😀") is true with "book page 1 failed"
+	set page 2 of {_i} to "Ab2X😀"
+	assert caseEquals(page 2 of {_i}, "Ab2X😀") is true with "book page 2 failed"
+	set {_t::1} to "aB1$😀"
+	set {_t::2} to "Ab2X😀"
+	assert pages of {_i} is {_t::*} with "book pages failed"
