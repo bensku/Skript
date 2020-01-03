@@ -149,7 +149,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			return l.toArray((Entity[]) Array.newInstance(returnType, l.size()));
 		} else {
 			if (chunks != null) {
-				return EntityData.getAll(types.getAll(e), returnType, chunks.getArray(e));
+				return EntityData.getAll(types.getArray(e), returnType, chunks.getArray(e));
 			} else {
 				return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
 			}
