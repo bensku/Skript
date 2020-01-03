@@ -1,4 +1,4 @@
 test "block condition":
 	assert air is transparent with "air isn't transparent"
-	assert barrier is transparent with "barrier isn't transparent"
+	assert potato is transparent with "potato isn't transparent"
 	assert dirt isn't transparent with "dirt is transparent"
