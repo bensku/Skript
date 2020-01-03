@@ -1,5 +1,4 @@
 test "block condition":
 	assert air is transparent with "air isn't transparent"
 	assert barrier is transparent with "barrier isn't transparent"
-	assert glass isn't transparent with "glass is transparent" #Spigot does not consider glass to be transparent!
 	assert dirt isn't transparent with "dirt is transparent"
