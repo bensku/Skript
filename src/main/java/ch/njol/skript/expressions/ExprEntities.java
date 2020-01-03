@@ -86,7 +86,6 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	private Class<? extends Entity> returnType = Entity.class;
 	private boolean isUsingRadius;
-	private boolean chunk;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -99,12 +98,11 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			}
 		}
 		isUsingRadius = matchedPattern >= 2;
-		chunk = parseResult.mark == 1;
 		if (isUsingRadius) {
 			radius = (Expression<Number>) exprs[exprs.length - 2];
 			center = (Expression<Location>) exprs[exprs.length - 1];
 		} else {
-			if (chunk) {
+			if (parseResult.mark == 1) {
 				chunks = (Expression<Chunk>) exprs[2];
 			} else {
 				worlds = (Expression<World>) exprs[1];
@@ -150,10 +148,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				l.add(iter.next());
 			return l.toArray((Entity[]) Array.newInstance(returnType, l.size()));
 		} else {
-			if (chunk) {
-				if (chunks == null) {
-					return null;
-				}
+			if (chunks != null) {
 				return EntityData.getAll(types.getAll(e), returnType, chunks.getArray(e));
 			} else {
 				return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
