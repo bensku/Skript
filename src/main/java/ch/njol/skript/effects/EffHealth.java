@@ -54,9 +54,9 @@ public class EffHealth extends Effect {
 	
 	static {
 		Skript.registerEffect(EffHealth.class,
-				"damage %livingentities/itemtype% by %number% [heart[s]][ with fake cause %-damagecause%]",
+				"damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
 				"heal %livingentities% [by %-number% [heart[s]]]",
-				"repair %itemtype% [by %-number%]");
+				"repair %itemtypes% [by %-number%]");
 	}
 	
 	@SuppressWarnings("null")
@@ -93,47 +93,46 @@ public class EffHealth extends Effect {
 				return;
 			damage = n.doubleValue();
 		}
-		if (ItemStack.class.isAssignableFrom(damageables.getReturnType())) {
-			ItemType i = (ItemType) damageables.getSingle(e);
-			if (i == null)
-				return;
-			ItemStack stack = i.getRandom();
-			assert stack != null;
-			if (this.damage == null) {
-				ItemUtils.setDamage(stack, 0);
-			} else {
-				ItemUtils.setDamage(stack, (int) Math.max(0, ItemUtils.getDamage(stack) + (heal ? -damage : damage)));
-				if (ItemUtils.getDamage(stack) >= i.getMaterial().getMaxDurability())
-					i = null;
-			}
-			damageables.change(e, new ItemType[] {new ItemType(stack)}, ChangeMode.SET);
-			return;
-		}
-		for (final Object damageable : damageables.getArray(e)) {
-			if (damageable instanceof Slot) {
-				ItemStack is = ((Slot) damageable).getItem();
-				if (is == null)
-					continue;
-				
+		Object[] arr = damageables.getArray(e);
+		if(arr.length > 0 && arr[0] instanceof ItemType) {
+			ItemType[] newarr = new ItemType[arr.length];
+			for (int i = 0; i < arr.length; i++) {
+				ItemStack is = ((ItemType) arr[i]).getRandom();
+				assert is != null;
 				if (this.damage == null) {
 					ItemUtils.setDamage(is, 0);
 				} else {
-					ItemUtils.setDamage(is, (int) Math.max(0, ItemUtils.getDamage(is) + (heal ? -damage : damage)));
-					if (ItemUtils.getDamage(is) >= is.getType().getMaxDurability())
-						is = null;
+					ItemUtils.setDamage(is, (int) Math.max(0, Math.min(ItemUtils.getDamage(is) + (heal ? -damage : damage), is.getType().getMaxDurability())));
 				}
-				((Slot) damageable).setItem(is);
-			} else if (damageable instanceof LivingEntity) {
-				if (this.damage == null) {
-					HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
-				} else {
-					HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
-					
-					if (!heal) {
-						DamageCause cause = DamageCause.CUSTOM;
-						if (dmgCause != null) cause = dmgCause.getSingle(e);
-						assert cause != null;
-						HealthUtils.setDamageCause((LivingEntity) damageable, cause);
+				newarr[i] = new ItemType(is);
+			}
+			damageables.change(e, newarr, ChangeMode.SET);
+		} else {
+			for (final Object damageable : arr) {
+				if (damageable instanceof Slot) {
+					ItemStack is = ((Slot) damageable).getItem();
+					if (is == null)
+						continue;
+					if (this.damage == null) {
+						ItemUtils.setDamage(is, 0);
+					} else {
+						ItemUtils.setDamage(is, (int) Math.max(0, ItemUtils.getDamage(is) + (heal ? -damage : damage)));
+						if (ItemUtils.getDamage(is) >= is.getType().getMaxDurability())
+							is = null;
+					}
+					((Slot) damageable).setItem(is);
+				} else if (damageable instanceof LivingEntity) {
+					if (this.damage == null) {
+						HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
+					} else {
+						HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
+						
+						if (!heal) {
+							DamageCause cause = DamageCause.CUSTOM;
+							if (dmgCause != null) cause = dmgCause.getSingle(e);
+							assert cause != null;
+							HealthUtils.setDamageCause((LivingEntity) damageable, cause);
+						}
 					}
 				}
 			}
