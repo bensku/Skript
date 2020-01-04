@@ -109,30 +109,15 @@ public class EffHealth extends Effect {
 			damageables.change(e, newarr, ChangeMode.SET);
 		} else {
 			for (final Object damageable : arr) {
-				if (damageable instanceof Slot) {
-					ItemStack is = ((Slot) damageable).getItem();
-					if (is == null)
-						continue;
-					if (this.damage == null) {
-						ItemUtils.setDamage(is, 0);
-					} else {
-						ItemUtils.setDamage(is, (int) Math.max(0, ItemUtils.getDamage(is) + (heal ? -damage : damage)));
-						if (ItemUtils.getDamage(is) >= is.getType().getMaxDurability())
-							is = null;
-					}
-					((Slot) damageable).setItem(is);
-				} else if (damageable instanceof LivingEntity) {
-					if (this.damage == null) {
-						HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
-					} else {
-						HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
-						
-						if (!heal) {
-							DamageCause cause = DamageCause.CUSTOM;
-							if (dmgCause != null) cause = dmgCause.getSingle(e);
-							assert cause != null;
-							HealthUtils.setDamageCause((LivingEntity) damageable, cause);
-						}
+				if (this.damage == null) {
+					HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
+				} else {
+					HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
+					if (!heal) {
+						DamageCause cause = DamageCause.CUSTOM;
+						if (dmgCause != null) cause = dmgCause.getSingle(e);
+						assert cause != null;
+						HealthUtils.setDamageCause((LivingEntity) damageable, cause);
 					}
 				}
 			}
