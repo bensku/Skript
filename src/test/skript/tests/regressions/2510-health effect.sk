@@ -12,9 +12,11 @@ test "health effect":
 	assert health of {_m} is 8 with "damage zombie ##1 failed"
 	damage {_m} by 0.5
 	assert health of {_m} is 7.5 with "damage zombie ##2 failed"
+	damage {_m} by 99
+	assert health of {_m} is 0 with "damage zombie ##3 failed"
 	heal {_m} by 1
-	assert health of {_m} is 8.5 with "heal zombie ##1 failed"
+	assert health of {_m} is 1 with "heal zombie ##1 failed"
 	heal {_m} by 0.5
-	assert health of {_m} is 9 with "heal zombie ##2 failed"
+	assert health of {_m} is 1.5 with "heal zombie ##2 failed"
 	heal {_m} by 99
 	assert health of {_m} is 10 with "heal zombie ##3 failed"
