@@ -40,6 +40,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import ch.njol.util.Math2;
 
 /**
  * @author Peter Güttinger
@@ -102,22 +103,24 @@ public class EffHealth extends Effect {
 				if (this.damage == null) {
 					ItemUtils.setDamage(is, 0);
 				} else {
-					ItemUtils.setDamage(is, (int) Math.max(0, Math.min(ItemUtils.getDamage(is) + (heal ? -damage : damage), is.getType().getMaxDurability())));
+					ItemUtils.setDamage(is, (int) Math2.fit(0, ItemUtils.getDamage(is) + (heal ? -damage : damage), is.getType().getMaxDurability()));
 				}
 				newarr[i] = new ItemType(is);
 			}
 			damageables.change(e, newarr, ChangeMode.SET);
 		} else {
 			for (final Object damageable : arr) {
+				LivingEntity entity = (LivingEntity) damageable;
+				assert entity != null;
 				if (this.damage == null) {
-					HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
+					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
 				} else {
-					HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
+					HealthUtils.heal(entity, (heal ? 1 : -1) * damage);
 					if (!heal) {
 						DamageCause cause = DamageCause.CUSTOM;
 						if (dmgCause != null) cause = dmgCause.getSingle(e);
 						assert cause != null;
-						HealthUtils.setDamageCause((LivingEntity) damageable, cause);
+						HealthUtils.setDamageCause(entity, cause);
 					}
 				}
 			}
