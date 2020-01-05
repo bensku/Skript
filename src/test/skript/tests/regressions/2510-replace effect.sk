@@ -1,0 +1,16 @@
+test "replace effect":
+	set {_inv} to chest inventory with 3 rows
+	set slot 2 of {_inv} to 54 dirt
+	set slot 3 of {_inv} to 30 bone
+	set slot 5 of {_inv} to (45 dirt) named "test"
+	set slot 6 of {_inv} to 20 iron ingot
+	replace all dirt in {_inv} with bone
+	set {_n::*} to 54, 30 and 45
+	loop all items in {_inv}:
+		assert loop-item is not dirt with "replace was incomplete"
+		if loop-item is bone:
+			increase {_i} by 1
+			assert item amount of loop-item is {_n::%{_i}%} with "replacement item amount not preserved %{_i}%"
+	set {_inv2} to {_inv}
+	replace all emerald in {_inv} with diamond
+	assert {_inv} is {_inv2} with "replace non-existent item changed inventory"
