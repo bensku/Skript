@@ -6,7 +6,7 @@ test "replace effect":
 	set slot 6 of {_inv} to 20 iron ingot
 	replace all dirt in {_inv} with bone
 	set {_n::*} to 54, 30 and 45
-	loop all items in {_inv}:
+	loop all items in inventory {_inv}:
 		assert loop-item is not dirt with "replace was incomplete"
 		if loop-item is bone:
 			increase {_i} by 1
