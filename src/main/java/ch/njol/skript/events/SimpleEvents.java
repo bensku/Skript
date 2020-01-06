@@ -30,6 +30,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -526,6 +527,14 @@ public class SimpleEvents {
 				.examples("on armor change:",
 					"	send \"You equipped %event-item%!\"")
 				.since("INSERT VERSION");
+		}
+		if (Skript.classExists("org.bukkit.event.block.SpongeAbsorbEvent")) {
+			Skript.registerEvent("Sponge Absorb", SimpleEvent.class, SpongeAbsorbEvent.class, "sponge absorb")
+					.description("Called when an sponge absorbs.")
+					.requiredPlugins("1.13 or newer")
+					.examples("on sponge absorb:",
+							"	cancel event")
+					.since("INSERT VERSION");
 		}
 	}
 }
