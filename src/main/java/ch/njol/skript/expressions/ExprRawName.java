@@ -68,7 +68,7 @@ public class ExprRawName extends SimpleExpression<String> {
 	
 	@Override
 	public boolean isSingle() {
-		return false;
+		return types.isSingle();
 	}
 	
 	@Override

@@ -151,7 +151,6 @@ public class EffColorItems extends Effect {
 				}
 			}
 		}
-		this.items.change(e, items, ChangeMode.SET);
 	}
 	
 	@Override

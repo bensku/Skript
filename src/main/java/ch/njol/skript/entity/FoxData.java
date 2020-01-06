@@ -60,7 +60,7 @@ public class FoxData extends EntityData<Fox> {
 	
 	@Override
 	protected boolean match(Fox entity) {
-		return type == entity.getFoxType();
+		return type == null || type == entity.getFoxType();
 	}
 	
 	@Override
