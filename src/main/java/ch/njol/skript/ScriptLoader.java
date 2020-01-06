@@ -360,7 +360,10 @@ final public class ScriptLoader {
 					
 					// Use internal unload method which does not call validateFunctions()
 					unloadScript_(script);
-					Functions.clearFunctions(script);
+					String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+							.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath()).toString();
+					assert name != null;
+					Functions.clearFunctions(name);
 				}
 				Functions.validateFunctions(); // Manually validate functions
 			}
@@ -680,7 +683,7 @@ final public class ScriptLoader {
 					event = replaceOptions(event);
 					
 					final NonNullPair<SkriptEventInfo<?>, SkriptEvent> parsedEvent = SkriptParser.parseEvent(event, "can't understand this event: '" + node.getKey() + "'");
-					if (parsedEvent == null)
+					if (parsedEvent == null || !parsedEvent.getSecond().shouldLoadEvent())
 						continue;
 					
 					if (Skript.debug() || node.debug())
@@ -829,12 +832,12 @@ final public class ScriptLoader {
 			return null;
 		}
 		
-		Functions.clearFunctions(f); // Functions are still callable from other scripts
-		// We're just making it impossible to look them up
 		try {
 			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
 					.resolve(Skript.SCRIPTSFOLDER).relativize(f.toPath().toAbsolutePath()).toString();
 			assert name != null;
+			Functions.clearFunctions(name); // Functions are still callable from other scripts
+			// We're just making it impossible to look them up
 			return loadStructure(new FileInputStream(f), name);
 		} catch (final IOException e) {
 			Skript.error("Could not load " + f.getName() + ": " + ExceptionUtils.toString(e));
@@ -945,7 +948,10 @@ final public class ScriptLoader {
 	 */
 	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
-		Functions.clearFunctions(script);
+		String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
+		assert name != null;
+		Functions.clearFunctions(name);
 		Functions.validateFunctions();
 		return r;
 	}

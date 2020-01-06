@@ -36,7 +36,8 @@ import ch.njol.skript.lang.ExpressionType;
  * @author Peter Güttinger
  */
 @Name("Command Sender")
-@Description("The player or the console who sent a command. Mostly useful in <a href='../commands/'>commands</a> and <a href='../events.html#command'>command events</a>.")
+@Description({"The player or the console who sent a command. Mostly useful in <a href='commands'>commands</a> and <a href='events.html#command'>command events</a>.",
+			 "If the command sender is a command block, its location can be retrieved by using %block's location%"})
 @Examples({"make the command sender execute \"/say hi!\"",
 		"on command:",
 		"	log \"%executor% used command /%command% %arguments%\" to \"commands.log\""})

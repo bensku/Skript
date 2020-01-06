@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerEditBookEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
@@ -33,7 +34,7 @@ public class EvtTestCase extends SkriptEvent {
 	
 	static {
 		if (TestMode.ENABLED)
-			Skript.registerEvent("Test Case", EvtTestCase.class, SkriptTestEvent.class, "test %string%")
+			Skript.registerEvent("Test Case", EvtTestCase.class, SkriptTestEvent.class, "test %string% [when <.+>]")
 				.description("Contents represent one test case.")
 				.examples("")
 				.since("INSERT VERSION");
@@ -42,10 +43,17 @@ public class EvtTestCase extends SkriptEvent {
 	@SuppressWarnings("null")
 	private Expression<String> name;
 	
+	@Nullable
+	private Condition condition;
+	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
 		name = (Expression<String>) args[0];
+		if (!parseResult.regexes.isEmpty()) { // Do not parse or run unless condition is met
+			String cond = parseResult.regexes.get(0).group();
+			condition = Condition.parse(cond, "Can't understand this condition: " + cond);
+		}
 		return true;
 	}
 	
@@ -58,6 +66,11 @@ public class EvtTestCase extends SkriptEvent {
 		Skript.info("Running test case " + n);
 		TestTracker.testStarted(n);
 		return true;
+	}
+	
+	@Override
+	public boolean shouldLoadEvent() {
+		return condition != null ? condition.check(new SkriptTestEvent()) : true;
 	}
 	
 	@Override

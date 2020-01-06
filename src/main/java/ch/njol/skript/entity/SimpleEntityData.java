@@ -273,7 +273,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 		}
 		
 		if (Skript.isRunningMinecraft(1, 14)) {
-			types.add(new SimpleEntityDataInfo("fox", Fox.class));
 			types.add(new SimpleEntityDataInfo("pillager", Pillager.class));
 			types.add(new SimpleEntityDataInfo("ravager", Ravager.class));
 			

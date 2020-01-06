@@ -159,7 +159,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 		public Iterator<Block> getBlocks() {
 			final BlockVector3 min = region.getMinimumPoint(), max = region.getMaximumPoint();
 			return new AABB(world, new Vector(min.getBlockX(), min.getBlockY(), min.getBlockZ()),
-					new Vector(max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1)).iterator();
+					new Vector(max.getBlockX(), max.getBlockY(), max.getBlockZ())).iterator();
 		}
 		
 		@Override

@@ -91,6 +91,7 @@ import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -112,6 +113,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
+
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
@@ -1009,6 +1012,25 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
-
+		//PlayerRiptideEvent
+		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
+			EventValues.registerEventValue(PlayerRiptideEvent.class, ItemType.class, new Getter<ItemType, PlayerRiptideEvent>() {
+				@Override
+				public ItemType get(PlayerRiptideEvent e) {
+					return new ItemType(e.getItem());
+				}
+			}, 0);
+		}
+		//PlayerArmorChangeEvent
+		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
+			EventValues.registerEventValue(PlayerArmorChangeEvent.class, ItemType.class, new Getter<ItemType, PlayerArmorChangeEvent>() {
+				@Override
+				@Nullable
+				public ItemType get(PlayerArmorChangeEvent e) {
+					ItemStack stack = e.getNewItem();
+					return stack == null ? null : new ItemType(stack);
+				}
+			}, 0);
+		}
 	}
 }
