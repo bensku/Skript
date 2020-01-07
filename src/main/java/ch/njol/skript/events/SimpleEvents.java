@@ -533,7 +533,8 @@ public class SimpleEvents {
 					.description("Called when an sponge absorbs.")
 					.requiredPlugins("1.13 or newer")
 					.examples("on sponge absorb:",
-							"	cancel event")
+							"\tloop absorbed blocks:",
+							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
 					.since("INSERT VERSION");
 		}
 	}
