@@ -108,6 +108,11 @@ public class NewBlockCompat implements BlockCompat {
 			}
 		}
 		
+		@Override
+		public Object getData() {
+			return data;
+		}
+		
 	}
 	
 	private static class NewBlockSetter implements BlockSetter {
