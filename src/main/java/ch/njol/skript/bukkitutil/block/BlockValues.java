@@ -40,4 +40,6 @@ public abstract class BlockValues {
 	@Override
 	public abstract int hashCode();
 	
+	public abstract Object getData();
+	
 }
