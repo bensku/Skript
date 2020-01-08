@@ -65,7 +65,7 @@ public class ExprAbsorbedBlocks extends SimpleExpression<Block> {
 	protected Block[] get(Event e) {
 		List<BlockState> bs = ((SpongeAbsorbEvent) e).getBlocks();
 		return bs.stream()
-			.map(block -> block.getBlock())
+			.map(BlockState::getBlock)
 			.toArray(Block[]::new);
 	}
 	
@@ -74,7 +74,7 @@ public class ExprAbsorbedBlocks extends SimpleExpression<Block> {
 	public Iterator<Block> iterator(Event e) {
 		List<BlockState> bs = ((SpongeAbsorbEvent) e).getBlocks();
 		return bs.stream()
-			.map(block -> block.getBlock())
+			.map(BlockState::getBlock)
 			.iterator();
 	}
 	
