@@ -72,7 +72,7 @@ public class MagicBlockCompat implements BlockCompat {
 	private class MagicBlockValues extends BlockValues {
 
 		private Material id;
-		short data;
+		private short data;
 		private int itemFlags;
 
 		@SuppressWarnings("null")
@@ -132,6 +132,11 @@ public class MagicBlockCompat implements BlockCompat {
 			} else {
 				return MatchQuality.DIFFERENT;
 			}
+		}
+		
+		@Override
+		public Object getData() {
+			return data;
 		}
 	}
 	
