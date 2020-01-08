@@ -681,7 +681,7 @@ public class BukkitClasses {
 				.user("players?")
 				.name("Player")
 				.description("A player. Depending on whether a player is online or offline several actions can be performed with them, " +
-								"though you won't get any errors when using effects that only work if the player is online (e.g. changing his inventory) on an offline player.",
+								"though you won't get any errors when using effects that only work if the player is online (e.g. changing their inventory) on an offline player.",
 						"You have two possibilities to use players as command arguments: &lt;player&gt; and &lt;offline player&gt;. " +
 								"The first requires that the player is online and also accepts only part of the name, " +
 								"while the latter doesn't require that the player is online, but the player's name has to be entered exactly.")
@@ -1393,13 +1393,14 @@ public class BukkitClasses {
 				.since("2.2-dev35")
 				.parser(new Parser<TeleportCause>() {
 					@Override
-					public String toString(TeleportCause teleportCause, int flags) {
-						return teleportCauses.toString(teleportCause, flags);
+					@Nullable
+					public TeleportCause parse(String input, ParseContext context) {
+						return teleportCauses.parse(input);
 					}
 					
 					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
+					public String toString(TeleportCause teleportCause, int flags) {
+						return teleportCauses.toString(teleportCause, flags);
 					}
 					
 					@SuppressWarnings("null")
@@ -1424,13 +1425,14 @@ public class BukkitClasses {
 				.since("2.3")
 				.parser(new Parser<SpawnReason>() {
 					@Override
-					public String toString(SpawnReason spawnReason, int flags) {
-						return spawnReasons.toString(spawnReason, flags);
+					@Nullable
+					public SpawnReason parse(String input, ParseContext context) {
+						return spawnReasons.parse(input);
 					}
 					
 					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
+					public String toString(SpawnReason spawnReason, int flags) {
+						return spawnReasons.toString(spawnReason, flags);
 					}
 					
 					@SuppressWarnings("null")
@@ -1490,6 +1492,7 @@ public class BukkitClasses {
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.Type.class))
 				.examples(fireworktypes.getAllNames())
 				.since("2.4")
+				.documentationId("FireworkType")
 				.parser(new Parser<FireworkEffect.Type>() {
 					@Override
 					@Nullable
@@ -1691,6 +1694,7 @@ public class BukkitClasses {
 					.examples(races.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.14 or newer")
+					.documentationId("CatType")
 					.parser(new Parser<Cat.Type>() {
 						@Nullable
 						@Override

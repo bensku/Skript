@@ -1583,7 +1583,7 @@ public final class Skript extends JavaPlugin implements Listener {
 					logEx("Here is full list of them:");
 					StringBuilder pluginsMessage = new StringBuilder();
 					for (PluginDescriptionFile desc : pluginPackages.values()) {
-						pluginsMessage.append(desc.getName());
+						pluginsMessage.append(desc.getFullName());
 						String website = desc.getWebsite();
 						if (website != null && !website.isEmpty()) // Add website if found
 							pluginsMessage.append(" (").append(desc.getWebsite()).append(")");

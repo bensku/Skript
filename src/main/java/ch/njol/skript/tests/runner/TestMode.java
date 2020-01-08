@@ -19,8 +19,11 @@
  */
 package ch.njol.skript.tests.runner;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.tests.TestResults;
 
@@ -44,7 +47,7 @@ public class TestMode {
 	 * {@link #RESULTS_FILE} as in {@link TestResults}.
 	 */
 	@SuppressWarnings("null")
-	public static final Path TEST_DIR = Paths.get(System.getProperty(ROOT + "dir"));
+	public static final Path TEST_DIR = ENABLED ? Paths.get(System.getProperty(ROOT + "dir")) : null;
 	
 	/**
 	 * Enable test development mode. Skript will allow individual test scripts
@@ -56,6 +59,11 @@ public class TestMode {
 	 * Path to file where to save results in JSON format.
 	 */
 	@SuppressWarnings("null")
-	public static final Path RESULTS_FILE = Paths.get(System.getProperty(ROOT + "results"));
+	public static final Path RESULTS_FILE = ENABLED ? Paths.get(System.getProperty(ROOT + "results")) : null;
 	
+	/**
+	 * In development mode, file that was last run.
+	 */
+	@Nullable
+	public static File lastTestFile;
 }

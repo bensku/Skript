@@ -57,12 +57,14 @@ import ch.njol.util.StringUtils;
 		"	replace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
 		" ",
 		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
-@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory)")
+@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, case sensitivity)")
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
-				"replace (all|every|) %strings% in %strings% with %string%",
-				"replace (all|every|) %strings% with %string% in %strings%",
+				"replace (all|every|) %strings% in %strings% with %string% [(1¦with case sensitivity)]",
+				"replace (all|every|) %strings% with %string% in %strings% [(1¦with case sensitivity)]",
+				"replace first %strings% in %strings% with %string% [(1¦with case sensitivity)]",
+				"replace first %strings% with %string% in %string% [(1¦with case sensitivity)]",
 				"replace (all|every|) %itemstacks% in %inventories% with %itemstack%",
 				"replace (all|every|) %itemstacks% with %itemstack% in %inventories%");
 	}
@@ -70,14 +72,20 @@ public class EffReplace extends Effect {
 	@SuppressWarnings("null")
 	private Expression<?> haystack, needles, replacement;
 	private boolean replaceString = true;
+	private boolean replaceFirst = false;
+	private boolean caseSensitive = false;
 	@SuppressWarnings({"null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		haystack =  exprs[1 + matchedPattern % 2];
-		replaceString = matchedPattern < 2;
+		replaceString = matchedPattern < 4;
+		replaceFirst = matchedPattern > 1 && matchedPattern < 4;
 		if (replaceString && !ChangerUtils.acceptsChange(haystack, ChangeMode.SET, String.class)) {
 			Skript.error(haystack + " cannot be changed and can thus not have parts replaced.");
 			return false;
+		}
+		if (SkriptConfig.caseSensitive.value() || parseResult.mark == 1) {
+			caseSensitive = true;
 		}
 		needles = exprs[0];
 		replacement = exprs[2 - matchedPattern % 2];
@@ -93,11 +101,19 @@ public class EffReplace extends Effect {
 		if (replacement == null || haystack == null || haystack.length == 0 || needles == null || needles.length == 0)
 			return;
 		if (replaceString) {
-			for (int x = 0; x < haystack.length; x++)
-				for (final Object n : needles) {
-					assert n != null;
-					haystack[x] = StringUtils.replace((String)haystack[x], (String)n, Matcher.quoteReplacement((String)replacement), SkriptConfig.caseSensitive.value());
-				}
+			if (replaceFirst) {
+				for (int x = 0; x < haystack.length; x++)
+					for (final Object n : needles) {
+						assert n != null;
+						haystack[x] = StringUtils.replaceFirst((String)haystack[x], (String)n, Matcher.quoteReplacement((String)replacement), caseSensitive);
+					}
+			} else {
+				for (int x = 0; x < haystack.length; x++)
+					for (final Object n : needles) {
+						assert n != null;
+						haystack[x] = StringUtils.replace((String)haystack[x], (String)n, Matcher.quoteReplacement((String)replacement), caseSensitive);
+					}
+			}
 			this.haystack.change(e, haystack, ChangeMode.SET);
 		} else {
 			for (Inventory inv : (Inventory[])haystack)
@@ -110,7 +126,11 @@ public class EffReplace extends Effect {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "replace " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug);
+		if (replaceFirst)
+			return "replace first " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug)
+					+ "(case sensitive: " + caseSensitive + ")";
+		return "replace " + needles.toString(e, debug) + " in " + haystack.toString(e, debug) + " with " + replacement.toString(e, debug)
+				+ "(case sensitive: " + caseSensitive + ")";
 	}
 	
 }
