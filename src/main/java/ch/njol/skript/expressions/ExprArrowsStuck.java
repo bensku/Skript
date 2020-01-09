@@ -30,17 +30,19 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Arrows Stuck")
 @Description("The number of arrows stuck in a living entity.")
-@Examples("set player's stuck arrows to 5")
+@Examples("set arrows stuck in player to 5")
 @Since("INSERT VERSION")
 public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Number> {
 
     static {
     	if (Skript.methodExists(LivingEntity.class, "getArrowsStuck")) {
-    		register(ExprArrowsStuck.class, Number.class, "stuck arrow[s]", "livingentities");
+    		Skript.registerExpression(ExprArrowsStuck.class, Number.class, ExpressionType.PROPERTY,
+    				"[number of] arrow[s] stuck in %livingentities%");
     	}
     }
 
