@@ -58,10 +58,11 @@ public class ExprDurability extends SimplePropertyExpression<ItemType, Object> {
 	public Object convert(final ItemType i) {
 		if (i.hasBlock()) {
 			BlockValues bv = i.getTypes().get(0).getBlockValues();
-			return (bv == null) ? null : ((USING_NEW_BLOCK_COMPAT) ? ((BlockData) bv.getData()).getAsString() : bv.getData());
+			if (bv == null) return null;
+			return USING_NEW_BLOCK_COMPAT ? ((BlockData) bv.getData()).getAsString() : bv.getData();
 		}
 		ItemStack stack = i.getRandom();
-		return (stack == null) ? null : stack.getDurability();
+		return stack == null ? null : stack.getDurability();
 	}
 	
 	@Override
@@ -77,7 +78,9 @@ public class ExprDurability extends SimplePropertyExpression<ItemType, Object> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		return (mode == ChangeMode.REMOVE_ALL) ? null : CollectionUtils.array(Object.class);
+		if (mode == ChangeMode.REMOVE_ALL)
+			return null;
+		return CollectionUtils.array(Object.class);
 	}
 	
 	@SuppressWarnings("deprecation")
