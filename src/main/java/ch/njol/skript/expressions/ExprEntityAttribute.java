@@ -110,7 +110,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "entity attribute " + toString(e, debug);
+		return "entity " + entities.toString(e, debug) + "'s " + attributes.toString(e, debug) + "attribute";
 	}
 	
 	@Nullable
