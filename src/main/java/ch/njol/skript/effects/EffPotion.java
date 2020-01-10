@@ -134,9 +134,7 @@ public class EffPotion extends Effect {
 		for (final LivingEntity en : entities.getArray(e)) {
 			for (final PotionEffectType t : ts) {
 				int duration = d;
-				if (replaceExisting) {
-					en.addPotionEffect(new PotionEffect(t, duration, a, ambient, particles), true);
-				} else {
+				if (!replaceExisting) {
 					if (en.hasPotionEffect(t)) {
 						for (final PotionEffect eff : en.getActivePotionEffects()) {
 							if (eff.getType() == t) {
@@ -146,6 +144,7 @@ public class EffPotion extends Effect {
 						}
 					}
 				}
+				en.addPotionEffect(new PotionEffect(t, duration, a, ambient, particles), true);
 			}
 		}
 	}
