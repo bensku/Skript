@@ -108,6 +108,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 		return Number.class;
 	}
 
+	@SuppressWarnings("null") // For some reason Java thinks that entities.toString(...) is null even though there's a null check ternary 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "entity" + (entities == null ? "" : (" " + entities.toString(e, debug))) + "'s " + (attributes == null ? "" : attributes.toString(e, debug)) + "attribute";
