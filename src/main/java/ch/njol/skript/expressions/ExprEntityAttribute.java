@@ -20,6 +20,9 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.attribute.Attribute;
+
+import java.util.stream.Stream;
+
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
@@ -32,10 +35,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -46,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"	send \"You are wounded!\"",
 		"	set victim's attack speed attribute to 2"})
 @Since("INSERT VERSION")
-public class ExprEntityAttribute extends SimpleExpression<Number> {
+public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
@@ -70,17 +73,11 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 
 	@SuppressWarnings("null")
 	@Override
-	@Nullable
-	protected Number[] get(Event e) {
+	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
-		Entity[] ea = entities.getArray(e);
-		Number[] arr = new Number[ea.length];
-		for (int i = 0; i < ea.length; i++) {
-			if (ea[i] instanceof Attributable) {
-				arr[i] = ((Attributable) ea[i]).getAttribute(a).getValue();
-			}
-		}
-		return arr;
+		return Stream.of(entities)
+		    .map(ent -> getAttribute(ent, a))
+		    .toArray(Number[]::new);
 	}
 
 	@Override
@@ -96,23 +93,14 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		Attribute a = attributes.getSingle(e);
 		double d = ((Number) delta[0]).doubleValue();
-		for (Entity entity : entities.getArray(e)) {
-			if (mode == ChangeMode.SET) {
-				if (entity instanceof Attributable) {
-					AttributeInstance ai = ((Attributable) entity).getAttribute(a);
-					if (ai != null) { // ai will be null if you put horse jump attributes on a cow, etc.
-						ai.setBaseValue(d);
-					}
+		if (mode == ChangeMode.SET) {
+			for (Entity entity : entities.getArray(e)) {
+				AttributeInstance ai = getAttribute(entity, a);
+				if (ai != null) {
+					ai.setBaseValue(d);
 				}
 			}
 		}
-		return;
-	}
-
-	@SuppressWarnings("null")
-	@Override
-	public boolean isSingle() {
-		return entities.isSingle();
 	}
 
 	@Override
@@ -122,7 +110,15 @@ public class ExprEntityAttribute extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "entity attribute";
+		return "entity attribute " + toString(e, debug);
+	}
+	
+	@Nullable
+	private static AttributeInstance getAttribute(Entity e, @Nullable Attribute a) {
+	    if (a != null && e instanceof Attributable) {
+	        return ((Attributable) e).getAttribute(a);
+	    }
+	   return null;
 	}
 	
 }
