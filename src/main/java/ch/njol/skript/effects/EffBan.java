@@ -46,6 +46,7 @@ import ch.njol.util.Kleenean;
  */
 @Name("Ban")
 @Description({"Bans/unbans a player or an IP address. Option values for ban reason and temp ban time span.",
+	"Note that if the timespan is not set, or if the value of the timespan is <none>, it will permanently ban the player.",
 	"Note that banning a player will not kick them from the server. You may use the <a href='effects.html#EffKick'>kick effect</a> if you wish so."})
 @Examples({"unban player",
 	"ban \"127.0.0.1\"",
@@ -87,15 +88,7 @@ public class EffBan extends Effect {
 	protected void execute(final Event e) {
 		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
 		Timespan ts = this.expires != null ? this.expires.getSingle(e) : null;
-		Date expires = null;
-		if (this.expires != null) {
-			if (ts != null)
-				expires = new Date(System.currentTimeMillis() + ts.getMilliSeconds());
-			else {
-				Skript.error("Could not temp ban " + players.toString(e, true) + " for: " + this.expires.toString(e, true));
-				return;
-			}
-		}
+		final Date expires = ts != null ? new Date(System.currentTimeMillis() + ts.getMilliSeconds()) : null;
 		final String source = "Skript ban effect";
 		for (final Object o : players.getArray(e)) {
 			if (o instanceof Player) {
