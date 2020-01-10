@@ -24,6 +24,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -328,12 +330,14 @@ final public class ScriptLoader {
 	};
 
 	private static void updateDisabledScripts(File directory) {
-		File[] files = directory.listFiles(disabledFilter);
-		for (File f : files) {
-			if (f.isDirectory())
-				updateDisabledScripts(f);
-			else
-				disabledFiles.add(f);
+		disabledFiles.clear();
+		try {
+			Files.walk(directory.toPath())
+				.map(Path::toFile)
+				.filter(disabledFilter::accept)
+				.forEach(disabledFiles::add);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
