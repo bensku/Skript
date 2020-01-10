@@ -265,7 +265,7 @@ public class SimpleEvents {
 					.since("2.1.1");
 		}
 		Skript.registerEvent("Item Damage", SimpleEvent.class, PlayerItemDamageEvent.class, "item damag(e|ing)")
-				.description("Called when a player damages an item when using it or armor when taking damage, ie: mining, chopping wood, using shears on a sheep or a zombie attacking you.")
+				.description("This event is called when an item is damaged such as the player using their tool or armour taking damage.")
 				.examples("on tool damage:",
 						"\tcancel event")
 				.since("INSERT VERSION");
