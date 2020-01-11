@@ -530,8 +530,8 @@ public class SimpleEvents {
 		}
 		if (Skript.classExists("org.bukkit.event.block.SpongeAbsorbEvent")) {
 			Skript.registerEvent("Sponge Absorb", SimpleEvent.class, SpongeAbsorbEvent.class, "sponge absorb")
-					.description("Called when an sponge absorbs.")
-					.requiredPlugins("1.13 or newer")
+					.description("Called when a sponge absorbs blocks.")
+					.requiredPlugins("Minecraft 1.13 or newer")
 					.examples("on sponge absorb:",
 							"\tloop absorbed blocks:",
 							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
