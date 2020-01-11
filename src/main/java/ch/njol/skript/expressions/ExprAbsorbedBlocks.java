@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.SpongeAbsorbEvent;
@@ -31,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -39,16 +39,18 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.util.Kleenean;
 
 @Name("Absorbed blocks")
 @Description("Blocks which are absorbed in a sponge absorb event. Cannot be used outside of sponge absorb events.")
+@Events("sponge absorb")
 @Examples("the absorbed blocks")
 @Since("INSERT VERSION")
-public class ExprAbsorbedBlocks extends SimpleExpression<Block> {
+public class ExprAbsorbedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	static {
-		Skript.registerExpression(ExprAbsorbedBlocks.class, Block.class, ExpressionType.SIMPLE, "[the] absorbed blocks");
+		Skript.registerExpression(ExprAbsorbedBlocks.class, BlockStateBlock.class, ExpressionType.SIMPLE, "[the] absorbed blocks");
 	}
 	
 	@Override
@@ -62,25 +64,25 @@ public class ExprAbsorbedBlocks extends SimpleExpression<Block> {
 	
 	@Override
 	@Nullable
-	protected Block[] get(Event e) {
+	protected BlockStateBlock[] get(Event e) {
 		List<BlockState> bs = ((SpongeAbsorbEvent) e).getBlocks();
 		return bs.stream()
-			.map(BlockState::getBlock)
-			.toArray(Block[]::new);
+			.map(BlockStateBlock::new)
+			.toArray(BlockStateBlock[]::new);
 	}
 	
 	@Override
 	@Nullable
-	public Iterator<Block> iterator(Event e) {
+	public Iterator<BlockStateBlock> iterator(Event e) {
 		List<BlockState> bs = ((SpongeAbsorbEvent) e).getBlocks();
 		return bs.stream()
-			.map(BlockState::getBlock)
+			.map(BlockStateBlock::new)
 			.iterator();
 	}
 	
 	@Override
-	public Class<? extends Block> getReturnType() {
-		return Block.class;
+	public Class<? extends BlockStateBlock> getReturnType() {
+		return BlockStateBlock.class;
 	}
 	
 	@Override
