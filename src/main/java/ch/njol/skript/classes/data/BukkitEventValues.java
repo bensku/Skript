@@ -30,6 +30,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Hanging;
@@ -51,6 +52,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -1032,5 +1034,27 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
+		//PrepareItemEnchantEvent
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(PrepareItemEnchantEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Player.class, new Getter<Player, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Player get(PrepareItemEnchantEvent e) {
+				return e.getEnchanter();
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Block.class, new Getter<Block, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Block get(PrepareItemEnchantEvent e) {
+				return e.getEnchantBlock();
+			}
+		}, 0);
 	}
 }

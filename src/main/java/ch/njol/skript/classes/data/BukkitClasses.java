@@ -42,6 +42,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -1719,6 +1720,28 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+		Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+			.user("enchant[ment][ ]offers?")
+			.name("Enchantment Offer")
+			.description("The enchantmentoffer in an enchant prepare event.")
+			.examples("cost of enchantmentoffer")
+			.since("INSERT VERSION")
+			.parser(new Parser<EnchantmentOffer>() {
+				@Override
+				public String toString(EnchantmentOffer o, int flags) {
+					return "enchantmentoffer";
+				}
+
+				@Override
+				public String toVariableNameString(EnchantmentOffer o) {
+					return "enchantmentoffer";
+				}
+
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			}));
 	}
 
 }

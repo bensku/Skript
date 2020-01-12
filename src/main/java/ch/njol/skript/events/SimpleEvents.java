@@ -30,6 +30,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -527,5 +528,11 @@ public class SimpleEvents {
 					"	send \"You equipped %event-item%!\"")
 				.since("INSERT VERSION");
 		}
+		Skript.registerEvent("Enchant Prepare", SimpleEvent.class, PrepareItemEnchantEvent.class, "[item] enchant prepare")
+			.description("Called when a player puts an item into enchantment table.")
+			.examples("on enchant prepare:",
+						"\tset enchant offer 1 to sharpness 1",
+						"\tset the cost of enchant offer 1 to 10 levels")
+			.since("INSERT VERSION");
 	}
 }
