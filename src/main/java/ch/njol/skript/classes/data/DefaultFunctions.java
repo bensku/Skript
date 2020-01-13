@@ -404,7 +404,7 @@ public class DefaultFunctions {
 			}
 			
 		}.description("Calculates the total amount of experience needed to achieve given level from scratch in Minecraft.")
-				.examples("calcExperience(3) # Will return \"27\"", "send \"The max capacity of your level is %calcExperience(%level of player%)%\" to the player")
+				.examples("calcExperience(3) # Will return \"27\"", "send \"You need %calcExperience(level of player + 1) - calcExperience(level of player)% XP to level up\" to the player")
 				.since("2.2-dev32"));
 		
 	}
