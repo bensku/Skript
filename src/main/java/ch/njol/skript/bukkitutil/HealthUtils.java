@@ -88,7 +88,7 @@ public abstract class HealthUtils {
 		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return;
-		setHealth(e, getHealth(e) - d);
+		e.damage(event.getDamage());
 	}
 	/** Heal an entity
 	 * @param e Entity to heal
