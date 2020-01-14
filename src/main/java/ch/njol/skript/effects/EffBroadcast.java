@@ -42,49 +42,62 @@ import ch.njol.util.Kleenean;
 		"message to all players instead of broadcasting it."})
 @Examples({"broadcast \"Welcome %player% to the server!\"",
 		"broadcast \"Woah! It's a message!\""})
-@Since("1.0")
+@Since("1.0, INSERT VERSION (send multiple times)")
 public class EffBroadcast extends Effect {
+
 	static {
-		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%]");
+		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%] [%number% times]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<String> messages;
+
 	@Nullable
 	private Expression<World> worlds;
-	
+
+	@SuppressWarnings("null")
+	private Expression<Number> repeat;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		messages = (Expression<String>) vars[0];
-		worlds = (Expression<World>) vars[1];
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		messages = (Expression<String>) exprs[0];
+		worlds = (Expression<World>) exprs[1];
+		repeat = (Expression<Number>) exprs[2];
 		return true;
 	}
-	
+
 	@Override
 	public void execute(final Event e) {
+		@SuppressWarnings("null")
+		int times = repeat.getSingle(e) != null ? repeat.getSingle(e).intValue() : 1;
 		for (final String m : messages.getArray(e)) {
 			final Expression<World> worlds = this.worlds;
 			if (worlds == null) {
 				// not Bukkit.broadcastMessage to ignore permissions
 				for (final Player p : PlayerUtils.getOnlinePlayers()) {
-					p.sendMessage(m);
+					for (int i = 1; i <= times; i++) {
+						p.sendMessage(m);
+					}
 				}
-				Bukkit.getConsoleSender().sendMessage(m);
+				for (int i = 1; i <= times; i++) {
+					Bukkit.getConsoleSender().sendMessage(m);
+				}
 			} else {
 				for (final World w : worlds.getArray(e)) {
 					for (final Player p : w.getPlayers()) {
-						p.sendMessage(m);
+						for (int i = 1; i <= times; i++) {
+							p.sendMessage(m);
+						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<World> worlds = this.worlds;
-		return "broadcast " + messages.toString(e, debug) + (worlds == null ? "" : " to " + worlds.toString(e, debug));
+		return "broadcast " + messages.toString(e, debug) + (worlds == null ? "" : " to " + worlds.toString(e, debug)) + repeat.toString(e, debug) + "times";
 	}
-	
 }
