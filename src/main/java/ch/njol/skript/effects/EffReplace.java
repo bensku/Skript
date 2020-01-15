@@ -119,8 +119,8 @@ public class EffReplace extends Effect {
 		} else {
 			for (Inventory inv : (Inventory[]) haystack)
 				for (ItemType item : (ItemType[]) needles)
-					for (Integer slot : inv.all(item.getRandom()).keySet()){
-						inv.setItem(slot.intValue(), (ItemStack) replacement);
+					for (Integer slot : inv.all(item.getRandom()).keySet()) {
+						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
 					}
 		}
 	}
