@@ -245,7 +245,13 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		FLASH("FLASH"),
 		FALLING_LAVA("FALLING_LAVA"),
 		LANDING_LAVA("LANDING_LAVA"),
-		FALLING_WATER("FALLING_WATER");
+		FALLING_WATER("FALLING_WATER"),
+		
+		// 1.15 particles
+		DRIPPING_HONEY("DRIPPING_HONEY"),
+		FALLING_HONEY("FALLING_HONEY"),
+		LANDING_HONEY("LANDING_HONEY"),
+		FALLING_NECTAR("FALLING_NECTAR");
 		
 		
 		@Nullable

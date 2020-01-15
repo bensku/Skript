@@ -95,7 +95,7 @@ public class UnparsedLiteral implements Literal<Object> {
 				final R r = Classes.parse(data, t, context);
 				if (r != null) {
 					log.printLog();
-					return new SimpleLiteral<R>(r, false);
+					return new SimpleLiteral<>(r, false, this);
 				}
 				log.clear();
 			}

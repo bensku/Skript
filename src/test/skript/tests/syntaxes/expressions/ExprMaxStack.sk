@@ -1,0 +1,4 @@
+test "max stack":
+	assert max stack size of diamond sword is 1 with "diamond sword max stack size failed"
+	assert max stack size of bucket is 16 with "bucket max stack size failed"
+	assert max stack size of dirt is 64 with "dirt max stack size failed"
