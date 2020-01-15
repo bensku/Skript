@@ -38,7 +38,7 @@ import ch.njol.util.Kleenean;
 @Name("Assert")
 @Description("Assert that condition is true. Test fails when it is not.")
 @Examples("")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class EffAssert extends Effect  {
 
 	static {

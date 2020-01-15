@@ -268,6 +268,24 @@ public class DefaultComparators {
 	};
 	static {
 		Comparators.registerComparator(EntityData.class, ItemType.class, entityItemComparator);
+		
+		// Entity - ItemType
+		// This skips (entity -> entitydata) == itemtype
+		// It was not working reliably, because there is a converter chain
+		// entity -> player -> inventoryholder -> block that sometimes takes a priority
+		Comparators.registerComparator(Entity.class, ItemType.class, new Comparator<Entity, ItemType>() {
+
+			@Override
+			public Relation compare(Entity entity, ItemType item) {
+				return entityItemComparator.compare(EntityData.fromEntity(entity), item);
+			}
+
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+			
+		});
 	}
 	
 	static {

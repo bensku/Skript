@@ -32,7 +32,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.UnparsedLiteral;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -209,7 +212,60 @@ public class CondCompare extends Condition {
 		
 		comp = Comparators.getComparator(f, s);
 		
+		if (comp == null) { // Try to re-parse with more context
+			/*
+			 * SkriptParser sees that CondCompare takes two objects. Most of the time,
+			 * this works fine. However, when there are multiple conflicting literals,
+			 * it just picks one of them at random.
+			 * 
+			 * If our other parameter is not a literal, we can try parsing the other
+			 * explicitly with same return type. This is not guaranteed to succeed,
+			 * but will in work in some cases that were previously ambiguous.
+			 * 
+			 * Some damage types not working (issue #2184) would be a good example
+			 * of issues that SkriptParser's lack of context can cause.
+			 */
+			SimpleLiteral<?> reparsedSecond = reparseLiteral(first.getReturnType(), second);
+			if (reparsedSecond != null) {
+				second = reparsedSecond;
+				comp = Comparators.getComparator(f, second.getReturnType());
+			} else {
+				SimpleLiteral<?> reparsedFirst = reparseLiteral(second.getReturnType(), first);
+				if (reparsedFirst != null) {
+					first = reparsedFirst;
+					comp = Comparators.getComparator(first.getReturnType(), s);
+				}
+			}
+			
+		}
+		
 		return comp != null;
+	}
+	
+	/**
+	 * Attempts to parse given expression again as a literal of given type.
+	 * This will only work if the expression is a literal and its unparsed
+	 * form can be accessed.
+	 * @param <T> Wanted type.
+	 * @param type Wanted class of literal.
+	 * @param expr Expression we currently have.
+	 * @return A literal value, or null if parsing failed.
+	 */
+	@Nullable
+	private <T> SimpleLiteral<T> reparseLiteral(Class<T> type, Expression<?> expr) {
+		if (expr instanceof SimpleLiteral) { // Only works for simple literals
+			Expression<?> source = expr.getSource();
+			
+			// Try to get access to unparsed content of it
+			if (source instanceof UnparsedLiteral) {
+				String unparsed = ((UnparsedLiteral) source).getData();
+				T data = Classes.parse(unparsed, type, ParseContext.DEFAULT);
+				if (data != null) { // Success, let's make a literal of it
+					return new SimpleLiteral<>(data, false, new UnparsedLiteral(unparsed));
+				}
+			}
+		}
+		return null; // Context-sensitive parsing failed; can't really help it
 	}
 	
 	/*

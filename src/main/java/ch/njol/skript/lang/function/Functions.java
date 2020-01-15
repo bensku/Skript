@@ -319,9 +319,9 @@ public abstract class Functions {
 	 * @param script
 	 * @return How many functions were removed
 	 */
-	public static int clearFunctions(final File script) {
+	public static int clearFunctions(String script) {
 		// Get and remove function namespace of script
-		Namespace namespace = namespaces.remove(new Namespace.Key(Namespace.Origin.SCRIPT, script.getName()));
+		Namespace namespace = namespaces.remove(new Namespace.Key(Namespace.Origin.SCRIPT, script));
 		if (namespace == null) { // No functions defined
 			return 0;
 		}
@@ -363,6 +363,7 @@ public abstract class Functions {
 				it.remove();
 			}
 		}
+		namespaces.clear();
 		
 		assert toValidate.isEmpty() : toValidate;
 		toValidate.clear();
