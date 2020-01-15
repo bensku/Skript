@@ -1,3 +1,2 @@
 test "block condition":
-	assert dirt is a block with "dirt is not a block"
 	assert emerald isn't a block with "emerald is a block"
