@@ -497,7 +497,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		return list.toArray((E[]) Array.newInstance(type, list.size()));
 	}
 	
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("unchecked")
 	public static <E extends Entity> E[] getAll(final EntityData<?>[] types, final Class<E> type, Chunk[] chunks) {
 		assert types.length > 0;
 		final List<E> list = new ArrayList<>();
