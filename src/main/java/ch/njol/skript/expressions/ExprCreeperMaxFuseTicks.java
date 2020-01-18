@@ -39,7 +39,8 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEntity, Number> {
 	
 	static {
-		register(ExprCreeperMaxFuseTicks.class, Number.class, "[creeper] max[imum] fuse tick[s]", "livingentities");
+		if(Skript.methodExists(LivingEntity.class, "getMaxFuseTicks"))
+			register(ExprCreeperMaxFuseTicks.class, Number.class, "[creeper] max[imum] fuse tick[s]", "livingentities");
 	}
 
 	@Override
