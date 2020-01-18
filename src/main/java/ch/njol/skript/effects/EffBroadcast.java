@@ -55,7 +55,7 @@ public class EffBroadcast extends Effect {
 	@Nullable
 	private Expression<World> worlds;
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<Number> repeat;
 
 	@SuppressWarnings({"unchecked", "null"})
@@ -69,8 +69,14 @@ public class EffBroadcast extends Effect {
 
 	@Override
 	public void execute(final Event e) {
-		@SuppressWarnings("null")
-		int times = repeat.getSingle(e) != null ? repeat.getSingle(e).intValue() : 1;
+		int times = 1;
+		if (repeat != null) {
+            Number n = repeat.getSingle(e);
+            if (n != null) {
+            	times = n.intValue();
+            	if (times < 1) times = 1;
+            }
+		}
 		for (final String m : messages.getArray(e)) {
 			final Expression<World> worlds = this.worlds;
 			if (worlds == null) {
@@ -98,6 +104,7 @@ public class EffBroadcast extends Effect {
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<World> worlds = this.worlds;
-		return "broadcast " + messages.toString(e, debug) + (worlds == null ? "" : " to " + worlds.toString(e, debug)) + repeat.toString(e, debug) + "times";
+		final Expression<Number> repeat = this.repeat;
+		return "broadcast " + messages.toString(e, debug) + (worlds == null ? "" : " to " + worlds.toString(e, debug)) + (repeat == null ? "" : " " + repeat.toString(e, debug)) + " times";
 	}
 }

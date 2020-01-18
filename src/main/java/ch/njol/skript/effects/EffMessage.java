@@ -70,7 +70,7 @@ public class EffMessage extends Effect {
 	@SuppressWarnings("null")
 	private Expression<CommandSender> recipients;
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<Number> repeat;
 
 	@SuppressWarnings({"unchecked", "null"})
@@ -85,8 +85,14 @@ public class EffMessage extends Effect {
 
 	@Override
 	protected void execute(final Event e) {
-		@SuppressWarnings("null")
-		int times = repeat.getSingle(e) != null ? repeat.getSingle(e).intValue() : 1;
+		int times = 1;
+		if (repeat != null) {
+            Number n = repeat.getSingle(e);
+            if (n != null) {
+            	times = n.intValue();
+            	if (times < 1) times = 1;
+            }
+		}
 		for (Expression<? extends String> message : messages) {
 			for (CommandSender receiver : recipients.getArray(e)) {
 				if (receiver instanceof Player) { // Can use JSON formatting
@@ -126,6 +132,7 @@ public class EffMessage extends Effect {
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "send " + messageExpr.toString(e, debug) + " to " + recipients.toString(e, debug) + repeat.toString(e, debug) + "times";
+		final Expression<Number> repeat = this.repeat;
+		return "send " + messageExpr.toString(e, debug) + " to " + recipients.toString(e, debug) + (repeat == null ? "" : " " + repeat.toString(e, debug)) + " times";
 	}
 }
