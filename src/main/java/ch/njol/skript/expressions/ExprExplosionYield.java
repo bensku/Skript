@@ -41,7 +41,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Explosion Yield")
 @Description("The percentage of blocks dropped in an explosion event.")
-@Events("sponge absorb")
+@Events("explosion")
 @Examples("set explosion yield to 10%")
 @Since("INSERT VERSION")
 public class ExprExplosionYield extends SimpleExpression<Number> {
