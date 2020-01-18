@@ -68,14 +68,15 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
 	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
-		int n = delta == null ? 0 : ((Number) delta[0]).intValue();
+		float n = delta == null ? 0 : ((Number) delta[0]).floatValue();
+		if (n > 1) n = n / 100;
 		EntityExplodeEvent e = (EntityExplodeEvent) event;
 		switch (mode) {
 			case SET:
@@ -84,18 +85,17 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 			case ADD:
 				float add = e.getYield() + n;
 				if (add < 0) add = 0;
+				if (add > 1) add = 1;
 				e.setYield(add);
 				break;
 			case REMOVE:
 				float subtract = e.getYield() - n;
 				if (subtract < 0) subtract = 0;
+				if (subtract > 1) subtract = 1;
 				e.setYield(subtract);
 				break;
 			case DELETE:
 				e.setYield(0);
-				break;
-			case RESET:
-				e.setYield(3);
 				break;
 		}
 	}
