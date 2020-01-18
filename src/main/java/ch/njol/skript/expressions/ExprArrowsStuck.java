@@ -54,7 +54,7 @@ public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Numb
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
@@ -65,7 +65,9 @@ public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Numb
 		for (LivingEntity le : getExpr().getArray(e)) {
 			switch (mode) {
 				case ADD:
-					le.setArrowsStuck(le.getArrowsStuck() + d);
+					int r1 = le.getArrowsStuck() + d;
+					if (r1 < 0) r1 = 0;
+					le.setArrowsStuck(r1);
 					break;
 				case SET:
 					le.setArrowsStuck(d);
@@ -75,6 +77,10 @@ public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Numb
 					le.setArrowsStuck(0);
 					break;
 				case REMOVE:
+					int r2 = le.getArrowsStuck() - d;
+					if (r2 < 0) r2 = 0;
+					le.setArrowsStuck(r2);
+					break;
 				case REMOVE_ALL:
 					assert false;		
 			}
