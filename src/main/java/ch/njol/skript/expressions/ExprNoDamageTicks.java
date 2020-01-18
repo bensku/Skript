@@ -61,7 +61,9 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Nu
 		for (LivingEntity le : getExpr().getArray(e)) {
 			switch (mode) {
 				case ADD:
-					le.setNoDamageTicks(le.getNoDamageTicks() + d);
+					int r = le.getNoDamageTicks() + d;
+					if (r < 0) r = 0;
+					le.setNoDamageTicks(r);
 					break;
 				case SET:
 					le.setNoDamageTicks(d);
