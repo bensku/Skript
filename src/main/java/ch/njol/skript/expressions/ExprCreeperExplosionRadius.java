@@ -73,8 +73,10 @@ public class ExprCreeperExplosionRadius extends SimplePropertyExpression<LivingE
 						c.setExplosionRadius(d);
 						break;
 					case DELETE:
-					case RESET:
 						c.setExplosionRadius(0);
+						break;
+					case RESET:
+						c.setExplosionRadius(3); //Seems to be the same for powered creepers?
 						break;
 					case REMOVE:
 						int r2 = c.getExplosionRadius() - d;
