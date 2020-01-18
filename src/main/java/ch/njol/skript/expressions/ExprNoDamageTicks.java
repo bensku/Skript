@@ -50,7 +50,7 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Nu
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
@@ -71,6 +71,10 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Nu
 					le.setNoDamageTicks(0);
 					break;
 				case REMOVE:
+					int r = le.getNoDamageTicks() - d;
+					if (r < 0) r = 0;
+					le.setNoDamageTicks(r);
+					break;
 				case REMOVE_ALL:
 					assert false;		
 			}
