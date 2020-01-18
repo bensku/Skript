@@ -73,8 +73,10 @@ public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEnti
 						c.setMaxFuseTicks(d);
 						break;
 					case DELETE:
-					case RESET:
 						c.setMaxFuseTicks(0);
+						break;
+					case RESET:
+						c.setMaxFuseTicks(30); //Seems to be the same for powered creepers?
 						break;
 					case REMOVE:
 						int r2 = c.getMaxFuseTicks() - d;
