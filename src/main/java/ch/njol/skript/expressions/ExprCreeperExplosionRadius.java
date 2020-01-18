@@ -39,7 +39,8 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprCreeperExplosionRadius extends SimplePropertyExpression<LivingEntity, Number> {
 	
 	static {
-		register(ExprCreeperExplosionRadius.class, Number.class, "[creeper] explosion radius", "livingentities");
+		if(Skript.methodExists(LivingEntity.class, "getExplosionRadius"))
+			register(ExprCreeperExplosionRadius.class, Number.class, "[creeper] explosion radius", "livingentities");
 	}
 
 	@Override
