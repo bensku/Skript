@@ -63,7 +63,7 @@ public class CondExplodesWithFire extends Condition {
 		isEvent = matchedPattern == 2;
 		if (isEvent) {
 			if (!ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
-				Skript.error("Checking if the explosion is fiery is only possible in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
+				Skript.error("Checking if the event explosion is fiery is only possible in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
 				return false;
 			}
 		}
@@ -75,14 +75,12 @@ public class CondExplodesWithFire extends Condition {
 
 	@Override
 	public boolean check(Event e) {
-		if (isEvent)
-			return ((ExplosionPrimeEvent) e).getFire();
-		if (e instanceof Explosive) {
+		if (isEvent) {
 			if (isNegated())
-				return !((Explosive) e).isIncendiary();
-			return ((Explosive) e).isIncendiary();
+				return !((ExplosionPrimeEvent) e).getFire();
+			return ((ExplosionPrimeEvent) e).getFire();
 		}
-		return false;
+		return entities.check(e, entity -> entity instanceof Explosive && ((Explosive) entity).isIncendiary(), isNegated());
 	}
 
 	@Override
