@@ -91,7 +91,7 @@ public class EffCancelDrops extends Effect {
 				event.getDrops().clear();
 			if (cancelExps)
 				event.setDroppedExp(0);
-		} else {
+		} else if (e instanceof BlockBreakEvent) {
 			BlockBreakEvent event = (BlockBreakEvent) e;
 			if (cancelItems)
 				event.setDropItems(false);
