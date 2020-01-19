@@ -5,3 +5,4 @@ test "explode creeper effect/condition" when minecraft version is "1.14.4":
 	assert last spawned creeper is going to explode with "creepers should explode when the ignition process is started"
 	stop ignition of the last spawned creeper
 	assert last spawned creeper is not going to explode with "creepers should not explode when the ignition process is stopped"
+	delete the last spawned creeper

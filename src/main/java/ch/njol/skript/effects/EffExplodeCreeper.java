@@ -36,7 +36,9 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Explode Creeper")
-@Description("Starts the explosion process of a creeper or instantly explodes it. The ignition process can be stopped with Paper 1.13+")
+@Description({"Starts the explosion process of a creeper or instantly explodes it.",
+				"This effect requires Paper 1.13+ or Spigot 1.14+.",
+				"The ignition process can be stopped on Paper 1.13+."})
 @Examples({"start explosion of the last spawned creeper",
 			"stop ignition of the last spawned creeper"})
 @Since("INSERT VERSION")
@@ -103,7 +105,7 @@ public class EffExplodeCreeper extends Effect {
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return (instant == true ? "instantly explode " : "start exploding ") + entities.toString(e, debug);
+		return (instant == true ? "instantly explode " : "start the explosion process of ") + entities.toString(e, debug);
 	}
 
 }
