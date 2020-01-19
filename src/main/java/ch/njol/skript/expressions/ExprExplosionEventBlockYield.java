@@ -39,21 +39,23 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Explosion Yield")
+@Name("Explosion Event Block Yield")
 @Description("The percentage of blocks dropped in an explosion event.")
 @Events("explosion")
-@Examples("set explosion yield to 10%")
+@Examples("set the explosion's block yield to 10%")
 @Since("INSERT VERSION")
-public class ExprExplosionYield extends SimpleExpression<Number> {
+public class ExprExplosionEventBlockYield extends SimpleExpression<Number> {
 	
 	static {
-		Skript.registerExpression(ExprExplosionYield.class, Number.class, ExpressionType.PROPERTY, "[the] [(block|explosion)] yield");
+		Skript.registerExpression(ExprExplosionEventBlockYield.class, Number.class, ExpressionType.PROPERTY, 
+				"[the] [explosion['s]] block (yield|amount)",
+				"[the] block (yield|amount) of [the] explosion");
 	}
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(EntityExplodeEvent.class)) {
-			Skript.error("The explosion yield is only usable in explosion events", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The explosion yield is only usable in an explosion event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -112,7 +114,7 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "explosion yield";
+		return "explosion event block yield";
 	}
 	
 }
