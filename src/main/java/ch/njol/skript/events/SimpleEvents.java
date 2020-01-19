@@ -42,6 +42,7 @@ import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PigZapEvent;
@@ -542,6 +543,22 @@ public class SimpleEvents {
 							"\tloop absorbed blocks:",
 							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
 					.since("2.5");
+		}
+		if (Skript.classExists("org.bukkit.event.entity.EntityTransformEvent")) {
+			Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class, "entity transform[ation]")
+			.description("Called when an entity transforms into other another entity/entities. This event triggers for:",
+					"- villager to zombie villager (infection)",
+					"- zombie villager to villager (curing)",
+					"- zombie to drowned (drowning)",
+					"- pig to zombie pigman (lightning)",
+					"- mooshroom cow to cow (shearing)",
+					"- slime split (splitting)",
+					"Note that by cancelling this event, although the transformation will be stopped, the server will try to transform the entity every tick.",
+					"As such, it is recommended to kill the event-entity immediately after cancelling the entity transform event.")
+			.requiredPlugins("Minecraft 1.13.2 or newer")
+			.examples("on entity transform:",
+					"\tbroadcast transformed entities")
+			.since("INSERT VERSION");
 		}
 	}
 }
