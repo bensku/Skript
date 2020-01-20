@@ -19,44 +19,28 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.SpongeAbsorbEvent;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment")
-@Description("The enchantment of an enchantment offer. NOTE: The level and cost should be set with their corresponding expressions. This change is visual, and does not effect what the item will be enchanted with. To change the enchantment, use the enchant event.")
+@Description({"The enchantment of an enchantment offer.", 
+			"NOTE: The level and cost should be set with their corresponding expressions.", 
+			"This change is visual, and does not effect what the item will be enchanted with.", 
+			"To change the enchantment that is applied, use the enchant event."})
 @Examples("set enchantment of enchantment offer 1 to sharpness")
 @Since("INSERT VERSION")
 public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType>{
@@ -99,6 +83,12 @@ public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<En
 				for (EnchantmentOffer offer : offers) {
 					offer.setEnchantment(((EnchantmentType) delta[0]).getType());
 				}
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case REMOVE_ALL:
+			case RESET:
+				assert false;
 		}
 	}
 }

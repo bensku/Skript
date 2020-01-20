@@ -19,12 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,7 +35,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.util.Kleenean;
 
 @Name("Enchantment Bonus")
@@ -56,8 +50,8 @@ public class ExprEnchantmentBonus extends SimpleExpression<Integer> {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(SpongeAbsorbEvent.class)) {
-			Skript.error("The 'enchantment bonus' is only usable in enchant prepare events.", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
+			Skript.error("Getting the enchantment bonus is only possible in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;

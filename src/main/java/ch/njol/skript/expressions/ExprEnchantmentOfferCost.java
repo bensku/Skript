@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.enchantments.EnchantmentOffer;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -27,17 +31,14 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
-import java.util.List;
-
-import org.bukkit.enchantments.EnchantmentOffer;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-@Name("Enchantment Offer Cost")
-@Description("The cost of an enchantment offer. This is displayed to the right of an enchantment offer. NOTE: This changes how many levels are required to enchant, but does not change the number of levels removed. To change that, use the enchant event.")
+@Name("Enchantment Offer Enchantment Cost")
+@Description({"The cost of an enchantment offer. This is displayed to the right of an enchantment offer.",
+			"If the cost is changed, it will always be at least 1.",
+			"This changes how many levels are required to enchant, but does not change the number of levels removed.", 
+			"To change the number of levels removed, use the enchant event."})
 @Examples("set cost of enchantment offer 1 to 50")
 @Since("INSERT VERSION")
 public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number>{
@@ -63,9 +64,9 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 
 	@Override
 	public @Nullable Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET)
-			return CollectionUtils.array(Number.class);
-		return null;
+		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
+			return null;
+		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
@@ -74,8 +75,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 		if (offers.length == 0)
 			return;
 		int cost = delta != null ? ((Number) delta[0]).intValue() : 1;
-		if (cost < 1)
-			cost = 1;
+		if (cost < 1) cost = 1;
 		int change = 1;
 		switch (mode) {
 			case SET:
@@ -85,23 +85,21 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
 					change = cost + offer.getCost();
-					if (change < 1)
-						change = 1;
+					if (change < 1) change = 1;
 					offer.setCost(change);
 				}
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
 					change = cost - offer.getCost();
-					if (change < 1)
-						change = 1;
+					if (change < 1) change = 1;
 					offer.setCost(change);
 				}
 				break;
 			case RESET:
-				for (EnchantmentOffer offer : offers)
-					offer.setCost(1);
-				break;
+			case DELETE:
+			case REMOVE_ALL:
+				assert false;
 		}
 	}
 }
