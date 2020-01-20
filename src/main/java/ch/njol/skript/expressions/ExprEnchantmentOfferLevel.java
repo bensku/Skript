@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -35,7 +36,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment Level")
-@Description({"The enchantment level of an enchantment offer.",
+@Description({"The enchantment level of an enchantment offer. Minecraft 1.11+.",
 			"If the level is changed, it will always be at least 1.",
 			"This change is visual, and does not change the number of levels applied.", 
 			"To change the number of levels applied, use the enchant event.",})
@@ -44,7 +45,9 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<EnchantmentOffer, Number>{
 
 	static {
-		register(ExprEnchantmentOfferLevel.class, Number.class, "[enchant[ment]] level", "enchantmentoffers");
+		if (Skript.methodExists(EnchantmentOffer.class, "getEnchantmentLevel")) {
+			register(ExprEnchantmentOfferLevel.class, Number.class, "[enchant[ment]] level", "enchantmentoffers");
+		}
 	}
 
 	@Override

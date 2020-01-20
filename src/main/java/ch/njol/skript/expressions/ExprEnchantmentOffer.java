@@ -38,17 +38,19 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Enchantment Offer")
-@Description("The enchantment offer in enchant prepare events.")
+@Description("The enchantment offer in enchant prepare events. Minecraft 1.11+.")
 @Examples("enchantment offer 1")
 @Since("INSERT VERSION")
 public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	static {
-		Skript.registerExpression(ExprEnchantmentOffer.class, EnchantmentOffer.class, ExpressionType.SIMPLE, 
-				"enchant[ment] offer 1",
-				"enchant[ment] offer 2",
-				"enchant[ment] offer 3",
-				"enchant[ment] offers");
+		if (Skript.methodExists(PrepareItemEnchantEvent.class, "getOffers")) {
+			Skript.registerExpression(ExprEnchantmentOffer.class, EnchantmentOffer.class, ExpressionType.SIMPLE, 
+					"enchant[ment] offer 1",
+					"enchant[ment] offer 2",
+					"enchant[ment] offer 3",
+					"enchant[ment] offers");
+		}
 	}
 
 	private int offerNumber;

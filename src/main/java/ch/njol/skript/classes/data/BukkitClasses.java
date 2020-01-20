@@ -1720,28 +1720,30 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
-		Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
-			.user("enchant[ment][ ]offers?")
-			.name("Enchantment Offer")
-			.description("The enchantmentoffer in an enchant prepare event.")
-			.examples("cost of enchantmentoffer")
-			.since("INSERT VERSION")
-			.parser(new Parser<EnchantmentOffer>() {
-				@Override
-				public String toString(EnchantmentOffer o, int flags) {
-					return "enchantmentoffer";
-				}
-
-				@Override
-				public String toVariableNameString(EnchantmentOffer o) {
-					return "enchantmentoffer";
-				}
-
-				@Override
-				public String getVariableNamePattern() {
-					return "\\S+";
-				}
-			}));
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+				.user("enchant[ment][ ]offers?")
+				.name("Enchantment Offer")
+				.description("The enchantmentoffer in an enchant prepare event.")
+				.examples("cost of enchantmentoffer")
+				.since("INSERT VERSION")
+				.parser(new Parser<EnchantmentOffer>() {
+					@Override
+					public String toString(EnchantmentOffer eo, int flags) {
+						return "enchantmentoffer";
+					}
+	
+					@Override
+					public String toVariableNameString(EnchantmentOffer eo) {
+						return "enchantmentoffer";
+					}
+	
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				}));
+		}
 	}
 
 }

@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -37,7 +38,7 @@ import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment")
-@Description({"The enchantment of an enchantment offer.", 
+@Description({"The enchantment of an enchantment offer. Minecraft 1.11+.", 
 			"NOTE: The level and cost should be set with their corresponding expressions.", 
 			"This change is visual, and does not effect what the item will be enchanted with.", 
 			"To change the enchantment that is applied, use the enchant event."})
@@ -46,7 +47,9 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType>{
 
 	static {
-		register(ExprEnchantmentOfferEnchantment.class, EnchantmentType.class, "enchant[ment]", "enchantmentoffers");
+		if (Skript.methodExists(EnchantmentOffer.class, "getEnchantment")) {
+			register(ExprEnchantmentOfferEnchantment.class, EnchantmentType.class, "enchant[ment]", "enchantmentoffers");
+		}
 	}
 
 	@Override
