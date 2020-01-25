@@ -36,7 +36,7 @@ import ch.njol.util.Kleenean;
 @Name("Running Minecraft")
 @Description("Checks if current Minecraft version is given version or newer.")
 @Examples("running minecraft \"1.14\"")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondMinecraftVersion extends Condition {
 	
 	static {

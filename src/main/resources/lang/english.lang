@@ -699,7 +699,7 @@ entities:
 		name: giant¦s
 		pattern: giant(|1¦s)
 	iron golem:
-		name: iron golems¦s @an
+		name: iron golem¦s @an
 		pattern: iron golem(|1¦s)
 	item frame:
 		name: item frame¦s @an
@@ -821,7 +821,7 @@ entities:
 		pattern: <age> cartographer(|1¦s)|(4¦)cartographer (kid(|1¦s)|child(|1¦ren))
 	cleric:
 		name: cleric¦s
-		pattern: <age> cleric(|1¦s)|(4¦)cleric (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	fisherman:
 		name: fisherman¦s
 		pattern: <age> fisherman(|1¦s)|(4¦)fisherman (kid(|1¦s)|child(|1¦ren))
@@ -851,7 +851,7 @@ entities:
 		pattern: <age> librarian(|1¦s)|(4¦)librarian (kid(|1¦s)|child(|1¦ren))
 	priest:
 		name: priest¦s
-		pattern: <age> priest(|1¦s)|(4¦)priest (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	blacksmith:
 		name: blacksmith¦s
 		pattern: <age> [black]smith(|1¦s)|(4¦)[black]smith (kid(|1¦s)|child(|1¦ren))
@@ -1152,6 +1152,25 @@ entities:
 	panda:
 		name: panda¦s
 		pattern: <age> [%-gene%[%-gene%]] panda(|1¦s)
+	#1.15 entity
+	no nectar bee:
+		name: no nectar bee¦s
+		pattern: <age> bee(|1¦s) without nectar
+	happy bee:
+		name: happy bee¦s
+		pattern: <age> happy bee(|1¦s)
+	bee:
+		name: bee¦s
+		pattern: <age> bee(|1¦s)
+	nectar bee:
+		name: nectar bee¦s
+		pattern: <age> bee(|1¦s) with nectar
+	angry bee:
+		name: angry bee¦s
+		pattern: <age> angry bee(|1¦s)
+	angry nectar bee:
+		name: angry nectar bee¦s
+		pattern: <age> angry bee(|1¦s) with nectar
 
 
 # -- Damage Causes --
@@ -1430,9 +1449,9 @@ visual effects:
 	sneeze:
 		name: sneeze @-
 		pattern: sneeze
-	campfire_cozy_smoke:
-		name: campfire cozy smoke @-
-		pattern: campfire cozy smoke
+	campfire_cosy_smoke:
+		name: campfire cosy smoke @-
+		pattern: campfire co(s|z)y smoke
 	campfire_signal_smoke:
 		name: campfire signal smoke @-
 		pattern: campfire signal smoke
@@ -1451,6 +1470,19 @@ visual effects:
 	falling_water:
 		name: falling water @-
 		pattern: falling water
+	# 1.15 particles
+	dripping_honey:
+		name: dripping honey @-
+		pattern: dripping honey
+	falling_honey:
+		name: falling honey @-
+		pattern: falling honey
+	landing_honey:
+		name: landing honey @-
+		pattern: landing honey
+	falling_nectar:
+		name: falling nectar @-
+		pattern: falling nectar
 
 # -- Inventory Actions --
 inventory actions:

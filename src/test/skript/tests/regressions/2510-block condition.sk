@@ -1,0 +1,4 @@
+test "block condition":
+	assert air is a block with "air is not a block" #Air is a block, apparently
+	assert sand is a block with "sand is not a block"
+	assert emerald isn't a block with "emerald is a block"

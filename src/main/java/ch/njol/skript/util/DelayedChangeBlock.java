@@ -43,6 +43,8 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.block.BlockSoundGroup;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
@@ -371,5 +373,10 @@ public class DelayedChangeBlock implements Block {
 	@Override
 	public BoundingBox getBoundingBox() {
 		return b.getBoundingBox();
+	}
+
+	@Override
+	public BlockSoundGroup getSoundGroup() {
+		return b.getSoundGroup();
 	}
 }

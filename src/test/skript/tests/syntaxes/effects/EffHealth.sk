@@ -1,0 +1,22 @@
+test "health effect":
+	set {_i} to diamond sword
+	assert {_i}'s damage value is 0 with "new item durability failed"
+	damage {_i} by 50
+	assert {_i}'s damage value is 50 with "damage item failed"
+	repair {_i} by 49
+	assert {_i}'s damage value is 1 with "repair item failed"
+	spawn zombie at location(0, 64, 0, world "world")
+	set {_m} to last spawned zombie
+	assert health of {_m} is 10 with "default zombie health failed"
+	damage {_m} by 2
+	assert health of {_m} is 8 with "damage zombie ##1 failed"
+	damage {_m} by 0.5
+	assert health of {_m} is 7.5 with "damage zombie ##2 failed"
+	damage {_m} by 99
+	assert health of {_m} is 0 with "damage zombie ##3 failed"
+	heal {_m} by 1
+	assert health of {_m} is 1 with "heal zombie ##1 failed"
+	heal {_m} by 0.5
+	assert health of {_m} is 1.5 with "heal zombie ##2 failed"
+	heal {_m} by 99
+	assert health of {_m} is 10 with "heal zombie ##3 failed"
