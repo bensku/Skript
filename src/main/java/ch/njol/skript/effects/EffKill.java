@@ -50,7 +50,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class EffKill extends Effect {
 
 	static {
-		Skript.registerEffect(EffKill.class, "kill %entities%");
+		Skript.registerEffect("kill %entities%");
 	}
 	
 	// Absolutely make sure it dies

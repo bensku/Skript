@@ -39,7 +39,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class EffFeed extends Effect {
 
     static {
-        Skript.registerEffect(EffFeed.class, "feed [the] %players% [by %-number% [beef[s]]]");
+        Skript.registerEffect("feed [the] %players% [by %-number% [beef[s]]]");
     }
 
     @SuppressWarnings("null")

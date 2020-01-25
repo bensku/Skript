@@ -54,7 +54,7 @@ import ch.njol.util.Kleenean;
 @Since("1.4")
 public class Delay extends Effect {
 	static {
-		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
+		Skript.registerEffect("(wait|halt) [for] %timespan%");
 	}
 
 	@SuppressWarnings("null")

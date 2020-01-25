@@ -57,8 +57,7 @@ import ch.njol.util.Kleenean;
 public class EffBan extends Effect {
 	
 	static {
-		Skript.registerEffect(EffBan.class,
-			"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "unban %strings/offlineplayers%",
+		Skript.registerEffect("ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "unban %strings/offlineplayers%",
 			"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "unban %players% by IP",
 			"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
 	}

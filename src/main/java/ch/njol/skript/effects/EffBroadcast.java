@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffBroadcast extends Effect {
 	static {
-		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%]");
+		Skript.registerEffect("broadcast %strings% [(to|in) %-worlds%]");
 	}
 	
 	@SuppressWarnings("null")

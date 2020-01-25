@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 public class EffRespawn extends Effect {
 
 	static {
-		Skript.registerEffect(EffRespawn.class, "force %players% to respawn");
+		Skript.registerEffect("force %players% to respawn");
 	}
 
 	@SuppressWarnings("null")

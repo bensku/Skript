@@ -52,8 +52,7 @@ import ch.njol.util.Kleenean;
 @Since("1.4")
 public class EffShoot extends Effect {
 	static {
-		Skript.registerEffect(EffShoot.class,
-				"shoot %entitydatas% [from %livingentities/locations%] [(at|with) (speed|velocity) %-number%] [%-direction%]",
+		Skript.registerEffect("shoot %entitydatas% [from %livingentities/locations%] [(at|with) (speed|velocity) %-number%] [%-direction%]",
 				"(make|let) %livingentities/locations% shoot %entitydatas% [(at|with) (speed|velocity) %-number%] [%-direction%]");
 	}
 	

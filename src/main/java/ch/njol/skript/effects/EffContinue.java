@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 public class EffContinue extends Effect {
 
 	static {
-		Skript.registerEffect(EffContinue.class, "continue [loop]");
+		Skript.registerEffect("continue [loop]");
 	}
 
 	@SuppressWarnings("null")

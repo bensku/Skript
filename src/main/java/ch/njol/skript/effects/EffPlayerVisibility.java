@@ -53,8 +53,7 @@ public class EffPlayerVisibility extends Effect {
 	private static final boolean USE_DEPRECATED_METHOD = !Skript.methodExists(Player.class, "hidePlayer", Plugin.class, Player.class);
 	
 	static {
-		Skript.registerEffect(EffPlayerVisibility.class,
-				"hide %players% [(from|for) %-players%]",
+		Skript.registerEffect("hide %players% [(from|for) %-players%]",
 				"reveal %players% [(to|for|from) %-players%]");
 	}
 

@@ -55,8 +55,7 @@ public class EffColorItems extends Effect {
 	private static final boolean MAPS_AND_POTIONS_COLORS = Skript.methodExists(PotionMeta.class, "setColor");
 	
 	static {
-		Skript.registerEffect(EffColorItems.class,
-				"(dye|colo[u]r|paint) %itemtypes% %color%",
+		Skript.registerEffect("(dye|colo[u]r|paint) %itemtypes% %color%",
 				"(dye|colo[u]r|paint) %itemtypes% \\(%number%, %number%, %number%\\)");
 	}
 	

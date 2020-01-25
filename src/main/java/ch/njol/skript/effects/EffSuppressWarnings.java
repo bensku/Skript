@@ -43,7 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("2.3")
 public class EffSuppressWarnings extends Effect {
 	static {
-		Skript.registerEffect(EffSuppressWarnings.class, "[local[ly]] suppress [the] (1¦conflict|2¦variable save|3¦[missing] conjunction[s]|4¦starting [with] expression[s]) warning[s]");
+		Skript.registerEffect("[local[ly]] suppress [the] (1¦conflict|2¦variable save|3¦[missing] conjunction[s]|4¦starting [with] expression[s]) warning[s]");
 	}
 	
 	private int CONFLICT = 1, INSTANCE = 2, CONJUNCTION = 3, STARTEXPR = 4;

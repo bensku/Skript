@@ -40,8 +40,7 @@ import ch.njol.util.Kleenean;
 public class EffToggleFlight extends Effect {
 
 	static {
-		Skript.registerEffect(EffToggleFlight.class,
-			"(allow|enable) (fly|flight) (for|to) %players%",
+		Skript.registerEffect("(allow|enable) (fly|flight) (for|to) %players%",
 			"(disallow|disable) (fly|flight) (for|to) %players%");
 	}
 

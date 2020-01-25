@@ -39,8 +39,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class EffMakeSay extends Effect {
 
 	static {
-		Skript.registerEffect(EffMakeSay.class,
-				"make %players% (say|send [the] message[s]) %strings%",
+		Skript.registerEffect("make %players% (say|send [the] message[s]) %strings%",
 				"force %players% to (say|send [the] message[s]) %strings%");
 	}
 

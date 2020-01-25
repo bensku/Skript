@@ -55,8 +55,7 @@ import ch.njol.util.Kleenean;
 @Since("<i>unknown</i> (before 2.1)")
 public class EffExit extends Effect { // TODO [code style] warn user about code after a stop effect
 	static {
-		Skript.registerEffect(EffExit.class,
-				"(exit|stop) [trigger]",
+		Skript.registerEffect("(exit|stop) [trigger]",
 				"(exit|stop) [(1|a|the|this)] (0¦section|1¦loop|2¦conditional)",
 				"(exit|stop) <\\d+> (0¦section|1¦loop|2¦conditional)s",
 				"(exit|stop) all (0¦section|1¦loop|2¦conditional)s");

@@ -48,8 +48,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0, 2.2-dev27 (ambient and particle-less potion effects)")
 public class EffPotion extends Effect {
 	static {
-		Skript.registerEffect(EffPotion.class,
-				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
+		Skript.registerEffect("apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
 				"apply ambient [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
 				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] without [any] particles to %livingentities% [for %-timespan%]"
 				//, "apply %itemtypes% to %livingentities%"

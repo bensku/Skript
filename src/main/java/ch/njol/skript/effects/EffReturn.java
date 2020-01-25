@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 @Since("2.2")
 public class EffReturn extends Effect {
 	static {
-		Skript.registerEffect(EffReturn.class, "return %objects%");
+		Skript.registerEffect("return %objects%");
 	}
 	
 	@SuppressWarnings("null")

@@ -51,8 +51,7 @@ import ch.njol.util.StringUtils;
 public class EffSendResourcePack extends Effect {
 
 	static {
-		Skript.registerEffect(EffSendResourcePack.class,
-				"send [the] resource pack [from [[the] URL]] %string% to %players%",
+		Skript.registerEffect("send [the] resource pack [from [[the] URL]] %string% to %players%",
 				"send [the] resource pack [from [[the] URL]] %string% with hash %string% to %players%");
 	}
 

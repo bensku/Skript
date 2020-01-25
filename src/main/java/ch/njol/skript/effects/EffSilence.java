@@ -40,8 +40,7 @@ import ch.njol.util.Kleenean;
 public class EffSilence extends Effect {
 	
 	static {
-		Skript.registerEffect(EffSilence.class,
-			"silence %entities%",
+		Skript.registerEffect("silence %entities%",
 			"unsilence %entities%",
 			"make %entities% silent",
 			"make %entities% not silent");

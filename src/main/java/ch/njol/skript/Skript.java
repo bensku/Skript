@@ -1261,6 +1261,24 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	/**
 	 * Registers an {@link Effect}.
+	 *
+	 * Only use this method if you're registering this syntax
+	 * element within a static initializer.
+	 *
+	 * @param patterns Skript patterns to match this effect
+	 * @see Skript#registerEffect(Class, String...)
+	 */
+	public static void registerEffect(final String... patterns) throws IllegalArgumentException {
+		Class<?> callingClass = WhoCalled.$.getCallingClass();
+		if (!Effect.class.isAssignableFrom(callingClass)) {
+			throw new RuntimeException("Attempted to register effect which was not a effect!");
+		}
+		//noinspection unchecked - checked above
+		registerEffect((Class<? extends Effect>) callingClass, patterns);
+	}
+	
+	/**
+	 * Registers an {@link Effect}.
 	 * 
 	 * @param effect The effect's class
 	 * @param patterns Skript patterns to match this effect

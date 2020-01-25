@@ -54,7 +54,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffDrop extends Effect {
 	static {
-		Skript.registerEffect(EffDrop.class, "drop %itemtypes/experiences% [%directions% %locations%]",
+		Skript.registerEffect("drop %itemtypes/experiences% [%directions% %locations%]",
 				"drop %itemtypes/experiences% [%directions% %locations%] without velocity");
 	}
 	

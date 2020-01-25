@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 public class EffLightning extends Effect {
 	
 	static {
-		Skript.registerEffect(EffLightning.class, "(create|strike) lightning(1¦[ ]effect|) %directions% %locations%");
+		Skript.registerEffect("(create|strike) lightning(1¦[ ]effect|) %directions% %locations%");
 	}
 	
 	@SuppressWarnings("null")

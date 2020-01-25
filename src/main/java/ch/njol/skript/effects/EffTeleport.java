@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffTeleport extends Effect {
 	static {
-		Skript.registerEffect(EffTeleport.class, "teleport %entities% (to|%direction%) %location%");
+		Skript.registerEffect("teleport %entities% (to|%direction%) %location%");
 	}
 	
 	@SuppressWarnings("null")

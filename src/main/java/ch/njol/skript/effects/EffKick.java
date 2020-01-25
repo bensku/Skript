@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffKick extends Effect {
 	static {
-		Skript.registerEffect(EffKick.class, "kick %players% [(by reason of|because [of]|on account of|due to) %-string%]");
+		Skript.registerEffect("kick %players% [(by reason of|because [of]|on account of|due to) %-string%]");
 	}
 	
 	@SuppressWarnings("null")

@@ -46,8 +46,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffCommand extends Effect {
 	static {
-		Skript.registerEffect(EffCommand.class,
-				"[execute] [the] command %strings% [by %-commandsenders%]",
+		Skript.registerEffect("[execute] [the] command %strings% [by %-commandsenders%]",
 				"[execute] [the] %commandsenders% command %strings%",
 				"(let|make) %commandsenders% execute [[the] command] %strings%");
 	}

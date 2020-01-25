@@ -44,8 +44,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class EffShear extends Effect {
 	static {
-		Skript.registerEffect(EffShear.class,
-				"shear %livingentities%",
+		Skript.registerEffect("shear %livingentities%",
 				"un[-]shear %livingentities%");
 	}
 	

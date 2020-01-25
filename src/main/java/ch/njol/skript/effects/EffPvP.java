@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 public class EffPvP extends Effect {
 	
 	static {
-		Skript.registerEffect(EffPvP.class, "enable PvP [in %worlds%]", "disable PVP [in %worlds%]");
+		Skript.registerEffect("enable PvP [in %worlds%]", "disable PVP [in %worlds%]");
 	}
 	
 	@SuppressWarnings("null")

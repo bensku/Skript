@@ -57,8 +57,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffEquip extends Effect implements Testable {
 	static {
-		Skript.registerEffect(EffEquip.class,
-				"equip [%livingentity%] with %itemtypes%",
+		Skript.registerEffect("equip [%livingentity%] with %itemtypes%",
 				"make %livingentity% wear %itemtypes%");
 	}
 	

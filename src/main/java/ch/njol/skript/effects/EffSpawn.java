@@ -47,8 +47,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Since("1.0")
 public class EffSpawn extends Effect {
 	static {
-		Skript.registerEffect(EffSpawn.class,
-				"(spawn|summon) %entitytypes% [%directions% %locations%]",
+		Skript.registerEffect("(spawn|summon) %entitytypes% [%directions% %locations%]",
 				"(spawn|summon) %number% of %entitytypes% [%directions% %locations%]");
 	}
 	

@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("2.4")
 public class EffScriptFile extends Effect {
 	static {
-		Skript.registerEffect(EffScriptFile.class, "(1¦enable|1¦load|2¦reload|3¦disable|3¦unload) s(c|k)ript [file] %string%");
+		Skript.registerEffect("(1¦enable|1¦load|2¦reload|3¦disable|3¦unload) s(c|k)ript [file] %string%");
 	}
 	
 	private static final int ENABLE = 1, RELOAD = 2, DISABLE = 3;

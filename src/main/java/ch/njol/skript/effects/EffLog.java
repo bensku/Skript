@@ -56,7 +56,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class EffLog extends Effect {
 	static {
-		Skript.registerEffect(EffLog.class, "log %strings% [(to|in) [file[s]] %-strings%]");
+		Skript.registerEffect("log %strings% [(to|in) [file[s]] %-strings%]");
 	}
 	
 	private final static File logsFolder = new File(Skript.getInstance().getDataFolder(), "logs");

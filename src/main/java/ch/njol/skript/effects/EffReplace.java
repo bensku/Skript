@@ -61,8 +61,7 @@ import ch.njol.util.StringUtils;
 @Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), 2.5 (replace first, case sensitivity)")
 public class EffReplace extends Effect {
 	static {
-		Skript.registerEffect(EffReplace.class,
-				"replace (all|every|) %strings% in %strings% with %string% [(1¦with case sensitivity)]",
+		Skript.registerEffect("replace (all|every|) %strings% in %strings% with %string% [(1¦with case sensitivity)]",
 				"replace (all|every|) %strings% with %string% in %strings% [(1¦with case sensitivity)]",
 				"replace first %strings% in %strings% with %string% [(1¦with case sensitivity)]",
 				"replace first %strings% with %string% in %string% [(1¦with case sensitivity)]",

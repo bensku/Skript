@@ -50,8 +50,7 @@ import ch.njol.util.Kleenean;
 public class EffHidePlayerFromServerList extends Effect {
 
 	static {
-		Skript.registerEffect(EffHidePlayerFromServerList.class,
-				"hide %players% (in|on|from) [the] server list",
+		Skript.registerEffect("hide %players% (in|on|from) [the] server list",
 				"hide %players%'[s] info[rmation] (in|on|from) [the] server list");
 	}
 

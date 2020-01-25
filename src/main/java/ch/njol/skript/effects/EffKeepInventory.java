@@ -45,8 +45,7 @@ import ch.njol.util.Kleenean;
 public class EffKeepInventory extends Effect {
 
 	static {
-		Skript.registerEffect(EffKeepInventory.class,
-			"keep [the] (inventory|items) [(1¦and [e]xp[erience][s] [point[s]])]",
+		Skript.registerEffect("keep [the] (inventory|items) [(1¦and [e]xp[erience][s] [point[s]])]",
 			"keep [the] [e]xp[erience][s] [point[s]] [(1¦and (inventory|items))]");
 	}
 

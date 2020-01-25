@@ -46,7 +46,7 @@ public class EffScriptOptionLoops extends Effect {
 	//use (1¦old|2¦new|1¦2.1.2|2¦2.2) loops
 	
 	static{
-		Skript.registerEffect(EffScriptOptionLoops.class, "use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
+		Skript.registerEffect("use[s] (1¦old|2¦new|1¦2.1.2|2¦2.2) loops");
 	}
 	
 	@SuppressWarnings("null")

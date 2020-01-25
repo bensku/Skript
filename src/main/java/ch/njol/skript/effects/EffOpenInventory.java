@@ -49,8 +49,7 @@ public class EffOpenInventory extends Effect {
 	private final static int WORKBENCH = 0, CHEST = 1, ANVIL = 2, HOPPER = 3, DROPPER = 4, DISPENSER = 5;
 	
 	static {
-		Skript.registerEffect(EffOpenInventory.class,
-				"(0¦open|1¦show) ((2¦(crafting [table]|workbench)|3¦chest|4¦anvil|5¦hopper|6¦dropper|7¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
+		Skript.registerEffect("(0¦open|1¦show) ((2¦(crafting [table]|workbench)|3¦chest|4¦anvil|5¦hopper|6¦dropper|7¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
 				"close [the] inventory [view] (to|of|for) %players%", "close %players%'[s] inventory [view]");
 	}
 	

@@ -41,8 +41,7 @@ import ch.njol.util.Kleenean;
 public class EffResetTitle extends Effect {
 	
 	static {
-		Skript.registerEffect(EffResetTitle.class,
-				"reset [the] title[s] [of %players%]",
+		Skript.registerEffect("reset [the] title[s] [of %players%]",
 				"reset [the] %players%'[s] title[s]");
 	}
 	

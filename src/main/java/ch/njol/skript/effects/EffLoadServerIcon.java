@@ -56,7 +56,7 @@ import ch.njol.util.Kleenean;
 public class EffLoadServerIcon extends AsyncEffect {
 
 	static {
-		Skript.registerEffect(EffLoadServerIcon.class, "load [the] server icon (from|of) [the] [image] [file] %string%");
+		Skript.registerEffect("load [the] server icon (from|of) [the] [image] [file] %string%");
 	}
 
 	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");

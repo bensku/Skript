@@ -48,8 +48,7 @@ import ch.njol.util.Kleenean;
 public class EffExplosion extends Effect {
 	
 	static {
-		Skript.registerEffect(EffExplosion.class,
-				"[(create|make)] [an] explosion (of|with) (force|strength|power) %number% [%directions% %locations%]",
+		Skript.registerEffect("[(create|make)] [an] explosion (of|with) (force|strength|power) %number% [%directions% %locations%]",
 				"[(create|make)] [a] safe explosion (of|with) (force|strength|power) %number% [%directions% %locations%]",
 				"[(create|make)] [a] fake explosion [%directions% %locations%]",
 				"[(create|make)] [an] explosion[ ]effect [%directions% %locations%]");

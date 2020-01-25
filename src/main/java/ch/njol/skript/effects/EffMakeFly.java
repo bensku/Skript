@@ -42,7 +42,7 @@ public class EffMakeFly extends Effect {
 
 	static {
 		if (Skript.methodExists(Player.class, "setFlying", boolean.class)) {
-			Skript.registerEffect(EffMakeFly.class, "force %players% to [(start|1¦stop)] fly[ing]",
+			Skript.registerEffect("force %players% to [(start|1¦stop)] fly[ing]",
 												"make %players% (start|1¦stop) flying",
 												"make %players% fly");
 		}

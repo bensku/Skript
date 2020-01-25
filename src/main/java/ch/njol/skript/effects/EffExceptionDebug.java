@@ -34,7 +34,7 @@ import ch.njol.util.Kleenean;
 public class EffExceptionDebug extends Effect {
 	
 	static {
-		Skript.registerEffect(EffExceptionDebug.class, "cause exception");
+		Skript.registerEffect("cause exception");
 	}
 
 	@Override

@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class EffFireworkLaunch extends Effect {
 	
 	static {
-		Skript.registerEffect(EffFireworkLaunch.class, "(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %number%]");
+		Skript.registerEffect("(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %number%]");
 	}
 
 	@SuppressWarnings("null")

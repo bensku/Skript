@@ -52,8 +52,7 @@ import ch.njol.util.Kleenean;
 public class EffCancelCooldown extends Effect {
 
 	static {
-		Skript.registerEffect(EffCancelCooldown.class,
-				"(cancel|ignore) [the] [current] [command] cooldown",
+		Skript.registerEffect("(cancel|ignore) [the] [current] [command] cooldown",
 				"un(cancel|ignore) [the] [current] [command] cooldown");
 	}
 

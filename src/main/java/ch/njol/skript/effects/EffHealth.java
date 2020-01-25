@@ -54,8 +54,7 @@ import ch.njol.util.Math2;
 public class EffHealth extends Effect {
 	
 	static {
-		Skript.registerEffect(EffHealth.class,
-				"damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
+		Skript.registerEffect("damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
 				"heal %livingentities% [by %-number% [heart[s]]]",
 				"repair %itemtypes% [by %-number%]");
 	}
