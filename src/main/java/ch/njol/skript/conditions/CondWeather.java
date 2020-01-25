@@ -50,7 +50,7 @@ public class CondWeather extends Condition {
 	
 	static {
 		// TODO a better alternative syntax, without the 'is' at the beginning
-		Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
+		Skript.registerCondition("is %weathertypes% [in %worlds%]");
 	}
 	
 	@SuppressWarnings("null")

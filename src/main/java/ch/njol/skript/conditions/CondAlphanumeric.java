@@ -43,8 +43,7 @@ import ch.njol.util.Kleenean;
 public class CondAlphanumeric extends Condition {
 	
 	static {
-		Skript.registerCondition(CondAlphanumeric.class,
-				"%strings% (is|are) alphanumeric",
+		Skript.registerCondition("%strings% (is|are) alphanumeric",
 				"%strings% (isn't|is not|aren't|are not) alphanumeric");
 	}
 	

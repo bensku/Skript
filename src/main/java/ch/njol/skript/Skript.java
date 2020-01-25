@@ -153,6 +153,7 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.EnumerationIterable;
+import ch.njol.util.whocalled.WhoCalled;
 
 // TODO meaningful error if someone uses an %expression with percent signs% outside of text or a variable
 
@@ -1225,6 +1226,24 @@ public final class Skript extends JavaPlugin implements Listener {
 	private final static Collection<SyntaxElementInfo<? extends Condition>> conditions = new ArrayList<>(50);
 	private final static Collection<SyntaxElementInfo<? extends Effect>> effects = new ArrayList<>(50);
 	private final static Collection<SyntaxElementInfo<? extends Statement>> statements = new ArrayList<>(100);
+	
+	/**
+	 * registers a {@link Condition}.
+	 *
+	 * Only use this method if you're registering this syntax
+	 * element within a static initializer.
+	 *
+	 * @param patterns Skript patterns to match this condition
+	 * @see Skript#registerCondition(Class, String...)
+	 */
+	public static void registerCondition(final String... patterns) throws IllegalArgumentException {
+		Class<?> callingClass = WhoCalled.$.getCallingClass();
+		if (!Condition.class.isAssignableFrom(callingClass)) {
+			throw new RuntimeException("Attempted to register condition which was not a condition!");
+		}
+		//noinspection unchecked - checked above
+		registerCondition((Class<? extends Condition>) callingClass, patterns);
+	}
 	
 	/**
 	 * registers a {@link Condition}.

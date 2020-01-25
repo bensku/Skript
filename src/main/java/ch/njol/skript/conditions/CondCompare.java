@@ -91,7 +91,7 @@ public class CondCompare extends Condition {
 	});
 	
 	static {
-		Skript.registerCondition(CondCompare.class, patterns.getPatterns());
+		Skript.registerCondition(patterns.getPatterns());
 	}
 	
 	@SuppressWarnings("null")

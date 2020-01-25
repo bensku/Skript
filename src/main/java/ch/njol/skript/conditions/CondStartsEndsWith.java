@@ -41,8 +41,7 @@ import ch.njol.util.Kleenean;
 public class CondStartsEndsWith extends Condition {
 	
 	static {
-		Skript.registerCondition(CondStartsEndsWith.class,
-				"%strings% (start|1¦end)[s] with %string%",
+		Skript.registerCondition("%strings% (start|1¦end)[s] with %string%",
 				"%strings% (doesn't|does not|do not|don't) (start|1¦end) with %string%");
 	}
 	

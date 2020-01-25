@@ -47,8 +47,7 @@ import ch.njol.util.Kleenean;
 public class CondIsBanned extends PropertyCondition<Object> {
 	
 	static {
-		Skript.registerCondition(CondIsBanned.class,
-				"%offlineplayers/strings% (is|are) banned",
+		Skript.registerCondition("%offlineplayers/strings% (is|are) banned",
 				"%players/strings% (is|are) IP(-| |)banned",
 				"%offlineplayers/strings% (isn't|is not|aren't|are not) banned",
 				"%players/strings% (isn't|is not|aren't|are not) IP(-| |)banned");

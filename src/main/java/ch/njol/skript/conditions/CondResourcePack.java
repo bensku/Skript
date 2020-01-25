@@ -46,8 +46,7 @@ import ch.njol.util.Kleenean;
 public class CondResourcePack extends Condition {
 
 	static {
-		Skript.registerCondition(CondResourcePack.class,
-				"[the] resource pack (was|is|has) [been] %resourcepackstate%",
+		Skript.registerCondition("[the] resource pack (was|is|has) [been] %resourcepackstate%",
 				"[the] resource pack (was|is|has)(n't| not) [been] %resourcepackstate%");
 	}
 

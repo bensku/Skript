@@ -43,8 +43,7 @@ import ch.njol.util.Kleenean;
 public class CondScriptLoaded extends Condition {
 	
 	static {
-		Skript.registerCondition(CondScriptLoaded.class,
-				"script[s] [%-strings%] (is|are) loaded",
+		Skript.registerCondition("script[s] [%-strings%] (is|are) loaded",
 				"script[s] [%-strings%] (isn't|is not|aren't|are not) loaded");
 	}
 	

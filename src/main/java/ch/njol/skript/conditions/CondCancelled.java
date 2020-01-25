@@ -42,8 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class CondCancelled extends Condition {
 
 	static {
-		Skript.registerCondition(CondCancelled.class,
-				"[the] event is cancel[l]ed",
+		Skript.registerCondition("[the] event is cancel[l]ed",
 				"[the] event (is not|isn't) cancel[l]ed"
 		);
 	}

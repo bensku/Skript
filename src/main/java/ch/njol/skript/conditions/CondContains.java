@@ -52,8 +52,7 @@ import ch.njol.util.StringUtils;
 public class CondContains extends Condition {
 
 	static {
-		Skript.registerCondition(CondContains.class,
-				"%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+		Skript.registerCondition("%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
 				"%inventories% (doesn't|does not|do not|don't) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
 				"%inventories/strings/objects% contain[s] %itemtypes/strings/objects%",
 				"%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%",

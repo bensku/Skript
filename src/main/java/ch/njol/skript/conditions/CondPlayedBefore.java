@@ -45,8 +45,7 @@ import ch.njol.util.Kleenean;
 public class CondPlayedBefore extends Condition {
 	
 	static {
-		Skript.registerCondition(CondPlayedBefore.class,
-				"%offlineplayer% [(has|did)] [already] play[ed] [on (this|the) server] (before|already)",
+		Skript.registerCondition("%offlineplayer% [(has|did)] [already] play[ed] [on (this|the) server] (before|already)",
 				"%offlineplayer% (has not|hasn't|did not|didn't) [(already|yet)] play[ed] [on (this|the) server] (before|already|yet)");
 	}
 	
