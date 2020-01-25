@@ -42,7 +42,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVelocity extends SimplePropertyExpression<Entity, Vector> {
 
 	static {
-		register(ExprVelocity.class, Vector.class, "velocit(y|ies)", "entities");
+		register(Vector.class, "velocit(y|ies)", "entities");
 	}
 
 	@Override

@@ -47,7 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Events("damage")
 public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
 	static {
-		register(ExprHealth.class, Double.class, "health", "livingentities");
+		register(Double.class, "health", "livingentities");
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})

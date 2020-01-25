@@ -48,7 +48,7 @@ import ch.njol.util.Kleenean;
 public class ExprCursorSlot extends SimplePropertyExpression<Player, Slot> {
 	
 	static {
-		register(ExprCursorSlot.class, Slot.class, "cursor slot", "players");
+		register(Slot.class, "cursor slot", "players");
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 	
 	static {
 		if (Skript.methodExists(ItemMeta.class, "hasCustomModelData")) {
-			register(ExprCustomModelData.class, Long.class, "[custom] model data", "itemtypes");
+			register(Long.class, "[custom] model data", "itemtypes");
 		}
 	}
 	

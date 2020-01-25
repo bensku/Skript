@@ -34,7 +34,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("2.1")
 public class ExprLength extends SimplePropertyExpression<String, Integer> {
 	static {
-		register(ExprLength.class, Integer.class, "length", "strings");
+		register(Integer.class, "length", "strings");
 	}
 	
 	@SuppressWarnings("null")

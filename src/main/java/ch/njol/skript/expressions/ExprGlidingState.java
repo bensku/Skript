@@ -40,7 +40,7 @@ public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boo
 	
 	static {
 		if (Skript.isRunningMinecraft(1, 9))
-			register(ExprGlidingState.class, Boolean.class, "(gliding|glider) [state]", "entities");
+			register(Boolean.class, "(gliding|glider) [state]", "entities");
 	}
 	
 	@Override

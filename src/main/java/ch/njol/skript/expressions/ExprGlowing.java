@@ -40,7 +40,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	
 	static {
-		register(ExprGlowing.class, Boolean.class, "glowing", "entities");
+		register(Boolean.class, "glowing", "entities");
 	}
 	
 	@Override

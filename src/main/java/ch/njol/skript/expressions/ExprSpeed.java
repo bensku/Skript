@@ -46,7 +46,7 @@ import ch.njol.util.Math2;
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 	static {
-		register(ExprSpeed.class, Float.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
+		register(Float.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
 	}
 	
 	private boolean walk;

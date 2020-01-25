@@ -43,7 +43,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("2.0")
 public class ExprBed extends SimplePropertyExpression<Player, Location> {
 	static {
-		register(ExprBed.class, Location.class, "bed[s] [location[s]]", "players");
+		register(Location.class, "bed[s] [location[s]]", "players");
 	}
 	
 	@Override

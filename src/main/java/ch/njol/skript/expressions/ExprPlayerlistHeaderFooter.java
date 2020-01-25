@@ -48,7 +48,7 @@ public class ExprPlayerlistHeaderFooter extends SimplePropertyExpression<Player,
 	
 	static {
 		if (Skript.methodExists(Player.class, "setPlayerListHeaderFooter", String.class, String.class)) //This method is only present if the header and footer methods we use are
-			PropertyExpression.register(ExprPlayerlistHeaderFooter.class, String.class, "(player|tab)[ ]list (header|1¦footer) [(text|message)]", "players");
+			PropertyExpression.register(String.class, "(player|tab)[ ]list (header|1¦footer) [(text|message)]", "players");
 	}
 	
 	private static final int HEADER = 0, FOOTER = 1;

@@ -57,7 +57,7 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 	private static final boolean useBlockData = Skript.isRunningMinecraft(1, 13);
 	
 	static {
-		register(ExprFacing.class, Direction.class, "(1¦horizontal|) facing", "livingentities/blocks");
+		register(Direction.class, "(1¦horizontal|) facing", "livingentities/blocks");
 	}
 	
 	private boolean horizontal;

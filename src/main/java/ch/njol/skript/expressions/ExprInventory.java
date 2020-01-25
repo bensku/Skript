@@ -58,7 +58,7 @@ public class ExprInventory extends SimpleExpression<Object> {
 	private Expression<InventoryHolder> holders;
 
 	static {
-		PropertyExpression.register(ExprInventory.class, Object.class, "inventor(y|ies)", "inventoryholders");
+		PropertyExpression.register(Object.class, "inventor(y|ies)", "inventoryholders");
 	}
 
 	@Override

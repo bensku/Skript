@@ -44,7 +44,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprCompassTarget extends SimplePropertyExpression<Player, Location> {
 	
 	static {
-		register(ExprCompassTarget.class, Location.class, "compass target", "players");
+		register(Location.class, "compass target", "players");
 	}
 	
 	@Override

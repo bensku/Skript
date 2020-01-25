@@ -41,7 +41,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("2.0")
 public class ExprEyeLocation extends SimplePropertyExpression<LivingEntity, Location> {
 	static {
-		register(ExprEyeLocation.class, Location.class, "(head|eye[s]) [location[s]]", "livingentities");
+		register(Location.class, "(head|eye[s]) [location[s]]", "livingentities");
 	}
 	
 	@Override

@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprDifficulty extends SimplePropertyExpression<World, Difficulty> {
 
 	static {
-		register(ExprDifficulty.class, Difficulty.class, "difficult(y|ies)", "worlds");
+		register(Difficulty.class, "difficult(y|ies)", "worlds");
 	}
 	
 	@Override

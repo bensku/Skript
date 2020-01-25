@@ -44,7 +44,7 @@ public class ExprPing extends SimplePropertyExpression<Player, Number> {
 	private static final boolean SUPPORTED = Skript.methodExists(Player.Spigot.class, "getPing");
 
 	static {
-		PropertyExpression.register(ExprPing.class, Number.class, "ping", "players");
+		PropertyExpression.register(Number.class, "ping", "players");
 	}
 
 	@Override

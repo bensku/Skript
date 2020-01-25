@@ -44,7 +44,7 @@ import edu.umd.cs.findbugs.ba.bcp.New;
 @Since("1.4")
 public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	static {
-		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemtypes/inventories");
+		register(Object.class, "type", "entitydatas/itemtypes/inventories");
 	}
 	
 	@Override

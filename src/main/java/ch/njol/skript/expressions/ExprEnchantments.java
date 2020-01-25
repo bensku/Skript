@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 
 	static {
-		PropertyExpression.register(ExprEnchantments.class, EnchantmentType.class, "enchantments", "itemtypes");
+		PropertyExpression.register(EnchantmentType.class, "enchantments", "itemtypes");
 	}
 
 	@SuppressWarnings("null")

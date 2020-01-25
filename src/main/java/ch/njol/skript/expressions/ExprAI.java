@@ -38,7 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 	
 	static {
-		register(ExprAI.class, Boolean.class, "(ai|artificial intelligence)", "livingentities");
+		register(Boolean.class, "(ai|artificial intelligence)", "livingentities");
 	}
 	
 	@Override

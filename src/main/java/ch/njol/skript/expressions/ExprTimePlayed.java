@@ -50,7 +50,7 @@ public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	private final static Statistic TIME_PLAYED;
 
 	static {
-		register(ExprTimePlayed.class, Timespan.class, "time played", "players");
+		register(Timespan.class, "time played", "players");
 		if (Skript.isRunningMinecraft(1, 13)) {
 			TIME_PLAYED = Statistic.PLAY_ONE_MINUTE; // Statistic name is misleading, it's actually measured in ticks
 		} else {

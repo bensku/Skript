@@ -42,7 +42,7 @@ import ch.njol.skript.util.slot.Slot;
 public class ExprItemFrameSlot extends SimplePropertyExpression<Entity, Slot> {
 	
 	static {
-		register(ExprItemFrameSlot.class, Slot.class, "item", "entities");
+		register(Slot.class, "item", "entities");
 	}
 	
 	@Override

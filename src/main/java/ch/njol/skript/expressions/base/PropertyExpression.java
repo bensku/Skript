@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.expressions.base;
 
+import java.lang.reflect.ParameterizedType;
+
 import org.bukkit.event.Event;
 
 import ch.njol.skript.Skript;
@@ -31,6 +33,7 @@ import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.Kleenean;
+import ch.njol.util.whocalled.WhoCalled;
 
 /**
  * Represents an expression which represents a property of another one. Remember to set the expression with {@link #setExpr(Expression)} in
@@ -41,6 +44,17 @@ import ch.njol.util.Kleenean;
  * @see #register(Class, Class, String, String)
  */
 public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
+	
+	public static <T> void register(final Class<T> type, final String property, final String fromType) {
+		Class<?> callingClass = WhoCalled.$.getCallingClass();
+		int typeArgs = ((ParameterizedType) callingClass.getGenericSuperclass()).getActualTypeArguments().length;
+		if (!Expression.class.isAssignableFrom(callingClass) || typeArgs < 1 ||
+			!((ParameterizedType) callingClass.getGenericSuperclass()).getActualTypeArguments()[typeArgs - 1].getTypeName().equals(type.getName())) {
+			throw new RuntimeException("Attempted to register expression which was not a proper expression!");
+		}
+		//noinspection unchecked - checked above
+		register((Class<? extends Expression<T>>) callingClass, type, property, fromType);
+	}
 	
 	/**
 	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property of %types%" and "%types%'[s] property"

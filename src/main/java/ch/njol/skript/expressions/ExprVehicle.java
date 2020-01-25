@@ -52,7 +52,7 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 	static final boolean hasMountEvents = Skript.classExists("org.spigotmc.event.entity.EntityMountEvent");
 	
 	static {
-		register(ExprVehicle.class, Entity.class, "vehicle[s]", "entities");
+		register(Entity.class, "vehicle[s]", "entities");
 	}
 	
 	@Override

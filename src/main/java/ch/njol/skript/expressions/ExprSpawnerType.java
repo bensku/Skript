@@ -62,7 +62,7 @@ public class ExprSpawnerType extends SimplePropertyExpression<Block, EntityData>
 			if (c != null)
 				CACHE.put(EntityData.fromClass(c), e); // Cache Skript EntityData -> Bukkit EntityType 
 		}
-		register(ExprSpawnerType.class, EntityData.class, "(entity|creature) type[s]", "blocks");
+		register(EntityData.class, "(entity|creature) type[s]", "blocks");
 	}
 	
 	@Override

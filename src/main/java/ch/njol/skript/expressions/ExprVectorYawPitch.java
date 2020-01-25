@@ -55,7 +55,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number> {
 
 	static {
-		register(ExprVectorYawPitch.class, Number.class, "[vector] (0¦yaw|1¦pitch)", "vectors");
+		register(Number.class, "[vector] (0¦yaw|1¦pitch)", "vectors");
 	}
 
 	private boolean usesYaw;

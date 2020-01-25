@@ -33,7 +33,7 @@ import org.bukkit.block.Block;
 public class ExprTemperature extends SimplePropertyExpression<Block, Double> {
 
     static {
-        register(ExprTemperature.class, Double.class, "temperature[s]", "blocks");
+        register(Double.class, "temperature[s]", "blocks");
     }
 
     @Override

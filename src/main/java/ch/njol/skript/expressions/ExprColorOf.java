@@ -61,7 +61,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 	static {
-		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects");
+		register(Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects");
 	}
 	
 	@SuppressWarnings("null")

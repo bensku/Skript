@@ -49,7 +49,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Events("level change")
 public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 	static {
-		register(ExprLevel.class, Integer.class, "level", "players");
+		register(Integer.class, "level", "players");
 	}
 	
 	@Override

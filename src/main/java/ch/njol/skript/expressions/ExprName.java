@@ -332,7 +332,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 
 	static {
 		for (NameType n : NameType.values())
-			register(ExprName.class, String.class, n.pattern, n.getFrom());
+			register(String.class, n.pattern, n.getFrom());
 	}
 
 	@SuppressWarnings("null")

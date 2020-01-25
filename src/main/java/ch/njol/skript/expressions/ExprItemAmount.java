@@ -43,7 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprItemAmount extends SimplePropertyExpression<ItemType, Number>{
 	
     static {
-        register(ExprItemAmount.class, Number.class, "item[[ ]stack] (amount|size|number)", "itemtypes");
+        register(Number.class, "item[[ ]stack] (amount|size|number)", "itemtypes");
     }
     
     @Override

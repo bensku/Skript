@@ -35,7 +35,7 @@ import ch.njol.skript.util.Date;
 public class ExprUnixDate extends SimplePropertyExpression<Number, Date> {
 	
 	static {
-		register(ExprUnixDate.class, Date.class, "unix date", "numbers");
+		register(Date.class, "unix date", "numbers");
 	}
 
 	@Override

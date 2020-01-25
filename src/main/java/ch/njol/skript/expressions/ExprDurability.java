@@ -46,7 +46,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 	
 	static {
-		register(ExprDurability.class, Short.class, "((data|damage)[s] [value[s]]|durabilit(y|ies))", "itemstacks/slots");
+		register(Short.class, "((data|damage)[s] [value[s]]|durabilit(y|ies))", "itemstacks/slots");
 	}
 	
 	@Override

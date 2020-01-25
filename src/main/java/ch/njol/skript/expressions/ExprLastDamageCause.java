@@ -50,7 +50,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprLastDamageCause extends PropertyExpression<LivingEntity, DamageCause>{
 	
 	static {
-		register(ExprLastDamageCause.class, DamageCause.class, "last damage (cause|reason|type)", "livingentities");
+		register(DamageCause.class, "last damage (cause|reason|type)", "livingentities");
 	}
 	
 	

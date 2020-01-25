@@ -38,7 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprExhaustion extends SimplePropertyExpression<Player, Number>{
 	
 	static {
-		register(ExprExhaustion.class, Number.class, "exhaustion", "players");
+		register(Number.class, "exhaustion", "players");
 	}
 
 	@Override

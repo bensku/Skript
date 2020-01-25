@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class ExprArmorSlot extends SimplePropertyExpression<LivingEntity, Slot> {
 	static {
-		register(ExprArmorSlot.class, Slot.class, "(0¦boot[s]|0¦shoe[s]|1¦leg[ging][s]|2¦chestplate[s]|3¦helm[et][s]) [(0¦item|4¦slot)]", "livingentities");
+		register(Slot.class, "(0¦boot[s]|0¦shoe[s]|1¦leg[ging][s]|2¦chestplate[s]|3¦helm[et][s]) [(0¦item|4¦slot)]", "livingentities");
 	}
 	
 	@SuppressWarnings("null")

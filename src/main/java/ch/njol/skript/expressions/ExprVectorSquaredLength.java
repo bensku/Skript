@@ -37,7 +37,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Number> {
 
 	static {
-		register(ExprVectorSquaredLength.class, Number.class, "squared length[s]", "vectors");
+		register(Number.class, "squared length[s]", "vectors");
 	}
 
 	@SuppressWarnings({"null", "unused"})

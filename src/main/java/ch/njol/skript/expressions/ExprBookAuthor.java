@@ -44,7 +44,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	
 	static {
-		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemtypes");
+		register(String.class, "[book] (author|writer|publisher)", "itemtypes");
 	}
 	
 	private static final ItemType book = Aliases.javaItemType("book with text");

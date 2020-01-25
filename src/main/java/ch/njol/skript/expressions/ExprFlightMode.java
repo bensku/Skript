@@ -37,7 +37,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 
 	static {
-		register(ExprFlightMode.class, Boolean.class, "fl(y[ing]|ight) (mode|state)", "players");
+		register(Boolean.class, "fl(y[ing]|ight) (mode|state)", "players");
 	}
 
 	@Override

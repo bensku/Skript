@@ -52,7 +52,7 @@ public class ExprInventoryInfo extends PropertyExpression<Inventory, Object> {
 	private int type;
 	
 	static {
-		PropertyExpression.register(ExprInventoryInfo.class, Object.class, "(" + HOLDER + "¦holder[s]|" + VIEWERS + "¦viewers|" + ROWS + "¦[amount of] rows)", "inventories");
+		PropertyExpression.register(Object.class, "(" + HOLDER + "¦holder[s]|" + VIEWERS + "¦viewers|" + ROWS + "¦[amount of] rows)", "inventories");
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 	public static boolean randomSK = true;
 	
 	static {
-		register(ExprYawPitch.class, Number.class, "(0¦yaw|1¦pitch)", "locations");
+		register(Number.class, "(0¦yaw|1¦pitch)", "locations");
 	}
 	
 	private boolean yaw;

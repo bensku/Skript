@@ -47,7 +47,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Events({"damage", "death"})
 public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Double> {
 	static {
-		register(ExprMaxHealth.class, Double.class, "max[imum] health", "livingentities");
+		register(Double.class, "max[imum] health", "livingentities");
 	}
 	
 	@SuppressWarnings("null")

@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Timespan> {
 
 	static {
-		register(ExprRemainingAir.class, Timespan.class, "remaining air", "livingentities");
+		register(Timespan.class, "remaining air", "livingentities");
 	}
 	
 	@Override

@@ -52,7 +52,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprUUID extends SimplePropertyExpression<Object, String> {
 	private final static boolean offlineUUIDSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
 	static {
-		register(ExprUUID.class, String.class, "UUID", (offlineUUIDSupported ? "offlineplayers" : "players") + "/worlds/entities");
+		register(String.class, "UUID", (offlineUUIDSupported ? "offlineplayers" : "players") + "/worlds/entities");
 	}
 	
 	@Override
