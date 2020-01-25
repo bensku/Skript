@@ -125,6 +125,7 @@ license {
 	exclude('**/*.sk') // Sample scripts and maybe aliases
 	exclude('**/*.lang') // Language files do not have headers (still under GPLv3)
 	exclude('**/*.json') // JSON files do not have headers
+	exclude('**/WhoCalled**.java') // WhoCalled is licenced under MIT
 }
 
 task checkAliases {
