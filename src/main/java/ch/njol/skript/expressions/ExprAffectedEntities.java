@@ -48,7 +48,7 @@ import ch.njol.util.Kleenean;
 public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 
 	static {
-		Skript.registerExpression(ExprAffectedEntities.class, LivingEntity.class, ExpressionType.SIMPLE, "[the] affected entities");
+		Skript.registerExpression(LivingEntity.class, ExpressionType.SIMPLE, "[the] affected entities");
 	}
 
 	@Override

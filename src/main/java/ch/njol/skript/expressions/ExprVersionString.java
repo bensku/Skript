@@ -53,7 +53,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVersionString extends SimpleExpression<String> {
 
 	static {
-		Skript.registerExpression(ExprVersionString.class, String.class, ExpressionType.SIMPLE, "[the] [(shown|custom)] version [(string|text)]");
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE, "[the] [(shown|custom)] version [(string|text)]");
 	}
 
 	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");

@@ -59,7 +59,7 @@ import ch.njol.util.Kleenean;
 public class ExprStringCase extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprStringCase.class, String.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE,
 				"%strings% in (0¦upper|1¦lower)[ ]case", 
 				"(0¦upper|1¦lower)[ ]case %strings%",
 				"capitali(s|z)ed %strings%",

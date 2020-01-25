@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 public class ExprReversedList extends SimpleExpression<Object> {
 	
 	static {
-		Skript.registerExpression(ExprReversedList.class, Object.class, ExpressionType.COMBINED, "reversed %objects%");
+		Skript.registerExpression(Object.class, ExpressionType.COMBINED, "reversed %objects%");
 	}
 	
 	@SuppressWarnings("null")

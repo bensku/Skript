@@ -58,7 +58,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0, 2.2-dev32 (SHA-256 algorithm)")
 public class ExprHash extends PropertyExpression<String, String> {
 	static {
-		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE,
 				"%strings% hash[ed] with (0¦MD5|1¦SHA-256)");
 	}
 	

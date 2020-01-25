@@ -71,7 +71,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class ExprLoopValue extends SimpleExpression<Object> {
 	static {
-		Skript.registerExpression(ExprLoopValue.class, Object.class, ExpressionType.SIMPLE, "[the] loop-<.+>");
+		Skript.registerExpression(Object.class, ExpressionType.SIMPLE, "[the] loop-<.+>");
 	}
 	
 	@SuppressWarnings("null")

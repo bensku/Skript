@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 	
 	static {
-		Skript.registerExpression(ExprEnchantmentLevel.class, Integer.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Integer.class, ExpressionType.PROPERTY,
 				"[the] [enchant[ment]] level[s] of %enchantments% (on|of) %itemtypes%",
 				"[the] %enchantments% [enchant[ment]] level[s] (on|of) %itemtypes%",
 				"%itemtypes%'[s] %enchantments% [enchant[ment]] level[s]",

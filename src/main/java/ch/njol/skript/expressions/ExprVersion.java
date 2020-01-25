@@ -79,7 +79,7 @@ public class ExprVersion extends SimpleExpression<String> {
 	}
 	
 	static {
-		Skript.registerExpression(ExprVersion.class, String.class, ExpressionType.SIMPLE, "(0¦[craft]bukkit|1¦minecraft|2¦skript)( |-)version");
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE, "(0¦[craft]bukkit|1¦minecraft|2¦skript)( |-)version");
 	}
 	
 	@SuppressWarnings("null")

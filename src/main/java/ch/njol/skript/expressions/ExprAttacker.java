@@ -58,7 +58,7 @@ import ch.njol.util.Kleenean;
 @Events({"damage", "death", "destroy"})
 public class ExprAttacker extends SimpleExpression<Entity> {
 	static {
-		Skript.registerExpression(ExprAttacker.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacker|damager)");
+		Skript.registerExpression(Entity.class, ExpressionType.SIMPLE, "[the] (attacker|damager)");
 	}
 	
 	@Override

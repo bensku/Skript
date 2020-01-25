@@ -41,7 +41,7 @@ import ch.njol.skript.lang.ExpressionType;
 public class ExprDamageCause extends EventValueExpression<DamageCause> {
 	
 	static {
-		Skript.registerExpression(ExprDamageCause.class, DamageCause.class, ExpressionType.SIMPLE, "[the] damage (cause|type)");
+		Skript.registerExpression(DamageCause.class, ExpressionType.SIMPLE, "[the] damage (cause|type)");
 	}
 	
 	public ExprDamageCause() {

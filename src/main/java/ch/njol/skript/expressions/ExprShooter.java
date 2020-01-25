@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("1.3.7")
 public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	static {
-		Skript.registerExpression(ExprShooter.class, LivingEntity.class, ExpressionType.SIMPLE, "[the] shooter [of %projectile%]");
+		Skript.registerExpression(LivingEntity.class, ExpressionType.SIMPLE, "[the] shooter [of %projectile%]");
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})

@@ -46,7 +46,7 @@ import ch.njol.util.Math2;
 @Since("2.0")
 public class ExprRound extends PropertyExpression<Number, Long> {
 	static {
-		Skript.registerExpression(ExprRound.class, Long.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Long.class, ExpressionType.PROPERTY,
 				"(a|the|) round[ed] down %number%",
 				"(a|the|) round[ed] %number%",
 				"(a|the|) round[ed] up %number%");

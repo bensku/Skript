@@ -41,7 +41,7 @@ import ch.njol.util.Kleenean;
 public class ExprNow extends SimpleExpression<Date> {
 	
 	static {
-		Skript.registerExpression(ExprNow.class, Date.class, ExpressionType.SIMPLE, "now");
+		Skript.registerExpression(Date.class, ExpressionType.SIMPLE, "now");
 	}
 	
 	@Override

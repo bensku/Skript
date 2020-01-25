@@ -41,7 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprDateAgoLater extends SimpleExpression<Date> {
 
     static {
-        Skript.registerExpression(ExprDateAgoLater.class, Date.class, ExpressionType.COMBINED,
+        Skript.registerExpression(Date.class, ExpressionType.COMBINED,
                 "%timespan% (ago|in the past|before [the] [date] %-date%)",
                 "%timespan% (later|(from|after) [the] [date] %-date%)");
     }

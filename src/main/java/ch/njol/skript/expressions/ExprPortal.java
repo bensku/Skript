@@ -55,7 +55,7 @@ public class ExprPortal extends SimpleExpression<Block> {
 	private static final boolean USING_BLOCKSTATE = Skript.isRunningMinecraft(1, 14);
 	
 	static {
-		Skript.registerExpression(ExprPortal.class, Block.class, ExpressionType.SIMPLE, 
+		Skript.registerExpression(Block.class, ExpressionType.SIMPLE,
 				"[the] portal['s] blocks",
 				"[the] blocks of [the] portal");
 	}

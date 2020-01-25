@@ -67,7 +67,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
 public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create 'vehicle' and 'passenger' expressions for vehicle enter/exit events?
 	static { // It was necessary to convert to SimpleExpression due to the method 'isSingle()'.
-		Skript.registerExpression(ExprPassenger.class, Entity.class, ExpressionType.PROPERTY, "[the] passenger[s] of %entities%", "%entities%'[s] passenger[s]");
+		Skript.registerExpression(Entity.class, ExpressionType.PROPERTY, "[the] passenger[s] of %entities%", "%entities%'[s] passenger[s]");
 	}
 	
 	@SuppressWarnings("null")

@@ -163,7 +163,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	}
 	
 	static {
-		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE, MessageType.patterns);
 	}
 	
 	@SuppressWarnings("null")

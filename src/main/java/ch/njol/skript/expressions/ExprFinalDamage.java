@@ -47,7 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Events("damage")
 public class ExprFinalDamage extends SimpleExpression<Double> {
 	static {
-		Skript.registerExpression(ExprFinalDamage.class, Double.class, ExpressionType.SIMPLE, "[the] final damage");
+		Skript.registerExpression(Double.class, ExpressionType.SIMPLE, "[the] final damage");
 	}
 	
 	@Override

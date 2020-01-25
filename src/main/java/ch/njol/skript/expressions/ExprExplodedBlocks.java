@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 public class ExprExplodedBlocks extends SimpleExpression<Block> {
 
 	static {
-		Skript.registerExpression(ExprExplodedBlocks.class, Block.class, ExpressionType.COMBINED, "[the] exploded blocks");
+		Skript.registerExpression(Block.class, ExpressionType.COMBINED, "[the] exploded blocks");
 	}
 	
 	@Override

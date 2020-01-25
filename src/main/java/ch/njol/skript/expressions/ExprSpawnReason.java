@@ -40,7 +40,7 @@ import ch.njol.skript.lang.ExpressionType;
 public class ExprSpawnReason extends EventValueExpression<SpawnReason> {
 
 	static {
-		Skript.registerExpression(ExprSpawnReason.class, SpawnReason.class, ExpressionType.SIMPLE, "[the] spawn[ing] reason");
+		Skript.registerExpression(SpawnReason.class, ExpressionType.SIMPLE, "[the] spawn[ing] reason");
 	}
 	public ExprSpawnReason() {
 		super(SpawnReason.class);

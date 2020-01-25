@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class ExprHotbarButton extends SimpleExpression<Number> {
 	
 	static {
-		Skript.registerExpression(ExprHotbarButton.class, Number.class, ExpressionType.SIMPLE, "[the] hotbar button");
+		Skript.registerExpression(Number.class, ExpressionType.SIMPLE, "[the] hotbar button");
 	}
 	
 	@Override

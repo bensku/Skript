@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVectorNormalize extends SimpleExpression<Vector> {
 
 	static {
-		Skript.registerExpression(ExprVectorNormalize.class, Vector.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(Vector.class, ExpressionType.SIMPLE,
 				"normalize[d] %vector%",
 				"%vector% normalized");
 	}

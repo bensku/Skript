@@ -51,7 +51,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 @Since("1.0")
 public class ExprBlockSphere extends SimpleExpression<Block> {
 	static {
-		Skript.registerExpression(ExprBlockSphere.class, Block.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks in radius %number% [(of|around) %location%]",
 				"[(all [[of] the]|the)] blocks around %location% in radius %number%");
 	}

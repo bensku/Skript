@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 @Since("2.1.1")
 public class ExprMe extends SimpleExpression<CommandSender> {
 	static {
-		Skript.registerExpression(ExprMe.class, CommandSender.class, ExpressionType.SIMPLE, "me", "my[self]");
+		Skript.registerExpression(CommandSender.class, ExpressionType.SIMPLE, "me", "my[self]");
 	}
 	
 	@Override

@@ -48,7 +48,7 @@ public class ExprLocationFromVector extends SimpleExpression<Location> {
 
 	static {
 		// TODO fix slowdowns and enable again, for now nuked for greater good
-//		Skript.registerExpression(ExprLocationFromVector.class, Location.class, ExpressionType.SIMPLE,
+//		Skript.registerExpression(Location.class, ExpressionType.SIMPLE,
 //				"%vector% [to location] [in] %world%", "location (from|of) %vector% [(from|in)] %world%",
 //				"%vector% [to location] [in] %world% with yaw %number% and pitch %number%",
 //				"location (from|of) %vector% [(in|from)] %world% with yaw %number% and pitch %number%");

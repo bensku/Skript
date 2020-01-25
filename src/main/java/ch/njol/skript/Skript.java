@@ -26,6 +26,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -1308,6 +1309,29 @@ public final class Skript extends JavaPlugin implements Listener {
 	private final static List<ExpressionInfo<?, ?>> expressions = new ArrayList<>(100);
 	
 	private final static int[] expressionTypesStartIndices = new int[ExpressionType.values().length];
+	
+	/**
+	 * Registers an expression.
+	 *
+	 * Only use this method if you're registering this syntax
+	 * element within a static initializer.
+	 *
+	 * @param returnType The superclass of all values returned by the expression
+	 * @param type The expression's {@link ExpressionType type}. This is used to determine in which order to try to parse expressions.
+	 * @param patterns Skript patterns that match this expression
+	 * @throws IllegalArgumentException if returnType is not a normal class
+	 * @see Skript#registerExpression(Class, Class, ExpressionType, String...)
+	 */
+	public static <T> void registerExpression(final Class<T> returnType, final ExpressionType type, final String... patterns) throws IllegalArgumentException {
+		Class<?> callingClass = WhoCalled.$.getCallingClass();
+		int typeArgs = ((ParameterizedType) callingClass.getGenericSuperclass()).getActualTypeArguments().length;
+		if (!Expression.class.isAssignableFrom(callingClass) || typeArgs < 1 ||
+			!((ParameterizedType) callingClass.getGenericSuperclass()).getActualTypeArguments()[typeArgs - 1].getTypeName().equals(returnType.getName())) {
+			throw new RuntimeException("Attempted to register expression which was not a proper expression!");
+		}
+		//noinspection unchecked - checked above
+		registerExpression((Class<? extends Expression<T>>) callingClass, returnType, type, patterns);
+	}
 	
 	/**
 	 * Registers an expression.

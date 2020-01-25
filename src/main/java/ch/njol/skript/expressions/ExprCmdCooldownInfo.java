@@ -57,7 +57,7 @@ import ch.njol.util.Kleenean;
 public class ExprCmdCooldownInfo extends SimpleExpression<Object> {
 
 	static {
-		Skript.registerExpression(ExprCmdCooldownInfo.class, Object.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(Object.class, ExpressionType.SIMPLE,
 				"[the] remaining [time] [of [the] (cooldown|wait) [(of|for) [the] [current] command]]",
 				"[the] elapsed [time] [of [the] (cooldown|wait) [(of|for) [the] [current] command]]",
 				"[the] ((cooldown|wait) time|[wait] time of [the] (cooldown|wait) [(of|for) [the] [current] command])",

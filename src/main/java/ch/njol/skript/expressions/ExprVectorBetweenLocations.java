@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
 
 	static {
-		Skript.registerExpression(ExprVectorBetweenLocations.class, Vector.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(Vector.class, ExpressionType.SIMPLE,
 				"[the] vector (from|between) %location% (to|and) %location%");
 	}
 

@@ -52,7 +52,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprServerIcon extends SimpleExpression<CachedServerIcon> {
 
 	static {
-		Skript.registerExpression(ExprServerIcon.class, CachedServerIcon.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(CachedServerIcon.class, ExpressionType.PROPERTY,
 				"[the] [(1¦(default)|2¦(shown|sent))] [server] icon");
 	}
 

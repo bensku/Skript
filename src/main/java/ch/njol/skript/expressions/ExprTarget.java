@@ -55,7 +55,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	static {
-		Skript.registerExpression(ExprTarget.class, Entity.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Entity.class, ExpressionType.PROPERTY,
 				"[the] target[[ed] %-*entitydata%] [of %livingentities%]",
 				"%livingentities%'[s] target[[ed] %-*entitydata%]");
 	}

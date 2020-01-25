@@ -52,7 +52,7 @@ import ch.njol.util.Kleenean;
 @Since("1.3.4")
 public class ExprLightLevel extends PropertyExpression<Location, Byte> {
 	static {
-		Skript.registerExpression(ExprLightLevel.class, Byte.class, ExpressionType.PROPERTY, "[(1¦sky|1¦sun|2¦block)[ ]]light[ ]level [(of|%direction%) %location%]");
+		Skript.registerExpression(Byte.class, ExpressionType.PROPERTY, "[(1¦sky|1¦sun|2¦block)[ ]]light[ ]level [(of|%direction%) %location%]");
 	}
 	
 	private final int SKY = 1, BLOCK = 2, ANY = SKY | BLOCK;

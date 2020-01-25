@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprSeed extends PropertyExpression<World, Long> {
 
 	static {
-		Skript.registerExpression(ExprSeed.class, Long.class, ExpressionType.PROPERTY, "[the] seed[s] (from|of) %worlds%", "%worlds%'[s] seed[s]");
+		Skript.registerExpression(Long.class, ExpressionType.PROPERTY, "[the] seed[s] (from|of) %worlds%", "%worlds%'[s] seed[s]");
 	}
 
 	@SuppressWarnings({"null", "unchecked"})

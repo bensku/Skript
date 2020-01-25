@@ -65,7 +65,7 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 	private final static String[] slotNames = {"ore", "fuel", "result"};
 	
 	static {
-		Skript.registerExpression(ExprFurnaceSlot.class, Slot.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Slot.class, ExpressionType.PROPERTY,
 				"(" + FUEL + "¦fuel|" + RESULT + "¦result) [slot]",
 				"(" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]] of %blocks%",
 				"%blocks%'[s] (" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]");

@@ -43,7 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("2.2-dev31")
 public class ExprChatFormat extends SimpleExpression<String>{
 	static {
-		Skript.registerExpression(ExprChatFormat.class, String.class, ExpressionType.SIMPLE, "[the] (message|chat) format[ting]");
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE, "[the] (message|chat) format[ting]");
 	}
 	
 	@Override

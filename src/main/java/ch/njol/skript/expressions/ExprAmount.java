@@ -61,7 +61,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class ExprAmount extends SimpleExpression<Integer> {
 	static {
-		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, 
+		Skript.registerExpression(Integer.class, ExpressionType.PROPERTY,
 				"(amount|number|size) of %objects%",
 				"recursive (amount|number|size) of %objects%");
 	}

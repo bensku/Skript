@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVectorRandom extends SimpleExpression<Vector> {
 
 	static {
-		Skript.registerExpression(ExprVectorRandom.class, Vector.class, ExpressionType.SIMPLE, "[a] random vector");
+		Skript.registerExpression(Vector.class, ExpressionType.SIMPLE, "[a] random vector");
 	}
 
 	@Override

@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class ExprParseError extends SimpleExpression<String> {
 	static {
-		Skript.registerExpression(ExprParseError.class, String.class, ExpressionType.SIMPLE, "[the] [last] [parse] error");
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE, "[the] [last] [parse] error");
 	}
 	
 	@Override

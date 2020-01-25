@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class ExprAmountOfItems extends SimpleExpression<Integer> {
 	static {
-		Skript.registerExpression(ExprAmountOfItems.class, Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
+		Skript.registerExpression(Integer.class, ExpressionType.PROPERTY, "[the] (amount|number) of %itemtypes% (in|of) %inventories%");
 	}
 	
 	@SuppressWarnings("null")

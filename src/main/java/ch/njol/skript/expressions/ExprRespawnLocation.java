@@ -54,7 +54,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprRespawnLocation extends SimpleExpression<Location> {
 
 	static {
-		Skript.registerExpression(ExprRespawnLocation.class, Location.class, ExpressionType.SIMPLE, "[the] respawn location");
+		Skript.registerExpression(Location.class, ExpressionType.SIMPLE, "[the] respawn location");
 	}
 	
 	@Override

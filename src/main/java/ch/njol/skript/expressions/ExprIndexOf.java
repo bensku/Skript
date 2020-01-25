@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 @Since("2.1")
 public class ExprIndexOf extends SimpleExpression<Integer> {
 	static {
-		Skript.registerExpression(ExprIndexOf.class, Integer.class, ExpressionType.COMBINED, "[the] (0¦|0¦first|1¦last) index of %string% in %string%");
+		Skript.registerExpression(Integer.class, ExpressionType.COMBINED, "[the] (0¦|0¦first|1¦last) index of %string% in %string%");
 	}
 	
 	boolean first;

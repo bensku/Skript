@@ -37,7 +37,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 
 	static {
-		Skript.registerExpression(ExprFireworkEffect.class, FireworkEffect.class, ExpressionType.COMBINED,
+		Skript.registerExpression(FireworkEffect.class, ExpressionType.COMBINED,
 				"(1¦|2¦flickering|3¦trailing|4¦flickering trailing|5¦trailing flickering) %fireworktype% [firework [effect]] colo[u]red %colors%",
 				"(1¦|2¦flickering|3¦trailing|4¦flickering trailing|5¦trailing flickering) %fireworktype% [firework [effect]] colo[u]red %colors% fad(e|ing) [to] %colors%");
 	}

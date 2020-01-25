@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.4.9")
 public class ExprRandom extends SimpleExpression<Object> {
 	static {
-		Skript.registerExpression(ExprRandom.class, Object.class, ExpressionType.COMBINED, "[a] random %*classinfo% [out] of %objects%");
+		Skript.registerExpression(Object.class, ExpressionType.COMBINED, "[a] random %*classinfo% [out] of %objects%");
 	}
 	
 	@SuppressWarnings("null")

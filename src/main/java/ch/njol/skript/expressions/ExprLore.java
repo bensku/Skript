@@ -63,7 +63,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprLore extends SimpleExpression<String> {
 
 	static {
-			Skript.registerExpression(ExprLore.class, String.class, ExpressionType.PROPERTY,
+			Skript.registerExpression(String.class, ExpressionType.PROPERTY,
 					"[the] lore of %itemstack/itemtype%", "%itemstack/itemtype%'[s] lore",
 					"[the] line %number% of [the] lore of %itemstack/itemtype%",
 					"[the] line %number% of %itemstack/itemtype%'[s] lore",

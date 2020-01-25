@@ -41,7 +41,6 @@ public class ExprSpecialNumber extends SimpleExpression<Number> {
 
 	static {
 		Skript.registerExpression(
-			ExprSpecialNumber.class,
 			Number.class,
 			ExpressionType.SIMPLE, 
 			"(0¦NaN|1¦[(2¦-|2¦minus)](infinity|\u221e)) value",

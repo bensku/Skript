@@ -50,7 +50,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.4.2")
 public class ExprSpawn extends PropertyExpression<World, Location> {
 	static {
-		Skript.registerExpression(ExprSpawn.class, Location.class, ExpressionType.PROPERTY, "[the] spawn[s] [(point|location)[s]] [of %worlds%]", "%worlds%'[s] spawn[s] [(point|location)[s]]");
+		Skript.registerExpression(Location.class, ExpressionType.PROPERTY, "[the] spawn[s] [(point|location)[s]] [of %worlds%]", "%worlds%'[s] spawn[s] [(point|location)[s]]");
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})

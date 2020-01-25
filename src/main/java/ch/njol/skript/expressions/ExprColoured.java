@@ -53,7 +53,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class ExprColoured extends PropertyExpression<String, String> {
 	static {
-		Skript.registerExpression(ExprColoured.class, String.class, ExpressionType.COMBINED,
+		Skript.registerExpression(String.class, ExpressionType.COMBINED,
 				"(colo[u]r-|colo[u]red )%strings%",
 				"(format-|formatted )%strings%",
 				"(un|non)[-](colo[u]r-|colo[u]red |format-|formatted )%strings%");

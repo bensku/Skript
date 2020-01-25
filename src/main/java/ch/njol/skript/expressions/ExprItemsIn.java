@@ -54,7 +54,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class ExprItemsIn extends SimpleExpression<Slot> {
 	static {
-		Skript.registerExpression(ExprItemsIn.class, Slot.class, ExpressionType.PROPERTY, "[(all [[of] the]|the)] items ([with]in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
+		Skript.registerExpression(Slot.class, ExpressionType.PROPERTY, "[(all [[of] the]|the)] items ([with]in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
 	}
 	
 	@SuppressWarnings("null")

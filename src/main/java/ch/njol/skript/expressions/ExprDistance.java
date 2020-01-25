@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class ExprDistance extends SimpleExpression<Double> {
 	static {
-		Skript.registerExpression(ExprDistance.class, Double.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
+		Skript.registerExpression(Double.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
 	}
 	
 	@SuppressWarnings("null")

@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 public class ExprOpenedInventory extends PropertyExpression<Player, Inventory> {
 
 	static {
-		Skript.registerExpression(ExprOpenedInventory.class, Inventory.class, ExpressionType.PROPERTY, "[the] (current|open|top) inventory [of %players%]", "%players%'[s] (current|open|top) inventory");
+		Skript.registerExpression(Inventory.class, ExpressionType.PROPERTY, "[the] (current|open|top) inventory [of %players%]", "%players%'[s] (current|open|top) inventory");
 	}
 
 	@Override

@@ -50,7 +50,7 @@ import ch.njol.util.StringUtils;
 public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 
 	static {
-		Skript.registerExpression(ExprItemWithLore.class, ItemType.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(ItemType.class, ExpressionType.PROPERTY,
 				"%itemtype% with [(a|the)] lore %strings%");
 	}
 

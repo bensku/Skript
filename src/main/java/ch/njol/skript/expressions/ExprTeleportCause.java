@@ -39,7 +39,7 @@ import ch.njol.skript.lang.ExpressionType;
 public class ExprTeleportCause extends EventValueExpression<TeleportCause> {
 
 	static {
-		Skript.registerExpression(ExprTeleportCause.class, TeleportCause.class, ExpressionType.SIMPLE, "[the] teleport (cause|reason|type)");
+		Skript.registerExpression(TeleportCause.class, ExpressionType.SIMPLE, "[the] teleport (cause|reason|type)");
 	}
 
 	public ExprTeleportCause() {

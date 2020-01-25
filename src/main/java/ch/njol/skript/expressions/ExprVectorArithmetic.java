@@ -105,7 +105,7 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 	});
 
 	static {
-		Skript.registerExpression(ExprVectorArithmetic.class, Vector.class, ExpressionType.SIMPLE, patterns.getPatterns());
+		Skript.registerExpression(Vector.class, ExpressionType.SIMPLE, patterns.getPatterns());
 	}
 
 	@SuppressWarnings("null")

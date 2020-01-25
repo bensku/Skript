@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("2.0")
 public class ExprLocationAt extends SimpleExpression<Location> {
 	static {
-		Skript.registerExpression(ExprLocationAt.class, Location.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Location.class, ExpressionType.COMBINED,
 				"[the] (location|position) [at] [\\(][x[ ][=[ ]]]%number%, [y[ ][=[ ]]]%number%, [and] [z[ ][=[ ]]]%number%[\\)] [[(in|of) [[the] world]] %world%]");
 	}
 	

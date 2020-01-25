@@ -46,7 +46,7 @@ import ch.njol.skript.util.slot.Slot;
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprItem extends EventValueExpression<ItemStack> {
 	static {
-		Skript.registerExpression(ExprItem.class, ItemStack.class, ExpressionType.SIMPLE, "[the] item");
+		Skript.registerExpression(ItemStack.class, ExpressionType.SIMPLE, "[the] item");
 	}
 	
 	public ExprItem() {

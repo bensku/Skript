@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 public class ExprTamer extends SimpleExpression<Player> {
 	
 	static {
-		Skript.registerExpression(ExprTamer.class, Player.class, ExpressionType.SIMPLE, "[the] tamer");
+		Skript.registerExpression(Player.class, ExpressionType.SIMPLE, "[the] tamer");
 	}
 	
 	@Override

@@ -58,7 +58,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 public class ExprItems extends SimpleExpression<ItemStack> {
 	
 	static {
-		Skript.registerExpression(ExprItems.class, ItemStack.class, ExpressionType.COMBINED,
+		Skript.registerExpression(ItemStack.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the|every)] item(s|[ ]types)", "[(all [[of] the]|the)] items of type[s] %itemtypes%",
 				"[(all [[of] the]|the|every)] block(s|[ ]types)", "[(all [[of] the]|the)] blocks of type[s] %itemtypes%");
 	}

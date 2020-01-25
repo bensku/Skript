@@ -51,7 +51,7 @@ import java.util.List;
 public class ExprBookPages extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprBookPages.class, String.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(String.class, ExpressionType.PROPERTY,
 				"[all] [the] [book] (pages|content) of %itemtypes%",
 				"%itemtypes%'s [book] (pages|content)",
 				"[book] page %number% of %itemtypes%", 

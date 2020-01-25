@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprMaxPlayers extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprMaxPlayers.class, Number.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Number.class, ExpressionType.PROPERTY,
 				"[the] [(1¦(real|default)|2¦(fake|shown|displayed))] max[imum] player[s] [(count|amount|number|size)]",
 				"[the] [(1¦(real|default)|2¦(fake|shown|displayed))] max[imum] (count|amount|number|size) of players");
 	}

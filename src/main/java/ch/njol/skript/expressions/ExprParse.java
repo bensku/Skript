@@ -73,7 +73,7 @@ import ch.njol.util.NonNullPair;
 @Since("2.0")
 public class ExprParse extends SimpleExpression<Object> {
 	static {
-		Skript.registerExpression(ExprParse.class, Object.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Object.class, ExpressionType.COMBINED,
 				"%string% parsed as (%-*classinfo%|\"<.*>\")");
 	}
 	

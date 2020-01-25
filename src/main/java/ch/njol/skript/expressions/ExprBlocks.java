@@ -54,7 +54,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 @Since("1.0")
 public class ExprBlocks extends SimpleExpression<Block> {
 	static {
-		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
 				"[(all [[of] the]|the)] blocks from %location% [on] %direction%",
 				"[(all [[of] the]|the)] blocks from %block% to %block%",

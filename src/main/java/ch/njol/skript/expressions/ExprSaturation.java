@@ -47,7 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprSaturation extends PropertyExpression<Player, Number> {
 
 	static {
-		Skript.registerExpression(ExprSaturation.class, Number.class, ExpressionType.PROPERTY, "[the] saturation [of %players%]", "%players%'[s] saturation");
+		Skript.registerExpression(Number.class, ExpressionType.PROPERTY, "[the] saturation [of %players%]", "%players%'[s] saturation");
 	}
 	
 	@Override

@@ -52,7 +52,7 @@ import ch.njol.util.Kleenean;
 @Since("1.4.6")
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
-		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Number.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%");
 	}
 	

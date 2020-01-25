@@ -46,7 +46,7 @@ public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, It
 	
 	static {
 		if (Skript.methodExists(ItemMeta.class, "hasCustomModelData")) {
-			Skript.registerExpression(ExprItemWithCustomModelData.class, ItemType.class, ExpressionType.PROPERTY,
+			Skript.registerExpression(ItemType.class, ExpressionType.PROPERTY,
 				"%itemtype% with [custom] model data %number%");
 		}
 	}

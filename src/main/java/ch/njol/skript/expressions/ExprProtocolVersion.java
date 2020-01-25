@@ -62,7 +62,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprProtocolVersion extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprProtocolVersion.class, Number.class, ExpressionType.SIMPLE, "[the] [(sent|required|fake)] protocol version [number]");
+		Skript.registerExpression(Number.class, ExpressionType.SIMPLE, "[the] [(sent|required|fake)] protocol version [number]");
 	}
 
 	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");

@@ -59,7 +59,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 	private static ExprFilter parsing;
 
 	static {
-		Skript.registerExpression(ExprFilter.class, Object.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Object.class, ExpressionType.COMBINED,
 				"%objects% (where|that match) \\[<.+>\\]");
 	}
 

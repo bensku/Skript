@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 public class ExprDamagedItem extends PropertyExpression<ItemType, ItemType> {
 	
 	static {
-		Skript.registerExpression(ExprDamagedItem.class, ItemType.class, ExpressionType.COMBINED,
+		Skript.registerExpression(ItemType.class, ExpressionType.COMBINED,
 				"%itemtype% with (damage|data) [value] %number%",
 				"%itemtype% damaged by %number%");
 	}

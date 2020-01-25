@@ -54,7 +54,7 @@ import ch.njol.util.Kleenean;
 @Since("1.3")
 public class ExprSignText extends SimpleExpression<String> {
 	static {
-		Skript.registerExpression(ExprSignText.class, String.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(String.class, ExpressionType.PROPERTY,
 				"[the] line %number% [of %block%]", "[the] (1¦1st|1¦first|2¦2nd|2¦second|3¦3rd|3¦third|4¦4th|4¦fourth) line [of %block%]");
 	}
 	

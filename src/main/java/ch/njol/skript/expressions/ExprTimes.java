@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class ExprTimes extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprTimes.class, Number.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(Number.class, ExpressionType.SIMPLE,
 				"%number% time[s]", "once", "twice");
 	}
 

@@ -51,7 +51,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprScript extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprScript.class, String.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(String.class, ExpressionType.SIMPLE,
 				"[the] script[['s] name]", "name of [the] script");
 	}
 	

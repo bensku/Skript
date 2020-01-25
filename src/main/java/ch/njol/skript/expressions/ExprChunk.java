@@ -48,7 +48,7 @@ import ch.njol.util.Kleenean;
 public class ExprChunk extends PropertyExpression<Location, Chunk> {
 	
 	static {
-		Skript.registerExpression(ExprChunk.class, Chunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
+		Skript.registerExpression(Chunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
 	}
 	
 	@SuppressWarnings("null")

@@ -109,7 +109,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 	}
 	
 	static {
-		Skript.registerExpression(ExprClicked.class, Object.class, ExpressionType.SIMPLE, "[the] ("
+		Skript.registerExpression(Object.class, ExpressionType.SIMPLE, "[the] ("
 					+ ClickableType.BLOCK_AND_ITEMS.getSyntax(false)
 					+ ClickableType.SLOT.getSyntax(false)
 					+ ClickableType.INVENTORY.getSyntax(false)

@@ -53,7 +53,7 @@ import ch.njol.util.Kleenean;
 @Since("1.1")
 public class ExprTimeState extends WrapperExpression<Object> {
 	static {
-		Skript.registerExpression(ExprTimeState.class, Object.class, ExpressionType.PROPERTY,
+		Skript.registerExpression(Object.class, ExpressionType.PROPERTY,
 				"[the] (former|past|old) [state] [of] %~object%", "%~object% before [the event]",
 				"[the] (future|to-be|new) [state] [of] %~object%", "%~object%(-to-be| after[(wards| the event)])");
 	}

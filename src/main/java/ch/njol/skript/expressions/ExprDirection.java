@@ -74,7 +74,7 @@ public class ExprDirection extends SimpleExpression<Direction> {
 		// TODO think about parsing statically & dynamically (also in general)
 		// "at": see LitAt
 		// TODO direction of %location% (from|relative to) %location%
-		Skript.registerExpression(ExprDirection.class, Direction.class, ExpressionType.COMBINED,
+		Skript.registerExpression(Direction.class, ExpressionType.COMBINED,
 				"[%-number% [(block|met(er|re))[s]] [to the]] (" +
 						NORTH + "¦north[(-| |)(" + (NORTH_EAST ^ NORTH) + "¦east|" + (NORTH_WEST ^ NORTH) + "¦west)][(ward(s|ly|)|er(n|ly|))] [of]" +
 						"|" + SOUTH + "¦south[(-| |)(" + (SOUTH_EAST ^ SOUTH) + "¦east|" + (SOUTH_WEST ^ SOUTH) + "¦west)][(ward(s|ly|)|er(n|ly|))] [of]" +

@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 public class ExprShuffledList extends SimpleExpression<Object> {
 	
 	static{
-		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
+		Skript.registerExpression(Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
 	
 	@SuppressWarnings("null")

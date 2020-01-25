@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Since("1.2")
 public class ExprXOf extends PropertyExpression<Object, Object> {
 	static {
-		Skript.registerExpression(ExprXOf.class, Object.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "%number% of %itemstacks/entitytype%");
+		Skript.registerExpression(Object.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "%number% of %itemstacks/entitytype%");
 	}
 	
 	@SuppressWarnings("null")

@@ -39,7 +39,7 @@ import ch.njol.skript.lang.ExpressionType;
 public class ExprInventoryAction extends EventValueExpression<InventoryAction> {
 
 	static {
-		Skript.registerExpression(ExprInventoryAction.class, InventoryAction.class, ExpressionType.SIMPLE, "[the] inventory action");
+		Skript.registerExpression(InventoryAction.class, ExpressionType.SIMPLE, "[the] inventory action");
 	}
 	
 	public ExprInventoryAction() {

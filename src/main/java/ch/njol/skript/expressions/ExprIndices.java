@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 public class ExprIndices extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprIndices.class, String.class, ExpressionType.COMBINED,
+		Skript.registerExpression(String.class, ExpressionType.COMBINED,
 				"[the] (indexes|indices) of %objects%",
 				"(all of the|all the|all) (indices|indexes) of %objects%"
 		);
