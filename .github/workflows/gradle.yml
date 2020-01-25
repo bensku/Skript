@@ -17,5 +17,10 @@ jobs:
         java-version: 1.8
     - name: Build Skript
       run: ./gradlew build
+    - name: Upload Artificat
+      uses: actions/upload-artifact@v1
+      with:
+        name: skript-nightly
+        path: build/libs/Skript.jar
     - name: Run test scripts
       run: ./gradlew skriptTest
