@@ -28,6 +28,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -36,12 +37,11 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Explode Creeper")
-@Description({"Starts the explosion process of a creeper or instantly explodes it.",
-				"This effect requires Paper 1.13+ or Spigot 1.14+.",
-				"The ignition process can be stopped on Paper 1.13+."})
+@Description("Starts the explosion process of a creeper or instantly explodes it.")
 @Examples({"start explosion of the last spawned creeper",
 			"stop ignition of the last spawned creeper"})
 @Since("INSERT VERSION")
+@RequiredPlugins("Paper 1.13 or newer/Spigot 1.14 or newer. Ignition can be stopped on Paper 1.13 or newer.")
 public class EffExplodeCreeper extends Effect {
 
 	static {

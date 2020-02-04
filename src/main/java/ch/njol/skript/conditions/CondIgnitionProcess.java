@@ -28,6 +28,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
@@ -35,11 +36,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Ignition Process")
-@Description("Checks if a creeper is going to explode. Requires Paper 1.13+")
+@Description("Checks if a creeper is going to explode.")
 @Examples({"if the last spawned creeper is going to explode:",
 			"\tloop all players in radius 3 of the last spawned creeper",
 			"\t\tsend \"RUN!!!\" to the loop-player"})
 @Since("INSERT VERSION")
+@RequiredPlugins("Paper 1.13 or newer")
 public class CondIgnitionProcess extends Condition {
 
 	static {
