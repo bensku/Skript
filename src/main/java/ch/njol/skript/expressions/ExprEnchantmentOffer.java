@@ -27,8 +27,10 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -38,9 +40,11 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Enchantment Offer")
-@Description("The enchantment offer in enchant prepare events. Minecraft 1.11+.")
+@Description("The enchantment offer in enchant prepare events.")
 @Examples("enchantment offer 1")
 @Since("INSERT VERSION")
+@Events("enchant prepare")
+@RequiredPlugins("1.11 or newer")
 public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	static {
@@ -68,7 +72,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@Override
 	@Nullable
 	protected EnchantmentOffer[] get(Event e) {
-		if (offerNumber == 4)
+		if (offerNumber == 3)
 			return ((PrepareItemEnchantEvent) e).getOffers();
 		return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber]};
 	}

@@ -1729,13 +1729,24 @@ public class BukkitClasses {
 				.since("INSERT VERSION")
 				.parser(new Parser<EnchantmentOffer>() {
 					@Override
+					@Nullable
+					public EnchantmentOffer parse(String input, ParseContext context) {
+						return null;
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
 					public String toString(EnchantmentOffer eo, int flags) {
-						return "enchantmentoffer";
+						return EnchantmentType.toString(eo.getEnchantment(), flags) + " " + eo.getEnchantmentLevel();
 					}
 	
 					@Override
 					public String toVariableNameString(EnchantmentOffer eo) {
-						return "enchantmentoffer";
+						return EnchantmentType.toString(eo.getEnchantment()) + " " + eo.getEnchantmentLevel();
 					}
 	
 					@Override

@@ -30,6 +30,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
@@ -38,13 +39,14 @@ import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment")
-@Description({"The enchantment of an enchantment offer. Minecraft 1.11+.", 
+@Description({"The enchantment of an enchantment offer.", 
 			"NOTE: The level and cost should be set with their corresponding expressions.", 
-			"This change is visual, and does not effect what the item will be enchanted with.", 
-			"To change the enchantment that is applied, use the enchant event."})
+			"This change is cosmetic, and does not effect what the item will be enchanted with.", 
+			"To change the enchantment that is applied, use the applied enchantment expression."})
 @Examples("set enchantment of enchantment offer 1 to sharpness")
 @Since("INSERT VERSION")
-public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType>{
+@RequiredPlugins("1.11 or newer")
+public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType> {
 
 	static {
 		if (Skript.methodExists(EnchantmentOffer.class, "getEnchantment")) {
@@ -81,10 +83,12 @@ public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<En
 		EnchantmentOffer[] offers = getExpr().getArray(event);
 		if (offers.length == 0 || delta == null || delta.length == 0)
 			return;
+		EnchantmentType enchant = (EnchantmentType) delta[0];
 		switch (mode) {
 			case SET:
 				for (EnchantmentOffer offer : offers) {
-					offer.setEnchantment(((EnchantmentType) delta[0]).getType());
+					offer.setEnchantment(enchant.getType());
+					offer.setEnchantmentLevel(enchant.getLevel());
 				}
 			case ADD:
 			case DELETE:

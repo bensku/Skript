@@ -25,23 +25,24 @@ import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment Cost")
-@Description({"The cost of an enchantment offer. This is displayed to the right of an enchantment offer. Minecraft 1.11+.",
+@Description({"The cost of an enchantment offer. This is displayed to the right of an enchantment offer.",
 			"If the cost is changed, it will always be at least 1.",
 			"This changes how many levels are required to enchant, but does not change the number of levels removed.", 
 			"To change the number of levels removed, use the enchant event."})
 @Examples("set cost of enchantment offer 1 to 50")
 @Since("INSERT VERSION")
+@RequiredPlugins("1.11 or newer")
 public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number>{
 
 	static {
@@ -66,14 +67,15 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 	}
 
 	@Override
-	public @Nullable Class<?>[] acceptChange(Changer.ChangeMode mode) {
+	@Nullable
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		EnchantmentOffer[] offers = getExpr().getArray(event);
 		if (offers.length == 0)
 			return;

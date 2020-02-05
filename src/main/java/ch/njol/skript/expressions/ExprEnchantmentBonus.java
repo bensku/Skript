@@ -38,20 +38,20 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Enchantment Bonus")
-@Description("The enchantment bonus in an enchant prepare event. This represents the number of bookshelves.")
+@Description("The enchantment bonus in an enchant prepare event. This represents the number of bookshelves affecting/surrounding the enchantment table.")
 @Events("enchant prepare")
 @Examples("the enchantment bonus")
 @Since("INSERT VERSION")
-public class ExprEnchantmentBonus extends SimpleExpression<Integer> {
+public class ExprEnchantmentBonus extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantmentBonus.class, Integer.class, ExpressionType.SIMPLE, "[the] enchantment bonus");
+		Skript.registerExpression(ExprEnchantmentBonus.class, Number.class, ExpressionType.SIMPLE, "[the] enchantment bonus");
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
-			Skript.error("Getting the enchantment bonus is only possible in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The enchantment bonus is only usable in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -59,13 +59,13 @@ public class ExprEnchantmentBonus extends SimpleExpression<Integer> {
 
 	@Override
 	@Nullable
-	protected Integer[] get(Event e) {
-		return new Integer[]{((PrepareItemEnchantEvent) e).getEnchantmentBonus()};
+	protected Number[] get(Event e) {
+		return new Number[]{((PrepareItemEnchantEvent) e).getEnchantmentBonus()};
 	}
 
 	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
