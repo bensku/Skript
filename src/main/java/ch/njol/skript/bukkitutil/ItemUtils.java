@@ -37,6 +37,7 @@ public class ItemUtils {
 	private ItemUtils() {} // Not to be instanced
 	
 	private static final boolean damageMeta = Skript.classExists("org.bukkit.inventory.meta.Damageable");
+	private static final boolean isItemExists = Skript.methodExists(Material.class, "isItem"); // Introduced in 1.12.x
 	
 	/**
 	 * Gets damage/durability of an item, or 0 if it does not have damage.
@@ -140,6 +141,20 @@ public class ItemUtils {
 			return is1 == is2;
 		return is1.getType() == is2.getType() && ItemUtils.getDamage(is1) == ItemUtils.getDamage(is2)
 			&& is1.getItemMeta().equals(is2.getItemMeta());
+	}
+	
+	/**
+	 * Check if a material is an item that can be held
+	 *
+	 * @param material Material to check if item
+	 * @return True if material is an item
+	 */
+	public static boolean isItem(Material material) {
+		if (isItemExists) {
+			return material.isItem();
+		} else {
+			return material != Material.AIR;
+		}
 	}
 	
 }
