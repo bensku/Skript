@@ -24,7 +24,7 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://maven.sk89q.com/repo'
+			url 'https://maven.sk89q.com/repo'
 		}
 	
 		maven {
@@ -32,11 +32,11 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://ci.emc.gs/nexus/content/groups/aikar/'
+			url 'https://ci.emc.gs/nexus/content/groups/aikar/'
 		}
 	
 		maven {
-			url 'http://nexus.hc.to/content/repositories/pub_releases'
+			url 'https://nexus.hc.to/content/repositories/pub_releases'
 		}
 	
 		maven {
@@ -275,7 +275,7 @@ task spigotResources(type: ProcessResources) {
 			"release-channel": channel, // Release channel, see above
 			"release-updater": "ch.njol.skript.update.GithubChecker", // Github API client
 			"release-source": "https://api.github.com/repos/SkriptLang/Skript/releases", // Github API URL
-			"release-download": "\"http://example.com\"" // TODO insert Spigot URL
+			"release-download": "\"https://example.com\"" // TODO insert Spigot URL
 		]
 	}
 	into 'build/resources/main'
