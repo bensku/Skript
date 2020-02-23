@@ -83,6 +83,7 @@ public class EffMessage extends Effect {
 	protected void execute(final Event e) {
 		for (Expression<? extends String> message : messages) {
 			for (CommandSender receiver : recipients.getArray(e)) {
+				Skript.debug("EffMessage " + receiver.getName());
 				if (receiver instanceof Player) { // Can use JSON formatting
 					if (message instanceof VariableString) { // Process formatting that is safe
 						((Player) receiver).spigot().sendMessage(BungeeConverter
