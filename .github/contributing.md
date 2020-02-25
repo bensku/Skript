@@ -1,7 +1,19 @@
 # Contributing to Skript
-Skript is an open source project. That basically means that you are
-encouraged to contribute by reporting issues and writing code. Basic
-guidelines are posted below to save time from everyone.
+Skript is an open source project, and you're encouraged to contribute to it.
+Both reporting issues and writing code help us. However, please review the
+following guidelines *before* doing either of these. Properly created issues
+and pull requests are often resolved faster than those that ignore them.
+
+## Behavior
+Please treat others with respect in the issue tracker and comments of pull
+requests. We hope that you do are a decent person and do this without
+telling. Failing that, your rudeness (and associated issues) may be ignored,
+closed or even deleted. Repeated or particularly harmful behavior will get
+you banned from this repository.
+
+Access to Skript's source code is a right that everyone with a binary release
+of it has. Access to our communications platforms is a *privilege* that will
+be taken away if misused.
 
 ## Issues
 Issues are usually used to report bugs and request improvements or new features.
@@ -12,9 +24,6 @@ are SkUnity forums and Discord (see README again).
 
 Don't be scared to report real bugs, though. We won't be angry if we receive
 invalid reports; it is just that you're unlikely to get help with those here.
-
-Oh, and one more thing: please avoid being offensive in Skript's issue tracker.
-It doesn't help anyone and may also get you banned.
 
 ### Reporting Bugs
 So, you have found out a potential Skript bug. By reporting it correctly, you
@@ -29,21 +38,15 @@ technically stable, they tend to not work reliably with Minecraft 1.9+.
 Second, test without addons. No, seriously; unless you're an addon developer,
 test without plugins that hook to Skript before reporting anything. We can't
 help you with addon issues here, unless we get a lot of technical information
-about the addon in question. Usually only developers of them know addons'
-Java code well enough.
+about the addon in question. Issues that are not tested without addons are
+likely to be ignored by the core team.
 
 If the issue still persists, search the issue tracker for similar
 errors and check if your issue might have been already reported.
 Only if you can't find anything, open a new issue.
 
-Now, what would you fill to the issue report?
-* A useful title (tl;dr for us busy and/or lazy developers)
-* Description of the issue, aka what does *not* work
-* Any error messages in the console (please use a paste service for lenghty errors)
-* Whether you tested without addons or not
-  - *Sometimes* we do not ignore people who are testing with addons
-  - Testing without is still better, unless you're an addon developer
-* Any additional information you think would be helpful
+When opening an bug template, pick a template for a bug and fill it.
+We may ignore or close issues that are not made with correct templates.
 
 ## Pull Requests
 Pull requests are a great way to contribute code, but there are still a few
@@ -74,29 +77,28 @@ time to [learn](https://help.github.com/categories/bootcamp/).
 
 ### When Programming
 We recommend using an IDE; you can find some set up instructions in README.
-Also, please follow our CODING_CONVENTIONS.
+Please also follow our code conventions.
 
 ### After Programming
 Test your changes. Actually, test more than your changes: if you think that you
 might have broken something unrelated, better to test that too. Nothing is more
 annoying than breaking existing features.
 
+After you have tested the changes, write automated test scripts if possible.
+They make it less likely for your changes to break in future releases, when
+other people work on Skript.
+
 When you are ready to submit a pull request, please follow the template. Don't
 be scared, usually everything goes well and your pull request will be present
-in next Skript release.
+in next Skript release, whenever that happens.
 
 Good luck!
 
-### Insight: Pull Request Review
-Pull requests will be reviewed before they are merged.
-This includes testing the code, but *no* debugging if it doesn't work;
-please test your code before submitting a pull request.
+### Pull Request Review
+Pull requests require two passing reviews before they can be merged. In
+addition to that, code submitted by people outside of core team must be tested
+by core team members. In some cases, this might be as simple as running the
+automated tests.
 
-The reviews are done by Skript developers with push access, but you're
-likely to get others to give feedback too. If you're asked about something,
-please answer - even if it is not us asking.
-
-## Code Bounties
-Just to let you know, [Bountysource](https://www.bountysource.com/) is a thing.
-While it has not ever happened, you could post a bounty on an issue to make
-someone potentially do it faster.
+In exceptional situations, pull requests may be merged regardless of review
+status by @bensku.
