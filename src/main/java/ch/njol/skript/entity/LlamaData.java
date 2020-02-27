@@ -27,7 +27,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Utils;
 import ch.njol.util.coll.CollectionUtils;
 
 public class LlamaData extends EntityData<Llama> {
@@ -36,8 +35,8 @@ public class LlamaData extends EntityData<Llama> {
 	static {
 		if (TRADER_SUPPORT)
 			EntityData.register(LlamaData.class, "llama", Llama.class, 0,
-					"llama", "trader llama", "creamy llama",
-					"white llama", "brown llama", "gray llama");
+					"llama", "creamy llama", "white llama", "brown llama", "gray llama",
+				"trader llama", "creamy trader llama", "white trader llama", "brown trader llama", "gray trader llama");
 		else if (Skript.classExists("org.bukkit.entity.Llama"))
 			EntityData.register(LlamaData.class, "llama", Llama.class, 0,
 					"llama", "creamy llama",
@@ -50,12 +49,13 @@ public class LlamaData extends EntityData<Llama> {
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
-		isTrader = (TRADER_SUPPORT && matchedPattern == 1) || Utils.isEither(parseResult.mark, 2, 3, 6, 7);
+		isTrader = TRADER_SUPPORT && matchedPattern > 4;
+		if (TRADER_SUPPORT && matchedPattern > 5) {
+			color = Color.values()[matchedPattern - 6];
+		} else if (matchedPattern > 0 && matchedPattern < 5) {
+			color = Color.values()[matchedPattern - 1];
+		}
 		
-		if (!TRADER_SUPPORT && isTrader)
-			return false;
-		if (matchedPattern > (TRADER_SUPPORT ? 1 : 0))
-			color = Color.values()[matchedPattern - (TRADER_SUPPORT ? 2 : 1)];
 		return true;
 	}
 	
@@ -77,7 +77,8 @@ public class LlamaData extends EntityData<Llama> {
 	
 	@Override
 	protected boolean match(Llama entity) {
-		return color == null || color == entity.getColor() || (TRADER_SUPPORT && isTrader == entity instanceof TraderLlama);
+		return (TRADER_SUPPORT && isTrader == entity instanceof TraderLlama && (color == null || color == entity.getColor()))
+			|| color == null || color == entity.getColor();
 	}
 	
 	@Override
@@ -85,8 +86,8 @@ public class LlamaData extends EntityData<Llama> {
 		// If TraderLlama does not exist, this would ALWAYS throw ClassNotFoundException
 		// (no matter if isTrader == false)
 		if (TRADER_SUPPORT)
-			return isTrader ? Llama.class : TraderLlama.class;
-		assert isTrader == false; // Shouldn't be possible on this version
+			return isTrader ? TraderLlama.class : Llama.class;
+		assert !isTrader; // Shouldn't be possible on this version
 		return Llama.class;
 	}
 	
@@ -117,7 +118,7 @@ public class LlamaData extends EntityData<Llama> {
 		if (!(data instanceof LlamaData))
 			return false;
 		LlamaData d = (LlamaData) data;
-		return isTrader != d.isTrader && (color == null || d.color == color);
+		return isTrader == d.isTrader && (color == null || d.color == color);
 	}
 	
 }

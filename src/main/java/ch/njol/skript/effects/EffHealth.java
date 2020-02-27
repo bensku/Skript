@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.HealthUtils;
 import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -39,12 +40,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import ch.njol.util.Math2;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Damage/Heal/Repair")
-@Description("Damage/Heal/Repair an entity, or item stack.")
+@Description("Damage/Heal/Repair an entity, or item.")
 @Examples({"damage player by 5 hearts",
 		"heal the player",
 		"repair tool of player"})
@@ -53,9 +55,9 @@ public class EffHealth extends Effect {
 	
 	static {
 		Skript.registerEffect(EffHealth.class,
-				"damage %slots/livingentities/itemstack% by %number% [heart[s]][ with fake cause %-damagecause%]",
+				"damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
 				"heal %livingentities% [by %-number% [heart[s]]]",
-				"repair %slots/itemstack% [by %-number%]");
+				"repair %itemtypes% [by %-number%]");
 	}
 	
 	@SuppressWarnings("null")
@@ -71,7 +73,7 @@ public class EffHealth extends Effect {
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		damageables = vars[0];
 		if (ItemStack.class.isAssignableFrom(damageables.getReturnType())) {
-			if (!ChangerUtils.acceptsChange(damageables, ChangeMode.SET, ItemStack.class)) {
+			if (!ChangerUtils.acceptsChange(damageables, ChangeMode.SET, ItemType.class)) {
 				Skript.error(damageables + " cannot be changed, thus it cannot be damaged or repaired.");
 				return false;
 			}
@@ -92,46 +94,33 @@ public class EffHealth extends Effect {
 				return;
 			damage = n.doubleValue();
 		}
-		if (ItemStack.class.isAssignableFrom(damageables.getReturnType())) {
-			ItemStack i = (ItemStack) damageables.getSingle(e);
-			if (i == null)
-				return;
-			
-			if (this.damage == null) {
-				ItemUtils.setDamage(i, 0);
-			} else {
-				ItemUtils.setDamage(i, (int) Math.max(0, ItemUtils.getDamage(i) + (heal ? -damage : damage)));
-				if (ItemUtils.getDamage(i) >= i.getType().getMaxDurability())
-					i = null;
-			}
-			damageables.change(e, new ItemStack[] {i}, ChangeMode.SET);
-			return;
-		}
-		for (final Object damageable : damageables.getArray(e)) {
-			if (damageable instanceof Slot) {
-				ItemStack is = ((Slot) damageable).getItem();
-				if (is == null)
-					continue;
-				
+		Object[] arr = damageables.getArray(e);
+		if(arr.length > 0 && arr[0] instanceof ItemType) {
+			ItemType[] newarr = new ItemType[arr.length];
+			for (int i = 0; i < arr.length; i++) {
+				ItemStack is = ((ItemType) arr[i]).getRandom();
+				assert is != null;
 				if (this.damage == null) {
 					ItemUtils.setDamage(is, 0);
 				} else {
-					ItemUtils.setDamage(is, (int) Math.max(0, ItemUtils.getDamage(is) + (heal ? -damage : damage)));
-					if (ItemUtils.getDamage(is) >= is.getType().getMaxDurability())
-						is = null;
+					ItemUtils.setDamage(is, (int) Math2.fit(0, ItemUtils.getDamage(is) + (heal ? -damage : damage), is.getType().getMaxDurability()));
 				}
-				((Slot) damageable).setItem(is);
-			} else if (damageable instanceof LivingEntity) {
+				newarr[i] = new ItemType(is);
+			}
+			damageables.change(e, newarr, ChangeMode.SET);
+		} else {
+			for (final Object damageable : arr) {
+				LivingEntity entity = (LivingEntity) damageable;
+				assert entity != null;
 				if (this.damage == null) {
-					HealthUtils.setHealth((LivingEntity) damageable, HealthUtils.getMaxHealth((LivingEntity) damageable));
+					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
 				} else {
-					HealthUtils.heal((LivingEntity) damageable, (heal ? 1 : -1) * damage);
-					
+					HealthUtils.heal(entity, (heal ? 1 : -1) * damage);
 					if (!heal) {
 						DamageCause cause = DamageCause.CUSTOM;
 						if (dmgCause != null) cause = dmgCause.getSingle(e);
 						assert cause != null;
-						HealthUtils.setDamageCause((LivingEntity) damageable, cause);
+						HealthUtils.setDamageCause(entity, cause);
 					}
 				}
 			}

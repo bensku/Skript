@@ -31,7 +31,7 @@ import ch.njol.skript.doc.Since;
  * @author Peter Güttinger
  */
 @Name("Is Blocking")
-@Description("Checks whether a player is blocking with his shield.")
+@Description("Checks whether a player is blocking with their shield.")
 @Examples({"on damage of player:",
 	  	"	victim is blocking",
 	 	"	damage attacker by 0.5 hearts"})
@@ -39,7 +39,7 @@ import ch.njol.skript.doc.Since;
 public class CondIsBlocking extends PropertyCondition<Player> {
 	
 	static {
-		register(CondIsBlocking.class, "(blocking|defending)", "players");
+		register(CondIsBlocking.class, "(blocking|defending) [with [a] shield]", "players");
 	}
 	
 	@Override
