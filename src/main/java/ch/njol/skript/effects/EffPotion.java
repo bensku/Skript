@@ -45,18 +45,19 @@ import ch.njol.util.Kleenean;
 		"remove haste from the victim",
 		"on join:",
 		"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
-@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects)")
+@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), INSERT VERSION (replacing existing effect)")
 public class EffPotion extends Effect {
 	static {
 		Skript.registerEffect(EffPotion.class,
-				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
-				"apply ambient [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%]",
-				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] without [any] particles to %livingentities% [for %-timespan%]"
+				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
+				"apply ambient [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
+				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] without [any] particles to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]"
 				//, "apply %itemtypes% to %livingentities%"
 				/*,"remove %potioneffecttypes% from %livingentities%"*/);
 	}
 	
 	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds, same as EffPoison
+	private boolean replaceExisting;
 	
 	@SuppressWarnings("null")
 	private Expression<PotionEffectType> potions;
@@ -74,6 +75,7 @@ public class EffPotion extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		apply = matchedPattern < 3;
+		replaceExisting = parseResult.mark == 1;
 		if (apply) {
 			potions = (Expression<PotionEffectType>) exprs[0];
 			tier = (Expression<Number>) exprs[1];
@@ -132,11 +134,13 @@ public class EffPotion extends Effect {
 		for (final LivingEntity en : entities.getArray(e)) {
 			for (final PotionEffectType t : ts) {
 				int duration = d;
-				if (en.hasPotionEffect(t)) {
-					for (final PotionEffect eff : en.getActivePotionEffects()) {
-						if (eff.getType() == t) {
-							duration += eff.getDuration();
-							break;
+				if (!replaceExisting) {
+					if (en.hasPotionEffect(t)) {
+						for (final PotionEffect eff : en.getActivePotionEffects()) {
+							if (eff.getType() == t) {
+								duration += eff.getDuration();
+								break;
+							}
 						}
 					}
 				}

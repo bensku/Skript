@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,15 +34,15 @@ import org.bukkit.inventory.ItemStack;
 @Description("Checks whether an item is edible.")
 @Examples({"steak is edible", "player's tool is edible"})
 @Since("2.2-dev36")
-public class CondIsEdible extends PropertyCondition<ItemStack> {
+public class CondIsEdible extends PropertyCondition<ItemType> {
 
 	static {
-		PropertyCondition.register(CondIsEdible.class, "edible", "itemstacks");
+		PropertyCondition.register(CondIsEdible.class, "edible", "itemtypes");
 	}
 
 	@Override
-	public boolean check(ItemStack i) {
-		return i.getType().isEdible();
+	public boolean check(ItemType i) {
+		return i.getMaterial().isEdible();
 	}
 
 	@Override

@@ -87,6 +87,9 @@ public abstract class Function<T> {
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(final Object[][] params) {
+		if (params.length > 0 && params[0].length == 0) // Parameters exist, but parameters are not of the correct type 
+			return null;
+		
 		final FunctionEvent<? extends T> e = new FunctionEvent<>(this);
 		
 		// Call function event only if requested by addon

@@ -949,7 +949,7 @@ final public class ScriptLoader {
 	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
 		String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
-				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath()).toString();
+				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
 		assert name != null;
 		Functions.clearFunctions(name);
 		Functions.validateFunctions();

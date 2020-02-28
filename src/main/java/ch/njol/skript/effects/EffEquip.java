@@ -24,6 +24,7 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -31,6 +32,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.LlamaInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -51,7 +53,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Equip")
-@Description("Equips a player with some given armor. This will replace any armor that the player is wearing.")
+@Description("Equips an entity with some given armor. This will replace any armor that the entity is wearing.")
 @Examples({"equip player with diamond helmet",
 		"equip player with all diamond armor"})
 @Since("1.0")
@@ -77,6 +79,7 @@ public class EffEquip extends Effect implements Testable {
 	
 	private final static boolean supportsHorses = Skript.classExists("org.bukkit.entity.Horse");
 	private final static boolean newHorses = Skript.classExists("org.bukkit.entity.AbstractHorse");
+	private final static boolean supportsLlamas = Skript.classExists("org.bukkit.entity.Llama");
 	
 	private static final ItemType helmet = Aliases.javaItemType("helmet");
 	private static final ItemType chestplate = Aliases.javaItemType("chestplate");
@@ -85,6 +88,7 @@ public class EffEquip extends Effect implements Testable {
 	private static final ItemType horseArmor = Aliases.javaItemType("horse armor");
 	private static final ItemType saddle = Aliases.javaItemType("saddle");
 	private static final ItemType chest = Aliases.javaItemType("chest");
+	private static final ItemType carpet = Aliases.javaItemType("carpet");
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -96,6 +100,18 @@ public class EffEquip extends Effect implements Testable {
 					if (t.isOfType(Material.SADDLE)) {
 						((Pig) en).setSaddle(true);
 						break;
+					}
+				}
+				continue;
+			} else if (supportsLlamas && en instanceof Llama) {
+				LlamaInventory invi = ((Llama) en).getInventory();
+				for (ItemType t : ts) {
+					for (ItemStack item : t.getAll()) {
+						if (carpet.isOfType(item)) {
+							invi.setDecor(item);
+						} else if (chest.isOfType(item)) {
+							((Llama) en).setCarryingChest(true);
+						}
 					}
 				}
 				continue;

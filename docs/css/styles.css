@@ -222,3 +222,31 @@ ul > .skript-code-block {
   
   background-color: wheat;
 }
+
+@media (max-width: 600px) {
+  body {
+    grid-template-columns: 0px minmax(80%, 100%);
+  }
+  
+  #global-navigation {
+    height: 4.1em;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #global-navigation > a {
+    padding: 0.2em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+  }
+  
+  #nav-title {
+    display: none;
+  }
+  #side-nav {
+    display: none;
+  }
+  
+  #content {
+    top: 5.63em;
+  }
+}
