@@ -379,49 +379,49 @@ tree types:
 		pattern: (any )?trees?
 	regular:
 		name: oak¦s
-		pattern: (any )?(regular tree|normal tree|oak)s?
+		pattern: (any )?(regular|normal|oak)( tree)?s?
 	small_regular:
 		name: small oak¦s
-		pattern: small (regular tree|normal tree|oak)s?
+		pattern: small (regular|normal|oak)( tree)?s?
 	big_regular:
 		name: big tree¦s
-		pattern: (big|large) (regular tree|normal tree|oak)s?
+		pattern: (big|large) (regular|normal|oak)( tree)?s?
 	redwood:
 		name: redwood¦s
-		pattern: (any )?(fir|pine|spruce|redwood)s?
+		pattern: (any )?(fir|pine|spruce|redwood)( tree)?s?
 	small_redwood:
 		name: small redwood¦s
-		pattern: small (fir|pine|spruce|redwood)s?
+		pattern: small (fir|pine|spruce|redwood)( tree)?s?
 	big_redwood:
 		name: tall redwood¦s
-		pattern: (big|tall) (fir|pine|spruce|redwood)s?
+		pattern: (big|tall) (fir|pine|spruce|redwood)( tree)?s?
 	mega_redwood:
 		name: mega redwood¦s
-		pattern: (mega|giant) (fir|pine|spruce|redwood)s?
+		pattern: (mega|giant) (fir|pine|spruce|redwood)( tree)?s?
 	birch:
 		name: birch¦es
-		pattern: birch(es)?
+		pattern: birch( trees?|es)
 	tall_birch:
 		name: tall birch¦es
-		pattern: (tall|big) birch(es)?
+		pattern: (tall|big) birch( trees?|es)
 	jungle:
 		name: jungle tree¦s
-		pattern: (any )?jungle trees?
+		pattern: (any )?jungle( tree)?s?
 	small_jungle:
 		name: small jungle tree¦s
-		pattern: small jungle trees?
+		pattern: small jungle( tree)?s?
 	big_jungle:
 		name: big jungle tree¦s
-		pattern: (big|tall|huge|giant|large) jungle trees?
+		pattern: (big|tall|huge|giant|large) jungle( tree)?s?
 	cocoa_tree:
 		name: cocoa tree¦s
 		pattern: cocoa trees?
 	acacia:
 		name: acacia¦s
-		pattern: acacias?
+		pattern: acacia( tree)?s?
 	dark_oak:
 		name: dark oak¦s
-		pattern: dark oaks?
+		pattern: dark oak( tree)?s?
 	jungle_bush:
 		name: bush¦es
 		pattern: (jungle )?bush(es)?
