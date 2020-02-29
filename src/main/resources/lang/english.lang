@@ -75,6 +75,7 @@ skript command:
 			check: Checks for a new version
 			changes: Lists all changes since the current version
 			download: Download the newest version
+		info: Prints a message with links to Skript's aliases and documentation
 		gen-docs: Generates documentation using doc-templates in plugin folder
 
 	invalid script: Can't find the script <grey>'<gold>%s<grey>'<red> in the scripts folder!
@@ -132,6 +133,9 @@ skript command:
 			# invalid version: No changelog for the version <gold>%s<red> available
 			title: <bold><cyan>%s<reset> (%s)
 			next page: <grey>page %s of %s. Type <gold>/skript update changes %s<gray> for the next page (hint: use the up arrow key)
+	info:
+		aliases: Skript's aliases can be found here: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Skript's documentation can be found here: <aqua>https://skriptlang.github.io/Skript
 
 # -- Updater --
 updater:
@@ -379,49 +383,49 @@ tree types:
 		pattern: (any )?trees?
 	regular:
 		name: oak¦s
-		pattern: (any )?(regular tree|normal tree|oak)s?
+		pattern: (any )?(regular|normal|oak)( tree)?s?
 	small_regular:
 		name: small oak¦s
-		pattern: small (regular tree|normal tree|oak)s?
+		pattern: small (regular|normal|oak)( tree)?s?
 	big_regular:
 		name: big tree¦s
-		pattern: (big|large) (regular tree|normal tree|oak)s?
+		pattern: (big|large) (regular|normal|oak)( tree)?s?
 	redwood:
 		name: redwood¦s
-		pattern: (any )?(fir|pine|spruce|redwood)s?
+		pattern: (any )?(fir|pine|spruce|redwood)( tree)?s?
 	small_redwood:
 		name: small redwood¦s
-		pattern: small (fir|pine|spruce|redwood)s?
+		pattern: small (fir|pine|spruce|redwood)( tree)?s?
 	big_redwood:
 		name: tall redwood¦s
-		pattern: (big|tall) (fir|pine|spruce|redwood)s?
+		pattern: (big|tall) (fir|pine|spruce|redwood)( tree)?s?
 	mega_redwood:
 		name: mega redwood¦s
-		pattern: (mega|giant) (fir|pine|spruce|redwood)s?
+		pattern: (mega|giant) (fir|pine|spruce|redwood)( tree)?s?
 	birch:
 		name: birch¦es
-		pattern: birch(es)?
+		pattern: birch( trees?|es)
 	tall_birch:
 		name: tall birch¦es
-		pattern: (tall|big) birch(es)?
+		pattern: (tall|big) birch( trees?|es)
 	jungle:
 		name: jungle tree¦s
-		pattern: (any )?jungle trees?
+		pattern: (any )?jungle( tree)?s?
 	small_jungle:
 		name: small jungle tree¦s
-		pattern: small jungle trees?
+		pattern: small jungle( tree)?s?
 	big_jungle:
 		name: big jungle tree¦s
-		pattern: (big|tall|huge|giant|large) jungle trees?
+		pattern: (big|tall|huge|giant|large) jungle( tree)?s?
 	cocoa_tree:
 		name: cocoa tree¦s
 		pattern: cocoa trees?
 	acacia:
 		name: acacia¦s
-		pattern: acacias?
+		pattern: acacia( tree)?s?
 	dark_oak:
 		name: dark oak¦s
-		pattern: dark oaks?
+		pattern: dark oak( tree)?s?
 	jungle_bush:
 		name: bush¦es
 		pattern: (jungle )?bush(es)?
@@ -699,7 +703,7 @@ entities:
 		name: giant¦s
 		pattern: giant(|1¦s)
 	iron golem:
-		name: iron golems¦s @an
+		name: iron golem¦s @an
 		pattern: iron golem(|1¦s)
 	item frame:
 		name: item frame¦s @an
@@ -731,6 +735,12 @@ entities:
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
+	red mooshroom:
+		name: red mooshroom¦s
+		pattern: <age> red mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
+	brown mooshroom:
+		name: brown mooshroom¦s
+		pattern: <age> brown mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
 	ocelot:
 		name: ocelot¦s @an
 		pattern: <age> ocelot(|1¦s)
@@ -806,7 +816,7 @@ entities:
 		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
 	normal:
 		name: villager¦s
-		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> [unemployed] villager(|1¦s)|(4¦)[[unemployed] villager] (kid(|1¦s)|child(|1¦ren))
 	armorer:
 		name: armorer¦s
 		pattern: <age> armorer(|1¦s)|(4¦)armorer (kid(|1¦s)|child(|1¦ren))
@@ -815,7 +825,7 @@ entities:
 		pattern: <age> cartographer(|1¦s)|(4¦)cartographer (kid(|1¦s)|child(|1¦ren))
 	cleric:
 		name: cleric¦s
-		pattern: <age> cleric(|1¦s)|(4¦)cleric (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	fisherman:
 		name: fisherman¦s
 		pattern: <age> fisherman(|1¦s)|(4¦)fisherman (kid(|1¦s)|child(|1¦ren))
@@ -845,7 +855,7 @@ entities:
 		pattern: <age> librarian(|1¦s)|(4¦)librarian (kid(|1¦s)|child(|1¦ren))
 	priest:
 		name: priest¦s
-		pattern: <age> priest(|1¦s)|(4¦)priest (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	blacksmith:
 		name: blacksmith¦s
 		pattern: <age> [black]smith(|1¦s)|(4¦)[black]smith (kid(|1¦s)|child(|1¦ren))
@@ -929,21 +939,33 @@ entities:
 	llama:
 		name: llama¦s
 		pattern: llama(|1¦s)|llama (4¦)cria(|1¦s)
+	creamy llama:
+		name: creamy llama¦s
+		pattern: creamy llama(|1¦s)|creamy llama (4¦)cria(|1¦s)
+	white llama:
+		name: white llama¦s
+		pattern: white llama(|1¦s)|white llama (4¦)cria(|1¦s)
+	brown llama:
+		name: brown llama¦s
+		pattern: brown llama(|1¦s)|brown llama (4¦)cria(|1¦s)
+	gray llama:
+		name: gray llama¦s
+		pattern: gray llama(|1¦s)|gray llama (4¦)cria(|1¦s)
 	trader llama:
 		name: trader llama¦s
 		pattern: trader llama(|1¦s)|trader llama (4¦)cria(|1¦s)
-	creamy llama:
-		name: creamy llama¦s
-		pattern: creamy [(2¦trader)] llama(|1¦s)|creamy [(2¦trader)] llama (4¦)cria(|1¦s)
-	white llama:
-		name: white llama¦s
-		pattern: white [(2¦trader)] llama(|1¦s)|white [(2¦trader)] llama (4¦)cria(|1¦s)
-	brown llama:
-		name: brown llama¦s
-		pattern: brown [(2¦trader)] llama(|1¦s)|brown [(2¦trader)] llama (4¦)cria(|1¦s)
-	gray llama:
-		name: gray llama¦s
-		pattern: gray [(2¦trader)] llama(|1¦s)|gray [(2¦trader)] llama (4¦)cria(|1¦s)
+	creamy trader llama:
+		name: creamy trader llama¦s
+		pattern: creamy trader llama(|1¦s)|creamy trader llama (4¦)cria(|1¦s)
+	white trader llama:
+		name: white trader llama¦s
+		pattern: white trader llama(|1¦s)|white trader llama (4¦)cria(|1¦s)
+	brown trader llama:
+		name: brown trader llama¦s
+		pattern: brown trader llama(|1¦s)|brown trader llama (4¦)cria(|1¦s)
+	gray trader llama:
+		name: gray trader llama¦s
+		pattern: gray trader llama(|1¦s)|gray trader llama (4¦)cria(|1¦s)
 	llama spit:
 		name: llama spit¦s
 		pattern: llama spit(|1¦s)
@@ -1134,6 +1156,25 @@ entities:
 	panda:
 		name: panda¦s
 		pattern: <age> [%-gene%[%-gene%]] panda(|1¦s)
+	#1.15 entity
+	no nectar bee:
+		name: no nectar bee¦s
+		pattern: <age> bee(|1¦s) without nectar
+	happy bee:
+		name: happy bee¦s
+		pattern: <age> happy bee(|1¦s)
+	bee:
+		name: bee¦s
+		pattern: <age> bee(|1¦s)
+	nectar bee:
+		name: nectar bee¦s
+		pattern: <age> bee(|1¦s) with nectar
+	angry bee:
+		name: angry bee¦s
+		pattern: <age> angry bee(|1¦s)
+	angry nectar bee:
+		name: angry nectar bee¦s
+		pattern: <age> angry bee(|1¦s) with nectar
 
 
 # -- Damage Causes --
@@ -1412,9 +1453,9 @@ visual effects:
 	sneeze:
 		name: sneeze @-
 		pattern: sneeze
-	campfire_cozy_smoke:
-		name: campfire cozy smoke @-
-		pattern: campfire cozy smoke
+	campfire_cosy_smoke:
+		name: campfire cosy smoke @-
+		pattern: campfire co(s|z)y smoke
 	campfire_signal_smoke:
 		name: campfire signal smoke @-
 		pattern: campfire signal smoke
@@ -1433,6 +1474,19 @@ visual effects:
 	falling_water:
 		name: falling water @-
 		pattern: falling water
+	# 1.15 particles
+	dripping_honey:
+		name: dripping honey @-
+		pattern: dripping honey
+	falling_honey:
+		name: falling honey @-
+		pattern: falling honey
+	landing_honey:
+		name: landing honey @-
+		pattern: landing honey
+	falling_nectar:
+		name: falling nectar @-
+		pattern: falling nectar
 
 # -- Inventory Actions --
 inventory actions:
