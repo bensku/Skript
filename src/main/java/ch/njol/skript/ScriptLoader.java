@@ -958,16 +958,17 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			
+			// Clear functions, DO NOT validate them yet
+			// If unloading, our caller will do this immediately after we return
+			// However, if reloading, new version of this script is first loaded
+			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+					.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
+			assert name != null;
+			Functions.clearFunctions(name);
+			
 			return info; // Return how much we unloaded
 		}
-		
-		// Clear functions, DO NOT validate them yet
-		// If unloading, our caller will do this immediately after we return
-		// However, if reloading, new version of this script is first loaded
-		String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
-				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
-		assert name != null;
-		Functions.clearFunctions(name);
 		
 		return new ScriptInfo(); // Return that we unloaded literally nothing
 	}
