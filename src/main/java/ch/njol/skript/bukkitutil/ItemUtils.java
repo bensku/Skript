@@ -144,12 +144,12 @@ public class ItemUtils {
 	}
 	
 	/**
-	 * Check if a material is an item that can be held
+	 * Check if a material has an item form that can be held.
 	 *
-	 * @param material Material to check if item
-	 * @return True if material is an item
+	 * @param material Material to check for item form
+	 * @return True if material has an item form
 	 */
-	public static boolean isItem(Material material) {
+	public static boolean hasItemForm(Material material) {
 		if (isItemExists) {
 			return material.isItem();
 		} else {

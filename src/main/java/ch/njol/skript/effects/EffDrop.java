@@ -20,14 +20,12 @@
 package ch.njol.skript.effects;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -103,7 +101,7 @@ public class EffDrop extends Effect {
 					if (o instanceof ItemStack)
 						o = new ItemType((ItemStack) o);
 					for (final ItemStack is : ((ItemType) o).getItem().getAll()) {
-						if (ItemUtils.isItem(is.getType())) {
+						if (ItemUtils.hasItemForm(is.getType())) {
 							if (useVelocity) {
 								lastSpawned = l.getWorld().dropItemNaturally(itemDropLoc, is);
 							} else {
