@@ -41,7 +41,8 @@ import ch.njol.util.Kleenean;
 
 @Name("Enchantment Offer")
 @Description("The enchantment offer in enchant prepare events.")
-@Examples("enchantment offer 1")
+@Examples({"on enchant prepare:",
+		"\tsend \"Your enchantment offers are: %the enchantment offers%\" to player"})
 @Since("INSERT VERSION")
 @Events("enchant prepare")
 @RequiredPlugins("1.11 or newer")
@@ -53,7 +54,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 					"enchant[ment] offer 1",
 					"enchant[ment] offer 2",
 					"enchant[ment] offer 3",
-					"enchant[ment] offers");
+					"[the] enchant[ment] offers");
 		}
 	}
 

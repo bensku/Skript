@@ -40,8 +40,8 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment")
 @Description({"The enchantment of an enchantment offer.", 
-			"NOTE: The level and cost should be set with their corresponding expressions.", 
-			"This change is cosmetic, and does not effect what the item will be enchanted with.", 
+			"The level and cost of the enchantment should be set with their corresponding expressions.", 
+			"This change is cosmetic, and does not affect what the item will be enchanted with.", 
 			"To change the enchantment that is applied, use the applied enchantment expression."})
 @Examples("set enchantment of enchantment offer 1 to sharpness")
 @Since("INSERT VERSION")

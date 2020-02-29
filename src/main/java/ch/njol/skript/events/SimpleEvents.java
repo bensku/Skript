@@ -530,7 +530,7 @@ public class SimpleEvents {
 				.since("INSERT VERSION");
 		}
 		Skript.registerEvent("Enchant Prepare", SimpleEvent.class, PrepareItemEnchantEvent.class, "[item] enchant prepare")
-			.description("Called when a player puts an item into enchantment table. Note: This event may be called multiple times.")
+			.description("Called when a player puts an item into enchantment table. This event may be called multiple times.")
 			.examples("on enchant prepare:",
 						"\tset enchant offer 1 to sharpness 1",
 						"\tset the cost of enchant offer 1 to 10 levels")
