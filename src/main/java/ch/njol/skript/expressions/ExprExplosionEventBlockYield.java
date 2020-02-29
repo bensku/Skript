@@ -40,7 +40,9 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Explosion Event Block Yield")
-@Description("The percentage of blocks dropped in an explosion event.")
+@Description({"The percentage (in decimal form) of exploded blocks dropped in an explosion event.", 
+				"When changing the yield, a value greater than 1 will be converted to a decimal.",
+				"For example, attempting to set the yield to 50 will actually set it to 0.50 (50%)."})
 @Events("explosion")
 @Examples("set the explosion's block yield to 10%")
 @Since("INSERT VERSION")
@@ -99,6 +101,9 @@ public class ExprExplosionEventBlockYield extends SimpleExpression<Number> {
 			case DELETE:
 				e.setYield(0);
 				break;
+			case REMOVE_ALL:
+			case RESET:
+				assert false;
 		}
 	}
 
