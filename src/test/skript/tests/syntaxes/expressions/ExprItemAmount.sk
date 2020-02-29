@@ -1,0 +1,9 @@
+test "item amount":
+	set {_i} to apple
+	assert item amount of {_i} is 1 with "default item amount failed"
+	set item amount of {_i} to 64
+	assert item amount of {_i} is 64 with "item amount failed"
+	set item amount of {_i} to 500
+	assert item amount of {_i} is 500 with "over-capacity item amount failed"
+	set item amount of {_i} to 0
+	assert item amount of {_i} is 0 with "zero item amount failed"

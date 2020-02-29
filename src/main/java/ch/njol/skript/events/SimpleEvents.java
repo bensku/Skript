@@ -30,6 +30,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -60,6 +61,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -93,6 +95,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import ch.njol.skript.Skript;
@@ -263,6 +266,11 @@ public class SimpleEvents {
 					.examples("on tool break:")
 					.since("2.1.1");
 		}
+		Skript.registerEvent("Item Damage", SimpleEvent.class, PlayerItemDamageEvent.class, "item damag(e|ing)")
+				.description("Called when an item is damaged. Most tools are damaged by using them; armor is damaged when the wearer takes damage.")
+				.examples("on item damage:",
+						"\tcancel event")
+				.since("2.5");
 		Skript.registerEvent("Tool Change", SimpleEvent.class, PlayerItemHeldEvent.class, "[player['s]] (tool|item held|held item) chang(e|ing)")
 				.description("Called whenever a player changes their held item by selecting a different slot (e.g. the keys 1-9 or the mouse wheel), <i>not</i> by dropping or replacing the item in the current slot.")
 				.examples("on player's held item change:")
@@ -516,7 +524,24 @@ public class SimpleEvents {
 					"Note: the riptide action is performed client side, so manipulating the player in this event may have undesired effects.")
 				.examples("on riptide:",
 					"	send \"You are riptiding!\"")
-				.since("INSERT VERSION");
+				.since("2.5");
+		}
+		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
+			Skript.registerEvent("Armor Change", SimpleEvent.class, PlayerArmorChangeEvent.class, "[player] armor change[d]")
+				.description("Called when armor pieces of a player are changed.")
+				.requiredPlugins("Paper")
+				.examples("on armor change:",
+					"	send \"You equipped %event-item%!\"")
+				.since("2.5");
+		}
+		if (Skript.classExists("org.bukkit.event.block.SpongeAbsorbEvent")) {
+			Skript.registerEvent("Sponge Absorb", SimpleEvent.class, SpongeAbsorbEvent.class, "sponge absorb")
+					.description("Called when a sponge absorbs blocks.")
+					.requiredPlugins("Minecraft 1.13 or newer")
+					.examples("on sponge absorb:",
+							"\tloop absorbed blocks:",
+							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
+					.since("2.5");
 		}
 	}
 }

@@ -30,7 +30,7 @@ import ch.njol.skript.doc.Since;
 @Name("Is Invulnerable")
 @Description("Checks whether an entity is invulnerable.")
 @Examples("target entity is invulnerable")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondIsInvulnerable extends PropertyCondition<Entity> {
 	
 	static {
