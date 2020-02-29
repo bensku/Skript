@@ -54,9 +54,12 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	static {
-		Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
-				"persistent data [(value|tag)[s]] %strings% of %persistentdataholders%",
-				"%persistentdataholders%'[s] persistent data [(value|tag)[s]] %string%");
+		if (Skript.isRunningMinecraft(1, 14)) {
+			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
+					"persistent data [(value|tag)[s]] %strings% of %persistentdataholders%",
+					"%persistentdataholders%'[s] persistent data [(value|tag)[s]] %string%"
+			);
+		}
 	}
 
 	@Nullable

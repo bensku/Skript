@@ -45,10 +45,12 @@ import org.eclipse.jdt.annotation.Nullable;
 public class CondHasPersistentData extends Condition {
 
 	static {
-		Skript.registerCondition(CondHasPersistentData.class,
-				"%persistentdataholders% (has|have) persistent data [(value|tag)[s]] %strings%",
-				"%persistentdataholders% (doesn't|does not|do not|don't) have persistent data [(value|tag)[s]] %strings%"
-		);
+		if (Skript.isRunningMinecraft(1, 14)) {
+			Skript.registerCondition(CondHasPersistentData.class,
+					"%persistentdataholders% (has|have) persistent data [(value|tag)[s]] %strings%",
+					"%persistentdataholders% (doesn't|does not|do not|don't) have persistent data [(value|tag)[s]] %strings%"
+			);
+		}
 	}
 
 	@SuppressWarnings("null")
