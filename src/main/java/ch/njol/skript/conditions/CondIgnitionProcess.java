@@ -25,6 +25,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -42,7 +43,7 @@ import ch.njol.util.Kleenean;
 			"\t\tsend \"RUN!!!\" to the loop-player"})
 @Since("INSERT VERSION")
 @RequiredPlugins("Paper 1.13 or newer")
-public class CondIgnitionProcess extends Condition {
+public class CondIgnitionProcess extends PropertyCondition<LivingEntity> {
 
 	static {
 		if (Skript.methodExists(Creeper.class, "isIgnited")) {
@@ -53,24 +54,21 @@ public class CondIgnitionProcess extends Condition {
 		}
 	}
 
-	@SuppressWarnings("null")
-	private Expression<LivingEntity> entities;
-
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		entities = (Expression<LivingEntity>) exprs[0];
+		setExpr((Expression<LivingEntity>) exprs[0]);
 		setNegated(parseResult.mark == 1);
 		return true;
 	}
 
 	@Override
-	public boolean check(Event e) {
-		return entities.check(e, entity -> entity instanceof Creeper && ((Creeper) entity).isIgnited(), isNegated());
+	public boolean check(LivingEntity e) {
+		return e instanceof Creeper && ((Creeper) e).isIgnited();
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return entities.toString(e, debug) + (isNegated() == false ? " are" : " are not") + " ignited";
+	protected String getPropertyName() {
+		return "going to explode";
 	}
 }
