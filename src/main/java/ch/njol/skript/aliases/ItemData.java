@@ -207,9 +207,11 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			// Play safe and mark ALL items that may have durability to have it changed
 			itemFlags |= ItemFlags.CHANGED_DURABILITY;
 		}
-		if (stack.hasItemMeta()) {
-			itemFlags |= ItemFlags.CHANGED_TAGS;
-		}
+		// All data made from stacks may have changed tags
+		// We cannot assume that lack of tags indicates that they can be
+		// ignored in comparisons; they may well have been explicitly removed
+		// See issue #2714 for examples of bad things that this causes
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 	public ItemData(ItemStack stack) {
