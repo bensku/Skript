@@ -75,6 +75,7 @@ skript command:
 			check: Checks for a new version
 			changes: Lists all changes since the current version
 			download: Download the newest version
+		info: Prints a message with links to Skript's aliases and documentation
 		gen-docs: Generates documentation using doc-templates in plugin folder
 
 	invalid script: Can't find the script <grey>'<gold>%s<grey>'<red> in the scripts folder!
@@ -132,6 +133,9 @@ skript command:
 			# invalid version: No changelog for the version <gold>%s<red> available
 			title: <bold><cyan>%s<reset> (%s)
 			next page: <grey>page %s of %s. Type <gold>/skript update changes %s<gray> for the next page (hint: use the up arrow key)
+	info:
+		aliases: Skript's aliases can be found here: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Skript's documentation can be found here: <aqua>https://skriptlang.github.io/Skript
 
 # -- Updater --
 updater:
