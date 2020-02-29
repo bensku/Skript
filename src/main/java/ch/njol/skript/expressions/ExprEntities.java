@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -52,23 +53,21 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.NonNullIterator;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Entities")
-@Description("All entities in all worlds, in a specific world or in a radius around a certain location, " +
+@Description("All entities in all worlds, in a specific world, in a chunk or in a radius around a certain location, " +
 		"e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.")
 @Examples({"kill all creepers in the player's world",
-		"send \"Psst!\" to all players witin 100 meters of the player",
+		"send \"Psst!\" to all players within 100 meters of the player",
 		"give a diamond to all ops",
-		"heal all tamed wolves in radius 2000 around {town center}"})
-@Since("1.2.1")
+		"heal all tamed wolves in radius 2000 around {town center}",
+		"delete all monsters in chunk at player"})
+@Since("1.2.1, INSERT VERSION (chunks)")
 public class ExprEntities extends SimpleExpression<Entity> {
 
 	static {
 		Skript.registerExpression(ExprEntities.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
-				"[(all [[of] the]|the)] %*entitydatas% [(in|of) [world[s]] %-worlds%]",
-				"[(all [[of] the]|the)] entities of type[s] %entitydatas% [(in|of) [world[s]] %-worlds%]",
+				"[(all [[of] the]|the)] %*entitydatas% [(in|of) ([world[s]] %-worlds%|1¦%-chunks%)]",
+				"[(all [[of] the]|the)] entities of type[s] %entitydatas% [(in|of) ([world[s]] %-worlds%|1¦%-chunks%)]",
 				"[(all [[of] the]|the)] %*entitydatas% (within|[with]in radius) %number% [(block[s]|met(er|re)[s])] (of|around) %location%",
 				"[(all [[of] the]|the)] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
 	}
@@ -78,6 +77,8 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	@Nullable
 	private Expression<World> worlds;
+	@SuppressWarnings("null")
+	private Expression<Chunk> chunks;
 	@Nullable
 	private Expression<Number> radius;
 	@Nullable
@@ -101,7 +102,11 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			radius = (Expression<Number>) exprs[exprs.length - 2];
 			center = (Expression<Location>) exprs[exprs.length - 1];
 		} else {
-			worlds = (Expression<World>) exprs[exprs.length - 1];
+			if (parseResult.mark == 1) {
+				chunks = (Expression<Chunk>) exprs[2];
+			} else {
+				worlds = (Expression<World>) exprs[1];
+			}
 		}
 		if (types instanceof Literal && ((Literal<EntityData<?>>) types).getAll().length == 1)
 			returnType = ((Literal<EntityData<?>>) types).getSingle().getType();
@@ -143,7 +148,11 @@ public class ExprEntities extends SimpleExpression<Entity> {
 				l.add(iter.next());
 			return l.toArray((Entity[]) Array.newInstance(returnType, l.size()));
 		} else {
-			return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
+			if (chunks != null) {
+				return EntityData.getAll(types.getArray(e), returnType, chunks.getArray(e));
+			} else {
+				return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
+			}
 		}
 	}
 

@@ -202,18 +202,18 @@ void createTestTask(String name, String environments, boolean devMode) {
 			standardInput = System.in
 		}
 		commandLine 'java', '-cp',
-				'build/libs/Skript.jar:' + project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
+				"build${File.separator}libs${File.separator}Skript.jar:" + project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
 				'ch.njol.skript.tests.platform.PlatformMain',
 				'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, "" + devMode
 	}
 }
 
 // Register different Skript testing tasks
-createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.14.4.json', false)
+createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.15.2.json', false)
 createTestTask('skriptTest', 'src/test/skript/environments/main', false)
 createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
 createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (System.getProperty('skript.testEnv') == null
-		? 'paper-1.14.4.json' : System.getProperty('skript.testEnv') + '.json'), true)
+		? 'paper-1.15.2.json' : System.getProperty('skript.testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
@@ -285,6 +285,43 @@ task spigotRelease(type: Jar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
 	archiveName = 'Skript-spigot.jar'
+	
+	manifest {
+		attributes("Name": "ch/njol/skript",
+				"Sealed": "true")
+	}
+	
+	from('skript-aliases') {
+		into('aliases-english')
+	}
+	
+	// Include all modules of Skript
+	from 'skript-worldguard6/build/classes/java/main'
+	from 'skript-worldguard7fawe/build/classes/java/main'
+}
+
+task nightlyResources(type: ProcessResources) {
+	from ('src/main/resources') {
+		include '**'
+		def hash = "git rev-parse --short HEAD".execute().text.trim()
+		version = project.property("version") + "-nightly-" + hash
+		filter ReplaceTokens, tokens: [
+			"version": version,
+			"today": "" + LocalDate.now(),
+			"release-flavor": "skriptlang-nightly", // SkriptLang build, automatically done by CI
+			"release-channel": "alpha", // No update checking, but these are VERY unstable
+			"release-updater": "ch.njol.skript.update.NoUpdateChecker", // No autoupdates for now
+			"release-source": "",
+			"release-download": "null"
+		]
+	}
+	into 'build/resources/main'
+}
+
+task nightlyRelease(type: Jar) {
+	from sourceSets.main.output
+	dependsOn nightlyResources
+	archiveName = 'Skript-nightly.jar'
 	
 	manifest {
 		attributes("Name": "ch/njol/skript",

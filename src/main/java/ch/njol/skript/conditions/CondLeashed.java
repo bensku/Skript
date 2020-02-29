@@ -29,7 +29,7 @@ import org.bukkit.entity.LivingEntity;
 @Name("Is Leashed")
 @Description("Checks to see if an entity is currently leashed.")
 @Examples("target entity is leashed")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondLeashed extends PropertyCondition<LivingEntity> {
 
 	static {

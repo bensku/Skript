@@ -49,6 +49,6 @@ public class TestFunctions {
 				.examples("caseEquals(\"hi\", \"Hi\") = false", 
 						"caseEquals(\"text\", \"text\", \"text\") = true", 
 						"caseEquals({some list variable::*})")
-				.since("INSERT VERSION"));
+				.since("2.5"));
 	}
 }

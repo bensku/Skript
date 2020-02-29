@@ -38,7 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set owner of target entity to player",
 	"delete owner of target entity",
 	"set {_t} to uuid of tamer of target entity"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprEntityTamer extends SimplePropertyExpression<LivingEntity, OfflinePlayer> {
 	
 	static {

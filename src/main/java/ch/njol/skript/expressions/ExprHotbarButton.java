@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 @Description("The hotbar button clicked in an <a href='events.html#inventory_click>inventory click</a> event.")
 @Examples({"on inventory click:",
 		"	send \"You clicked the hotbar button %hotbar button%!\""})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprHotbarButton extends SimpleExpression<Number> {
 	
 	static {

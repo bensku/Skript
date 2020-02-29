@@ -15,5 +15,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build and run test scripts
+    - name: Build Skript
+      run: ./gradlew nightlyRelease
+    - name: Run test scripts
       run: ./gradlew skriptTest
+    - name: Upload Nightly Build
+      uses: actions/upload-artifact@v1
+      if: success()
+      with:
+        name: skript-nightly
+        path: build/libs/Skript-nightly.jar
