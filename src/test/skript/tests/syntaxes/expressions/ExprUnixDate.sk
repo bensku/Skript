@@ -1,0 +1,3 @@
+test "unix date":
+	set {_now} to now
+	assert unix date of (unix timestamp of {_now}) is {_now} with "unix date failed"

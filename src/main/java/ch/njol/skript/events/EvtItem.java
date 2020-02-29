@@ -81,7 +81,7 @@ public class EvtItem extends SkriptEvent {
 					"[(player|1¦entity)] (pick[ ]up|picking up) [[of] %itemtypes%]")
 				.description("Called when a player/entity picks up an item. Please note that the item is still on the ground when this event is called.")
 				.examples("on pick up:", "on entity pickup of wheat:")
-				.since("<i>unknown</i> (before 2.1), INSERT VERSION (entity)")
+				.since("<i>unknown</i> (before 2.1), 2.5 (entity)")
 				.requiredPlugins("1.12.2+ for entity");
 		} else {
 			Skript.registerEvent("Pick Up", EvtItem.class, PlayerPickupItemEvent.class, "[player] (pick[ ]up|picking up) [[of] %itemtypes%]")

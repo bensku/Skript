@@ -100,6 +100,7 @@ public class SkriptCommand implements CommandExecutor {
 					.add("check")
 					.add("changes")
 					.add("download")
+			).add("info"
 			//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
@@ -334,6 +335,9 @@ public class SkriptCommand implements CommandExecutor {
 				} else if (args[1].equalsIgnoreCase("download")) {
 					updater.updateCheck(sender);
 				}
+			} else if (args[0].equalsIgnoreCase("info")) {
+				info(sender, "info.aliases");
+				info(sender, "info.documentation");
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
 			} else if (args[0].equalsIgnoreCase("gen-docs")) {

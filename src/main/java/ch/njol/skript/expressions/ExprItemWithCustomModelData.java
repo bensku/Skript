@@ -41,7 +41,7 @@ import ch.njol.util.Kleenean;
 @Examples({"give player a diamond sword with custom model data 2",
 	"set slot 1 of inventory of player to wooden hoe with custom model data 357"})
 @RequiredPlugins("1.14+")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprItemWithCustomModelData extends PropertyExpression<ItemType, ItemType> {
 	
 	static {
