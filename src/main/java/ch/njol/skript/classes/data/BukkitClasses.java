@@ -60,6 +60,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
@@ -1719,6 +1720,13 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+
+		Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
+				.user("persistent data ?holders?")
+				.name("Persistent Data Holder")
+				.description("Something that can hold persistent data (e.g. an entity or some blocks).")
+				.examples("set persistent data value \"epic\" of player to true")
+				.since("INSERT VERSION"));
 	}
 
 }
