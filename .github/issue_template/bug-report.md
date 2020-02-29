@@ -26,7 +26,7 @@ Screenshots of bugs visible in-game can also be attached.
 
 ### Server Information
 * **Server version/platform:** <!-- /version -->
-* **Skript version:** <!-- /version Skript -->
+* **Skript version:** <!-- /version Skript ("latest" is not useful, we need the version number) -->
 
 ### Additional Context
 <!--- Anything you'd like to add? This can be left empty. --->

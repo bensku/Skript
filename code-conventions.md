@@ -1,9 +1,10 @@
 # Code Conventions
 
 ## Security
-Keep in mind that your code will be running on servers; security matters.
-Following these guidelines is *vital* for all new code. Contributors
-should also see the dedicated [security document](security.md).
+Keep in mind that your code will be running on hundreds or thousands of
+servers; security matters. Following these guidelines is *vital* for all new
+code. Contributors should also see the dedicated
+[security document](security.md).
 
 * **NO MALICIOUS CODE** - I think you already knew this
   ```java

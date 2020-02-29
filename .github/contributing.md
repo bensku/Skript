@@ -6,10 +6,10 @@ and pull requests are often resolved faster than those that ignore them.
 
 ## Behavior
 Please treat others with respect in the issue tracker and comments of pull
-requests. We hope that you do are a decent person and do this without
-telling. Failing that, your rudeness (and associated issues) may be ignored,
-closed or even deleted. Repeated or particularly harmful behavior will get
-you banned from this repository.
+requests. We hope that you are a decent person and do this without telling.
+Failing that, inappropriate behavior (and issues where it is observed) may
+be ignored, closed or even deleted. Repeated or particularly egregious behavior
+will get you banned from issue trackers of SkriptLang organization.
 
 Access to Skript's source code is a right that everyone with a binary release
 of it has. Access to our communications platforms is a *privilege* that will
@@ -45,7 +45,7 @@ If the issue still persists, search the issue tracker for similar
 errors and check if your issue might have been already reported.
 Only if you can't find anything, open a new issue.
 
-When opening an bug template, pick a template for a bug and fill it.
+When opening an issue, pick a template for a bug report and fill it.
 We may ignore or close issues that are not made with correct templates.
 
 ## Pull Requests
@@ -84,9 +84,9 @@ Test your changes. Actually, test more than your changes: if you think that you
 might have broken something unrelated, better to test that too. Nothing is more
 annoying than breaking existing features.
 
-After you have tested the changes, write automated test scripts if possible.
-They make it less likely for your changes to break in future releases, when
-other people work on Skript.
+After manually testing, try to write some automated
+[test scripts](https://github.com/SkriptLang/Skript/blob/master/src/test/skript/README.md)
+if possible. Remember that not everything can be tested this way, though.
 
 When you are ready to submit a pull request, please follow the template. Don't
 be scared, usually everything goes well and your pull request will be present
