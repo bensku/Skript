@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 		"remove haste from the victim",
 		"on join:",
 		"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
-@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), INSERT VERSION (replacing existing effect)")
+@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect)")
 public class EffPotion extends Effect {
 	static {
 		Skript.registerEffect(EffPotion.class,

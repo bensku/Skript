@@ -32,7 +32,7 @@ import ch.njol.skript.doc.Since;
 @Description("Checks if a creeper is charged (powered).")
 @Examples({"if the last spawned creeper is charged:",
 			"\tbroadcast \"A charged creeper is at %location of last spawned creeper%\""})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondIsCharged extends PropertyCondition<LivingEntity> {
 	
 	static {
