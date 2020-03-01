@@ -1,5 +1,5 @@
 {
-  "skriptVersion" : "2.5-alpha1",
+  "skriptVersion" : "2.5-alpha2",
 
   "classes" : [
     {
@@ -442,18 +442,6 @@
   "examples" : "projectile is a snowball\\nshoot an arrow at speed 5 from the player"
 },
 {
-  "id" : "region",
-  "name" : "Region",
-  "patterns" : [
-    "&quot;region name&quot;",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "A region of a regions plugin. Skript currently supports WorldGuard, Factions, GriefPrevention and PreciousStones.\\nPlease note that some regions plugins do not have named regions, some use numerical ids to identify regions, and some may have regions with the same name in different worlds, thus using regions like \"region name\" in scripts may or may not work.",
-  "examples" : ""
-},
-{
   "id" : "resourcepackstate",
   "name" : "Resource Pack State",
   "patterns" : [
@@ -652,20 +640,6 @@
   "since" : "2.4",
   "description" : "Checks if the given string is alphanumeric.",
   "examples" : "if the argument is not alphanumeric:\\n    send \"Invalid name!\""
-},
-{
-  "id" : "CondCanBuild",
-  "name" : "Can Build",
-  "patterns" : [
-    "%<a href='classes.html#player'>players</a>% (can|(is|are) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#player'>players</a>% (can('t|not)|(is|are)(n't| not) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.0",
-  "description" : "Tests whether a player is allowed to build at a certain location.
-This condition requires a supported <a href='../classes.html#region'>regions</a> plugin to be installed.",
-  "examples" : "command /setblock <material>:\\n    description: set the block at your crosshair to a different type\\n    trigger:\\n        player cannot build at the targeted block:\\n            message \"You do not have permission to change blocks there!\"\\n            stop\\n        set the targeted block to argument"
 },
 {
   "id" : "CondCanFly",
@@ -985,6 +959,19 @@ Note: This is the only element where not all patterns are shown. It has actually
   "examples" : "# increased attack against burning targets\\nvictim is burning:\\n    increase damage by 2"
 },
 {
+  "id" : "CondIsCharged",
+  "name" : "Is Charged",
+  "patterns" : [
+    "%<a href='classes.html#livingentity'>living entities</a>% (is|are) (charged|powered)",
+"%<a href='classes.html#livingentity'>living entities</a>% (isn't|is not|aren't|are not) (charged|powered)",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Checks if a creeper is charged (powered).",
+  "examples" : "if the last spawned creeper is charged:\\n    broadcast \"A charged creeper is at %location of last spawned creeper%\""
+},
+{
   "id" : "CondIsEdible",
   "name" : "Is Edible",
   "patterns" : [
@@ -1106,20 +1093,6 @@ Note: This is the only element where not all patterns are shown. It has actually
   "since" : "2.3",
   "description" : "Checks whether or not a chunk/world is loaded",
   "examples" : "if chunk at {home::%player's uuid%} is loaded:"
-},
-{
-  "id" : "CondIsMember",
-  "name" : "Is Member/Owner of Region",
-  "patterns" : [
-    "%<a href='classes.html#offlineplayer'>offline players</a>% (is|are) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
-"%<a href='classes.html#offlineplayer'>offline players</a>% (is|are)(n't| not) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Checks whether a player is a member or owner of a particular region.
-This condition requires a supported regions plugin to be installed.",
-  "examples" : "on region enter:\\n    player is the owner of the region\\n    message \"Welcome back to %region%!\"\\n    send \"%player% just entered %region%!\" to all members of the region"
 },
 {
   "id" : "CondIsOnline",
@@ -1371,22 +1344,6 @@ For more info, see <a href='https://minecraft.gamepedia.com/Slime#.22Slime_chunk
   "examples" : "PvP is enabled\\nPvP is disabled in \"world\""
 },
 {
-  "id" : "CondRegionContains",
-  "name" : "Region Contains",
-  "patterns" : [
-    "[[the] region] %<a href='classes.html#region'>regions</a>% contain[s] %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#location'>locations</a>% (is|are) ([contained] in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
-"[[the] region] %<a href='classes.html#region'>regions</a>% (do|does)(n't| not) contain %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#location'>locations</a>% (is|are)(n't| not) (contained in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Checks whether a location is contained in a particular <a href='../classes.html#region'>region</a>.
-This condition requires a supported regions plugin to be installed.",
-  "examples" : "player is in the region {regions::3}\\non region enter:\\n    region contains {flags.%world%.red}\\n    message \"The red flag is near!\""
-},
-{
   "id" : "CondResourcePack",
   "name" : "Resource Pack",
   "patterns" : [
@@ -1567,6 +1524,19 @@ message to all players instead of broadcasting it.",
   "examples" : "# set:\\nSet the player's display name to \"<red>%name of player%\"\\nset the block above the victim to lava\\n# add:\\nadd 2 to the player's health # preferably use '<a href='#heal'>heal</a>' for this\\nadd argument to {blacklist::*}\\ngive a diamond pickaxe of efficiency 5 to the player\\nincrease the data value of the clicked block by 1\\n# remove:\\nremove 2 pickaxes from the victim\\nsubtract 2.5 from {points::%uuid of player%}\\n# remove all:\\nremove every iron tool from the player\\nremove all minecarts from {entitylist::*}\\n# delete:\\ndelete the block below the player\\nclear drops\\ndelete {variable}\\n# reset:\\nreset walk speed of player\\nreset chunk at the targeted block"
 },
 {
+  "id" : "EffChargeCreeper",
+  "name" : "Charge Creeper",
+  "patterns" : [
+    "make %<a href='classes.html#livingentity'>living entities</a>% [a[n]] (charged|powered|((un|non[-])charged|(un|non[-])powered)) [creeper[s]]",
+"(charge|power|(uncharge|unpower)) %<a href='classes.html#livingentity'>living entities</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Charges or uncharges a creeper. A creeper is charged when it has been struck by lightning.",
+  "examples" : "on spawn of creeper:\\n    charge the event-entity"
+},
+{
   "id" : "EffColorItems",
   "name" : "Colour Items",
   "patterns" : [
@@ -1704,7 +1674,7 @@ message to all players instead of broadcasting it.",
     "pattern_end"
   ],
   "since" : "1.0",
-  "description" : "Equips a player with some given armor. This will replace any armor that the player is wearing.",
+  "description" : "Equips an entity with some given armor. This will replace any armor that the entity is wearing.",
   "examples" : "equip player with diamond helmet\\nequip player with all diamond armor"
 },
 {
@@ -1726,7 +1696,7 @@ message to all players instead of broadcasting it.",
   "id" : "EffExplosion",
   "name" : "Explosion",
   "patterns" : [
-    "[(create|make)] [an] explosion (of|with) (force|strength|power) %<a href='classes.html#number'>number</a>% [%<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%]",
+    "[(create|make)] [an] explosion (of|with) (force|strength|power) %<a href='classes.html#number'>number</a>% [%<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%] [(with fire)]",
 "[(create|make)] [a] safe explosion (of|with) (force|strength|power) %<a href='classes.html#number'>number</a>% [%<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%]",
 "[(create|make)] [a] fake explosion [%<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%]",
 "[(create|make)] [an] explosion[ ]effect [%<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%]",
@@ -2065,13 +2035,13 @@ Note: if a player was hidden and relogs, this player will be visible again.",
   "id" : "EffPotion",
   "name" : "Potion Effects",
   "patterns" : [
-    "apply [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%]",
-"apply ambient [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%]",
-"apply [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] without [any] particles to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%]",
+    "apply [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%] [(replacing [the] existing effect)]",
+"apply ambient [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%] [(replacing [the] existing effect)]",
+"apply [potion of] %<a href='classes.html#potioneffecttype'>potions</a>% [potion] [[[of] tier] %<a href='classes.html#number'>number</a>%] without [any] particles to %<a href='classes.html#livingentity'>living entities</a>% [for %<a href='classes.html#timespan'>time span</a>%] [(replacing [the] existing effect)]",
 
     "pattern_end"
   ],
-  "since" : "2.0, 2.2-dev27 (ambient and particle-less potion effects)",
+  "since" : "2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect)",
   "description" : "Apply or remove potion effects to/from entities.",
   "examples" : "apply swiftness 2 to the player\\nremove haste from the victim\\non join:\\n    apply potion of strength of tier {strength.%player%} to the player for 999 days"
 },
@@ -2304,7 +2274,7 @@ Note: if no input is given for the title/subtitle or the times,it will keep the 
   "name" : "Tree",
   "patterns" : [
     "(grow|create|generate) tree [of type %<a href='classes.html#structuretype'>tree type</a>%] %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"(grow|create|generate) %<a href='classes.html#structuretype'>tree type</a>% [tree] %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
+"(grow|create|generate) %<a href='classes.html#structuretype'>tree type</a>% %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
 
     "pattern_end"
   ],
@@ -3359,19 +3329,6 @@ This may require that there is enough space above the given location and that th
   "examples" : "on redstone change:\\n    send \"someone is using redstone\" to console"
 },
 {
-  "id" : "region_enterleave",
-  "name" : "On Region Enter/Leave",
-  "patterns" : [
-    "(enter[ing]|leav(e|ing)|exit[ing]) [of] ([a] region|[[the] region] %<a href='classes.html#region'>regions</a>%)",
-"region (enter[ing]|leav(e|ing)|exit[ing])",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Called when a player enters or leaves a <a href='../classes.html#region'>region</a>.\\nThis event requires a supported regions plugin to be installed.",
-  "examples" : "on region exit:\\n    message \"Leaving %region%.\""
-},
-{
   "id" : "resource_pack_request_response",
   "name" : "On Resource Pack Request Response",
   "patterns" : [
@@ -3982,6 +3939,18 @@ One can also use the type of the argument instead of its index to address the ar
   "examples" : "set chestplate of the player to a diamond chestplate\\nhelmet of player is neither a helmet nor air # player is wearing a block, e.g. from another plugin"
 },
 {
+  "id" : "ExprArrowsStuck",
+  "name" : "Arrows Stuck",
+  "patterns" : [
+    "[number of] arrow[s] stuck in %<a href='classes.html#livingentity'>living entities</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "The number of arrows stuck in a living entity.",
+  "examples" : "set arrows stuck in player to 5"
+},
+{
   "id" : "ExprAttacked",
   "name" : "Attacked",
   "patterns" : [
@@ -4085,19 +4054,6 @@ Can optionally include a direction as well, e.g. 'block above' or 'block in fron
   "since" : "1.0",
   "description" : "Blocks relative to other blocks or between other blocks. Can be used to get blocks relative to other blocks or for looping.",
   "examples" : "loop blocks above the player:\\nloop blocks between the block below the player and the targeted block:\\nset the blocks below the player, the victim and the targeted block to air"
-},
-{
-  "id" : "ExprBlocksInRegion",
-  "name" : "Blocks in Region",
-  "patterns" : [
-    "[(all|the)] blocks (in|of) [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "All blocks in a <a href='../classes.html#region'>region</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "loop all blocks in the region {arena.%{faction.%player%}%}:\\n    clear the loop-block"
 },
 {
   "id" : "ExprBookAuthor",
@@ -4578,16 +4534,16 @@ See also: <a href='#ExprRandom'>random</a>",
   "id" : "ExprEntities",
   "name" : "Entities",
   "patterns" : [
-    "[(all [[of] the]|the)] %*<a href='classes.html#entitydata'>entity types</a>% [(in|of) [world[s]] %<a href='classes.html#world'>worlds</a>%]",
-"[(all [[of] the]|the)] entities of type[s] %<a href='classes.html#entitydata'>entity types</a>% [(in|of) [world[s]] %<a href='classes.html#world'>worlds</a>%]",
+    "[(all [[of] the]|the)] %*<a href='classes.html#entitydata'>entity types</a>% [(in|of) ([world[s]] %<a href='classes.html#world'>worlds</a>%|%<a href='classes.html#chunk'>chunks</a>%)]",
+"[(all [[of] the]|the)] entities of type[s] %<a href='classes.html#entitydata'>entity types</a>% [(in|of) ([world[s]] %<a href='classes.html#world'>worlds</a>%|%<a href='classes.html#chunk'>chunks</a>%)]",
 "[(all [[of] the]|the)] %*<a href='classes.html#entitydata'>entity types</a>% (within|[with]in radius) %<a href='classes.html#number'>number</a>% [(block[s]|met(er|re)[s])] (of|around) %<a href='classes.html#location'>location</a>%",
 "[(all [[of] the]|the)] entities of type[s] %<a href='classes.html#entitydata'>entity types</a>% in radius %<a href='classes.html#number'>number</a>% (of|around) %<a href='classes.html#location'>location</a>%",
 
     "pattern_end"
   ],
-  "since" : "1.2.1",
-  "description" : "All entities in all worlds, in a specific world or in a radius around a certain location, e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.",
-  "examples" : "kill all creepers in the player's world\\nsend \"Psst!\" to all players witin 100 meters of the player\\ngive a diamond to all ops\\nheal all tamed wolves in radius 2000 around {town center}"
+  "since" : "1.2.1, 2.5 (chunks)",
+  "description" : "All entities in all worlds, in a specific world, in a chunk or in a radius around a certain location, e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.",
+  "examples" : "kill all creepers in the player's world\\nsend \"Psst!\" to all players within 100 meters of the player\\ngive a diamond to all ops\\nheal all tamed wolves in radius 2000 around {town center}\\ndelete all monsters in chunk at player"
 },
 {
   "id" : "ExprAI",
@@ -5624,6 +5580,32 @@ Please note that the location of an entity is at it's feet, use <a href='#ExprEy
   "examples" : "give a diamond sword of sharpness 100 named \"<gold>Excalibur\" to the player\\nset tool of player to the player's tool named \"<gold>Wand\"\\nset the name of the player's tool to \"<gold>Wand\"\\nopen hopper inventory named \"Magic Hopper\" to player"
 },
 {
+  "id" : "LitNewLine",
+  "name" : "New Line",
+  "patterns" : [
+    "n[ew]l[ine]",
+"line[ ]break",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "Returns a line break separator.",
+  "examples" : "send \"Hello%nl%Goodbye!\" to player"
+},
+{
+  "id" : "ExprNoDamageTicks",
+  "name" : "No Damage Ticks",
+  "patterns" : [
+    "[the] (invulnerability|no damage) tick[s] of %<a href='classes.html#livingentity'>living entities</a>%",
+"%<a href='classes.html#livingentity'>living entities</a>%'[s] (invulnerability|no damage) tick[s]",
+
+    "pattern_end"
+  ],
+  "since" : "2.5",
+  "description" : "The number of ticks that an entity is invulnerable to damage for.",
+  "examples" : "on damage:\\n    set victim's invulnerability ticks to 20 #Victim will not take damage for the next second"
+},
+{
   "id" : "ExprNow",
   "name" : "Now",
   "patterns" : [
@@ -5873,46 +5855,6 @@ Please note that the order of the numbers doesn't matter, i.e. <code>random numb
   "since" : "unknown (2.2)",
   "description" : "The raw Minecraft material name of the given item. Note that this is not guaranteed to give same results on all servers.",
   "examples" : "raw name of tool of player"
-},
-{
-  "id" : "ExprRegion",
-  "name" : "Region",
-  "patterns" : [
-    "[the] [event-]region",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "The <a href='classes.html#region'>region</a> involved in an event.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "on region enter:\\n    region is {forbidden region}\\n    cancel the event"
-},
-{
-  "id" : "ExprMembersOfRegion",
-  "name" : "Region Members & Owners",
-  "patterns" : [
-    "[(all|the)] (members|owner[s]) of [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
-"[[the] region[s]] %<a href='classes.html#region'>regions</a>%'[s] (members|owner[s])",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "A list of members or owners of a <a href='../classes.html#region'>region</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "on entering of a region:\\n    message \"You're entering %region% whose owners are %owners of region%\"."
-},
-{
-  "id" : "ExprRegionsAt",
-  "name" : "Regions At",
-  "patterns" : [
-    "[the] region[s] %<a href='classes.html#direction'>direction</a>% %<a href='classes.html#location'>locations</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "All <a href='../classes.html#region'>regions</a> at a particular <a href='../classes/#location'>location</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "On click on a sign:\\n    line 1 of the clicked block is \"[region info]\"\\n    set {_regions::*} to regions at the clicked block\\n    if {_regions::*} is empty:\\n        message \"No regions exist at this sign.\"\\n    else:\\n        message \"Regions containing this sign: <gold>%{_regions::*}%<r>.\""
 },
 {
   "id" : "ExprRemainingAir",
