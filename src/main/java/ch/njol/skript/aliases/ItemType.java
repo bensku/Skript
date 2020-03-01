@@ -276,25 +276,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	public boolean isOfType(@Nullable ItemStack item) {
-		// Duplicate code to avoid creating ItemData
-		for (ItemData myType : types) {
-			if (item == null) { // Given item null
-				if (myType.type == Material.AIR)
-					return true; // Both items AIR/null
-			} else if (myType.isAlias) {
-				if (!myType.isOfType(item))
-					continue;
-				return true;
-			} else {
-				return item.isSimilar(myType.stack);
-			}
-		}
-		return false;
-		
-		// Alternative, simpler implementation
-//		if (item == null)
-//			return isOfType(Material.AIR, null);
-//		return isOfType(new ItemData(item));
+		if (item == null)
+			return isOfType(Material.AIR, null);
+		return isOfType(new ItemData(item));
 	}
 	
 	public boolean isOfType(@Nullable BlockState block) {
@@ -312,8 +296,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	public boolean isOfType(ItemData type) {
 		for (final ItemData myType : types) {
-			if (myType.equals(type))
+			if (myType.equals(type)) {
 				return true;
+			}
 		}
 		return false;
 	}
