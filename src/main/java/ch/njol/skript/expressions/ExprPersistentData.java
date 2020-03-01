@@ -28,6 +28,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Expression;
@@ -50,6 +51,7 @@ import org.eclipse.jdt.annotation.Nullable;
 			"broadcast \"%persistent data value \"\"nickname\"\" of player%\"",
 			"clear persistent data value value \"nickname\" of player"})
 @Since("INSERT VERSION")
+@RequiredPlugins("1.14 or newer")
 @SuppressWarnings({"unchecked", "null"})
 public class ExprPersistentData<T> extends SimpleExpression<T> {
 

@@ -1721,12 +1721,14 @@ public class BukkitClasses {
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
 
-		Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
-				.user("persistent data ?holders?")
-				.name("Persistent Data Holder")
-				.description("Something that can hold persistent data (e.g. an entity or some blocks).")
-				.examples("set persistent data value \"epic\" of player to true")
-				.since("INSERT VERSION"));
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
+			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
+					.user("persistent data ?holders?")
+					.name("Persistent Data Holder")
+					.description("Something that can hold persistent data (e.g. an entity or some blocks).")
+					.examples("set persistent data value \"epic\" of player to true")
+					.since("INSERT VERSION"));
+		}
 	}
 
 }

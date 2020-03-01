@@ -25,6 +25,7 @@ import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
@@ -41,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Name("Has Persistent Data")
 @Description("Checks whether a persistent data holder has the specified value.")
 @Examples("if player has persistent data \"epic\":")
+@RequiredPlugins("1.14 or newer")
 @Since("INSERT VERSION")
 public class CondHasPersistentData extends Condition {
 

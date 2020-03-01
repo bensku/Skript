@@ -40,19 +40,18 @@ public class PersistentDataUtils {
 
 	private final static PersistentDataType<byte[], Boolean> BOOLEAN = new PersistentDataUtils().new BooleanDataType();
 
+	private final static PersistentDataType<?,?>[] types = new PersistentDataType<?,?>[]{
+		PersistentDataType.STRING,
+		PersistentDataType.LONG,
+		PersistentDataType.DOUBLE,
+		BOOLEAN
+	};
+
 	/**
 	 * @return All {@linkplain PersistentDataType}s usable within Skript.
 	 */
-	@SuppressWarnings("null")
 	public static PersistentDataType<?,?>[] getTypes() {
-		List<PersistentDataType<?,?>> list = new ArrayList<>();
-
-		list.add(PersistentDataType.STRING);
-		list.add(PersistentDataType.LONG);
-		list.add(PersistentDataType.DOUBLE);
-		list.add(BOOLEAN);
-
-		return list.toArray(new PersistentDataType<?,?>[4]);
+		return types;
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class PersistentDataUtils {
 	public static Object get(PersistentDataHolder holder, String name) {
 		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
 		Object get = null;
-		for (PersistentDataType<?,?> type : getTypes()) {
+		for (PersistentDataType<?,?> type : types) {
 			try {
 				get = holder.getPersistentDataContainer().get(key, type);
 				if (get != null)
