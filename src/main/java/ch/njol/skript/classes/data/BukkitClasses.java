@@ -1725,8 +1725,16 @@ public class BukkitClasses {
 			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
 					.user("persistent data ?holders?")
 					.name("Persistent Data Holder")
-					.description("Something that can hold persistent data (e.g. an entity or some blocks).")
+					.description(
+							"Represents something that can have persistent data. " 
+							+ "The following can all hold persistent data: "
+							+ "entities, items, banners, barrels, beacons, beds, beehives, bells, blast furnaces, brewing stands, "
+							+ "campfires, chests, comand blocks, comparators, conduits, mob spawners, daylight detectors, dispensers, "
+							+ "droppers, enchanting tables, ender chests, end gateways, furnaces, hoppers, jigsaw blocks, jukeboxes, "
+							+ "lecterns, shulker boxes, smokers, and structure blocks."
+					)
 					.examples("set persistent data value \"epic\" of player to true")
+					.requiredPlugins("1.14 or newer")
 					.since("INSERT VERSION"));
 		}
 	}

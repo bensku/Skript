@@ -24,12 +24,17 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.TileState;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.log.SkriptLogger;
 
 /**
@@ -55,19 +60,47 @@ public class PersistentDataUtils {
 	}
 
 	/**
-	 * 
-	 * @param holder The PersistentDataHolder {@linkplain PersistentDataHolder}.
+	 * To make PersistentData work well with Skript, the holder is not limited to just {@linkplain PersistentDataHolder}s.
+	 * A holder can also be a {@linkplain Block} or an {@linkplain ItemType}.
+	 * This gets the actual holder from those types.
+	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
+	 * @return The actual {@linkplain PersistentDataHolder}, or null if the object's actual holder can't be found.
+	 */
+	@Nullable
+	public static PersistentDataHolder getActualHolder(Object holder) {
+		if (holder instanceof PersistentDataHolder) {
+			return (PersistentDataHolder) holder;
+		} else if (holder instanceof ItemType) {
+			return ((ItemType) holder).getItemMeta();
+		} else if (holder instanceof Block) {
+			if (((Block) holder).getState() instanceof TileState)
+				return ((TileState) ((Block) holder).getState());
+		}
+		return null;
+	}
+
+	/**
+	 * This returns the value from the holder's persistent data container.
+	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
 	 * @param name The {@linkplain NamespacedKey} name.
 	 * @return The value, or null if it was not found.
+	 * @see PersistentDataUtils#getActualHolder(Object)
 	 */
 	@SuppressWarnings("null")
 	@Nullable
-	public static Object get(PersistentDataHolder holder, String name) {
+	public static Object get(Object holder, String name) {
+
+		PersistentDataHolder realHolder = getActualHolder(holder);
+		if (realHolder == null)
+			return null;
+
 		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
 		Object get = null;
+
+		// Try to guess the key type.
 		for (PersistentDataType<?,?> type : types) {
 			try {
-				get = holder.getPersistentDataContainer().get(key, type);
+				get = realHolder.getPersistentDataContainer().get(key, type);
 				if (get != null)
 					break;
 			} catch (IllegalArgumentException e) {
@@ -75,6 +108,7 @@ public class PersistentDataUtils {
 			}
 		}
 		return get;
+
 	}
 
 	/**
@@ -85,20 +119,36 @@ public class PersistentDataUtils {
 	 * @return Whether the persistent data was set.
 	 */
 	@SuppressWarnings("null")
-	public static boolean set(PersistentDataHolder holder, String name, Object value) {
-		SkriptLogger.log(Level.INFO, value.getClass().getName());
-		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
-		if (value instanceof String)
-			holder.getPersistentDataContainer().set(key, PersistentDataType.STRING, (String) value);
-		else if (value instanceof Long)
-			holder.getPersistentDataContainer().set(key, PersistentDataType.LONG, (Long) value);
-		else if (value instanceof Double)
-			holder.getPersistentDataContainer().set(key, PersistentDataType.DOUBLE, (Double) value);
-		else if (value instanceof Boolean)
-			holder.getPersistentDataContainer().set(key, BOOLEAN, (Boolean) value);
-		else
+	public static boolean set(Object holder, String name, Object value) {
+
+		PersistentDataHolder realHolder = getActualHolder(holder);
+		if (realHolder == null)
 			return false;
+
+		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
+
+		// Attempt to set the value based on the possible PersistentDataTypes.
+		if (value instanceof Boolean) {
+			realHolder.getPersistentDataContainer().set(key, BOOLEAN, (Boolean) value);
+		} else if (value instanceof String) {
+			realHolder.getPersistentDataContainer().set(key, PersistentDataType.STRING, (String) value);
+		} else if (value instanceof Long) {
+			realHolder.getPersistentDataContainer().set(key, PersistentDataType.LONG, (Long) value);
+		} else if (value instanceof Double) {
+			realHolder.getPersistentDataContainer().set(key, PersistentDataType.DOUBLE, (Double) value);
+		} else {
+			return false;
+		}
+
+		// This properly stores the data on ItemTypes and TileStates
+		if (holder instanceof ItemType) {
+			((ItemType) holder).setItemMeta((ItemMeta) realHolder);
+		} else if (realHolder instanceof TileState) {
+			((TileState) realHolder).update();
+		}
+
 		return true;
+
 	}
 
 	/**
@@ -107,12 +157,26 @@ public class PersistentDataUtils {
 	 * @param name The {@linkplain NamespacedKey} name.
 	 * @return Whether the value was removed. False returns mean that the holder does not have the value.
 	 */
-	public static boolean remove(PersistentDataHolder holder, String name) {
+	public static boolean remove(Object holder, String name) {
+
+		PersistentDataHolder realHolder = getActualHolder(holder);
+		if (realHolder == null)
+			return false;
+
 		NamespacedKey key = new NamespacedKey(Skript.getInstance(), name);
 		if (PersistentDataUtils.get(holder, name) == null)
 			return false;
-		holder.getPersistentDataContainer().remove(key);
+		realHolder.getPersistentDataContainer().remove(key);
+
+		// This properly stores the data on ItemTypes and TileStates
+		if (holder instanceof ItemType) {
+			((ItemType) holder).setItemMeta((ItemMeta) realHolder);
+		} else if (realHolder instanceof TileState) {
+			((TileState) realHolder).update();
+		}
+
 		return true;
+
 	}
 
 

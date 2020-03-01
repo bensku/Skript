@@ -45,8 +45,9 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Persistent Data")
-@Description({"Persistent data is a way of storing data on some entities and blocks, similar to metadata.",
-				"Unlike metadata, persistent data is not affected by server restarts."})
+@Description({"Persistent data is a way of storing data on entities, items, and some blocks.",
+			"Unlike metadata, it is not affected by server restarts.",
+			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders."})
 @Examples({"set persistent data value \"nickname\" of player to \"bob\"",
 			"broadcast \"%persistent data value \"\"nickname\"\" of player%\"",
 			"clear persistent data value value \"nickname\" of player"})
@@ -58,8 +59,8 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
-					"persistent data [(value|tag)[s]] %strings% of %persistentdataholders%",
-					"%persistentdataholders%'[s] persistent data [(value|tag)[s]] %string%"
+					"persistent data [(value|tag)[s]] %strings% of %persistentdataholders/itemtypes/blocks%",
+					"%persistentdataholders/itemtypes/blocks%'[s] persistent data [(value|tag)[s]] %string%"
 			);
 		}
 	}
@@ -67,7 +68,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	@Nullable
 	private Expression<String> values;
 	@Nullable
-	private Expression<PersistentDataHolder> holders;
+	private Expression<Object> holders;
 
 	private ExprPersistentData<?> source;
 	private Class<T> superType;
@@ -88,7 +89,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		values = (Expression<String>) exprs[0];
-		holders = (Expression<PersistentDataHolder>) exprs[1];
+		holders = (Expression<Object>) exprs[1];
 		return true;
 	}
 
@@ -97,7 +98,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	public T[] get(Event e) {
 		List<Object> list = new ArrayList<>();
 		for (String value : values.getArray(e)) {
-			for (PersistentDataHolder holder : holders.getArray(e)) {
+			for (Object holder : holders.getArray(e)) {
 				list.add(PersistentDataUtils.get(holder, value));
 			}
 		}
@@ -119,7 +120,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		for (String value : values.getArray(e)) {
-			for (PersistentDataHolder holder : holders.getArray(e)) {
+			for (Object holder : holders.getArray(e)) {
 				switch (mode) {
 					case SET:
 						PersistentDataUtils.set(holder, value, delta[0]);

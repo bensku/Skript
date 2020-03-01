@@ -1,0 +1,24 @@
+test "persistent data expression/condition":
+
+	# Test entities holding persistent data
+
+	spawn a chicken at spawn of world "world"
+	assert last spawned chicken doesn't have persistent data value "cool" with "(Condition) Entities should not have a persistent tag before it is set"
+	set persistent data value "cool" of last spawned chicken to true
+	assert persistent data value "cool" of last spawned chicken = true with "(Expression) The persistent tag was set to be true, but it is not"
+	assert last spawned chicken has persistent data value "cool" with "(Condition) Entities should have a persistent tag if it is set"
+	clear persistent data value "cool" of last spawned chicken
+	assert last spawned chicken doesn't have persistent data value "cool" with "(Condition) Entities should not have a persistent tag after it is cleared"
+	delete last spawned chicken
+
+	# Test blocks holding persistent data
+
+	set block at spawn of world "world" to a campfire
+	set {_block} to block at spawn of world "world"
+	assert {_block} doesn't have persistent data value "cool" with "(Condition) Blocks should not have a persistent tag before it is set"
+	set persistent data value "cool" of {_block} to true
+	assert persistent data value "cool" of {_block} = true with "(Expression) The persistent tag was set to be true, but it is not"
+	assert {_block} has persistent data value "cool" with "(Condition) Blocks should have a persistent tag if it is set"
+	clear persistent data value "cool" of {_block}
+	assert {_block} doesn't have persistent data value "cool" with "(Condition) Blocks should not have a persistent tag after it is cleared"
+	set block at spawn of world "world" to air

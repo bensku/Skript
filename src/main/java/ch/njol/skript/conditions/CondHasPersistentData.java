@@ -40,7 +40,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Has Persistent Data")
-@Description("Checks whether a persistent data holder has the specified value.")
+@Description({"Checks whether a persistent data holder has the specified value. ",
+			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders."})
 @Examples("if player has persistent data \"epic\":")
 @RequiredPlugins("1.14 or newer")
 @Since("INSERT VERSION")
@@ -49,21 +50,21 @@ public class CondHasPersistentData extends Condition {
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerCondition(CondHasPersistentData.class,
-					"%persistentdataholders% (has|have) persistent data [(value|tag)[s]] %strings%",
-					"%persistentdataholders% (doesn't|does not|do not|don't) have persistent data [(value|tag)[s]] %strings%"
+					"%persistentdataholders/itemtypes/blocks% (has|have) persistent data [(value|tag)[s]] %strings%",
+					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) have persistent data [(value|tag)[s]] %strings%"
 			);
 		}
 	}
 
 	@SuppressWarnings("null")
-	private Expression<PersistentDataHolder> holders;
+	private Expression<Object> holders;
 	@SuppressWarnings("null")
 	private Expression<String> values;
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		holders = (Expression<PersistentDataHolder>) exprs[0];
+		holders = (Expression<Object>) exprs[0];
 		values = (Expression<String>) exprs[1];
 		setNegated(matchedPattern == 1);
 		return true;
