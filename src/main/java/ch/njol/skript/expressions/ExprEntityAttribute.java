@@ -60,14 +60,11 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Nullable
 	private Expression<Attribute> attributes;
 	
-	@Nullable
-	private Expression<Entity> entities;
-	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attributes = (Expression<Attribute>) exprs[matchedPattern];
-		entities = (Expression<Entity>) exprs[matchedPattern ^ 1];
+		setExpr((Expression<? extends Entity>) exprs[matchedPattern ^ 1]);
 		return true;
 	}
 
@@ -76,7 +73,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
 		return Stream.of(entities)
-		    .map(ent -> getAttribute(ent, a))
+		    .map(ent -> getAttribute(ent, a).getBaseValue())
 		    .toArray(Number[]::new);
 	}
 
@@ -94,7 +91,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 		Attribute a = attributes.getSingle(e);
 		double d = ((Number) delta[0]).doubleValue();
 		if (mode == ChangeMode.SET) {
-			for (Entity entity : entities.getArray(e)) {
+			for (Entity entity : getExpr().getArray(e)) {
 				AttributeInstance ai = getAttribute(entity, a);
 				if (ai != null) {
 					ai.setBaseValue(d);
@@ -111,7 +108,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@SuppressWarnings("null") // For some reason Java thinks that entities.toString(...) is null even though there's a null check ternary 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "entity" + (entities == null ? "" : (" " + entities.toString(e, debug))) + "'s " + (attributes == null ? "" : attributes.toString(e, debug)) + "attribute";
+		return "entity " + getExpr().toString(e, debug) + "'s " + (attributes == null ? "" : attributes.toString(e, debug)) + "attribute";
 	}
 	
 	@Nullable
