@@ -108,7 +108,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		IRON_GOLEM_SHEATH("IRON_GOLEM_SHEATH", true),
 		TOTEM_RESURRECT("TOTEM_RESURRECT", true),
 		HURT_DROWN("HURT_DROWN", true),
-		HURT_EXPLOSIION("HURT_EXPLOSION", true),
+		HURT_EXPLOSION("HURT_EXPLOSION", true),
 		
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
