@@ -12,7 +12,7 @@ Skript requires **Spigot** to work. You heard it right, Bukkit does *not* work.
 **Paper**, which is a fork of Spigot, is recommended; it is required for some
 parts of Skript to be available.
 
-Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12 and 1.13.
+Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12, 1.13, 1.14 and 1.15.
 For example, this means that 1.12.2 is supported, but 1.12.1 is *not*.
 Testing with all old patch versions is not feasible for us.
 

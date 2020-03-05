@@ -30,7 +30,7 @@ import ch.njol.skript.doc.Since;
 @Name("Has AI")
 @Description("Checks whether an entity has AI.")
 @Examples("target entity has ai")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondAI extends PropertyCondition<LivingEntity> {
 	
 	static {

@@ -44,7 +44,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"if player's time played is greater than 10 minutes:",
 	"\tgive player a diamond sword",
 	"set player's time played to 0 seconds"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprTimePlayed extends SimplePropertyExpression<Player, Timespan> {
 	
 	private final static Statistic TIME_PLAYED;

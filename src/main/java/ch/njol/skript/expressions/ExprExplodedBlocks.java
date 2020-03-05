@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 	"\tloop exploded blocks:",
 	"\t\tadd loop-block to {exploded::blocks::*}"})
 @Events("explode")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprExplodedBlocks extends SimpleExpression<Block> {
 
 	static {
