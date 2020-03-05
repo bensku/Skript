@@ -38,7 +38,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description("Charges or uncharges a creeper. A creeper is charged when it has been struck by lightning.")
 @Examples({"on spawn of creeper:", 
 			"\tcharge the event-entity"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class EffChargeCreeper extends Effect {
 
 	static {
