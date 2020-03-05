@@ -36,7 +36,7 @@ import ch.njol.util.Kleenean;
 @Name("New Line")
 @Description("Returns a line break separator.")
 @Examples("send \"Hello%nl%Goodbye!\" to player")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class LitNewLine extends SimpleLiteral<String> {
 
 	static {
