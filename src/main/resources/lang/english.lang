@@ -1568,6 +1568,7 @@ inventory types:
 
 # -- Spawn Reasons --
 spawn reasons:
+	beehive: beehive
 	breeding: breed, breeding
 	build_irongolem: built iron golem, build iron golem
 	build_snowman: built snowman, build snowman
@@ -1580,6 +1581,7 @@ spawn reasons:
 	drowned: drowned
 	egg: egg
 	ender_pearl: ender pearl
+	explosion: explosion
 	infection: infection, infected
 	jockey: jockey
 	lightning: lightning
@@ -1587,6 +1589,8 @@ spawn reasons:
 	natural: natural
 	nether_portal: nether portal
 	ocelot_baby: ocelot baby
+	patrol: patrol
+	raid: raid
 	reinforcements: reinforcements
 	shoulder_entity: perching, shoulder
 	silverfish_block: silverfish reveal, silverfish trap
