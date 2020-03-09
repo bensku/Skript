@@ -1726,7 +1726,7 @@ public class BukkitClasses {
 				.description("The attribute type of an entity. Note that this type does not contain any numerical values."
 						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
 				.defaultExpression(new EventValueExpression<>(Attribute.class))
-				.examples(attributes.getAllNames())
+				.usage(attributes.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<Attribute>() {
 					@Override
