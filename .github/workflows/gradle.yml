@@ -25,3 +25,20 @@ jobs:
       with:
         name: skript-nightly
         path: build/libs/Skript-nightly.jar
+    - name: Generate new documentation
+      if: success()
+      run: |
+        ./gradlew generateDocs
+        git config --global user.email "${EMAIL}"
+        git config --global user.name "SkriptLang"
+        git clone https://${ACCESS_TOKEN}@github.com/SkriptLang/skript-website-public.git
+        cd skript-website-public
+        git checkout -b update/docs
+        rm docs.json
+        mv ../src/main/resources/docs.json docs.json
+        git add .
+        git commit -m "[update] - Updated documentation"
+        git push origin update/docs -f
+      env:
+        EMAIL: ${{ secrets.EMAIL }}
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
