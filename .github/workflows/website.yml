@@ -1,0 +1,43 @@
+name: Deploy new Documentation
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@2.0.0
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Build Skript
+        run: ./gradlew clean build
+
+      - name: Generate new documentation
+        if: success()
+        run: |
+          ./gradlew generateDocs
+          git config --global user.email "${EMAIL}"
+          git config --global user.name "SkriptLang"
+          git clone https://${ACCESS_TOKEN}@github.com/SkriptLang/skript-website-public.git
+          cd skript-website-public
+          git checkout -b update/docs
+          rm docs.json
+          mv ../src/main/resources/docs.json docs.json
+          git add .
+          git commit -m "[update] - Updated documentation"
+          git push origin update/docs -f
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
