@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.events;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -101,6 +102,8 @@ import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.Getter;
 
 /**
  * @author Peter Güttinger
@@ -226,8 +229,14 @@ public class SimpleEvents {
 				.since("1.0");
 		Skript.registerEvent("Lightning Strike", SimpleEvent.class, LightningStrikeEvent.class, "lightning [strike]")
 				.description("Called when lightning strikes.")
-				.examples("on lightning:")
+				.examples("on lightning:", "\tspawn a zombie at location of event-entity")
 				.since("1.0");
+		EventValues.registerEventValue(LightningStrikeEvent.class, Entity.class, new Getter<Entity, LightningStrikeEvent>() {
+			@Override
+			public Entity get(LightningStrikeEvent event) {
+				return event.getLightning();
+			}
+		}, 0);
 		Skript.registerEvent("Pig Zap", SimpleEvent.class, PigZapEvent.class, "pig[ ]zap")
 				.description("Called when a pig is stroke by lightning and transformed into a zombie pigman. Cancel the event to prevent the transformation.")
 				.examples("on pig zap:")
