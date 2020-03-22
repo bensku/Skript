@@ -60,6 +60,8 @@ public class ExprScripts extends SimpleExpression<String> {
 				"[all [of the]] (disabled|unloaded) scripts [(1¦without [subdirectory] paths)]");
 	}
 
+	private final String scriptsPath = Skript.getInstance().getDataFolder().getPath() + "/scripts/";
+
 	private boolean includeEnabled;
 	private boolean includeDisabled;
 	private boolean noPaths;
@@ -88,7 +90,7 @@ public class ExprScripts extends SimpleExpression<String> {
 			if (noPaths) {
 				scripts.add(f.getName());
 			} else {
-				scripts.add(f.getPath().split("scripts/")[1]);
+				scripts.add(f.getPath().replaceFirst(scriptsPath, ""));
 			}
 		}
 		return scripts;
