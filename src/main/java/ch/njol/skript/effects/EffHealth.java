@@ -107,6 +107,10 @@ public class EffHealth extends Effect {
 				}
 				newarr[i] = new ItemType(is);
 			}
+			
+			// Set changed item back to source
+			// We KNOW this is supported, but have to check anyway to prepare SimpleExpression for change
+			damageables.acceptChange(ChangeMode.SET);
 			damageables.change(e, newarr, ChangeMode.SET);
 		} else {
 			for (final Object damageable : arr) {
