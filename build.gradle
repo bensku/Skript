@@ -202,7 +202,8 @@ void createTestTask(String name, String environments, boolean devMode) {
 			standardInput = System.in
 		}
 		commandLine 'java', '-cp',
-				"build${File.separator}libs${File.separator}Skript.jar:" + project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
+				"build${File.separator}libs${File.separator}Skript.jar${File.pathSeparator}" +
+					project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
 				'ch.njol.skript.tests.platform.PlatformMain',
 				'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, "" + devMode
 	}
