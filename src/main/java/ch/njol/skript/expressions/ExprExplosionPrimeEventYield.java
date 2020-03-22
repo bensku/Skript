@@ -40,14 +40,15 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Explosion Prime Event Explosion Yield")
-@Description("The yield/radius of the explosion in an explosion prime event.")
+@Description("The yield/radius of the explosion in an explosion prime event. This is how big the explosion is.")
 @Events("explosion prime")
-@Examples("set the explosion radius to 10")
+@Examples({"on explosion prime:",
+		"\tset the explosion radius to 10"})
 @Since("INSERT VERSION")
 public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprExplosionPrimeEventYield.class, Number.class, ExpressionType.PROPERTY, "[the] explosion (radius|size|yield)");
+		Skript.registerExpression(ExprExplosionPrimeEventYield.class, Number.class, ExpressionType.SIMPLE, "[the] explosion (radius|size|yield)");
 	}
 
 	@Override
@@ -95,7 +96,6 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 				e.setRadius(0);
 				break;
 			case REMOVE_ALL:
-				assert false;
 			case RESET:
 				assert false;
 		}

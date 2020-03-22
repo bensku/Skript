@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.event.Event;
@@ -29,14 +30,16 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Explosive Entity Explosion Yield")
-@Description("The yield/radius of an explosive (primed tnt, fireball, etc.). This is how big of an explosion is caused by the entity. For creepers, use the creeper explosion radius expression (1.12+).")
+@Description("The yield/radius of an explosive (creeper, primed tnt, fireball, etc.). This is how big of an explosion is caused by the entity.")
 @Examples("set the explosive radius of the event-entity to 10")
+@RequiredPlugins("Minecraft 1.12 or newer for creepers")
 @Since("INSERT VERSION")
 public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, Number> {
 
@@ -44,9 +47,15 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 		register(ExprExplosiveEntityYield.class, Number.class, "explosi(ve|on) (radius|size|yield)", "entities");
 	}
 
+	private final boolean creeperUsable = Skript.methodExists(Creeper.class, "getExplosionRadius");
+
 	@Override
 	public Number convert(Entity e) {
-		return e instanceof Explosive ? ((Explosive) e).getYield() : 0;
+		if (e instanceof Explosive)
+			return ((Explosive) e).getYield();
+		if (e instanceof Creeper && creeperUsable)
+			return ((Creeper) e).getExplosionRadius();
+		return 0;
 	}
 
 	@Override
@@ -59,9 +68,11 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 
 	@Override
 	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
-		Float f = delta == null ? 0 : ((Number) delta[0]).floatValue();
+		if (delta == null)
+			return;
 		for (Entity entity : getExpr().getArray(event)) {
 			if (entity instanceof Explosive) {
+				Float f = ((Number) delta[0]).floatValue();
 				Explosive e = (Explosive) entity;
 				switch (mode) {
 					case SET:
@@ -81,7 +92,30 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 						e.setYield(0);
 						break;
 					case REMOVE_ALL:
+					case RESET:
 						assert false;
+				}
+			} else if (entity instanceof Creeper && creeperUsable) {
+				Creeper c = (Creeper) entity;
+				int i = ((Number) delta[0]).intValue();
+				switch (mode) {
+					case SET:
+						c.setExplosionRadius(i);
+						break;
+					case ADD:
+						int add = c.getExplosionRadius() + i;
+						if (add < 0) add = 0;
+						c.setExplosionRadius(add);
+						break;
+					case REMOVE:
+						int subtract = c.getExplosionRadius() - i;
+						if (subtract < 0) subtract = 0;
+						c.setExplosionRadius(subtract);
+						break;	
+					case DELETE:
+						c.setExplosionRadius(0);
+						break;
+					case REMOVE_ALL:
 					case RESET:
 						assert false;
 				}
