@@ -62,11 +62,9 @@ public class EffExplodeWithFire extends Effect {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
-		if (isEvent) {
-			if (!ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
-				Skript.error("Making the explosion fiery is only usable in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
-				return false;
-			}
+		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
+			Skript.error("Making the explosion fiery is only usable in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
 		if (matchedPattern < 2)
 			entities = (Expression<Entity>) exprs[0];

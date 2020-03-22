@@ -61,11 +61,9 @@ public class CondExplodesWithFire extends Condition {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
-		if (isEvent) {
-			if (!ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
-				Skript.error("Checking if the event explosion is fiery is only possible in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
-				return false;
-			}
+		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
+			Skript.error("Checking if the event explosion is fiery is only possible in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
 		if (matchedPattern < 2)
 			entities = (Expression<Entity>) exprs[0];
