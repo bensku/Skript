@@ -329,10 +329,10 @@ final public class ScriptLoader {
 		}
 	};
 
-	private static void updateDisabledScripts(File directory) {
+	private static void updateDisabledScripts(Path path) {
 		disabledFiles.clear();
 		try {
-			Files.walk(directory.toPath())
+			Files.walk(path)
 				.map(Path::toFile)
 				.filter(disabledFilter::accept)
 				.forEach(disabledFiles::add);
@@ -370,7 +370,7 @@ final public class ScriptLoader {
 		
 		final Date start = new Date();
 
-		updateDisabledScripts(scriptsFolder);
+		updateDisabledScripts(scriptsFolder.toPath());
 		
 		Runnable task = () -> {
 			final Set<File> oldLoadedFiles = new HashSet<>(loadedFiles);
@@ -799,8 +799,7 @@ final public class ScriptLoader {
 				// Remove the script from the disabled scripts list
 				@SuppressWarnings("null")
 				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
-				if (disabledFiles.contains(disabledFile))
-					disabledFiles.remove(disabledFile);
+				disabledFiles.remove(disabledFile);
 				
 				// Add to loaded files to use for future reloads
 				loadedFiles.add(file);
