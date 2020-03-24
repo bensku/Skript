@@ -1,8 +1,12 @@
 test "altern numbers expression":
 	set {_test::*} to integers between 1 and 5
-	set {_test::2*} to (1, 2, 3, 4 and 5)
+	set {_test2::*} to (1, 2, 3, 4 and 5)
 	assert {_test::*} = {_test2::*} with "integer part of numbers expr failure"
 	
 	set {_test3::*} to numbers between 1.12 and 1.19
 	set {_test4::*} to (1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.18 and 1.19)
-	assert {_test3::*} = {_test4::*} with "numbers part of numbers expr failure, wrong increment?"
+	assert {_test3::*} = {_test4::*} with "numbers part of numbers expr failure, wrong increment? floating point precision?"
+
+	set {_test5::*} to integers between 0.45 and 3.89
+	set {_test6::*} to (1, 2 and 3)
+	assert {_test5::*} = {_test6::*} with "integer part with numbers as input of numbers expr failure, wrong increment? wrong rounding?"

@@ -42,7 +42,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
- * @author Peter GÃ¼ttinger
+ * @author Peter Güttinger
  */
 @Name("Numbers")
 @Description({"All numbers between two given numbers, useful for looping.",
@@ -56,7 +56,7 @@ import ch.njol.util.Kleenean;
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
-				"[(all [[of] the]|the)] (numbers|1Â¦integers) (between|from) %number% (and|to) %number%");
+				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%");
 	}
 	
 	@SuppressWarnings("null")
@@ -84,18 +84,16 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			s = f;
 			f = temp;
 		}
-		final List<Number> list = new ArrayList<>();
-		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
+		
 		final BigDecimal decimals = BigDecimal.valueOf(s.doubleValue());
-		final double increment = Math.pow(10, -decimals.scale());
-		final double amount = integer ? Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1 : f.doubleValue() - s.doubleValue() + increment;
-
-		for (double i = 0; i < amount; i+= increment) {
-			if (integer)
-				list.add((long) low + i);
-			else
-				list.add(low + i);
+		final double increment = integer ? 1 : Math.pow(10, -1 * decimals.scale());
+		double startValue = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
+		double endValue = integer ? Math.floor(f.doubleValue()) : f.doubleValue();
+		
+		for (double i = startValue; i < endValue; i += increment) {
+		    list.add(integer ? (long) i : i);
 		}
+	
 		if (reverse) Collections.reverse(list);
 		return list.toArray(new Number[0]);
 	}
