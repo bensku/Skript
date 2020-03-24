@@ -42,7 +42,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
- * @author Peter Güttinger
+ * @author Peter Gï¿½ttinger
  */
 @Name("Numbers")
 @Description({"All numbers between two given numbers, useful for looping.",
@@ -56,7 +56,7 @@ import ch.njol.util.Kleenean;
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
-				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%");
+				"[(all [[of] the]|the)] (numbers|1ï¿½integers) (between|from) %number% (and|to) %number%");
 	}
 	
 	@SuppressWarnings("null")
@@ -86,7 +86,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		}
 		
 		final BigDecimal decimals = BigDecimal.valueOf(s.doubleValue());
-		final double increment = integer ? 1 : Math.pow(10, -1 * decimals.scale());
+		final double increment = integer ? 1 : Math.pow(10, -1 * decimals.scale()); 
 		double startValue = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
 		double endValue = integer ? Math.floor(f.doubleValue()) : f.doubleValue();
 		

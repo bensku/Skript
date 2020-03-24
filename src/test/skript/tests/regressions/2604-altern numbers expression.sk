@@ -10,3 +10,4 @@ test "altern numbers expression":
 	set {_test5::*} to integers between 0.45 and 3.89
 	set {_test6::*} to (1, 2 and 3)
 	assert {_test5::*} = {_test6::*} with "integer part with numbers as input of numbers expr failure, wrong increment? wrong rounding?"
+	
