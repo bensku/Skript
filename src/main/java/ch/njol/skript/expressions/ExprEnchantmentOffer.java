@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	static {
-		if (Skript.methodExists(PrepareItemEnchantEvent.class, "getOffers")) {
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			Skript.registerExpression(ExprEnchantmentOffer.class, EnchantmentOffer.class, ExpressionType.SIMPLE, 
 					"enchant[ment] offer 1",
 					"enchant[ment] offer 2",
@@ -79,13 +79,13 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	}
 
 	@Override
-	public Class<? extends EnchantmentOffer> getReturnType() {
-		return EnchantmentOffer.class;
+	public boolean isSingle() {
+		return offerNumber != 4;
 	}
 
 	@Override
-	public boolean isSingle() {
-		return offerNumber != 4;
+	public Class<? extends EnchantmentOffer> getReturnType() {
+		return EnchantmentOffer.class;
 	}
 
 	@Override

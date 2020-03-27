@@ -43,8 +43,8 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchantment Exp Level Cost")
-@Description({"The cost of an enchantment in an enchant prepare event.",
+@Name("Enchant Prepare Enchantment Experience Level Cost")
+@Description({"The experience cost of an enchantment in an enchant prepare event.",
 			"If the cost is changed, it will always be at least 1."})
 @Examples({"on enchant prepare:",
 		"\tset the cost of enchantment 1 to 50"})

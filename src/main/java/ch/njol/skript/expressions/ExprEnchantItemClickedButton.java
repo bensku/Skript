@@ -28,6 +28,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -44,6 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on enchant:", 
 			"\tif the clicked enchantment button is 1:", 
 			"\t\tsend \"You clicked button 1!\""})
+@Events("enchant")
 @Since("INSERT VERSION")
 public class ExprEnchantItemClickedButton extends SimpleExpression<Number>{
 

@@ -1037,13 +1037,6 @@ public final class BukkitEventValues {
 			}, 0);
 		}
 		//PrepareItemEnchantEvent
-		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
-			@Override
-			@Nullable
-			public ItemType get(PrepareItemEnchantEvent e) {
-				return new ItemType(e.getItem());
-			}
-		}, 0);
 		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Player.class, new Getter<Player, PrepareItemEnchantEvent>() {
 			@Override
 			@Nullable

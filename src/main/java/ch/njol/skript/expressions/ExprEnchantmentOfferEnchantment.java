@@ -49,19 +49,9 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType> {
 
 	static {
-		if (Skript.methodExists(EnchantmentOffer.class, "getEnchantment")) {
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			register(ExprEnchantmentOfferEnchantment.class, EnchantmentType.class, "enchant[ment]", "enchantmentoffers");
 		}
-	}
-
-	@Override
-	public Class<EnchantmentType> getReturnType() {
-		return EnchantmentType.class;
-	}
-
-	@Override
-	protected String getPropertyName() {
-		return "enchant[ment]";
 	}
 
 	@SuppressWarnings("null")
@@ -98,4 +88,15 @@ public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<En
 				assert false;
 		}
 	}
+
+	@Override
+	public Class<EnchantmentType> getReturnType() {
+		return EnchantmentType.class;
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "enchant[ment]";
+	}
+
 }

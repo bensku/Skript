@@ -546,13 +546,15 @@ public class SimpleEvents {
 					.since("2.5");
 		}
 		Skript.registerEvent("Enchant Prepare", SimpleEvent.class, PrepareItemEnchantEvent.class, "[item] enchant prepare")
-			.description("Called when a player puts an item into enchantment table. This event may be called multiple times.")
+			.description("Called when a player puts an item into enchantment table. This event may be called multiple times."
+						+ " To get the enchant item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
 			.examples("on enchant prepare:",
 						"\tset enchant offer 1 to sharpness 1",
 						"\tset the cost of enchant offer 1 to 10 levels")
 			.since("INSERT VERSION");
 		Skript.registerEvent("Enchant", SimpleEvent.class, EnchantItemEvent.class, "[item] enchant")
-		.description("Called when a player successfully enchants an item.")
+		.description("Called when a player successfully enchants an item."
+				+ " To get the enchanted item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
 		.examples("on enchant:",
 					"\tif the clicked button is enchantment option 1:",
 					"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")

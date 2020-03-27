@@ -46,19 +46,9 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<EnchantmentOffer, Number>{
 
 	static {
-		if (Skript.methodExists(EnchantmentOffer.class, "getEnchantmentLevel")) {
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			register(ExprEnchantmentOfferLevel.class, Number.class, "[enchant[ment]] level", "enchantmentoffers");
 		}
-	}
-
-	@Override
-	public Class<Number> getReturnType() {
-		return Number.class;
-	}
-
-	@Override
-	protected String getPropertyName() {
-		return "[enchant[ment]] level";
 	}
 
 	@Override
@@ -109,4 +99,15 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 				assert false;
 		}
 	}
+
+	@Override
+	public Class<Number> getReturnType() {
+		return Number.class;
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "[enchant[ment]] level";
+	}
+
 }

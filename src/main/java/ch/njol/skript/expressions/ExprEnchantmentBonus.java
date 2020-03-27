@@ -37,11 +37,11 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
-@Name("Enchantment Bonus")
+@Name("Enchant Prepare Enchantment Bonus")
 @Description("The enchantment bonus in an enchant prepare event. This represents the number of bookshelves affecting/surrounding the enchantment table.")
-@Events("enchant prepare")
 @Examples({"on enchant:", 
 	"\tsend \"There are %enchantment bonus% bookshelves surrounding this enchantment table!\" to player"})
+@Events("enchant prepare")
 @Since("INSERT VERSION")
 public class ExprEnchantmentBonus extends SimpleExpression<Number> {
 
@@ -65,13 +65,14 @@ public class ExprEnchantmentBonus extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public Class<? extends Number> getReturnType() {
-		return Number.class;
-	}
-
-	@Override
 	public boolean isSingle() {
 		return true;
+	}
+
+
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
