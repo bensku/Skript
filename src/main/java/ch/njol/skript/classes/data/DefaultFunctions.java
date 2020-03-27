@@ -427,7 +427,7 @@ public class DefaultFunctions {
 			}
 		}).description("Returns a RGB color from the given red, green and blue parameters.")
 			.examples("dye player's leggings rgb(120, 30, 45)")
-			.since("INSERT VERSION");
+			.since("2.5");
 	}
 	
 }

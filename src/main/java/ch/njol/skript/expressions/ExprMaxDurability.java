@@ -33,7 +33,7 @@ import ch.njol.skript.util.slot.Slot;
 @Description("The maximum durability of an item.")
 @Examples({"maximum durability of diamond sword",
 		   "if max durability of player's tool is not 0: # Item is damageable"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprMaxDurability extends SimplePropertyExpression<Object, Number> {
 
 	static {

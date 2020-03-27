@@ -33,7 +33,7 @@ import ch.njol.skript.doc.Since;
 @Examples({"on damage:",
 	"\tif victim is tameable:",
 	"\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondIsTameable extends PropertyCondition<LivingEntity> {
 	
 	static {

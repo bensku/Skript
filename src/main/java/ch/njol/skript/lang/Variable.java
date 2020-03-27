@@ -376,8 +376,8 @@ public class Variable<T> implements Expression<T> {
 	
 	@Override
 	public Iterator<T> iterator(final Event e) {
-		if (!list)
-			throw new SkriptAPIException("");
+		//if (!list)
+		//	throw new SkriptAPIException("");
 		final String name = StringUtils.substring(this.name.toString(e), 0, -1);
 		final Object val = Variables.getVariable(name + "*", e, local);
 		if (val == null)
