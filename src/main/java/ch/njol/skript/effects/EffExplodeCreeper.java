@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 @Description("Starts the explosion process of a creeper or instantly explodes it.")
 @Examples({"start explosion of the last spawned creeper",
 			"stop ignition of the last spawned creeper"})
-@Since("INSERT VERSION")
+@Since("2.5")
 @RequiredPlugins("Paper 1.13 or newer/Spigot 1.14 or newer. Ignition can be stopped on Paper 1.13 or newer.")
 public class EffExplodeCreeper extends Effect {
 
