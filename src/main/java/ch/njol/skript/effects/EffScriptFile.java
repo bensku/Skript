@@ -97,10 +97,7 @@ public class EffScriptFile extends Effect {
 					return;
 				}
 				
-				if (!ScriptLoader.isAsync())
-					ScriptLoader.unloadScript(f);
-				Config config = ScriptLoader.loadStructure(f);
-				ScriptLoader.loadScripts(config);
+				ScriptLoader.reloadScripts(f);
 				break;
 			}
 			case DISABLE: {
