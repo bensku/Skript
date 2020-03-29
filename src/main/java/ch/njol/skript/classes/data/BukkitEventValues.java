@@ -677,10 +677,10 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// PlayerItemDamageEvent
-		EventValues.registerEventValue(PlayerItemDamageEvent.class, ItemStack.class, new Getter<ItemStack, PlayerItemDamageEvent>() {
+		EventValues.registerEventValue(PlayerItemDamageEvent.class, ItemType.class, new Getter<ItemType, PlayerItemDamageEvent>() {
 			@Override
-			public ItemStack get(PlayerItemDamageEvent event) {
-				return event.getItem();
+			public ItemType get(PlayerItemDamageEvent event) {
+				return new ItemType(event.getItem());
 			}
 		}, 0);
 		
