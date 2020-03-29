@@ -89,6 +89,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
@@ -673,6 +674,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(final PlayerMoveEvent e) {
 				return EvtMoveOn.getBlock(e);
+			}
+		}, 0);
+		// PlayerItemDamageEvent
+		EventValues.registerEventValue(PlayerItemDamageEvent.class, ItemStack.class, new Getter<ItemStack, PlayerItemDamageEvent>() {
+			@Override
+			public ItemStack get(PlayerItemDamageEvent event) {
+				return event.getItem();
 			}
 		}, 0);
 		
