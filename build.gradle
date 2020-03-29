@@ -36,10 +36,6 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://nexus.hc.to/content/repositories/pub_releases'
-		}
-	
-		maven {
 			url 'https://jitpack.io'
 		}
 	
@@ -94,7 +90,7 @@ processResources {
 		"version": System.getenv("SKRIPT_VERSION") == null ? project.property("version") : System.getenv("SKRIPT_VERSION"),
 		'today': "unknown", // Don't leak information about system this was built on
 		"release-flavor": "selfbuilt-unknown", // Note: 'selfbuilt' prefix makes updater report a custom build
-		"release-channel": "nones", // No updates, so anything else wouldn't make sense
+		"release-channel": "none", // No updates, so anything else wouldn't make sense
 		"release-updater": "ch.njol.skript.update.NoUpdateChecker", // Disable update checking
 		"release-source": "",
 		"release-download": "null"
