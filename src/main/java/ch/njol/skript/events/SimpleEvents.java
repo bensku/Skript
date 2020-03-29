@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.events;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
