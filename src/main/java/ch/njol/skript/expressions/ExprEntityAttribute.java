@@ -89,7 +89,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		Attribute a = attributes.getSingle(e);
-		double d = ((Number) delta[0]).doubleValue();
+		double d = delta == null ? 0 : ((Number) delta[0]).doubleValue();
 		for (Entity entity : getExpr().getArray(e)) {
 			AttributeInstance ai = getAttribute(entity, a);
 			if(ai != null) {
