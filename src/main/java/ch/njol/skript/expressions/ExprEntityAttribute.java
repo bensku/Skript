@@ -80,9 +80,9 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(Number.class);
-		return null;
+		if (mode == ChangeMode.REMOVE_ALL)
+			return null;
+		return CollectionUtils.array(Number.class);
 	}
 
 	@SuppressWarnings("null")
@@ -90,11 +90,27 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		Attribute a = attributes.getSingle(e);
 		double d = ((Number) delta[0]).doubleValue();
-		if (mode == ChangeMode.SET) {
-			for (Entity entity : getExpr().getArray(e)) {
-				AttributeInstance ai = getAttribute(entity, a);
-				if (ai != null) {
-					ai.setBaseValue(d);
+		for (Entity entity : getExpr().getArray(e)) {
+			AttributeInstance ai = getAttribute(entity, a);
+			if(ai != null) {
+				switch(mode) {
+					case ADD:
+						ai.setBaseValue(ai.getBaseValue() + d);
+						break;
+					case SET:
+						ai.setBaseValue(d);
+						break;
+					case DELETE:
+						ai.setBaseValue(0);
+						break;
+					case RESET:
+						ai.setBaseValue(ai.getDefaultValue());
+						break;
+					case REMOVE:
+						ai.setBaseValue(ai.getBaseValue() - d);
+						break;
+					case REMOVE_ALL:
+						assert false;
 				}
 			}
 		}
@@ -105,7 +121,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 		return Number.class;
 	}
 
-	@SuppressWarnings("null") // For some reason Java thinks that entities.toString(...) is null even though there's a null check ternary 
+	@SuppressWarnings("null") 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "entity " + getExpr().toString(e, debug) + "'s " + (attributes == null ? "" : attributes.toString(e, debug)) + "attribute";
