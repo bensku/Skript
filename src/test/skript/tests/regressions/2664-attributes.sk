@@ -1,5 +1,16 @@
 test "attributes":
 	spawn cow at location(0, 64, 0, world "world")
-	set {_x} to 3.14
-	set movement speed attribute of last spawned cow to {_x}
-	assert movement speed attribute of last spawned cow is {_x} with "attribute failed"
+	set {_m} to last spawned cow
+	set {_def} to movement speed attribute of {_m} # We want to make sure the default is constant
+	set movement speed attribute of {_m} to 3.14
+	assert movement speed attribute of {_m} is 3.14 with "attribute set failed"
+	add 5 to movement speed attribute of {_m}
+	assert movement speed attribute of {_m} is 8.14 with "attribute add failed"
+	remove 4 from movement speed attribute of {_m}
+	assert movement speed attribute of {_m} is 4.14 with "attribute remove ##1 failed"
+	remove 10 from movement speed attribute of {_m}
+	assert movement speed attribute of {_m} is -5.86 with "attribute remove ##2 failed" # Negative attribute values should be safe
+	delete movement speed attribute of {_m}
+	assert movement speed attribute of {_m} is 0 with "attribute delete failed"
+	reset movement speed attribute of {_m}
+	assert movement speed attribute of {_m} is {_def} with "attribute reset failed" # Compare with original "default"
