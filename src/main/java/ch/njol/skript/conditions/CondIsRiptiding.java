@@ -31,7 +31,7 @@ import ch.njol.skript.doc.Since;
 @Name("Is Riptiding")
 @Description("Checks to see if an entity is currently using the Riptide enchantment.")
 @Examples("target entity is riptiding")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondIsRiptiding extends PropertyCondition<LivingEntity> {
 	
 	static {

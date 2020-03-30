@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set custom model data of player's tool to 3",
 	"set {_model} to custom model data of player's tool"})
 @RequiredPlugins("1.14+")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long> {
 	
 	static {

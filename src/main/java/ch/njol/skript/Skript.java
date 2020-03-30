@@ -1538,10 +1538,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("[Skript] Severe Error:");
 		logEx(info);
 		logEx();
-		if (!tainted) {
-			logEx("Something went horribly wrong with Skript.");
-			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
-		}
 		
 		// Parse something useful out of the stack trace
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -1559,6 +1555,13 @@ public final class Skript extends JavaPlugin implements Listener {
 		if (tainted) {
 			logEx("Skript is running with developer command-line options.");
 			logEx("If you are not a developer, consider disabling them.");
+		} else if (getInstance().getDescription().getVersion().contains("nightly")) {
+			logEx("You're running a (buggy) nightly version of Skript.");
+			logEx("If this is not a test server, switch to a more stable release NOW!");
+			logEx("Your players are unlikely to appreciate crashes and/or data loss due to Skript bugs.");
+			logEx("");
+			logEx("Just testing things? Good. Please report this bug, so that we can fix it before a stable release.");
+			logEx("Issue tracker: " + issuesUrl);
 		} else if (!isRunningMinecraft(1, 9)) {
 			logEx("You are running an outdated Minecraft version not supported by Skript.");
 			logEx("Please update to Minecraft 1.9.4 or later or fix this yourself and send us a pull request.");
@@ -1574,6 +1577,8 @@ public final class Skript extends JavaPlugin implements Listener {
 			logEx("Run /sk update check to get a download link to latest Skript!");
 			logEx("You will be given instructions how to report this error if it persists after update.");
 		} else {
+			logEx("Something went horribly wrong with Skript.");
+			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
 			if (pluginPackages.isEmpty()) {
 				logEx("You should report it at " + issuesUrl + ". Please copy paste this report there (or use paste service).");
 				logEx("This ensures that your issue is noticed and will be fixed as soon as possible.");

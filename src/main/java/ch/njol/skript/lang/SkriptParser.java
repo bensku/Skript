@@ -574,7 +574,7 @@ public class SkriptParser {
 				final Object t = Classes.parse(expr, ci.getC(), context);
 				if (t != null) {
 					log.printLog();
-					return new SimpleLiteral<>(t, false);
+					return new SimpleLiteral<>(t, false, new UnparsedLiteral(expr));
 				}
 			}
 			log.printError();

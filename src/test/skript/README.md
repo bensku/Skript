@@ -67,7 +67,7 @@ Use Gradle to launch a test development server:
 TERM=dumb ./gradlew skriptTestDev
 ```
 
-The server launched will be running at localhost:25555. You can use console
+The server launched will be running at localhost:25565. You can use console
 as normal, though there is some lag due to Gradle. If you're having trouble,
 try without <code>TERM=dumb</code>.
 
