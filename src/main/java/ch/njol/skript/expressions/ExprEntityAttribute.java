@@ -44,7 +44,8 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Entity Attribute")
 @Description({"The attribute value of an entity.",
-			 "Note that the movement speed attribute cannot be reliably used for players. For that purpose, use the speed expression instead."})
+			 "Note that the movement speed attribute cannot be reliably used for players. For that purpose, use the speed expression instead.",
+			 "Resetting an entity's attribute is only available in Minecraft 1.11 and above."})
 @Examples({"on damage of player:",
 		"	send \"You are wounded!\"",
 		"	set victim's attack speed attribute to 2"})
@@ -56,6 +57,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 				"%attributetype% [value] of %entities%",
 				"%entities%'[s] %attributetype% [value]");
 	}
+	
+	private static final boolean DEFAULTVALUE_EXISTS = Skript.isRunningMinecraft(1, 11);
 	
 	@Nullable
 	private Expression<Attribute> attributes;
@@ -80,7 +83,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS))
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
