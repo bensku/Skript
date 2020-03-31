@@ -1,6 +1,7 @@
 test "attributes 1":
 	spawn cow at location(0, 64, 0, world "world")
 	set {_m} to last spawned cow
+	assert movement speed attribute of {_m} is set with "attribute get failed"
 	set movement speed attribute of {_m} to 3.14
 	assert movement speed attribute of {_m} is 3.14 with "attribute set failed"
 	add 5 to movement speed attribute of {_m}
@@ -17,4 +18,4 @@ test "attributes 2" when minecraft version is not "1.9.4":
 	spawn cow at location(0, 65, 0, world "world")
 	set {_m} to last spawned cow
 	reset movement speed attribute of {_m}
-	assert movement speed attribute of {_m} is 0.7 with "attribute reset failed"
+	assert movement speed attribute of {_m} is set with "attribute reset failed" # No need to compare with a fixed constant
