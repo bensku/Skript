@@ -1725,7 +1725,7 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
 				.user("attribute ?types?")
 				.name("Attribute Type")
-				.description("The attribute type of an entity. Note that this type does not contain any numerical values."
+				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
 						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
 				.defaultExpression(new EventValueExpression<>(Attribute.class))
 				.usage(attributes.getAllNames())
