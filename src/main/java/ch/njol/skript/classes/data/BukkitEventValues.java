@@ -103,6 +103,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.PortalCreateEvent;
@@ -491,6 +492,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public ItemType get(final ItemSpawnEvent e) {
 				return new ItemType(e.getEntity().getItemStack());
+			}
+		}, 0);
+		// LightningStrikeEvent
+		EventValues.registerEventValue(LightningStrikeEvent.class, Entity.class, new Getter<Entity, LightningStrikeEvent>() {
+			@Override
+			public Entity get(LightningStrikeEvent event) {
+				return event.getLightning();
 			}
 		}, 0);
 		
