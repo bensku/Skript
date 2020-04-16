@@ -35,7 +35,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 	"This differs from the server side view distance of player as this will retrieve the view distance the player has set on their client.")
 @Examples({"set {_clientView} to the client view distance of player", "set view distance of player to client view distance of player"})
 @RequiredPlugins("1.13.2+")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprClientViewDistance extends SimplePropertyExpression<Player, Number> {
 	
 	static {

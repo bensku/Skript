@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Ageable;
@@ -488,6 +489,23 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 				for (final EntityData<?> t : types) {
 					if (t.isInstance(e)) {
 						list.add(e);
+						break;
+					}
+				}
+			}
+		}
+		return list.toArray((E[]) Array.newInstance(type, list.size()));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <E extends Entity> E[] getAll(final EntityData<?>[] types, final Class<E> type, Chunk[] chunks) {
+		assert types.length > 0;
+		final List<E> list = new ArrayList<>();
+		for (Chunk chunk : chunks) {
+			for (Entity entity : chunk.getEntities()) {
+				for (EntityData<?> t : types) {
+					if (t.isInstance(entity)) {
+						list.add(((E) entity));
 						break;
 					}
 				}

@@ -32,6 +32,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
@@ -57,7 +58,7 @@ import ch.njol.util.StringUtils;
 		"	replace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
 		" ",
 		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
-@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, case sensitivity)")
+@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), 2.5 (replace first, case sensitivity)")
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
@@ -65,8 +66,8 @@ public class EffReplace extends Effect {
 				"replace (all|every|) %strings% with %string% in %strings% [(1¦with case sensitivity)]",
 				"replace first %strings% in %strings% with %string% [(1¦with case sensitivity)]",
 				"replace first %strings% with %string% in %string% [(1¦with case sensitivity)]",
-				"replace (all|every|) %itemstacks% in %inventories% with %itemstack%",
-				"replace (all|every|) %itemstacks% with %itemstack% in %inventories%");
+				"replace (all|every|) %itemtypes% in %inventories% with %itemtype%",
+				"replace (all|every|) %itemtypes% with %itemtype% in %inventories%");
 	}
 	
 	@SuppressWarnings("null")
@@ -116,10 +117,10 @@ public class EffReplace extends Effect {
 			}
 			this.haystack.change(e, haystack, ChangeMode.SET);
 		} else {
-			for (Inventory inv : (Inventory[])haystack)
-				for (ItemStack item : (ItemStack[]) needles)
-					for (Integer slot : inv.all(item).keySet()){
-						inv.setItem(slot.intValue(), (ItemStack)replacement);
+			for (Inventory inv : (Inventory[]) haystack)
+				for (ItemType item : (ItemType[]) needles)
+					for (Integer slot : inv.all(item.getRandom()).keySet()) {
+						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
 					}
 		}
 	}

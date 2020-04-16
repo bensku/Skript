@@ -77,6 +77,7 @@ skript command:
 			check: Überprüft, ob eine neue Version von Skript verfügbar ist
 			changes: Listet alle Änderungen seit der aktuellen Version auf (auf englisch)
 			download: Lädt die neueste Version herunter
+		info: Druckt eine Nachricht mit Links zu den Aliases und der Dokumentation von Skript.
 	
 	invalid script: Das Skript <grey>'<gold>%s<grey>'<red> konnte nicht gefunden werden.
 	invalid folder: Der Ordner <grey>'<gold>%s<grey>'<red> konnte nicht gefunden werden.
@@ -133,6 +134,9 @@ skript command:
 			# invalid version: Kein Changelog der Version <gold>%s<red> verfügbar
 			title: <bold><cyan>%s<reset> (%s)
 			next page: <gray>Seite %s von %s. Tippe <gold>/skript update changes %s<gray> für die nächste Seite (Tipp: benutze die Pfeil-Hoch-Taste)
+	info:
+		aliases: Die Aliase von Skript finden Sie hier: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Die Dokumentation von Skript finden Sie hier: <aqua>https://skriptlang.github.io/Skript
 
 # -- Updater --
 updater:

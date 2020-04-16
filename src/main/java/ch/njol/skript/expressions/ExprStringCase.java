@@ -55,7 +55,7 @@ import ch.njol.util.Kleenean;
 	"\"What is your name?\" in kebab case # What-is-your-name?",
 	"\"What is your name?\" in lower kebab case # what-is-your-name?",
 	"\"What is your name?\" in upper kebab case # WHAT-IS-YOUR-NAME?"})
-@Since("2.2-dev16 (lowercase and uppercase), INSERT VERSION (advanced cases)")
+@Since("2.2-dev16 (lowercase and uppercase), 2.5 (advanced cases)")
 public class ExprStringCase extends SimpleExpression<String> {
 	
 	static {
