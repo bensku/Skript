@@ -21,13 +21,14 @@ package ch.njol.skript.lang;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Streams;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -89,7 +90,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	public T[] getAll(final Event e);
 	
 	/**
-	 * Gets a non-null stream of this expression's values
+	 * Gets a non-null stream of this expression's values.
 	 *
 	 * @param e The event
 	 * @return A non-null stream of this expression's values
@@ -99,7 +100,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 		if (iter == null) {
 			return Stream.empty();
 		}
-		return Streams.stream(iter);
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iter, 0), false);
 	}
 	
 	/**
