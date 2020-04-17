@@ -8,6 +8,7 @@
 #
 
 aliases:
+	# Items that the user cannot give himself
 	blacklisted = TNT, bedrock, obsidian, mob spawner, lava, lava bucket
 
 # This version of the command requires that the player has the permission skript.give,
@@ -19,11 +20,11 @@ command /item <items>:
 	executable by: players
 	permission: skript.give
 	trigger:
-		player has permission "skript.give.bypassblacklist":
+		if player has permission "skript.give.bypassblacklist":
 			give arguments to player
 		else:
 			loop arguments:
-				loop-item is not blacklisted:
+				if loop-item is not blacklisted:
 					give loop-item to player
 				else:
 					message "<red>%loop-item%<reset> is blacklisted and thus cannot be spawned"
@@ -39,11 +40,11 @@ command /item2 <items>:
 	permission: skript.give
 	trigger:
 		loop arguments:
-			loop-item is enchanted:
-				player does not have the permission "skript.give.enchanted":
+			if loop-item is enchanted:
+				if player does not have the permission "skript.give.enchanted":
 					message "You don't have permission to spawn enchanted items!"
 					stop
-			player has permission "skript.give.%ID of loop-item%":
+			if player has permission "skript.give.%ID of loop-item%":
 				give loop-item to player
 			else:
 				message "You don't have permission to spawn <red>%loop-item%<reset>!"
@@ -56,7 +57,7 @@ command /give <item types> to <player>:
 	trigger:
 		send "Giving %argument 1% to %argument 2%" to player
 		loop argument 1:
-			player has permission "skript.give.%ID of loop-item%":
+			if player has permission "skript.give.%ID of loop-item%":
 				give loop-item to argument 2
 				send "You recieved %loop-item% from %player%" to argument 2
 			else:
