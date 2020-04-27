@@ -1,6 +1,6 @@
 test "explode with fire effect/condition":
 	spawn a primed tnt at spawn of world "world"
 	assert last spawned primed tnt does not explode with fire with "primed tnt should not explode with fire by default"
-	make last spawned primed tnt explode with fire
+	make the last spawned primed tnt's explosion fiery
 	assert last spawned primed tnt explodes with fire with "primed tnt should explode with fire after being set to explode with fire"
 	delete last spawned tnt

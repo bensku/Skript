@@ -46,7 +46,7 @@ public class EffExplodeWithFire extends Effect {
 
 	static {
 		Skript.registerEffect(EffExplodeWithFire.class,
-				"make %entities% explosion [(1¦not)] (fiery|incendiary)",
+				"make %entities%'[s] explosion [(1¦not)] (fiery|incendiary)",
 				"make %entities% [(1¦not)] cause (a fiery|an incendiary explosion)",
 				"make the [event(-| )]explosion [(1¦not)] fiery");
 	}
