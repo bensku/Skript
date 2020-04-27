@@ -55,7 +55,7 @@ import ch.njol.util.Kleenean;
 public class EffMessage extends Effect {
 
 	static {
-		Skript.registerEffect(EffMessage.class, "(message|send [message[s]]) %strings% [to %commandsenders%] [%number% times]");
+		Skript.registerEffect(EffMessage.class, "(message|send [message[s]]) %strings% [to %commandsenders%] [%-number% times]");
 	}
 
 	@SuppressWarnings("null")
@@ -90,7 +90,6 @@ public class EffMessage extends Effect {
             Number n = repeat.getSingle(e);
             if (n != null) {
             	times = n.intValue();
-            	if (times < 1) times = 1;
             }
 		}
 		for (Expression<? extends String> message : messages) {

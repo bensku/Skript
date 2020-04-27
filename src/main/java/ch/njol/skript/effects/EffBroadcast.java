@@ -46,7 +46,7 @@ import ch.njol.util.Kleenean;
 public class EffBroadcast extends Effect {
 
 	static {
-		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%] [%number% times]");
+		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%] [%-number% times]");
 	}
 
 	@SuppressWarnings("null")
@@ -74,7 +74,6 @@ public class EffBroadcast extends Effect {
             Number n = repeat.getSingle(e);
             if (n != null) {
             	times = n.intValue();
-            	if (times < 1) times = 1;
             }
 		}
 		for (final String m : messages.getArray(e)) {
