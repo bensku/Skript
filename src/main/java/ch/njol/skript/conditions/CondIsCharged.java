@@ -17,43 +17,38 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.expressions;
+package ch.njol.skript.conditions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.LivingEntity;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.util.Kleenean;
 
-@Name("New Line")
-@Description("Returns a line break separator.")
-@Examples("send \"Hello%nl%Goodbye!\" to player")
+@Name("Is Charged")
+@Description("Checks if a creeper is charged (powered).")
+@Examples({"if the last spawned creeper is charged:",
+			"\tbroadcast \"A charged creeper is at %location of last spawned creeper%\""})
 @Since("2.5")
-public class LitNewLine extends SimpleLiteral<String> {
-
+public class CondIsCharged extends PropertyCondition<LivingEntity> {
+	
 	static {
-		Skript.registerExpression(LitNewLine.class, String.class, ExpressionType.SIMPLE, "n[ew]l[ine]", "line[ ]break");
+		register(CondIsCharged.class, "(charged|powered)", "livingentities");
 	}
-
-	public LitNewLine() {
-		super("\n", false);
-	}
-
+	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
-		return true;
+	public boolean check(final LivingEntity e) {
+		if (e instanceof Creeper)
+			return ((Creeper) e).isPowered();
+		return false;
 	}
-
+	
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "newline";
+	protected String getPropertyName() {
+		return "charged";
 	}
+	
 }

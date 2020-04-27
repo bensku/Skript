@@ -836,8 +836,6 @@ final public class ScriptLoader {
 			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
 					.resolve(Skript.SCRIPTSFOLDER).relativize(f.toPath().toAbsolutePath()).toString();
 			assert name != null;
-			Functions.clearFunctions(name); // Functions are still callable from other scripts
-			// We're just making it impossible to look them up
 			return loadStructure(new FileInputStream(f), name);
 		} catch (final IOException e) {
 			Skript.error("Could not load " + f.getName() + ": " + ExceptionUtils.toString(e));
@@ -948,10 +946,6 @@ final public class ScriptLoader {
 	 */
 	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
-		String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
-				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
-		assert name != null;
-		Functions.clearFunctions(name);
 		Functions.validateFunctions();
 		return r;
 	}
@@ -964,10 +958,47 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			
+			// Clear functions, DO NOT validate them yet
+			// If unloading, our caller will do this immediately after we return
+			// However, if reloading, new version of this script is first loaded
+			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+					.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
+			assert name != null;
+			Functions.clearFunctions(name);
+			
 			return info; // Return how much we unloaded
 		}
 		
 		return new ScriptInfo(); // Return that we unloaded literally nothing
+	}
+	
+	/**
+	 * Reloads a single script.
+	 * @param script Script file.
+	 * @return Statistics of the newly loaded script.
+	 */
+	public static ScriptInfo reloadScript(File script) {
+		if (!isAsync()) {
+			unloadScript_(script);
+		}
+		Config configs = loadStructure(script);
+		Functions.validateFunctions();
+		return loadScripts(configs);
+	}
+	
+	/**
+	 * Reloads all scripts in the given folder and its subfolders.
+	 * @param folder A folder.
+	 * @return Statistics of newly loaded scripts.
+	 */
+	public static ScriptInfo reloadScripts(File folder) {
+		if (!isAsync()) {
+			unloadScripts_(folder);
+		}
+		List<Config> configs = loadStructures(folder);
+		Functions.validateFunctions();
+		return loadScripts(configs);
 	}
 
 	/**
