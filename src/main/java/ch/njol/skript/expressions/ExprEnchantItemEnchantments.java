@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
@@ -71,11 +70,13 @@ public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentTyp
 		return true;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	protected EnchantmentType[] get(Event e) {
 		return ((EnchantItemEvent) e).getEnchantsToAdd().entrySet().stream()
-				.map(entry -> new EnchantmentType(entry.getKey(), entry.getValue())).toArray(EnchantmentType[]::new);
+				.map(entry -> new EnchantmentType(entry.getKey(), entry.getValue()))
+				.toArray(EnchantmentType[]::new);
 	}
 
 	@Override
@@ -86,6 +87,7 @@ public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentTyp
 		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		EnchantmentType[] enchants = new EnchantmentType[delta != null ? delta.length : 0];

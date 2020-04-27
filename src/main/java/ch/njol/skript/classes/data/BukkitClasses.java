@@ -1751,7 +1751,7 @@ public class BukkitClasses {
 	
 					@Override
 					public String getVariableNamePattern() {
-						return "\\S+";
+						return ".+";
 					}
 				}));
 		}

@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
@@ -38,6 +40,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer")
 @Description("The enchantment offer in enchant prepare events.")
@@ -51,36 +54,86 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	static {
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			Skript.registerExpression(ExprEnchantmentOffer.class, EnchantmentOffer.class, ExpressionType.SIMPLE, 
-					"enchant[ment] offer 1",
-					"enchant[ment] offer 2",
-					"enchant[ment] offer 3",
-					"[the] enchant[ment] offers");
+					"[the] enchant[ment] offers",
+					"enchant[ment] offer %number%",
+					"[the] %number%(st|nd|rd|th) enchant[ment] offer");
 		}
 	}
 
-	private int offerNumber;
+	@SuppressWarnings("null")
+	private Expression<Number> exprOfferNumber;
 
+	private boolean multiple;
+
+	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
 			Skript.error("Enchantment offers are only usable in enchant prepare events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		offerNumber = matchedPattern;
+		if (matchedPattern == 0) {
+			multiple = true;
+		} else {
+			exprOfferNumber = (Expression<Number>) exprs[0];
+			multiple = false;
+		}
 		return true;
+	}
+
+	@SuppressWarnings("null")
+	@Override
+	@Nullable
+	protected EnchantmentOffer[] get(Event e) {
+		if (multiple)
+			return ((PrepareItemEnchantEvent) e).getOffers();
+
+		int offerNumber = exprOfferNumber.getSingle(e).intValue();
+		if (offerNumber < 1 || offerNumber > 3)
+			return new EnchantmentOffer[]{};
+		return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber - 1]};
 	}
 
 	@Override
 	@Nullable
-	protected EnchantmentOffer[] get(Event e) {
-		if (offerNumber == 3)
-			return ((PrepareItemEnchantEvent) e).getOffers();
-		return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber]};
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (mode == ChangeMode.DELETE)
+			return CollectionUtils.array(EnchantmentOffer.class);
+		return null;
+	}
+
+	@SuppressWarnings("null")
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+
+		// Index Form
+		int offerNumber = 0;
+		if (exprOfferNumber != null) {
+			offerNumber = exprOfferNumber.getSingle(e).intValue() - 1;
+		}
+
+		if (e instanceof PrepareItemEnchantEvent) {
+			switch (mode) {
+				case DELETE:
+					if (multiple) {
+						for (int i = 0; i <= 2; i++)
+							((PrepareItemEnchantEvent) e).getOffers()[i] = null;
+					} else {
+						((PrepareItemEnchantEvent) e).getOffers()[offerNumber] = null;
+					}
+				case SET:
+				case ADD:
+				case REMOVE:
+				case RESET:
+				case REMOVE_ALL:
+					assert false;
+			}
+		}
 	}
 
 	@Override
 	public boolean isSingle() {
-		return offerNumber != 4;
+		return !multiple;
 	}
 
 	@Override
@@ -90,7 +143,9 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "enchantment offer " + offerNumber;
+		if (multiple)
+			return "the enchantment offers";
+		return "enchantment offer " + exprOfferNumber.toString(e, debug);
 	}
 
 }

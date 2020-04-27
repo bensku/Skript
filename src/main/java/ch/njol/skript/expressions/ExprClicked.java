@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -72,7 +73,8 @@ public class ExprClicked extends SimpleExpression<Object> {
 		SLOT(2, Slot.class, "clicked slot", "clicked slot"),
 		INVENTORY(3, Inventory.class, "clicked inventory", "clicked inventory"),
 		TYPE(4, ClickType.class, "click type", "click (type|action)"),
-		ACTION(5, InventoryAction.class, "inventory action", "inventory action");
+		ACTION(5, InventoryAction.class, "inventory action", "inventory action"),
+		ENCHANT_BUTTON(6, Number.class, "clicked enchantment button", "(clicked [enchant[ment]] button|enchant[ment] button clicked)");
 		
 		private String name, syntax;
 		private Class<?> c;
@@ -114,7 +116,8 @@ public class ExprClicked extends SimpleExpression<Object> {
 					+ ClickableType.SLOT.getSyntax(false)
 					+ ClickableType.INVENTORY.getSyntax(false)
 					+ ClickableType.TYPE.getSyntax(false)
-					+ ClickableType.ACTION.getSyntax(true) + ")");
+					+ ClickableType.ACTION.getSyntax(false) 
+					+ ClickableType.ENCHANT_BUTTON.getSyntax(true) + ")");
 	}
 	
 	@Nullable
@@ -149,6 +152,12 @@ public class ExprClicked extends SimpleExpression<Object> {
 			case SLOT:
 				if (!ScriptLoader.isCurrentEvent(InventoryClickEvent.class)) {
 					Skript.error("The expression '" + clickable.getName() + "' may only be used in an inventory click event", ErrorQuality.SEMANTIC_ERROR);
+					return false;
+				}
+				break;
+			case ENCHANT_BUTTON:
+				if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
+					Skript.error("The expression 'clicked enchantment button' is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
 					return false;
 				}
 				break;
@@ -210,6 +219,10 @@ public class ExprClicked extends SimpleExpression<Object> {
 				if (invi != null) // Inventory is technically not guaranteed to exist...
 					return CollectionUtils.array(new InventorySlot(invi, ((InventoryClickEvent) e).getSlot()));
 				return null;
+			case ENCHANT_BUTTON:
+				if (e instanceof EnchantItemEvent) {
+					return new Number[]{((EnchantItemEvent) e).whichButton() + 1};
+				}
 		}
 		return null;
 	}

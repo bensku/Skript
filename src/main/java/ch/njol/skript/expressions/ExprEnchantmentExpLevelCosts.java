@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -57,51 +58,79 @@ public class ExprEnchantmentExpLevelCosts extends SimpleExpression<Number>{
 	static {
 		if (!Skript.isRunningMinecraft(1, 11)) { // This expression should only be usable on 1.9 and 1.10.
 			Skript.registerExpression(ExprEnchantmentExpLevelCosts.class, Number.class, ExpressionType.SIMPLE,
-					"[the] cost of enchant[ment] [offer] 1",
-					"[the] cost of enchant[ment] [offer] 2",
-					"[the] cost of enchant[ment] [offer] 3",
-					"[the] cost of (enchant[ment]s|enchant[ment] offers)");
+					"[the] cost of (enchant[ment]s|enchant[ment] offers)",
+					"[the] cost of enchant[ment] [offer] %number%",
+					"enchant[ment] [offer] %number%'[s] cost",
+					"[the] cost of [the] %number%(st|nd|rd|th) enchant[ment] [offer]");
 		}
 	}
 
-	private int offerNumber;
+	@SuppressWarnings("null")
+	private Expression<Number> exprOfferNumber;
 
+	private boolean multiple;
+
+	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
 			Skript.error("The enchantment exp level cost is only usable in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		offerNumber = matchedPattern;
+		if (matchedPattern == 0) {
+			multiple = true;
+		} else {
+			exprOfferNumber = (Expression<Number>) exprs[0];
+			multiple = false;
+		}
 		return true;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		if (offerNumber == 4) {
+		if (multiple) {
 			return Arrays.stream(((PrepareItemEnchantEvent) e).getExpLevelCostsOffered())
 					.boxed()
 					.toArray(Number[]::new);
 		}
-		return new Number[]{((PrepareItemEnchantEvent) e).getExpLevelCostsOffered()[offerNumber]};
+
+		int offerNumber = exprOfferNumber.getSingle(e).intValue();
+		if (offerNumber < 1 || offerNumber > 3)
+			return new Number[]{};
+
+		return new Number[]{((PrepareItemEnchantEvent) e).getExpLevelCostsOffered()[offerNumber - 1]};
 	}
 
 	@Override
-	public @Nullable Class<?>[] acceptChange(Changer.ChangeMode mode) {
+	@Nullable
+	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
 		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		int cost = delta != null ? ((Number) delta[0]).intValue() : 1;
-		if (cost < 1) cost = 1;
+		if (delta == null)
+			return;
+		int cost = ((Number) delta[0]).intValue();
+		if (cost < 1) 
+			return;
+
+		// Index Form
+		int offerNumber = 0;
+		if (exprOfferNumber != null) {
+			offerNumber = exprOfferNumber.getSingle(event).intValue() - 1;
+		}
+
+		int change;
 		PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
 		switch (mode) {
 			case SET:
-				if (offerNumber == 4) {
+				if (multiple) {
 					for (int i = 0; i <= 2; i++)
 						e.getExpLevelCostsOffered()[i] = cost;
 				} else {
@@ -109,31 +138,33 @@ public class ExprEnchantmentExpLevelCosts extends SimpleExpression<Number>{
 				}
 				break;
 			case ADD:
-				int add;
-				if (offerNumber == 4) {
+				if (multiple) {
 					for (int i = 0; i <= 2; i++) {
-						add = cost + e.getExpLevelCostsOffered()[i];
-						if (add < 1) add = 1;
-						e.getExpLevelCostsOffered()[i] = add;
+						change = cost + e.getExpLevelCostsOffered()[i];
+						if (change < 1) 
+							continue;
+						e.getExpLevelCostsOffered()[i] = change;
 					}
 				} else {
-					add = cost + e.getExpLevelCostsOffered()[offerNumber];
-					if (add < 1) add = 1;
-					e.getExpLevelCostsOffered()[offerNumber] = add;
+					change = cost + e.getExpLevelCostsOffered()[offerNumber];
+					if (change < 1) 
+						return;
+					e.getExpLevelCostsOffered()[offerNumber] = change;
 				}
 				break;
 			case REMOVE:
-				int subtract;
-				if (offerNumber == 4) {
+				if (multiple) {
 					for (int i = 0; i <= 2; i++) {
-						subtract = cost - e.getExpLevelCostsOffered()[i];
-						if (subtract < 1) subtract = 1;
-						e.getExpLevelCostsOffered()[i] = subtract;
+						change = cost - e.getExpLevelCostsOffered()[i];
+						if (change < 1) 
+							continue;
+						e.getExpLevelCostsOffered()[i] = change;
 					}
 				} else {
-					subtract = cost - e.getExpLevelCostsOffered()[offerNumber];
-					if (subtract < 1) subtract = 1;
-					e.getExpLevelCostsOffered()[offerNumber] = subtract;
+					change = cost - e.getExpLevelCostsOffered()[offerNumber];
+					if (change < 1) 
+						return;
+					e.getExpLevelCostsOffered()[offerNumber] = change;
 				}
 				break;
 			case RESET:
@@ -145,7 +176,7 @@ public class ExprEnchantmentExpLevelCosts extends SimpleExpression<Number>{
 
 	@Override
 	public boolean isSingle() {
-		return offerNumber != 4;
+		return !multiple;
 	}
 
 	@Override
@@ -155,9 +186,9 @@ public class ExprEnchantmentExpLevelCosts extends SimpleExpression<Number>{
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (offerNumber == 4)
+		if (multiple)
 			return "cost of enchantment offers";
-		return "cost of enchantment offer " + (offerNumber+1);
+		return "cost of enchantment offer " + exprOfferNumber.toString(e, debug);
 	}
 
 }

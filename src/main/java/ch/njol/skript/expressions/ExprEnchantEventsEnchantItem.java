@@ -55,7 +55,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
 
 	static {
-		Skript.registerExpression(ExprEnchantEventsEnchantItem.class, ItemType.class, ExpressionType.SIMPLE, "[the] enchant[ed](-| )item");
+		Skript.registerExpression(ExprEnchantEventsEnchantItem.class, ItemType.class, ExpressionType.SIMPLE, "[the] enchanted item");
 	}
 
 	@Override
@@ -85,7 +85,8 @@ public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		assert delta != null;
+		if (delta == null)
+			return;
 		ItemType item = ((ItemType) delta[0]);
 		switch (mode) {
 			case SET:

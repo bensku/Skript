@@ -67,11 +67,12 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		EnchantmentOffer[] offers = getExpr().getArray(event);
-		if (offers.length == 0)
+		if (offers.length == 0 || delta == null)
 			return;
-		int cost = delta != null ? ((Number) delta[0]).intValue() : 1;
-		if (cost < 1) cost = 1;
-		int change = 1;
+		int cost = ((Number) delta[0]).intValue();
+		if (cost < 1) 
+			return;
+		int change;
 		switch (mode) {
 			case SET:
 				for (EnchantmentOffer offer : offers)
@@ -80,14 +81,16 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
 					change = cost + offer.getCost();
-					if (change < 1) change = 1;
+					if (change < 1) 
+						return;
 					offer.setCost(change);
 				}
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
 					change = cost - offer.getCost();
-					if (change < 1) change = 1;
+					if (change < 1) 
+						return;
 					offer.setCost(change);
 				}
 				break;
@@ -105,7 +108,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 
 	@Override
 	protected String getPropertyName() {
-		return "[enchant[ment]] cost";
+		return "enchantment cost";
 	}
 
 }

@@ -1051,6 +1051,13 @@ public final class BukkitEventValues {
 				return e.getEnchantBlock();
 			}
 		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(PrepareItemEnchantEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
 		//EnchantItemEvent
 		EventValues.registerEventValue(EnchantItemEvent.class, Player.class, new Getter<Player, EnchantItemEvent>() {
 			@Override
@@ -1064,6 +1071,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(EnchantItemEvent e) {
 				return e.getEnchantBlock();
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, ItemType.class, new Getter<ItemType, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(EnchantItemEvent e) {
+				return new ItemType(e.getItem());
 			}
 		}, 0);
 	}

@@ -49,7 +49,9 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantItemExpCost.class, Number.class, ExpressionType.SIMPLE, "[the] [exp[erience]] cost of enchant[(ing|ment)]");
+		Skript.registerExpression(ExprEnchantItemExpCost.class, Number.class, ExpressionType.SIMPLE, 
+				"[the] [e]xp[erience] cost (of|for) [the] enchant[ment]",
+				"[the] enchant[ment] cost");
 	}
 
 	@Override
@@ -119,7 +121,7 @@ public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "experience cost of enchantment";
+		return "the experience cost of the enchantment";
 	}
 
 }

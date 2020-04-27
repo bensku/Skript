@@ -57,7 +57,7 @@ public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<En
 	@SuppressWarnings("null")
 	@Override
 	public EnchantmentType convert(final EnchantmentOffer offer) {
-		return Converters.convert(offer.getEnchantment(), EnchantmentType.class);
+		return new EnchantmentType(offer.getEnchantment(), offer.getEnchantmentLevel());
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<En
 
 	@Override
 	protected String getPropertyName() {
-		return "enchant[ment]";
+		return "enchantment";
 	}
 
 }

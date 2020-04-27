@@ -67,11 +67,12 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		EnchantmentOffer[] offers = getExpr().getArray(event);
-		if (offers.length == 0)
+		if (offers.length == 0 || delta == null)
 			return;
-		int level = delta != null ? ((Number) delta[0]).intValue() : 1;
-		if (level < 1) level = 1;
-		int change = 1;
+		int level = ((Number) delta[0]).intValue();
+		if (level < 1) 
+			return;
+		int change;
 		switch (mode) {
 			case SET:
 				for (EnchantmentOffer offer : offers)
@@ -80,16 +81,16 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
 					change = level + offer.getEnchantmentLevel();
-					if (change < 1)
-						change = 1;
+					if (change < 1) 
+						return;
 					offer.setEnchantmentLevel(change);
 				}
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
 					change = level - offer.getEnchantmentLevel();
-					if (change < 1)
-						change = 1;
+					if (change < 1) 
+						return;
 					offer.setEnchantmentLevel(change);
 				}
 				break;
@@ -107,7 +108,7 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 
 	@Override
 	protected String getPropertyName() {
-		return "[enchant[ment]] level";
+		return "enchantment level";
 	}
 
 }
