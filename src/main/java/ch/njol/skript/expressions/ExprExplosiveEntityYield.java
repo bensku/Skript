@@ -68,11 +68,10 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 
 	@Override
 	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
-		if (delta == null)
-			return;
+		Number change = delta != null ? (Number) delta[0] : 0;
 		for (Entity entity : getExpr().getArray(event)) {
 			if (entity instanceof Explosive) {
-				Float f = ((Number) delta[0]).floatValue();
+				Float f = change.floatValue();
 				Explosive e = (Explosive) entity;
 				switch (mode) {
 					case SET:
@@ -97,7 +96,7 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 				}
 			} else if (entity instanceof Creeper && creeperUsable) {
 				Creeper c = (Creeper) entity;
-				int i = ((Number) delta[0]).intValue();
+				int i = change.intValue();
 				switch (mode) {
 					case SET:
 						c.setExplosionRadius(i);
