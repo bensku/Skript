@@ -74,9 +74,7 @@ public class CondExplodesWithFire extends Condition {
 	@Override
 	public boolean check(Event e) {
 		if (isEvent) {
-			if (isNegated())
-				return !((ExplosionPrimeEvent) e).getFire();
-			return ((ExplosionPrimeEvent) e).getFire();
+			return ((ExplosionPrimeEvent) e).getFire() ^ isNegated();
 		}
 		return entities.check(e, entity -> entity instanceof Explosive && ((Explosive) entity).isIncendiary(), isNegated());
 	}
