@@ -80,7 +80,7 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 				break;
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
-					change = level + offer.getEnchantmentLevel();
+					change = offer.getEnchantmentLevel() + level;
 					if (change < 1) 
 						return;
 					offer.setEnchantmentLevel(change);
@@ -88,7 +88,7 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
-					change = level - offer.getEnchantmentLevel();
+					change = offer.getEnchantmentLevel() - level;
 					if (change < 1) 
 						return;
 					offer.setEnchantmentLevel(change);

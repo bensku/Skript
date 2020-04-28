@@ -1746,7 +1746,7 @@ public class BukkitClasses {
 	
 					@Override
 					public String toVariableNameString(EnchantmentOffer eo) {
-						return EnchantmentType.toString(eo.getEnchantment()) + " " + eo.getEnchantmentLevel();
+						return toString(eo, 0);
 					}
 	
 					@Override

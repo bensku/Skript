@@ -82,7 +82,7 @@ public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentTyp
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.RESET)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
 		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
 	}
@@ -92,7 +92,7 @@ public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentTyp
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		EnchantmentType[] enchants = new EnchantmentType[delta != null ? delta.length : 0];
 		if (delta != null && delta.length != 0) {
-			for (int i = 0; i<delta.length; i++) {
+			for (int i = 0; i < delta.length; i++) {
 				if (delta[i] instanceof EnchantmentType)
 					enchants[i] = (EnchantmentType) delta[i];
 				else
@@ -103,24 +103,17 @@ public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentTyp
 		switch (mode) {
 			case SET:
 				e.getEnchantsToAdd().clear();
-				for (EnchantmentType enchant : enchants)
-					e.getEnchantsToAdd().put(enchant.getType(), enchant.getLevel());
-				break;
 			case ADD:
 				for (EnchantmentType enchant : enchants)
 					e.getEnchantsToAdd().put(enchant.getType(), enchant.getLevel());
 				break;
 			case REMOVE:
-				for (EnchantmentType enchant : enchants) {
-					if (e.getEnchantsToAdd().containsKey(enchant.getType())) {
-						if (e.getEnchantsToAdd().containsValue(enchant.getLevel())) {
-							e.getEnchantsToAdd().remove(enchant.getType(), enchant.getLevel());
-						}
-					}
-				}
-			case REMOVE_ALL:
+				for (EnchantmentType enchant : enchants)
+					e.getEnchantsToAdd().remove(enchant.getType(), enchant.getLevel());
+				break;
 			case DELETE:
 				e.getEnchantsToAdd().clear();
+			case REMOVE_ALL:
 			case RESET:
 				assert false;
 		}

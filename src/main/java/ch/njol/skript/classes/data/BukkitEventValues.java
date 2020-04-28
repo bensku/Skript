@@ -1060,18 +1060,18 @@ public final class BukkitEventValues {
 				return e.getEnchanter();
 			}
 		}, 0);
-		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Block.class, new Getter<Block, PrepareItemEnchantEvent>() {
-			@Override
-			@Nullable
-			public Block get(PrepareItemEnchantEvent e) {
-				return e.getEnchantBlock();
-			}
-		}, 0);
 		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
 			@Override
 			@Nullable
 			public ItemType get(PrepareItemEnchantEvent e) {
 				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Block.class, new Getter<Block, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Block get(PrepareItemEnchantEvent e) {
+				return e.getEnchantBlock();
 			}
 		}, 0);
 		//EnchantItemEvent
@@ -1082,18 +1082,18 @@ public final class BukkitEventValues {
 				return e.getEnchanter();
 			}
 		}, 0);
-		EventValues.registerEventValue(EnchantItemEvent.class, Block.class, new Getter<Block, EnchantItemEvent>() {
-			@Override
-			@Nullable
-			public Block get(EnchantItemEvent e) {
-				return e.getEnchantBlock();
-			}
-		}, 0);
 		EventValues.registerEventValue(EnchantItemEvent.class, ItemType.class, new Getter<ItemType, EnchantItemEvent>() {
 			@Override
 			@Nullable
 			public ItemType get(EnchantItemEvent e) {
 				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, Block.class, new Getter<Block, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public Block get(EnchantItemEvent e) {
+				return e.getEnchantBlock();
 			}
 		}, 0);
 	}

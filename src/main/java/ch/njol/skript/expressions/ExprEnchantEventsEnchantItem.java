@@ -123,7 +123,7 @@ public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "enchant item";
+		return "enchanted item";
 	}
 
 }

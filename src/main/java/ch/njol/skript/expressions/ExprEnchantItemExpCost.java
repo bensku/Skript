@@ -40,18 +40,17 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchant Event Experience Cost")
-@Description({"The cost to enchant in an enchant event.", 
-				"This is the number displayed in the enchantment table, not the actual number of levels removed."})
+@Description({"The cost of enchanting in an enchant event.", 
+				"This is number that was displayed in the enchantment table, not the actual number of levels removed."})
 @Examples({"on enchant:",
-			"\tsend \"Cost: %cost of enchanting%\" to player"})
-@Events("enchant prepare")
+			"\tsend \"Cost: %the displayed cost of enchanting%\" to player"})
+@Events("enchant")
 @Since("INSERT VERSION")
 public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 
 	static {
 		Skript.registerExpression(ExprEnchantItemExpCost.class, Number.class, ExpressionType.SIMPLE, 
-				"[the] [e]xp[erience] cost (of|for) [the] enchant[ment]",
-				"[the] enchant[ment] cost");
+				"[the] [displayed] [[e]xp[erience]] cost (of enchanting|to enchant)");
 	}
 
 	@Override
@@ -69,11 +68,6 @@ public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 		return new Number[]{((EnchantItemEvent) e).getExpLevelCost()};
 	}
 
-	/*
-	 * As of now, modifying the cost does not seem to serve a purpose.
-	 * However, in the case that this eventually gains functionality,
-	 * it can be added easily.
-	 * 
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
@@ -84,22 +78,22 @@ public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		int cost = delta != null ? ((Number) delta[0]).intValue() : 1;
-		if (cost < 1) cost = 1;
+		if (delta == null)
+			return;
+		int cost = ((Number) delta[0]).intValue();
+		int change;
 		EnchantItemEvent e = (EnchantItemEvent) event;
 		switch (mode) {
 			case SET:
 				e.setExpLevelCost(cost);
 				break;
 			case ADD:
-				int add = cost + e.getExpLevelCost();
-				if (add < 1) add = 1;
-				e.setExpLevelCost(add);
+				change = e.getExpLevelCost() + cost;
+				e.setExpLevelCost(change);
 				break;
 			case REMOVE:
-				int subtract = cost + e.getExpLevelCost();
-				if (subtract < 1) subtract = 1;
-				e.setExpLevelCost(subtract);
+				change = e.getExpLevelCost() - cost;
+				e.setExpLevelCost(change);
 				break;
 			case RESET:
 			case DELETE:
@@ -107,7 +101,6 @@ public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 				assert false;
 		}
 	}
-	*/
 
 	@Override
 	public boolean isSingle() {
@@ -121,7 +114,7 @@ public class ExprEnchantItemExpCost extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the experience cost of the enchantment";
+		return "the displayed cost of enchanting";
 	}
 
 }

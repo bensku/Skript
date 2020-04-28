@@ -19,7 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -54,8 +57,8 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	static {
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			Skript.registerExpression(ExprEnchantmentOffer.class, EnchantmentOffer.class, ExpressionType.SIMPLE, 
-					"[the] enchant[ment] offers",
-					"enchant[ment] offer %number%",
+					"[all [of]] [the] enchant[ment] offers",
+					"enchant[ment] offer[s] %numbers%",
 					"[the] %number%(st|nd|rd|th) enchant[ment] offer");
 		}
 	}
@@ -63,7 +66,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@SuppressWarnings("null")
 	private Expression<Number> exprOfferNumber;
 
-	private boolean multiple;
+	private boolean all;
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
@@ -73,25 +76,39 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 			return false;
 		}
 		if (matchedPattern == 0) {
-			multiple = true;
+			all = true;
 		} else {
 			exprOfferNumber = (Expression<Number>) exprs[0];
-			multiple = false;
+			all = false;
 		}
 		return true;
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({"null", "unused"})
 	@Override
 	@Nullable
 	protected EnchantmentOffer[] get(Event e) {
-		if (multiple)
+		if (all)
 			return ((PrepareItemEnchantEvent) e).getOffers();
 
-		int offerNumber = exprOfferNumber.getSingle(e).intValue();
-		if (offerNumber < 1 || offerNumber > 3)
-			return new EnchantmentOffer[]{};
-		return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber - 1]};
+		if (exprOfferNumber == null)
+			return new EnchantmentOffer[0];
+
+		if (exprOfferNumber.isSingle()) {
+			int offerNumber = exprOfferNumber.getSingle(e).intValue();
+			if (offerNumber < 1 || offerNumber > ((PrepareItemEnchantEvent) e).getOffers().length)
+				return new EnchantmentOffer[0];
+			return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber - 1]};
+		}
+
+		List<EnchantmentOffer> offers = new ArrayList<>();
+		int i;
+		for (Number n : exprOfferNumber.getArray(e)) {
+			i = n.intValue();
+			if (i >= 1 || i <= ((PrepareItemEnchantEvent) e).getOffers().length)
+				offers.add(((PrepareItemEnchantEvent) e).getOffers()[i - 1]);
+		}
+		return offers.toArray(new EnchantmentOffer[0]);
 	}
 
 	@Override
@@ -106,20 +123,26 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 
-		// Index Form
-		int offerNumber = 0;
+		List<Number> offerNumbers = new ArrayList<>();
 		if (exprOfferNumber != null) {
-			offerNumber = exprOfferNumber.getSingle(e).intValue() - 1;
+			if (exprOfferNumber.isSingle())
+				offerNumbers.add(exprOfferNumber.getSingle(e));
+			else
+				offerNumbers.addAll(Arrays.asList(exprOfferNumber.getArray(e)));
 		}
 
 		if (e instanceof PrepareItemEnchantEvent) {
 			switch (mode) {
 				case DELETE:
-					if (multiple) {
-						for (int i = 0; i <= 2; i++)
+					if (all) {
+						for (int i = 0; i < ((PrepareItemEnchantEvent) e).getOffers().length; i++)
 							((PrepareItemEnchantEvent) e).getOffers()[i] = null;
 					} else {
-						((PrepareItemEnchantEvent) e).getOffers()[offerNumber] = null;
+						int i;
+						for (Number n : offerNumbers) {
+							i = n.intValue();
+							((PrepareItemEnchantEvent) e).getOffers()[i - 1] = null;
+						}
 					}
 				case SET:
 				case ADD:
@@ -133,7 +156,9 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@Override
 	public boolean isSingle() {
-		return !multiple;
+		if (all)
+			return false;
+		return exprOfferNumber.isSingle();
 	}
 
 	@Override
@@ -143,9 +168,9 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (multiple)
+		if (all)
 			return "the enchantment offers";
-		return "enchantment offer " + exprOfferNumber.toString(e, debug);
+		return "enchantment offer(s) " + exprOfferNumber.toString(e, debug);
 	}
 
 }

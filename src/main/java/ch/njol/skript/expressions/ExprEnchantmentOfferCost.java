@@ -80,7 +80,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 				break;
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
-					change = cost + offer.getCost();
+					change = offer.getCost() + cost;
 					if (change < 1) 
 						return;
 					offer.setCost(change);
@@ -88,7 +88,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
-					change = cost - offer.getCost();
+					change = offer.getCost() - cost;
 					if (change < 1) 
 						return;
 					offer.setCost(change);
