@@ -19,12 +19,10 @@
  */
 package ch.njol.skript.util;
 
-import java.time.ZoneId;
 import java.util.TimeZone;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.yggdrasil.YggdrasilSerializable;
 
@@ -51,6 +49,15 @@ public class Date implements Comparable<Date>, YggdrasilSerializable {
 		this.timestamp = timestamp - offset;
 	}
 	
+	/**
+	 * Get a new Date with the current time
+	 *
+	 * @return New date with the current time
+	 */
+	public static Date now() {
+		return new Date(System.currentTimeMillis());
+	}
+	
 	public Timespan difference(final Date other) {
 		return new Timespan(Math.abs(timestamp - other.timestamp));
 	}
@@ -67,18 +74,50 @@ public class Date implements Comparable<Date>, YggdrasilSerializable {
 	}
 	
 	/**
+	 * Get the timestamp of this date
+	 *
 	 * @return The timestamp in milliseconds
 	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
 	
+	/**
+	 * Add a {@link Timespan} to this date
+	 *
+	 * @param span Timespan to add
+	 */
 	public void add(final Timespan span) {
 		timestamp += span.getMilliSeconds();
 	}
 	
+	/**
+	 * Subtract a {@link Timespan} from this date
+	 *
+	 * @param span Timespan to subtract
+	 */
 	public void subtract(final Timespan span) {
 		timestamp -= span.getMilliSeconds();
+	}
+	
+	/**
+	 * Get a new instance of this Date with the added timespan
+	 *
+	 * @param span Timespan to add to this Date
+	 * @return New Date with the added timespan
+	 */
+	public Date plus(Timespan span) {
+		return new Date(timestamp + span.getMilliSeconds());
+	}
+	
+	/**
+	 * Get a new instance of this Date with the subtracted timespan
+	 *
+	 * @param span Timespan to subtract from this Date
+	 * @return New Date with the subtracted timespan
+	 */
+	public Date minus(Timespan span) {
+		return new Date(timestamp - span.getMilliSeconds());
 	}
 	
 	@Override
@@ -98,9 +137,7 @@ public class Date implements Comparable<Date>, YggdrasilSerializable {
 		if (!(obj instanceof Date))
 			return false;
 		final Date other = (Date) obj;
-		if (timestamp != other.timestamp)
-			return false;
-		return true;
+		return timestamp == other.timestamp;
 	}
 	
 }

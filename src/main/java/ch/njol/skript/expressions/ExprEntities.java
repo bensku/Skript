@@ -61,7 +61,7 @@ import ch.njol.util.coll.iterator.NonNullIterator;
 		"give a diamond to all ops",
 		"heal all tamed wolves in radius 2000 around {town center}",
 		"delete all monsters in chunk at player"})
-@Since("1.2.1, INSERT VERSION (chunks)")
+@Since("1.2.1, 2.5 (chunks)")
 public class ExprEntities extends SimpleExpression<Entity> {
 
 	static {
