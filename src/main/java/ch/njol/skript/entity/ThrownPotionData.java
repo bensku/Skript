@@ -22,13 +22,13 @@ package ch.njol.skript.entity;
 import java.util.Arrays;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -49,6 +49,9 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	
 	private static final Adjective m_adjective = new Adjective("entities.thrown potion.adjective");
 	private static final boolean RUNNING_LEGACY = !Skript.isRunningMinecraft(1, 13);
+	private static final ItemType POTION = Aliases.javaItemType("potion");
+	private static final ItemType SPLASH_POTION = Aliases.javaItemType("splash potion");
+	private static final ItemType LINGER_POTION = Aliases.javaItemType("lingering potion");
 	
 	@Nullable
 	private ItemType[] types;
@@ -57,21 +60,20 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
 			return (types = Converters.convert((ItemType[]) exprs[0].getAll(), ItemType.class, t -> {
-				Material type = t.getMaterial();
 				// If the itemtype is a potion, lets make it a splash potion (required by Bukkit)
 				// Due to an issue with 1.12.2 and below, we have to force a lingering potion to be a splash potion
-				if (type == Material.POTION || (type == Material.LINGERING_POTION && RUNNING_LEGACY)) {
+				if (t.isSupertypeOf(POTION) || (t.isSupertypeOf(LINGER_POTION) && RUNNING_LEGACY)) {
 					ItemMeta meta = t.getItemMeta();
-					ItemType itemType = new ItemType(Material.SPLASH_POTION);
+					ItemType itemType = SPLASH_POTION.clone();
 					itemType.setItemMeta(meta);
 					return itemType;
-				} else if (type != Material.SPLASH_POTION && type != Material.LINGERING_POTION) {
+				} else if (!t.isSupertypeOf(SPLASH_POTION ) && !t.isSupertypeOf(LINGER_POTION)) {
 					return null;
 				}
 				return t;
 			})).length != 0; // no error message - other things can be thrown as well
 		} else {
-			types = new ItemType[]{new ItemType(Material.SPLASH_POTION)};
+			types = new ItemType[]{SPLASH_POTION.clone()};
 		}
 		return true;
 	}
