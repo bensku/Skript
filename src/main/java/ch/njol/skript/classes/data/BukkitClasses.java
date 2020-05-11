@@ -1729,6 +1729,7 @@ public class BukkitClasses {
 			.description("A gamerule")
 			.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining()))
 			.since("INSERT VERSION")
+			.requiredPlugins("Minecraft 1.13 or newer")
 			.parser(new Parser<GameRule>() {
 				@Override
 				@Nullable
