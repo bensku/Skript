@@ -32,30 +32,31 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Game Rule")
-@Description("The gamerule of a world.")
+@Name("Gamerule Value")
+@Description("The gamerule value of a world.")
 @Examples({"set the gamerule \"commandBlockOutput\" of world \"world\" to false"})
-@Since("2.5")
-public class ExprGameRule extends SimpleExpression<Object> {
+@Since("INSERT VERSION")
+public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	
 	static {
-		Skript.registerExpression(ExprGameRule.class, Object.class, ExpressionType.PROPERTY,
-			"[the] game[ ]rule %string% of %world%");
+		Skript.registerExpression(ExprGameRule.class, GameruleValue.class, ExpressionType.COMBINED,
+			"[the] gamerule %gamerule% of %worlds%");
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<String> gamerule;
+	private Expression<GameRule> gamerule;
 	@SuppressWarnings("null")
 	private Expression<World> world;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		gamerule = (Expression<String>) exprs[0];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		gamerule = (Expression<GameRule>) exprs[0];
 		world = (Expression<World>) exprs[1];
 		return true;
 	}
@@ -71,40 +72,36 @@ public class ExprGameRule extends SimpleExpression<Object> {
 	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) {
 		assert delta != null;
 		if (mode == Changer.ChangeMode.SET) {
-			World gameruleWorld = world.getSingle(e);
-			if (gameruleWorld == null) return;
-			GameRule bukkitGamerule = getGamerule(e);
+			GameRule bukkitGamerule = gamerule.getSingle(e);
 			if (bukkitGamerule == null) return;
-			gameruleWorld.setGameRule(bukkitGamerule, delta[0]);
+			for (World gameruleWorld : world.getArray(e)) gameruleWorld.setGameRule(bukkitGamerule, delta[0]);
 		}
 	}
 		
 	@Nullable
 	@Override
-	protected Object[] get(Event e) {
-		World gameruleWorld = world.getSingle(e);
-		if (gameruleWorld == null) return null;
-		GameRule<?> bukkitGamerule = getGamerule(e);
+	protected GameruleValue[] get(Event e) {
+		GameRule<?> bukkitGamerule = gamerule.getSingle(e);
 		if (bukkitGamerule == null) return null;
-		return new Object[] {gameruleWorld.getGameRuleValue(bukkitGamerule)};
-	}
-	
-	@Nullable
-	private GameRule<?> getGamerule(Event e) {
-		String stringGamerule = gamerule.getSingle(e);
-		if (stringGamerule == null) return null;
-		GameRule<?> bukkitGamerule = GameRule.getByName(stringGamerule);
-		return bukkitGamerule;
+		World[] gameruleWorlds = world.getArray(e);
+		GameruleValue[] gameruleValues = new GameruleValue[gameruleWorlds.length];
+		int index = 0;
+		for (World gameruleWorld : gameruleWorlds) {
+			Object gameruleValue = gameruleWorld.getGameRuleValue(bukkitGamerule);
+			assert gameruleValue != null;
+			gameruleValues[index++] = new GameruleValue<>(gameruleValue);
+		}
+		return gameruleValues;
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return true;
+		return false;
 	}
 	
 	@Override
-	public Class<?> getReturnType() {
-		return GameRule.class;
+	public Class<? extends GameruleValue> getReturnType() {
+		return GameruleValue.class;
 	}
 	
 	@Override

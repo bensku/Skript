@@ -48,6 +48,7 @@ import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.slot.Slot;
 
 /**
@@ -342,5 +343,20 @@ public class DefaultConverters {
 				return new Direction(vector);
 			}
 });
+		Converters.registerConverter(GameruleValue.class, Number.class, new Converter<GameruleValue, Number>() {
+			@Nullable
+			@Override
+			public Number convert(GameruleValue gameruleValue) {
+				return gameruleValue.getGameruleValue() instanceof Number ? ((Number) gameruleValue.getGameruleValue()) : null;
+			}
+		});
+		
+		Converters.registerConverter(GameruleValue.class, Boolean.class, new Converter<GameruleValue, Boolean>() {
+			@Nullable
+			@Override
+			public Boolean convert(GameruleValue gameruleValue) {
+				return gameruleValue.getGameruleValue() instanceof Boolean ? ((Boolean) gameruleValue.getGameruleValue()) : null;
+			}
+		});
 	}
 }

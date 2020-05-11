@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -55,7 +56,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Name / Display Name")
-@Description({"Represents the Minecraft account, display or tab list name of a player, or the custom name of an item, entity or inventory.",
+@Description({"Represents the Minecraft account, display or tab list name of a player, or the custom name of an item, entity, inventory, or gamerule.",
 		"",
 		"<ul>",
 		"\t<li><strong>Players</strong>",
@@ -82,6 +83,11 @@ import ch.njol.util.coll.CollectionUtils;
 		"\t\t<ul>",
 		"\t\t\t<li><strong>Name and Display Name:</strong> The name/title of the inventory. " +
 			"Changing name of an inventory means opening the same inventory with the same contents but with a different name to its current viewers.</li>",
+		"\t\t</ul>",
+		"\t</li>",
+		"\t<li><strong>Gamerules</strong>",
+		"\t\t<ul>",
+		"\t\t\t<li><strong>Name:</strong> The name of the gamerule. Cannot be changed.</li>",
 		"\t\t</ul>",
 		"\t</li>",
 		"</ul>"})
@@ -184,6 +190,8 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 						}
 					}
 					return null;
+				} else if (o instanceof GameRule) {
+					return ((GameRule) o).getName();
 				} else {
 					assert false;
 					return null;

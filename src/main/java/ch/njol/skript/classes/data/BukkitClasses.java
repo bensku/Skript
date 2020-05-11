@@ -20,18 +20,21 @@
 package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -1719,6 +1722,36 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+		
+		Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
+			.user("gamerules?")
+			.name("Gamerule")
+			.description("A gamerule")
+			.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining()))
+			.since("INSERT VERSION")
+			.parser(new Parser<GameRule>() {
+				@Override
+				@Nullable
+				public GameRule parse(final String input, final ParseContext context) {
+					return GameRule.getByName(input);
+				}
+				
+				@Override
+				public String toString(GameRule o, int flags) {
+					return o.getName();
+				}
+				
+				@Override
+				public String toVariableNameString(GameRule o) {
+					return o.getName();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			})
+		);
 	}
 
 }
