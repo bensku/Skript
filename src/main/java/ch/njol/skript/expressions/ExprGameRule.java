@@ -41,7 +41,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Gamerule Value")
 @Description("The gamerule value of a world.")
-@Examples({"set the gamerule \"commandBlockOutput\" of world \"world\" to false"})
+@Examples({"set the gamerule commandBlockOutput of world \"world\" to false"})
 @Since("INSERT VERSION")
 @RequiredPlugins("Minecraft 1.13+")
 public class ExprGameRule extends SimpleExpression<GameruleValue> {
