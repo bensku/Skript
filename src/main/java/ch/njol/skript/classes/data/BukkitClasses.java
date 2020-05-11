@@ -1722,37 +1722,38 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
-		
-		Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
-			.user("gamerules?")
-			.name("Gamerule")
-			.description("A gamerule")
-			.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining()))
-			.since("INSERT VERSION")
-			.requiredPlugins("Minecraft 1.13 or newer")
-			.parser(new Parser<GameRule>() {
-				@Override
-				@Nullable
-				public GameRule parse(final String input, final ParseContext context) {
-					return GameRule.getByName(input);
-				}
-				
-				@Override
-				public String toString(GameRule o, int flags) {
-					return o.getName();
-				}
-				
-				@Override
-				public String toVariableNameString(GameRule o) {
-					return o.getName();
-				}
-				
-				@Override
-				public String getVariableNamePattern() {
-					return "\\S+";
-				}
-			})
-		);
+		if (Skript.classExists("org.bukkit.GameRule")) {
+			Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
+				.user("gamerules?")
+				.name("Gamerule")
+				.description("A gamerule")
+				.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining()))
+				.since("INSERT VERSION")
+				.requiredPlugins("Minecraft 1.13 or newer")
+				.parser(new Parser<GameRule>() {
+					@Override
+					@Nullable
+					public GameRule parse(final String input, final ParseContext context) {
+						return GameRule.getByName(input);
+					}
+					
+					@Override
+					public String toString(GameRule o, int flags) {
+						return o.getName();
+					}
+					
+					@Override
+					public String toVariableNameString(GameRule o) {
+						return o.getName();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+			);
+		}
 	}
 
 }

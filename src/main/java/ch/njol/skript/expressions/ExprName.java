@@ -85,7 +85,7 @@ import ch.njol.util.coll.CollectionUtils;
 			"Changing name of an inventory means opening the same inventory with the same contents but with a different name to its current viewers.</li>",
 		"\t\t</ul>",
 		"\t</li>",
-		"\t<li><strong>Gamerules</strong>",
+		"\t<li><strong>Gamerules (1.13+)</strong>",
 		"\t\t<ul>",
 		"\t\t\t<li><strong>Name:</strong> The name of the gamerule. Cannot be changed.</li>",
 		"\t\t</ul>",
@@ -101,8 +101,10 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 
 	@Nullable
 	static final MethodHandle TITLE_METHOD;
+	static final boolean HAS_GAMERULES;
 
 	static {
+		HAS_GAMERULES = Skript.classExists("org.bukkit.GameRule");
 		MethodHandle _METHOD = null;
 		try {
 			_METHOD = MethodHandles.lookup().findVirtual(Inventory.class, "getTitle", MethodType.methodType(String.class));
@@ -190,7 +192,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 						}
 					}
 					return null;
-				} else if (o instanceof GameRule) {
+				} else if (HAS_GAMERULES && o instanceof GameRule) {
 					return ((GameRule) o).getName();
 				} else {
 					assert false;

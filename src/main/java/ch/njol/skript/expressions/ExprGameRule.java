@@ -29,6 +29,7 @@ import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -42,11 +43,14 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The gamerule value of a world.")
 @Examples({"set the gamerule \"commandBlockOutput\" of world \"world\" to false"})
 @Since("INSERT VERSION")
+@RequiredPlugins("Minecraft 1.13+")
 public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	
 	static {
-		Skript.registerExpression(ExprGameRule.class, GameruleValue.class, ExpressionType.COMBINED,
-			"[the] gamerule %gamerule% of %worlds%");
+		if (Skript.classExists("org.bukkit.GameRule")) {
+			Skript.registerExpression(ExprGameRule.class, GameruleValue.class, ExpressionType.COMBINED,
+				"[the] gamerule %gamerule% of %worlds%");
+		}
 	}
 	
 	@SuppressWarnings("null")
