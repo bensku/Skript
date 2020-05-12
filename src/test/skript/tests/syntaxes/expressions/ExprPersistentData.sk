@@ -1,24 +1,34 @@
-test "persistent data expression/condition":
+test "persistent data expression/condition" when minecraft version is "1.15.2":
 
 	# Test entities holding persistent data
 
 	spawn a chicken at spawn of world "world"
-	assert last spawned chicken doesn't have persistent data value "cool" with "(Condition) Entities should not have a persistent tag before it is set"
-	set persistent data value "cool" of last spawned chicken to true
-	assert persistent data value "cool" of last spawned chicken = true with "(Expression) The persistent tag was set to be true, but it is not"
-	assert last spawned chicken has persistent data value "cool" with "(Condition) Entities should have a persistent tag if it is set"
-	clear persistent data value "cool" of last spawned chicken
-	assert last spawned chicken doesn't have persistent data value "cool" with "(Condition) Entities should not have a persistent tag after it is cleared"
+	assert last spawned chicken doesn't have persistent data value {cool} with "(Condition) Entities should not have a persistent tag before it is set"
+	set persistent data value {cool} of last spawned chicken to true
+	assert persistent data value {cool} of last spawned chicken = true with "(Expression) The persistent tag was set to be true, but it is not"
+	assert last spawned chicken has persistent data value {cool} with "(Condition) Entities should have a persistent tag if it is set"
+	clear persistent data value {cool} of last spawned chicken
+	assert last spawned chicken doesn't have persistent data value {cool} with "(Condition) Entities should not have a persistent tag after it is cleared"
 	delete last spawned chicken
 
 	# Test blocks holding persistent data
 
 	set block at spawn of world "world" to a campfire
 	set {_block} to block at spawn of world "world"
-	assert {_block} doesn't have persistent data value "cool" with "(Condition) Blocks should not have a persistent tag before it is set"
-	set persistent data value "cool" of {_block} to true
-	assert persistent data value "cool" of {_block} = true with "(Expression) The persistent tag was set to be true, but it is not"
-	assert {_block} has persistent data value "cool" with "(Condition) Blocks should have a persistent tag if it is set"
-	clear persistent data value "cool" of {_block}
-	assert {_block} doesn't have persistent data value "cool" with "(Condition) Blocks should not have a persistent tag after it is cleared"
+	assert {_block} doesn't have persistent data value {enchantment} with "(Condition) Blocks should not have a persistent tag before it is set"
+	set persistent data value {enchantment} of {_block} to sharpness 10
+	assert persistent data value {enchantment} of {_block} = sharpness 10 with "(Expression) The persistent tag was set to be sharpness 10, but it is not"
+	assert {_block} has persistent data value {enchantment} with "(Condition) Blocks should have a persistent tag if it is set"
+	clear persistent data value {enchantment} of {_block}
+	assert {_block} doesn't have persistent data value {enchantment} with "(Condition) Blocks should not have a persistent tag after it is cleared"
 	set block at spawn of world "world" to air
+
+	# Things that can't be serialized (entities, for example) should still be set and accessible
+	spawn a pig at spawn of world "world"
+	assert last spawned pig doesn't have persistent data value {me} with "(Condition) Entities should not have a persistent tag before it is set (Non-serializable Test)"
+	set persistent data value {me} of last spawned pig to last spawned pig
+	assert persistent data value {me} of last spawned pig = last spawned pig with "(Expression) The persistent tag was set, but it is not (Non-serializable Test)"
+	assert last spawned pig has persistent data value {me} with "(Condition) Entities should have a persistent tag if it is set (Non-serializable Test)"
+	clear persistent data value {me} of last spawned pig
+	assert last spawned pig doesn't have persistent data value {me} with "(Condition) Entities should not have a persistent tag after it is cleared (Non-serializable Test)"
+	delete last spawned pig
