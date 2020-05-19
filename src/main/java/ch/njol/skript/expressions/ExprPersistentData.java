@@ -62,6 +62,9 @@ import ch.njol.util.coll.CollectionUtils;
 @SuppressWarnings({"null", "unchecked"})
 public class ExprPersistentData<T> extends SimpleExpression<T> {
 
+	// TODO implement other changer types: add, remove, remove all
+	// TODO you should be able to set multiple values - e.g. set persistent data {test::*} of player to "me1" and "me2"
+
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
@@ -127,10 +130,11 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	public T[] get(Event e) {
 		List<Object> values = new ArrayList<>();
 		for (Variable<?> v : variables) {
-			// TODO handle list stuff here maybe
 			String varName = v.getName().toString(e);
-			for (Object holder : holders.getArray(e))
-				values.add(PersistentDataUtils.get(holder, varName));
+			for (Object holder : holders.getArray(e)) {
+				for (Object object : PersistentDataUtils.get(holder, varName))
+					values.add(object);
+			}
 		}
 		try {
 			return Converters.convertStrictly(values.toArray(), superType);

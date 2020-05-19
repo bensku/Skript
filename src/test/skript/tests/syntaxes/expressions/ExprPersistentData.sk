@@ -23,7 +23,8 @@ test "persistent data expression/condition" when minecraft version is "1.15.2":
 	assert {_block} doesn't have persistent data value {enchantment} with "(Condition) Blocks should not have a persistent tag after it is cleared"
 	set block at spawn of world "world" to air
 
-	# Things that can't be serialized (entities, for example) should still be set and accessible
+	# Test things that can't be serialized (e.g. entities) should still be set and accessible
+
 	spawn a pig at spawn of world "world"
 	assert last spawned pig doesn't have persistent data value {me} with "(Condition) Entities should not have a persistent tag before it is set (Non-serializable Test)"
 	set persistent data value {me} of last spawned pig to last spawned pig
@@ -31,4 +32,31 @@ test "persistent data expression/condition" when minecraft version is "1.15.2":
 	assert last spawned pig has persistent data value {me} with "(Condition) Entities should have a persistent tag if it is set (Non-serializable Test)"
 	clear persistent data value {me} of last spawned pig
 	assert last spawned pig doesn't have persistent data value {me} with "(Condition) Entities should not have a persistent tag after it is cleared (Non-serializable Test)"
+	delete last spawned pig
+
+	# Test using list variables
+
+	set block at spawn of world "world" to a campfire
+	set {_block} to block at spawn of world "world"
+	assert {_block} doesn't have persistent data value {enchantment::sharpness} with "(Condition) Blocks should not have a persistent tag before it is set (List Test)"
+	set persistent data value {enchantment::sharpness} of {_block} to sharpness 10
+	assert persistent data value {enchantment::sharpness} of {_block} = sharpness 10 with "(Expression) The persistent tag was set to be sharpness 10, but it is not (List Test)"
+	assert persistent data value {enchantment::*} of {_block} = sharpness 10 with "(Expression) The full list should be just sharpness 10, but it is not (List Test)"
+	assert {_block} doesn't have persistent data value {enchantment::smite} with "(Condition) Blocks should not have a persistent tag if the index was not set (List Test)"
+	assert {_block} has persistent data value {enchantment::sharpness} with "(Condition) Blocks should have a persistent tag if it is set (List Test)"
+	clear persistent data value {enchantment::sharpness} of {_block}
+	assert {_block} doesn't have persistent data value {enchantment::sharpness} with "(Condition) Blocks should not have a persistent tag after it is cleared (List Test)"
+	set block at spawn of world "world" to air
+
+	# Test using list variables on things that can't be serialized
+
+	spawn a pig at spawn of world "world"
+	assert last spawned pig doesn't have persistent data value {me::1} and {me::2} with "(Condition) Entities should not have a persistent tag before it is set (Non-serializable List Test)"
+	set persistent data value {me::1} of last spawned pig to last spawned pig
+	assert persistent data value {me::1} of last spawned pig = last spawned pig with "(Expression) The persistent tag was set, but it is not (Non-serializable List Test)"
+	assert persistent data value {me::*} of last spawned pig = last spawned pig with "(Expression) The full list should be just the last spawned pig, but it is not (Non-serializable List Test)"
+	assert last spawned pig doesn't have persistent data value {me::2} with "(Condition) Entities should not have a persistent tag if the index was not set (Non-serializable List Test)"
+	assert last spawned pig has persistent data value {me::1} with "(Condition) Entities should have a persistent tag if it is set (Non-serializable List Test)"
+	clear persistent data value {me::1} of last spawned pig
+	assert last spawned pig doesn't have persistent data value {me::1} and {me::2} with "(Condition) Entities should not have a persistent tag after it is cleared (Non-serializable List Test)"
 	delete last spawned pig
