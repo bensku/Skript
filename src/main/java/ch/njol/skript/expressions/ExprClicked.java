@@ -74,7 +74,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 		INVENTORY(3, Inventory.class, "clicked inventory", "clicked inventory"),
 		TYPE(4, ClickType.class, "click type", "click (type|action)"),
 		ACTION(5, InventoryAction.class, "inventory action", "inventory action"),
-		ENCHANT_BUTTON(6, Number.class, "clicked enchantment button", "(clicked [enchant[ment]] button|enchant[ment] button clicked)");
+		ENCHANT_BUTTON(6, Number.class, "clicked enchantment button", "clicked [enchant[ment]] button");
 		
 		private String name, syntax;
 		private Class<?> c;

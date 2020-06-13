@@ -19,16 +19,12 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
@@ -43,25 +39,24 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchant Events Enchant Item")
-@Description({"The enchant item in an enchant prepare event or enchant event.",
-				"It can be modified, but enchantments will still be applied in the enchant event."})
+@Name("Enchanting Experience Cost")
+@Description({"The cost of enchanting in an enchant event.", 
+				"This is number that was displayed in the enchantment table, not the actual number of levels removed."})
 @Examples({"on enchant:",
-			"\tset the enchanted item to a diamond chestplate",
-			"on enchant prepare:",
-			"\tset the enchant item to a wooden sword"})
-@Events("enchant prepare and enchant")
+			"\tsend \"Cost: %the displayed cost of enchanting%\" to player"})
+@Events("enchant")
 @Since("INSERT VERSION")
-public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
+public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantEventsEnchantItem.class, ItemType.class, ExpressionType.SIMPLE, "[the] enchanted item");
+		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE, 
+				"[the] [displayed] ([e]xp[erience]|enchanting) cost");
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class) && !ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
-			Skript.error("The enchant item is only usable in an enchant prepare event or enchant event.", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
+			Skript.error("The experience cost of enchanting is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -69,41 +64,37 @@ public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
 
 	@Override
 	@Nullable
-	protected ItemType[] get(Event e) {
-		if (e instanceof PrepareItemEnchantEvent)
-			return new ItemType[]{new ItemType(((PrepareItemEnchantEvent) e).getItem())};
-		return new ItemType[]{new ItemType(((EnchantItemEvent) e).getItem())};
+	protected Number[] get(Event e) {
+		return new Number[]{((EnchantItemEvent) e).getExpLevelCost()};
 	}
 
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(ItemType.class);
-		return null;
+		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
+			return null;
+		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
-		ItemType item = ((ItemType) delta[0]);
+		int cost = ((Number) delta[0]).intValue();
+		int change;
+		EnchantItemEvent e = (EnchantItemEvent) event;
 		switch (mode) {
 			case SET:
-				if (event instanceof PrepareItemEnchantEvent) {
-					PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
-					e.getItem().setType(item.getMaterial());
-					e.getItem().setItemMeta(item.getItemMeta());
-					e.getItem().setAmount(item.getAmount());
-				} else {
-					EnchantItemEvent e = (EnchantItemEvent) event;
-					e.getItem().setType(item.getMaterial());
-					e.getItem().setItemMeta(item.getItemMeta());
-					e.getItem().setAmount(item.getAmount());
-				}
+				e.setExpLevelCost(cost);
 				break;
 			case ADD:
+				change = e.getExpLevelCost() + cost;
+				e.setExpLevelCost(change);
+				break;
 			case REMOVE:
+				change = e.getExpLevelCost() - cost;
+				e.setExpLevelCost(change);
+				break;
 			case RESET:
 			case DELETE:
 			case REMOVE_ALL:
@@ -117,13 +108,13 @@ public class ExprEnchantEventsEnchantItem extends SimpleExpression<ItemType> {
 	}
 
 	@Override
-	public Class<? extends ItemType> getReturnType() {
-		return ItemType.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "enchanted item";
+		return "the displayed cost of enchanting";
 	}
 
 }

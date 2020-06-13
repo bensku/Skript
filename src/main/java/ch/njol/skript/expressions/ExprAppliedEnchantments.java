@@ -48,17 +48,17 @@ import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchant Event Applied Enchantments")
+@Name("Applied Enchantments")
 @Description({"The applied enchantments in an enchant event.",
 				"Deleting or removing the applied enchantments will prevent the item's enchantment."})
 @Examples({"on enchant",
 			"\tset the applied enchantments to sharpness 10 and fire aspect 5"})
 @Events("enchant")
 @Since("INSERT VERSION")
-public class ExprEnchantItemEnchantments extends SimpleExpression<EnchantmentType> {
+public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 
 	static {
-		Skript.registerExpression(ExprEnchantItemEnchantments.class, EnchantmentType.class, ExpressionType.SIMPLE, "[the] applied enchant[ment][s]");
+		Skript.registerExpression(ExprAppliedEnchantments.class, EnchantmentType.class, ExpressionType.SIMPLE, "[the] applied enchant[ment]s");
 	}
 
 	@Override
