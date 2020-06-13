@@ -36,10 +36,6 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://nexus.hc.to/content/repositories/pub_releases'
-		}
-	
-		maven {
 			url 'https://jitpack.io'
 		}
 	
