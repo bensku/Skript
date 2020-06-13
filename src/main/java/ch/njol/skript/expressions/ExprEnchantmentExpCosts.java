@@ -44,7 +44,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchant Prepare Enchantment Experience Level Cost")
+@Name("Enchantment Experience Level Costs")
 @Description({"The experience cost of an enchantment in an enchant prepare event.",
 			"If the cost is changed, it will always be at least 1."})
 @Examples({"on enchant prepare:",
@@ -53,11 +53,11 @@ import ch.njol.util.coll.CollectionUtils;
 @Events("enchant prepare")
 @RequiredPlugins("1.9 or 1.10")
 @SuppressWarnings("deprecation")
-public class ExprEnchantmentExpLevelCosts extends SimpleExpression<Number>{
+public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 
 	static {
 		if (!Skript.isRunningMinecraft(1, 11)) { // This expression should only be usable on 1.9 and 1.10.
-			Skript.registerExpression(ExprEnchantmentExpLevelCosts.class, Number.class, ExpressionType.SIMPLE,
+			Skript.registerExpression(ExprEnchantmentExpCosts.class, Number.class, ExpressionType.SIMPLE,
 					"[the] cost of (enchant[ment]s|enchant[ment] offers)",
 					"[the] cost of enchant[ment] [offer] %number%",
 					"enchant[ment] [offer] %number%'[s] cost",
