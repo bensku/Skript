@@ -41,7 +41,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -340,7 +339,7 @@ final public class ScriptLoader {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Initialize and start load thread
 	static {
 		loaderThread = new AsyncLoaderThread();
@@ -757,7 +756,7 @@ final public class ScriptLoader {
 		// In always sync task, enable stuff
 		Callable<Void> callable = new Callable<Void>() {
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access", "null"})
 			@Override
 			public @Nullable Void call() throws Exception {				
 				// Unload script IF we're doing async stuff
@@ -797,7 +796,6 @@ final public class ScriptLoader {
 				}
 				
 				// Remove the script from the disabled scripts list
-				@SuppressWarnings("null")
 				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
 				disabledFiles.remove(disabledFile);
 				

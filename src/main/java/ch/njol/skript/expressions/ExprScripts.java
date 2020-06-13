@@ -19,12 +19,8 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Config;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
@@ -35,13 +31,14 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.StringUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import org.bukkit.event.Event;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("All Scripts")
 @Description("Returns all of the scripts, or just the enabled or disabled ones.")
@@ -55,12 +52,12 @@ public class ExprScripts extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprScripts.class, String.class, ExpressionType.SIMPLE,
-				"[all [of the]] scripts [(1¦without [subdirectory] paths)]",
-				"[all [of the]] (enabled|loaded) scripts [(1¦without [subdirectory] paths)]",
-				"[all [of the]] (disabled|unloaded) scripts [(1¦without [subdirectory] paths)]");
+				"[all [of the]] scripts [(1¦without ([subdirectory] paths|parents))]",
+				"[all [of the]] (enabled|loaded) scripts [(1¦without ([subdirectory] paths|parents))]",
+				"[all [of the]] (disabled|unloaded) scripts [(1¦without ([subdirectory] paths|parents))]");
 	}
 
-	private final String scriptsPath = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER).getPath() + File.separator;
+	private static final String SCRIPTS_PATH = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER).getPath() + File.separator;
 
 	private boolean includeEnabled;
 	private boolean includeDisabled;
@@ -81,26 +78,21 @@ public class ExprScripts extends SimpleExpression<String> {
 			scripts.addAll(ScriptLoader.getLoadedFiles());
 		if (includeDisabled)
 			scripts.addAll(ScriptLoader.getDisabledFiles());
-		return formatFiles(scripts).toArray(new String[0]);
+		return formatFiles(scripts);
 	}
 
-	private List<String> formatFiles(List<File> files) {
-		List<String> scripts = new ArrayList<>();
-		for (File f : files) {
-			if (noPaths) {
-				scripts.add(f.getName());
-			} else {
-				scripts.add(f.getPath().replaceFirst(scriptsPath, ""));
-			}
-		}
-		return scripts;
+	@SuppressWarnings("null")
+	private String[] formatFiles(List<File> files) {
+		return files.stream()
+			.map(f -> noPaths ? f.getName() : f.getPath().replaceFirst(SCRIPTS_PATH, ""))
+			.toArray(String[]::new);
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
@@ -110,4 +102,5 @@ public class ExprScripts extends SimpleExpression<String> {
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "scripts";
 	}
+
 }
