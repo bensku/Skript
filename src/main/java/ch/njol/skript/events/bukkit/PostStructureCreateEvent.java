@@ -18,7 +18,7 @@
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.events.bukkit;
-why would you do this to me IntelliJ
+
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
