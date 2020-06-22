@@ -108,7 +108,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		IRON_GOLEM_SHEATH("IRON_GOLEM_SHEATH", true),
 		TOTEM_RESURRECT("TOTEM_RESURRECT", true),
 		HURT_DROWN("HURT_DROWN", true),
-		HURT_EXPLOSIION("HURT_EXPLOSION", true),
+		HURT_EXPLOSION("HURT_EXPLOSION", true),
 		
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
@@ -245,7 +245,13 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		FLASH("FLASH"),
 		FALLING_LAVA("FALLING_LAVA"),
 		LANDING_LAVA("LANDING_LAVA"),
-		FALLING_WATER("FALLING_WATER");
+		FALLING_WATER("FALLING_WATER"),
+		
+		// 1.15 particles
+		DRIPPING_HONEY("DRIPPING_HONEY"),
+		FALLING_HONEY("FALLING_HONEY"),
+		LANDING_HONEY("LANDING_HONEY"),
+		FALLING_NECTAR("FALLING_NECTAR");
 		
 		
 		@Nullable

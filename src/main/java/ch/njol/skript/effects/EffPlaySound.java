@@ -20,6 +20,8 @@
 package ch.njol.skript.effects;
 
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -55,7 +57,8 @@ import ch.njol.util.Kleenean;
 public class EffPlaySound extends Effect {
 
 	private static final boolean SOUND_CATEGORIES_EXIST = Skript.classExists("org.bukkit.SoundCategory");
-
+	private static final Pattern SOUND_VALID_PATTERN = Pattern.compile("[a-z0-9\\/._-]+"); // Minecraft only accepts these characters 
+	
 	static {
 		if (SOUND_CATEGORIES_EXIST) {
 			Skript.registerEffect(EffPlaySound.class,
@@ -162,15 +165,23 @@ public class EffPlaySound extends Effect {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
-				if (soundEnum == null)
+				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
+					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
+						continue;
 					p.playSound(location, sound, category, volume, pitch);
-				else
+				} else {
 					p.playSound(location, soundEnum, category, volume, pitch);
+				}
 			} else {
-				if (soundEnum == null)
+				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
+					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
+						continue;
 					p.playSound(location, sound, volume, pitch);
-				else
+				} else {
 					p.playSound(location, soundEnum, volume, pitch);
+				}
 			}
 		}
 	}
@@ -183,15 +194,23 @@ public class EffPlaySound extends Effect {
 				soundEnum = Sound.valueOf(sound.toUpperCase(Locale.ENGLISH));
 			} catch (IllegalArgumentException ignored) {}
 			if (SOUND_CATEGORIES_EXIST) {
-				if (soundEnum == null)
+				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
+					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
+						continue;
 					w.playSound(location, sound, category, volume, pitch);
-				else
+				} else {
 					w.playSound(location, soundEnum, category, volume, pitch);
+				}
 			} else {
-				if (soundEnum == null)
+				if (soundEnum == null) {
+					sound = sound.toLowerCase(Locale.ENGLISH);
+					if (!SOUND_VALID_PATTERN.matcher(sound).matches())
+						continue;
 					w.playSound(location, sound, volume, pitch);
-				else
+				} else {
 					w.playSound(location, soundEnum, volume, pitch);
+				}
 			}
 		}
 	}

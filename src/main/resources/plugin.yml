@@ -23,7 +23,26 @@ name: Skript
 
 description: Customize Minecraft's mechanics with simple scripts written in plain English sentences.
 
-authors: [Njol, Mirreski, bensku, TheBentoBox, Snow-Pyon, Pikachu920, Nicofisi, tim740, Tuke-Nuke, TheLimeGlass, xXAndrew28Xx, Sashie, RoyCurtis, nfell2009, Syst3ms, Blueyescat]
+authors:
+    - Njol
+    - Mirreski
+    - bensku
+    - TheBentoBox
+    - FranKusmiruk
+    - ShaneBeee
+    - Blueyescat
+    - JRoy
+    - Nicofisi
+    - APickledWalrus
+    - xXAndrew28Xx
+    - Syst3ms
+    - TheLimeGlass
+    - Pikachu920
+    - Sashie
+    - Wealthyturtle
+    - OfficialDonut
+    - eyesniper2
+
 website: https://skriptlang.github.io/Skript
 
 main: ch.njol.skript.Skript
@@ -38,7 +57,7 @@ commands:
         permission: skript.admin
         usage: /skript help
 
-soft-depend: [SQLibrary, Vault, WorldGuard, EffectLib, Residence, PreciousStones]
+soft-depend: [SQLibrary, Vault, WorldGuard, Residence, PreciousStones]
 
 permissions:
     skript.*:

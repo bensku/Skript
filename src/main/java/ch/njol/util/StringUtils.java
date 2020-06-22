@@ -408,6 +408,12 @@ public abstract class StringUtils {
 		return "" + haystack.replaceAll("(?ui)" + Pattern.quote(needle), replacement);
 	}
 	
+	public static String replaceFirst(final String haystack, final String needle, final String replacement, final boolean caseSensitive) {
+		if (caseSensitive)
+			return "" + haystack.replaceFirst(needle, replacement);
+		return "" + haystack.replaceFirst("(?ui)" + Pattern.quote(needle), replacement);
+	}
+
 	public static byte[] hexStringToByteArray(String s) {
 		int len = s.length();
 		byte[] data = new byte[len / 2];

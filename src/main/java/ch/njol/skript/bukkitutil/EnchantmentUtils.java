@@ -73,13 +73,17 @@ public class EnchantmentUtils {
 			ENCHANTMENTS.put(Enchantment.BINDING_CURSE, "binding_curse");
 			ENCHANTMENTS.put(Enchantment.VANISHING_CURSE, "vanishing_curse");
 		}
+		
+		if (Skript.isRunningMinecraft(1, 12)) {
+			ENCHANTMENTS.put(Enchantment.SWEEPING_EDGE, "sweeping_edge");
+		}
 	}
 	
 	public static String getKey(Enchantment ench) {
 		if (KEY_METHOD_EXISTS)
 			return ench.getKey().getKey();
 		String name = ENCHANTMENTS.get(ench);
-		assert name != null;
+		assert name != null : "missing name for " + ench;
 		return name;
 	}
 	

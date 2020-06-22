@@ -1,0 +1,10 @@
+test "enchant effect":
+	set {_i} to diamond sword
+	assert enchantment level of smite on {_i} is not set with "non-existent enchant failed"
+	enchant {_i} with sharpness 5
+	assert enchantment level of sharpness on {_i} is 5 with "1st enchant failed"
+	enchant {_i} with unbreaking 0
+	assert enchantment level of unbreaking on {_i} is 0 with "2nd enchant failed"
+	disenchant {_i}
+	assert enchantment level of sharpness on {_i} is not set with "1st enchant disenchant failed"
+	assert enchantment level of unbreaking on {_i} is not set with "2nd enchant disenchant failed"
