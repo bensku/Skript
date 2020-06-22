@@ -106,7 +106,7 @@ public class FlatFileStorage extends VariablesStorage {
 		boolean update2_0_beta3 = false;
 		final Version v2_1 = new Version(2, 1);
 		boolean update2_1 = false;
-		final Version v_2_5 = new Version(2, 5);
+		final Version post_2_3 = new Version("INSERT VERSION");
 		
 		BufferedReader r = null;
 		try {
@@ -200,9 +200,9 @@ public class FlatFileStorage extends VariablesStorage {
 		}
 		
 		Version previousVersion = SkriptConfig.getPreviousConfigVersion();
-		if (previousVersion == null || previousVersion.isSmallerThan(v_2_5)) { // If previousVersion is null, the config is probably broken or ancient 
+		if (previousVersion == null || previousVersion.isSmallerThan(post_2_3)) { // If previousVersion is null, the config is probably broken or ancient 
 			try {
-				Skript.info("Updating your config to version 2.4-beta9...");
+				Skript.info("Updating your config to version INSERT VERSION...");
 				Config cfg = SkriptConfig.getConfig();
 				if (cfg == null) {
 					Skript.error("Could not get the Skript config file!");
@@ -235,10 +235,10 @@ public class FlatFileStorage extends VariablesStorage {
 					}
 					w.close();
 					
-					Skript.info("Successfully updated your config to version 2.4-beta9!");
+					Skript.info("Successfully updated your config to version INSERT VERSION!");
 				}
 			} catch (IOException e) {
-				Skript.error("Could not update config to the version 2.4-beta9!");
+				Skript.error("Could not update config to the version INSERT VERSION!");
 				ioEx = e;
 			}
 		} else { // Valid Config Version
