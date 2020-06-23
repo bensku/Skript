@@ -381,8 +381,11 @@ public abstract class SkriptConfig {
 			}
 			mainConfig = mc;
 			String rawPreviousConfigVersion = mc.getMainNode().getValue(version.key);
-			if (rawPreviousConfigVersion != null)
-				previousConfigVersion = new Version(rawPreviousConfigVersion);
+			if (rawPreviousConfigVersion != null) {
+				try {
+					previousConfigVersion = new Version(rawPreviousConfigVersion);
+				} catch (IllegalArgumentException e) {}
+			}
 			if (!Skript.getVersion().toString().equals(mc.get(version.key))) {
 				try {
 					final InputStream in = Skript.getInstance().getResource("config.sk");
