@@ -47,7 +47,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\t\tsend \"All Scripts: %scripts%\" to player",
 		"\t\tsend \"Loaded Scripts: %enabled scripts%\" to player",
 		"\t\tsend \"Unloaded Scripts: %disabled scripts%\" to player"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprScripts extends SimpleExpression<String> {
 
 	static {
