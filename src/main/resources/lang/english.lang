@@ -512,6 +512,7 @@ colors:
 
 # -- Chat Styles --
 chat styles:
+	color: color, c
 	bold: bold, b
 	italic: italic, italics, i
 	strikethrough: strikethrough, strike, s

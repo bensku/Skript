@@ -22,10 +22,12 @@
 package ch.njol.skript.util.chat;
 
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.util.chat.MessageComponent.*;
+import ch.njol.skript.lang.VariableString;
+
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.util.chat.MessageComponent.*;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Chat codes that come with Skript by default.
@@ -59,6 +61,19 @@ public enum SkriptChatCode implements ChatCode {
 	white("white", 'f'),
 	
 	// Formatting
+	
+	color {
+		@SuppressWarnings("null")
+		@Override
+		public void updateComponent(MessageComponent component, String param) {
+			param = param.replace("#", "");
+			if (param.length() < 6)
+				return;
+			try {
+				component.color = ChatColor.of('#' + param.substring(0, 6));
+			} catch (IllegalArgumentException ignored) {}
+		}
+	},
 	
 	bold {
 		@Override

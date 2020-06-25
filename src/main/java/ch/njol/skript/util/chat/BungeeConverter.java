@@ -45,8 +45,8 @@ public class BungeeConverter {
 		base.setUnderlined(origin.underlined);
 		base.setStrikethrough(origin.strikethrough);
 		base.setObfuscated(origin.obfuscated);
-		if (origin.color != null) // TODO this is crappy way to copy *color* over...
-			base.setColor(ChatColor.getByChar(SkriptChatCode.valueOf(origin.color).getColorChar()));
+		if (origin.color != null)
+			base.setColor(origin.color);
 		/*
 		 * This method doesn't exist on normal spigot 1.8
 		 * and it's not worth working around since people affected

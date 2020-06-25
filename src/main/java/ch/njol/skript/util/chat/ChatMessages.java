@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -113,6 +114,8 @@ public class ChatMessages {
 				Skript.debug("Parsing message style lang files");
 				for (SkriptChatCode code : SkriptChatCode.values()) {
 					assert code != null;
+					if (code == SkriptChatCode.color && !Skript.isRunningMinecraft(1, 16))
+						continue;
 					registerChatCode(code);
 				}
 				
@@ -257,7 +260,7 @@ public class ChatMessages {
 						components.add(current);
 						
 						if (code.getColorCode() != null) { // Just update color code
-							current.color = code.getColorCode();
+							current.color = ChatColor.getByChar(code.getColorChar());
 						} else {
 							assert param != null;
 							code.updateComponent(current, param); // Call SkriptChatCode update
@@ -300,7 +303,7 @@ public class ChatMessages {
 					components.add(current);
 					
 					if (code.getColorCode() != null) // Just update color code
-						current.color = code.getColorCode();
+						current.color = ChatColor.getByChar(code.getColorChar());
 					else
 						code.updateComponent(current, param); // Call SkriptChatCode update
 					
