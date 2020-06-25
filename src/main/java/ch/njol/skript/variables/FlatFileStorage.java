@@ -242,7 +242,7 @@ public class FlatFileStorage extends VariablesStorage {
 				ioEx = e;
 			}
 		} else { // Valid Config Version
-			Integer threshold = getValue(n, "variable re-save threshold", Integer.class);
+			Integer threshold = getValue(n, "required variable changes for save", Integer.class);
 			if (threshold != null) {
 				if (threshold < 0)
 					Skript.error("The variable re-save threshold cannot be negative!");
@@ -250,7 +250,7 @@ public class FlatFileStorage extends VariablesStorage {
 					REQUIRED_CHANGES_FOR_RESAVE = threshold;
 			}
 			
-			Integer rewrite = getValue(n, "file re-write frequency in ticks", Integer.class);
+			Integer rewrite = getValue(n, "variable save interval", Integer.class);
 			if (rewrite != null) {
 				if (rewrite < 1) {
 					Skript.error("The file re-write frequency cannot be less than 1 tick!");
