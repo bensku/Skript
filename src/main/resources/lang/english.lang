@@ -251,6 +251,8 @@ enchantments:
 		multishot: Multishot, Multi-Shot
 		piercing: Piercing
 		quick_charge: Quick Charge
+		# new 1.16 Enchantment
+		soul_speed: Soul Speed
 
 # -- Potion Effects --
 potions:
