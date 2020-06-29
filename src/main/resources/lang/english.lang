@@ -380,6 +380,15 @@ biomes:
 	deep_lukewarm_ocean: deep lukewarm ocean
 	deep_cold_ocean: deep cold ocean
 	deep_frozen_ocean: deep frozen ocean
+	# 1.14 biomes
+	bamboo_jungle: bamboo jungle
+	bamboo_jungle_hills: bamboo jungle hills
+	# 1.16 biomes
+	nether_wastes: nether wastes, nether, hell
+	crimson_forest: crimson forest
+	soul_sand_valley: soul sand valley
+	warped_forest: warped forest
+	basalt_deltas: basalt deltas
 
 # -- Tree Types --
 tree types:
