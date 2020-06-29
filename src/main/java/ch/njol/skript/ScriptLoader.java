@@ -60,7 +60,6 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.effects.Delay;
-import ch.njol.skript.events.bukkit.PostStructureCreateEvent;
 import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Conditional;
@@ -99,7 +98,6 @@ import ch.njol.util.Callback;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import ch.njol.util.Validate;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -114,95 +112,6 @@ final public class ScriptLoader {
 	
 	@Nullable
 	public static Config currentScript = null;
-
-	/**
-	 * If true, a {@link PreScriptLoadEvent} will be called
-	 * right before a script starts parsing, but after
-	 * {@link ScriptLoader#currentScript} has been set
-	 * to a non-null {@link Config}.
-	 */
-	private static boolean callPreLoadEvent;
-
-	/**
-	 * A set of all the SkriptAddons that have called
-	 * {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	private static Set<SkriptAddon> preloadListeners = new HashSet<>();
-
-	/**
-	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean,
-	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#preloadListeners}
-	 * depending on the provided boolean (true adds, false removes).
-	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
-	 * @param addon A non-null SkriptAddon
-	 */
-	public static void setCallPreloadEvent(boolean state, SkriptAddon addon) {
-		Validate.notNull(addon);
-		callPreLoadEvent = state;
-		if (state)
-			preloadListeners.add(addon);
-		else
-			preloadListeners.remove(addon);
-	}
-
-	public static boolean getCallPreloadEvent() {
-		return callPreLoadEvent;
-	}
-
-	/**
-	 * Returns an unmodifiable list of all the addons
-	 * that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	@SuppressWarnings("null")
-	public static Set<SkriptAddon> getPreloadListeners() {
-		return Collections.unmodifiableSet(preloadListeners);
-	}
-	
-	/**
-	 * If true, a {@link PostStructureCreateEvent} will be called
-	 * right after the structure of a script is generated,
-	 * but before the script is parsed.
-	 */
-	private static boolean callPostStructureEvent;
-
-	/**
-	 * A set of all the SkriptAddons that have called
-	 * {@link ScriptLoader#setCallPostStructureEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	private static Set<SkriptAddon> postStructureListeners = new HashSet<>();
-
-	/**
-	 * Sets {@link ScriptLoader#callPostStructureEvent} to the provided boolean,
-	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#postStructureListeners}
-	 * depending on the provided boolean (true adds, false removes).
-	 * @param state The new value for {@link ScriptLoader#postStructureListeners}
-	 * @param addon A non-null SkriptAddon
-	 */
-	public static void setCallPostStructureEvent(boolean state, SkriptAddon addon) {
-		Validate.notNull(addon);
-		callPostStructureEvent = state;
-		if (state)
-			postStructureListeners.add(addon);
-		else
-			postStructureListeners.remove(addon);
-	}
-
-	public static boolean getCallPostStructureEvent() {
-		return callPostStructureEvent;
-	}
-
-	/**
-	 * Returns an unmodifiable list of all the addons
-	 * that have called {@link ScriptLoader#setCallPostStructureEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	@SuppressWarnings("null")
-	public static Set<SkriptAddon> getPostStructureListeners() {
-		return Collections.unmodifiableSet(postStructureListeners);
-	}
 
 	/**
 	 * use {@link #setCurrentEvent(String, Class...)}
@@ -486,6 +395,9 @@ final public class ScriptLoader {
 			// Do NOT sort here, list must be loaded in order it came in (see issue #667)
 			final boolean wasLocal = Language.setUseLocal(false);
 			try {
+				// Copying the array, otherwise an addon could remove configs from the list
+				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(new ArrayList<>(configs)));
+				
 				for (final Config cfg : configs) {
 					assert cfg != null : configs.toString();
 					ScriptInfo info = loadScript(cfg);
@@ -611,14 +523,6 @@ final public class ScriptLoader {
 			
 			currentOptions.clear();
 			currentScript = config;
-
-			/*
-			 * If editing this class, please remember to call this event
-			 * after currentScript has already been set to the provided Config,
-			 * but before the script actually starts parsing
-			 */
-			if (callPreLoadEvent)
-				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(config));
 
 //			final SerializedScript script = new SerializedScript();
 			
@@ -983,9 +887,6 @@ final public class ScriptLoader {
 						continue;
 					}
 				}
-				
-				if (callPostStructureEvent)
-					Bukkit.getPluginManager().callEvent(new PostStructureCreateEvent(config));
 				
 				currentScript = null;
 			} finally {
