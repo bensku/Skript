@@ -93,7 +93,9 @@ public class EventValues {
 	 * @param e
 	 * @param c
 	 * @param g
-	 * @param time
+	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
+	 *            <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only register a default and a past state. The future state will
+	 *            default to the default state in this case.
 	 * @param excludes Subclasses of the event for which this event value should not be registered for
 	 */
 	public static <T, E extends Event> void registerEventValue(Class<E> e, Class<T> c, Getter<T, E> g, int time, @Nullable String excludeErrorMessage, @SuppressWarnings("unchecked") @Nullable Class<? extends E>... excludes) {
@@ -116,8 +118,10 @@ public class EventValues {
 	 * method repeatedly.
 	 * 
 	 * @param e event
-	 * @param c type of getter
-	 * @param time the event-value's time
+	 * @param c return type of getter
+	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
+	 *            <b>Always register a default state!</b> You can leave out one of the other states instead, e.g. only register a default and a past state. The future state will
+	 *            default to the default state in this case.
 	 * @return The event's value
 	 * @see #registerEventValue(Class, Class, Getter, int)
 	 */
@@ -131,11 +135,11 @@ public class EventValues {
 	}
 	
 	/**
-	 * Returns a getter to get a value from an event.
+	 * Returns a getter to get a value from in an event.
 	 * <p>
 	 * Can print an error if the event value is blocked for the given event.
 	 * 
-	 * @param e event class runtime calling
+	 * @param e the event class the getter will be getting from
 	 * @param c type of getter
 	 * @param time the event-value's time
 	 * @return A getter to get values for a given type of events
