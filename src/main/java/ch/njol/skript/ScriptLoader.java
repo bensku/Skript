@@ -24,6 +24,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -306,6 +307,39 @@ final public class ScriptLoader {
 		return Collections.unmodifiableCollection(loadedFiles);
 	}
 	
+	/**
+	 * All disabled script files.
+	 */
+	@SuppressWarnings("null")
+	static final Set<File> disabledFiles = Collections.synchronizedSet(new HashSet<>());
+	
+	@SuppressWarnings("null")
+	public static Collection<File> getDisabledFiles() {
+		return Collections.unmodifiableCollection(disabledFiles);
+	}
+
+	/**
+	 * Filter for disabled scripts & folders.
+	 */
+	private final static FileFilter disabledFilter = new FileFilter() {
+		@Override
+		public boolean accept(final @Nullable File f) {
+			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
+		}
+	};
+
+	private static void updateDisabledScripts(Path path) {
+		disabledFiles.clear();
+		try {
+			Files.walk(path)
+				.map(Path::toFile)
+				.filter(disabledFilter::accept)
+				.forEach(disabledFiles::add);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// Initialize and start load thread
 	static {
 		loaderThread = new AsyncLoaderThread();
@@ -334,6 +368,8 @@ final public class ScriptLoader {
 			scriptsFolder.mkdirs();
 		
 		final Date start = new Date();
+
+		updateDisabledScripts(scriptsFolder.toPath());
 		
 		Runnable task = () -> {
 			final Set<File> oldLoadedFiles = new HashSet<>(loadedFiles);
@@ -720,7 +756,7 @@ final public class ScriptLoader {
 		// In always sync task, enable stuff
 		Callable<Void> callable = new Callable<Void>() {
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access", "null"})
 			@Override
 			public @Nullable Void call() throws Exception {				
 				// Unload script IF we're doing async stuff
@@ -758,6 +794,10 @@ final public class ScriptLoader {
 					
 					deleteCurrentEvent();
 				}
+				
+				// Remove the script from the disabled scripts list
+				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
+				disabledFiles.remove(disabledFile);
 				
 				// Add to loaded files to use for future reloads
 				loadedFiles.add(file);
@@ -836,8 +876,6 @@ final public class ScriptLoader {
 			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
 					.resolve(Skript.SCRIPTSFOLDER).relativize(f.toPath().toAbsolutePath()).toString();
 			assert name != null;
-			Functions.clearFunctions(name); // Functions are still callable from other scripts
-			// We're just making it impossible to look them up
 			return loadStructure(new FileInputStream(f), name);
 		} catch (final IOException e) {
 			Skript.error("Could not load " + f.getName() + ": " + ExceptionUtils.toString(e));
@@ -948,10 +986,6 @@ final public class ScriptLoader {
 	 */
 	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
-		String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
-				.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
-		assert name != null;
-		Functions.clearFunctions(name);
 		Functions.validateFunctions();
 		return r;
 	}
@@ -964,10 +998,48 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			disabledFiles.add(new File(script.getParentFile(), "-" + script.getName()));
+			
+			// Clear functions, DO NOT validate them yet
+			// If unloading, our caller will do this immediately after we return
+			// However, if reloading, new version of this script is first loaded
+			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+					.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
+			assert name != null;
+			Functions.clearFunctions(name);
+			
 			return info; // Return how much we unloaded
 		}
 		
 		return new ScriptInfo(); // Return that we unloaded literally nothing
+	}
+	
+	/**
+	 * Reloads a single script.
+	 * @param script Script file.
+	 * @return Statistics of the newly loaded script.
+	 */
+	public static ScriptInfo reloadScript(File script) {
+		if (!isAsync()) {
+			unloadScript_(script);
+		}
+		Config configs = loadStructure(script);
+		Functions.validateFunctions();
+		return loadScripts(configs);
+	}
+	
+	/**
+	 * Reloads all scripts in the given folder and its subfolders.
+	 * @param folder A folder.
+	 * @return Statistics of newly loaded scripts.
+	 */
+	public static ScriptInfo reloadScripts(File folder) {
+		if (!isAsync()) {
+			unloadScripts_(folder);
+		}
+		List<Config> configs = loadStructures(folder);
+		Functions.validateFunctions();
+		return loadScripts(configs);
 	}
 
 	/**

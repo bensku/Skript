@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader.ScriptInfo;
@@ -100,6 +101,7 @@ public class SkriptCommand implements CommandExecutor {
 					.add("check")
 					.add("changes")
 					.add("download")
+			).add("info"
 			//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
@@ -186,17 +188,11 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						}
 						reloading(sender, "script", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScript(f);
-						Config config = ScriptLoader.loadStructure(f);
-						ScriptLoader.loadScripts(config);
+						ScriptLoader.reloadScript(f);
 						reloaded(sender, r, "script", f.getName());
 					} else {
 						reloading(sender, "scripts in folder", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScripts(f);
-						List<Config> configs = ScriptLoader.loadStructures(f);
-						final int enabled = ScriptLoader.loadScripts(configs).files;
+						final int enabled = ScriptLoader.reloadScripts(f).files;
 						if (enabled == 0)
 							info(sender, "reload.empty folder", f.getName());
 						else
@@ -333,6 +329,17 @@ public class SkriptCommand implements CommandExecutor {
 					updater.changesCheck(sender);
 				} else if (args[1].equalsIgnoreCase("download")) {
 					updater.updateCheck(sender);
+				}
+			} else if (args[0].equalsIgnoreCase("info")) {
+				info(sender, "info.aliases");
+				info(sender, "info.documentation");
+				info(sender, "info.server", Bukkit.getVersion());
+				info(sender, "info.version", Skript.getVersion());
+				info(sender, "info.addons");
+				for (SkriptAddon addon : Skript.getAddons()) {
+					PluginDescriptionFile desc = addon.plugin.getDescription();
+					String web = desc.getWebsite();
+					Skript.info(sender, " - " + desc.getFullName() + (web != null ? " (" + web + ")" : ""));
 				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
