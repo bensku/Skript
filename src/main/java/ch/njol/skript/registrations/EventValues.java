@@ -98,7 +98,8 @@ public class EventValues {
 	 *            default to the default state in this case.
 	 * @param excludes Subclasses of the event for which this event value should not be registered for
 	 */
-	public static <T, E extends Event> void registerEventValue(Class<E> e, Class<T> c, Getter<T, E> g, int time, @Nullable String excludeErrorMessage, @SuppressWarnings("unchecked") @Nullable Class<? extends E>... excludes) {
+	@SafeVarargs
+	public static <T, E extends Event> void registerEventValue(Class<E> e, Class<T> c, Getter<T, E> g, int time, @Nullable String excludeErrorMessage, @Nullable Class<? extends E>... excludes) {
 		Skript.checkAcceptRegistrations();
 		List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
 		for (int i = 0; i < eventValues.size(); i++) {
