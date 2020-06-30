@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.List;
 
 import org.bukkit.event.Event;
 
@@ -27,9 +26,16 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Comparator.Relation;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -42,6 +48,8 @@ import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.PersistentDataUtils;
 import ch.njol.skript.util.Utils;
@@ -62,9 +70,6 @@ import ch.njol.util.coll.CollectionUtils;
 @SuppressWarnings({"null", "unchecked"})
 public class ExprPersistentData<T> extends SimpleExpression<T> {
 
-	// TODO implement other changer types: add, remove, remove all
-	// TODO you should be able to set multiple values - e.g. set persistent data {test::*} of player to "me1" and "me2"
-
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
@@ -78,9 +83,8 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	 * <br>e.g. <b>set persistent data value {isCool} of player to true</b>
 	 * <br>e.g. <b>set {_value} to persistent data value {isCool} of player</b>
 	 */
-	private Variable<?>[] variables = new Variable<?>[]{};
 
-	private Expression<Object> varExpression;
+	private ExpressionList<Variable<?>> variables;
 	private Expression<Object> holders;
 
 	private ExprPersistentData<?> source;
@@ -101,39 +105,37 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		List<Variable<?>> vars = new ArrayList<>();
 		ExpressionList<?> exprList = exprs[0] instanceof ExpressionList ? (ExpressionList<?>) exprs[0] : new ExpressionList<>(new Expression<?>[]{exprs[0]}, Object.class, false);
 		for (Expression<?> expr : exprList.getExpressions()) {
-			if (expr instanceof Variable<?>) {
-				Variable<?> v = (Variable<?>) expr;
-				if (v.isLocal()) {
-					Skript.error("Using local variables in Persistent Data is not supported."
-								+ " If you are trying to set a value temporarily, consider using Metadata", ErrorQuality.SEMANTIC_ERROR
-					);
-					return false;
-				}
-				vars.add(v);
+			if (!(expr instanceof Variable<?>)) { // Input not a variable
+				Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
+				return false;
+			} else if (((Variable<?>) expr).isLocal()) { // Input is a variable, but it's local
+				Skript.error("Using local variables in persistent data is not supported."
+						+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
+				);
+				return false;
 			}
 		}
-		if (!vars.isEmpty()) {
-			variables = vars.toArray(new Variable<?>[0]);
-			varExpression = (Expression<Object>) exprs[0];
-			holders = (Expression<Object>) exprs[1];
-			return true;
-		}
-		Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
-		return false;
+		variables = (ExpressionList<Variable<?>>) exprList;
+		holders = (Expression<Object>) exprs[1];
+		return true;
 	}
 
 	@Override
 	@Nullable
 	public T[] get(Event e) {
 		List<Object> values = new ArrayList<>();
-		for (Variable<?> v : variables) {
-			String varName = v.getName().toString(e);
-			for (Object holder : holders.getArray(e)) {
-				for (Object object : PersistentDataUtils.get(holder, varName))
-					values.add(object);
+		for (Expression<?> expr : variables.getExpressions()) {
+			String varName = ((Variable<?>) expr).getName().toString(e);
+			if (varName.contains(Variable.SEPARATOR)) { // It's a list
+				for (Object holder : holders.getArray(e)) {
+					for (Object object : PersistentDataUtils.getList(holder, varName))
+						values.add(object);
+				}
+			} else { // It's a single variable
+				for (Object holder : holders.getArray(e))
+					values.add(PersistentDataUtils.getSingle(holder, varName));
 			}
 		}
 		try {
@@ -146,9 +148,16 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
-			return CollectionUtils.array(Object.class);
-		return null;
+		if (mode == ChangeMode.RESET)
+			return null;
+		for (Expression<?> expr : variables.getExpressions()) {
+			if (!((Variable<?>) expr).isList()) {
+				if (mode == ChangeMode.REMOVE_ALL)
+					return null;
+				return CollectionUtils.array(Object.class);
+			}
+		}
+		return CollectionUtils.array(Object[].class);
 	}
 
 	@Override
@@ -157,22 +166,96 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 			return;
 		switch (mode) {
 			case SET:
-				for (Variable<?> v : variables) {
-					String varName = v.getName().toString(e);
-					for (Object holder : holders.getArray(e))
-						PersistentDataUtils.set(holder, varName, delta[0]);
+				for (Expression<?> expr : variables.getExpressions()) {
+					Variable<?> var = (Variable<?>) expr;
+					String varName = var.getName().toString(e);
+					if (var.isList()) {
+						varName = varName.replace("*", "");
+						for (Object holder : holders.getArray(e)) {
+							for (int i = 1; i <= delta.length; i++) {
+								// varName + i = var::i (e.g. exampleList::1, exampleList::2, etc.)
+								PersistentDataUtils.setList(holder, varName + i, delta[i - 1]);
+							}
+						}
+					} else if (varName.contains(Variable.SEPARATOR)) { // Specific index of a list
+						for (Object holder : holders.getArray(e))
+							PersistentDataUtils.setList(holder, varName, delta[0]);
+					} else { // It's a single variable
+						for (Object holder : holders.getArray(e))
+							PersistentDataUtils.setSingle(holder, varName, delta[0]);
+					}
 				}
 				break;
 			case DELETE:
-				for (Variable<?> v : variables) {
-					String varName = v.getName().toString(e);
-					for (Object holder : holders.getArray(e))
-						PersistentDataUtils.remove(holder, varName);
+				for (Expression<?> expr : variables.getExpressions()) {
+					String varName = ((Variable<?>) expr).getName().toString(e);
+					if (varName.contains(Variable.SEPARATOR)) { // It's a list
+						for (Object holder : holders.getArray(e))
+							PersistentDataUtils.removeList(holder, varName);
+					} else { // It's a single variable
+						for (Object holder : holders.getArray(e))
+							PersistentDataUtils.removeSingle(holder, varName);
+					}
 				}
 				break;
 			case ADD:
+				for (Expression<?> expr : variables.getExpressions()) {
+					Variable<?> var = (Variable<?>) expr;
+					String varName = var.getName().toString(e);
+					if (var.isList()) {
+						for (Object holder : holders.getArray(e)) {
+							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName);
+							if (varMap != null) {
+								varName = varName.replace("*", "");
+								int start = 1;
+								for (Object value : delta) {
+									while (varMap.containsKey(String.valueOf(start)))
+										start++;
+									PersistentDataUtils.setList(holder, varName + start, value);
+									start++;
+								}
+							}
+						}
+					} else if (delta[0] instanceof Number) {
+						for (Object holder : holders.getArray(e)) {
+							Object n = PersistentDataUtils.getSingle(holder, varName);
+							if (n instanceof Number)
+								PersistentDataUtils.setSingle(holder, varName, ((Number) n).doubleValue() + ((Number) delta[0]).doubleValue());
+						}
+					}
+				}
+				break;
 			case REMOVE:
 			case REMOVE_ALL:
+				for (Expression<?> expr : variables.getExpressions()) {
+					Variable<?> var = (Variable<?>) expr;
+					String varName = var.getName().toString(e);
+					if (var.isList() || mode == ChangeMode.REMOVE_ALL) {
+						for (Object holder : holders.getArray(e)) {
+							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName);
+							int sizeBefore = varMap.size();
+							if (varMap != null) {
+								for (Object value : delta) {
+									// Create a clone to avoid a ConcurrentModificationException
+									for (Entry<String, Object> entry : new HashMap<>(varMap).entrySet()) {
+										if (Relation.EQUAL.is(Comparators.compare(entry.getValue(), value)))
+											varMap.remove(entry.getKey());
+									}
+								}
+								if (sizeBefore != varMap.size()) { // It changed so we should set it
+									PersistentDataUtils.setListMap(holder, varName, varMap);
+								}
+							}
+						}
+					} else if (delta[0] instanceof Number) {
+						for (Object holder : holders.getArray(e)) {
+							Object n = PersistentDataUtils.getSingle(holder, varName);
+							if (n instanceof Number)
+								PersistentDataUtils.setSingle(holder, varName, ((Number) n).doubleValue() - ((Number) delta[0]).doubleValue());
+						}
+					}
+				}
+				break;
 			case RESET:
 				assert false;
 		}
@@ -180,7 +263,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	@Override
 	public boolean isSingle() {
-		return variables.length == 1 && holders.isSingle();
+		return variables.isSingle() && holders.isSingle();
 	}
 
 	@Override
@@ -200,7 +283,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "persistent data value(s) " + varExpression.toString(e, debug) + " of " + holders.toString(e, debug);
+		return "persistent data value(s) " + variables.toString(e, debug) + " of " + holders.toString(e, debug);
 	}
 
 }

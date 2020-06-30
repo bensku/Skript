@@ -65,43 +65,33 @@ public class CondHasPersistentData extends Condition {
 	@SuppressWarnings("null")
 	private Expression<Object> holders;
 	@SuppressWarnings("null")
-	private Expression<Object> varExpression;
-
-	@SuppressWarnings("null")
-	private Variable<?>[] variables;
+	private ExpressionList<Variable<?>> variables;
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		List<Variable<?>> vars = new ArrayList<>();
 		ExpressionList<?> exprList = exprs[1] instanceof ExpressionList ? (ExpressionList<?>) exprs[1] : new ExpressionList<>(new Expression<?>[]{exprs[1]}, Object.class, false);
 		for (Expression<?> expr : exprList.getExpressions()) {
-			if (expr instanceof Variable<?>) {
-				Variable<?> v = (Variable<?>) expr;
-				if (v.isLocal()) {
-					Skript.error("Using local variables in Persistent Data is not supported."
-								+ " If you are trying to set a value temporarily, consider using Metadata", ErrorQuality.SEMANTIC_ERROR
-					);
-					return false;
-				}
-				vars.add(v);
+			if (!(expr instanceof Variable<?>)) { // Input not a variable
+				Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
+				return false;
+			} else if (((Variable<?>) expr).isLocal()) { // Input is a variable, but it's local
+				Skript.error("Using local variables in persistent data is not supported."
+						+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
+				);
+				return false;
 			}
 		}
-		if (!vars.isEmpty()) {
-			setNegated(matchedPattern == 1);
-			variables = vars.toArray(new Variable<?>[0]);
-			varExpression = (Expression<Object>) exprs[1];
-			holders = (Expression<Object>) exprs[0];
-			return true;
-		}
-		Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
-		return false;
+		variables = (ExpressionList<Variable<?>>) exprList;
+		holders = (Expression<Object>) exprs[0];
+		setNegated(matchedPattern == 1);
+		return true;
 	}
 
 	@Override
 	public boolean check(Event e) {
-		for (Variable<?> v : variables) {
-			if (!(holders.check(e, holder -> PersistentDataUtils.has(holder, v.getName().toString(e)), isNegated())))
+		for (Expression<?> expr : variables.getExpressions()) {
+			if (!(holders.check(e, holder -> PersistentDataUtils.has(holder, ((Variable<?>) expr).getName().toString(e)), isNegated())))
 				return false;
 		}
 		return true;
@@ -111,7 +101,7 @@ public class CondHasPersistentData extends Condition {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, holders,
-				"persistent data " + (varExpression.isSingle() ? "value " : "values ") + varExpression.toString(e, debug));
+				"persistent data value(s) " + variables.toString(e, debug));
 	}
 
 }

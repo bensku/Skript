@@ -19,13 +19,13 @@
  */
 package ch.njol.skript.util;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -47,14 +47,19 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.SerializedVariable.Value;
 
 /**
+ * This class allows persistent data to work easily with Skript.
+ * In Skript, Persistent Data is formatted like variables.
+ * This looks like: <b>set persistent data {isAdmin} of player to true</b>
  * @author APickledWalrus
+ * @see SingleVariablePersistentDataType
+ * @see ListVariablePersistentDataType
+ * @see ch.njol.skript.expressions.ExprPersistentData
+ * @see ch.njol.skript.conditions.CondHasPersistentData
  */
 public class PersistentDataUtils {
 
-	private final static PersistentDataType<byte[], Value> SINGLE_VARIABLE_TYPE = new SingleVariableType();
-	private final static PersistentDataType<byte[], Map<String, Value>> LIST_VARIABLE_TYPE = new ListVariableType();
-
-	private final static String SEPARATOR = Variable.SEPARATOR;
+	private final static PersistentDataType<byte[], Value> SINGLE_VARIABLE_TYPE = new SingleVariablePersistentDataType();
+	private final static PersistentDataType<byte[], Map<String, Value>> LIST_VARIABLE_TYPE = new ListVariablePersistentDataType();
 
 	/*
 	 * General Utility Methods
@@ -80,181 +85,187 @@ public class PersistentDataUtils {
 	}
 
 	/**
-	 * Tries to convert the input String to a valid key name.
-	 * This method <b>will</b> print a warning to the console if the name couldn't be fully converted.
+	 * This returns a {@link NamespacedKey} from the provided name with Skript as the namespace being used.
+	 * The name will be encoded in Base64 to make sure the key name is valid.
 	 * @param name The name to convert
-	 * @return The converted name or null if the name couldn't be fully converted.
-	 * @see NamespacedKey
+	 * @return The created {@link NamespacedKey}
 	 */
 	@SuppressWarnings("null")
 	@Nullable
 	public static NamespacedKey getNamespacedKey(String name) {
-		if (name.contains(" "))
-			name = name.replace(" ", "");
-		if (name.contains("::"))
-			name = name.replace("::", "//");
-		try {
-			return new NamespacedKey(Skript.getInstance(), name);
-		} catch (IllegalArgumentException e) {
-			Skript.warning("Invalid characters were used in a Persistent Data variable, or the name is longer than 256 characters."
-				+ " If you are trying to get it, it will not be returned."
-				+ " If you are trying to change it, it will not be returned."
-				+ " Valid characters are letters, numbers, periods, underscores, hyphens, and forward slashes."
-				+ " If you believe this is a Skript issue, please create an issue with the appropriate details on GitHub."
-			);
+		// Encode the name in Base64 to make sure the key name is valid
+		name = Base64.getEncoder().encodeToString(name.replace(" ", "").getBytes(StandardCharsets.UTF_8)).replace('=', '_').replace('+', '.');
+		return new NamespacedKey(Skript.getInstance(), name);
+	}
+
+	/*
+	 * Single Variable Modification Methods
+	 */
+
+	/**
+	 * Gets the Persistent Data Tag's value of the given single variable name from the given holder.
+	 * If the value set was not serializable, it was set under Metadata and is retrieved from Metadata here.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the single variable (e.g. <b>"myVariable" from {myVariable}</b>)
+	 * @return The Persistent Data Tag's value from the holder, or null if: 
+	 * the holder was invalid, the key was invalid, or if a value could not be found.
+	 * @see PersistentDataUtils#setSingle(Object, String, Object)
+	 * @see PersistentDataUtils#removeSingle(Object, String)
+	 */
+	@Nullable
+	public static Object getSingle(Object holder, String name) {
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
 			return null;
+
+		if (name.contains(Variable.SEPARATOR)) // This is a list variable..
+			return null;
+
+		NamespacedKey key = getNamespacedKey(name);
+		if (key == null)
+			return null;
+
+		// We need to check to avoid an IllegalArgumentException
+		if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) {
+			Value value = actualHolder.getPersistentDataContainer().get(key, SINGLE_VARIABLE_TYPE);
+			if (value != null)
+				return Classes.deserialize(value.type, value.data);
+		}
+
+		// Try to get as Metadata instead
+		if (holder instanceof Metadatable) {
+			List<MetadataValue> values = ((Metadatable) holder).getMetadata(name);
+			for (MetadataValue mv : values) {
+				if (mv.getOwningPlugin() == Skript.getInstance()) // Get the latest value set by Skript
+					return mv.value();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Sets the Persistent Data Tag from the given name and value for the given holder.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the single variable (e.g. <b>"myVariable" from {myVariable}</b>)
+	 * @param value The value for the Persistent Data Tag to be set to.
+	 * If this value is not serializable (see {@linkplain Classes#serialize(Object)}), this value will be set under Metadata.
+	 * @see PersistentDataUtils#getSingle(Object, String)
+	 * @see PersistentDataUtils#removeSingle(Object, String)
+	 */
+	public static void setSingle(Object holder, String name, Object value) {
+		if (name.contains(Variable.SEPARATOR)) // This is a list variable..
+			return;
+
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return;
+
+		Value serialized = Classes.serialize(value);
+
+		if (serialized != null) { // Can be serialized, set as Persistent Data
+			NamespacedKey key = getNamespacedKey(name);
+			if (key == null)
+				return;
+
+			actualHolder.getPersistentDataContainer().set(key, SINGLE_VARIABLE_TYPE, serialized);
+
+			// This is to store the data on the ItemType or TileState
+			if (holder instanceof ItemType) {
+				((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
+			} else if (actualHolder instanceof TileState) {
+				((TileState) actualHolder).update();
+			}
+		} else if (holder instanceof Metadatable) { // Set as Metadata instead
+			((Metadatable) holder).setMetadata(name, new FixedMetadataValue(Skript.getInstance(), value));
+		}
+	}
+
+	/**
+	 * Sets the Persistent Data Tag's value for the given holder from the given name and value.
+	 * This method will check the holder's {@linkplain PersistentDataContainer} and Metadata.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the single variable (e.g. <b>"myVariable" from {myVariable}</b>)
+	 * @see PersistentDataUtils#getSingle(Object, String)
+	 * @see PersistentDataUtils#setSingle(Object, String, Object)
+	 */
+	public static void removeSingle(Object holder, String name) {
+		if (name.contains(Variable.SEPARATOR)) // This is a list variable..
+			return;
+
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return;
+
+		NamespacedKey key = getNamespacedKey(name);
+		if (key == null)
+			return;
+
+		if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) { // Can be serialized, try to remove Persistent Data
+			actualHolder.getPersistentDataContainer().remove(key);
+
+			// This is to store the data on the ItemType or TileState
+			if (holder instanceof ItemType) {
+				((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
+			} else if (actualHolder instanceof TileState) {
+				((TileState) actualHolder).update();
+			}
+		} else if (holder instanceof Metadatable) { // Try to remove Metadata instead
+			((Metadatable) holder).removeMetadata(name, Skript.getInstance());
 		}
 	}
 
 	/*
-	 * Get, Set, Remove, Has Methods
+	 * List Variable Modification Methods
 	 */
 
 	/**
-	 * Gets a value from a key in the holder's PersistentDataContainer.
-	 * <b>Note:</b> If the object can't be found under PersistentData, the holder's metadata for
-	 * the same value will be checked if possible. If a value is found, that value will be returned instead.
-	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
-	 * @param name The key name in the PersistentDataContainer. It will go through conversion to replace some characters.
-	 * @return The value, or null if it was not found.
+	 * Gets the Persistent Data Tag's value of the given list variable name from the given holder.
+	 * This method may return a single value, or multiple, depending on the given name.
+	 * If the value set was not serializable, it was set under Metadata and is retrieved from Metadata here.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the list variable (e.g. <b>"myList::*" from {myList::*}</b>)
+	 * @return The Persistent Data Tag's value(s) from the holder, or an empty array if: 
+	 * the holder was invalid, the name was invalid, the key was invalid, or if no value(s) could be found.
+	 * @see PersistentDataUtils#setList(Object, String, Object)
+	 * @see PersistentDataUtils#removeList(Object, String)
+	 * @see PersistentDataUtils#getListMap(Object, String)
 	 */
-	@SuppressWarnings({"unchecked", "null"})
-	public static Object[] get(Object holder, String name) {
+	@SuppressWarnings({"null", "unchecked"})
+	public static Object[] getList(Object holder, String name) {
+		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
+			return new Object[0];
+
 		PersistentDataHolder actualHolder = getActualHolder(holder);
 		if (actualHolder == null)
 			return new Object[0];
 
-		if (name.contains("::")) { // Check if it's a list variable.
-			String keyName = name.substring(0, name.lastIndexOf(SEPARATOR));
-			NamespacedKey key = getNamespacedKey(keyName);
-			if (key == null)
-				return new Object[0];
+		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		NamespacedKey key = getNamespacedKey(keyName);
+		if (key == null)
+			return new Object[0];
 
+		String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
+
+		// We need to check to avoid an IllegalArgumentException
+		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) {
 			Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
-			String index = name.substring(name.lastIndexOf(SEPARATOR) + SEPARATOR.length());
-
-			if (values != null) {
-				if (index.equals("*")) { // Return all values
-					List<Object> returnObjects = new ArrayList<>();
-					for (Value value : values.values())
-						returnObjects.add(Classes.deserialize(value.type, value.data));
-					return returnObjects.toArray();
-				} else { // Return just one value
-					Value value = values.get(index);
-					if (value != null)
-						return new Object[]{Classes.deserialize(value.type, value.data)};
-				}
-			}
-
-			// Try to get as Metadata instead.
-			if (holder instanceof Metadatable) {
-				Metadatable mHolder = (Metadatable) holder;
-				List<MetadataValue> mValues = mHolder.getMetadata(keyName);
-
-				if (!mValues.isEmpty()) {
-					Map<String, Object> mMap = null;
-					for (MetadataValue mv : mValues) { // Get the latest value set by Skript
-						if (mv.getOwningPlugin() == Skript.getInstance()) {
-							mMap = (Map<String, Object>) mv.value();
-							break;
-						}
-					}
-					if (mMap == null)
-						return new Object[0];
-
-					if (index.equals("*")) { // Return all values
-						List<Object> returnObjects = new ArrayList<>();
-						for (Object object : mMap.values())
-							returnObjects.add(object);
-						return returnObjects.toArray();
-					} else { // Return just one
-						return new Object[]{mMap.get(index)};
-					}
-
-				}
-			}
-		} else {
-			NamespacedKey key = getNamespacedKey(name);
-			if (key == null)
-				return new Object[0];
-
-			Value value = actualHolder.getPersistentDataContainer().get(key, SINGLE_VARIABLE_TYPE);
-			if (value != null)
-				return new Object[]{Classes.deserialize(value.type, value.data)};
-
-			// Try to get as Metadata instead
-			if (holder instanceof Metadatable) {
-				Metadatable mHolder = (Metadatable) holder;
-				List<MetadataValue> values = mHolder.getMetadata(name);
-				for (MetadataValue mv : values) {
-					if (mv.getOwningPlugin() == Skript.getInstance()) // Get the latest value set by Skript
-						return new Object[]{mv.value()};
-				}
-				return new Object[0];
+			if (index.equals("*")) { // Return all values
+				List<Object> returnObjects = new ArrayList<>();
+				for (Value value : values.values())
+					returnObjects.add(Classes.deserialize(value.type, value.data));
+				return returnObjects.toArray();
+			} else { // Return just one value
+				Value value = values.get(index);
+				if (value != null)
+					return new Object[]{Classes.deserialize(value.type, value.data)};
 			}
 		}
 
-		return new Object[0];
-	}
-
-	/**
-	 * Sets a key to a value in the holder's PersistentDataContainer.
-	 * <b>Note:</b> If the given value can't be serialized by Skript, the value will be set in Metadata instead if possible.
-	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
-	 * @param name The key name in the PersistentDataContainer. It will go through conversion to replace some characters.
-	 * @param value The value for the key to be set to.
-	 * @return Whether the key was set to the value.
-	 */
-	@SuppressWarnings({"unchecked", "null"})
-	public static boolean set(Object holder, String name, Object value) {
-		PersistentDataHolder actualHolder = getActualHolder(holder);
-		if (actualHolder == null)
-			return false;
-
-		Value serialized = Classes.serialize(value);
-
-		if (name.contains("::")) { // Check if it's a list variable.
-			if (serialized != null) {  // Can be serialized, set as PersistentData
-				String keyName = name.substring(0, name.lastIndexOf(SEPARATOR));
-				NamespacedKey key = getNamespacedKey(keyName);
-				if (key == null)
-					return false;
-
-				Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
-				if (values == null)
-					values = new HashMap<>();
-
-				String index = name.substring(name.lastIndexOf(SEPARATOR) + SEPARATOR.length());
-				if (index.equals("*")) { // Clear map and set value
-					values.clear();
-					values.put("1", serialized);
-				} else {
-					values.put(index, serialized);
-				}
-
-				actualHolder.getPersistentDataContainer().set(key, LIST_VARIABLE_TYPE, values);
-
-				// This is to store the data on the ItemType or TileState
-				if (holder instanceof ItemType) {
-					((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
-				} else if (actualHolder instanceof TileState) {
-					((TileState) actualHolder).update();
-				}
-
-				return true;
-			}
-
-			// Try to set as Metadata instead
-			if (holder instanceof Metadatable) {
-				Skript.warning("The variable '{" + name + "}' is not able to be set under Persistent Data."
-						+ " However, the value will instead be set under Metadata and will clear on a restart."
-						+ " It will still be accessible through the Persistent Data expression too."
-				);
-				Metadatable mHolder = (Metadatable) holder;
-
-				String keyName = name.substring(0, name.lastIndexOf(SEPARATOR));
-				List<MetadataValue> mValues = mHolder.getMetadata(keyName);
-
+		// Try to get as Metadata instead.
+		if (holder instanceof Metadatable) {
+			List<MetadataValue> mValues = ((Metadatable) holder).getMetadata(keyName);
+			if (!mValues.isEmpty()) {
 				Map<String, Object> mMap = null;
 				for (MetadataValue mv : mValues) { // Get the latest value set by Skript
 					if (mv.getOwningPlugin() == Skript.getInstance()) {
@@ -263,113 +274,153 @@ public class PersistentDataUtils {
 					}
 				}
 				if (mMap == null)
-					mMap = new HashMap<>();
+					return new Object[0];
 
-				String index = name.substring(name.lastIndexOf(SEPARATOR) + SEPARATOR.length());
-				if (index.equals("*")) { // Clear map and set value
-					mMap.clear();
-					mMap.put("1", value);
-				} else {
-					mMap.put(index, value);
+				if (index.equals("*")) { // Return all values
+					List<Object> returnObjects = new ArrayList<>();
+					for (Object object : mMap.values())
+						returnObjects.add(object);
+					return returnObjects.toArray();
+				} else { // Return just one
+					return new Object[]{mMap.get(index)};
 				}
-
-				mHolder.setMetadata(keyName, new FixedMetadataValue(Skript.getInstance(), mMap));
-
-				return true;
 			}
-
-		} else {
-			if (serialized != null) { // Can be serialized, set as PersistentData
-				NamespacedKey key = getNamespacedKey(name);
-				if (key == null)
-					return false;
-
-				// Attempt to set the value based on the possible PersistentDataTypes.
-				actualHolder.getPersistentDataContainer().set(key, SINGLE_VARIABLE_TYPE, serialized);
-
-				// This is to store the data on the ItemType or TileState
-				if (holder instanceof ItemType) {
-					((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
-				} else if (actualHolder instanceof TileState) {
-					((TileState) actualHolder).update();
-				}
-
-				return true;
-			}
-
-			// Try to set as Metadata instead
-			if (holder instanceof Metadatable) {
-				Skript.warning("The variable '{" + name + "}' is not able to be set under Persistent Data."
-						+ " However, the value will instead be set under Metadata and will clear on a restart."
-						+ " It will still be accessible through the Persistent Data expression too."
-				);
-				Metadatable mHolder = (Metadatable) holder;
-				mHolder.setMetadata(name, new FixedMetadataValue(Skript.getInstance(), value));
-				return true;
-			}
-
 		}
-
-		return false;
+		return new Object[0];
 	}
 
 	/**
-	 * Removes a key/value from the holder's PersistentDataContainer.
-	 * <b>Note:</b> If the given key can't be found in the holder's PersistentDataContainer, this method will try to
-	 * find it under the holder's Metadata if possible. If a value is found, then it will be removed.
-	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
-	 * @param name The key name in the PersistentDataContainer. It will go through conversion to replace some characters.
-	 * @return Whether the value was removed. False returns mean that the holder does not have the value.
+	 * Sets the Persistent Data Tag's value for the given holder from the given list variable name and value.
+	 * This method may return a single value, or multiple, depending on the given name.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the list variable (e.g. <b>"myList::*" from {myList::*}</b>)
+	 * If the index of the name is "*", then the index set in the list will be "1".
+	 * To set a different index, format the list variable like normal (e.g. <b>"myList::index" from {myList::index}</b>)
+	 * @param value The value for the Persistent Data Tag to be set to.
+	 * If this value is not serializable (see {@linkplain Classes#serialize(Object)}), this value will be set under Metadata.
+	 * @see PersistentDataUtils#getList(Object, String)
+	 * @see PersistentDataUtils#removeList(Object, String)
+	 * @see PersistentDataUtils#setListMap(Object, String, Map)
 	 */
-	@SuppressWarnings({"unchecked", "null"})
-	public static boolean remove(Object holder, String name) {
+	@SuppressWarnings({"null", "unchecked"})
+	public static void setList(Object holder, String name, Object value) {
+		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
+			return;
+
 		PersistentDataHolder actualHolder = getActualHolder(holder);
 		if (actualHolder == null)
-			return false;
+			return;
 
-		if (name.contains("::")) { // Check if it's a list variable.
-			String keyName = name.substring(0, name.lastIndexOf(SEPARATOR));
+		Value serialized = Classes.serialize(value);
+
+		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+
+		if (serialized != null) {  // Can be serialized, set as Persistent Data
 			NamespacedKey key = getNamespacedKey(keyName);
 			if (key == null)
-				return false;
+				return;
 
 			Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
 			if (values == null)
 				values = new HashMap<>();
 
-			String index = name.substring(name.lastIndexOf(SEPARATOR) + SEPARATOR.length());
+			String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
+			if (index.equals("*")) { // Clear map and set value
+				values.clear();
+				values.put("1", serialized);
+			} else {
+				values.put(index, serialized);
+			}
 
-			if (!values.isEmpty()) { // Has values may be able to remove
-				if (index.equals("*")) { // Remove ALL values
-					actualHolder.getPersistentDataContainer().remove(key);
-					return true;
-				} else { // Remove value and set again
-					if (!values.containsKey(index))
-						return false;
+			actualHolder.getPersistentDataContainer().set(key, LIST_VARIABLE_TYPE, values);
 
+			// This is to store the data on the ItemType or TileState
+			if (holder instanceof ItemType) {
+				((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
+			} else if (actualHolder instanceof TileState) {
+				((TileState) actualHolder).update();
+			}
+		} else if (holder instanceof Metadatable) { // Try to set as Metadata instead
+			Metadatable mHolder = (Metadatable) holder;
+
+			Map<String, Object> mMap = null;
+			for (MetadataValue mv : mHolder.getMetadata(keyName)) { // Get the latest value set by Skript
+				if (mv.getOwningPlugin() == Skript.getInstance()) {
+					mMap = (Map<String, Object>) mv.value();
+					break;
+				}
+			}
+			if (mMap == null)
+				mMap = new HashMap<>();
+
+			String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
+			if (index.equals("*")) { // Clear map and set value
+				mMap.clear();
+				mMap.put("1", value);
+			} else {
+				mMap.put(index, value);
+			}
+
+			mHolder.setMetadata(keyName, new FixedMetadataValue(Skript.getInstance(), mMap));
+		}
+	}
+
+	/**
+	 * Removes the value of the Persistent Data Tag of the given name for the given holder.
+	 * This method will check the holder's {@linkplain PersistentDataContainer} and Metadata.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the list variable (e.g. <b>"myList::*" from {myList::*}</b>)
+	 * If the index of the name is "*", then the entire list will be cleared.
+	 * To remove a specific index, format the list variable like normal (e.g. <b>"myList::index" from {myList::index}</b>)
+	 * @see PersistentDataUtils#getList(Object, String)
+	 * @see PersistentDataUtils#setList(Object, String, Object)
+	 */
+	@SuppressWarnings({"unchecked", "null"})
+	public static void removeList(Object holder, String name) {
+		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
+			return;
+
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return;
+
+		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		NamespacedKey key = getNamespacedKey(keyName);
+		if (key == null)
+			return;
+
+		String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
+
+		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) {
+			if (index.equals("*")) { // Remove the whole thing
+				actualHolder.getPersistentDataContainer().remove(key);
+			} else { // Remove just some
+				Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
+				if (values != null) {
 					values.remove(index);
 					if (values.isEmpty()) { // No point in storing an empty map. The last value was removed.
 						actualHolder.getPersistentDataContainer().remove(key);
 					} else {
 						actualHolder.getPersistentDataContainer().set(key, LIST_VARIABLE_TYPE, values);
 					}
-
-					// This is to store the data on the ItemType or TileState
-					if (holder instanceof ItemType) {
-						((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
-					} else if (actualHolder instanceof TileState) {
-						((TileState) actualHolder).update();
-					}
-
-					return true;
 				}
-			} else { // The map is empty, so we should check Metadata
-				Metadatable mHolder = (Metadatable) holder;
+			}
+			
+			// This is to store the data on the ItemType or TileState
+			if (holder instanceof ItemType) {
+				((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
+			} else if (actualHolder instanceof TileState) {
+				((TileState) actualHolder).update();
+			}
+		} else if (holder instanceof Metadatable) { // Try metadata
+			Metadatable mHolder = (Metadatable) holder;
 
+			if (index.equals("*")) { // Remove ALL values
+				mHolder.removeMetadata(keyName, Skript.getInstance());
+			} else { // Remove just one
 				List<MetadataValue> mValues = mHolder.getMetadata(keyName);
 
 				if (!mValues.isEmpty()) {
-
 					Map<String, Object> mMap = null;
 					for (MetadataValue mv : mValues) { // Get the latest value set by Skript
 						if (mv.getOwningPlugin() == Skript.getInstance()) {
@@ -377,229 +428,166 @@ public class PersistentDataUtils {
 							break;
 						}
 					}
-					if (mMap == null)
-						mMap = new HashMap<>();
 
-					if (index.equals("*")) { // Remove ALL values
-						if (!mHolder.hasMetadata(keyName))
-							return false;
-						mHolder.removeMetadata(keyName, Skript.getInstance());
-						return true;
-					} else { // Remove value and set again
-						if (!mMap.containsKey(index))
-							return false;
+					if (mMap != null) {
 						mMap.remove(index);
 						if (mMap.isEmpty()) { // No point in storing an empty map. The last value was removed.
 							mHolder.removeMetadata(keyName, Skript.getInstance());
 						} else {
 							mHolder.setMetadata(keyName, new FixedMetadataValue(Skript.getInstance(), mMap));
 						}
-
-						return true;
 					}
-
 				}
 			}
-		} else {
-			NamespacedKey key = getNamespacedKey(name);
-			if (key == null)
-				return false;
-
-			if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) {
-				actualHolder.getPersistentDataContainer().remove(key);
-
-				// This is to update the data on the ItemType or TileState
-				if (holder instanceof ItemType) {
-					((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
-				} else if (actualHolder instanceof TileState) {
-					((TileState) actualHolder).update();
-				}
-
-				return true;
-			}
-
-			// Try to remove Metadata instead
-			if (holder instanceof Metadatable) {
-				Metadatable mHolder = (Metadatable) holder;
-				if (mHolder.hasMetadata(name)) {
-					mHolder.removeMetadata(name, Skript.getInstance());
-					return true;
-				}
-			}
-
 		}
-
-		return false;
 	}
 
 	/**
-	 * Whether or not the holder has a value under the key.
-	 * <b>Note:</b> If the holder doesn't have this value in its PersistentDataContainer, then the holder's metadata will
-	 * instead be checked. If a value is found under metadata, then this method will return true.
-	 * @param holder A {@linkplain PersistentDataHolder}, a {@linkplain Block}, or an {@linkplain ItemType}.
-	 * @param name The key name in the PersistentDataContainer. It will go through conversion to replace some characters.
-	 * @return True if the user has the key and false if they do not (or if a problem occurred e.g invalid holder, name).
+	 * Returns the map of a list variable. Keyed by variable index.
+	 * This method will check the holder's {@linkplain PersistentDataContainer} and Metadata.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The full list variable (e.g. <b>"myList::*" from {myList::*}</b>)
+	 * If it is not provided in this format, a null value will be returned.
+	 * @return The map of a list variable, or null if:
+	 * If name was provided in an incorrect format, the holder is invalid, or if no value is set under that name for the holder.
+	 * @see PersistentDataUtils#getList(Object, String)
+	 * @see PersistentDataUtils#setListMap(Object, String, Map)
 	 */
-	public static boolean has(Object holder, String name) {
-		// Run the get method because of how much needs to be checked/done (avoid code repetition)
-		for (Object object : get(holder, name)) {
-			if (object != null)
-				return true;
+	@SuppressWarnings({"unchecked", "null"})
+	@Nullable
+	public static Map<String, Object> getListMap(Object holder, String name) {
+		if (!name.endsWith("*")) // Make sure we're getting a whole list
+			return null;
+
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return null;
+
+		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		NamespacedKey key = getNamespacedKey(keyName);
+		if (key == null)
+			return null;
+
+		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
+			Map<String, Object> returnMap = new HashMap<>();
+			for (Entry<String, Value> entry : actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).entrySet()) {
+				returnMap.put(entry.getKey(), Classes.deserialize(entry.getValue().type, entry.getValue().data));
+			}
+			return returnMap;
+		} else if (holder instanceof Metadatable) { // Check Metadata
+			Map<String, Object> mMap = null;
+			for (MetadataValue mv : ((Metadatable) holder).getMetadata(keyName)) { // Get the latest value set by Skript
+				if (mv.getOwningPlugin() == Skript.getInstance()) {
+					mMap = (Map<String, Object>) mv.value();
+					break;
+				}
+			}
+			return mMap;
 		}
-		return false;
+
+		return null;
+	}
+
+	/**
+	 * Sets the list map of the given holder.
+	 * This map <i>should</i> be gotten from {@linkplain PersistentDataUtils#getListMap(Object, String)}
+	 * This method will check the holder's {@linkplain PersistentDataContainer} and Metadata.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The full list variable (e.g. <b>"myList::*" from {myList::*}</b>)
+	 * If it is not provided in this format, nothing will be set.
+	 * @param varMap The new map for Persistent Data Tag of the given holder.
+	 * If a variable map doesn't already exist in the holder's {@linkplain PersistentDataContainer},
+	 * this map will be set in their Metadata.
+	 * @see PersistentDataUtils#setList(Object, String, Object)
+	 * @see PersistentDataUtils#getListMap(Object, String)
+	 */
+	@SuppressWarnings("null")
+	public static void setListMap(Object holder, String name, Map<String, Object> varMap) {
+		if (!name.endsWith("*")) // Make sure we're setting a whole list
+			return;
+
+		if (varMap.isEmpty()) { // If the map is empty, remove the whole value instead.
+			removeList(holder, name);
+			return;
+		}
+
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return;
+
+		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		NamespacedKey key = getNamespacedKey(keyName);
+		if (key == null)
+			return;
+
+		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
+			Map<String, Value> serializedMap = new HashMap<>();
+			for (Entry<String, Object> entry : varMap.entrySet())
+				serializedMap.put(entry.getKey(), Classes.serialize(entry.getValue()));
+			actualHolder.getPersistentDataContainer().set(key, LIST_VARIABLE_TYPE, serializedMap);
+		} else if (holder instanceof Metadatable) { // Check Metadata
+			((Metadatable) holder).setMetadata(keyName, new FixedMetadataValue(Skript.getInstance(), varMap));
+		}
+
+		// We need to update the data on an ItemType or TileState
+		if (holder instanceof ItemType) {
+			((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
+		} else if (actualHolder instanceof TileState) {
+			((TileState) actualHolder).update();
+		}
 	}
 
 	/*
-	 * Allow PersistentData to work with all Skript types that can be serialized.
+	 * Other Utility Methods
 	 */
 
 	/**
-	 * This {@link PersistentDataType} is used for single variables.
-	 * The {@link NamespacedKey}'s key should be the variable's name.
-	 * {hello} -> "hello" and the {@link Value} is the variable's serialized value.
-	 * @see PersistentDataUtils#getNamespacedKey(String) for conversion details.
+	 * Whether the given holder has a value under the given name.
+	 * This method will check the holder's {@linkplain PersistentDataContainer} and Metadata.
+	 * @param holder The holder of the Persistent Data Tag. See {@linkplain PersistentDataUtils#getActualHolder(Object)}
+	 * @param name The name of the variable 
+	 * (e.g. <b>"myVariable" from {myVariable}</b> OR <b>"myList::index" from {myList::index}</b> OR <b>"myList::*" from {myList::*}</b>)
+	 * @return True if the user has something under the Persistent Data Tag from the given name.
+	 * This method will return false if: the holder is invalid, the name is invalid, or if no value could be found.
 	 */
-	private final static class SingleVariableType implements PersistentDataType<byte[], Value> {
+	@SuppressWarnings({"null", "unchecked"})
+	public static boolean has(Object holder, String name) {
+		PersistentDataHolder actualHolder = getActualHolder(holder);
+		if (actualHolder == null)
+			return false;
 
-		// This is how many bytes an int is.
-		private final int INT_LENGTH = 4;
+		boolean isList = name.contains(Variable.SEPARATOR);
+		String keyName = isList ? name.substring(0, name.lastIndexOf(Variable.SEPARATOR)) : name;
+		NamespacedKey key = getNamespacedKey(keyName);
+		if (key == null)
+			return false;
 
-		// Charset used for converting bytes and Strings
-		@SuppressWarnings("null")
-		private final Charset STRING_CHARSET = StandardCharsets.UTF_8;
-
-		public SingleVariableType() {}
-
-		@Override
-		public Class<byte[]> getPrimitiveType() {
-			return byte[].class;
-		}
-
-		@Override
-		public Class<Value> getComplexType() {
-			return Value.class;
-		}
-
-		@SuppressWarnings("null")
-		@Override
-		public byte[] toPrimitive(Value complex, PersistentDataAdapterContext context) {
-			byte[] type = complex.type.getBytes(STRING_CHARSET);
-
-			ByteBuffer bb = ByteBuffer.allocate(INT_LENGTH + type.length + complex.data.length);
-			bb.putInt(type.length);
-			bb.put(type);
-			bb.put(complex.data);
-
-			return bb.array();
-		}
-
-		@Override
-		public Value fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
-			ByteBuffer bb = ByteBuffer.wrap(primitive);
-
-			int typeLength = bb.getInt();
-			byte[] typeBytes = new byte[typeLength];
-			bb.get(typeBytes, 0, typeLength);
-			String type = new String(typeBytes, STRING_CHARSET);
-
-			byte[] data = new byte[bb.remaining()];
-			bb.get(data);
-
-			return new Value(type, data);
-		}
-
-	}
-
-	/**
-	 * This {@link PersistentDataType} is used for list variables.
-	 * In this case, a list variable is any variable containing "::" (the separator)
-	 * The map's key is the variable's index and the map's value is the index's value.
-	 * With this {@link PersistentDataType}, the NamespacedKey's key is the rest of the list variable.
-	 * e.g. {one::two::three} where "one//two" would be the {@link NamespacedKey}'s key and "three" the key for the map.
-	 * @see PersistentDataUtils#getNamespacedKey(String) for conversion details.
-	 */
-	private final static class ListVariableType implements PersistentDataType<byte[], Map<String, Value>> {
-
-		// This is how many bytes an int is.
-		private final int INT_LENGTH = 4;
-
-		// Charset used for converting bytes and Strings
-		@SuppressWarnings("null")
-		private final Charset STRING_CHARSET = StandardCharsets.UTF_8;
-
-		public ListVariableType() {}
-
-		@Override
-		public Class<byte[]> getPrimitiveType() {
-			return byte[].class;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public Class<Map<String, Value>> getComplexType() {
-			return (Class<Map<String, Value>>) (Class<?>) Map.class;
-		}
-
-		@SuppressWarnings("null")
-		@Override
-		public byte[] toPrimitive(Map<String, Value> complex, PersistentDataAdapterContext context) {
-			int allocate = 0;
-
-			for (String index : complex.keySet()) {
-				Value value = complex.get(index);
-				// Store it: index -> type -> data
-				allocate += INT_LENGTH + index.getBytes(STRING_CHARSET).length
-							+ INT_LENGTH + value.type.getBytes(STRING_CHARSET).length 
-							+ INT_LENGTH + value.data.length;
+		if (isList) {
+			String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
+			if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) {
+				if (actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).containsKey(index))
+					return true;
 			}
-
-			ByteBuffer bb = ByteBuffer.allocate(allocate);
-
-			for (String index : complex.keySet()) {
-				Value value = complex.get(index);
-				byte[] typeBytes = value.type.getBytes(STRING_CHARSET);
-				byte[] indexBytes = index.getBytes(STRING_CHARSET);
-
-				bb.putInt(indexBytes.length);
-				bb.put(indexBytes);
-
-				bb.putInt(typeBytes.length);
-				bb.put(typeBytes);
-
-				bb.putInt(value.data.length);
-				bb.put(value.data);
+			if (holder instanceof Metadatable) {
+				Metadatable mHolder = (Metadatable) holder;
+				if (mHolder.hasMetadata(keyName)) {
+					for (MetadataValue mv : mHolder.getMetadata(keyName)) { // Get the latest value set by Skript
+						if (mv.getOwningPlugin() == Skript.getInstance()) {
+							if (((Map<String, Object>) mv.value()).containsKey(index))
+								return true;
+							break;
+						}
+					}
+				}
 			}
-
-			return bb.array();
+		} else {
+			if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE))
+				return true;
+			if (holder instanceof Metadatable)
+				return ((Metadatable) holder).hasMetadata(name);
 		}
 
-		@Override
-		public Map<String, Value> fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
-			ByteBuffer bb = ByteBuffer.wrap(primitive);
-
-			HashMap<String, Value> values = new HashMap<>();
-
-			while (bb.hasRemaining()) {
-				int indexLength = bb.getInt();
-				byte[] indexBytes = new byte[indexLength];
-				bb.get(indexBytes, 0, indexLength);
-				String index = new String(indexBytes, STRING_CHARSET);
-
-				int typeLength = bb.getInt();
-				byte[] typeBytes = new byte[typeLength];
-				bb.get(typeBytes, 0, typeLength);
-				String type = new String(typeBytes, STRING_CHARSET);
-
-				int dataLength = bb.getInt();
-				byte[] dataBytes = new byte[dataLength];
-				bb.get(dataBytes, 0, dataLength);
-
-				values.put(index, new Value(type, dataBytes));
-			}
-
-			return values;
-		}
-
+		return false;
 	}
 
 }
