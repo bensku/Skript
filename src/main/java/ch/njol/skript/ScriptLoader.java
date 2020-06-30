@@ -503,6 +503,7 @@ final public class ScriptLoader {
 	 * @param config Config for script to be loaded.
 	 * @return Info about script that is loaded
 	 */
+	// Whenever you call this method, make sure to also call PreScriptLoadEvent
 	private static ScriptInfo loadScript(final @Nullable Config config) {
 		if (config == null) { // Something bad happened, hopefully got logged to console
 			return new ScriptInfo();
