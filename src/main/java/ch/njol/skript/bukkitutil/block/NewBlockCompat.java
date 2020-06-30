@@ -262,7 +262,7 @@ public class NewBlockCompat implements BlockCompat {
 			// Generic block placement
 			if (!placed) {
 				block.setType(type);
-				if (ourValues != null)
+				if (ourValues != null && !ourValues.isDefault())
 					block.setBlockData(ourValues.data, applyPhysics);
 			}
 		}
