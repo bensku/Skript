@@ -38,7 +38,7 @@ public class ExprRedstoneBlockPower extends SimplePropertyExpression<Block, Numb
 	}
 	
 	@Override
-	public Integer convert(Block b) {
+	public Number convert(Block b) {
 		return b.getBlockPower();
 	}
 	
