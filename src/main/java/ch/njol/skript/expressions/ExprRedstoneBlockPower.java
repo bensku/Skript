@@ -20,12 +20,21 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.block.Block;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
-public class ExprBlockPower extends SimplePropertyExpression<Block, Integer> {
+@Name("Redstone Block Power")
+@Description("Power of a redstone block")
+@Examples({"if redstone power of targeted block is 15:",
+	"\tsend \"This block is very powerful!\""})
+@Since("INSERT VERSION")
+public class ExprRedstoneBlockPower extends SimplePropertyExpression<Block, Number> {
 	
 	static {
-		register(ExprBlockPower.class, Integer.class, "power", "block");
+		register(ExprRedstoneBlockPower.class, Number.class, "redstone power", "blocks");
 	}
 	
 	@Override
@@ -34,13 +43,13 @@ public class ExprBlockPower extends SimplePropertyExpression<Block, Integer> {
 	}
 	
 	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "power";
+		return "redstone power";
 	}
 	
 }
