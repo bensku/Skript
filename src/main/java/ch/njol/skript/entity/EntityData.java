@@ -34,7 +34,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Piglin;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Zoglin;
 import org.bukkit.entity.Zombie;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -420,20 +422,32 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 			final E e = loc.getWorld().spawn(loc, getType());
 			if (e == null)
 				throw new IllegalArgumentException();
-			if (baby.isTrue()){
-				if(e instanceof Ageable)
+			if (baby.isTrue()) {
+				if (e instanceof Ageable)
 					((Ageable) e).setBaby();
-				else if(e instanceof Zombie)
+				else if (e instanceof Zombie)
 					((Zombie) e).setBaby(true);
-				else if(e instanceof PigZombie)
+				else if (e instanceof PigZombie)
 					((PigZombie) e).setBaby(true);
-			}else if(baby.isFalse()){
-				if(e instanceof Ageable)
+				else if (Skript.isRunningMinecraft(1, 16)) {
+					if (e instanceof Piglin)
+						((Piglin) e).setBaby(true);
+					else if (e instanceof Zoglin)
+						((Zoglin) e).setBaby(true);
+				}
+			} else if (baby.isFalse()) {
+				if (e instanceof Ageable)
 					((Ageable) e).setAdult();
-				else if(e instanceof Zombie)
+				else if (e instanceof Zombie)
 					((Zombie) e).setBaby(false);
-				else if(e instanceof PigZombie)
+				else if (e instanceof PigZombie)
 					((PigZombie) e).setBaby(false);
+				else if (Skript.isRunningMinecraft(1, 16)) {
+					if (e instanceof Piglin)
+						((Piglin) e).setBaby(false);
+					else if (e instanceof Zoglin)
+						((Zoglin) e).setBaby(false);
+				}
 			}
 			set(e);
 			return e;
