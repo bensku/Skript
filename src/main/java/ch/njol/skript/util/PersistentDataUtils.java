@@ -47,7 +47,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.SerializedVariable.Value;
 
 /**
- * This class allows persistent data to work easily with Skript.
+ * This class allows Persistent Data to work properly with Skript.
  * In Skript, Persistent Data is formatted like variables.
  * This looks like: <b>set persistent data {isAdmin} of player to true</b>
  * @author APickledWalrus
@@ -91,10 +91,9 @@ public class PersistentDataUtils {
 	 * @return The created {@link NamespacedKey}
 	 */
 	@SuppressWarnings("null")
-	@Nullable
 	public static NamespacedKey getNamespacedKey(String name) {
 		// Encode the name in Base64 to make sure the key name is valid
-		name = Base64.getEncoder().encodeToString(name.replace(" ", "").getBytes(StandardCharsets.UTF_8)).replace('=', '_').replace('+', '.');
+		name = Base64.getEncoder().encodeToString(name.getBytes(StandardCharsets.UTF_8)).replace('=', '_').replace('+', '.');
 		return new NamespacedKey(Skript.getInstance(), name);
 	}
 
@@ -114,16 +113,15 @@ public class PersistentDataUtils {
 	 */
 	@Nullable
 	public static Object getSingle(Object holder, String name) {
+		if (name.contains(Variable.SEPARATOR)) // This is a list variable..
+			return null;
+
 		PersistentDataHolder actualHolder = getActualHolder(holder);
 		if (actualHolder == null)
 			return null;
 
-		if (name.contains(Variable.SEPARATOR)) // This is a list variable..
-			return null;
-
+		name = "!!SINGLE!!" + name;
 		NamespacedKey key = getNamespacedKey(name);
-		if (key == null)
-			return null;
 
 		// We need to check to avoid an IllegalArgumentException
 		if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) {
@@ -161,12 +159,11 @@ public class PersistentDataUtils {
 		if (actualHolder == null)
 			return;
 
+		name = "!!SINGLE!!" + name;
 		Value serialized = Classes.serialize(value);
 
 		if (serialized != null) { // Can be serialized, set as Persistent Data
 			NamespacedKey key = getNamespacedKey(name);
-			if (key == null)
-				return;
 
 			actualHolder.getPersistentDataContainer().set(key, SINGLE_VARIABLE_TYPE, serialized);
 
@@ -197,9 +194,8 @@ public class PersistentDataUtils {
 		if (actualHolder == null)
 			return;
 
+		name = "!!SINGLE!!" + name;
 		NamespacedKey key = getNamespacedKey(name);
-		if (key == null)
-			return;
 
 		if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) { // Can be serialized, try to remove Persistent Data
 			actualHolder.getPersistentDataContainer().remove(key);
@@ -231,62 +227,29 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#removeList(Object, String)
 	 * @see PersistentDataUtils#getListMap(Object, String)
 	 */
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("null")
 	public static Object[] getList(Object holder, String name) {
 		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
 			return new Object[0];
 
-		PersistentDataHolder actualHolder = getActualHolder(holder);
-		if (actualHolder == null)
-			return new Object[0];
+		// Format the variable for getListMap (e.g. {varName::*})
+		// We don't need to worry about the name being invalid, as getListMap will handle that
+		String listName = name;
+		if (!name.endsWith("*"))
+			listName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR) + 2) + "*";
 
-		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
-		NamespacedKey key = getNamespacedKey(keyName);
-		if (key == null)
+		Map<String, Object> listVar = getListMap(holder, listName);
+		if (listVar == null) // One of our values was invalid
 			return new Object[0];
 
 		String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
-
-		// We need to check to avoid an IllegalArgumentException
-		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) {
-			Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
-			if (index.equals("*")) { // Return all values
-				List<Object> returnObjects = new ArrayList<>();
-				for (Value value : values.values())
-					returnObjects.add(Classes.deserialize(value.type, value.data));
-				return returnObjects.toArray();
-			} else { // Return just one value
-				Value value = values.get(index);
-				if (value != null)
-					return new Object[]{Classes.deserialize(value.type, value.data)};
-			}
+		if (index.equals("*")) { // Return all values
+			return listVar.values().toArray();
+		} else { // Return the value under the given index (if it exists)
+			if (listVar.containsKey(index))
+				return new Object[]{listVar.get(index)};
+			return new Object[0];
 		}
-
-		// Try to get as Metadata instead.
-		if (holder instanceof Metadatable) {
-			List<MetadataValue> mValues = ((Metadatable) holder).getMetadata(keyName);
-			if (!mValues.isEmpty()) {
-				Map<String, Object> mMap = null;
-				for (MetadataValue mv : mValues) { // Get the latest value set by Skript
-					if (mv.getOwningPlugin() == Skript.getInstance()) {
-						mMap = (Map<String, Object>) mv.value();
-						break;
-					}
-				}
-				if (mMap == null)
-					return new Object[0];
-
-				if (index.equals("*")) { // Return all values
-					List<Object> returnObjects = new ArrayList<>();
-					for (Object object : mMap.values())
-						returnObjects.add(object);
-					return returnObjects.toArray();
-				} else { // Return just one
-					return new Object[]{mMap.get(index)};
-				}
-			}
-		}
-		return new Object[0];
 	}
 
 	/**
@@ -302,7 +265,7 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#removeList(Object, String)
 	 * @see PersistentDataUtils#setListMap(Object, String, Map)
 	 */
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("unchecked")
 	public static void setList(Object holder, String name, Object value) {
 		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
 			return;
@@ -313,12 +276,10 @@ public class PersistentDataUtils {
 
 		Value serialized = Classes.serialize(value);
 
-		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		String keyName = "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
 
 		if (serialized != null) {  // Can be serialized, set as Persistent Data
 			NamespacedKey key = getNamespacedKey(keyName);
-			if (key == null)
-				return;
 
 			Map<String, Value> values = actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE);
 			if (values == null)
@@ -342,7 +303,6 @@ public class PersistentDataUtils {
 			}
 		} else if (holder instanceof Metadatable) { // Try to set as Metadata instead
 			Metadatable mHolder = (Metadatable) holder;
-
 			Map<String, Object> mMap = null;
 			for (MetadataValue mv : mHolder.getMetadata(keyName)) { // Get the latest value set by Skript
 				if (mv.getOwningPlugin() == Skript.getInstance()) {
@@ -375,7 +335,7 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#getList(Object, String)
 	 * @see PersistentDataUtils#setList(Object, String, Object)
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings({"unchecked"})
 	public static void removeList(Object holder, String name) {
 		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
 			return;
@@ -384,10 +344,8 @@ public class PersistentDataUtils {
 		if (actualHolder == null)
 			return;
 
-		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		String keyName = "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
 		NamespacedKey key = getNamespacedKey(keyName);
-		if (key == null)
-			return;
 
 		String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
 
@@ -453,7 +411,7 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#getList(Object, String)
 	 * @see PersistentDataUtils#setListMap(Object, String, Map)
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings({"null", "unchecked"})
 	@Nullable
 	public static Map<String, Object> getListMap(Object holder, String name) {
 		if (!name.endsWith("*")) // Make sure we're getting a whole list
@@ -463,11 +421,10 @@ public class PersistentDataUtils {
 		if (actualHolder == null)
 			return null;
 
-		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		String keyName = "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
 		NamespacedKey key = getNamespacedKey(keyName);
-		if (key == null)
-			return null;
 
+		// Check to avoid a possible IllegalArgumentException (i.e. if a single variable had this same key name)
 		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
 			Map<String, Object> returnMap = new HashMap<>();
 			for (Entry<String, Value> entry : actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).entrySet()) {
@@ -501,7 +458,6 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#setList(Object, String, Object)
 	 * @see PersistentDataUtils#getListMap(Object, String)
 	 */
-	@SuppressWarnings("null")
 	public static void setListMap(Object holder, String name, Map<String, Object> varMap) {
 		if (!name.endsWith("*")) // Make sure we're setting a whole list
 			return;
@@ -515,10 +471,8 @@ public class PersistentDataUtils {
 		if (actualHolder == null)
 			return;
 
-		String keyName = name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
+		String keyName = "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR));
 		NamespacedKey key = getNamespacedKey(keyName);
-		if (key == null)
-			return;
 
 		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
 			Map<String, Value> serializedMap = new HashMap<>();
@@ -557,10 +511,8 @@ public class PersistentDataUtils {
 			return false;
 
 		boolean isList = name.contains(Variable.SEPARATOR);
-		String keyName = isList ? name.substring(0, name.lastIndexOf(Variable.SEPARATOR)) : name;
+		String keyName = isList ? "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR)) : "!!SINGLE!!" + name;
 		NamespacedKey key = getNamespacedKey(keyName);
-		if (key == null)
-			return false;
 
 		if (isList) {
 			String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
@@ -584,9 +536,8 @@ public class PersistentDataUtils {
 			if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE))
 				return true;
 			if (holder instanceof Metadatable)
-				return ((Metadatable) holder).hasMetadata(name);
+				return ((Metadatable) holder).hasMetadata(keyName);
 		}
-
 		return false;
 	}
 

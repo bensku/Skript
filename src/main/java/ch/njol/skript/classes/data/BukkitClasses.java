@@ -1728,10 +1728,11 @@ public class BukkitClasses {
 					.description(
 							"Represents something that can have persistent data. " 
 							+ "The following can all hold persistent data: "
-							+ "entities, items, banners, barrels, beacons, beds, beehives, bells, blast furnaces, brewing stands, "
-							+ "campfires, chests, comand blocks, comparators, conduits, mob spawners, daylight detectors, dispensers, "
-							+ "droppers, enchanting tables, ender chests, end gateways, furnaces, hoppers, jigsaw blocks, jukeboxes, "
-							+ "lecterns, shulker boxes, smokers, and structure blocks."
+							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
+							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
+							+ "daylight detectors, dispensers, droppers, enchanting tables, ender chests, end gateways, furnaces, "
+							+ "hoppers, jigsaw blocks, jukeboxes, lecterns, shulker boxes, signs, skulls, smokers, and structure blocks. "
+							+ "For the source list, <a href='https://hub.spigotmc.org/javadocs/spigot/org/bukkit/persistence/PersistentDataHolder.html'>see this page</a>."
 					)
 					.examples("set persistent data value \"epic\" of player to true")
 					.requiredPlugins("1.14 or newer")

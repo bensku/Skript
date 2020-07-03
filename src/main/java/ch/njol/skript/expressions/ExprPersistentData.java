@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-
 import org.bukkit.event.Event;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -27,7 +26,9 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,7 +64,7 @@ import ch.njol.util.coll.CollectionUtils;
 			"If the new value when changing a persistent data value can't be persistently stored in variables",
 			"(meaning it gets cleared on a restart), it will be set in metadata and a warning will be printed in console.",
 			"That value will still be accessible through this expression, but it will be from metadata."
-			})
+})
 @Examples("set persistent data value {isAdmin} of player to true")
 @Since("INSERT VERSION")
 @RequiredPlugins("1.14 or newer")
@@ -129,10 +130,8 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 		for (Expression<?> expr : variables.getExpressions()) {
 			String varName = ((Variable<?>) expr).getName().toString(e);
 			if (varName.contains(Variable.SEPARATOR)) { // It's a list
-				for (Object holder : holders.getArray(e)) {
-					for (Object object : PersistentDataUtils.getList(holder, varName))
-						values.add(object);
-				}
+				for (Object holder : holders.getArray(e))
+					Collections.addAll(values, PersistentDataUtils.getList(holder, varName));
 			} else { // It's a single variable
 				for (Object holder : holders.getArray(e))
 					values.add(PersistentDataUtils.getSingle(holder, varName));
@@ -140,7 +139,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 		}
 		try {
 			return Converters.convertStrictly(values.toArray(), superType);
-		} catch (ClassCastException e1) {
+		} catch (ClassCastException ex) {
 			return (T[]) Array.newInstance(superType, 0);
 		}
 	}
@@ -203,10 +202,16 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 					Variable<?> var = (Variable<?>) expr;
 					String varName = var.getName().toString(e);
 					if (var.isList()) {
+						varName = varName.replace("*", "");
 						for (Object holder : holders.getArray(e)) {
-							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName);
-							if (varMap != null) {
-								varName = varName.replace("*", "");
+							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName + "*");
+							if (varMap == null) {
+								// The list is empty, so we don't need to check for the next available index.
+								for (int i = 1; i <= delta.length; i++) {
+									// varName + i = var::i (e.g. exampleList::1, exampleList::2, etc.)
+									PersistentDataUtils.setList(holder, varName + i, delta[i - 1]);
+								}
+							} else {
 								int start = 1;
 								for (Object value : delta) {
 									while (varMap.containsKey(String.valueOf(start)))
@@ -236,15 +241,14 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 							int sizeBefore = varMap.size();
 							if (varMap != null) {
 								for (Object value : delta) {
-									// Create a clone to avoid a ConcurrentModificationException
-									for (Entry<String, Object> entry : new HashMap<>(varMap).entrySet()) {
-										if (Relation.EQUAL.is(Comparators.compare(entry.getValue(), value)))
-											varMap.remove(entry.getKey());
+									Iterator<Entry<String, Object>> entries = varMap.entrySet().iterator();
+									while (entries.hasNext()) {
+										if (Relation.EQUAL.is(Comparators.compare(entries.next().getValue(), value)))
+											entries.remove();
 									}
 								}
-								if (sizeBefore != varMap.size()) { // It changed so we should set it
+								if (sizeBefore != varMap.size()) // It changed so we should set it
 									PersistentDataUtils.setListMap(holder, varName, varMap);
-								}
 							}
 						}
 					} else if (delta[0] instanceof Number) {

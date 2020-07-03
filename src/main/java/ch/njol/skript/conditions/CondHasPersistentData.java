@@ -47,7 +47,8 @@ import ch.njol.util.Kleenean;
 @Name("Has Persistent Data")
 @Description({"Checks whether a persistent data holder has the specified value.",
 			"This condition will return true if the value also exists under metadata.",
-			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders."})
+			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders."
+})
 @Examples("if player has persistent data \"epic\":")
 @RequiredPlugins("1.14 or newer")
 @Since("INSERT VERSION")
