@@ -50,8 +50,11 @@ public class EffOpenInventory extends Effect {
 	
 	static {
 		Skript.registerEffect(EffOpenInventory.class,
-				"(0¦open|1¦show) ((2¦(crafting [table]|workbench)|3¦chest|4¦anvil|5¦hopper|6¦dropper|7¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
-				"close [the] inventory [view] (to|of|for) %players%", "close %players%'[s] inventory [view]");
+			"open ((1¦(crafting [table]|workbench)|2¦chest|3¦anvil|4¦hopper|5¦dropper|6¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
+			"show ((1¦(crafting [table]|workbench)|2¦chest|3¦anvil|4¦hopper|5¦dropper|6¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
+			"close [the] inventory [view] (to|of|for) %players%",
+			"close %players%'[s] inventory [view]"
+		);
 	}
 	
 	@Nullable
@@ -66,38 +69,29 @@ public class EffOpenInventory extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		int openFlag = 0;
-		if(parseResult.mark >= 7) {
-			openFlag = parseResult.mark ^ 7;
+		if (parseResult.mark >= 6) {
 			invType = DISPENSER;
-		} else if(parseResult.mark >= 6) {
-			openFlag = parseResult.mark ^ 6;
+		} else if (parseResult.mark >= 5) {
 			invType = DROPPER;
-		} else if(parseResult.mark >= 5) {
-			openFlag = parseResult.mark ^ 5;
-			invType = HOPPER;
 		} else if (parseResult.mark >= 4) {
-			openFlag = parseResult.mark ^ 4;
-			invType = ANVIL;
+			invType = HOPPER;
 		} else if (parseResult.mark >= 3) {
-			openFlag = parseResult.mark ^ 3;
-			invType = CHEST;
+			invType = ANVIL;
 		} else if (parseResult.mark >= 2) {
+			invType = CHEST;
+		} else if (parseResult.mark >= 1) {
 			invType = WORKBENCH;
-			openFlag = parseResult.mark ^ 2;
-		} else {
-			openFlag = parseResult.mark;
 		}
 		
-		open = matchedPattern == 0;
-		invi = open ? (Expression<Inventory>) exprs[0] : null;
-		players = (Expression<Player>) exprs[exprs.length - 1];
-		if (openFlag == 1 && invi != null) {
+		open = matchedPattern == 0 || matchedPattern == 1;
+		if (matchedPattern == 1) {
 			Skript.warning("Using 'show' inventory instead of 'open' is not recommended as it will eventually show an unmodifiable view of the inventory in the future.");
 		}
+		invi = open ? (Expression<Inventory>) exprs[0] : null;
+		players = (Expression<Player>) exprs[exprs.length - 1];
 		return true;
 	}
-	
+		
 	@Override
 	protected void execute(final Event e) {
 		if (invi != null) {
