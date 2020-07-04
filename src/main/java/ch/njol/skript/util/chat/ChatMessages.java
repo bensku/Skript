@@ -56,6 +56,7 @@ import ch.njol.skript.localization.Message;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.yggdrasil.Fields;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Handles parsing chat messages.
@@ -113,6 +114,8 @@ public class ChatMessages {
 				Skript.debug("Parsing message style lang files");
 				for (SkriptChatCode code : SkriptChatCode.values()) {
 					assert code != null;
+					if (code == SkriptChatCode.color && !Skript.isRunningMinecraft(1, 16)) // Don't register "color" tag for versions below 1.16
+						continue;
 					registerChatCode(code);
 				}
 				
@@ -257,7 +260,7 @@ public class ChatMessages {
 						components.add(current);
 						
 						if (code.getColorCode() != null) { // Just update color code
-							current.color = code.getColorCode();
+							current.color = ChatColor.getByChar(code.getColorChar());
 						} else {
 							assert param != null;
 							code.updateComponent(current, param); // Call SkriptChatCode update
@@ -300,7 +303,7 @@ public class ChatMessages {
 					components.add(current);
 					
 					if (code.getColorCode() != null) // Just update color code
-						current.color = code.getColorCode();
+						current.color = ChatColor.getByChar(code.getColorChar());
 					else
 						code.updateComponent(current, param); // Call SkriptChatCode update
 					
@@ -506,5 +509,23 @@ public class ChatMessages {
 		plain = plain.replace("<", "").replace(">", "").replace("§", "").replace("&", "");
 		assert plain != null;
 		return plain;
+	}
+
+	/**
+	 * Tries to get a {@link ChatColor} from the given string.
+	 * @param hex The hex code to parse.
+	 * @return The ChatColor, or null if it couldn't be parsed.
+	 */
+	@SuppressWarnings("null")
+	@Nullable
+	public static ChatColor parseHexColor(String hex) {
+		hex = hex.replace("#", "");
+		if (hex.length() < 6)
+			return null;
+		try {
+			return ChatColor.of('#' + hex.substring(0, 6));
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 }

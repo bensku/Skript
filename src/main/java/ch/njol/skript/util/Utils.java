@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,6 +39,8 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
+
+import net.md_5.bungee.api.ChatColor;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
@@ -51,6 +52,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Callback;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.Pair;
@@ -483,6 +485,7 @@ public abstract class Utils {
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
+	final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -494,6 +497,13 @@ public abstract class Utils {
 						chat.put(s.toLowerCase(), style.toString());
 						if (english)
 							englishChat.put(s.toLowerCase(), style.toString());
+					}
+				}
+				if (HEX_SUPPORTED) { // Register "color" tag into chat map
+					for (final String s : Language.getList("chat styles.color")) {
+						chat.put(s.toLowerCase(), "color");
+						if (english)
+							englishChat.put(s.toLowerCase(), "color");
 					}
 				}
 			}
@@ -526,9 +536,18 @@ public abstract class Utils {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
-				final String f = chat.get(m.group(1).toLowerCase());
+				final String tag = m.group(1).toLowerCase();
+				final String f = chat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.contains(":")) { // Check for parsing hex colors
+					final String[] parts = tag.split(":", 2);
+					if (parts.length == 2 && chat.get(parts[0]).equals("color")) {
+						ChatColor chatColor = ChatMessages.parseHexColor(parts[1]);
+						if (chatColor != null)
+							return chatColor.toString();
+					}
+				}
 				return "" + m.group();
 			}
 		});
@@ -553,9 +572,18 @@ public abstract class Utils {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
-				final String f = englishChat.get(m.group(1).toLowerCase());
+				final String tag = m.group(1).toLowerCase();
+				final String f = englishChat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.contains(":")) { // Check for parsing hex colors
+					final String[] parts = tag.split(":", 2);
+					if (parts.length == 2 && englishChat.get(parts[0]).equals("color")) {
+						ChatColor chatColor = ChatMessages.parseHexColor(parts[1]);
+						if (chatColor != null)
+							return chatColor.toString();
+					}
+				}
 				return "" + m.group();
 			}
 		});
