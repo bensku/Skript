@@ -26,7 +26,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.chat.MessageComponent.*;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  * Chat codes that come with Skript by default.
@@ -60,16 +59,6 @@ public enum SkriptChatCode implements ChatCode {
 	white("white", 'f'),
 	
 	// Formatting
-	
-	color {
-		@SuppressWarnings("null")
-		@Override
-		public void updateComponent(MessageComponent component, String param) {
-			ChatColor color = ChatMessages.parseHexColor(param);
-			if (color != null)
-				component.color = color;
-		}
-	},
 	
 	bold {
 		@Override

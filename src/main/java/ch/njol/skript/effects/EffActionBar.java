@@ -31,13 +31,11 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 @Name("Action Bar")
 @Description("Sends an action bar message to the given player(s).")
@@ -68,12 +66,7 @@ public class EffActionBar extends Effect {
 	protected void execute(final Event e) {
 		String msg = message.getSingle(e);
 		assert msg != null;
-		BaseComponent[] components;
-		if (message instanceof VariableString) {
-			components = BungeeConverter.convert(((VariableString) message).getMessageComponents(e));
-		} else {
-			components = BungeeConverter.convert(ChatMessages.parseToArray(msg));
-		}
+		BaseComponent[] components = BungeeConverter.convert(ChatMessages.parseToArray(msg));
 		for (Player player : recipients.getArray(e))
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
 	}

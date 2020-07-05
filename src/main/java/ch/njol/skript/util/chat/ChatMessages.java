@@ -55,6 +55,7 @@ import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.Utils;
 import ch.njol.yggdrasil.Fields;
 import net.md_5.bungee.api.ChatColor;
 
@@ -114,8 +115,6 @@ public class ChatMessages {
 				Skript.debug("Parsing message style lang files");
 				for (SkriptChatCode code : SkriptChatCode.values()) {
 					assert code != null;
-					if (code == SkriptChatCode.color && !Skript.isRunningMinecraft(1, 16)) // Don't register "color" tag for versions below 1.16
-						continue;
 					registerChatCode(code);
 				}
 				
@@ -205,6 +204,7 @@ public class ChatMessages {
 	 * @param msg Input string.
 	 * @return List with components.
 	 */
+	@SuppressWarnings("null")
 	public static List<MessageComponent> parse(String msg) {
 		char[] chars = msg.toCharArray();
 		
@@ -247,8 +247,16 @@ public class ChatMessages {
 					}
 					name = name.toLowerCase(); // Tags are case-insensitive
 					
+					boolean tryHex = Utils.HEX_SUPPORTED && name.startsWith("#");
+					ChatColor chatColor = null;
+					if (tryHex) {
+						chatColor = Utils.parseHexColor(name);
+						if (chatColor == null)
+							tryHex = false;
+					}
+					
 					code = codes.get(name);
-					if (code != null) { // ... and if the tag IS really valid
+					if (code != null || tryHex) { // ... and if the tag IS really valid
 						String text = curStr.toString();
 						curStr = new StringBuilder();
 						assert text != null;
@@ -259,7 +267,9 @@ public class ChatMessages {
 						
 						components.add(current);
 						
-						if (code.getColorCode() != null) { // Just update color code
+						if (tryHex) {
+							current.color = chatColor;
+						} else if (code.getColorCode() != null) { // Just update color code
 							current.color = ChatColor.getByChar(code.getColorChar());
 						} else {
 							assert param != null;
@@ -284,12 +294,21 @@ public class ChatMessages {
 				}
 				
 				char color = chars[i + 1];
+				
+				boolean tryHex = Utils.HEX_SUPPORTED && color == 'x';
+				ChatColor chatColor = null;
+				if (tryHex && i + 14 < chars.length) { // Try to parse hex "&x&1&2&3&4&5&6"
+					chatColor = Utils.parseHexColor(msg.substring(i + 2, i + 14).replace("&", "").replace("§", ""));
+					if (chatColor == null)
+						tryHex = false;
+				}
+				
 				if (color >= colorChars.length) { // Invalid Unicode color character
 					curStr.append(c);
 					continue;
 				}
 				code = colorChars[color];
-				if (code == null) {
+				if (code == null && !tryHex) {
 					curStr.append(c).append(color); // Invalid formatting char, plain append
 				} else {
 					String text = curStr.toString();
@@ -302,10 +321,14 @@ public class ChatMessages {
 					
 					components.add(current);
 					
-					if (code.getColorCode() != null) // Just update color code
+					if (tryHex) { // Set color to hex ChatColor
+						current.color = chatColor;
+						i = i + 12; // Skip past all the tags
+					} else if (code.getColorCode() != null) { // Just update color code
 						current.color = ChatColor.getByChar(code.getColorChar());
-					else
+					} else {
 						code.updateComponent(current, param); // Call SkriptChatCode update
+					}
 					
 					// Copy styles from old to current if needed
 					copyStyles(old, current);
@@ -509,23 +532,5 @@ public class ChatMessages {
 		plain = plain.replace("<", "").replace(">", "").replace("§", "").replace("&", "");
 		assert plain != null;
 		return plain;
-	}
-
-	/**
-	 * Tries to get a {@link ChatColor} from the given string.
-	 * @param hex The hex code to parse.
-	 * @return The ChatColor, or null if it couldn't be parsed.
-	 */
-	@SuppressWarnings("null")
-	@Nullable
-	public static ChatColor parseHexColor(String hex) {
-		hex = hex.replace("#", "");
-		if (hex.length() < 6)
-			return null;
-		try {
-			return ChatColor.of('#' + hex.substring(0, 6));
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
 	}
 }

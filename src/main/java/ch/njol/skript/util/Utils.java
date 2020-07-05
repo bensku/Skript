@@ -52,7 +52,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Callback;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.Pair;
@@ -485,7 +484,7 @@ public abstract class Utils {
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
-	final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
+	public final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -497,13 +496,6 @@ public abstract class Utils {
 						chat.put(s.toLowerCase(), style.toString());
 						if (english)
 							englishChat.put(s.toLowerCase(), style.toString());
-					}
-				}
-				if (HEX_SUPPORTED) { // Register "color" tag into chat map
-					for (final String s : Language.getList("chat styles.color")) {
-						chat.put(s.toLowerCase(), "color");
-						if (english)
-							englishChat.put(s.toLowerCase(), "color");
 					}
 				}
 			}
@@ -540,13 +532,10 @@ public abstract class Utils {
 				final String f = chat.get(tag);
 				if (f != null)
 					return f;
-				if (HEX_SUPPORTED && tag.contains(":")) { // Check for parsing hex colors
-					final String[] parts = tag.split(":", 2);
-					if (parts.length == 2 && chat.get(parts[0]).equals("color")) {
-						ChatColor chatColor = ChatMessages.parseHexColor(parts[1]);
-						if (chatColor != null)
-							return chatColor.toString();
-					}
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
 				}
 				return "" + m.group();
 			}
@@ -576,13 +565,10 @@ public abstract class Utils {
 				final String f = englishChat.get(tag);
 				if (f != null)
 					return f;
-				if (HEX_SUPPORTED && tag.contains(":")) { // Check for parsing hex colors
-					final String[] parts = tag.split(":", 2);
-					if (parts.length == 2 && englishChat.get(parts[0]).equals("color")) {
-						ChatColor chatColor = ChatMessages.parseHexColor(parts[1]);
-						if (chatColor != null)
-							return chatColor.toString();
-					}
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
 				}
 				return "" + m.group();
 			}
@@ -590,6 +576,24 @@ public abstract class Utils {
 		assert m != null;
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
+	}
+	
+	/**
+	 * Tries to get a {@link ChatColor} from the given string.
+	 * @param hex The hex code to parse.
+	 * @return The ChatColor, or null if it couldn't be parsed.
+	 */
+	@SuppressWarnings("null")
+	@Nullable
+	public static ChatColor parseHexColor(String hex) {
+		hex = hex.replace("#", "");
+		if (hex.length() < 6)
+			return null;
+		try {
+			return ChatColor.of('#' + hex.substring(0, 6));
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 	
 	/**
