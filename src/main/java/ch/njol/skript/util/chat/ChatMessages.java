@@ -529,6 +529,8 @@ public class ChatMessages {
 		String plain = sb.toString();
 		
 		// To be extra safe, strip <, >, § and &; protects against bugs in parser
+		if (Utils.HEX_SUPPORTED) // Strip '§x'
+			plain = plain.replace("§x", "");
 		plain = plain.replace("<", "").replace(">", "").replace("§", "").replace("&", "");
 		assert plain != null;
 		return plain;
