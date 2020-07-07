@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader.ScriptInfo;
@@ -332,6 +333,14 @@ public class SkriptCommand implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("info")) {
 				info(sender, "info.aliases");
 				info(sender, "info.documentation");
+				info(sender, "info.server", Bukkit.getVersion());
+				info(sender, "info.version", Skript.getVersion());
+				info(sender, "info.addons");
+				for (SkriptAddon addon : Skript.getAddons()) {
+					PluginDescriptionFile desc = addon.plugin.getDescription();
+					String web = desc.getWebsite();
+					Skript.info(sender, " - " + desc.getFullName() + (web != null ? " (" + web + ")" : ""));
+				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
 			} else if (args[0].equalsIgnoreCase("gen-docs")) {

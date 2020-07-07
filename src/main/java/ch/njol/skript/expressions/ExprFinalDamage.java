@@ -64,7 +64,7 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	protected Double[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
 			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+		return new Double[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
 	}
 	
 	@Override
