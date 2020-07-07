@@ -108,7 +108,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		TITLE_METHOD = _METHOD;
 	}
 
-	/**
+	/*
 	 * 1 = "name",
 	 * 2 = "display name",
 	 * 3 = "tablist name"
@@ -179,8 +179,12 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		for (Object o : getExpr().getArray(e)) {
 			if (o instanceof Player) {
 				switch (mark) {
-					case 2: ((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
-					case 3: ((Player) o).setPlayerListName(name); // If name is null, then the player's name will be used.
+					case 2: 
+						((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
+						break;
+					case 3: // Null check not necessary. This method will use the player's name if 'name' is null.
+						((Player) o).setPlayerListName(name);
+						break;
 				}
 			} else if (o instanceof Entity) {
 				((Entity) o).setCustomName(name);
@@ -193,7 +197,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				ItemMeta m = i.getItemMeta();
 				m.setDisplayName(name);
 				i.setItemMeta(m);
-			} else if (o instanceof Inventory ) {
+			} else if (o instanceof Inventory) {
 				Inventory inv = (Inventory) o;
 
 				if (inv.getViewers().isEmpty())
@@ -229,7 +233,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
+	public Class<String> getReturnType() {
 		return String.class;
 	}
 
