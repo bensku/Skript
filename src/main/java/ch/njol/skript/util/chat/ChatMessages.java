@@ -251,8 +251,7 @@ public class ChatMessages {
 					ChatColor chatColor = null;
 					if (tryHex) {
 						chatColor = Utils.parseHexColor(name);
-						if (chatColor == null)
-							tryHex = false;
+						tryHex = chatColor != null;
 					}
 					
 					code = codes.get(name);
@@ -299,8 +298,7 @@ public class ChatMessages {
 				ChatColor chatColor = null;
 				if (tryHex && i + 14 < chars.length) { // Try to parse hex "&x&1&2&3&4&5&6"
 					chatColor = Utils.parseHexColor(msg.substring(i + 2, i + 14).replace("&", "").replace("§", ""));
-					if (chatColor == null)
-						tryHex = false;
+					tryHex = chatColor != null;
 				}
 				
 				if (color >= colorChars.length) { // Invalid Unicode color character
