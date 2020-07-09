@@ -21,6 +21,8 @@ package ch.njol.skript.log;
 
 import java.util.logging.Filter;
 
+import org.bukkit.Bukkit;
+
 import ch.njol.skript.Skript;
 import ch.njol.util.LoggerFilter;
 
@@ -33,7 +35,7 @@ import ch.njol.util.LoggerFilter;
  * <li>It's a miracle that it somehow even logs messages via Java's default logging system, but usually completely ignores it.
  * <li>Because Level is an enum it's not possible to create your own levels, e.g. DEBUG
  * </ul>
- * 
+ *
  * @author Peter Güttinger
  */
 public class BukkitLoggerFilter {
@@ -45,7 +47,7 @@ public class BukkitLoggerFilter {
 	
 	/**
 	 * Adds a filter to Bukkit's log.
-	 * 
+	 *
 	 * @param f A filter to filter log messages
 	 */
 	public static void addFilter(final Filter f) {

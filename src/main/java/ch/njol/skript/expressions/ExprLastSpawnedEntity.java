@@ -22,6 +22,7 @@ package ch.njol.skript.expressions;
 import java.lang.reflect.Array;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -47,14 +48,14 @@ import ch.njol.util.Kleenean;
  */
 @Name("Last Spawned Entity")
 @Description("Holds the entity that was spawned most recently with the <a href='../effects.html#EffSpawn'>spawn effect</a>, drop with the <a href='../effects/#EffDrop'>drop effect</a> or shot with the <a href='../effects/#EffShoot'>shoot effect</a>. " +
-		"Please note that even though you can spawn multiple mobs simultaneously (e.g. with 'spawn 5 creepers'), only the last spawned mob is saved and can be used. " +
-		"If you spawn an entity, shoot a projectile and drop an item you can however access all them together.")
+	"Please note that even though you can spawn multiple mobs simultaneously (e.g. with 'spawn 5 creepers'), only the last spawned mob is saved and can be used. " +
+	"If you spawn an entity, shoot a projectile and drop an item you can however access all them together.")
 @Examples({"spawn a priest",
-		"set {healer::%spawned priest%} to true",
-		"shoot an arrow from the last spawned entity",
-		"ignite the shot projectile",
-		"drop a diamond sword",
-		"push last dropped item upwards"})
+	"set {healer::%spawned priest%} to true",
+	"shoot an arrow from the last spawned entity",
+	"ignite the shot projectile",
+	"drop a diamond sword",
+	"push last dropped item upwards"})
 @Since("1.3 (spawned entity), 2.0 (shot entity), 2.2-dev26 (dropped item)")
 public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	static {
@@ -70,7 +71,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		if (parseResult.mark == 2) // It's just to make an extra expression for item only
 			type = EntityData.fromClass(Item.class);
-		else 
+		else
 			type = ((Literal<EntityData<?>>) exprs[0]).getSingle();
 		from = parseResult.mark;
 		return true;
