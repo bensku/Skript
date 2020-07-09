@@ -40,9 +40,9 @@ import ch.njol.util.Kleenean;
 
 @Name("Open/Close Inventory")
 @Description({"Opens an inventory to a player. The player can then access and modify the inventory as if it was a chest that he just opened.",
-		"Please note that currently 'show' and 'open' have the same effect, but 'show' will eventually show an unmodifiable view of the inventory in the future."})
+	"Please note that currently 'show' and 'open' have the same effect, but 'show' will eventually show an unmodifiable view of the inventory in the future."})
 @Examples({"show the victim's inventory to the player",
-		"open the player's inventory for the player"})
+	"open the player's inventory for the player"})
 @Since("2.0, 2.1.1 (closing), 2.2-Fixes-V10 (anvil), 2.4 (hopper, dropper, dispenser")
 public class EffOpenInventory extends Effect {
 	
@@ -69,11 +69,11 @@ public class EffOpenInventory extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (parseResult.mark >= 6) {
+		if(parseResult.mark >= 6) {
 			invType = DISPENSER;
-		} else if (parseResult.mark >= 5) {
+		} else if(parseResult.mark >= 5) {
 			invType = DROPPER;
-		} else if (parseResult.mark >= 4) {
+		} else if(parseResult.mark >= 4) {
 			invType = HOPPER;
 		} else if (parseResult.mark >= 3) {
 			invType = ANVIL;
@@ -84,14 +84,14 @@ public class EffOpenInventory extends Effect {
 		}
 		
 		open = matchedPattern == 0 || matchedPattern == 1;
-		if (matchedPattern == 1) {
+		if(matchedPattern == 1) {
 			Skript.warning("Using 'show' inventory instead of 'open' is not recommended as it will eventually show an unmodifiable view of the inventory in the future.");
 		}
 		invi = open ? (Expression<Inventory>) exprs[0] : null;
 		players = (Expression<Player>) exprs[exprs.length - 1];
 		return true;
 	}
-		
+	
 	@Override
 	protected void execute(final Event e) {
 		if (invi != null) {
@@ -126,7 +126,7 @@ public class EffOpenInventory extends Effect {
 							break;
 						case DISPENSER:
 							p.openInventory(Bukkit.createInventory(p, InventoryType.DISPENSER));
-					
+						
 					}
 				} else
 					p.closeInventory();
