@@ -20,7 +20,6 @@
 package ch.njol.skript.events;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.eclipse.jdt.annotation.Nullable;

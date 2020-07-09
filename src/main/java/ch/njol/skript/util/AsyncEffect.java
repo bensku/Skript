@@ -31,9 +31,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Effects that extend this class are ran asynchronously. Next trigger item will be ran
  * in main server thread, as if there had been a delay before.

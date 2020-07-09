@@ -21,14 +21,12 @@ package ch.njol.skript.hooks.biomes;
 
 import java.io.IOException;
 
-import org.bukkit.block.Biome;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.Hook;
 import ch.njol.skript.hooks.biomes.BiomeMapUtil.To19Mapping;
 import ch.njol.skript.util.EnumUtils;
-import ch.njol.skript.util.VisualEffect;
 
 /**
  * Hook for using 1.13 biome names on older Minecraft versions. note that this

@@ -25,17 +25,13 @@ import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.update.ReleaseChannel;
 import ch.njol.skript.update.ReleaseManifest;
 import ch.njol.skript.update.ReleaseStatus;
-import ch.njol.skript.update.UpdateChecker;
 import ch.njol.skript.update.UpdateManifest;
 import ch.njol.skript.update.Updater;
-import ch.njol.skript.update.UpdaterState;
 import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
 

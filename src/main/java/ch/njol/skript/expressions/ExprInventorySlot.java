@@ -25,8 +25,6 @@ import java.util.List;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -37,7 +35,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.EquipmentSlot;

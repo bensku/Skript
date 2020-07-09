@@ -19,13 +19,10 @@
  */
 package ch.njol.skript.hooks.regions;
 
-import static ch.njol.skript.variables.Variables.yggdrasil;
-
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;

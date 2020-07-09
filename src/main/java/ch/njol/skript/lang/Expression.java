@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.lang;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;

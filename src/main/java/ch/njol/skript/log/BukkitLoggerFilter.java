@@ -21,8 +21,6 @@ package ch.njol.skript.log;
 
 import java.util.logging.Filter;
 
-import org.bukkit.Bukkit;
-
 import ch.njol.skript.Skript;
 import ch.njol.util.LoggerFilter;
 

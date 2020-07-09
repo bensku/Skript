@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.lang.reflect.Array;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;

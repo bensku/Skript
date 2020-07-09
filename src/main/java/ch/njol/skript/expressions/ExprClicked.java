@@ -20,9 +20,7 @@
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -33,7 +31,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -48,12 +45,11 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.slot.Slot;
-import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
