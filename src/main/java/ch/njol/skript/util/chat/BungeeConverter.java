@@ -22,6 +22,7 @@ package ch.njol.skript.util.chat;
 import java.util.List;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.util.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -45,8 +46,8 @@ public class BungeeConverter {
 		base.setUnderlined(origin.underlined);
 		base.setStrikethrough(origin.strikethrough);
 		base.setObfuscated(origin.obfuscated);
-		if (origin.color != null) // TODO this is crappy way to copy *color* over...
-			base.setColor(ChatColor.getByChar(SkriptChatCode.valueOf(origin.color).getColorChar()));
+		if (origin.color != null)
+			base.setColor(origin.color);
 		/*
 		 * This method doesn't exist on normal spigot 1.8
 		 * and it's not worth working around since people affected
@@ -60,7 +61,7 @@ public class BungeeConverter {
 			base.setClickEvent(new ClickEvent(ClickEvent.Action.valueOf(origin.clickEvent.action.spigotName), origin.clickEvent.value));
 		if (origin.hoverEvent != null)
 			base.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(origin.hoverEvent.action.spigotName),
-					new BaseComponent[] {new TextComponent(origin.hoverEvent.value)})); // WAIT WHAT?!?
+					convert(ChatMessages.parse(origin.hoverEvent.value)))); // Parse color (and possibly hex codes) here
 		
 		return base;
 	}

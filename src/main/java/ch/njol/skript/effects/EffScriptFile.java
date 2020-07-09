@@ -97,7 +97,7 @@ public class EffScriptFile extends Effect {
 					return;
 				}
 				
-				ScriptLoader.reloadScripts(f);
+				ScriptLoader.reloadScript(f);
 				break;
 			}
 			case DISABLE: {

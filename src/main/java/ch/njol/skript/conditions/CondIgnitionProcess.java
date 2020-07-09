@@ -41,7 +41,7 @@ import ch.njol.util.Kleenean;
 @Examples({"if the last spawned creeper is going to explode:",
 			"\tloop all players in radius 3 of the last spawned creeper",
 			"\t\tsend \"RUN!!!\" to the loop-player"})
-@Since("INSERT VERSION")
+@Since("2.5")
 @RequiredPlugins("Paper 1.13 or newer")
 public class CondIgnitionProcess extends PropertyCondition<LivingEntity> {
 
