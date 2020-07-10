@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,23 +31,21 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment Cost")
 @Description({"The cost of an enchantment offer. This is displayed to the right of an enchantment offer.",
-			"If the cost is changed, it will always be at least 1.",
-			"This changes how many levels are required to enchant, but does not change the number of levels removed.", 
-			"To change the number of levels removed, use the enchant event."})
+			" If the cost is changed, it will always be at least 1.",
+			" This changes how many levels are required to enchant, but does not change the number of levels removed.",
+			" To change the number of levels removed, use the enchant event."})
 @Examples("set cost of enchantment offer 1 to 50")
 @Since("INSERT VERSION")
 @RequiredPlugins("1.11 or newer")
 public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number>{
 
 	static {
-		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer"))
 			register(ExprEnchantmentOfferCost.class, Number.class, "[enchant[ment]] cost", "enchantmentoffers");
-		}
 	}
 
 	@Override

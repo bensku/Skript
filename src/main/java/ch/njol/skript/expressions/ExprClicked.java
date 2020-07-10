@@ -218,11 +218,11 @@ public class ExprClicked extends SimpleExpression<Object> {
 				Inventory invi = ((InventoryClickEvent) e).getClickedInventory();
 				if (invi != null) // Inventory is technically not guaranteed to exist...
 					return CollectionUtils.array(new InventorySlot(invi, ((InventoryClickEvent) e).getSlot()));
-				return null;
+				break;
 			case ENCHANT_BUTTON:
-				if (e instanceof EnchantItemEvent) {
+				if (e instanceof EnchantItemEvent)
 					return new Number[]{((EnchantItemEvent) e).whichButton() + 1};
-				}
+				break;
 		}
 		return null;
 	}

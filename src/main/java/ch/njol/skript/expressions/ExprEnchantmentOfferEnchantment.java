@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -33,8 +32,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -49,12 +46,10 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantmentOfferEnchantment extends SimplePropertyExpression<EnchantmentOffer, EnchantmentType> {
 
 	static {
-		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer"))
 			register(ExprEnchantmentOfferEnchantment.class, EnchantmentType.class, "enchant[ment]", "enchantmentoffers");
-		}
 	}
-
-	@SuppressWarnings("null")
+	
 	@Override
 	public EnchantmentType convert(final EnchantmentOffer offer) {
 		return new EnchantmentType(offer.getEnchantment(), offer.getEnchantmentLevel());

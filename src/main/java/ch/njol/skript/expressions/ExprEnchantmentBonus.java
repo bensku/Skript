@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 @Name("Enchantment Bonus")
 @Description("The enchantment bonus in an enchant prepare event. This represents the number of bookshelves affecting/surrounding the enchantment table.")
 @Examples({"on enchant:", 
-	"\tsend \"There are %enchantment bonus% bookshelves surrounding this enchantment table!\" to player"})
+			"\tsend \"There are %enchantment bonus% bookshelves surrounding this enchantment table!\" to player"})
 @Events("enchant prepare")
 @Since("INSERT VERSION")
 public class ExprEnchantmentBonus extends SimpleExpression<Number> {

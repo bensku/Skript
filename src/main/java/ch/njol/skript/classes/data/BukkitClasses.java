@@ -1725,15 +1725,11 @@ public class BukkitClasses {
 				.user("enchant[ment][ ]offers?")
 				.name("Enchantment Offer")
 				.description("The enchantmentoffer in an enchant prepare event.")
-				.examples("cost of enchantmentoffer")
+				.examples("on enchant prepare:",
+					"\tset enchant offer 1 to sharpness 1",
+					"\tset the cost of enchant offer 1 to 10 levels")
 				.since("INSERT VERSION")
 				.parser(new Parser<EnchantmentOffer>() {
-					@Override
-					@Nullable
-					public EnchantmentOffer parse(String input, ParseContext context) {
-						return null;
-					}
-
 					@Override
 					public boolean canParse(ParseContext context) {
 						return false;

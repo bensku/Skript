@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE, 
+		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE,
 				"[the] [displayed] ([e]xp[erience]|enchanting) cost");
 	}
 
@@ -81,19 +81,18 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 		if (delta == null)
 			return;
 		int cost = ((Number) delta[0]).intValue();
-		int change;
 		EnchantItemEvent e = (EnchantItemEvent) event;
 		switch (mode) {
 			case SET:
 				e.setExpLevelCost(cost);
 				break;
 			case ADD:
-				change = e.getExpLevelCost() + cost;
-				e.setExpLevelCost(change);
+				int add = e.getExpLevelCost() + cost;
+				e.setExpLevelCost(add);
 				break;
 			case REMOVE:
-				change = e.getExpLevelCost() - cost;
-				e.setExpLevelCost(change);
+				int subtract = e.getExpLevelCost() - cost;
+				e.setExpLevelCost(subtract);
 				break;
 			case RESET:
 			case DELETE:

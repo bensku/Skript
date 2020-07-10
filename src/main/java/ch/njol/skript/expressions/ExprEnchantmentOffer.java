@@ -48,7 +48,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Enchantment Offer")
 @Description("The enchantment offer in enchant prepare events.")
 @Examples({"on enchant prepare:",
-		"\tsend \"Your enchantment offers are: %the enchantment offers%\" to player"})
+			"\tsend \"Your enchantment offers are: %the enchantment offers%\" to player"})
 @Since("INSERT VERSION")
 @Events("enchant prepare")
 @RequiredPlugins("1.11 or newer")
@@ -90,17 +90,17 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	protected EnchantmentOffer[] get(Event e) {
 		if (all)
 			return ((PrepareItemEnchantEvent) e).getOffers();
-
 		if (exprOfferNumber == null)
 			return new EnchantmentOffer[0];
-
 		if (exprOfferNumber.isSingle()) {
-			int offerNumber = exprOfferNumber.getSingle(e).intValue();
-			if (offerNumber < 1 || offerNumber > ((PrepareItemEnchantEvent) e).getOffers().length)
+			Number offerNumber = exprOfferNumber.getSingle(e);
+			if (offerNumber == null)
 				return new EnchantmentOffer[0];
-			return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offerNumber - 1]};
+			int offer = offerNumber.intValue();
+			if (offer < 1 || offer > ((PrepareItemEnchantEvent) e).getOffers().length)
+				return new EnchantmentOffer[0];
+			return new EnchantmentOffer[]{((PrepareItemEnchantEvent) e).getOffers()[offer - 1]};
 		}
-
 		List<EnchantmentOffer> offers = new ArrayList<>();
 		int i;
 		for (Number n : exprOfferNumber.getArray(e)) {
@@ -122,7 +122,6 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-
 		List<Number> offerNumbers = new ArrayList<>();
 		if (exprOfferNumber != null) {
 			if (exprOfferNumber.isSingle())
@@ -130,13 +129,11 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 			else
 				offerNumbers.addAll(Arrays.asList(exprOfferNumber.getArray(e)));
 		}
-
 		if (e instanceof PrepareItemEnchantEvent) {
 			switch (mode) {
 				case DELETE:
 					if (all) {
-						for (int i = 0; i < ((PrepareItemEnchantEvent) e).getOffers().length; i++)
-							((PrepareItemEnchantEvent) e).getOffers()[i] = null;
+						Arrays.fill(((PrepareItemEnchantEvent) e).getOffers(), null);
 					} else {
 						int i;
 						for (Number n : offerNumbers) {
@@ -144,6 +141,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 							((PrepareItemEnchantEvent) e).getOffers()[i - 1] = null;
 						}
 					}
+					break;
 				case SET:
 				case ADD:
 				case REMOVE:
@@ -156,9 +154,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@Override
 	public boolean isSingle() {
-		if (all)
-			return false;
-		return exprOfferNumber.isSingle();
+		return !all && exprOfferNumber.isSingle();
 	}
 
 	@Override
@@ -168,9 +164,7 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (all)
-			return "the enchantment offers";
-		return "enchantment offer(s) " + exprOfferNumber.toString(e, debug);
+		return all ? "the enchantment offers" : "enchantment offer(s) " + exprOfferNumber.toString(e, debug);
 	}
 
 }

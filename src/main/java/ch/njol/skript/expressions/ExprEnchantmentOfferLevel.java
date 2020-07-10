@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,7 +31,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment Level")
@@ -72,7 +70,6 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 		int level = ((Number) delta[0]).intValue();
 		if (level < 1) 
 			return;
-		int change;
 		switch (mode) {
 			case SET:
 				for (EnchantmentOffer offer : offers)
@@ -80,18 +77,18 @@ public class ExprEnchantmentOfferLevel extends SimplePropertyExpression<Enchantm
 				break;
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
-					change = offer.getEnchantmentLevel() + level;
-					if (change < 1) 
+					int add = offer.getEnchantmentLevel() + level;
+					if (add < 1)
 						return;
-					offer.setEnchantmentLevel(change);
+					offer.setEnchantmentLevel(add);
 				}
 				break;
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
-					change = offer.getEnchantmentLevel() - level;
-					if (change < 1) 
+					int subtract = offer.getEnchantmentLevel() - level;
+					if (subtract < 1)
 						return;
-					offer.setEnchantmentLevel(change);
+					offer.setEnchantmentLevel(subtract);
 				}
 				break;
 			case RESET:

@@ -19,11 +19,9 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -55,7 +53,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprEnchantItem extends SimpleExpression<ItemType> {
 
 	static {
-		Skript.registerExpression(ExprEnchantItem.class, ItemType.class, ExpressionType.SIMPLE, "[the] enchanted item");
+		Skript.registerExpression(ExprEnchantItem.class, ItemType.class, ExpressionType.SIMPLE, "[the] enchant[ed] item");
 	}
 
 	@Override

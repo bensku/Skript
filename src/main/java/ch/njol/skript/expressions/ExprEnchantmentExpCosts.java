@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 
-import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -46,9 +45,9 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Experience Level Costs")
 @Description({"The experience cost of an enchantment in an enchant prepare event.",
-			"If the cost is changed, it will always be at least 1."})
+			" If the cost is changed, it will always be at least 1."})
 @Examples({"on enchant prepare:",
-		"\tset the cost of enchantment 1 to 50"})
+			"\tset the cost of enchantment 1 to 50"})
 @Since("INSERT VERSION")
 @Events("enchant prepare")
 @RequiredPlugins("1.9 or 1.10")
@@ -85,22 +84,23 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 		}
 		return true;
 	}
-
-	@SuppressWarnings("null")
+	
 	@Override
 	@Nullable
-	protected Number[] get(Event e) {
+	protected Number[] get(Event event) {
+		PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
 		if (multiple) {
-			return Arrays.stream(((PrepareItemEnchantEvent) e).getExpLevelCostsOffered())
+			return Arrays.stream(e.getExpLevelCostsOffered())
 					.boxed()
 					.toArray(Number[]::new);
 		}
-
-		int offerNumber = exprOfferNumber.getSingle(e).intValue();
-		if (offerNumber < 1 || offerNumber > 3)
+		Number offerNumber = exprOfferNumber.getSingle(e);
+		if (offerNumber == null)
 			return new Number[]{};
-
-		return new Number[]{((PrepareItemEnchantEvent) e).getExpLevelCostsOffered()[offerNumber - 1]};
+		int offer = offerNumber.intValue();
+		if (offer < 1 || offer > e.getExpLevelCostsOffered().length)
+			return new Number[]{};
+		return new Number[]{e.getExpLevelCostsOffered()[offer - 1]};
 	}
 
 	@Override
@@ -119,14 +119,12 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 		int cost = ((Number) delta[0]).intValue();
 		if (cost < 1) 
 			return;
-
-		// Index Form
-		int offerNumber = 0;
+		int offer = 0;
 		if (exprOfferNumber != null) {
-			offerNumber = exprOfferNumber.getSingle(event).intValue() - 1;
+			Number offerNumber = exprOfferNumber.getSingle(event);
+			if (offerNumber != null) // Convert to Index Form
+				offer = offerNumber.intValue() - 1;
 		}
-
-		int change;
 		PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
 		switch (mode) {
 			case SET:
@@ -134,37 +132,39 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 					for (int i = 0; i <= 2; i++)
 						e.getExpLevelCostsOffered()[i] = cost;
 				} else {
-					e.getExpLevelCostsOffered()[offerNumber] = cost;
+					e.getExpLevelCostsOffered()[offer] = cost;
 				}
 				break;
 			case ADD:
+				int add;
 				if (multiple) {
 					for (int i = 0; i <= 2; i++) {
-						change = cost + e.getExpLevelCostsOffered()[i];
-						if (change < 1) 
+						add = cost + e.getExpLevelCostsOffered()[i];
+						if (add < 1)
 							continue;
-						e.getExpLevelCostsOffered()[i] = change;
+						e.getExpLevelCostsOffered()[i] = add;
 					}
 				} else {
-					change = cost + e.getExpLevelCostsOffered()[offerNumber];
-					if (change < 1) 
+					add = cost + e.getExpLevelCostsOffered()[offer];
+					if (add < 1)
 						return;
-					e.getExpLevelCostsOffered()[offerNumber] = change;
+					e.getExpLevelCostsOffered()[offer] = add;
 				}
 				break;
 			case REMOVE:
+				int remove;
 				if (multiple) {
 					for (int i = 0; i <= 2; i++) {
-						change = cost - e.getExpLevelCostsOffered()[i];
-						if (change < 1) 
+						remove = cost - e.getExpLevelCostsOffered()[i];
+						if (remove < 1)
 							continue;
-						e.getExpLevelCostsOffered()[i] = change;
+						e.getExpLevelCostsOffered()[i] = remove;
 					}
 				} else {
-					change = cost - e.getExpLevelCostsOffered()[offerNumber];
-					if (change < 1) 
+					remove = cost - e.getExpLevelCostsOffered()[offer];
+					if (remove < 1)
 						return;
-					e.getExpLevelCostsOffered()[offerNumber] = change;
+					e.getExpLevelCostsOffered()[offer] = remove;
 				}
 				break;
 			case RESET:
@@ -186,9 +186,7 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (multiple)
-			return "cost of enchantment offers";
-		return "cost of enchantment offer " + exprOfferNumber.toString(e, debug);
+		return multiple ? "cost of enchantment offers" : "cost of enchantment offer " + exprOfferNumber.toString(e, debug);
 	}
 
 }

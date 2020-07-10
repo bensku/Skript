@@ -19,26 +19,19 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -50,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Applied Enchantments")
 @Description({"The applied enchantments in an enchant event.",
-				"Deleting or removing the applied enchantments will prevent the item's enchantment."})
+				" Deleting or removing the applied enchantments will prevent the item's enchantment."})
 @Examples({"on enchant",
 			"\tset the applied enchantments to sharpness 10 and fire aspect 5"})
 @Events("enchant")
