@@ -462,7 +462,7 @@ public abstract class Math2 {
 	 * @return 0 if f is NaN or INF, otherwise f
 	 */
 	public static float safe(float f) {
-		if(f != f || Float.isInfinite(f)) //NaN or INF 
+		if (f != f || Float.isInfinite(f)) //NaN or INF 
 			return 0;
 		return f;
 	}
@@ -475,7 +475,7 @@ public abstract class Math2 {
 	 * @return 0 if d is NaN or INF, otherwise d
 	 */
 	public static double safe(double d) {
-		if(d != d || Double.isInfinite(d)) //NaN or INF 
+		if (d != d || Double.isInfinite(d)) //NaN or INF 
 			return 0;
 		return d;
 	}
