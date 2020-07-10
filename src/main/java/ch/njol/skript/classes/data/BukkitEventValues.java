@@ -644,19 +644,19 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// PlayerInteractEvent
-		EventValues.registerEventValue(PlayerInteractEvent.class, Block.class, new Getter<Block, PlayerInteractEvent>() {
-			@Override
-			@Nullable
-			public Block get(final PlayerInteractEvent e) {
-				return e.getClickedBlock();
-			}
-		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, ItemType.class, new Getter<ItemType, PlayerInteractEvent>() {
 			@Override
 			@Nullable
 			public ItemType get(final PlayerInteractEvent e) {
 				ItemStack item = e.getItem();
 				return item == null ? null : new ItemType(item);
+			}
+		}, 0);
+		EventValues.registerEventValue(PlayerInteractEvent.class, Block.class, new Getter<Block, PlayerInteractEvent>() {
+			@Override
+			@Nullable
+			public Block get(final PlayerInteractEvent e) {
+				return e.getClickedBlock();
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, Direction.class, new Getter<Direction, PlayerInteractEvent>() {
