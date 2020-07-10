@@ -42,7 +42,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.destroystokyo.paper.block.BlockSoundGroup;

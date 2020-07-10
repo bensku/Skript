@@ -20,7 +20,6 @@
 package ch.njol.skript.lang.parser;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.jdt.annotation.Nullable;
 

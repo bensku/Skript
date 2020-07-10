@@ -19,15 +19,10 @@
  */
 package ch.njol.skript.effects;
 
-import java.util.Arrays;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;

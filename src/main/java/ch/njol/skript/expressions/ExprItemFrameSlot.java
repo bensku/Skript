@@ -24,7 +24,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;

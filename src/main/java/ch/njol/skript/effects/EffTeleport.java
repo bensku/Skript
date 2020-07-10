@@ -37,7 +37,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
-import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 
 @Name("Teleport")

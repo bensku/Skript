@@ -21,11 +21,10 @@
 
 package ch.njol.skript.util.chat;
 
-import ch.njol.skript.util.Utils;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.util.chat.MessageComponent.*;
+import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
+import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
 
 /**
  * Chat codes that come with Skript by default.

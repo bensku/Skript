@@ -56,7 +56,6 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Golem;

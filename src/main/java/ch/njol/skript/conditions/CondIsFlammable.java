@@ -26,8 +26,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 
-import org.bukkit.inventory.ItemStack;
-
 @Name("Is Flammable")
 @Description("Checks whether an item is flammable.")
 @Examples({"wood is flammable", "player's tool is flammable"})

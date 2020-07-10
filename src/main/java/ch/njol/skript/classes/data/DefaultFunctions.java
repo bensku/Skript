@@ -27,7 +27,6 @@ import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.function.FunctionEvent;

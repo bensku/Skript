@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.localization.Language;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -52,6 +51,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.StringMode;
