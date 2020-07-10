@@ -110,7 +110,7 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 			case RESET:
 				assert false;
 		}
-		if (i != null)
+		if (i != null && is != null)
 			i.setItemStack(is);
 		else if (s != null)
 			s.setItem(is);
