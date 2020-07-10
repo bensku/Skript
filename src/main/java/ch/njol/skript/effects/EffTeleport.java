@@ -40,24 +40,22 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Teleport")
 @Description("Teleport an entity to a specific location.")
 @Examples({"teleport the player to {homes.%player%}",
 		"teleport the attacker to the victim"})
 @Since("1.0")
 public class EffTeleport extends Effect {
+
 	static {
 		Skript.registerEffect(EffTeleport.class, "teleport %entities% (to|%direction%) %location%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	@SuppressWarnings("null")
 	private Expression<Location> location;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -65,7 +63,7 @@ public class EffTeleport extends Effect {
 		location = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		Location to = location.getSingle(e);
@@ -80,36 +78,18 @@ public class EffTeleport extends Effect {
 			}
 		}
 		for (final Entity entity : entities.getArray(e)) {
-			final Location loc;
-			if (ignoreDirection(to.getYaw(), to.getPitch())) {
-				loc = to.clone();
-				loc.setPitch(entity.getLocation().getPitch());
-				loc.setYaw(entity.getLocation().getYaw());
-			} else {
-				loc = to;
-			}
-			loc.getChunk().load();
+			to.getChunk().load();
 			if (e instanceof PlayerRespawnEvent && entity.equals(((PlayerRespawnEvent) e).getPlayer()) && !Delay.isDelayed(e)) {
-				((PlayerRespawnEvent) e).setRespawnLocation(loc);
+				((PlayerRespawnEvent) e).setRespawnLocation(to);
 			} else {
-				entity.teleport(loc);
+				entity.teleport(to);
 			}
 		}
 	}
-	
-	/**
-	 * @param yaw Notch-yaw
-	 * @param pitch Notch-pitch
-	 * @return Whether the given pitch and yaw represent a cartesian coordinate direction
-	 */
-	private static boolean ignoreDirection(final float yaw, final float pitch) {
-		return (pitch == 0 || Math.abs(pitch - 90) < Skript.EPSILON || Math.abs(pitch + 90) < Skript.EPSILON)
-				&& (yaw == 0 || Math.abs(Math.sin(Math.toRadians(yaw))) < Skript.EPSILON || Math.abs(Math.cos(Math.toRadians(yaw))) < Skript.EPSILON);
-	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "teleport " + entities.toString(e, debug) + " to " + location.toString(e, debug);
 	}
-	
+
 }
