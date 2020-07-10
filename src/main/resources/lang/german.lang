@@ -59,18 +59,18 @@ skript command:
 		help: Zeigt diese Hilfe an. Benutze '/skript reload/enable/disable/update' um mehr Infos zu erhalten
 		reload:
 			description: Lädt die Konfigurationen, Skripte, alles oder nur bestimmte Skripte neu
-			all: Lädt alle Konfigurationen und Skripte neu
-			config: Lädt alle Konfigurationen neu
-			aliases: Lädt die Itemnamen neu (aliases-*.sk)
-			scripts: Lädt alle Skripte neu
+			@all: Lädt alle Konfigurationen und Skripte neu
+			@config: Lädt alle Konfigurationen neu
+			@aliases: Lädt die Itemnamen neu (aliases-*.sk)
+			@scripts: Lädt alle Skripte neu
 			<script>: Lädt ein bestimmtes Skript oder einen Ordner neu
 		enable:
 			description: Aktiviert alle Skripte oder nur bestimmte
-			all: Aktiviert alle Skripte
+			@all: Aktiviert alle Skripte
 			<script>: Aktiviert ein bestimmtes Skript oder einen Ordner
 		disable:
 			description: Deaktiviert alle Skripte oder nur bestimmte
-			all: Deaktiviert alle Skripte
+			@all: Deaktiviert alle Skripte
 			<script>: Deaktiviert ein bestimmtes Skript oder einen Ordner
 		update:
 			description: Überprüft auf eine neue Version, listet Änderungen dieser auf, und kann sie auch gleich herunterladen
