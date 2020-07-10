@@ -681,7 +681,7 @@ public class BukkitClasses {
 				.user("players?")
 				.name("Player")
 				.description("A player. Depending on whether a player is online or offline several actions can be performed with them, " +
-								"though you won't get any errors when using effects that only work if the player is online (e.g. changing his inventory) on an offline player.",
+								"though you won't get any errors when using effects that only work if the player is online (e.g. changing their inventory) on an offline player.",
 						"You have two possibilities to use players as command arguments: &lt;player&gt; and &lt;offline player&gt;. " +
 								"The first requires that the player is online and also accepts only part of the name, " +
 								"while the latter doesn't require that the player is online, but the player's name has to be entered exactly.")
@@ -1389,17 +1389,18 @@ public class BukkitClasses {
 				.user("teleport ?(cause|reason|type)s?")
 				.name("Teleport Cause")
 				.description("The teleport cause in a <a href='events.html#teleport'>teleport</a> event.")
-				.examples(teleportCauses.getAllNames())
+				.usage(teleportCauses.getAllNames())
 				.since("2.2-dev35")
 				.parser(new Parser<TeleportCause>() {
 					@Override
-					public String toString(TeleportCause teleportCause, int flags) {
-						return teleportCauses.toString(teleportCause, flags);
+					@Nullable
+					public TeleportCause parse(String input, ParseContext context) {
+						return teleportCauses.parse(input);
 					}
 					
 					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
+					public String toString(TeleportCause teleportCause, int flags) {
+						return teleportCauses.toString(teleportCause, flags);
 					}
 					
 					@SuppressWarnings("null")
@@ -1420,17 +1421,18 @@ public class BukkitClasses {
 				.user("spawn(ing)? ?reasons?")
 				.name("Spawn Reason")
 				.description("The spawn reason in a <a href='events.html#spawn'>spawn</a> event.")
-				.examples(spawnReasons.getAllNames())
+				.usage(spawnReasons.getAllNames())
 				.since("2.3")
 				.parser(new Parser<SpawnReason>() {
 					@Override
-					public String toString(SpawnReason spawnReason, int flags) {
-						return spawnReasons.toString(spawnReason, flags);
+					@Nullable
+					public SpawnReason parse(String input, ParseContext context) {
+						return spawnReasons.parse(input);
 					}
 					
 					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
+					public String toString(SpawnReason spawnReason, int flags) {
+						return spawnReasons.toString(spawnReason, flags);
 					}
 					
 					@SuppressWarnings("null")
@@ -1488,8 +1490,9 @@ public class BukkitClasses {
 				.name("Firework Type")
 				.description("The type of a <a href='#fireworkeffect'>fireworkeffect</a>.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.Type.class))
-				.examples(fireworktypes.getAllNames())
+				.usage(fireworktypes.getAllNames())
 				.since("2.4")
+				.documentationId("FireworkType")
 				.parser(new Parser<FireworkEffect.Type>() {
 					@Override
 					@Nullable
@@ -1554,7 +1557,7 @@ public class BukkitClasses {
 				.user("difficult(y|ies)")
 				.name("Difficulty")
 				.description("The difficulty of a <a href='#world'>world</a>.")
-				.examples(difficulties.getAllNames())
+				.usage(difficulties.getAllNames())
 				.since("2.3")
 				.parser(new Parser<Difficulty>() {
 					@Override
@@ -1586,7 +1589,7 @@ public class BukkitClasses {
 				.user("resource ?pack ?states?")
 				.name("Resource Pack State")
 				.description("The state in a <a href='events.html#resource_pack_request_action'>resource pack request response</a> event.")
-				.examples(resourcePackStates.getAllNames())
+				.usage(resourcePackStates.getAllNames())
 				.since("2.4")
 				.parser(new Parser<Status>() {
 					@Override
@@ -1620,7 +1623,7 @@ public class BukkitClasses {
 					.name("Sound Category")
 					.description("The category of a sound, they are used for sound options of Minecraft. " +
 							"See the <a href='effects.html#EffPlaySound'>play sound</a> and <a href='effects.html#EffStopSound'>stop sound</a> effects.")
-					.examples(soundCategories.getAllNames())
+					.usage(soundCategories.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.11 or newer")
 					.parser(new Parser<SoundCategory>() {
@@ -1655,7 +1658,7 @@ public class BukkitClasses {
 					.name("Gene")
 					.description("Represents a Panda's main or hidden gene. " +
 							"See <a href='https://minecraft.gamepedia.com/Panda#Genetics'>genetics</a> for more info.")
-					.examples(genes.getAllNames())
+					.usage(genes.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.14 or newer")
 					.parser(new Parser<Gene>() {
@@ -1688,9 +1691,10 @@ public class BukkitClasses {
 					.user("cat ?(type|race)s?")
 					.name("Cat Type")
 					.description("Represents the race/type of a cat entity.")
-					.examples(races.getAllNames())
+					.usage(races.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.14 or newer")
+					.documentationId("CatType")
 					.parser(new Parser<Cat.Type>() {
 						@Nullable
 						@Override

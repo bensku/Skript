@@ -21,13 +21,16 @@ package ch.njol.skript;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader.ScriptInfo;
@@ -98,6 +101,7 @@ public class SkriptCommand implements CommandExecutor {
 					.add("check")
 					.add("changes")
 					.add("download")
+			).add("info"
 			//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
@@ -184,17 +188,11 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						}
 						reloading(sender, "script", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScript(f);
-						Config config = ScriptLoader.loadStructure(f);
-						ScriptLoader.loadScripts(config);
+						ScriptLoader.reloadScript(f);
 						reloaded(sender, r, "script", f.getName());
 					} else {
 						reloading(sender, "scripts in folder", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScripts(f);
-						List<Config> configs = ScriptLoader.loadStructures(f);
-						final int enabled = ScriptLoader.loadScripts(configs).files;
+						final int enabled = ScriptLoader.reloadScripts(f).files;
 						if (enabled == 0)
 							info(sender, "reload.empty folder", f.getName());
 						else
@@ -332,6 +330,17 @@ public class SkriptCommand implements CommandExecutor {
 				} else if (args[1].equalsIgnoreCase("download")) {
 					updater.updateCheck(sender);
 				}
+			} else if (args[0].equalsIgnoreCase("info")) {
+				info(sender, "info.aliases");
+				info(sender, "info.documentation");
+				info(sender, "info.server", Bukkit.getVersion());
+				info(sender, "info.version", Skript.getVersion());
+				info(sender, "info.addons");
+				for (SkriptAddon addon : Skript.getAddons()) {
+					PluginDescriptionFile desc = addon.plugin.getDescription();
+					String web = desc.getWebsite();
+					Skript.info(sender, " - " + desc.getFullName() + (web != null ? " (" + web + ")" : ""));
+				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
 			} else if (args[0].equalsIgnoreCase("gen-docs")) {
@@ -347,11 +356,27 @@ public class SkriptCommand implements CommandExecutor {
 				generator.generate(); // Try to generate docs... hopefully
 				Skript.info(sender, "Documentation generated!");
 			} else if (args[0].equalsIgnoreCase("test") && TestMode.DEV_MODE) {
-				File script = TestMode.TEST_DIR.resolve(args[1] + ".sk").toFile();
+				File script;
+				if (args.length == 1) {
+					script = TestMode.lastTestFile;
+					if (script == null) {
+						Skript.error(sender, "No test script has been run yet!");
+						return true;
+					}
+				} else {
+					script = TestMode.TEST_DIR.resolve(
+							Arrays.stream(args).skip(1).collect(Collectors.joining(" ")) + ".sk").toFile();
+					TestMode.lastTestFile = script;
+				}
 				assert script != null;
+				if (!script.exists()) {
+					Skript.error(sender, "Test script doesn't exist!");
+					return true;
+				}
+				
 				ScriptLoader.loadScripts(ScriptLoader.loadStructure(script)); // Load test
 				Bukkit.getPluginManager().callEvent(new SkriptTestEvent()); // Run it
-				ScriptLoader.unloadScript(script); // Unload it
+				Skript.disableScripts(); // Clean state for next test
 				
 				// Get results and show them
 				String[] lines = TestTracker.collectResults().createReport().split("\n");

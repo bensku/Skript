@@ -1,0 +1,5 @@
+test "fox EntityData fixes" when minecraft version is "1.14.4":
+	spawn red fox at location(0, 64, 0, world "world")
+	spawn 3 snow foxes at location(0, 64, 0, world "world")
+	delete all foxes
+	assert size of all foxes = 0 with "all foxes not deleted:%size of all foxes%"

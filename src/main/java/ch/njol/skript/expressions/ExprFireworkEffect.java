@@ -51,7 +51,7 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		flicker = parseResult.mark == 2 && parseResult.mark > 3;
+		flicker = parseResult.mark == 2 || parseResult.mark > 3;
 		trail = parseResult.mark >= 3;
 		hasFade = matchedPattern == 1;
 		type = (Expression<FireworkEffect.Type>) exprs[0];

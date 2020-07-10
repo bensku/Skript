@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
@@ -48,19 +49,19 @@ import ch.njol.util.Kleenean;
 public class EffEnchant extends Effect {
 	static {
 		Skript.registerEffect(EffEnchant.class,
-				"enchant %~itemstack% with %enchantmenttypes%",
-				"disenchant %~itemstack%");
+				"enchant %~itemtypes% with %enchantmenttypes%",
+				"disenchant %~itemtypes%");
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<ItemStack> item;
+	private Expression<ItemType> item;
 	@Nullable
 	private Expression<EnchantmentType> enchs;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		item = (Expression<ItemStack>) exprs[0];
+		item = (Expression<ItemType>) exprs[0];
 		if (!ChangerUtils.acceptsChange(item, ChangeMode.SET, ItemStack.class)) {
 			Skript.error(item + " cannot be changed, thus it cannot be (dis)enchanted");
 			return false;
@@ -72,25 +73,30 @@ public class EffEnchant extends Effect {
 	
 	@Override
 	protected void execute(final Event e) {
-		final ItemStack i = item.getSingle(e);
+		final ItemType i = item.getSingle(e);
 		if (i == null)
 			return;
 		if (enchs != null) {
 			final EnchantmentType[] types = enchs.getArray(e);
 			if (types.length == 0)
 				return;
+			
 			for (final EnchantmentType type : types) {
 				Enchantment ench = type.getType();
 				assert ench != null;
-				i.addUnsafeEnchantment(ench, type.getLevel());
+				i.addEnchantments(new EnchantmentType(ench, type.getLevel()));
 			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
+			item.change(e, new ItemType[] {i}, ChangeMode.SET);
 		} else {
-			for (final Enchantment ench : i.getEnchantments().keySet()) {
+			final EnchantmentType[] types = i.getEnchantmentTypes();
+			if (types == null)
+				return;
+			
+			for (final EnchantmentType ench : types) {
 				assert ench != null;
-				i.removeEnchantment(ench);
+				i.removeEnchantments(ench);
 			}
-			item.change(e, new ItemStack[] {i}, ChangeMode.SET);
+			item.change(e, new ItemType[] {i}, ChangeMode.SET);
 		}
 	}
 	

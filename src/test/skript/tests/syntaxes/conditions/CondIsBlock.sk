@@ -1,0 +1,6 @@
+test "block condition":
+	assert emerald isn't a block with "emerald is a block"
+
+test "block condition 2" when minecraft version is not "1.9.4": #These test glitch out on MC 1.9
+	assert air is a block with "air is not a block"
+	assert sand is a block with "sand is not a block"

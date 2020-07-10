@@ -38,32 +38,37 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Ban")
-@Description({"Bans/unbans a player or an IP address.",
-		"Starting with Skript 2.1.1 and Bukkit 1.7.2 R0.4, one can also ban players with a reason.",
-		"Note that banning a player will not kick them from the server. You may use the <a href='effects.html#EffKick'>kick effect</a> if you wish so."})
+@Description({"Bans or unbans a player or an IP address.",
+	"If a reason is given, it will be shown to the player when they try to join the server while banned.",
+	"A length of ban may also be given to apply a temporary ban. If it is absent for any reason, a permanent ban will be used instead.",
+	"We recommend that you test your scripts so that no accidental permanent bans are applied.",
+	"",
+	"Note that banning people does not kick them from the server.",
+	"Consider using the <a href='effects.html#EffKick'>kick effect</a> after applying a ban."})
 @Examples({"unban player",
-		"ban \"127.0.0.1\"",
-		"IP-ban the player because \"he is an idiot\""})
-@Since("1.4, 2.1.1 (ban reason)")
+	"ban \"127.0.0.1\"",
+	"IP-ban the player because \"he is an idiot\"",
+	"ban player due to \"inappropriate language\" for 2 days"})
+@Since("1.4, 2.1.1 (ban reason), 2.5 (timespan)")
 public class EffBan extends Effect {
 	
 	static {
 		Skript.registerEffect(EffBan.class,
-				"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%]", "unban %strings/offlineplayers%",
-				"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%]", "unban %players% by IP",
-				"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
+			"ban %strings/offlineplayers% [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "unban %strings/offlineplayers%",
+			"ban %players% by IP [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "unban %players% by IP",
+			"IP(-| )ban %players% [(by reason of|because [of]|on account of|due to) %-string%] [for %-timespan%]", "(IP(-| )unban|un[-]IP[-]ban) %players%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<?> players;
 	@Nullable
 	private Expression<String> reason;
+	@Nullable
+	private Expression<Timespan> expires;
 	
 	private boolean ban;
 	private boolean ipBan;
@@ -73,15 +78,18 @@ public class EffBan extends Effect {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		players = exprs[0];
 		reason = exprs.length > 1 ? (Expression<String>) exprs[1] : null;
+		expires = exprs.length > 1 ? (Expression<Timespan>) exprs[2] : null;
 		ban = matchedPattern % 2 == 0;
 		ipBan = matchedPattern >= 2;
 		return true;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	protected void execute(final Event e) {
 		final String reason = this.reason != null ? this.reason.getSingle(e) : null; // don't check for null, just ignore an invalid reason
-		final Date expires = null;
+		Timespan ts = this.expires != null ? this.expires.getSingle(e) : null;
+		final Date expires = ts != null ? new Date(System.currentTimeMillis() + ts.getMilliSeconds()) : null;
 		final String source = "Skript ban effect";
 		for (final Object o : players.getArray(e)) {
 			if (o instanceof Player) {
@@ -125,7 +133,8 @@ public class EffBan extends Effect {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return (ipBan ? "IP-" : "") + (ban ? "" : "un") + "ban " + players.toString(e, debug) + (reason != null ? " on account of " + reason.toString(e, debug) : "");
+		return (ipBan ? "IP-" : "") + (ban ? "" : "un") + "ban " + players.toString(e, debug) +
+			(reason != null ? " on account of " + reason.toString(e, debug) : "") + (expires != null ? " for " + expires.toString(e, debug) : "");
 	}
 	
 }
