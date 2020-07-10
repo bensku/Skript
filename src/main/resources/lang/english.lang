@@ -57,18 +57,18 @@ skript command:
 		help: Prints this help message. Use '/skript reload/enable/disable/update' to get more info
 		reload:
 			description: Reloads the config, all scripts, everything, or a specific script
-			all: Reloads all configs and all scripts
-			config: Reloads the main config
-			aliases: Reloads the aliases configs (aliases-*.sk)
-			scripts: Reloads all scripts
+			@all: Reloads all configs and all scripts
+			@config: Reloads the main config
+			@aliases: Reloads the aliases configs (aliases-*.sk)
+			@scripts: Reloads all scripts
 			<script>: Reloads a specific script or a folder of scripts
 		enable:
 			description: Enables all scripts or a specific one
-			all: Enables all scripts
+			@all: Enables all scripts
 			<script>: Enables a specific script or a folder of scripts
 		disable:
 			description: Disables all scripts or a specific one
-			all: Disables all scripts
+			@all: Disables all scripts
 			<script>: Disables a specific script or a folder of scripts
 		update:
 			description: Check for updates, read the changelog, or download the latest version of Skript
