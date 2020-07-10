@@ -50,8 +50,6 @@ import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.jetbrains.annotations.NotNull;
-
 /*
  *   This file is part of Skript.
  *
@@ -391,7 +389,7 @@ public class SkriptCommand implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, @NotNull String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] args) {
         File file = new File(Skript.getInstance().getDataFolder(), "scripts");
         File[] listFiles = file.listFiles();
         if (listFiles != null) {
