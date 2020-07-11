@@ -71,7 +71,7 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 	}
 	
 	@Override
-	public Class<Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 	
