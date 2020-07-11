@@ -44,6 +44,7 @@ import ch.njol.util.Kleenean;
 		"	broadcast \"%attacker% used a %projectile% to attack %victim%!\""})
 @Since("1.2")
 public class CondIsSet extends Condition {
+	
 	static {
 		Skript.registerCondition(CondIsSet.class,
 				"%~objects% (exist[s]|(is|are) set)",

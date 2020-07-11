@@ -37,8 +37,9 @@ import ch.njol.skript.doc.Since;
 public class CondIsSwimming extends PropertyCondition<LivingEntity> {
 	
 	static {
-		if (Skript.methodExists(LivingEntity.class, "isSwimming"))
+		if (Skript.methodExists(LivingEntity.class, "isSwimming")) {
 			register(CondIsSwimming.class, "swimming", "livingentities");
+		}
 	}
 	
 	@Override

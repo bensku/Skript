@@ -47,23 +47,15 @@ import ch.njol.util.Kleenean;
 public class CondItemInHand extends Condition {
 	
 	static {
-		if (Skript.isRunningMinecraft(1, 9)) {
-			Skript.registerCondition(CondItemInHand.class,
-					"[%livingentities%] ha(s|ve) %itemtypes% in [main] hand",
-					"[%livingentities%] (is|are) holding %itemtypes% [in main hand]",
-					"[%livingentities%] ha(s|ve) %itemtypes% in off[(-| )]hand",
-					"[%livingentities%] (is|are) holding %itemtypes% in off[(-| )]hand",
-					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in [main] hand",
-					"[%livingentities%] (is not|isn't) holding %itemtypes% [in main hand]",
-					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in off[(-| )]hand",
-					"[%livingentities%] (is not|isn't) holding %itemtypes% in off[(-| )]hand");
-		} else {
-			Skript.registerCondition(CondItemInHand.class,
-					"[%livingentities%] ha(s|ve) %itemtypes% in hand",
-					"[%livingentities%] (is|are) holding %itemtypes% in hand",
-					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes%",
-					"[%livingentities%] (is not|isn't) holding %itemtypes%");
-		}
+		Skript.registerCondition(CondItemInHand.class,
+				"[%livingentities%] ha(s|ve) %itemtypes% in [main] hand",
+				"[%livingentities%] (is|are) holding %itemtypes% [in main hand]",
+				"[%livingentities%] ha(s|ve) %itemtypes% in off[(-| )]hand",
+				"[%livingentities%] (is|are) holding %itemtypes% in off[(-| )]hand",
+				"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in [main] hand",
+				"[%livingentities%] (is not|isn't) holding %itemtypes% [in main hand]",
+				"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in off[(-| )]hand",
+				"[%livingentities%] (is not|isn't) holding %itemtypes% in off[(-| )]hand");
 	}
 	
 	@SuppressWarnings("null")

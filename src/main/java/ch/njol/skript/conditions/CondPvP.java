@@ -44,7 +44,9 @@ import ch.njol.util.Kleenean;
 public class CondPvP extends Condition {
 	
 	static {
-		Skript.registerCondition(CondPvP.class, "(is PvP|PvP is) enabled [in %worlds%]", "(is PvP|PvP is) disabled [in %worlds%]");
+		Skript.registerCondition(CondPvP.class,
+			"(is PvP|PvP is) enabled [in %worlds%]",
+			"(is PvP|PvP is) disabled [in %worlds%]");
 	}
 	
 	@SuppressWarnings("null")
