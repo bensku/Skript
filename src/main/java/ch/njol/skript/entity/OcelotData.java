@@ -19,10 +19,6 @@
  */
 package ch.njol.skript.entity;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Tameable;
 import org.eclipse.jdt.annotation.Nullable;

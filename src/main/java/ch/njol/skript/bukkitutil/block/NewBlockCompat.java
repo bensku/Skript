@@ -30,10 +30,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.type.Bed;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -42,7 +39,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.aliases.MatchQuality;
-import ch.njol.util.Setter;
 
 /**
  * 1.13+ block compat.

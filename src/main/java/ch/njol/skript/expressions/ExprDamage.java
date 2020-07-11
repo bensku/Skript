@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Collection;
-
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;

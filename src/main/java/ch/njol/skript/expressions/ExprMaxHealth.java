@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;

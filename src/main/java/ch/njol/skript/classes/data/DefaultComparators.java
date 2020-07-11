@@ -19,40 +19,18 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.Objects;
 
-import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
-import org.bukkit.entity.minecart.HopperMinecart;
-import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,7 +45,6 @@ import ch.njol.skript.entity.BoatData;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.util.Date;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;

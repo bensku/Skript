@@ -20,7 +20,6 @@
 package ch.njol.skript.tests.runner;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerEditBookEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
