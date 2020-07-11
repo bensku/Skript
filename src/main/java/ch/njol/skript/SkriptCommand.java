@@ -496,4 +496,5 @@ public class SkriptCommand implements TabExecutor {
             }
         });
     }
+	
 }
