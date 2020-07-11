@@ -64,7 +64,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 //			return ConverterUtils.convert(entities.getArray(e), Number.class, new Getter<Number, LivingEntity>() {
 //				@Override
 //				public Number get(final LivingEntity entity) {
-//					return Number.doubleValue(0.5f * (entity.getHealth() - ((EntityDamageEvent) e).getDamage()));
+//					return 0.5f * (entity.getHealth() - ((EntityDamageEvent) e).getDamage());
 //				}
 //			});
 //		}
@@ -72,7 +72,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 			@SuppressWarnings("null")
 			@Override
 			public Number get(final LivingEntity entity) {
-				return Number.doubleValue(HealthUtils.getHealth(entity));
+				return HealthUtils.getHealth(entity);
 			}
 		});
 	}
@@ -139,7 +139,7 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 	}
 	
 	@Override
-	public Class<Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 	
