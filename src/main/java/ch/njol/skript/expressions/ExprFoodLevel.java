@@ -61,7 +61,7 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 	
 	@Override
 	protected Number[] get(final Event e, final Player[] source) {
-		return get(source, new Getter<Float, Player>() {
+		return get(source, new Getter<Number, Player>() {
 			@Override
 			public Number get(final Player p) {
 				if (getTime() >= 0 && e instanceof FoodLevelChangeEvent && p.equals(((FoodLevelChangeEvent) e).getEntity()) && !Delay.isDelayed(e)) {
