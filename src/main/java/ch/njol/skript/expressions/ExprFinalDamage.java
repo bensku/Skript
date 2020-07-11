@@ -38,7 +38,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 @Name("Final Damage")
 @Description("How much damage is done in a damage event, considering all types of damage reduction. Can NOT be changed.")
@@ -64,7 +63,7 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	protected Double[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
 			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+		return new Double[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
 	}
 	
 	@Override

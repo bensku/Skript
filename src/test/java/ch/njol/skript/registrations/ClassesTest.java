@@ -19,8 +19,10 @@
  */
 package ch.njol.skript.registrations;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assume.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +34,6 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Snowball;
@@ -58,7 +59,6 @@ import ch.njol.skript.entity.SimpleEntityData;
 import ch.njol.skript.entity.WolfData;
 import ch.njol.skript.entity.XpOrbData;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Experience;

@@ -19,18 +19,6 @@
  */
 package ch.njol.skript.util;
 
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.bekvon.bukkit.residence.commands.check;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.expressions.base.EventValueExpression;
-import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.registrations.Classes;
-
 /**
  * Preserved for addon compatibility for a limited amount of time.
  * Please, do use {@link ch.njol.skript.util.slot.Slot} instead!

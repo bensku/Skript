@@ -82,7 +82,9 @@ public class DroppedItemData extends EntityData<Item> {
 	public void set(final Item entity) {
 		final ItemType t = CollectionUtils.getRandom(types);
 		assert t != null;
-		entity.setItemStack(t.getItem().getRandom());
+		ItemStack stack = t.getItem().getRandom();
+		if (stack != null)
+			entity.setItemStack(stack);
 	}
 	
 	@Override

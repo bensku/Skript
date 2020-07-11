@@ -19,31 +19,31 @@
  */
 package ch.njol.skript.conditions;
 
-import ch.njol.skript.aliases.ItemType;
+import org.bukkit.block.Block;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 
-@Name("Is Block")
-@Description("Checks whether an item is a block.")
-@Examples({"player's held item is a block", "{list::*} are blocks"})
-@Since("2.4")
-public class CondIsBlock extends PropertyCondition<ItemType> {
+@Name("Is Block Redstone Powered")
+@Description("Checks if a block is powered by redstone")
+@Examples({"if clicked block is redstone powered:",
+	"\tsend \"This block is well-powered by redstone!\""})
+@Since("2.5")
+public class CondIsBlockRedstonePowered extends PropertyCondition<Block> {
 	
 	static {
-		register(CondIsBlock.class, "([a] block|blocks)", "itemtypes");
+		register(CondIsBlockRedstonePowered.class, "redstone powered", "blocks");
 	}
 	
 	@Override
-	public boolean check(ItemType i) {
-		return i.getMaterial().isBlock();
+	public boolean check(Block b) {
+		return b.isBlockPowered();
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "block";
+		return "redstone powered";
 	}
-	
 }

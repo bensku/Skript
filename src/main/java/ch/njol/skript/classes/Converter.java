@@ -23,10 +23,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Debuggable;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;

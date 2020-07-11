@@ -35,13 +35,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.destroystokyo.paper.block.BlockSoundGroup;
@@ -288,12 +288,27 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
-	public boolean breakNaturally(final ItemStack tool) {
+	public boolean breakNaturally(@Nullable ItemStack tool) {
 		if (delayChanges) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 				@Override
 				public void run() {
 					state.getBlock().breakNaturally(tool);
+				}
+			});
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean breakNaturally(ItemStack tool, boolean triggerEffect) {
+		if (delayChanges) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					state.getBlock().breakNaturally(tool, triggerEffect);
 				}
 			});
 			return true;
@@ -309,7 +324,13 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
-	public Collection<ItemStack> getDrops(final ItemStack tool) {
+	public Collection<ItemStack> getDrops(@Nullable ItemStack tool) {
+		assert false;
+		return Collections.emptySet();
+	}
+	
+	@Override
+	public Collection<ItemStack> getDrops(ItemStack tool, @Nullable Entity entity) {
 		assert false;
 		return Collections.emptySet();
 	}

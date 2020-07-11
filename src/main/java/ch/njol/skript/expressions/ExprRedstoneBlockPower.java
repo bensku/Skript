@@ -17,33 +17,39 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.conditions;
+package ch.njol.skript.expressions;
 
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.conditions.base.PropertyCondition;
+import org.bukkit.block.Block;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
-@Name("Is Block")
-@Description("Checks whether an item is a block.")
-@Examples({"player's held item is a block", "{list::*} are blocks"})
-@Since("2.4")
-public class CondIsBlock extends PropertyCondition<ItemType> {
+@Name("Redstone Block Power")
+@Description("Power of a redstone block")
+@Examples({"if redstone power of targeted block is 15:",
+	"\tsend \"This block is very powerful!\""})
+@Since("2.5")
+public class ExprRedstoneBlockPower extends SimplePropertyExpression<Block, Number> {
 	
 	static {
-		register(CondIsBlock.class, "([a] block|blocks)", "itemtypes");
+		register(ExprRedstoneBlockPower.class, Number.class, "redstone power", "blocks");
 	}
 	
 	@Override
-	public boolean check(ItemType i) {
-		return i.getMaterial().isBlock();
+	public Number convert(Block b) {
+		return b.getBlockPower();
+	}
+	
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "block";
+		return "redstone power";
 	}
 	
 }
