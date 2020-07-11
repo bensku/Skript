@@ -59,6 +59,7 @@ import ch.njol.util.Kleenean;
 		"player's off hand tool is shield #Only for Minecraft 1.9"})
 @Since("1.0")
 public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
+	
 	static {
 		Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (tool|held item|weapon) [of %livingentities%]", "%livingentities%'[s] (tool|held item|weapon)");
 	}

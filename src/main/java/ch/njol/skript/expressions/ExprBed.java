@@ -42,6 +42,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"	teleport the player to the world's spawn point"})
 @Since("2.0")
 public class ExprBed extends SimplePropertyExpression<Player, Location> {
+	
 	static {
 		register(ExprBed.class, Location.class, "bed[s] [location[s]]", "players");
 	}

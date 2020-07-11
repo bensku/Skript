@@ -57,21 +57,24 @@ import ch.njol.util.Kleenean;
 		"push last dropped item upwards"})
 @Since("1.3 (spawned entity), 2.0 (shot entity), 2.2-dev26 (dropped item)")
 public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
+	
 	static {
 		Skript.registerExpression(ExprLastSpawnedEntity.class, Entity.class, ExpressionType.SIMPLE, "[the] [last[ly]] (0¦spawned|1¦shot) %*entitydata%", "[the] [last[ly]] dropped (2¦item)");
 	}
 	
-	int from;
+	private int from;
+	
 	@SuppressWarnings("null")
 	private EntityData<?> type;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (parseResult.mark == 2) // It's just to make an extra expression for item only
+		if (parseResult.mark == 2) { // It's just to make an extra expression for item only
 			type = EntityData.fromClass(Item.class);
-		else 
+		} else {
 			type = ((Literal<EntityData<?>>) exprs[0]).getSingle();
+		}
 		from = parseResult.mark;
 		return true;
 	}
@@ -79,9 +82,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
-		final Entity en = from == 0 ? EffSpawn.lastSpawned :  from == 1 ? EffShoot.lastSpawned : EffDrop.lastSpawned;
-		if (en == null)
-			return null;
+		final Entity en = from == 0 ? EffSpawn.lastSpawned : from == 1 ? EffShoot.lastSpawned : EffDrop.lastSpawned;
 		if (!type.isInstance(en))
 			return null;
 		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
@@ -101,7 +102,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the last " + (from == 1 ? "spawned" : from == 1 ? "shot" : "dropped") + " " + type;
+		return "the last " + (from == 0 ? "spawned" : from == 1 ? "shot" : "dropped") + " " + type;
 	}
 	
 }

@@ -53,6 +53,7 @@ import ch.njol.util.Kleenean;
 		"set {inventory::%uuid of player%::*} to items in the player's inventory"})
 @Since("2.0")
 public class ExprItemsIn extends SimpleExpression<Slot> {
+	
 	static {
 		Skript.registerExpression(ExprItemsIn.class, Slot.class, ExpressionType.PROPERTY, "[(all [[of] the]|the)] items ([with]in|of|contained in|out of) (|1¦inventor(y|ies)) %inventories%");
 	}

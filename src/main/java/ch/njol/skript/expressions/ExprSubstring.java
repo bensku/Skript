@@ -44,6 +44,7 @@ import ch.njol.util.Kleenean;
 		, "message \"%subtext of {_s} from characters 2 to (the length of {_s} - 1)%\" # removes the first and last character from {_s} and sends it to the player or console"})
 @Since("2.1")
 public class ExprSubstring extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprSubstring.class, String.class, ExpressionType.COMBINED,
 				"[the] (part|sub[ ](text|string)) of %strings% (between|from) (ind(ex|ices)|character[s]|) %number% (and|to) (index|character|) %number%",

@@ -40,6 +40,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"loop blocks in front of the player's head:"})
 @Since("2.0")
 public class ExprEyeLocation extends SimplePropertyExpression<LivingEntity, Location> {
+	
 	static {
 		register(ExprEyeLocation.class, Location.class, "(head|eye[s]) [location[s]]", "livingentities");
 	}

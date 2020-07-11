@@ -42,8 +42,6 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("2.0")
 public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 	
-	public static boolean randomSK = true;
-	
 	static {
 		register(ExprYawPitch.class, Number.class, "(0¦yaw|1¦pitch)", "locations");
 	}

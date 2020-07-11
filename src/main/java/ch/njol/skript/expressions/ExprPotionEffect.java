@@ -32,6 +32,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
+	
 	static {
 		// REMIND create
 //		Skript.registerExpression(ExprPotionEffect.class, PotionEffect.class, ExpressionType.COMBINED,"(|1¦extended) [potion [of]] %potioneffect%");

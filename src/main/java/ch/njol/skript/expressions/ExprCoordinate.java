@@ -43,6 +43,7 @@ import ch.njol.util.Kleenean;
 		"	message \"Watch out for lava!\""})
 @Since("1.4.3")
 public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
+	
 	static {
 		register(ExprCoordinate.class, Double.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
 	}

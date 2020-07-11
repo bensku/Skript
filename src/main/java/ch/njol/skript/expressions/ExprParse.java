@@ -72,6 +72,7 @@ import ch.njol.util.NonNullPair;
 		"		give {var::1::*} to the player"})
 @Since("2.0")
 public class ExprParse extends SimpleExpression<Object> {
+	
 	static {
 		Skript.registerExpression(ExprParse.class, Object.class, ExpressionType.COMBINED,
 				"%string% parsed as (%-*classinfo%|\"<.*>\")");

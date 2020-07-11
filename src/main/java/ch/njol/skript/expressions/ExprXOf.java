@@ -46,6 +46,7 @@ import ch.njol.util.Kleenean;
 @Examples("give level of player of pickaxes to the player")
 @Since("1.2")
 public class ExprXOf extends PropertyExpression<Object, Object> {
+	
 	static {
 		Skript.registerExpression(ExprXOf.class, Object.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "%number% of %itemstacks/entitytype%");
 	}

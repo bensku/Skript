@@ -46,6 +46,7 @@ import ch.njol.util.Kleenean;
 		"		message \"<red>Please put an integer on line 1!\""})
 @Since("2.0")
 public class ExprParseError extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprParseError.class, String.class, ExpressionType.SIMPLE, "[the] [last] [parse] error");
 	}

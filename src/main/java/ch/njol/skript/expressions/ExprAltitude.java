@@ -37,6 +37,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"	set damage to damage * 1.2"})
 @Since("1.4.3")
 public class ExprAltitude extends SimplePropertyExpression<Location, Double> {
+	
 	static {
 		register(ExprAltitude.class, Double.class, "altitude[s]", "locations");
 	}

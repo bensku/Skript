@@ -50,6 +50,7 @@ import ch.njol.util.Kleenean;
 		"		damage the loop-player by 1"})
 @Since("1.4.4")
 public class ExprBiome extends PropertyExpression<Location, Biome> {
+	
 	static {
 		Skript.registerExpression(ExprBiome.class, Biome.class, ExpressionType.PROPERTY, "[the] biome (of|%direction%) %location%", "%location%'[s] biome");
 	}

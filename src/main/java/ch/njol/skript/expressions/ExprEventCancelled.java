@@ -40,6 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
  */
 @NoDoc
 public class ExprEventCancelled extends SimpleExpression<Boolean> {
+	
 	static {
 		Skript.registerExpression(ExprEventCancelled.class, Boolean.class, ExpressionType.SIMPLE, "[is] event cancelled");
 	}

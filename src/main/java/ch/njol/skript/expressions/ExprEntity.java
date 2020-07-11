@@ -54,6 +54,7 @@ import ch.njol.util.StringUtils;
 		"projectile is an arrow"})
 @Since("1.0")
 public class ExprEntity extends SimpleExpression<Entity> {
+	
 	static {
 		Skript.registerExpression(ExprEntity.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, "[the] [event-]<.+>");
 	}

@@ -20,6 +20,7 @@
 package ch.njol.skript.expressions;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -36,7 +37,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
 
 @Name("Hash")
 @Description({"Hashes the given text using the MD5 or SHA-256 algorithms. Each algorithm is suitable for different use cases.<p>",
@@ -57,13 +57,14 @@ import ch.njol.util.Kleenean;
 		"\t\t\tmessage \"Wrong password!\""})
 @Since("2.0, 2.2-dev32 (SHA-256 algorithm)")
 public class ExprHash extends PropertyExpression<String, String> {
+	
 	static {
 		Skript.registerExpression(ExprHash.class, String.class, ExpressionType.SIMPLE,
 				"%strings% hash[ed] with (0¦MD5|1¦SHA-256)");
 	}
 	
 	@SuppressWarnings("null")
-	private final static Charset UTF_8 = Charset.forName("UTF-8");
+	private final static Charset UTF_8 = StandardCharsets.UTF_8;
 	
 	@Nullable
 	static MessageDigest md5;

@@ -62,7 +62,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Events({"click", "inventory click"})
 public class ExprClicked extends SimpleExpression<Object> {
 
-	private static enum ClickableType {
+	private enum ClickableType {
 		
 		BLOCK_AND_ITEMS(1, Block.class, "clicked block/itemtype/entity", "clicked (block|%-*itemtype/entitydata%)"),
 		SLOT(2, Slot.class, "clicked slot", "clicked slot"),
@@ -116,7 +116,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 	@Nullable
 	private EntityData<?> entityType;
 	@Nullable
-	private ItemType itemType; //null results in any itemtype
+	private ItemType itemType; // null results in any itemtype
 	private ClickableType clickable = ClickableType.BLOCK_AND_ITEMS;
 	
 	@Override
@@ -179,7 +179,7 @@ public class ExprClicked extends SimpleExpression<Object> {
 						return new Block[] {block};
 					return null;
 				} else if (e instanceof PlayerInteractEntityEvent) {
-					if (entityType == null) //We're testing for the entity in this event
+					if (entityType == null) // We're testing for the entity in this event
 						return null;
 					final Entity entity = ((PlayerInteractEntityEvent) e).getRightClicked();
 					

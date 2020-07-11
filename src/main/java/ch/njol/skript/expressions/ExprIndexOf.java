@@ -43,6 +43,7 @@ import ch.njol.util.Kleenean;
 		"\tset {_s} to the first (index of \"abc\" in {_s} + 3) characters of {_s} # removes everything after the first \"abc\" from {_s}"})
 @Since("2.1")
 public class ExprIndexOf extends SimpleExpression<Integer> {
+	
 	static {
 		Skript.registerExpression(ExprIndexOf.class, Integer.class, ExpressionType.COMBINED, "[the] (0¦|0¦first|1¦last) index of %string% in %string%");
 	}

@@ -34,6 +34,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Examples("send \"You can only pick up %max stack size of player's tool% of %type of (player's tool)%\" to player")
 @Since("2.1")
 public class ExprMaxStack extends SimplePropertyExpression<ItemType, Integer> {
+	
 	static {
 		register(ExprMaxStack.class, Integer.class, "max[imum] stack[[ ]size]", "itemtype");
 	}
@@ -51,6 +52,7 @@ public class ExprMaxStack extends SimplePropertyExpression<ItemType, Integer> {
 	@SuppressWarnings("null")
 	@Override
 	public Integer convert(final ItemType i) {
-		return Integer.valueOf(i.getRandom().getMaxStackSize());
+		return i.getRandom().getMaxStackSize();
 	}
+	
 }

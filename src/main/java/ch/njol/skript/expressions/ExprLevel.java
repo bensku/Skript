@@ -48,21 +48,17 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("<i>unknown</i> (before 2.1)")
 @Events("level change")
 public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
+	
 	static {
 		register(ExprLevel.class, Integer.class, "level", "players");
 	}
 	
 	@Override
 	protected Integer[] get(final Event e, final Player[] source) {
-		return super.get(source, new Converter<Player, Integer>() {
-			@SuppressWarnings("null")
-			@Override
-			public Integer convert(final Player p) {
-				if (e instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e)) {
-					return getTime() < 0 ? ((PlayerLevelChangeEvent) e).getOldLevel() : ((PlayerLevelChangeEvent) e).getNewLevel();
-				}
-				return p.getLevel();
-			}
+		return super.get(source, p -> {
+			if (e instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e))
+				return getTime() < 0 ? ((PlayerLevelChangeEvent) e).getOldLevel() : ((PlayerLevelChangeEvent) e).getNewLevel();
+			return p.getLevel();
 		});
 	}
 	

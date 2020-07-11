@@ -41,7 +41,8 @@ import org.eclipse.jdt.annotation.Nullable;
 		"represented by [player] or [sender], and the message by [message] or [msg].")
 @Examples({"set the chat format to \"<yellow>[player]<light gray>: <green>[message]\""})
 @Since("2.2-dev31")
-public class ExprChatFormat extends SimpleExpression<String>{
+public class ExprChatFormat extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprChatFormat.class, String.class, ExpressionType.SIMPLE, "[the] (message|chat) format[ting]");
 	}

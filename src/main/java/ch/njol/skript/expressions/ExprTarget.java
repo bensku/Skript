@@ -54,6 +54,7 @@ import ch.njol.util.coll.CollectionUtils;
 			"\tsend \"You're being followed by an %entity%!\" to target of entity"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
+	
 	static {
 		Skript.registerExpression(ExprTarget.class, Entity.class, ExpressionType.PROPERTY,
 				"[the] target[[ed] %-*entitydata%] [of %livingentities%]",

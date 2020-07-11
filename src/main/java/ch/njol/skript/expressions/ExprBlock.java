@@ -56,6 +56,7 @@ import ch.njol.util.Kleenean;
 		"	clear the inventory of the block"})
 @Since("1.0")
 public class ExprBlock extends WrapperExpression<Block> {
+	
 	static {
 		Skript.registerExpression(ExprBlock.class, Block.class, ExpressionType.SIMPLE, "[the] [event-]block");
 		Skript.registerExpression(ExprBlock.class, Block.class, ExpressionType.COMBINED, "[the] block %direction% [%location%]");

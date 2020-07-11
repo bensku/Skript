@@ -45,6 +45,7 @@ import ch.njol.util.Kleenean;
 @Since("2.2-dev19")
 @Events("damage")
 public class ExprFinalDamage extends SimpleExpression<Double> {
+	
 	static {
 		Skript.registerExpression(ExprFinalDamage.class, Double.class, ExpressionType.SIMPLE, "[the] final damage");
 	}

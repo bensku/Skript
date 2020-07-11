@@ -64,7 +64,8 @@ import ch.njol.util.Kleenean;
 		"clear passengers of boat"})
 @Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
 public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create 'vehicle' and 'passenger' expressions for vehicle enter/exit events?
-	static { // It was necessary to convert to SimpleExpression due to the method 'isSingle()'.
+	
+	static { // It was necessary to convert to SimpleExpression due to the method 'isSingle()'
 		Skript.registerExpression(ExprPassenger.class, Entity.class, ExpressionType.PROPERTY, "[the] passenger[s] of %entities%", "%entities%'[s] passenger[s]");
 	}
 	
@@ -75,18 +76,14 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 	@Nullable
 	protected Entity[] get(Event e) {
 		Entity[] source = vehicle.getAll(e);
-		Converter<Entity, Entity[]> conv = new Converter<Entity, Entity[]>(){
-			@Override
-			@Nullable
-			public Entity[] convert(Entity v) {
-				if (getTime() >= 0 && e instanceof VehicleEnterEvent && v.equals(((VehicleEnterEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleEnterEvent) e).getEntered()};
-				}
-				if (getTime() >= 0 && e instanceof VehicleExitEvent && v.equals(((VehicleExitEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
-					return new Entity[] {((VehicleExitEvent) e).getExited()};
-				}
-				return PassengerUtils.getPassenger(v);
-			}};
+		Converter<Entity, Entity[]> conv = v -> {
+			if (getTime() >= 0 && e instanceof VehicleEnterEvent && v.equals(((VehicleEnterEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
+				return new Entity[] {((VehicleEnterEvent) e).getEntered()};
+			} else if (getTime() >= 0 && e instanceof VehicleExitEvent && v.equals(((VehicleExitEvent) e).getVehicle()) && !Delay.isDelayed(e)) {
+				return new Entity[] {((VehicleExitEvent) e).getExited()};
+			}
+			return PassengerUtils.getPassenger(v);
+		};
 			
 		List<Entity> entities = new ArrayList<>();
 		for (Entity v : source) {

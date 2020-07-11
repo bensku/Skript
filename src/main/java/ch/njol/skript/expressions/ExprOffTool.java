@@ -40,14 +40,10 @@ import ch.njol.skript.util.slot.Slot;
 
 @NoDoc
 public class ExprOffTool extends ExprTool {
+	
 	static {
-		if (Skript.isRunningMinecraft(1, 9)) {
-			Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
-		} else { // Don't break scripts if running older Minecraft
-			Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
-					"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
-		}
+		Skript.registerExpression(ExprOffTool.class, Slot.class, ExpressionType.PROPERTY, "[the] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon) [of %livingentities%]", "%livingentities%'[s] (off[(-| )]tool|off[(-| )][held ]item|off[(-| )]weapon)",
+			"[the] (off[ ]hand tool|off[ ] hand item|shield[ item]) [of %livingentities%]", "%livingentities%'[s] (off[ ]hand tool|off[ ] hand item|shield[ item])");
 	}
 	
 	@Override

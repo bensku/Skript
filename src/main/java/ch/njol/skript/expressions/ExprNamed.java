@@ -51,6 +51,7 @@ import ch.njol.util.Kleenean;
 		"open hopper inventory named \"Magic Hopper\" to player"})
 @Since("2.0, 2.2-dev34 (inventories)")
 public class ExprNamed extends PropertyExpression<Object, Object> {
+	
 	static {
 		Skript.registerExpression(ExprNamed.class, Object.class, ExpressionType.PROPERTY,
 				"%itemtype/inventorytype% (named|with name[s]) %string%");

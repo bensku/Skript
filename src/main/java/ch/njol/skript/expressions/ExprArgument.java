@@ -59,6 +59,7 @@ import ch.njol.util.StringUtils;
 		"heal the last argument"})
 @Since("1.0")
 public class ExprArgument extends SimpleExpression<Object> {
+	
 	static {
 		Skript.registerExpression(ExprArgument.class, Object.class, ExpressionType.SIMPLE,
 				"[the] last arg[ument][s]",

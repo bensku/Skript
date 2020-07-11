@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("2.0")
 public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 	
-	static final boolean hasMountEvents = Skript.classExists("org.spigotmc.event.entity.EntityMountEvent");
+	private static final boolean hasMountEvents = Skript.classExists("org.spigotmc.event.entity.EntityMountEvent");
 	
 	static {
 		register(ExprVehicle.class, Entity.class, "vehicle[s]", "entities");
@@ -57,26 +57,22 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 	
 	@Override
 	protected Entity[] get(final Event e, final Entity[] source) {
-		return get(source, new Converter<Entity, Entity>() {
-			@Override
-			@Nullable
-			public Entity convert(final Entity p) {
-				if (getTime() >= 0 && e instanceof VehicleEnterEvent && p.equals(((VehicleEnterEvent) e).getEntered()) && !Delay.isDelayed(e)) {
-					return ((VehicleEnterEvent) e).getVehicle();
-				}
-				if (getTime() >= 0 && e instanceof VehicleExitEvent && p.equals(((VehicleExitEvent) e).getExited()) && !Delay.isDelayed(e)) {
-					return ((VehicleExitEvent) e).getVehicle();
-				}
-				if (hasMountEvents) {
-					if (getTime() >= 0 && e instanceof EntityMountEvent && p.equals(((EntityMountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
-						return ((EntityMountEvent) e).getMount();
-					}
-					if (getTime() >= 0 && e instanceof EntityDismountEvent && p.equals(((EntityDismountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
-						return ((EntityDismountEvent) e).getDismounted();
-					}
-				}
-				return p.getVehicle();
+		return get(source, p -> {
+			if (getTime() >= 0 && e instanceof VehicleEnterEvent && p.equals(((VehicleEnterEvent) e).getEntered()) && !Delay.isDelayed(e)) {
+				return ((VehicleEnterEvent) e).getVehicle();
+			} else if (getTime() >= 0 && e instanceof VehicleExitEvent && p.equals(((VehicleExitEvent) e).getExited()) && !Delay.isDelayed(e)) {
+				return ((VehicleExitEvent) e).getVehicle();
 			}
+			
+			if (hasMountEvents) {
+				if (getTime() >= 0 && e instanceof EntityMountEvent && p.equals(((EntityMountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
+					return ((EntityMountEvent) e).getMount();
+				} else if (getTime() >= 0 && e instanceof EntityDismountEvent && p.equals(((EntityDismountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
+					return ((EntityDismountEvent) e).getDismounted();
+				}
+			}
+			
+			return p.getVehicle();
 		});
 	}
 	

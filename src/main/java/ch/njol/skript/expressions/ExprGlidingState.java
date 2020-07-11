@@ -38,8 +38,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boolean> {
 	
 	static {
-		if (Skript.isRunningMinecraft(1, 9))
-			register(ExprGlidingState.class, Boolean.class, "(gliding|glider) [state]", "entities");
+		register(ExprGlidingState.class, Boolean.class, "(gliding|glider) [state]", "entities");
 	}
 	
 	@Override

@@ -42,6 +42,7 @@ import ch.njol.skript.registrations.Converters;
 		"	message \"This is a %type of clicked entity%!\""})
 @Since("1.4")
 public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
+	
 	static {
 		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemtypes/inventories");
 	}

@@ -50,6 +50,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 			"\tset loop-block to air"})
 @Since("1.0")
 public class ExprBlockSphere extends SimpleExpression<Block> {
+	
 	static {
 		Skript.registerExpression(ExprBlockSphere.class, Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks in radius %number% [(of|around) %location%]",

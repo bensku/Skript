@@ -50,7 +50,9 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"		set {uuid::%name of player%} to uuid of player"})
 @Since("2.1.2, 2.2 (offline players' UUIDs), 2.2-dev24 (other entities' UUIDs)")
 public class ExprUUID extends SimplePropertyExpression<Object, String> {
+	
 	private final static boolean offlineUUIDSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
+	
 	static {
 		register(ExprUUID.class, String.class, "UUID", (offlineUUIDSupported ? "offlineplayers" : "players") + "/worlds/entities");
 	}

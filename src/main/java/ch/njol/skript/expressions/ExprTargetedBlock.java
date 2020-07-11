@@ -54,6 +54,7 @@ import ch.njol.util.Kleenean;
 		"\t\tset targeted block to argument"})
 @Since("1.0")
 public class ExprTargetedBlock extends PropertyExpression<Player, Block> {
+	
 	static {
 		Skript.registerExpression(ExprTargetedBlock.class, Block.class, ExpressionType.COMBINED,
 				"[the] target[ed] block[s] [of %players%]", "%players%'[s] target[ed] block[s]",

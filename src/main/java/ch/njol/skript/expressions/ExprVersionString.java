@@ -51,13 +51,13 @@ import ch.njol.util.coll.CollectionUtils;
 @RequiredPlugins("Paper 1.12.2 or newer")
 @Events("server list ping")
 public class ExprVersionString extends SimpleExpression<String> {
-
+	
+	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
+	
 	static {
 		Skript.registerExpression(ExprVersionString.class, String.class, ExpressionType.SIMPLE, "[the] [(shown|custom)] version [(string|text)]");
 	}
-
-	private static final boolean PAPER_EVENT_EXISTS = Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent");
-
+	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (ScriptLoader.isCurrentEvent(ServerListPingEvent.class)) {

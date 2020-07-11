@@ -61,8 +61,9 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 @Events({"smelt", "fuel burn"})
 public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
-	private final static int ORE = 0, FUEL = 1, RESULT = 2;
-	private final static String[] slotNames = {"ore", "fuel", "result"};
+	
+	private static final int ORE = 0, FUEL = 1, RESULT = 2;
+	private static final String[] slotNames = {"ore", "fuel", "result"};
 	
 	static {
 		Skript.registerExpression(ExprFurnaceSlot.class, Slot.class, ExpressionType.PROPERTY,
@@ -71,8 +72,8 @@ public class ExprFurnaceSlot extends PropertyExpression<Block, Slot> {
 				"%blocks%'[s] (" + ORE + "¦ore|" + FUEL + "¦fuel|" + RESULT + "¦result)[s] [slot[s]]");
 	}
 	
-	int slot;
-	boolean isEvent;
+	private int slot;
+	private boolean isEvent;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override

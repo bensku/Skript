@@ -59,6 +59,7 @@ import ch.njol.util.Kleenean;
 @Examples({"message \"There are %number of all players% players online!\""})
 @Since("1.0")
 public class ExprAmount extends SimpleExpression<Integer> {
+	
 	static {
 		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, 
 				"(amount|number|size) of %objects%",

@@ -46,6 +46,7 @@ import ch.njol.util.Kleenean;
 @Examples({"shooter is a skeleton"})
 @Since("1.3.7")
 public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
+	
 	static {
 		Skript.registerExpression(ExprShooter.class, LivingEntity.class, ExpressionType.SIMPLE, "[the] shooter [of %projectile%]");
 	}
@@ -59,15 +60,11 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	
 	@Override
 	protected LivingEntity[] get(final Event e, final Projectile[] source) {
-		return get(source, new Converter<Projectile, LivingEntity>() {
-			@Override
-			@Nullable
-			public LivingEntity convert(final Projectile p) {
-				final Object o = ProjectileUtils.getShooter(p);
-				if (o instanceof LivingEntity)
-					return (LivingEntity) o;
-				return null;
-			}
+		return get(source, p -> {
+			final Object o = ProjectileUtils.getShooter(p);
+			if (o instanceof LivingEntity)
+				return (LivingEntity) o;
+			return null;
 		});
 	}
 	

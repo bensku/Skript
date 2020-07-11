@@ -50,6 +50,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.3.5")
 @Events("damage")
 public class ExprDamage extends SimpleExpression<Double> {
+	
 	static {
 		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
 	}

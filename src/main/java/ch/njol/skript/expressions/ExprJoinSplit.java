@@ -45,6 +45,7 @@ import ch.njol.util.StringUtils;
 		"set {_s::*} to the string argument split at \",\""})
 @Since("2.1")
 public class ExprJoinSplit extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprJoinSplit.class, String.class, ExpressionType.COMBINED,
 				"(concat[enate]|join) %strings% [(with|using|by) [[the] delimiter] %-string%]",

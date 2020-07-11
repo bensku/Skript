@@ -51,6 +51,7 @@ import ch.njol.util.Kleenean;
 		"		ignite the loop-player for 5 seconds"})
 @Since("1.3.4")
 public class ExprLightLevel extends PropertyExpression<Location, Byte> {
+	
 	static {
 		Skript.registerExpression(ExprLightLevel.class, Byte.class, ExpressionType.PROPERTY, "[(1¦sky|1¦sun|2¦block)[ ]]light[ ]level [(of|%direction%) %location%]");
 	}
