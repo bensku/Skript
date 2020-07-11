@@ -45,6 +45,7 @@ import ch.njol.util.Math2;
 		"increase the argument's fly speed by 0.1"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
+	
 	static {
 		register(ExprSpeed.class, Number.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
 	}
@@ -110,7 +111,7 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public Class<Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 	
