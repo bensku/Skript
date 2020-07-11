@@ -27,7 +27,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
@@ -37,18 +37,19 @@ import org.bukkit.event.Event;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-@Name("Explode With Fire")
-@Description("Sets if an entity will explode with fire. Use \"make the explosion fiery\" in explosion prime events.")
-@Examples({"on explosion prime:", 
-	"\tmake the explosion fiery"})
+@Name("Make Incendiary")
+@Description("Sets if an entity's explosion will leave behind fire. This effect is also usable in an explosion prime event.")
+@Examples({"on explosion prime:",
+			"\tmake the explosion fiery"})
 @Since("INSERT VERSION")
-public class EffExplodeWithFire extends Effect {
+public class EffIncendiary extends Effect {
 
 	static {
-		Skript.registerEffect(EffExplodeWithFire.class,
-				"make %entities%'[s] explosion [(1¦not)] (fiery|incendiary)",
-				"make %entities% [(1¦not)] cause (a fiery|an incendiary explosion)",
-				"make the [event(-| )]explosion [(1¦not)] fiery");
+		Skript.registerEffect(EffIncendiary.class,
+				"make %entities% [(1¦not)] incendiary",
+				"make %entities%'[s] explosion [(1¦not)] (incendiary|fiery)",
+				"make [the] [event(-| )]explosion [(1¦not)] (incendiary|fiery)"
+		);
 	}
 
 	@SuppressWarnings("null")
@@ -60,13 +61,13 @@ public class EffExplodeWithFire extends Effect {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
 		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
-			Skript.error("Making the explosion fiery is only usable in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("Making 'the explosion' fiery is only usable in an explosion prime event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		if (matchedPattern < 2)
+		if (!isEvent)
 			entities = (Expression<Entity>) exprs[0];
 		causeFire = parseResult.mark != 1;
 		return true;
@@ -87,7 +88,7 @@ public class EffExplodeWithFire extends Effect {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		if (isEvent)
-			return "make the explosion " + (causeFire == true ? "" : "not") + " fiery (ExplosionPrimeEvent)";
-		return "make " + entities.toString(e, debug) + (causeFire == true ? "" : " not") + " explode with fire";
+			return "make the event-explosion " + (causeFire == true ? "" : "not") + " fiery";
+		return "make " + entities.toString(e, debug) + (causeFire == true ? "" : " not") + " incendiary";
 	}
 }

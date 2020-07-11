@@ -19,12 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Explosive;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -37,19 +31,26 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
-@Name("Explodes With Fire")
-@Description("Checks if an entity will create fire if it explodes.")
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Explosive;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+@Name("Is Incendiary")
+@Description("Checks if an entity will create fire when it explodes. This condition is also usable in an explosion prime event.")
 @Examples({"on explosion prime:", 
-			"\tif the event-explosion is fiery:",
+			"\tif the explosion is fiery:",
 			"\t\tbroadcast \"A fiery explosive has been ignited!\""})
 @Since("INSERT VERSION")
-public class CondExplodesWithFire extends Condition {
+public class CondIncendiary extends Condition {
 
 	static {
-		Skript.registerCondition(CondExplodesWithFire.class,
-				"%entities% [(1¦((does|do) not|(doesn't|don't)))] explode[s] with fire",
-				"%entities% [(1¦((does|do) not|(doesn't|don't)))] cause[s] (a fiery|an incendiary explosion)",
-				"the [event(-| )]explosion (is|1¦(is not|isn't)) fiery");
+		Skript.registerCondition(CondIncendiary.class,
+				"%entities% ((is|are) incendiary|cause an (incendiary|fiery) explosion)",
+				"%entities% ((is not|are not|isn't|aren't) incendiary|(does not|do not|doesn't|don't) cause[s] an (incendiary|fiery) explosion)",
+				"the [event(-| )]explosion (is|1¦(is not|isn't)) (incendiary|fiery)"
+		);
 	}
 
 	@SuppressWarnings("null")
@@ -62,27 +63,29 @@ public class CondExplodesWithFire extends Condition {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
 		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
-			Skript.error("Checking if the event explosion is fiery is only possible in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("Checking if 'the explosion' is fiery is only possible in an explosion prime event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		if (matchedPattern < 2)
+		if (!isEvent)
 			entities = (Expression<Entity>) exprs[0];
-		setNegated(parseResult.mark == 1);
+		setNegated(matchedPattern == 1 || parseResult.mark == 1);
 		return true;
 	}
 
 	@Override
 	public boolean check(Event e) {
-		if (isEvent) {
+		if (isEvent)
 			return ((ExplosionPrimeEvent) e).getFire() ^ isNegated();
-		}
 		return entities.check(e, entity -> entity instanceof Explosive && ((Explosive) entity).isIncendiary(), isNegated());
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		if (isEvent)
-			return "the event-explosion " + (isNegated() == false ? "" : "is not") + " fiery (ExplosionPrimeEvent)";
-		return entities.toString(e, debug) + (isNegated() == false ? "" : " do not") + " explode with fire";
+			return "the event-explosion " + (isNegated() == false ? "is" : "is not") + " incendiary";
+		if (entities.isSingle())
+			return entities.toString(e, debug) + (isNegated() == false ? " is" : " is not") + " incendiary";
+		return entities.toString(e, debug) + (isNegated() == false ? " are" : " are not") + " incendiary";
 	}
+
 }
