@@ -43,6 +43,7 @@ import ch.njol.util.Kleenean;
 		"\tmessage \"You're very close to your home!\""})
 @Since("1.0")
 public class ExprDistance extends SimpleExpression<Number> {
+	
 	static {
 		Skript.registerExpression(ExprDistance.class, Number.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
 	}
