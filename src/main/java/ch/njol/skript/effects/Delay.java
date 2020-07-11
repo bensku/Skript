@@ -53,6 +53,7 @@ import ch.njol.util.Kleenean;
 		"wait a tick"})
 @Since("1.4")
 public class Delay extends Effect {
+	
 	static {
 		Skript.registerEffect(Delay.class, "(wait|halt) [for] %timespan%");
 	}

@@ -49,6 +49,7 @@ public class EffPvP extends Effect {
 	
 	@SuppressWarnings("null")
 	private Expression<World> worlds;
+	
 	private boolean enable;
 	
 	@SuppressWarnings({"unchecked", "null"})

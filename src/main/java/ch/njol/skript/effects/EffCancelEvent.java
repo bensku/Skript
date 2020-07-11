@@ -54,6 +54,7 @@ import ch.njol.util.Kleenean;
 		"	cancel the event"})
 @Since("1.0")
 public class EffCancelEvent extends Effect {
+	
 	static {
 		Skript.registerEffect(EffCancelEvent.class, "cancel [the] event", "uncancel [the] event");
 	}

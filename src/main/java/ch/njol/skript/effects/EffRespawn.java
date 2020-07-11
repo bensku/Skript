@@ -49,6 +49,7 @@ public class EffRespawn extends Effect {
 
 	@SuppressWarnings("null")
 	private Expression<Player> players;
+	
 	private boolean hasDelay;
 
 	@SuppressWarnings({"unchecked", "null"})

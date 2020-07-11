@@ -58,6 +58,7 @@ import ch.njol.util.Kleenean;
 		"equip player with all diamond armor"})
 @Since("1.0")
 public class EffEquip extends Effect implements Testable {
+	
 	static {
 		Skript.registerEffect(EffEquip.class,
 				"equip [%livingentity%] with %itemtypes%",
@@ -66,6 +67,7 @@ public class EffEquip extends Effect implements Testable {
 	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
+	
 	@SuppressWarnings("null")
 	private Expression<ItemType> types;
 	

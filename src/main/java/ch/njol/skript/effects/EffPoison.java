@@ -46,6 +46,7 @@ import ch.njol.util.Kleenean;
 		"cure the player from poison"})
 @Since("1.3.2")
 public class EffPoison extends Effect {
+	
 	static {
 		Skript.registerEffect(EffPoison.class,
 				"poison %livingentities% [for %-timespan%]",
@@ -56,6 +57,7 @@ public class EffPoison extends Effect {
 	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entites;
+	
 	@Nullable
 	private Expression<Timespan> duration;
 	

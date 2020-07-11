@@ -53,6 +53,7 @@ public class EffScriptFile extends Effect {
 	private static final int ENABLE = 1, RELOAD = 2, DISABLE = 3;
 	
 	private int mark;
+	
 	@Nullable
 	private Expression<String> fileName;
 	

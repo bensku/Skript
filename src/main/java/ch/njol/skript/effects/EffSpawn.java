@@ -46,6 +46,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 		"spawn a ghast 5 meters above the player"})
 @Since("1.0")
 public class EffSpawn extends Effect {
+	
 	static {
 		Skript.registerEffect(EffSpawn.class,
 				"(spawn|summon) %entitytypes% [%directions% %locations%]",

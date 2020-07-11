@@ -47,6 +47,7 @@ import ch.njol.util.Kleenean;
 		"disenchant the player's tool"})
 @Since("2.0")
 public class EffEnchant extends Effect {
+	
 	static {
 		Skript.registerEffect(EffEnchant.class,
 				"enchant %~itemtypes% with %enchantmenttypes%",
@@ -55,6 +56,7 @@ public class EffEnchant extends Effect {
 	
 	@SuppressWarnings("null")
 	private Expression<ItemType> item;
+	
 	@Nullable
 	private Expression<EnchantmentType> enchs;
 	

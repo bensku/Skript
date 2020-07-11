@@ -40,9 +40,7 @@ import ch.njol.util.Kleenean;
 @Since("2.3")
 public class EffConnect extends Effect {
 
-	public static final String BUNGEE_CHANNEL = "BungeeCord";
-	public static final String GET_SERVERS_CHANNEL = "GetServers";
-	public static final String CONNECT_CHANNEL = "Connect";
+	public static final String BUNGEE_CHANNEL = "BungeeCord", CONNECT_CHANNEL = "Connect", GET_SERVERS_CHANNEL = "GetServers";
 
 	static {
 		Skript.registerEffect(EffConnect.class,

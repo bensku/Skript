@@ -44,12 +44,14 @@ import ch.njol.util.Kleenean;
 		"broadcast \"Woah! It's a message!\""})
 @Since("1.0")
 public class EffBroadcast extends Effect {
+	
 	static {
 		Skript.registerEffect(EffBroadcast.class, "broadcast %strings% [(to|in) %-worlds%]");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<String> messages;
+	
 	@Nullable
 	private Expression<World> worlds;
 	

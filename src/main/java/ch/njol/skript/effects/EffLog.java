@@ -55,6 +55,7 @@ import ch.njol.util.Kleenean;
 		"	log \"%player% placed TNT in %world% at %location of block%\" to \"tnt/placement.log\""})
 @Since("2.0")
 public class EffLog extends Effect {
+	
 	static {
 		Skript.registerEffect(EffLog.class, "log %strings% [(to|in) [file[s]] %-strings%]");
 	}
@@ -63,11 +64,9 @@ public class EffLog extends Effect {
 	
 	final static HashMap<String, PrintWriter> writers = new HashMap<>();
 	static {
-		Skript.closeOnDisable(new Closeable() {
-			@Override
-			public void close() {
-				for (final PrintWriter pw : writers.values())
-					pw.close();
+		Skript.closeOnDisable(() -> {
+			for (final PrintWriter pw : writers.values()) {
+				pw.close();
 			}
 		});
 	}

@@ -47,6 +47,7 @@ import ch.njol.util.Kleenean;
 		"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
 @Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect)")
 public class EffPotion extends Effect {
+	
 	static {
 		Skript.registerEffect(EffPotion.class,
 				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
@@ -67,6 +68,7 @@ public class EffPotion extends Effect {
 	private Expression<LivingEntity> entities;
 	@Nullable
 	private Expression<Timespan> duration;
+	
 	private boolean apply;
 	private boolean ambient; // Ambient means less particles
 	private boolean particles; // Particles or no particles?

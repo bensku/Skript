@@ -48,6 +48,7 @@ import ch.njol.util.Kleenean;
 		"show mob spawner flames at the targeted block to the player"})
 @Since("2.1")
 public class EffVisualEffect extends Effect {
+	
 	static {
 		Skript.registerEffect(EffVisualEffect.class, "(play|show) %visualeffects% (on|%directions%) %entities/locations% [(to %-players%|in (radius|range) of %number%)]",
 				"(play|show) %number% %visualeffects% (on|%directions%) %locations% [(to %-players%|in (radius|range) of %number%)]");

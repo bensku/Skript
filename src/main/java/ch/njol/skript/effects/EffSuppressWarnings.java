@@ -42,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 			"suppress the variable save warnings"})
 @Since("2.3")
 public class EffSuppressWarnings extends Effect {
+	
 	static {
 		Skript.registerEffect(EffSuppressWarnings.class, "[local[ly]] suppress [the] (1¦conflict|2¦variable save|3¦[missing] conjunction[s]|4¦starting [with] expression[s]) warning[s]");
 	}

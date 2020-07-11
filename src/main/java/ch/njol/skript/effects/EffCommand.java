@@ -45,6 +45,7 @@ import ch.njol.util.Kleenean;
 		"execute console command \"/say Hello everyone!\""})
 @Since("1.0")
 public class EffCommand extends Effect {
+	
 	static {
 		Skript.registerEffect(EffCommand.class,
 				"[execute] [the] command %strings% [by %-commandsenders%]",

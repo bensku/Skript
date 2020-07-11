@@ -44,6 +44,7 @@ import ch.njol.util.Kleenean;
 		"make the attacker ride the victim"})
 @Since("2.0")
 public class EffVehicle extends Effect {
+	
 	static {
 		Skript.registerEffect(EffVehicle.class,
 				"(make|let|force) %entities% [to] (ride|mount) [(in|on)] %"+ (PassengerUtils.hasMultiplePassenger() ? "entities" : "entity") +"/entitydatas%",

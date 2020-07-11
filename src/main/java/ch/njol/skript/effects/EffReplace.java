@@ -55,6 +55,7 @@ import ch.njol.util.StringUtils;
 		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
 @Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), 2.5 (replace first, case sensitivity)")
 public class EffReplace extends Effect {
+	
 	static {
 		Skript.registerEffect(EffReplace.class,
 				"replace (all|every|) %strings% in %strings% with %string% [(1¦with case sensitivity)]",
@@ -70,6 +71,7 @@ public class EffReplace extends Effect {
 	private boolean replaceString = true;
 	private boolean replaceFirst = false;
 	private boolean caseSensitive = false;
+	
 	@SuppressWarnings({"null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
