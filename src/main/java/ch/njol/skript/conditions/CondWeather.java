@@ -54,6 +54,7 @@ public class CondWeather extends Condition {
 	
 	@SuppressWarnings("null")
 	private Expression<WeatherType> weathers;
+	
 	@SuppressWarnings("null")
 	private Expression<World> worlds;
 	
@@ -74,8 +75,7 @@ public class CondWeather extends Condition {
 			} else {
 				weatherType = WeatherType.fromWorld(w);
 			}
-			return weathers.check(e,
-					expectedType -> expectedType == weatherType);
+			return weathers.check(e, expectedType -> expectedType == weatherType);
 		}, isNegated());
 	}
 	
