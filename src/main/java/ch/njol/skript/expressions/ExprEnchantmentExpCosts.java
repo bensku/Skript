@@ -40,6 +40,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -106,9 +107,9 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
 			return null;
-		return CollectionUtils.array(Number.class);
+		return CollectionUtils.array(Number.class, Experience.class);
 	}
 
 	@SuppressWarnings("null")
@@ -116,7 +117,8 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (delta == null)
 			return;
-		int cost = ((Number) delta[0]).intValue();
+		Object c = delta[0];
+		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
 		if (cost < 1) 
 			return;
 		int offer = 0;

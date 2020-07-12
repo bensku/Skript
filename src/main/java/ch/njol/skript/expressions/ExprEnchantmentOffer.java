@@ -22,6 +22,7 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
@@ -42,6 +43,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -67,6 +69,9 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	private Expression<Number> exprOfferNumber;
 
 	private boolean all;
+
+	// Used for getCost()
+	private final Random rand = new Random();
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
@@ -114,35 +119,54 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.DELETE)
-			return CollectionUtils.array(EnchantmentOffer.class);
+		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
+			return CollectionUtils.array(EnchantmentType.class);
 		return null;
 	}
 
 	@SuppressWarnings("null")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		List<Number> offerNumbers = new ArrayList<>();
-		if (exprOfferNumber != null) {
-			if (exprOfferNumber.isSingle())
-				offerNumbers.add(exprOfferNumber.getSingle(e));
-			else
-				offerNumbers.addAll(Arrays.asList(exprOfferNumber.getArray(e)));
-		}
-		if (e instanceof PrepareItemEnchantEvent) {
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null && mode != ChangeMode.DELETE)
+			return;
+		EnchantmentType et = mode != ChangeMode.DELETE ? (EnchantmentType) delta[0] : null;
+		if (event instanceof PrepareItemEnchantEvent) {
+			PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
 			switch (mode) {
-				case DELETE:
+				case SET:
 					if (all) {
-						Arrays.fill(((PrepareItemEnchantEvent) e).getOffers(), null);
+						for (int i = 0; i <= 2; i++) {
+							EnchantmentOffer eo = e.getOffers()[i];
+							if (eo == null) {
+								eo = new EnchantmentOffer(et.getType(), et.getLevel(), getCost(i + 1, e.getEnchantmentBonus()));
+								e.getOffers()[i] = eo;
+							} else {
+								eo.setEnchantment(et.getType());
+								eo.setEnchantmentLevel(et.getLevel());
+							}
+						}
 					} else {
-						int i;
-						for (Number n : offerNumbers) {
-							i = n.intValue();
-							((PrepareItemEnchantEvent) e).getOffers()[i - 1] = null;
+						for (Number n : exprOfferNumber.getArray(e)) {
+							int slot = n.intValue() - 1;
+							EnchantmentOffer eo = e.getOffers()[slot];
+							if (eo == null) {
+								eo = new EnchantmentOffer(et.getType(), et.getLevel(), getCost(slot + 1, e.getEnchantmentBonus()));
+								e.getOffers()[slot] = eo;
+							} else {
+								eo.setEnchantment(et.getType());
+								eo.setEnchantmentLevel(et.getLevel());
+							}
 						}
 					}
 					break;
-				case SET:
+				case DELETE:
+					if (all) {
+						Arrays.fill(e.getOffers(), null);
+					} else {
+						for (Number n : exprOfferNumber.getArray(e))
+							e.getOffers()[n.intValue() - 1] = null;
+					}
+					break;
 				case ADD:
 				case REMOVE:
 				case RESET:
@@ -165,6 +189,23 @@ public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return all ? "the enchantment offers" : "enchantment offer(s) " + exprOfferNumber.toString(e, debug);
+	}
+
+	/**
+	 * Returns an enchantment cost from an enchantment button and number of bookshelves.
+	 * @param slot The enchantment button slot (1, 2, or 3).
+	 * @param bookshelves The number of bookshelves around the enchantment table.
+	 * @return A cost for that enchantment button with the number of bookshelves, or 1 if 'slot' is not an integer from 1 to 3.
+	 */
+	public int getCost(int slot, int bookshelves) {
+		// (from 1 to 8) + floor(bookshelves / 2) + (from 0 to bookshelves)
+		int base = (int) ((rand.nextInt(7) + 1) + Math.floor(bookshelves / 2) + (rand.nextInt(bookshelves + 1)));
+		switch (slot) {
+			case 1: return Math.max(base / 3, 1);
+			case 2: return (base * 2) / 3 + 1;
+			case 3: return Math.max(base, bookshelves * 2);
+			default: return 1;
+		}
 	}
 
 }

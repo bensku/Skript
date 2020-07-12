@@ -36,6 +36,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -73,14 +74,15 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
 			return null;
-		return CollectionUtils.array(Number.class);
+		return CollectionUtils.array(Number.class, Experience.class);
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
-		int cost = ((Number) delta[0]).intValue();
+		Object c = delta[0];
+		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
 		EnchantItemEvent e = (EnchantItemEvent) event;
 		switch (mode) {
 			case SET:

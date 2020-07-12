@@ -31,6 +31,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.util.Experience;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Enchantment Offer Enchantment Cost")
@@ -58,7 +59,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
-		return CollectionUtils.array(Number.class);
+		return CollectionUtils.array(Number.class, Experience.class);
 	}
 
 	@Override
@@ -66,7 +67,8 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 		EnchantmentOffer[] offers = getExpr().getArray(event);
 		if (offers.length == 0 || delta == null)
 			return;
-		int cost = ((Number) delta[0]).intValue();
+		Object c = delta[0];
+		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
 		if (cost < 1) 
 			return;
 		int change;
