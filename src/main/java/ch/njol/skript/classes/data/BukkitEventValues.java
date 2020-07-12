@@ -51,6 +51,8 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -1050,5 +1052,49 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
+		//PrepareItemEnchantEvent
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Player.class, new Getter<Player, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Player get(PrepareItemEnchantEvent e) {
+				return e.getEnchanter();
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(PrepareItemEnchantEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Block.class, new Getter<Block, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Block get(PrepareItemEnchantEvent e) {
+				return e.getEnchantBlock();
+			}
+		}, 0);
+		//EnchantItemEvent
+		EventValues.registerEventValue(EnchantItemEvent.class, Player.class, new Getter<Player, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public Player get(EnchantItemEvent e) {
+				return e.getEnchanter();
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, ItemType.class, new Getter<ItemType, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(EnchantItemEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, Block.class, new Getter<Block, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public Block get(EnchantItemEvent e) {
+				return e.getEnchantBlock();
+			}
+		}, 0);
 	}
 }
