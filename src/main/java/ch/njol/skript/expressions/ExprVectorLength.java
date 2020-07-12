@@ -49,7 +49,7 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 
 	@Override
 	@SuppressWarnings({"unused", "null"})
-	public Double convert(Vector vector) {
+	public Number convert(Vector vector) {
 		return vector.length();
 	}
 
@@ -97,8 +97,8 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 	}
 
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 }
