@@ -44,20 +44,21 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"set the last spawned entity's max health to 1000"})
 @Since("2.0")
 @Events({"damage", "death"})
-public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Double> {
+public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Number> {
+	
 	static {
-		register(ExprMaxHealth.class, Double.class, "max[imum] health", "livingentities");
+		register(ExprMaxHealth.class, Number.class, "max[imum] health", "livingentities");
 	}
 	
 	@SuppressWarnings("null")
 	@Override
-	public Double convert(final LivingEntity e) {
+	public Number convert(final LivingEntity e) {
 		return HealthUtils.getMaxHealth(e);
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

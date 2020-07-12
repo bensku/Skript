@@ -30,14 +30,14 @@ import org.bukkit.block.Block;
 @Description("Temperature at given block.")
 @Examples("message \"%temperature of the targeted block%\"")
 @Since("2.2-dev35")
-public class ExprTemperature extends SimplePropertyExpression<Block, Double> {
+public class ExprTemperature extends SimplePropertyExpression<Block, Number> {
 
     static {
-        register(ExprTemperature.class, Double.class, "temperature[s]", "blocks");
+        register(ExprTemperature.class, Number.class, "temperature[s]", "blocks");
     }
 
     @Override
-    public Double convert(Block block) {
+    public Number convert(Block block) {
         return block.getTemperature();
     }
 
@@ -47,8 +47,8 @@ public class ExprTemperature extends SimplePropertyExpression<Block, Double> {
     }
 
     @Override
-    public Class<? extends Double> getReturnType() {
-        return Double.class;
+    public Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
 }
