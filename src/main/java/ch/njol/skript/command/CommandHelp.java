@@ -19,7 +19,8 @@
  */
 package ch.njol.skript.command;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RESET;
 
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;

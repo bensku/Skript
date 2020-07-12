@@ -30,7 +30,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 @Name("Starts/Ends With")

@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 

@@ -19,10 +19,8 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;

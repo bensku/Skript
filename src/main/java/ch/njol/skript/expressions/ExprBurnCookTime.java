@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.Event;

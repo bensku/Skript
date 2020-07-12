@@ -30,7 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.BlockInventoryHolder;
