@@ -42,6 +42,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -1718,6 +1719,37 @@ public class BukkitClasses {
 						}
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
+		}
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+				.user("enchant[ment][ ]offers?")
+				.name("Enchantment Offer")
+				.description("The enchantmentoffer in an enchant prepare event.")
+				.examples("on enchant prepare:",
+					"\tset enchant offer 1 to sharpness 1",
+					"\tset the cost of enchant offer 1 to 10 levels")
+				.since("INSERT VERSION")
+				.parser(new Parser<EnchantmentOffer>() {
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(EnchantmentOffer eo, int flags) {
+						return EnchantmentType.toString(eo.getEnchantment(), flags) + " " + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String toVariableNameString(EnchantmentOffer eo) {
+						return "offer:" + EnchantmentType.toString(eo.getEnchantment()) + "=" + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				}));
 		}
 	}
 
