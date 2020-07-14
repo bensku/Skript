@@ -64,9 +64,11 @@ public class ExprRepeated extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	protected String[] get(Event e) {
 		String string = text.getSingle(e);
-		Integer number = times.getSingle(e).intValue();
-		assert string != null && number != null;
-		if (number < 1) return null;
+		Long num = times.getSingle(e);
+		if(string == null || num == null) return null;
+		Integer number = num.intValue();
+		if (number < 0) return null;
+		else if (number == 0) return new String[]{""};
 		StringBuilder builder = new StringBuilder();
 		for (int x = 0; x < number; x++) {
 			builder.append(string);
