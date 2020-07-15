@@ -71,14 +71,16 @@ public class ExprRepeated extends SimpleExpression<String> {
 		Integer number = num.intValue();
 		if (number < 0) return null;
 		else if (number == 0) return new String[]{""};
-		String[] result = new String[number];
-		Arrays.fill(result, string);
-		return result;
+		StringBuilder builder = new StringBuilder();
+		for(int x = 0; x < number; x++){
+			builder.append(string);
+		}
+		return new String[]{builder.toString()};
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return false;
+		return true;
 	}
 	
 	@Override
