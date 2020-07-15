@@ -41,16 +41,16 @@ import java.lang.reflect.Array;
 
 @Name("Ternary")
 @Description("A shorthand expression for returning something based on a condition.")
-@Examples({"set {points} to 500 if {admin::%player's uuid%} is set else 100"})
+@Examples({"set {points} to 500 if {admin::%player's uuid%} is set else 100", "set {points} to (player's name = \"Notch\") ? 500 : 100"})
 @Since("2.2-dev36")
 @SuppressWarnings("null")
 public class ExprTernary<T> extends SimpleExpression<T> {
-
+	
 	static {
 		Skript.registerExpression(ExprTernary.class, Object.class, ExpressionType.COMBINED,
-				"%objects% if <.+>[,] (otherwise|else) %objects%");
+			"%objects% if <.+>[,] (otherwise|else) %objects%", "<.+> ? %objects% : %objects%");
 	}
-
+	
 	private final ExprTernary<?> source;
 	private final Class<T> superType;
 	@Nullable
@@ -59,12 +59,12 @@ public class ExprTernary<T> extends SimpleExpression<T> {
 	private Condition condition;
 	@Nullable
 	private Expression<Object> ifFalse;
-
+	
 	@SuppressWarnings("unchecked")
 	public ExprTernary() {
 		this(null, (Class<? extends T>) Object.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private ExprTernary(ExprTernary<?> source, Class<? extends T>... types) {
 		this.source = source;
@@ -75,7 +75,7 @@ public class ExprTernary<T> extends SimpleExpression<T> {
 		}
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -89,7 +89,7 @@ public class ExprTernary<T> extends SimpleExpression<T> {
 		condition = Condition.parse(cond, "Can't understand this condition: " + cond);
 		return condition != null && LiteralUtils.canInitSafely(ifTrue, ifFalse);
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	protected T[] get(Event e) {
@@ -100,30 +100,30 @@ public class ExprTernary<T> extends SimpleExpression<T> {
 			return (T[]) Array.newInstance(superType, 0);
 		}
 	}
-
+	
 	@Override
 	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		return new ExprTernary<>(this, to);
 	}
-
+	
 	@Override
 	public Expression<?> getSource() {
 		return source == null ? this : source;
 	}
-
+	
 	@Override
 	public Class<? extends T> getReturnType() {
 		return superType;
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return ifTrue.isSingle() && ifFalse.isSingle();
 	}
-
+	
 	@Override
 	public String toString(Event e, boolean debug) {
 		return ifTrue.toString(e, debug) + " if " + condition + " otherwise " + ifFalse.toString(e, debug);
 	}
-
+	
 }
