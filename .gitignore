@@ -38,6 +38,9 @@ out/
 .idea/**/markdown-navigator.xml
 .idea/**/markdown-navigator
 
+#IntelliJ: Discord Status Extension
+.idea/discord.xml
+
 
 # ===== OTHER =====
 

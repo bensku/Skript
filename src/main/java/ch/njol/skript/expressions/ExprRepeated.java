@@ -1,23 +1,25 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
+
+import java.util.Arrays;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -65,20 +67,18 @@ public class ExprRepeated extends SimpleExpression<String> {
 	protected String[] get(Event e) {
 		String string = text.getSingle(e);
 		Long num = times.getSingle(e);
-		if(string == null || num == null) return null;
+		if (string == null || num == null) return null;
 		Integer number = num.intValue();
 		if (number < 0) return null;
 		else if (number == 0) return new String[]{""};
-		StringBuilder builder = new StringBuilder();
-		for (int x = 0; x < number; x++) {
-			builder.append(string);
-		}
-		return new String[]{builder.toString()};
+		String[] result = new String[number];
+		Arrays.fill(result, string);
+		return result;
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return true;
+		return false;
 	}
 	
 	@Override
