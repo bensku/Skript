@@ -22,7 +22,6 @@ package ch.njol.skript.util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,6 +38,8 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
+
+import net.md_5.bungee.api.ChatColor;
 
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
@@ -483,6 +483,7 @@ public abstract class Utils {
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
+	public final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -526,9 +527,15 @@ public abstract class Utils {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
-				final String f = chat.get(m.group(1).toLowerCase());
+				final String tag = m.group(1).toLowerCase();
+				final String f = chat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
+				}
 				return "" + m.group();
 			}
 		});
@@ -553,15 +560,39 @@ public abstract class Utils {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
 				if (color != null)
 					return color.getFormattedChat();
-				final String f = englishChat.get(m.group(1).toLowerCase());
+				final String tag = m.group(1).toLowerCase();
+				final String f = englishChat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
+				}
 				return "" + m.group();
 			}
 		});
 		assert m != null;
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
+	}
+	
+	/**
+	 * Tries to get a {@link ChatColor} from the given string.
+	 * @param hex The hex code to parse.
+	 * @return The ChatColor, or null if it couldn't be parsed.
+	 */
+	@SuppressWarnings("null")
+	@Nullable
+	public static ChatColor parseHexColor(String hex) {
+		hex = hex.replace("#", "");
+		if (hex.length() < 6)
+			return null;
+		try {
+			return ChatColor.of('#' + hex.substring(0, 6));
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 	
 	/**

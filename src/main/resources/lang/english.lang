@@ -145,6 +145,7 @@ updater:
 	not started: Skript has not yet checked for the latest version. Use <gold>/skript update check<reset> to do so.
 	checking: Checking for the latest version of Skript...
 	check in progress: Checking for a new version is currently in progress.
+	updater disabled: The updater is disabled, so a check for the latest version of Skript was not performed.
 	check error: <red>There was an error checking for the latest version of Skript:<light red> %s
 	running latest version: You're currently running the latest stable version of Skript.
 	running latest version (beta): You're currently running a <i>beta<r> version of Skript, and no new <i>stable<r> version is available. Please note that you have to update to newer beta versions manually!
@@ -154,7 +155,7 @@ updater:
 	download error: <red>There was an error downloading the latest version of Skript:<light red> %s
 	downloaded: The latest version of Skript has been downloaded! Restart the server or use /reload to apply the changes.
 	internal error: An internal error occurred while checking for the latest version of Skript. Please refer to the server log for details.
-	custom version: You're currently running custom Skript version. No updates will be automatically installed.
+	custom version: You're currently running a custom Skript version. No updates will be automatically installed.
 
 # -- Commands --
 commands:
@@ -251,6 +252,8 @@ enchantments:
 		multishot: Multishot, Multi-Shot
 		piercing: Piercing
 		quick_charge: Quick Charge
+		# new 1.16 Enchantment
+		soul_speed: Soul Speed
 
 # -- Potion Effects --
 potions:
@@ -378,6 +381,15 @@ biomes:
 	deep_lukewarm_ocean: deep lukewarm ocean
 	deep_cold_ocean: deep cold ocean
 	deep_frozen_ocean: deep frozen ocean
+	# 1.14 biomes
+	bamboo_jungle: bamboo jungle
+	bamboo_jungle_hills: bamboo jungle hills
+	# 1.16 biomes
+	nether_wastes: nether wastes, nether, hell
+	crimson_forest: crimson forest
+	soul_sand_valley: soul sand valley
+	warped_forest: warped forest
+	basalt_deltas: basalt deltas
 
 # -- Tree Types --
 tree types:
@@ -775,8 +787,8 @@ entities:
 		name: non-op¦s
 		pattern: non(-| |)op(|1¦s)
 	zombie pigman:
-		name: zombie pig¦man¦men
-		pattern: <age> zombie pigm(an|1¦en)|(4¦)zombie pigletboy(|1¦s)
+		name: (zombie pig¦man¦men|zombified piglin)
+		pattern: <age> (zombie pigm(an|1¦en)|zombified piglin(|1¦s))|(4¦)(zombie pigletboy(|1¦s)|zombified piglin (kid(|1¦s)|child(|1¦ren)))
 	sheep:
 		name: sheep
 		# while sheep is ambiguous, sheeps is plural (even though it's wrong)
@@ -912,11 +924,11 @@ entities:
 		not a block error: Falling blocks must be blocks, not items
 	thrown potion:
 		name: thrown potion¦s
-		pattern: thrown (potion(|1¦s)|(¦2)%-itemtypes%)
+		pattern: thrown (potion(|1¦s)|(2¦)%-itemtypes%)
 		adjective: thrown
 	dropped item:
 		name: dropped item¦s
-		pattern: dropped (item(|1¦s)|(¦2)%-itemtypes%)|item entit(y|1¦ies)
+		pattern: dropped (item(|1¦s)|(2¦)%-itemtypes%)|item entit(y|1¦ies)
 		adjective: dropped
 	horse:
 		name: horse¦s
@@ -1178,6 +1190,19 @@ entities:
 	angry nectar bee:
 		name: angry nectar bee¦s
 		pattern: <age> angry bee(|1¦s) with nectar
+	#1.16 entities
+	piglin:
+		name: piglin¦s
+		pattern: <age> piglin(|1¦s)|(4¦)piglin (kid(|1¦s)|child(|1¦ren))
+	hoglin:
+		name: hoglin¦s
+		pattern: <age> hoglin(|1¦s)|(4¦)hoglin (kid(|1¦s)|child(|1¦ren))
+	zoglin:
+		name: zoglin¦s
+		pattern: <age> zoglin(|1¦s)|(4¦)zoglin (kid(|1¦s)|child(|1¦ren))
+	strider:
+		name: strider¦s
+		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
 
 # -- Cat Types --
 cat types:
@@ -1503,6 +1528,37 @@ visual effects:
 	falling_nectar:
 		name: falling nectar @-
 		pattern: falling nectar
+	# 1.16 particles
+	ash:
+		name: ash @-
+		pattern: ash
+	crimson_spore:
+		name: crimson spore @-
+		pattern: crimson spore
+	soul_fire_flame:
+		name: soul fire flame @-
+		pattern: soul fire flame
+	warped_spore:
+		name: warped spore @-
+		pattern: warped spore
+	dripping_obsidian_tear:
+		name: dripping obsidian tear @-
+		pattern: dripping obsidian tear
+	falling_obsidian_tear:
+		name: falling obsidian tear @-
+		pattern: falling obsidian tear
+	landing_obsidian_tear:
+		name: landing obsidian tear @-
+		pattern: landing obsidian tear
+	soul:
+		name: soul @-
+		pattern: soul
+	reverse_portal:
+		name: reverse portal @-
+		pattern: reverse portal
+	white_ash:
+		name: white ash @-
+		pattern: white ash
 
 # -- Inventory Actions --
 inventory actions:

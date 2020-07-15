@@ -55,14 +55,14 @@ import ch.njol.util.Math2;
 		"\tcancel event"})
 @Since("2.0")
 @Events("level change")
-public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
+public class ExprLevelProgress extends SimplePropertyExpression<Player, Number> {
 	
 	static {
-		register(ExprLevelProgress.class, Float.class, "level progress", "players");
+		register(ExprLevelProgress.class, Number.class, "level progress", "players");
 	}
 	
 	@Override
-	public Float convert(final Player p) {
+	public Number convert(final Player p) {
 		return p.getExp();
 	}
 	
@@ -101,13 +101,13 @@ public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
 					return;
 			}
 			p.setLevel(Math.max(0, p.getLevel() + (int) Math.floor(c)));
-			p.setExp(Math2.mod(c, 1));
+			p.setExp(Math2.mod(Math2.safe(c), 1));
 		}
 	}
 	
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

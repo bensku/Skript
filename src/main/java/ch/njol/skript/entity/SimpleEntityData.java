@@ -56,11 +56,11 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Fox;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Golem;
 import org.bukkit.entity.Guardian;
+import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Husk;
@@ -80,6 +80,7 @@ import org.bukkit.entity.MushroomCow;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Piglin;
 import org.bukkit.entity.Pillager;
 import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Projectile;
@@ -100,6 +101,7 @@ import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Stray;
+import org.bukkit.entity.Strider;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.TippedArrow;
@@ -114,6 +116,7 @@ import org.bukkit.entity.Witch;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.Zoglin;
 import org.bukkit.entity.Zombie;
 import org.bukkit.entity.ZombieHorse;
 import org.eclipse.jdt.annotation.Nullable;
@@ -278,6 +281,14 @@ public class SimpleEntityData extends EntityData<Entity> {
 			
 			types.add(new SimpleEntityDataInfo("wandering trader", WanderingTrader.class));
 			types.add(new SimpleEntityDataInfo("raider", Raider.class, true));
+		}
+		
+		if (Skript.isRunningMinecraft(1, 16)) {
+			types.add(new SimpleEntityDataInfo("piglin", Piglin.class));
+			types.add(new SimpleEntityDataInfo("hoglin", Hoglin.class));
+			types.add(new SimpleEntityDataInfo("zoglin", Zoglin.class));
+			types.add(new SimpleEntityDataInfo("strider", Strider.class));
+			
 		}
 		if (Skript.classExists("org.bukkit.entity.Illusioner")) {
 			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));

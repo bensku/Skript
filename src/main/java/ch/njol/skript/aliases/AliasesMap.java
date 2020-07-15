@@ -25,7 +25,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.aliases.AliasesMap.Match;
 import ch.njol.skript.entity.EntityData;
 
 /**
