@@ -1,0 +1,52 @@
+# ===== GRADLE =====
+
+# Gradle: compiled stuff lands here
+/target
+
+# Gradle: auto-generated
+/.gradle/
+
+
+# ===== INTELLIJ and other JetBrains products =====
+
+# IntelliJ: compiled stuff lands here
+build/
+out/
+
+# IntelliJ: user-specific
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/inspectionProfiles
+.idea/**/deployment.xml
+
+# IntelliJ: auto-generated
+*.iml
+.idea/**/libraries
+.idea/**/modules
+
+# IntelliJ: meaningless in general or for Skript
+.idea/**/usage.statistics.xml
+.idea/**/uiDesigner.xml
+.idea/**/shelf
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/dbnavigator.xml
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator
+
+# ===== ECLIPSE products =====
+/.settings/
+*.classpath
+*.project
+
+# ===== OTHER =====
+
+# [Maybe ECJ:] compiled stuff lands here
+**/bin/
+
+# Skript testing
+test_runners
