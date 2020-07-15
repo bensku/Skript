@@ -19,9 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-import java.util.Map;
-
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 

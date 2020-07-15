@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.inventory.ItemStack;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;

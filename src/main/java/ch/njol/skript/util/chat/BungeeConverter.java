@@ -22,8 +22,6 @@ package ch.njol.skript.util.chat;
 import java.util.List;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.util.Utils;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;

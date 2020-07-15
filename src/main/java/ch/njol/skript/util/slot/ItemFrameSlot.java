@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.util.slot;
 
-import java.util.Locale;
-
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;

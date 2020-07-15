@@ -20,10 +20,7 @@
 package ch.njol.skript.expressions;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
@@ -39,7 +36,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ch.njol.util.StringUtils;
 
 @Name("Item with Lore")
 @Description({"Returns the given item type with the specified lore added to it.",

@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 import org.bukkit.event.Event;

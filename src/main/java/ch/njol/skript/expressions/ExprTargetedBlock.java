@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
