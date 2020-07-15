@@ -51,13 +51,13 @@ public class ExprRepeated extends SimpleExpression<String> {
 	private Expression<String> text;
 	
 	@SuppressWarnings("null")
-	private Expression<Long> times;
+	private Expression<Number> times;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		text = (Expression<String>) exprs[0];
-		times = (Expression<Long>) exprs[1];
+		times = (Expression<Number>) exprs[1];
 		return true;
 	}
 	
@@ -66,7 +66,7 @@ public class ExprRepeated extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	protected String[] get(Event e) {
 		String string = text.getSingle(e);
-		Long num = times.getSingle(e);
+		Number num = times.getSingle(e);
 		if (string == null || num == null) return null;
 		Integer number = num.intValue();
 		if (number < 0) return null;
