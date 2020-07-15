@@ -40,7 +40,6 @@ out/
 
 # ===== ECLIPSE products =====
 /.settings/
-*.gradle
 *.classpath
 *.project
 
