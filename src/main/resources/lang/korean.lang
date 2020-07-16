@@ -1,7 +1,7 @@
 # Default Korean language file
 
 # Which version of Skript this language file was written for
-version: 2.4.1
+version: @version@
 
 # -- General --
 and: and
