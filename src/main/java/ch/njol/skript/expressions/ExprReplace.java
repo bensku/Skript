@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -41,13 +41,18 @@ import ch.njol.util.Kleenean;
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"on chat:",
-	"\tsend replace all \"look\",\"up\" with \"watch\" in \"You should look up\" #You should watch watch"})
+	"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
+	"\tsend {_hey}",
+	"set {_no} to replace first \"yes\" in \"Yes, yes\" with \"no\" with case sensitivity #Only the second yes gets replaced with no"
+})
 @Since("INSERT VERSION")
 public class ExprReplace extends SimpleExpression<String> {
 	static {
-		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED, "[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% with %string% in %string% [with case sensitivity]", "[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% in %string% with %string% (|4¦with case sensitivity)");
+		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED,
+			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% with %string% in %string% [with case sensitivity]",
+			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% in %string% with %string% [with case sensitivity]");
 	}
-
+	
 	@SuppressWarnings("null")
 	Expression<Number> occurrenceN = null;
 	@SuppressWarnings("null")
@@ -59,7 +64,7 @@ public class ExprReplace extends SimpleExpression<String> {
 	private boolean caseSensitive = false;
 	private boolean regex = false;
 	private String type = "ALL";
-
+	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
@@ -83,7 +88,7 @@ public class ExprReplace extends SimpleExpression<String> {
 		}
 		return true;
 	}
-
+	
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
@@ -139,20 +144,20 @@ public class ExprReplace extends SimpleExpression<String> {
 		}
 		return new String[]{newHaystack};
 	}
-
+	
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-
+	
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "replace " + type + " " + needles.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + haystack.toString(e, debug);
 	}
-
+	
 }
