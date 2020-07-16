@@ -115,7 +115,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	 */
 	private int mark;
 
-	private final ItemType AIR = Aliases.javaItemType("air");
+	private static final ItemType AIR = Aliases.javaItemType("air");
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
