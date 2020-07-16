@@ -201,14 +201,6 @@ public class DefaultConverters {
 //			}
 //		});
 		
-		// ItemType - ItemStack
-		Converters.registerConverter(ItemType.class, ItemStack.class, new Converter<ItemType, ItemStack>() {
-			@Override
-			@Nullable
-			public ItemStack convert(final ItemType i) {
-				return i.getRandom();
-			}
-		});
 		Converters.registerConverter(ItemStack.class, ItemType.class, new Converter<ItemStack, ItemType>() {
 			@Override
 			public ItemType convert(final ItemStack i) {
@@ -238,14 +230,12 @@ public class DefaultConverters {
 //			}
 //		});
 		
-		// Slot - ItemStack
-		Converters.registerConverter(Slot.class, ItemStack.class, new Converter<Slot, ItemStack>() {
+		// Slot - ItemType
+		Converters.registerConverter(Slot.class, ItemType.class, new Converter<Slot, ItemType>() {
 			@Override
-			public ItemStack convert(final Slot s) {
+			public ItemType convert(final Slot s) {
 				final ItemStack i = s.getItem();
-				if (i == null)
-					return new ItemStack(Material.AIR, 1);
-				return i;
+				return new ItemType(i != null ? i : new ItemStack(Material.AIR, 1));
 			}
 		});
 //		// Slot - Inventory

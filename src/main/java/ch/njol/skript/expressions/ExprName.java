@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -39,6 +40,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -150,8 +152,8 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 					return ((Inventory) o).getViewers().get(0).getOpenInventory().getTitle();
 				return null;
 			}
-		} else if (o instanceof Slot) {
-			ItemStack is = ((Slot) o).getItem();
+		} else if (o instanceof Slot || o instanceof ItemStack) {
+			ItemStack is = o instanceof Slot ? ((Slot) o).getItem() : (ItemStack) o;
 			if (is != null && is.hasItemMeta()) {
 				ItemMeta m = is.getItemMeta();
 				return m.hasDisplayName() ? m.getDisplayName() : null;
@@ -222,11 +224,18 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			} else if (o instanceof Slot) {
 				Slot s = (Slot) o;
 				ItemStack is = s.getItem();
-				if (is != null && is.hasItemMeta()) {
-					ItemMeta m = is.getItemMeta();
+				if (is != null && is.getType() != Material.AIR) {
+					ItemMeta m = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
 					m.setDisplayName(name);
 					is.setItemMeta(m);
 					s.setItem(is);
+				}
+			} else if (o instanceof ItemStack) {
+				ItemStack is = (ItemStack) o;
+				if (is != null && is.getType() != Material.AIR) {
+					ItemMeta m = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
+					m.setDisplayName(name);
+					is.setItemMeta(m);
 				}
 			}
 		}
