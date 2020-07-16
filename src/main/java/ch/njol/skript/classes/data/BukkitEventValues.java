@@ -388,11 +388,19 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0, "Use 'attacker' and/or 'victim' in damage events", EntityDamageEvent.class);
+		EventValues.registerEventValue(EntityEvent.class, CommandSender.class, new Getter<CommandSender, EntityEvent>() {
+			@Override
+			@Nullable
+			public CommandSender get(final EntityEvent e) {
+				return e.getEntity();
+			}
+		}, 0, "Use 'attacker' and/or 'victim' in damage events", EntityDamageEvent.class);
 		EventValues.registerEventValue(EntityEvent.class, World.class, new Getter<World, EntityEvent>() {
 			@Override
 			@Nullable
 			public World get(final EntityEvent e) {
-				return e.getEntity() == null ? null : e.getEntity().getWorld(); // no idea why it could be null, but it can happen
+				Entity entity = e.getEntity();
+				return entity == null ? null : entity.getWorld(); // no idea why it could be null, but it can happen
 			}
 		}, 0);
 		// EntityDamageEvent
