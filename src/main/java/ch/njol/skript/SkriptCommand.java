@@ -394,7 +394,7 @@ public class SkriptCommand implements TabExecutor {
         File[] listFiles = file.listFiles();
         if (listFiles != null) {
             List<File> files = new ArrayList<>(Arrays.asList(listFiles));
-            List<String> command = new ArrayList<>(Arrays.asList("reload", "enable", "disable", "update", "help"));
+            List<String> command = new ArrayList<>(Arrays.asList("reload", "enable", "disable", "update", "help", "info"));
             List<String> reload = new ArrayList<>(Arrays.asList("@all", "@scripts", "@config", "@aliases"));
             List<String> enable = new ArrayList<>(Collections.singletonList("@all"));
             List<String> disable = new ArrayList<>(Collections.singletonList("@all"));
