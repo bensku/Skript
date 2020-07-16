@@ -395,8 +395,7 @@ final public class ScriptLoader {
 			// Do NOT sort here, list must be loaded in order it came in (see issue #667)
 			final boolean wasLocal = Language.setUseLocal(false);
 			try {
-				// Copying the array, otherwise an addon could remove configs from the list
-				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(new ArrayList<>(configs)));
+				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
 				
 				for (final Config cfg : configs) {
 					assert cfg != null : configs.toString();
