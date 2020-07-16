@@ -14,6 +14,8 @@ test "replace items":
 	set {_inv2} to {_inv}
 	replace all emerald in {_inv} with diamond
 	assert {_inv} is {_inv2} with "replace non-existent item changed inventory"
+
+
 test "replace strings":
 	loop 16 times:
 		set {_text::%loop-number%} to "My name is bob and this is my friend bob! Say hi, bob!"
@@ -54,7 +56,7 @@ test "replace strings":
 	assert {_text::8} is "My name is bob and this is my friend bobby! Say hi, bob!" with "replace Nth pattern 2 (case sensitivity disabled) (%{_text::8}%) failed"
 	assert {_text::9} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::9}%) failed"
 	assert {_text::10} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::10}%) failed"
-	assert {_text::11} is "My name is BOBBY and this is my friend bobby! Say hi, bobby!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
+	assert {_text::11} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
 	assert {_text::12} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::12}%) failed"
 	assert {_text::13} is "My name is bob and this is my friend bob! Say hi, BOBBY!" with "replace last pattern 1 (case sensitivity enabled) (%{_text::13}%) failed"
 	assert {_text::14} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 2 (case sensitivity enabled) (%{_text::14}%) failed"

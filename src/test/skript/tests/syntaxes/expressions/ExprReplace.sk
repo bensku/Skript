@@ -38,7 +38,7 @@ test "replace strings":
 	assert {_text::8} is "My name is bob and this is my friend bobby! Say hi, bob!" with "replace Nth pattern 2 (case sensitivity disabled) (%{_text::8}%) failed"
 	assert {_text::9} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::9}%) failed"
 	assert {_text::10} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::10}%) failed"
-	assert {_text::11} is "My name is BOBBY and this is my friend bobby! Say hi, bobby!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
+	assert {_text::11} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
 	assert {_text::12} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::12}%) failed"
 	assert {_text::13} is "My name is bob and this is my friend bob! Say hi, BOBBY!" with "replace last pattern 1 (case sensitivity enabled) (%{_text::13}%) failed"
 	assert {_text::14} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 2 (case sensitivity enabled) (%{_text::14}%) failed"
