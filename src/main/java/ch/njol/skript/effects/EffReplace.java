@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -39,6 +39,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"replace \"<item>\" in {textvar} with \"%item%\"",
@@ -125,7 +126,7 @@ public class EffReplace extends Effect {
 			} else if (type == "LAST") {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile((String)s).matcher((String) haystack[x]);
+						Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
 						if (!matcher.find()) continue;
 						int lastMatchStart = 0;
 						do {
@@ -141,7 +142,7 @@ public class EffReplace extends Effect {
 			} else if (type == "TH" && occurrenceN != null) {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile((String)s).matcher((String) haystack[x]);
+						Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
 						Integer number = occurrenceN.getSingle(e).intValue();
 						if (!matcher.find()) continue;
 						int nthMatchStart = 0;
