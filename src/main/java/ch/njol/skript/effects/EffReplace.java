@@ -39,22 +39,29 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
-@Examples({"on chat:",
-	"\tsend replace all \"look\",\"up\" with \"watch\" in \"You should look up\" #You should watch watch"})
-@Since("INSERT VERSION")
+@Examples({"replace \"<item>\" in {textvar} with \"%item%\"",
+	"replace 3rd \"(\\d)\" with \"DIGIT\" in {textvar} #10 becomes DIGITDIGIT",
+	"replace every \"&\" with \"§\" in line 1",
+	"# The following acts as a simple chat censor:",
+	"on chat:",
+	"\treplace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
+	"#If you'd like a more advanced chat censor you can use regex:",
+	"on chat:",
+	"\treplace all \"(i|1)d(i|1)(o|0)(t|7)\" with \"****\" in message # which will block 'idiot' but also words in which a vowel is replaced with a number",
+	"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
+@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, replace last, replace Nth, case sensitivity and regex support)")
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
 			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% with %string% in %string% [with case sensitivity]",
-			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% in %string% with %string% (|4¦with case sensitivity)",
+			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% in %string% with %string% [with case sensitivity]",
 			"replace (all|every|) %itemtypes% with %itemtype% in %inventories%",
 			"replace (all|every|) %itemtypes% in %inventories% with %itemtype%"
 		);
 	}
-
+	
 	@SuppressWarnings("null")
 	Expression<Number> occurrenceN = null;
 	@SuppressWarnings("null")
@@ -63,7 +70,7 @@ public class EffReplace extends Effect {
 	private boolean regex = false;
 	private boolean replaceString = false;
 	private String type = "ALL";
-
+	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -91,7 +98,7 @@ public class EffReplace extends Effect {
 		}
 		return true;
 	}
-
+	
 	@Override
 	@SuppressWarnings("null")
 	protected void execute(Event e) {
@@ -106,19 +113,19 @@ public class EffReplace extends Effect {
 			if (type == "FIRST") {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						haystack[x] = ((String) haystack[x]).replaceFirst(s.toString(), newText);
+						haystack[x] = ((String) haystack[x]).replaceFirst((String) s, newText);
 					}
 				}
 			} else if (type == "ALL") {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						haystack[x] = ((String) haystack[x]).replaceAll(s.toString(), newText);
+						haystack[x] = ((String) haystack[x]).replaceAll((String) s, newText);
 					}
 				}
 			} else if (type == "LAST") {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile(s.toString()).matcher((String) haystack[x]);
+						Matcher matcher = Pattern.compile((String)s).matcher((String) haystack[x]);
 						if (!matcher.find()) continue;
 						int lastMatchStart = 0;
 						do {
@@ -134,7 +141,7 @@ public class EffReplace extends Effect {
 			} else if (type == "TH" && occurrenceN != null) {
 				for (int x = 0; x < haystack.length; x++) {
 					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile(s.toString()).matcher((String) haystack[x]);
+						Matcher matcher = Pattern.compile((String)s).matcher((String) haystack[x]);
 						Integer number = occurrenceN.getSingle(e).intValue();
 						if (!matcher.find()) continue;
 						int nthMatchStart = 0;
@@ -165,11 +172,11 @@ public class EffReplace extends Effect {
 					}
 		}
 	}
-
-
+	
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "replace " + type + " " + needles.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + haystack.toString(e, debug);
-
+		
 	}
 }
