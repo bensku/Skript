@@ -16,8 +16,8 @@ test "replace items":
 	assert {_inv} is {_inv2} with "replace non-existent item changed inventory"
 
 test "replace strings":
-	loop 8 times:
-		set {_text::%loop-number%} to "My name is bob and this is my friend bob!"
+	loop 12 times:
+		set {_text::%loop-number%} to "My name is bob and this is my friend bob! Say hi, bob!"
 
 	# Original Replace
 	replace all "bob" in {_text::1} with "bobby"
@@ -27,19 +27,29 @@ test "replace strings":
 	replace first "bob" in {_text::3} with "bobby"
 	replace first "bob" with "bobby" in {_text::4}
 
+	#Replace Last
+	replace last "bob" in {_text::9} with "bobby"
+	replace last "bob" with "bobby" in {_text::10}
+
+	#Replace Nth
+	replace 2nd "bob" in {_text::11} with "bobby"
+	replace 2nd "bob" with "bobby" in {_text::11}
+
 	# Case Sensitivity
 	replace all "bob" in {_text::5} with "BOBBY" with case sensitivity
 	replace all "BOB" with "bobby" in {_text::6} with case sensitivity
 	replace first "bob" in {_text::7} with "BOBBY" with case sensitivity
 	replace first "BOB" with "bobby" in {_text::8} with case sensitivity
 
-	assert {_text::1} is "My name is bobby and this is my friend bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
-	assert {_text::2} is "My name is bobby and this is my friend bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
-	assert {_text::3} is "My name is bobby and this is my friend bob!" with "replace first pattern 1 (case sensitivity disabled) (%{_text::3}%) failed"
-	assert {_text::4} is "My name is bobby and this is my friend bob!" with "replace first pattern 2 (case sensitivity disabled) (%{_text::4}%) failed"
-	assert {_text::5} is "My name is BOBBY and this is my friend BOBBY!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::6}%) failed"
-	assert {_text::6} is "My name is bob and this is my friend bob!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::5}%) failed"
-	assert {_text::7} is "My name is BOBBY and this is my friend bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::8}%) failed"
-	assert {_text::8} is "My name is bob and this is my friend bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::7}%) failed"
-
-	
+	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
+	assert {_text::2} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
+	assert {_text::3} is "My name is bobby and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity disabled) (%{_text::3}%) failed"
+	assert {_text::4} is "My name is bobby and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity disabled) (%{_text::4}%) failed"
+	assert {_text::5} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::6}%) failed"
+	assert {_text::6} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::5}%) failed"
+	assert {_text::7} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::7}%) failed"
+	assert {_text::8} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::8}%) failed"
+	assert {_text::9} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 1 (case sensitivity disabled) (%{_text::9}%) failed"
+	assert {_text::10} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 2 (case sensitivity disabled) (%{_text::10}%) failed"
+	assert {_text::11} is "My name is bob and this is my friend bobby! Say hi, bobby!" with "replace last pattern 1 (case sensitivity disabled) (%{_text::11}%) failed"
+	assert {_text::12} is "My name is bob and this is my friend bobby! Say hi, bobby!" with "replace last pattern 2 (case sensitivity disabled) (%{_text::12}%) failed"
