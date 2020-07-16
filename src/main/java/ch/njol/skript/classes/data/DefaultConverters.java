@@ -201,6 +201,14 @@ public class DefaultConverters {
 //			}
 //		});
 		
+		// ItemType - ItemStack
+		Converters.registerConverter(ItemType.class, ItemStack.class, new Converter<ItemType, ItemStack>() {
+			@Override
+			@Nullable
+			public ItemStack convert(final ItemType i) {
+				return i.getRandom();
+			}
+		});
 		Converters.registerConverter(ItemStack.class, ItemType.class, new Converter<ItemStack, ItemType>() {
 			@Override
 			public ItemType convert(final ItemStack i) {

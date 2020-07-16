@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -39,8 +38,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -49,7 +48,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -117,11 +115,13 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	 */
 	private int mark;
 
+	private final ItemType AIR = Aliases.javaItemType("air");
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		mark = parseResult.mark;
-		setExpr(exprs[0] instanceof Variable ? exprs[0].getConvertedExpression(Object.class) : exprs[0]);
+		setExpr(exprs[0]);
 		return true;
 	}
 
@@ -152,8 +152,8 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 					return ((Inventory) o).getViewers().get(0).getOpenInventory().getTitle();
 				return null;
 			}
-		} else if (o instanceof Slot || o instanceof ItemStack) {
-			ItemStack is = o instanceof Slot ? ((Slot) o).getItem() : (ItemStack) o;
+		} else if (o instanceof Slot) {
+			ItemStack is = ((Slot) o).getItem();
 			if (is != null && is.hasItemMeta()) {
 				ItemMeta m = is.getItemMeta();
 				return m.hasDisplayName() ? m.getDisplayName() : null;
@@ -224,18 +224,11 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			} else if (o instanceof Slot) {
 				Slot s = (Slot) o;
 				ItemStack is = s.getItem();
-				if (is != null && is.getType() != Material.AIR) {
+				if (is != null && !AIR.isOfType(is)) {
 					ItemMeta m = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
 					m.setDisplayName(name);
 					is.setItemMeta(m);
 					s.setItem(is);
-				}
-			} else if (o instanceof ItemStack) {
-				ItemStack is = (ItemStack) o;
-				if (is != null && is.getType() != Material.AIR) {
-					ItemMeta m = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
-					m.setDisplayName(name);
-					is.setItemMeta(m);
 				}
 			}
 		}
