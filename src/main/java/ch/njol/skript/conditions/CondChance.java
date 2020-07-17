@@ -50,13 +50,13 @@ public class CondChance extends Condition {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Double> chance;
+	private Expression<Number> chance;
 	private boolean percent;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		chance = (Expression<Double>) exprs[0];
+		chance = (Expression<Number>) exprs[0];
 		percent = parser.mark == 1;
 		return true;
 	}

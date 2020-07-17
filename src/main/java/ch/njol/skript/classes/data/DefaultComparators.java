@@ -21,11 +21,21 @@ package ch.njol.skript.classes.data;
 
 import java.util.Objects;
 
+import ch.njol.skript.util.EnchantmentType;
+import ch.njol.skript.util.Experience;
+import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.EnchantmentOffer;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Item;
@@ -457,6 +467,33 @@ public class DefaultComparators {
 				return false;
 			}
 		});
+		
+		// EnchantmentOffer Comparators
+		if (Skript.isRunningMinecraft(1, 11)) {
+			// EnchantmentOffer - EnchantmentType
+			Comparators.registerComparator(EnchantmentOffer.class, EnchantmentType.class, new Comparator<EnchantmentOffer, EnchantmentType>() {
+				@Override
+				public Relation compare(EnchantmentOffer eo, EnchantmentType et) {
+					return Relation.get(eo.getEnchantment() == et.getType() && eo.getEnchantmentLevel() == et.getLevel());
+				}
+				
+				@Override
+				public boolean supportsOrdering() {
+					return false;
+				}
+			});
+			// EnchantmentOffer - Experience
+			Comparators.registerComparator(EnchantmentOffer.class, Experience.class, new Comparator<EnchantmentOffer, Experience>() {
+				@Override
+				public Relation compare(EnchantmentOffer eo, Experience exp) {
+					return Relation.get(eo.getCost() == exp.getXP());
+				}
+				
+				@Override public boolean supportsOrdering() {
+					return false;
+				}
+			});
+		}
 	}
 	
 }

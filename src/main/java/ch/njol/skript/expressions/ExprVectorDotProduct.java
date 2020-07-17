@@ -68,7 +68,7 @@ public class ExprVectorDotProduct extends SimpleExpression<Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Double[] get(Event e) {
+	protected Number[] get(Event e) {
 		Vector v1 = first.getSingle(e);
 		Vector v2 = second.getSingle(e);
 		if (v1 == null || v2 == null)
