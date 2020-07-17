@@ -21,41 +21,26 @@
 
 package ch.njol.skript.util.chat;
 
-import java.io.NotSerializableException;
-import java.io.StreamCorruptedException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Converter;
-import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
-import ch.njol.skript.localization.Message;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.Converters;
-import ch.njol.yggdrasil.Fields;
+import ch.njol.skript.util.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Handles parsing chat messages.
@@ -202,6 +187,7 @@ public class ChatMessages {
 	 * @param msg Input string.
 	 * @return List with components.
 	 */
+	@SuppressWarnings("null")
 	public static List<MessageComponent> parse(String msg) {
 		char[] chars = msg.toCharArray();
 		
@@ -244,8 +230,15 @@ public class ChatMessages {
 					}
 					name = name.toLowerCase(); // Tags are case-insensitive
 					
+					boolean tryHex = Utils.HEX_SUPPORTED && name.startsWith("#");
+					ChatColor chatColor = null;
+					if (tryHex) {
+						chatColor = Utils.parseHexColor(name);
+						tryHex = chatColor != null;
+					}
+					
 					code = codes.get(name);
-					if (code != null) { // ... and if the tag IS really valid
+					if (code != null || tryHex) { // ... and if the tag IS really valid
 						String text = curStr.toString();
 						curStr = new StringBuilder();
 						assert text != null;
@@ -256,8 +249,10 @@ public class ChatMessages {
 						
 						components.add(current);
 						
-						if (code.getColorCode() != null) { // Just update color code
-							current.color = code.getColorCode();
+						if (tryHex) {
+							current.color = chatColor;
+						} else if (code.getColorCode() != null) { // Just update color code
+							current.color = ChatColor.getByChar(code.getColorChar());
 						} else {
 							assert param != null;
 							code.updateComponent(current, param); // Call SkriptChatCode update
@@ -281,12 +276,20 @@ public class ChatMessages {
 				}
 				
 				char color = chars[i + 1];
+				
+				boolean tryHex = Utils.HEX_SUPPORTED && color == 'x';
+				ChatColor chatColor = null;
+				if (tryHex && i + 14 < chars.length) { // Try to parse hex "&x&1&2&3&4&5&6"
+					chatColor = Utils.parseHexColor(msg.substring(i + 2, i + 14).replace("&", "").replace("§", ""));
+					tryHex = chatColor != null;
+				}
+				
 				if (color >= colorChars.length) { // Invalid Unicode color character
 					curStr.append(c);
 					continue;
 				}
 				code = colorChars[color];
-				if (code == null) {
+				if (code == null && !tryHex) {
 					curStr.append(c).append(color); // Invalid formatting char, plain append
 				} else {
 					String text = curStr.toString();
@@ -299,10 +302,14 @@ public class ChatMessages {
 					
 					components.add(current);
 					
-					if (code.getColorCode() != null) // Just update color code
-						current.color = code.getColorCode();
-					else
+					if (tryHex) { // Set color to hex ChatColor
+						current.color = chatColor;
+						i = i + 12; // Skip past all the tags
+					} else if (code.getColorCode() != null) { // Just update color code
+						current.color = ChatColor.getByChar(code.getColorChar());
+					} else {
 						code.updateComponent(current, param); // Call SkriptChatCode update
+					}
 					
 					// Copy styles from old to current if needed
 					copyStyles(old, current);
@@ -503,6 +510,8 @@ public class ChatMessages {
 		String plain = sb.toString();
 		
 		// To be extra safe, strip <, >, § and &; protects against bugs in parser
+		if (Utils.HEX_SUPPORTED) // Strip '§x'
+			plain = plain.replace("§x", "");
 		plain = plain.replace("<", "").replace(">", "").replace("§", "").replace("&", "");
 		assert plain != null;
 		return plain;

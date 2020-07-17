@@ -19,8 +19,8 @@
  */
 package ch.njol.skript;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 

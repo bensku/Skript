@@ -924,11 +924,11 @@ entities:
 		not a block error: Falling blocks must be blocks, not items
 	thrown potion:
 		name: thrown potion¦s
-		pattern: thrown (potion(|1¦s)|(¦2)%-itemtypes%)
+		pattern: thrown (potion(|1¦s)|(2¦)%-itemtypes%)
 		adjective: thrown
 	dropped item:
 		name: dropped item¦s
-		pattern: dropped (item(|1¦s)|(¦2)%-itemtypes%)|item entit(y|1¦ies)
+		pattern: dropped (item(|1¦s)|(2¦)%-itemtypes%)|item entit(y|1¦ies)
 		adjective: dropped
 	horse:
 		name: horse¦s

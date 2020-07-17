@@ -27,7 +27,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 

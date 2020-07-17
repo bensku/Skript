@@ -22,26 +22,18 @@ package ch.njol.skript.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
-import net.md_5.bungee.api.ChatColor;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.FireworkExplodeEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 
 public class EvtFirework extends SkriptEvent {
 	

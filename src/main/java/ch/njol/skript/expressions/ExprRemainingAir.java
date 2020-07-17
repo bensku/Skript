@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 

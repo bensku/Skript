@@ -19,7 +19,8 @@
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
 
 import java.io.EOFException;
 import java.io.IOException;
