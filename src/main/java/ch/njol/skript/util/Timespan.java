@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.util;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.eclipse.jdt.annotation.Nullable;

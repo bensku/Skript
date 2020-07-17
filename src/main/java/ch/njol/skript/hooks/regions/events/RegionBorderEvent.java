@@ -24,7 +24,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.regions.classes.Region;
 
 /**

@@ -19,10 +19,6 @@
  */
 package ch.njol.skript.entity;
 
-import java.util.HashMap;
-
-import javax.annotation.Nullable;
-
 import org.bukkit.entity.Rabbit;
 
 import ch.njol.skript.Skript;

@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 			"\tif number of uppercase chars in message / length of message > 0.5",
 			"\t\tcancel event",
 			"\t\tsend \"<red>Your message has to many caps!\" to player"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprNumberOfCharacters extends SimpleExpression<Number> {
 
 	static {

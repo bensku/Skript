@@ -34,7 +34,7 @@ import ch.njol.skript.doc.Since;
 @Description("Check if an item has a custom model data tag")
 @Examples("player's tool has custom model data")
 @RequiredPlugins("1.14+")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondHasCustomModelData extends PropertyCondition<ItemType> {
 	
 	static {

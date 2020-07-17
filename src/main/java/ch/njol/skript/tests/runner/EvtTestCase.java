@@ -20,7 +20,6 @@
 package ch.njol.skript.tests.runner;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerEditBookEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -37,7 +36,7 @@ public class EvtTestCase extends SkriptEvent {
 			Skript.registerEvent("Test Case", EvtTestCase.class, SkriptTestEvent.class, "test %string% [when <.+>]")
 				.description("Contents represent one test case.")
 				.examples("")
-				.since("INSERT VERSION");
+				.since("2.5");
 	}
 	
 	@SuppressWarnings("null")

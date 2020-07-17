@@ -19,7 +19,9 @@
  */
 package ch.njol.yggdrasil.xml;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.IOException;
 import java.io.NotSerializableException;

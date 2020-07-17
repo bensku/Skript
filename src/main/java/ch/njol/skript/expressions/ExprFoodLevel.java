@@ -47,9 +47,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The food level of a player from 0 to 10. Has several aliases: food/hunger level/meter/bar. ")
 @Examples({"set the player's food level to 10"})
 @Since("1.0")
-public class ExprFoodLevel extends PropertyExpression<Player, Float> {
+public class ExprFoodLevel extends PropertyExpression<Player, Number> {
+	
 	static {
-		Skript.registerExpression(ExprFoodLevel.class, Float.class, ExpressionType.PROPERTY, "[the] (food|hunger)[[ ](level|met(er|re)|bar)] [of %player%]", "%player%'[s] (food|hunger)[[ ](level|met(er|re)|bar)]");
+		Skript.registerExpression(ExprFoodLevel.class, Number.class, ExpressionType.PROPERTY, "[the] (food|hunger)[[ ](level|met(er|re)|bar)] [of %player%]", "%player%'[s] (food|hunger)[[ ](level|met(er|re)|bar)]");
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -60,22 +61,21 @@ public class ExprFoodLevel extends PropertyExpression<Player, Float> {
 	}
 	
 	@Override
-	protected Float[] get(final Event e, final Player[] source) {
-		return get(source, new Getter<Float, Player>() {
+	protected Number[] get(final Event e, final Player[] source) {
+		return get(source, new Getter<Number, Player>() {
 			@Override
-			public Float get(final Player p) {
+			public Number get(final Player p) {
 				if (getTime() >= 0 && e instanceof FoodLevelChangeEvent && p.equals(((FoodLevelChangeEvent) e).getEntity()) && !Delay.isDelayed(e)) {
 					return 0.5f * ((FoodLevelChangeEvent) e).getFoodLevel();
-				} else {
-					return 0.5f * p.getFoodLevel();
 				}
+				return 0.5f * p.getFoodLevel();
 			}
 		});
 	}
 	
 	@Override
-	public Class<Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

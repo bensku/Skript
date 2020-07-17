@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import java.util.Map.Entry;
-
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.eclipse.jdt.annotation.Nullable;

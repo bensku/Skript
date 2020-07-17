@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.invoke.MethodHandle;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;

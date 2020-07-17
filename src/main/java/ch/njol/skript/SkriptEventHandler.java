@@ -32,8 +32,8 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -48,9 +48,7 @@ import ch.njol.skript.ScriptLoader.ScriptInfo;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.timings.SkriptTimings;
-import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger

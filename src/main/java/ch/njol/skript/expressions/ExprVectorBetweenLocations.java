@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Collection;
-
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
