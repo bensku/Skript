@@ -1,0 +1,11 @@
+test "time since":
+
+	set {_time} to time since 1 hour ago
+	assert {_time} is 1 hour with "time since 1 hour ago failed | value: %{_time}%"
+
+	set {_time} to time since 1 day ago
+	assert {_time} is 1 day with "time since 1 day ago failed | value: %{_time}%"
+
+	set {_time} to time since 1 day later
+	# {_time} won't update since "1 day later" returns null
+	assert {_time} is 1 day with "time since 1 day later failed | value: %{_time}%"
