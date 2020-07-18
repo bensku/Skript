@@ -40,62 +40,61 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+enum ReplacementTypes {
+	ALL,
+	FIRST,
+	LAST
+}
+
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"replace \"<item>\" in {textvar} with \"%item%\"",
-	"replace 3rd \"(\\d)\" with \"DIGIT\" in {textvar} #10 becomes DIGITDIGIT",
-	"replace every \"&\" with \"§\" in line 1",
-	"# The following acts as a simple chat censor:",
-	"on chat:",
-	"\treplace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
-	"#If you'd like a more advanced chat censor you can use regex:",
-	"on chat:",
-	"\treplace all \"(i|1)d(i|1)(o|0)(t|7)\" with \"****\" in message # which will block 'idiot' but also words in which a vowel is replaced with a number",
-	"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
-@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, replace last, replace Nth, case sensitivity and regex support)")
+		"replace every \"&\" with \"§\" in line 1",
+		"# The following acts as a simple chat censor:",
+		"on chat:",
+		"\treplace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
+		"#If you'd like a more advanced chat censor you can use regex:",
+		"on chat:",
+		"\treplace all \"(i|1)d(i|1)(o|0)(t|7)\" with \"****\" in message # which will block 'idiot' but also words in which a vowel is replaced with a number",
+		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
+@Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, replace last, case sensitivity and regex support)")
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
-			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% with %string% in %string% [with case sensitivity]",
-			"[regex] replace (1¦first|2¦last|3¦%-number%(st|nd|rd|th)|0¦all|every|) %strings% in %string% with %string% [with case sensitivity]",
-			"replace (all|every|) %itemtypes% with %itemtype% in %inventories%",
-			"replace (all|every|) %itemtypes% in %inventories% with %itemtype%"
+				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
+				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% in %strings% with %string%",
+				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
+				"replace (all|every|) %itemtypes% in %inventories% with %itemtype%",
+				"replace (all|every|) %itemtypes% with %itemtype% in %inventories%"
 		);
 	}
 	
-	@SuppressWarnings("null")
-	Expression<Number> occurrenceN = null;
+	private String type = "ALL";
 	@SuppressWarnings("null")
 	private Expression<?> haystack, needles, replacement;
 	private boolean caseSensitive = false;
 	private boolean regex = false;
 	private boolean replaceString = false;
-	private String type = "ALL";
 	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern < 3) {
 			replaceString = true;
-			if (parseResult.mark == 1) type = "FIRST";
-			if (parseResult.mark == 2) type = "LAST";
-			if (parseResult.expr.startsWith("regex")) regex = true;
-			if (SkriptConfig.caseSensitive.value() || parseResult.expr.endsWith("with case sensitivity"))
+			int mark = parseResult.mark;
+			regex = matchedPattern == 2;
+			if (SkriptConfig.caseSensitive.value() || (parseResult.mark ^ 4) < 4)
 				caseSensitive = true;
-			if (parseResult.mark == 3) {
-				type = "TH";
-				occurrenceN = (Expression<Number>) exprs[0];
-			}
+			type = ReplacementTypes.values()[mark < 4 ? mark : (mark ^ 4)].name();
 		}
-		int start = replaceString ? 1 : 0;
 		if (matchedPattern % 2 == 1) {
-			needles = exprs[start];
-			replacement = exprs[start + 2];
-			haystack = exprs[start + 1];
+			needles = expressions[0];
+			replacement = expressions[2];
+			haystack = expressions[1];
 		} else {
-			needles = exprs[start];
-			replacement = exprs[start + 1];
-			haystack = exprs[start + 2];
+			needles = expressions[0];
+			replacement = expressions[1];
+			haystack = expressions[2];
 		}
 		return true;
 	}
@@ -111,58 +110,38 @@ public class EffReplace extends Effect {
 			Object[] oldNeedles = Arrays.stream((String[]) needles).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
 			String newText = (String) replacement;
 			if (!regex) newText = newText.replace("$", "\\$");
-			if (type == "FIRST") {
-				for (int x = 0; x < haystack.length; x++) {
-					for (Object s : oldNeedles) {
-						haystack[x] = ((String) haystack[x]).replaceFirst((String) s, newText);
-					}
-				}
-			} else if (type == "ALL") {
-				for (int x = 0; x < haystack.length; x++) {
-					for (Object s : oldNeedles) {
-						haystack[x] = ((String) haystack[x]).replaceAll((String) s, newText);
-					}
-				}
-			} else if (type == "LAST") {
-				for (int x = 0; x < haystack.length; x++) {
-					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
-						if (!matcher.find()) continue;
-						int lastMatchStart = 0;
-						do {
-							lastMatchStart = matcher.start();
-						} while (matcher.find());
-						matcher.find(lastMatchStart);
-						StringBuffer sb = new StringBuffer();
-						matcher.appendReplacement(sb, newText);
-						matcher.appendTail(sb);
-						haystack[x] = sb.toString();
-					}
-				}
-			} else if (type == "TH" && occurrenceN != null) {
-				for (int x = 0; x < haystack.length; x++) {
-					for (Object s : oldNeedles) {
-						Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
-						Integer number = occurrenceN.getSingle(e).intValue();
-						if (!matcher.find()) continue;
-						int nthMatchStart = 0;
-						int found = 0;
-						do {
-							nthMatchStart = matcher.start();
-							found++;
-						} while (matcher.find() && found != number);
-						if (found < number) continue;
-						matcher.find(nthMatchStart);
-						StringBuffer sb = new StringBuffer();
-						try {
-							matcher.appendReplacement(sb, newText);
-						} catch (IndexOutOfBoundsException exception) {
-							continue;
+			switch (type) {
+				case "ALL":
+					for (int x = 0; x < haystack.length; x++) {
+						for (Object s : oldNeedles) {
+							haystack[x] = ((String) haystack[x]).replaceAll((String) s, newText);
 						}
-						matcher.appendTail(sb);
-						haystack[x] = sb.toString();
 					}
-				}
+					break;
+				case "FIRST":
+					for (int x = 0; x < haystack.length; x++) {
+						for (Object s : oldNeedles) {
+							haystack[x] = ((String) haystack[x]).replaceFirst((String) s, newText);
+						}
+					}
+					break;
+				case "LAST":
+					for (int x = 0; x < haystack.length; x++) {
+						for (Object s : oldNeedles) {
+							Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
+							if (!matcher.find()) continue;
+							int lastMatchStart = 0;
+							do {
+								lastMatchStart = matcher.start();
+							} while (matcher.find());
+							matcher.find(lastMatchStart);
+							StringBuffer sb = new StringBuffer();
+							matcher.appendReplacement(sb, newText);
+							matcher.appendTail(sb);
+							haystack[x] = sb.toString();
+						}
+					}
+					break;
 			}
 			this.haystack.change(e, haystack, Changer.ChangeMode.SET);
 		} else {

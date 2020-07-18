@@ -32,9 +32,6 @@ test "replace strings":
 	replace last "bob" with "bobby" in {_text::5}
 	replace last "bob" in {_text::6} with "bobby"
 
-	#Replace Nth
-	replace 2nd "bob" in {_text::7} with "bobby"
-	replace 2nd "bob" with "bobby" in {_text::8}
 
 	# Case Sensitivity
 	replace all "bob" in {_text::9} with "BOBBY" with case sensitivity
@@ -43,8 +40,6 @@ test "replace strings":
 	replace first "BOB" with "bobby" in {_text::12} with case sensitivity
 	replace last "bob" in {_text::13} with "BOBBY" with case sensitivity
 	replace last "BOB" with "bobby" in {_text::14} with case sensitivity
-	replace 2nd "bob" in {_text::15} with "BOBBY" with case sensitivity
-	replace 2nd "BOB" with "bobby" in {_text::16} with case sensitivity
 
 	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
 	assert {_text::2} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
@@ -52,13 +47,9 @@ test "replace strings":
 	assert {_text::4} is "My name is bobby and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity disabled) (%{_text::4}%) failed"
 	assert {_text::5} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 1 (case sensitivity disabled) (%{_text::6}%) failed"
 	assert {_text::6} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 2 (case sensitivity disabled) (%{_text::5}%) failed"
-	assert {_text::7} is "My name is bob and this is my friend bobby! Say hi, bob!" with "replace Nth pattern 1 (case sensitivity disabled) (%{_text::7}%) failed"
-	assert {_text::8} is "My name is bob and this is my friend bobby! Say hi, bob!" with "replace Nth pattern 2 (case sensitivity disabled) (%{_text::8}%) failed"
 	assert {_text::9} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::9}%) failed"
 	assert {_text::10} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::10}%) failed"
 	assert {_text::11} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
 	assert {_text::12} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::12}%) failed"
 	assert {_text::13} is "My name is bob and this is my friend bob! Say hi, BOBBY!" with "replace last pattern 1 (case sensitivity enabled) (%{_text::13}%) failed"
 	assert {_text::14} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace last pattern 2 (case sensitivity enabled) (%{_text::14}%) failed"
-	assert {_text::15} is "My name is bob and this is my friend BOBBY! Say hi, bob!" with "replace Nth pattern 1 (case sensitivity enabled) (%{_text::15}%) failed"
-	assert {_text::16} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace Nth pattern 2 (case sensitivity enabled) (%{_text::16}%) failed"
