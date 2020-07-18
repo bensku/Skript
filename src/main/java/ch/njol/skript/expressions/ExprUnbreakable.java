@@ -25,7 +25,6 @@ import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 

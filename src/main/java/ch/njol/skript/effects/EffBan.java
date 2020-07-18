@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.effects;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Date;
 
