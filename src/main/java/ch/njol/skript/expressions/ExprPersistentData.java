@@ -19,37 +19,31 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.event.Event;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Comparator.Relation;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.PersistentDataUtils;
@@ -74,7 +68,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
-					"persistent data [(value|tag)[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
+					"[persistent data [(value|tag)[s]]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
 		}
 	}
@@ -127,14 +121,13 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	@Nullable
 	public T[] get(Event e) {
 		List<Object> values = new ArrayList<>();
+		Object[] holders = this.holders.getArray(e);
 		for (Expression<?> expr : variables.getExpressions()) {
 			String varName = ((Variable<?>) expr).getName().toString(e);
 			if (varName.contains(Variable.SEPARATOR)) { // It's a list
-				for (Object holder : holders.getArray(e))
-					Collections.addAll(values, PersistentDataUtils.getList(holder, varName));
+				Collections.addAll(values, PersistentDataUtils.getList(varName, holders));
 			} else { // It's a single variable
-				for (Object holder : holders.getArray(e))
-					values.add(PersistentDataUtils.getSingle(holder, varName));
+				Collections.addAll(values, PersistentDataUtils.getSingle(varName, holders));
 			}
 		}
 		try {
@@ -163,6 +156,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null && mode != ChangeMode.DELETE)
 			return;
+		Object[] holders = this.holders.getArray(e);
 		switch (mode) {
 			case SET:
 				for (Expression<?> expr : variables.getExpressions()) {
@@ -170,18 +164,12 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 					String varName = var.getName().toString(e);
 					if (var.isList()) {
 						varName = varName.replace("*", "");
-						for (Object holder : holders.getArray(e)) {
-							for (int i = 1; i <= delta.length; i++) {
-								// varName + i = var::i (e.g. exampleList::1, exampleList::2, etc.)
-								PersistentDataUtils.setList(holder, varName + i, delta[i - 1]);
-							}
-						}
+						for (int i = 1; i <= delta.length; i++) // varName + i = var::i (e.g. exampleList::1, exampleList::2, etc.)
+							PersistentDataUtils.setList(varName + i, delta[i - 1], holders);
 					} else if (varName.contains(Variable.SEPARATOR)) { // Specific index of a list
-						for (Object holder : holders.getArray(e))
-							PersistentDataUtils.setList(holder, varName, delta[0]);
+						PersistentDataUtils.setList(varName, delta[0], holders);
 					} else { // It's a single variable
-						for (Object holder : holders.getArray(e))
-							PersistentDataUtils.setSingle(holder, varName, delta[0]);
+						PersistentDataUtils.setSingle(varName, delta[0], holders);
 					}
 				}
 				break;
@@ -189,11 +177,9 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 				for (Expression<?> expr : variables.getExpressions()) {
 					String varName = ((Variable<?>) expr).getName().toString(e);
 					if (varName.contains(Variable.SEPARATOR)) { // It's a list
-						for (Object holder : holders.getArray(e))
-							PersistentDataUtils.removeList(holder, varName);
+						PersistentDataUtils.removeList(varName, holders);
 					} else { // It's a single variable
-						for (Object holder : holders.getArray(e))
-							PersistentDataUtils.removeSingle(holder, varName);
+						PersistentDataUtils.removeSingle(varName, holders);
 					}
 				}
 				break;
@@ -203,29 +189,31 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 					String varName = var.getName().toString(e);
 					if (var.isList()) {
 						varName = varName.replace("*", "");
-						for (Object holder : holders.getArray(e)) {
-							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName + "*");
-							if (varMap == null) {
+						for (Object holder : holders) {
+							Set<String> varIndexes = PersistentDataUtils.getListIndexes(varName + "*", holder);
+							if (varIndexes == null) {
 								// The list is empty, so we don't need to check for the next available index.
 								for (int i = 1; i <= delta.length; i++) {
 									// varName + i = var::i (e.g. exampleList::1, exampleList::2, etc.)
-									PersistentDataUtils.setList(holder, varName + i, delta[i - 1]);
+									PersistentDataUtils.setList(varName + i, delta[i - 1], holder);
 								}
 							} else {
-								int start = 1;
+								int start = 1 + varIndexes.size();
 								for (Object value : delta) {
-									while (varMap.containsKey(String.valueOf(start)))
+									while (varIndexes.contains(String.valueOf(start)))
 										start++;
-									PersistentDataUtils.setList(holder, varName + start, value);
+									PersistentDataUtils.setList(varName + start, value, holder);
 									start++;
 								}
 							}
 						}
 					} else if (delta[0] instanceof Number) {
-						for (Object holder : holders.getArray(e)) {
-							Object n = PersistentDataUtils.getSingle(holder, varName);
-							if (n instanceof Number)
-								PersistentDataUtils.setSingle(holder, varName, ((Number) n).doubleValue() + ((Number) delta[0]).doubleValue());
+						for (Object holder : holders) {
+							Object[] n = PersistentDataUtils.getSingle(varName, holder);
+							double oldValue = 0;
+							if (n.length != 0 && n[0] instanceof Number)
+								oldValue = ((Number) n[0]).doubleValue();
+							PersistentDataUtils.setSingle(varName, oldValue + ((Number) delta[0]).doubleValue(), holder);
 						}
 					}
 				}
@@ -236,26 +224,23 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 					Variable<?> var = (Variable<?>) expr;
 					String varName = var.getName().toString(e);
 					if (var.isList() || mode == ChangeMode.REMOVE_ALL) {
-						for (Object holder : holders.getArray(e)) {
-							Map<String, Object> varMap = PersistentDataUtils.getListMap(holder, varName);
+						for (Object holder : holders) {
+							Map<String, Object> varMap = PersistentDataUtils.getListMap(varName, holder);
 							int sizeBefore = varMap.size();
 							if (varMap != null) {
-								for (Object value : delta) {
-									Iterator<Entry<String, Object>> entries = varMap.entrySet().iterator();
-									while (entries.hasNext()) {
-										if (Relation.EQUAL.is(Comparators.compare(entries.next().getValue(), value)))
-											entries.remove();
-									}
-								}
+								for (Object value : delta)
+									varMap.entrySet().removeIf(entry -> Relation.EQUAL.is(Comparators.compare(entry.getValue(), value)));
 								if (sizeBefore != varMap.size()) // It changed so we should set it
-									PersistentDataUtils.setListMap(holder, varName, varMap);
+									PersistentDataUtils.setListMap(varName, varMap, holder);
 							}
 						}
 					} else if (delta[0] instanceof Number) {
-						for (Object holder : holders.getArray(e)) {
-							Object n = PersistentDataUtils.getSingle(holder, varName);
-							if (n instanceof Number)
-								PersistentDataUtils.setSingle(holder, varName, ((Number) n).doubleValue() - ((Number) delta[0]).doubleValue());
+						for (Object holder : holders) {
+							Object[] n = PersistentDataUtils.getSingle(varName, holder);
+							double oldValue = 0;
+							if (n.length != 0 && n[0] instanceof Number)
+								oldValue = ((Number) n[0]).doubleValue();
+							PersistentDataUtils.setSingle(varName, oldValue - ((Number) delta[0]).doubleValue(), holder);
 						}
 					}
 				}

@@ -36,7 +36,7 @@ import ch.njol.skript.variables.SerializedVariable.Value;
  * In this case, a list variable is any variable containing "::" (the separator)
  * The map's key is the variable's index and the map's value is the index's value.
  * With this {@link PersistentDataType}, the NamespacedKey's key is the rest of the list variable.
- * e.g. {one::two::three} where "one//two" would be the {@link NamespacedKey}'s key and "three" the key for the map.
+ * e.g. {one::two::three} where "one//two" would be the {@link org.bukkit.NamespacedKey}'s key and "three" the key for the map.
  * @see PersistentDataUtils#getNamespacedKey(String)
  * @see PersistentDataUtils
  * @author APickledWalrus

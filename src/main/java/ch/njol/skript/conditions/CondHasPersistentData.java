@@ -20,11 +20,7 @@
 
 package ch.njol.skript.conditions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.event.Event;
-
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -57,8 +53,8 @@ public class CondHasPersistentData extends Condition {
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerCondition(CondHasPersistentData.class,
-					"%persistentdataholders/itemtypes/blocks% (has|have) persistent data [(value|tag)[s]] %objects%",
-					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) have persistent data [(value|tag)[s]] %objects%"
+					"%persistentdataholders/itemtypes/blocks% (has|have|holds) [persistent data [(value|tag)[s]]] %objects%",
+					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) (have|hold) [persistent data [(value|tag)[s]]] %objects%"
 			);
 		}
 	}
@@ -92,7 +88,7 @@ public class CondHasPersistentData extends Condition {
 	@Override
 	public boolean check(Event e) {
 		for (Expression<?> expr : variables.getExpressions()) {
-			if (!(holders.check(e, holder -> PersistentDataUtils.has(holder, ((Variable<?>) expr).getName().toString(e)), isNegated())))
+			if (!(holders.check(e, holder -> PersistentDataUtils.has(((Variable<?>) expr).getName().toString(e), holder), isNegated())))
 				return false;
 		}
 		return true;

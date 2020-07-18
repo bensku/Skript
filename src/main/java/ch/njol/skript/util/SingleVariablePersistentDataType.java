@@ -30,7 +30,7 @@ import ch.njol.skript.variables.SerializedVariable.Value;
 
 /**
  * This {@link PersistentDataType} is used for single variables.
- * The {@link NamespacedKey}'s key should be the variable's name.
+ * The {@link org.bukkit.NamespacedKey}'s key should be the variable's name.
  * {hello} -> "hello" and the {@link Value} is the variable's serialized value.
  * @see PersistentDataUtils#getNamespacedKey(String)
  * @see PersistentDataUtils
