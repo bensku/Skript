@@ -85,7 +85,7 @@ public class SkriptCommand implements TabExecutor {
                     .add("@config")
                     .add("@aliases")
                     .add("@scripts")
-                    .add("@<script>")
+                    .add("<script>")
             ).add(new CommandHelp("enable", SkriptColor.DARK_RED)
                     .add("@all")
                     .add("<script>")
