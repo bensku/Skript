@@ -199,6 +199,10 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 			assert e != null;
 			if (EventValues.doesEventValueHaveTimeStates(e, c)) {
 				super.setTime(time);
+				// Since the time was changed, we now need to re-initalize the getters we already got. START
+				getters.clear();
+				init();
+				// END
 				return true;
 			}
 		}
