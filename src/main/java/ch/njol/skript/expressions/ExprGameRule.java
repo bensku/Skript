@@ -25,7 +25,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -67,18 +67,21 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.SET) return CollectionUtils.array(Object.class);
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.SET) 
+            return CollectionUtils.array(Boolean.class, Number.class);
 		return null;
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) {
+	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert delta != null;
-		if (mode == Changer.ChangeMode.SET) {
+		if (mode == ChangeMode.SET) {
 			GameRule bukkitGamerule = gamerule.getSingle(e);
-			if (bukkitGamerule == null) return;
-			for (World gameruleWorld : world.getArray(e)) gameruleWorld.setGameRule(bukkitGamerule, delta[0]);
+			if (bukkitGamerule == null) 
+                return;
+			for (World gameruleWorld : world.getArray(e))
+                gameruleWorld.setGameRule(bukkitGamerule, delta[0]);
 		}
 	}
 		
@@ -86,7 +89,8 @@ public class ExprGameRule extends SimpleExpression<GameruleValue> {
 	@Override
 	protected GameruleValue[] get(Event e) {
 		GameRule<?> bukkitGamerule = gamerule.getSingle(e);
-		if (bukkitGamerule == null) return null;
+		if (bukkitGamerule == null) 
+            return null;
 		World[] gameruleWorlds = world.getArray(e);
 		GameruleValue[] gameruleValues = new GameruleValue[gameruleWorlds.length];
 		int index = 0;
