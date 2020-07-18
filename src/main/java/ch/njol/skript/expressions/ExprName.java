@@ -38,6 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -47,7 +48,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -115,11 +115,13 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	 */
 	private int mark;
 
+	private static final ItemType AIR = Aliases.javaItemType("air");
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		mark = parseResult.mark;
-		setExpr(exprs[0] instanceof Variable ? exprs[0].getConvertedExpression(Object.class) : exprs[0]);
+		setExpr(exprs[0]);
 		return true;
 	}
 
@@ -222,8 +224,8 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			} else if (o instanceof Slot) {
 				Slot s = (Slot) o;
 				ItemStack is = s.getItem();
-				if (is != null && is.hasItemMeta()) {
-					ItemMeta m = is.getItemMeta();
+				if (is != null && !AIR.isOfType(is)) {
+					ItemMeta m = is.hasItemMeta() ? is.getItemMeta() : Bukkit.getItemFactory().getItemMeta(is.getType());
 					m.setDisplayName(name);
 					is.setItemMeta(m);
 					s.setItem(is);
