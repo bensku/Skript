@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.events;
 
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;

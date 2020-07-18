@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-
 /**
  * @author Peter Güttinger
  */

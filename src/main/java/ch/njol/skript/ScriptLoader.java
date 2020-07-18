@@ -24,6 +24,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +98,6 @@ import ch.njol.util.Callback;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import ch.njol.util.Validate;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -112,51 +112,6 @@ final public class ScriptLoader {
 	
 	@Nullable
 	public static Config currentScript = null;
-
-	/**
-	 * If true, a {@link PreScriptLoadEvent} will be called
-	 * right before a script starts parsing, but after
-	 * {@link ScriptLoader#currentScript} has been set
-	 * to a non-null {@link Config}.
-	 */
-	private static boolean callPreLoadEvent;
-
-	/**
-	 * A set of all the SkriptAddons that have called
-	 * {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	private static Set<SkriptAddon> preloadListeners = new HashSet<>();
-
-	/**
-	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean,
-	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#preloadListeners}
-	 * depending on the provided boolean (true adds, false removes).
-	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
-	 * @param addon A non-null SkriptAddon
-	 */
-	public static void setCallPreloadEvent(boolean state, SkriptAddon addon) {
-		Validate.notNull(addon);
-		callPreLoadEvent = state;
-		if (state)
-			preloadListeners.add(addon);
-		else
-			preloadListeners.remove(addon);
-	}
-
-	public static boolean getCallPreloadEvent() {
-		return callPreLoadEvent;
-	}
-
-	/**
-	 * Returns an unmodifiable list of all the addons
-	 * that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	@SuppressWarnings("null")
-	public static Set<SkriptAddon> getPreloadListeners() {
-		return Collections.unmodifiableSet(preloadListeners);
-	}
 
 	/**
 	 * use {@link #setCurrentEvent(String, Class...)}
@@ -306,6 +261,39 @@ final public class ScriptLoader {
 		return Collections.unmodifiableCollection(loadedFiles);
 	}
 	
+	/**
+	 * All disabled script files.
+	 */
+	@SuppressWarnings("null")
+	static final Set<File> disabledFiles = Collections.synchronizedSet(new HashSet<>());
+	
+	@SuppressWarnings("null")
+	public static Collection<File> getDisabledFiles() {
+		return Collections.unmodifiableCollection(disabledFiles);
+	}
+
+	/**
+	 * Filter for disabled scripts & folders.
+	 */
+	private final static FileFilter disabledFilter = new FileFilter() {
+		@Override
+		public boolean accept(final @Nullable File f) {
+			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
+		}
+	};
+
+	private static void updateDisabledScripts(Path path) {
+		disabledFiles.clear();
+		try {
+			Files.walk(path)
+				.map(Path::toFile)
+				.filter(disabledFilter::accept)
+				.forEach(disabledFiles::add);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// Initialize and start load thread
 	static {
 		loaderThread = new AsyncLoaderThread();
@@ -334,6 +322,8 @@ final public class ScriptLoader {
 			scriptsFolder.mkdirs();
 		
 		final Date start = new Date();
+
+		updateDisabledScripts(scriptsFolder.toPath());
 		
 		Runnable task = () -> {
 			final Set<File> oldLoadedFiles = new HashSet<>(loadedFiles);
@@ -405,6 +395,8 @@ final public class ScriptLoader {
 			// Do NOT sort here, list must be loaded in order it came in (see issue #667)
 			final boolean wasLocal = Language.setUseLocal(false);
 			try {
+				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
+				
 				for (final Config cfg : configs) {
 					assert cfg != null : configs.toString();
 					ScriptInfo info = loadScript(cfg);
@@ -510,6 +502,7 @@ final public class ScriptLoader {
 	 * @param config Config for script to be loaded.
 	 * @return Info about script that is loaded
 	 */
+	// Whenever you call this method, make sure to also call PreScriptLoadEvent
 	private static ScriptInfo loadScript(final @Nullable Config config) {
 		if (config == null) { // Something bad happened, hopefully got logged to console
 			return new ScriptInfo();
@@ -530,14 +523,6 @@ final public class ScriptLoader {
 			
 			currentOptions.clear();
 			currentScript = config;
-
-			/*
-			 * If editing this class, please remember to call this event
-			 * after currentScript has already been set to the provided Config,
-			 * but before the script actually starts parsing
-			 */
-			if (callPreLoadEvent)
-				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(config));
 
 //			final SerializedScript script = new SerializedScript();
 			
@@ -720,7 +705,7 @@ final public class ScriptLoader {
 		// In always sync task, enable stuff
 		Callable<Void> callable = new Callable<Void>() {
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access", "null"})
 			@Override
 			public @Nullable Void call() throws Exception {				
 				// Unload script IF we're doing async stuff
@@ -758,6 +743,10 @@ final public class ScriptLoader {
 					
 					deleteCurrentEvent();
 				}
+				
+				// Remove the script from the disabled scripts list
+				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
+				disabledFiles.remove(disabledFile);
 				
 				// Add to loaded files to use for future reloads
 				loadedFiles.add(file);
@@ -958,6 +947,7 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			disabledFiles.add(new File(script.getParentFile(), "-" + script.getName()));
 			
 			// Clear functions, DO NOT validate them yet
 			// If unloading, our caller will do this immediately after we return

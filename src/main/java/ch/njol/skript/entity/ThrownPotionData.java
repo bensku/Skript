@@ -21,14 +21,15 @@ package ch.njol.skript.entity;
 
 import java.util.Arrays;
 
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.aliases.ItemData;
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.localization.Adjective;
@@ -46,7 +47,11 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		EntityData.register(ThrownPotionData.class, "thrown potion", ThrownPotion.class, "thrown potion");
 	}
 	
-	private final static Adjective m_adjective = new Adjective("entities.thrown potion.adjective");
+	private static final Adjective m_adjective = new Adjective("entities.thrown potion.adjective");
+	private static final boolean RUNNING_LEGACY = !Skript.isRunningMinecraft(1, 13);
+	private static final ItemType POTION = Aliases.javaItemType("potion");
+	private static final ItemType SPLASH_POTION = Aliases.javaItemType("splash potion");
+	private static final ItemType LINGER_POTION = Aliases.javaItemType("lingering potion");
 	
 	@Nullable
 	private ItemType[] types;
@@ -54,26 +59,23 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
-			if ((Converters.convert((ItemType[]) exprs[0].getAll(), ItemType.class, new Converter<ItemType, ItemType>() {
-				@Override
-				@Nullable
-				public ItemType convert(final ItemType t) {
-					ItemType r = null;
-					for (final ItemData d : t.getTypes()) {
-						if (d.getType() == Material.POTION) {
-							if (r == null)
-								r = new ItemType(d);
-							else
-								r.add(d);
-						}
-					}
-					return r;
+			return (types = Converters.convert((ItemType[]) exprs[0].getAll(), ItemType.class, t -> {
+				// If the itemtype is a potion, lets make it a splash potion (required by Bukkit)
+				// Due to an issue with 1.12.2 and below, we have to force a lingering potion to be a splash potion
+				if (t.isSupertypeOf(POTION) || (t.isSupertypeOf(LINGER_POTION) && RUNNING_LEGACY)) {
+					ItemMeta meta = t.getItemMeta();
+					ItemType itemType = SPLASH_POTION.clone();
+					itemType.setItemMeta(meta);
+					return itemType;
+				} else if (!t.isSupertypeOf(SPLASH_POTION ) && !t.isSupertypeOf(LINGER_POTION)) {
+					return null;
 				}
-			})).length == 0) {
-				return false; // no error message - other things can be thrown as well
-			}
+				return t;
+			})).length != 0; // no error message - other things can be thrown as well
+		} else {
+			types = new ItemType[]{SPLASH_POTION.clone()};
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -99,6 +101,20 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		return true;
 	}
 	
+	@Nullable
+	@Override
+	public ThrownPotion spawn(Location loc) {
+		ItemType t = CollectionUtils.getRandom(types);
+		assert t != null;
+		final ItemStack i = t.getRandom();
+		if (i == null) {
+			return null;
+		}
+		ThrownPotion potion = loc.getWorld().spawn(loc, ThrownPotion.class);
+		potion.setItem(i);
+		return potion;
+	}
+	
 	@Override
 	public void set(final ThrownPotion entity) {
 		if (types != null) {
@@ -109,6 +125,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 				return; // Missing item, can't make thrown potion of it
 			entity.setItem(i);
 		}
+		assert false;
 	}
 	
 	@Override
@@ -145,7 +162,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		return "" + b.toString();
 	}
 	
-//		return ItemType.serialize(types);
+	//		return ItemType.serialize(types);
 	@Override
 	@Deprecated
 	protected boolean deserialize(final String s) {

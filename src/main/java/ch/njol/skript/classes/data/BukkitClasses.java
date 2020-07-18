@@ -40,11 +40,13 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -1722,6 +1724,7 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+
 		if (Skript.classExists("org.bukkit.GameRule")) {
 			Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
 				.user("gamerules?")
@@ -1754,6 +1757,69 @@ public class BukkitClasses {
 				})
 			);
 		}
-	}
 
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+				.user("enchant[ment][ ]offers?")
+				.name("Enchantment Offer")
+				.description("The enchantmentoffer in an enchant prepare event.")
+				.examples("on enchant prepare:",
+					"\tset enchant offer 1 to sharpness 1",
+					"\tset the cost of enchant offer 1 to 10 levels")
+				.since("INSERT VERSION")
+				.parser(new Parser<EnchantmentOffer>() {
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(EnchantmentOffer eo, int flags) {
+						return EnchantmentType.toString(eo.getEnchantment(), flags) + " " + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String toVariableNameString(EnchantmentOffer eo) {
+						return "offer:" + EnchantmentType.toString(eo.getEnchantment()) + "=" + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				}));
+		}
+		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
+		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
+				.user("attribute ?types?")
+				.name("Attribute Type")
+				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
+						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
+				.defaultExpression(new EventValueExpression<>(Attribute.class))
+				.usage(attributes.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Attribute>() {
+					@Override
+					@Nullable
+					public Attribute parse(String input, ParseContext context) {
+						return attributes.parse(input);
+					}
+					
+					@Override
+					public String toString(Attribute a, int flags) {
+						return attributes.toString(a, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Attribute a) {
+						return toString(a, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "[\\sA-Za-z]+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Attribute.class)));
+	}
 }

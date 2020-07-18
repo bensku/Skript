@@ -30,7 +30,6 @@ import org.bukkit.event.weather.WeatherEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
 
 /**
  * @author Peter Güttinger
