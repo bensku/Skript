@@ -374,8 +374,7 @@ public class SkriptCommand implements TabExecutor {
 				Skript.disableScripts(); // Clean state for next test
 
 				// Get results and show them
-				String[] lines = TestTracker.collectResults().createReport().split("
-");
+				String[] lines = TestTracker.collectResults().createReport().split("\n");
 				for (String line : lines) {
 					assert line != null;
 					Skript.info(sender, line);
@@ -397,7 +396,7 @@ public class SkriptCommand implements TabExecutor {
 		String script = StringUtils.join(args, " ", start, args.length);
 		File f = getScriptFromName(script);
 		if (f == null){
-			Skript.error(sender, (script.endsWith("/") || script.endsWith("\") ? m_invalid_folder : m_invalid_script).toString(script));
+			Skript.error(sender, (script.endsWith("/") || script.endsWith("\\") ? m_invalid_folder : m_invalid_script).toString(script));
 			return null;
 		}
 		return f;
@@ -405,9 +404,9 @@ public class SkriptCommand implements TabExecutor {
 
 	@Nullable
 	public static File getScriptFromName(String script){
-		final boolean isFolder = script.endsWith("/") || script.endsWith("\");
+		final boolean isFolder = script.endsWith("/") || script.endsWith("\\");
 		if (isFolder) {
-			script = script.replace('/', File.separatorChar).replace('\', File.separatorChar);
+			script = script.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 		} else if (!StringUtils.endsWithIgnoreCase(script, ".sk")) {
 			int dot = script.lastIndexOf('.');
 			if (dot > 0 && !script.substring(dot+1).equals("")) {
