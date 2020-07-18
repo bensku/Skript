@@ -1,18 +1,18 @@
 /**
- * This file is part of Skript.
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -30,9 +30,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -141,8 +141,8 @@ public class SimpleEvents {
 				"Please note that using this event might cause quite some lag since it gets called extremely often.")
 			.examples("# prevents sand from falling",
 				"on block physics:",
-				"\tblock is sand",
-				"\tcancel event")
+				"	block is sand",
+				"	cancel event")
 			.since("1.4.6");
 		Skript.registerEvent("Piston Extend", SimpleEvent.class, BlockPistonExtendEvent.class, "piston extend[ing]")
 			.description("Called when a piston is about to extend.")
@@ -280,15 +280,15 @@ public class SimpleEvents {
 		Skript.registerEvent("Join", SimpleEvent.class, PlayerJoinEvent.class, "[player] (login|logging in|join[ing])")
 			.description("Called when the player joins the server. The player is already in a world when this event is called, so if you want to prevent players from joining you should prefer <a href='#connect'>on connect</a> over this event.")
 			.examples("on join:",
-				"\tmessage \"Welcome on our awesome server!\"",
-				"\tbroadcast \"%player% just joined the server!\"")
+				"	message \"Welcome on our awesome server!\"",
+				"	broadcast \"%player% just joined the server!\"")
 			.since("1.0");
 		Skript.registerEvent("Connect", SimpleEvent.class, PlayerLoginEvent.class, "[player] connect[ing]")
 			.description("Called when the player connects to the server. This event is called before the player actually joins the server, so if you want to prevent players from joining you should prefer this event over <a href='#join'>on join</a>.")
 			.examples("on connect:",
-				"\tplayer doesn't have permission \"VIP\"",
-				"\tnumber of players is greater than 15",
-				"\tkick the player due to \"The last 5 slots are reserved for VIP players.\"")
+				"	player doesn't have permission \"VIP\"",
+				"	number of players is greater than 15",
+				"	kick the player due to \"The last 5 slots are reserved for VIP players.\"")
 			.since("2.0");
 		Skript.registerEvent("Kick", SimpleEvent.class, PlayerKickEvent.class, "[player] (kick|being kicked)")
 			.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects.html#EffCancelEvent'>cancel the event</a> entirely.")
@@ -315,14 +315,14 @@ public class SimpleEvents {
 			.description("Called when a player starts or stops sneaking. Use <a href='conditions.html#CondIsSneaking'>is sneaking</a> to get whether the player was sneaking before the event was called.")
 			.examples("# make players that stop sneaking jump",
 				"on sneak toggle:",
-				"\tplayer was sneaking",
-				"\tpush the player upwards at speed 0.5")
+				"	player was sneaking",
+				"	push the player upwards at speed 0.5")
 			.since("1.0");
 		Skript.registerEvent("Sprint Toggle", SimpleEvent.class, PlayerToggleSprintEvent.class, "[player] toggl(e|ing) sprint", "[player] sprint toggl(e|ing)")
 			.description("Called when a player starts or stops sprinting. Use <a href='conditions.html#CondIsSprinting'>is sprinting</a> to get whether the player was sprinting before the event was called.")
 			.examples("on sprint toggle:",
-				"\tplayer is not sprinting",
-				"\tsend \"Run!\"")
+				"	player is not sprinting",
+				"	send \"Run!\"")
 			.since("1.0");
 		Skript.registerEvent("Portal Create", SimpleEvent.class, PortalCreateEvent.class, "portal creat(e|ion)")
 			.description("Called when a portal is created, either by a player or mob lighting an obsidian frame on fire, or by a nether portal creating its teleportation target in the nether/overworld.",
@@ -347,8 +347,8 @@ public class SimpleEvents {
 		Skript.registerEvent("Sign Change", SimpleEvent.class, SignChangeEvent.class, "sign (chang[e]|edit)[ing]", "[player] (chang[e]|edit)[ing] [a] sign")
 			.description("As signs are placed empty, this event is called when a player is done editing a sign.")
 			.examples("on sign change:",
-				"\tline 2 is empty",
-				"\tset line 1 to \"<red>%line 1%\"")
+				"	line 2 is empty",
+				"	set line 1 to \"<red>%line 1%\"")
 			.since("1.0");
 		Skript.registerEvent("Spawn Change", SimpleEvent.class, SpawnChangeEvent.class, "[world] spawn change")
 			.description("Called when the spawn point of a world changes.")
@@ -389,7 +389,7 @@ public class SimpleEvents {
 			Skript.registerEvent("Entity Dismount", SimpleEvent.class, EntityDismountEvent.class, "dismount[ing]")
 				.description("Called when an entity dismounts.")
 				.examples("on dismount:",
-					"\tkill event-entity", "\tset {_vehicle} to event-entity's vehicle")
+					"\tkill event-entity")
 				.since("2.2-dev13b");
 		}
 		Skript.registerEvent("World Init", SimpleEvent.class, WorldInitEvent.class, "world init[ialization]")
@@ -416,7 +416,7 @@ public class SimpleEvents {
 			Skript.registerEvent("Gliding State Change", SimpleEvent.class, EntityToggleGlideEvent.class, "(gliding state change|toggl(e|ing) gliding)")
 				.description("Called when an entity toggles glider on or off, or when server toggles gliding state of an entity forcibly.")
 				.examples("on toggling gliding:",
-					"\tcancel the event # bad idea, but you CAN do it!")
+					"	cancel the event # bad idea, but you CAN do it!")
 				.since("2.2-dev21");
 			Skript.registerEvent("AoE Cloud Effect", SimpleEvent.class, AreaEffectCloudApplyEvent.class, "(area|AoE) [cloud] effect")
 				.description("Called when area effect cloud applies its potion effect. This happens every 5 ticks by default.")
@@ -447,31 +447,31 @@ public class SimpleEvents {
 			Skript.registerEvent("Resurrect Attempt", SimpleEvent.class, EntityResurrectEvent.class, "[entity] resurrect[ion] [attempt]")
 				.description("Called when an entity dies, always. If they are not holding a totem, this is cancelled - you can, however, uncancel it.")
 				.examples("on resurrect attempt:",
-					"\tentity is player",
-					"\tentity has permission \"admin.undying\"",
-					"\tuncancel the event")
+					"	entity is player",
+					"	entity has permission \"admin.undying\"",
+					"	uncancel the event")
 				.since("2.2-dev28");
 			SkriptEventHandler.listenCancelled.add(EntityResurrectEvent.class); // Listen this even when cancelled
 		}
 		Skript.registerEvent("Player World Change", SimpleEvent.class, PlayerChangedWorldEvent.class, "[player] world chang(ing|e[d])")
 			.description("Called when a player enters a world. Does not work with other entities!")
 			.examples("on player world change:",
-				"\tworld is \"city\"",
-				"\tsend \"Welcome to the City!\"")
+				"	world is \"city\"",
+				"	send \"Welcome to the City!\"")
 			.since("2.2-dev28");
 		Skript.registerEvent("Flight Toggle", SimpleEvent.class, PlayerToggleFlightEvent.class, "[player] flight toggl(e|ing)", "[player] toggl(e|ing) flight")
 			.description("Called when a players stops/starts flying.")
 			.examples("on flight toggle:",
-				"\tif {game::%player%::playing} exists:",
-				"\t	cancel event")
+				"	if {game::%player%::playing} exists:",
+				"		cancel event")
 			.since("2.2-dev36");
 		if (Skript.classExists("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
 			Skript.registerEvent("Language Change", SimpleEvent.class, PlayerLocaleChangeEvent.class, "[player] (language|locale) chang(e|ing)", "[player] chang(e|ing) (language|locale)")
 				.description("Called after a player changed their language in the game settings. You can use the <a href='expressions.html#ExprLanguage'>language</a> expression to get the current language of the player.",
 					"This event requires Minecraft 1.12+.")
 				.examples("on language change:",
-					"\tif player's language starts with \"en\":",
-					"\t	send \"Hello!\"")
+					"	if player's language starts with \"en\":",
+					"		send \"Hello!\"")
 				.since("2.3");
 		}
 		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerJumpEvent")) {
@@ -479,8 +479,8 @@ public class SimpleEvents {
 				.description("Called whenever a player jumps.",
 					"This event requires PaperSpigot.")
 				.examples("on jump:",
-					"\tevent-player does not have permission \"jump\"",
-					"\tcancel event")
+					"	event-player does not have permission \"jump\"",
+					"	cancel event")
 				.since("2.3");
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
@@ -492,8 +492,8 @@ public class SimpleEvents {
 					"they will return the values before the swap -",
 					"this enables you to cancel the event before anything happens.")
 				.examples("on swap hand items:",
-					"\tevent-player's tool is a diamond sword",
-					"\tcancel event")
+					"	event-player's tool is a diamond sword",
+					"	cancel event")
 				.since("2.3");
 		}
 		Skript.registerEvent("Server List Ping", SimpleEvent.class, (Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent") ? PaperServerListPingEvent.class : ServerListPingEvent.class), "server [list] ping")
@@ -506,9 +506,9 @@ public class SimpleEvents {
 					"<a href='expressions.html#ExprVersionString'>Version String</a>, <a href='expressions.html#ExprHoverList'>Hover List</a> and <a href='expressions.html#ExprServerIcon'>Server Icon</a> " +
 					"expressions, and <a href='effects.html#EffPlayerInfoVisibility'>Player Info Visibility</a> and <a href='effects.html#EffHidePlayerFromServerList'>Hide Player from Server List</a> effects to modify the server list.")
 			.examples("on server list ping:",
-				"\tset the motd to \"Welcome %{player-by-IP::%ip%}%! Join now!\" if {player-by-IP::%ip%} is set, else \"Join now!\"",
-				"\tset the fake max players count to (online players count + 1)",
-				"\tset the shown icon to a random server icon out of {server-icons::*}")
+				"	set the motd to \"Welcome %{player-by-IP::%ip%}%! Join now!\" if {player-by-IP::%ip%} is set, else \"Join now!\"",
+				"	set the fake max players count to (online players count + 1)",
+				"	set the shown icon to a random server icon out of {server-icons::*}")
 			.since("2.3");
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
@@ -516,8 +516,8 @@ public class SimpleEvents {
 				.description("Called when an entity swims or stops swimming.")
 				.requiredPlugins("1.13 or newer")
 				.examples("on swim toggle:",
-					"\tevent-entity does not have permission \"swim\"",
-					"\tcancel event")
+					"	event-entity does not have permission \"swim\"",
+					"	cancel event")
 				.since("2.3");
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
@@ -525,7 +525,7 @@ public class SimpleEvents {
 				.description("Called when the player activates the riptide enchantment, using their trident to propel them through the air.",
 					"Note: the riptide action is performed client side, so manipulating the player in this event may have undesired effects.")
 				.examples("on riptide:",
-					"\tsend \"You are riptiding!\"")
+					"	send \"You are riptiding!\"")
 				.since("2.5");
 		}
 		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
@@ -533,7 +533,7 @@ public class SimpleEvents {
 				.description("Called when armor pieces of a player are changed.")
 				.requiredPlugins("Paper")
 				.examples("on armor change:",
-					"\tsend \"You equipped %event-item%!\"")
+					"	send \"You equipped %event-item%!\"")
 				.since("2.5");
 		}
 		if (Skript.classExists("org.bukkit.event.block.SpongeAbsorbEvent")) {
