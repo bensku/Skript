@@ -37,6 +37,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -1751,6 +1752,37 @@ public class BukkitClasses {
 					}
 				}));
 		}
+		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
+		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
+				.user("attribute ?types?")
+				.name("Attribute Type")
+				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
+						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
+				.defaultExpression(new EventValueExpression<>(Attribute.class))
+				.usage(attributes.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Attribute>() {
+					@Override
+					@Nullable
+					public Attribute parse(String input, ParseContext context) {
+						return attributes.parse(input);
+					}
+					
+					@Override
+					public String toString(Attribute a, int flags) {
+						return attributes.toString(a, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Attribute a) {
+						return toString(a, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "[\\sA-Za-z]+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Attribute.class)));
 	}
-
 }
