@@ -469,7 +469,6 @@ public class DefaultComparators {
 			}
 		});
 		
-<<<<<<< HEAD
 		Comparators.registerComparator(GameruleValue.class, GameruleValue.class, new Comparator<GameruleValue, GameruleValue>() {
 			@Override
 			public Relation compare(GameruleValue o1, GameruleValue o2) {
