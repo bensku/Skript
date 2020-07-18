@@ -440,6 +440,13 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// ProjectileHitEvent
+		EventValues.registerEventValue(ProjectileHitEvent.class, Block.class, new Getter<Block, ProjectileHitEvent>() {
+			@Nullable
+			@Override
+			public Block get(ProjectileHitEvent e) {
+				return e.getHitBlock();
+			}
+		}, 0);
 		EventValues.registerEventValue(ProjectileHitEvent.class, Entity.class, new Getter<Entity, ProjectileHitEvent>() {
 			@Override
 			@Nullable
@@ -725,7 +732,7 @@ public final class BukkitEventValues {
 				return e.getEntity().getLocation();
 			}
 		}, 0);
-			
+		
 		// HangingBreakEvent
 		EventValues.registerEventValue(HangingBreakEvent.class, Entity.class, new Getter<Entity, HangingBreakEvent>() {
 			@Nullable
