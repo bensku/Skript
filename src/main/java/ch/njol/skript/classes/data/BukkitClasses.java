@@ -20,12 +20,15 @@
 package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -53,6 +56,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
@@ -933,7 +937,36 @@ public class BukkitClasses {
 						return ".+";
 					}
 				}));
-		
+		Classes.registerClass(new ClassInfo<>(EntityRegainHealthEvent.RegainReason.class, "healreason")
+			.user("(regen|heal) (reason|cause)")
+			.name("Heal Reason")
+			.description("The heal reason in a heal event")
+			.usage(String.join(", ", Collections.singletonList(Arrays.stream(EntityRegainHealthEvent.RegainReason.values()).map(Enum::name).collect(Collectors.joining(", ")))))
+			.examples("").since("INSERT VERSION").parser(new Parser<EntityRegainHealthEvent.RegainReason>() {
+				@Override
+				public EntityRegainHealthEvent.RegainReason parse(String s, ParseContext parseContext) {
+					try {
+						return EntityRegainHealthEvent.RegainReason.valueOf(s);
+					} catch (IllegalArgumentException e){
+						return null;
+					}
+				}
+				
+				@Override
+				public String toString(EntityRegainHealthEvent.RegainReason o, int flags) {
+					return "heal reason " + o.name();
+				}
+				
+				@Override
+				public String toVariableNameString(EntityRegainHealthEvent.RegainReason o) {
+					return "regainreason:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "regainreason:\\w+";
+				}
+			}).serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")
 				.name("Game Mode")
