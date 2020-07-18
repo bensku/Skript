@@ -388,6 +388,56 @@ public class SkriptCommand implements TabExecutor {
         return true;
     }
 
+    private final static ArgsMessage m_invalid_script = new ArgsMessage(NODE + ".invalid script");
+    private final static ArgsMessage m_invalid_folder = new ArgsMessage(NODE + ".invalid folder");
+
+    @Nullable
+    private static File getScriptFromArgs(final CommandSender sender, final String[] args, final int start) {
+        String script = StringUtils.join(args, " ", start, args.length);
+        File f = getScriptFromName(script);
+        if (f == null){
+            Skript.error(sender, (script.endsWith("/") || script.endsWith("\\") ? m_invalid_folder : m_invalid_script).toString(script));
+            return null;
+        }
+        return f;
+    }
+
+    @Nullable
+    public static File getScriptFromName(String script){
+        final boolean isFolder = script.endsWith("/") || script.endsWith("\\");
+        if (isFolder) {
+            script = script.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+        } else if (!StringUtils.endsWithIgnoreCase(script, ".sk")) {
+            int dot = script.lastIndexOf('.');
+            if (dot > 0 && !script.substring(dot+1).equals("")) {
+                return null;
+            }
+            script = script + ".sk";
+        }
+        if (script.startsWith("-"))
+            script = script.substring(1);
+        File f = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER + File.separator + script);
+        if (!f.exists()) {
+            f = new File(f.getParentFile(), "-" + f.getName());
+            if (!f.exists()) {
+                return null;
+            }
+        }
+        return f;
+    }
+
+    private static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
+        return FileUtils.renameAll(folder, new Converter<String, String>() {
+            @Override
+            @Nullable
+            public String convert(final String name) {
+                if (StringUtils.endsWithIgnoreCase(name, ".sk") && name.startsWith("-") == enable)
+                    return enable ? name.substring(1) : "-" + name;
+                return null;
+            }
+        });
+    }
+	
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] args) {
         File file = new File(Skript.getInstance().getDataFolder(), "scripts");
@@ -446,55 +496,4 @@ public class SkriptCommand implements TabExecutor {
             return Collections.emptyList();
         }
     }
-
-    private final static ArgsMessage m_invalid_script = new ArgsMessage(NODE + ".invalid script");
-    private final static ArgsMessage m_invalid_folder = new ArgsMessage(NODE + ".invalid folder");
-
-    @Nullable
-    private static File getScriptFromArgs(final CommandSender sender, final String[] args, final int start) {
-        String script = StringUtils.join(args, " ", start, args.length);
-        File f = getScriptFromName(script);
-        if (f == null){
-            Skript.error(sender, (script.endsWith("/") || script.endsWith("\\") ? m_invalid_folder : m_invalid_script).toString(script));
-            return null;
-        }
-        return f;
-    }
-
-    @Nullable
-    public static File getScriptFromName(String script){
-        final boolean isFolder = script.endsWith("/") || script.endsWith("\\");
-        if (isFolder) {
-            script = script.replace('/', File.separatorChar).replace('\\', File.separatorChar);
-        } else if (!StringUtils.endsWithIgnoreCase(script, ".sk")) {
-            int dot = script.lastIndexOf('.');
-            if (dot > 0 && !script.substring(dot+1).equals("")) {
-                return null;
-            }
-            script = script + ".sk";
-        }
-        if (script.startsWith("-"))
-            script = script.substring(1);
-        File f = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER + File.separator + script);
-        if (!f.exists()) {
-            f = new File(f.getParentFile(), "-" + f.getName());
-            if (!f.exists()) {
-                return null;
-            }
-        }
-        return f;
-    }
-
-    private static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
-        return FileUtils.renameAll(folder, new Converter<String, String>() {
-            @Override
-            @Nullable
-            public String convert(final String name) {
-                if (StringUtils.endsWithIgnoreCase(name, ".sk") && name.startsWith("-") == enable)
-                    return enable ? name.substring(1) : "-" + name;
-                return null;
-            }
-        });
-    }
-	
 }
