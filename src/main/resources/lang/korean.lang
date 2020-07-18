@@ -1,7 +1,7 @@
 # Default Korean language file
 
 # Which version of Skript this language file was written for
-version: 2.4.1
+version: @version@
 
 # -- General --
 and: and
@@ -54,33 +54,41 @@ skript:
 skript command:
 	help:
 		description: Skript의 주요 명령어
-		help: 이 도움말 메시지를 인쇄합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/backup/update'를 사용하십시오.
+		help: 이 도움말 메시지를 표시합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/backup/update'를 사용하십시오.
 		reload:
 			description: 구성, 모든 스크립트, 모든 것 또는 특정 스크립트를 다시로드합니다.
 			@all: 모든 구성 및 모든 스크립트를 다시 로드합니다.
+			all: 모든 구성 및 모든 스크립트를 다시 로드합니다.
 			@config: 기본 구성을 다시 로드합니다.
+			config: 기본 구성을 다시 로드합니다.
 			@aliases: 별칭 구성을 다시 로드합니다 (aliases-*.sk)
+			aliases: 별칭 구성을 다시 로드합니다 (aliases-*.sk)
 			@scripts: 모든 스크립트를 다시 로드합니다.
+			scripts: 모든 스크립트를 다시 로드합니다.
 			<script>: 특정 스크립트 또는 스크립트 폴더를 다시 로드합니다.
 		enable:
 			description: 모든 스크립트 또는 특정 스크립트를 활성화 합니다.
 			@all: 모든 스크립트를 활성화 합니다.
+			all: 모든 스크립트를 활성화 합니다.
 			<script>: 특정 스크립트 또는 스크립트 폴더를 활성화 합니다.
 		disable:
 			description: 모든 스크립트 또는 특정 스크립트를 비활성화 합니다.
 			@all: 모든 스크립트를 비활성화 합니다.
+			all: 모든 스크립트를 비활성화 합니다.
 			<script>: 특정 스크립트 또는 스크립트 폴더를 비활성화 합니다.
 		backup:
 			description: 모든 스크립트 또는 특정 스크립트를 백업합니다.
 			@all: 모든 스크립트를 백업합니다.
+			all: 모든 스크립트를 백업합니다.
 			<script>: 특정 스크립트 또는 스크립트 폴더를 백업합니다.
 		update:
 			description: 업데이트를 확인하거나, 변경 로그를 읽거나, 최신 버전의 Skript를 다운로드합니다.
 			check: 새 버전을 확인합니다.
 			changes: 현재 버전 이후의 모든 변경 사항을 나열합니다.
 			download: 최신 버전을 다운로드합니다.
+		info: Skript의 별명 및 문서에 대한 링크가있는 메시지를 표시합니다
 		gen-docs: 플러그인 폴더의 문서 템플릿을 사용하여 문서를 생성합니다.
-
+		
 	invalid script: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red> 스크립트를 찾을 수 없습니다!
 	invalid folder: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red> 폴더를 찾을 수 없습니다!
 	reload:
@@ -136,12 +144,19 @@ skript command:
 			# invalid version: <gold>%s<red> 버전에 대한 변경 로그가 없습니다.
 			title: <bold><cyan>%s<reset> (%s)
 			next page: <grey>%s의 %s페이지입니다. 다음 페이지의 <gold>/skript update changes %s <gray>를 입력합니다 (위쪽 화살표 키 사용).
+	info:
+		aliases: Skript의 별명은 여기에서 찾을 수 있습니다: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Skript의 문서는 여기에서 찾을 수 있습니다: <aqua>https://skriptlang.github.io/Skript
+		version: Skript 버전: <aqua>%s
+		server: 서버 버전: <aqua>%s
+		addons: 설치된 Skript 애드온:
 
 # -- Updater --
 updater:
 	not started: Skript는 아직 최신 버전을 확인하지 않았습니다. <gold>/skript update check <reset>을 사용하십시오.
 	checking: Skript의 최신 버전 확인 중...
 	check in progress: 현재 새 버전 확인이 진행 중입니다.
+	updater disabled: 업데이터가 비활성화되어 있으므로 Skript의 최신 버전을 확인하지 않았습니다.
 	check error: <red>Skript의 최신 버전을 확인하는 동안 오류가 발생했습니다: <light red>%s
 	running latest version: 현재 안정적인 최신 Skript 버전을 실행하고 있습니다.
 	running latest version (beta): 현재 <i>베타<r>버전의 Skript을 실행하고 있으며 새로운 <i>stable<r>버전을 사용할 수 없습니다. 최신 베타 버전으로 수동 업데이트해야합니다.
@@ -248,6 +263,8 @@ enchantments:
 		multishot: Multishot, Multi-Shot
 		piercing: Piercing
 		quick_charge: Quick Charge
+		# new 1.16 Enchantment
+		soul_speed: Soul Speed
 
 # -- Potion Effects --
 potions:
@@ -375,6 +392,15 @@ biomes:
 	deep_lukewarm_ocean: deep lukewarm ocean
 	deep_cold_ocean: deep cold ocean
 	deep_frozen_ocean: deep frozen ocean
+	# 1.14 biomes
+	bamboo_jungle: bamboo jungle
+	bamboo_jungle_hills: bamboo jungle hills
+	# 1.16 biomes
+	nether_wastes: nether wastes, nether, hell
+	crimson_forest: crimson forest
+	soul_sand_valley: soul sand valley
+	warped_forest: warped forest
+	basalt_deltas: basalt deltas
 
 # -- Tree Types --
 tree types:
@@ -452,9 +478,9 @@ time:
 	real: real, rl, irl
 	minecraft: mc, minecraft
 	errors:
-		24 hours: A day only has 24 hours
-		12 hours: Using 12-hour format does not allow more than 12 hours
-		60 minutes: An hour only has 60 minutes
+		24 hours: 하루 24 시간 만 있습니다
+		12 hours: 12 시간 형식을 사용하면 12 시간을 초과 할 수 없습니다
+		60 minutes: 한 시간에 60 분만 있습니다
 
 # -- Chat and Wool Colours --
 colors:
@@ -735,6 +761,12 @@ entities:
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
+	red mooshroom:
+		name: red mooshroom¦s
+		pattern: <age> red mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
+	brown mooshroom:
+		name: brown mooshroom¦s
+		pattern: <age> brown mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
 	ocelot:
 		name: ocelot¦s @an
 		pattern: <age> ocelot(|1¦s)
@@ -743,7 +775,7 @@ entities:
 		pattern: (wild|untamed) <age> ocelot(|1¦s)
 	cat:
 		name: cat¦s
-		pattern: <age> cat(|1¦s)|tamed <age> ocelot(|1¦s)|(4¦)kitten(|1¦s)
+		pattern: <age> [%-cattype%] cat(|1¦s)|tamed <age> ocelot(|1¦s)|(4¦)[%-cattype%] kitten(|1¦s)
 	painting:
 		name: painting¦s
 		pattern: painting(|1¦s)
@@ -766,8 +798,8 @@ entities:
 		name: non-op¦s
 		pattern: non(-| |)op(|1¦s)
 	zombie pigman:
-		name: zombie pig¦man¦men
-		pattern: <age> zombie pigm(an|1¦en)|(4¦)zombie pigletboy(|1¦s)
+		name: (zombie pig¦man¦men|zombified piglin)
+		pattern: <age> (zombie pigm(an|1¦en)|zombified piglin(|1¦s))|(4¦)(zombie pigletboy(|1¦s)|zombified piglin (kid(|1¦s)|child(|1¦ren)))
 	sheep:
 		name: sheep
 		# while sheep is ambiguous, sheeps is plural (even though it's wrong)
@@ -903,11 +935,11 @@ entities:
 		not a block error: Falling blocks must be blocks, not items
 	thrown potion:
 		name: thrown potion¦s
-		pattern: thrown (potion(|1¦s)|(¦2)%-itemtypes%)
+		pattern: thrown (potion(|1¦s)|(2¦)%-itemtypes%)
 		adjective: thrown
 	dropped item:
 		name: dropped item¦s
-		pattern: dropped (item(|1¦s)|(¦2)%-itemtypes%)|item entit(y|1¦ies)
+		pattern: dropped (item(|1¦s)|(2¦)%-itemtypes%)|item entit(y|1¦ies)
 		adjective: dropped
 	horse:
 		name: horse¦s
@@ -1169,7 +1201,33 @@ entities:
 	angry nectar bee:
 		name: angry nectar bee¦s
 		pattern: <age> angry bee(|1¦s) with nectar
+	#1.16 entities
+	piglin:
+		name: piglin¦s
+		pattern: <age> piglin(|1¦s)|(4¦)piglin (kid(|1¦s)|child(|1¦ren))
+	hoglin:
+		name: hoglin¦s
+		pattern: <age> hoglin(|1¦s)|(4¦)hoglin (kid(|1¦s)|child(|1¦ren))
+	zoglin:
+		name: zoglin¦s
+		pattern: <age> zoglin(|1¦s)|(4¦)zoglin (kid(|1¦s)|child(|1¦ren))
+	strider:
+		name: strider¦s
+		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
 
+# -- Cat Types --
+cat types:
+	tabby: tabby
+	black: black
+	red: red
+	siamese: siamese
+	british_shorthair: british shorthair
+	calico: calico
+	persian: persian
+	ragdoll: ragdoll
+	white: white
+	jellie: jellie
+	all_black: all black
 
 # -- Damage Causes --
 damage causes:
@@ -1481,6 +1539,37 @@ visual effects:
 	falling_nectar:
 		name: falling nectar @-
 		pattern: falling nectar
+	# 1.16 particles
+	ash:
+		name: ash @-
+		pattern: ash
+	crimson_spore:
+		name: crimson spore @-
+		pattern: crimson spore
+	soul_fire_flame:
+		name: soul fire flame @-
+		pattern: soul fire flame
+	warped_spore:
+		name: warped spore @-
+		pattern: warped spore
+	dripping_obsidian_tear:
+		name: dripping obsidian tear @-
+		pattern: dripping obsidian tear
+	falling_obsidian_tear:
+		name: falling obsidian tear @-
+		pattern: falling obsidian tear
+	landing_obsidian_tear:
+		name: landing obsidian tear @-
+		pattern: landing obsidian tear
+	soul:
+		name: soul @-
+		pattern: soul
+	reverse_portal:
+		name: reverse portal @-
+		pattern: reverse portal
+	white_ash:
+		name: white ash @-
+		pattern: white ash
 
 # -- Inventory Actions --
 inventory actions:
