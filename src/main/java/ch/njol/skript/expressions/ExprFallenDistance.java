@@ -52,7 +52,7 @@ public class ExprFallenDistance extends SimplePropertyExpression<Entity, Number>
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.RESET || mode == ChangeMode.REMOVE_ALL ||mode == ChangeMode.DELETE) ? null : CollectionUtils.array(Number.class);
+		return (mode == ChangeMode.RESET || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.DELETE) ? null : CollectionUtils.array(Number.class);
 	}
 	
 	@Override
@@ -90,7 +90,7 @@ public class ExprFallenDistance extends SimplePropertyExpression<Entity, Number>
 	
 	@Override
 	protected String getPropertyName() {
-		return "[the] (fall[en]|fell[ed]) (distance|height)";
+		return "fallen distance";
 	}
 	
 }
