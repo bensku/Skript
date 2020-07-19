@@ -31,16 +31,16 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Fallen distance")
+@Name("Fall distance")
 @Description({"The distance an entity has fallen for"})
-@Examples({"set all entities' fallen distance to 10",
+@Examples({"set all entities' fall distance to 10",
 	"on damage:",
 	"\tsend \"%victim's fall distance%\" to victim"})
 @Since("INSERT VERSION")
 public class ExprFallenDistance extends SimplePropertyExpression<Entity, Number> {
 	
 	static {
-		register(ExprFallenDistance.class, Number.class, "[the] (fall[en]|fell[ed]) (distance|height)", "entities");
+		register(ExprFallenDistance.class, Number.class, "[the] fall[en] (distance|height)", "entities");
 	}
 	
 	@Nullable
@@ -90,7 +90,7 @@ public class ExprFallenDistance extends SimplePropertyExpression<Entity, Number>
 	
 	@Override
 	protected String getPropertyName() {
-		return "fallen distance";
+		return "fall distance";
 	}
 	
 }
