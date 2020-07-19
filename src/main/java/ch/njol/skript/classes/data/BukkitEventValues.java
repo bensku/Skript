@@ -440,7 +440,8 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// ProjectileHitEvent
-		EventValues.registerEventValue(ProjectileHitEvent.class, Block.class, new Getter<Block, ProjectileHitEvent>() {
+		// ProjectileHitEvent#getPlayer was added in 1.11
+		if(Skript.methodExists(ProjectileHitEvent.class, "getHitBlock")) EventValues.registerEventValue(ProjectileHitEvent.class, Block.class, new Getter<Block, ProjectileHitEvent>() {
 			@Nullable
 			@Override
 			public Block get(ProjectileHitEvent e) {
