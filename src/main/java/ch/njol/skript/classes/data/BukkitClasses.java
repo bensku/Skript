@@ -1720,6 +1720,34 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Gene.class)));
 		}
+		EnumUtils<EntityRegainHealthEvent.RegainReason> regainReasons = new EnumUtils<>(EntityRegainHealthEvent.RegainReason.class, "heal reasons");
+		Classes.registerClass(new ClassInfo<>(EntityRegainHealthEvent.RegainReason.class, "healreason")
+			.user("(regen|heal) (reason|cause)")
+			.name("Heal Reason")
+			.description("The heal reason in a heal event")
+			.usage(regainReasons.getAllNames())
+			.examples("").since("INSERT VERSION").parser(new Parser<EntityRegainHealthEvent.RegainReason>() {
+				@Override
+				@Nullable
+				public EntityRegainHealthEvent.RegainReason parse(String s, ParseContext parseContext) {
+					return regainReasons.parse(s);
+				}
+				
+				@Override
+				public String toString(EntityRegainHealthEvent.RegainReason o, int flags) {
+					return regainReasons.toString(o, flags);
+				}
+				
+				@Override
+				public String toVariableNameString(EntityRegainHealthEvent.RegainReason o) {
+					return "regainreason:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "regainreason:\\w+";
+				}
+			}).serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));
 		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
 			EnumUtils<Cat.Type> races = new EnumUtils<>(Cat.Type.class, "cat types");
 			Classes.registerClass(new ClassInfo<>(Cat.Type.class, "cattype")
