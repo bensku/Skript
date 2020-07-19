@@ -71,7 +71,7 @@ public class EffReplace extends Effect {
 	
 	private String type = "ALL";
 	@SuppressWarnings("null")
-	private Expression<?> haystack, needles, replacement;
+	private Expression<?> storage, textToReplace, replacement;
 	private boolean caseSensitive = false;
 	private boolean regex = false;
 	private boolean replaceString = false;
@@ -88,13 +88,13 @@ public class EffReplace extends Effect {
 			type = ReplacementTypes.values()[mark < 4 ? mark : (mark ^ 4)].name();
 		}
 		if (matchedPattern % 2 == 1) {
-			needles = expressions[0];
+			textToReplace = expressions[0];
 			replacement = expressions[2];
-			haystack = expressions[1];
+			storage = expressions[1];
 		} else {
-			needles = expressions[0];
+			textToReplace = expressions[0];
 			replacement = expressions[1];
-			haystack = expressions[2];
+			storage = expressions[2];
 		}
 		return true;
 	}
@@ -102,33 +102,33 @@ public class EffReplace extends Effect {
 	@Override
 	@SuppressWarnings("null")
 	protected void execute(Event e) {
-		Object[] haystack = this.haystack.getAll(e);
-		Object[] needles = this.needles.getAll(e);
+		Object[] storage = this.storage.getAll(e);
+		Object[] textToReplace = this.textToReplace.getAll(e);
 		Object replacement = this.replacement.getSingle(e);
 		if (replaceString) {
-			if (haystack == null || needles == null || replacement == null) return;
-			Object[] oldNeedles = Arrays.stream((String[]) needles).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
+			if (storage == null || textToReplace == null || replacement == null) return;
+			Object[] oldtextToReplace = Arrays.stream((String[]) textToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
 			String newText = (String) replacement;
 			if (!regex) newText = newText.replace("$", "\\$");
 			switch (type) {
 				case "ALL":
-					for (int x = 0; x < haystack.length; x++) {
-						for (Object s : oldNeedles) {
-							haystack[x] = ((String) haystack[x]).replaceAll((String) s, newText);
+					for (int x = 0; x < storage.length; x++) {
+						for (Object s : oldtextToReplace) {
+							storage[x] = ((String) storage[x]).replaceAll((String) s, newText);
 						}
 					}
 					break;
 				case "FIRST":
-					for (int x = 0; x < haystack.length; x++) {
-						for (Object s : oldNeedles) {
-							haystack[x] = ((String) haystack[x]).replaceFirst((String) s, newText);
+					for (int x = 0; x < storage.length; x++) {
+						for (Object s : oldtextToReplace) {
+							storage[x] = ((String) storage[x]).replaceFirst((String) s, newText);
 						}
 					}
 					break;
 				case "LAST":
-					for (int x = 0; x < haystack.length; x++) {
-						for (Object s : oldNeedles) {
-							Matcher matcher = Pattern.compile((String) s).matcher((String) haystack[x]);
+					for (int x = 0; x < storage.length; x++) {
+						for (Object s : oldtextToReplace) {
+							Matcher matcher = Pattern.compile((String) s).matcher((String) storage[x]);
 							if (!matcher.find()) continue;
 							int lastMatchStart = 0;
 							do {
@@ -138,15 +138,15 @@ public class EffReplace extends Effect {
 							StringBuffer sb = new StringBuffer();
 							matcher.appendReplacement(sb, newText);
 							matcher.appendTail(sb);
-							haystack[x] = sb.toString();
+							storage[x] = sb.toString();
 						}
 					}
 					break;
 			}
-			this.haystack.change(e, haystack, Changer.ChangeMode.SET);
+			this.storage.change(e, storage, Changer.ChangeMode.SET);
 		} else {
-			for (Inventory inv : (Inventory[]) haystack)
-				for (ItemType item : (ItemType[]) needles)
+			for (Inventory inv : (Inventory[]) storage)
+				for (ItemType item : (ItemType[]) textToReplace)
 					for (Integer slot : inv.all(item.getRandom()).keySet()) {
 						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
 					}
@@ -156,7 +156,7 @@ public class EffReplace extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "replace " + type + " " + needles.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + haystack.toString(e, debug);
+		return "replace " + type + " " + textToReplace.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + storage.toString(e, debug);
 		
 	}
 }
