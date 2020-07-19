@@ -45,6 +45,7 @@ import ch.njol.util.StringUtils;
 	"set {_s::*} to the string argument split at \",\""})
 @Since("2.1, INSERT VERSION (added regex support)")
 public class ExprJoinSplit extends SimpleExpression<String> {
+	
 	static {
 		Skript.registerExpression(ExprJoinSplit.class, String.class, ExpressionType.COMBINED,
 			"(concat[enate]|join) %strings% [(with|using|by) [[the] delimiter] %-string%]",
@@ -53,8 +54,10 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 			"regex split %string% (at|using|by) [[the] delimiter] %string%",
 			"regex %string% split (at|using|by) [[the] delimiter] %string%");
 	}
+	
 	private boolean regex;
 	private boolean join;
+	
 	@SuppressWarnings("null")
 	private Expression<String> strings;
 	@Nullable
@@ -96,7 +99,13 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return join ? "join " + strings.toString(e, debug) + (delimiter != null ? " with " + delimiter.toString(e, debug) : "") : ((regex ? "regex " : "")+"split " + strings.toString(e, debug) + (delimiter != null ? " at " + delimiter.toString(e, debug) : ""));
+		return join ? "join " + strings.toString(e, debug)
+			+(delimiter != null ? " with "
+			+ delimiter.toString(e, debug) : "")
+			: ((regex ? "regex " : "")
+			+"split " + strings.toString(e, debug)
+			+ (delimiter != null ? " at "
+			+ delimiter.toString(e, debug) : ""));
 	}
 	
 }
