@@ -88,23 +88,23 @@ public class ExprReplace extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("null")
 	protected String[] get(Event event) {
-		Object[] oldNeedles = Arrays.stream(needles.getAll(event)).map((String he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
+		Object[] oldNeedles = Arrays.stream(needles.getAll(event)).map((String he) -> ((caseSensitive && !regex ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
 		String newText = replacement.getSingle(event);
 		if (!regex) newText = newText.replace("$", "\\$");
 		String newHaystack = haystack.getSingle(event);
 		switch (type) {
 			case "ALL":
 				for (Object s : oldNeedles) {
-					newHaystack = newHaystack.replaceAll(s.toString(), newText);
+					newHaystack = newHaystack.replaceAll((String) s, newText);
 				}
 			case "FIRST":
 				for (Object s : oldNeedles) {
-					newHaystack = newHaystack.replaceFirst(s.toString(), newText);
+					newHaystack = newHaystack.replaceFirst((String) s, newText);
 				}
 				break;
 			case "LAST":
 				for (Object s : oldNeedles) {
-					Matcher matcher = Pattern.compile(s.toString()).matcher(newHaystack);
+					Matcher matcher = Pattern.compile((String) s).matcher(newHaystack);
 					if (!matcher.find()) continue;
 					int lastMatchStart = 0;
 					do {
