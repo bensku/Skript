@@ -42,10 +42,10 @@ import ch.njol.util.coll.CollectionUtils;
 			"\tset the explosive yield of the event-entity to 10"})
 @RequiredPlugins("Minecraft 1.12 or newer for creepers")
 @Since("INSERT VERSION")
-public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, Number> {
+public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number> {
 
 	static {
-		register(ExprExplosiveEntityYield.class, Number.class, "explosive (yield|radius|size)", "entities");
+		register(ExprExplosiveYield.class, Number.class, "explosive (yield|radius|size)", "entities");
 	}
 
 	private final static boolean CREEPER_USABLE = Skript.methodExists(Creeper.class, "getExplosionRadius");

@@ -47,10 +47,10 @@ import ch.njol.util.coll.CollectionUtils;
 		"\tset the yield of the explosion to 10"})
 @Events("explosion prime")
 @Since("INSERT VERSION")
-public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
+public class ExprExplosionYield extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprExplosionPrimeEventYield.class, Number.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(ExprExplosionYield.class, Number.class, ExpressionType.SIMPLE,
 			"[the] explosion (yield|radius|size)",
 			"[the] (yield|radius|size) of [the] explosion"
 		);
@@ -111,13 +111,13 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public Class<? extends Number> getReturnType() {
-		return Number.class;
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override
-	public boolean isSingle() {
-		return true;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
