@@ -34,12 +34,12 @@ test "replace strings":
 
 
 	# Case Sensitivity
-	replace all "bob" in {_text::9} with "BOBBY" with case sensitivity
-	replace all "BOB" with "bobby" in {_text::10} with case sensitivity
-	replace first "bob" in {_text::11} with "BOBBY" with case sensitivity
-	replace first "BOB" with "bobby" in {_text::12} with case sensitivity
-	replace last "bob" in {_text::13} with "BOBBY" with case sensitivity
-	replace last "BOB" with "bobby" in {_text::14} with case sensitivity
+	case-sensitive replace all "bob" in {_text::9} with "BOBBY"
+	case-sensitive replace all "BOB" with "bobby" in {_text::10}
+	case-sensitive replace first "bob" in {_text::11} with "BOBBY"
+	case-sensitive replace first "BOB" with "bobby" in {_text::12}
+	case-sensitive replace last "bob" in {_text::13} with "BOBBY"
+	case-sensitive replace last "BOB" with "bobby" in {_text::14}
 
 	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
 	assert {_text::2} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
