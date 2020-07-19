@@ -47,8 +47,8 @@ public class CondIncendiary extends Condition {
 
 	static {
 		Skript.registerCondition(CondIncendiary.class,
-				"%entities% ((is|are) incendiary|cause an (incendiary|fiery) explosion)",
-				"%entities% ((is not|are not|isn't|aren't) incendiary|(does not|do not|doesn't|don't) cause[s] an (incendiary|fiery) explosion)",
+				"%entities% ((is|are) incendiary|cause[s] a[n] (incendiary|fiery) explosion)",
+				"%entities% ((is not|are not|isn't|aren't) incendiary|(does not|do not|doesn't|don't) cause[s] a[n] (incendiary|fiery) explosion)",
 				"the [event(-| )]explosion (is|1¦(is not|isn't)) (incendiary|fiery)"
 		);
 	}
@@ -58,8 +58,8 @@ public class CondIncendiary extends Condition {
 
 	private boolean isEvent;
 
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
+	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
 		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {

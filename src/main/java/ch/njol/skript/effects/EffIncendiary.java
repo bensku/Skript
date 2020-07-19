@@ -59,8 +59,8 @@ public class EffIncendiary extends Effect {
 
 	private boolean isEvent;
 
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
+	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		isEvent = matchedPattern == 2;
 		if (isEvent && !ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
@@ -91,4 +91,5 @@ public class EffIncendiary extends Effect {
 			return "make the event-explosion " + (causeFire == true ? "" : "not") + " fiery";
 		return "make " + entities.toString(e, debug) + (causeFire == true ? "" : " not") + " incendiary";
 	}
+
 }
