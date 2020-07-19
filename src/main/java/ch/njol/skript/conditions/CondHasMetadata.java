@@ -48,9 +48,7 @@ public class CondHasMetadata extends Condition {
 		);
 	}
 	
-	@SuppressWarnings("null")
 	private Expression<Metadatable> holders;
-	@SuppressWarnings("null")
 	private Expression<String> values;
 
 	@Override

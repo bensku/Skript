@@ -54,7 +54,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @param name The unique name of this constant.
 	 * @throws IllegalArgumentException If the given name is already in use.
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	protected PseudoEnum(final String name) throws IllegalArgumentException {
 		this.name = name;
 		info = (Info<T>) getInfo(getClass());
@@ -136,7 +136,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @return This constant's pseudo-enum class.
 	 * @see Enum#getDeclaringClass()
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	public final Class<T> getDeclaringClass() {
 		return getDeclaringClass(getClass());
 	}

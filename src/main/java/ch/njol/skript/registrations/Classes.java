@@ -681,7 +681,6 @@ public abstract class Classes {
 		// temporary
 		assert Bukkit.isPrimaryThread();
 		
-		@SuppressWarnings("null")
 		ClassInfo<?> ci = getSuperClassInfo(o.getClass());
 		if (ci.getSerializeAs() != null) {
 			ci = getExactClassInfo(ci.getSerializeAs());

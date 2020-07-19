@@ -63,7 +63,6 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Number convert(final Player p) {
 		return walk ? p.getWalkSpeed() : p.getFlySpeed();
