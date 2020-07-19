@@ -511,7 +511,7 @@ public class SimpleEvents {
 						"	set the fake max players count to (online players count + 1)",
 						"	set the shown icon to a random server icon out of {server-icons::*}")
 				.since("2.3");
-		Skript.registerEvent("Unknown Command", SimpleEvent.class, UnknownCommandEvent.class, "unknown command")
+		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) Skript.registerEvent("Unknown Command", SimpleEvent.class, UnknownCommandEvent.class, "unknown command")
 			.description("Called when a player sends a command that isn't registered")
 			.examples("on unknown command:")
 			.since("INSERT VERSION");
@@ -523,7 +523,7 @@ public class SimpleEvents {
 					.examples("on swim toggle:",
 							"	event-entity does not have permission \"swim\"",
 							"	cancel event")
-					.since("2.3");
+					.since("2.3").requiredPlugins("Paper");
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
 			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchant[ment]]")

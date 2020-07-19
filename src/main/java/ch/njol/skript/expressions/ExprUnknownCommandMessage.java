@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("INSERT VERSION")
 public class ExprUnknownCommandMessage extends SimpleExpression<String> {
 	static {
-		if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent") && Skript.methodExists(UnknownCommandEvent.class, "getMessage"))
+		if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
 			Skript.registerExpression(ExprUnknownCommandMessage.class, String.class, ExpressionType.SIMPLE, "[the] (unknown command message|unknown cmd message)");
 	}
 	
