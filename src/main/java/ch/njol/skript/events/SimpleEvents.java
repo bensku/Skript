@@ -514,7 +514,7 @@ public class SimpleEvents {
 		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) Skript.registerEvent("Unknown Command", SimpleEvent.class, UnknownCommandEvent.class, "unknown command")
 			.description("Called when a player sends a command that isn't registered")
 			.examples("on unknown command:")
-			.since("INSERT VERSION");
+			.since("INSERT VERSION").requiredPlugins("Paper");
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
 					"[entity] swim toggl(e|ing)")
@@ -523,7 +523,7 @@ public class SimpleEvents {
 					.examples("on swim toggle:",
 							"	event-entity does not have permission \"swim\"",
 							"	cancel event")
-					.since("2.3").requiredPlugins("Paper");
+					.since("2.3");
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
 			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchant[ment]]")
