@@ -49,23 +49,23 @@ public class CondMatches extends Condition {
 	}
 	
 	@SuppressWarnings("null")
-	Expression<String> text1;
+	Expression<String> strings;
 	@SuppressWarnings("null")
-	Expression<String> text2;
+	Expression<String> regex;
 	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		text1 = (Expression<String>) exprs[0];
-		text2 = (Expression<String>) exprs[1];
+		strings = (Expression<String>) exprs[0];
+		regex = (Expression<String>) exprs[1];
 		return true;
 	}
 	
 	@Override
 	public boolean check(Event e) {
-		String[] txt1 = text1.getAll(e);
-		String[] txt2 = text2.getAll(e);
-		if (txt1 == null || text2 == null) return false;
+		String[] txt1 = strings.getArray(e);
+		String[] txt2 = regex.getArray(e);
+		if (txt1.length < 1 || txt2.length < 1) return false;
 		Object[] patterns = Arrays.stream(txt2)
 			.map((str) -> Pattern.compile(str))
 			.toArray();
@@ -76,7 +76,7 @@ public class CondMatches extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return text1.toString(e, debug) + " matches " + text2.toString(e, debug);
+		return strings.toString(e, debug) + " matches " + regex.toString(e, debug);
 	}
 	
 }
