@@ -39,16 +39,21 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Explosion Prime Event Explosion Yield")
-@Description("The yield/radius of the explosion in an explosion prime event. This is how big the explosion is.")
-@Events("explosion prime")
+@Name("Explosion Yield")
+@Description({"The yield of the explosion in an explosion prime event. This is how big the explosion is.",
+				" When changing the yield, values less than 0 will be ignored.",
+				" Read <a href='https://minecraft.gamepedia.com/Explosion'>this wiki page</a> for more information"})
 @Examples({"on explosion prime:",
-		"\tset the explosion radius to 10"})
+		"\tset the yield of the explosion to 10"})
+@Events("explosion prime")
 @Since("INSERT VERSION")
 public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprExplosionPrimeEventYield.class, Number.class, ExpressionType.SIMPLE, "[the] explosion (radius|size|yield)");
+		Skript.registerExpression(ExprExplosionPrimeEventYield.class, Number.class, ExpressionType.SIMPLE,
+			"[the] explosion (yield|radius|size)",
+			"[the] (yield|radius|size) of [the] explosion"
+		);
 	}
 
 	@Override
@@ -63,7 +68,7 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		return CollectionUtils.array(((ExplosionPrimeEvent) e).getRadius());
+		return new Number[]{((ExplosionPrimeEvent) e).getRadius()};
 	}
 
 	@Override
@@ -77,6 +82,8 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 	@Override
 	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
 		float f = delta == null ? 0 : ((Number) delta[0]).floatValue();
+		if (f < 0) // Negative values will throw an error.
+			return;
 		ExplosionPrimeEvent e = (ExplosionPrimeEvent) event;
 		switch (mode) {
 			case SET:
@@ -84,12 +91,14 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 				break;
 			case ADD:
 				float add = e.getRadius() + f;
-				if (add < 0) add = 0;
+				if (add < 0)
+					return;
 				e.setRadius(add);
 				break;
 			case REMOVE:
 				float subtract = e.getRadius() - f;
-				if (subtract < 0) subtract = 0;
+				if (subtract < 0)
+					return;
 				e.setRadius(subtract);
 				break;
 			case DELETE:
@@ -113,7 +122,7 @@ public class ExprExplosionPrimeEventYield extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "explosion prime event explosion yield";
+		return "the yield of the explosion";
 	}
 
 }

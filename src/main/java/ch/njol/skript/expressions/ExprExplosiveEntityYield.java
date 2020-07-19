@@ -33,27 +33,28 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Explosive Entity Explosion Yield")
-@Description("The yield/radius of an explosive (creeper, primed tnt, fireball, etc.). This is how big of an explosion is caused by the entity.")
-@Examples("set the explosive radius of the event-entity to 10")
+@Name("Explosive Yield")
+@Description({"The yield of an explosive (creeper, primed tnt, fireball, etc.). This is how big of an explosion is caused by the entity.",
+				"Read <a href='https://minecraft.gamepedia.com/Explosion'>this wiki page</a> for more information"})
+@Examples({"on spawn of a creeper:",
+			"\tset the explosive yield of the event-entity to 10"})
 @RequiredPlugins("Minecraft 1.12 or newer for creepers")
 @Since("INSERT VERSION")
 public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, Number> {
 
 	static {
-		register(ExprExplosiveEntityYield.class, Number.class, "explosi(ve|on) (radius|size|yield)", "entities");
+		register(ExprExplosiveEntityYield.class, Number.class, "explosive (yield|radius|size)", "entities");
 	}
 
-	private final boolean creeperUsable = Skript.methodExists(Creeper.class, "getExplosionRadius");
+	private final static boolean CREEPER_USABLE = Skript.methodExists(Creeper.class, "getExplosionRadius");
 
 	@Override
 	public Number convert(Entity e) {
 		if (e instanceof Explosive)
 			return ((Explosive) e).getYield();
-		if (e instanceof Creeper && creeperUsable)
+		if (CREEPER_USABLE && e instanceof Creeper)
 			return ((Creeper) e).getExplosionRadius();
 		return 0;
 	}
@@ -71,20 +72,24 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 		Number change = delta != null ? (Number) delta[0] : 0;
 		for (Entity entity : getExpr().getArray(event)) {
 			if (entity instanceof Explosive) {
-				Float f = change.floatValue();
 				Explosive e = (Explosive) entity;
+				float f = change.floatValue();
+				if (f < 0) // Negative values will throw an error.
+					return;
 				switch (mode) {
 					case SET:
 						e.setYield(f);
 						break;
 					case ADD:
 						float add = e.getYield() + f;
-						if (add < 0) add = 0;
+						if (add < 0)
+							return;
 						e.setYield(add);
 						break;
 					case REMOVE:
 						float subtract = e.getYield() - f;
-						if (subtract < 0) subtract = 0;
+						if (subtract < 0)
+							return;
 						e.setYield(subtract);
 						break;	
 					case DELETE:
@@ -94,21 +99,25 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 					case RESET:
 						assert false;
 				}
-			} else if (entity instanceof Creeper && creeperUsable) {
+			} else if (CREEPER_USABLE && entity instanceof Creeper) {
 				Creeper c = (Creeper) entity;
 				int i = change.intValue();
+				if (i < 0) // Negative values will throw an error.
+					return;
 				switch (mode) {
 					case SET:
 						c.setExplosionRadius(i);
 						break;
 					case ADD:
 						int add = c.getExplosionRadius() + i;
-						if (add < 0) add = 0;
+						if (add < 0)
+							return;
 						c.setExplosionRadius(add);
 						break;
 					case REMOVE:
 						int subtract = c.getExplosionRadius() - i;
-						if (subtract < 0) subtract = 0;
+						if (subtract < 0)
+							return;
 						c.setExplosionRadius(subtract);
 						break;	
 					case DELETE:
@@ -123,13 +132,13 @@ public class ExprExplosiveEntityYield extends SimplePropertyExpression<Entity, N
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "explosive entity explosion yield";
+	public Class<Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
-	public Class<Number> getReturnType() {
-		return Number.class;
+	protected String getPropertyName() {
+		return "explosive yield";
 	}
 
 }
