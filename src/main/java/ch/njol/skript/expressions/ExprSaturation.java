@@ -49,7 +49,7 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public Class<Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 	
@@ -62,9 +62,9 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 	
 	@Override
 	protected Number[] get(final Event e, final Player[] source) {
-		return get(source, new Getter<Float, Player>() {
+		return get(source, new Getter<Number, Player>() {
 			@Override
-			public Float get(final Player player) {
+			public Number get(final Player player) {
 				return player.getSaturation();
 			}
 		});

@@ -19,12 +19,14 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Location;
 import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -32,55 +34,50 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
-@Name("Distance")
-@Description("The distance between two points.")
-@Examples({"if the distance between the player and {home::%uuid of player%} is smaller than 20:",
-		"\tmessage \"You're very close to your home!\""})
-@Since("1.0")
-public class ExprDistance extends SimpleExpression<Number> {
-	
+@Name("Enchantment Bonus")
+@Description("The enchantment bonus in an enchant prepare event. This represents the number of bookshelves affecting/surrounding the enchantment table.")
+@Examples({"on enchant:", 
+			"\tsend \"There are %enchantment bonus% bookshelves surrounding this enchantment table!\" to player"})
+@Events("enchant prepare")
+@Since("INSERT VERSION")
+public class ExprEnchantmentBonus extends SimpleExpression<Number> {
+
 	static {
-		Skript.registerExpression(ExprDistance.class, Number.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
+		Skript.registerExpression(ExprEnchantmentBonus.class, Number.class, ExpressionType.SIMPLE, "[the] enchantment bonus");
 	}
-	
-	@SuppressWarnings("null")
-	private Expression<Location> loc1, loc2;
-	
-	@SuppressWarnings({"unchecked", "null"})
+
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		loc1 = (Expression<Location>) vars[0];
-		loc2 = (Expression<Location>) vars[1];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
+			Skript.error("The enchantment bonus is only usable in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
+			return false;
+		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
-	protected Number[] get(final Event e) {
-		final Location l1 = loc1.getSingle(e), l2 = loc2.getSingle(e);
-		if (l1 == null || l2 == null || l1.getWorld() != l2.getWorld())
-			return new Number[0];
-		return new Number[] {l1.distance(l2)};
+	protected Number[] get(Event e) {
+		return new Number[]{((PrepareItemEnchantEvent) e).getEnchantmentBonus()};
 	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "distance between " + loc1.toString(e, debug) + " and " + loc2.toString(e, debug);
-	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
+
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
-	
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "enchantment bonus";
+	}
+
 }

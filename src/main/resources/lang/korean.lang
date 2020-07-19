@@ -1,4 +1,4 @@
-# Default English language file
+# Default Korean language file
 
 # Which version of Skript this language file was written for
 version: @version@
@@ -15,7 +15,7 @@ neither: neither
 nor: nor
 
 # What null (nothing) should show up as in a string/text
-none: <none>
+none: <없음>
 
 genders:
 	0:
@@ -42,138 +42,149 @@ genders:
 skript:
 	copyright: ~ created by & © Peter Güttinger aka Njol ~
 	prefix: <gray>[<gold>Skript<gray>] # not used
-	quotes error: Invalid use of quotes ("). If you want to use quotes in "quoted text", double them: "".
-	brackets error: Invalid amount or placement of brackets. Please make sure that each opening bracket has a corresponding closing bracket.
-	invalid reload: Skript may only be reloaded by either Bukkit's '/reload' or Skript's '/skript reload' command.
-	no scripts: No scripts were found, maybe you should write some ;)
-	no errors: All scripts loaded without errors.
-	scripts loaded: Loaded %s script¦¦s¦ with a total of %s trigger¦¦s¦ and %s command¦¦s¦ in %s
-	finished loading: Finished loading.
+	quotes error: 따옴표(")가 잘못되었습니다. 인용문 텍스트에서 따옴표를 사용하려면 ""을 두 배로 늘립니다.
+	brackets error: 대괄호 금액 또는 배치가 잘못되었습니다. 각 여는 브래킷에 해당하는 닫는 브래킷이 있는지 확인하십시오.
+	invalid reload: Skript은 Bukkit의 '/reload'또는 Skript의 '/skript reload'명령어로 만 다시로드 할 수 있습니다.
+	no scripts: 스크립트를 찾지 못했습니다. 아마도 일부를 작성해야합니다 ;)
+	no errors: 모든 스크립트가 오류없이 로드되었습니다.
+	scripts loaded: %s에 총 %s개의 트리거와 %s개의 명령어가있는 %s개의 스크립트를 로드했습니다.
+	finished loading: 로딩이 완료되었습니다.
 
 # -- Skript command --
 skript command:
 	help:
-		description: Skript's main command
-		help: Prints this help message. Use '/skript reload/enable/disable/update' to get more info
+		description: Skript의 주요 명령어
+		help: 이 도움말 메시지를 표시합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/backup/update'를 사용하십시오.
 		reload:
-			description: Reloads the config, all scripts, everything, or a specific script
-			all: Reloads all configs and all scripts
-			config: Reloads the main config
-			aliases: Reloads the aliases configs (aliases-*.sk)
-			scripts: Reloads all scripts
-			<script>: Reloads a specific script or a folder of scripts
+			description: 구성, 모든 스크립트, 모든 것 또는 특정 스크립트를 다시로드합니다.
+			@all: 모든 구성 및 모든 스크립트를 다시 로드합니다.
+			all: 모든 구성 및 모든 스크립트를 다시 로드합니다.
+			@config: 기본 구성을 다시 로드합니다.
+			config: 기본 구성을 다시 로드합니다.
+			@aliases: 별칭 구성을 다시 로드합니다 (aliases-*.sk)
+			aliases: 별칭 구성을 다시 로드합니다 (aliases-*.sk)
+			@scripts: 모든 스크립트를 다시 로드합니다.
+			scripts: 모든 스크립트를 다시 로드합니다.
+			<script>: 특정 스크립트 또는 스크립트 폴더를 다시 로드합니다.
 		enable:
-			description: Enables all scripts or a specific one
-			all: Enables all scripts
-			<script>: Enables a specific script or a folder of scripts
+			description: 모든 스크립트 또는 특정 스크립트를 활성화 합니다.
+			@all: 모든 스크립트를 활성화 합니다.
+			all: 모든 스크립트를 활성화 합니다.
+			<script>: 특정 스크립트 또는 스크립트 폴더를 활성화 합니다.
 		disable:
-			description: Disables all scripts or a specific one
-			all: Disables all scripts
-			<script>: Disables a specific script or a folder of scripts
+			description: 모든 스크립트 또는 특정 스크립트를 비활성화 합니다.
+			@all: 모든 스크립트를 비활성화 합니다.
+			all: 모든 스크립트를 비활성화 합니다.
+			<script>: 특정 스크립트 또는 스크립트 폴더를 비활성화 합니다.
+		backup:
+			description: 모든 스크립트 또는 특정 스크립트를 백업합니다.
+			@all: 모든 스크립트를 백업합니다.
+			all: 모든 스크립트를 백업합니다.
+			<script>: 특정 스크립트 또는 스크립트 폴더를 백업합니다.
 		update:
-			description: Check for updates, read the changelog, or download the latest version of Skript
-			check: Checks for a new version
-			changes: Lists all changes since the current version
-			download: Download the newest version
-		info: Prints a message with links to Skript's aliases and documentation
-		gen-docs: Generates documentation using doc-templates in plugin folder
-
-	invalid script: Can't find the script <grey>'<gold>%s<grey>'<red> in the scripts folder!
-	invalid folder: Can't find the folder <grey>'<gold>%s<grey>'<red> in the scripts folder!
+			description: 업데이트를 확인하거나, 변경 로그를 읽거나, 최신 버전의 Skript를 다운로드합니다.
+			check: 새 버전을 확인합니다.
+			changes: 현재 버전 이후의 모든 변경 사항을 나열합니다.
+			download: 최신 버전을 다운로드합니다.
+		info: Skript의 별명 및 문서에 대한 링크가있는 메시지를 표시합니다
+		gen-docs: 플러그인 폴더의 문서 템플릿을 사용하여 문서를 생성합니다.
+		
+	invalid script: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red>라는 스크립트를 찾을 수 없습니다!
+	invalid folder: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red>라는 폴더를 찾을 수 없습니다!
 	reload:
-		reloading: Reloading %s...
-		reloaded: Successfully reloaded %s.
-		error: Encountered %2$s error¦¦s¦ while reloading %1$s!
-		script disabled: <gold>%s<reset> is currently disabled. Use <gray>/<gold>skript <cyan>enable <red>%s<reset> to enable it.
+		reloading: %s을(를) 다시 로드하는 중입니다...
+		reloaded: %s을(를) 다시 로드했습니다.
+		error: %1$s을(를) 다시 로드하는 동안 %2$s개의 오류가 발생했습니다!
+		script disabled: <gold>%s<reset>은 현재 비활성화되어 있습니다. <gray>/<gold>skript<cyan> <red>%s<reset>을 사용하여 활성화하십시오.
 
-		config and scripts: the config and all scripts
-		scripts: all scripts
-		main config: the main configuration
-		aliases: the aliases
+		config and scripts: 구성 및 모든 스크립트
+		scripts: 모든 스크립트
+		main config: 주요 구성
+		aliases: aliases
 		script: <gold>%s<reset>
-		scripts in folder: all scripts in <gold>%s<reset>
-		x scripts in folder: <gold>%2$s <reset>script¦¦s¦ in <gold>%1$s<reset>
-		empty folder: <gold>%s<reset>r does not contain any enabled scripts.
+		scripts in folder: <gold>%s<reset>폴더속 모든 스크립트
+		x scripts in folder: <gold> %1$s<reset>폴더속 <gold>%2$s<reset>개의 스크립트
+		empty folder: <gold>%s<reset>에 활성화 된 스크립트가 없습니다.
 	enable:
 		all:
-			enabling: Enabling all disabled scripts...
-			enabled: Successfully enabled & parsed all previously disabled scripts.
-			error: Encountered %s error¦¦s¦ while parsing disabled scripts!
-			io error: Could not load any scripts (some scripts might have been renamed already and will be enabled when the server restarts): %s
+			enabling: 비활성화 된 모든 스크립트를 활성화하는 중...
+			enabled: 이전에 비활성화 된 모든 스크립트를 성공적으로 활성화 및 파싱했습니다.
+			error: 비활성화 된 스크립트를 구문 분석하는 동안 %s개의 오류가 발생했습니다!
+			io error: 스크립트를 로드 할 수 없습니다 (일부 스크립트의 이름이 이미 변경되어 서버가 다시 시작될 때 활성화 됨): %s
 		single:
-			already enabled: <gold>%s<reset> is already enabled! Use <gray>/<gold>skript <cyan>reload <red>%s<reset> to reload it if it was changed.
-			enabling: Enabling <gold>%s<reset>...
-			enabled: Successfully enabled & parsed <gold>%s<reset>.
-			error: Encountered %2$s error¦¦s¦ while parsing <gold>%1$s<red>!
-			io error: Could not enable <gold>%s<red>: %s
+			already enabled: <gold> %s<reset>이 이미 활성화되었습니다! <gray>/<gold>skript<cyan> reload <red>%s<reset>을 사용하여 변경된 경우 다시로드하십시오.
+			enabling: <gold>%s<reset>을(를) 활성화 중...
+			enabled: <gold>%s<reset>을(를) 활성화하고 구문 분석했습니다.
+			error: <gold>%1$s<red>을(를) 구문 분석하는 동안 %2$s개의 오류가 발생했습니다!
+			io error: <gold>%s<red>을(를) 활성화 할 수 없습니다: %s
 		folder:
-			empty: <gold>%s<reset> does not contain any disabled scripts.
-			enabling: Enabling <gold>%2$s <reset>script¦¦s¦ in <gold>%1$s<reset>...
-			enabled: Successfully enabled & parsed <gold>%2$s<reset> previously disabled scripts in <gold>%1$s<reset>.
-			error: Encountered %2$s error¦¦s¦ while parsing scripts in <gold>%1$s<red>!
-			io error: Error while enabling scripts in <gold>%s<red> (some scripts might get enabled when the server restarts): %s
+			empty: <gold>%s<reset>에 비활성화 된 스크립트가 없습니다.
+			enabling: <gold>%1$s<reset>에서 <gold>%2$s<reset>개의 스크립트를 활성화하는 중...
+			enabled: <gold>%1$s<reset>에서 이전에 <gold>%2$s<reset>개의 스크립트를 성공적으로 활성화 및 구문 분석했습니다.
+			error: <gold>%1$s<red>에서 스크립트를 구문 분석하는 동안 %2$s개의 오류가 발생했습니다!
+			io error: <gold>%s<red>에서 스크립트를 활성화하는 동안 오류가 발생했습니다 (서버가 다시 시작될 때 일부 스크립트가 활성화 될 수 있음): %s
 	disable:
 		all:
-			disabled: Successfully disabled all scripts.
-			io error: Could not rename all scripts - some scripts will be enabled again when you restart the server: %s
+			disabled: 모든 스크립트를 성공적으로 비활성화했습니다.
+			io error: 모든 스크립트의 이름을 바꿀 수 없습니다. 서버를 다시 시작할 때 일부 스크립트가 다시 활성화됩니다: %s
 		single:
-			already disabled: <gold>%s<reset> is already disabled!
-			disabled: Successfully disabled <gold>%s<reset>.
-			io error: Could not rename <gold>%s<red>, it will be enabled again when you restart the server: %s
+			already disabled: <gold>%s<reset>은 이미 비활성화되었습니다!
+			disabled: <gold>%s<reset>을(를) 비활성화했습니다.
+			io error: <gold>%s<red>의 이름을 바꿀 수 없습니다. 서버를 다시 시작할 때 다시 활성화됩니다: %s
 		folder:
-			empty: <gold>%s<reset> does not contain any enabled scripts,
-			disabled: Successfully disabled <gold>%2$s<reset> script(s) in <gold>%1$s<reset>.
-			io error: Could not disable any script in <gold>%s<red> (some scripts might get disabled when the server restarts): %s
+			empty: <gold>%s<reset>에 활성화 된 스크립트가 없습니다.
+			disabled: <gold>%1$s<reset>에서 <gold>%2$s<reset>개의 스크립트를 성공적으로 비활성화했습니다.
+			io error: <gold>%s<red>에서 스크립트를 비활성화 할 수 없습니다 (서버가 다시 시작될 때 일부 스크립트가 비활성화 될 수 있음): %s
 	update:
 		# check/download: see Updater
 		changes:
 			# multiple versions:
-			# 	title: <gold>%s<r> update¦ has¦s have¦ been released since this version (<gold>%s<r>) of Skript:
-			# 	footer: To show the changelog of a version type <gold>/skript update changes <version><reset>
-			# invalid version: No changelog for the version <gold>%s<red> available
+			# 	title: Skript의 이 버전 (<gold>%s<r>) 이후 <gold>%s<r> 업데이트가 릴리스되었습니다.
+			# 	footer: 버전 유형 <gold>/skript update changes <version> <reset>의 변경 로그를 표시하려면
+			# invalid version: <gold>%s<red> 버전에 대한 변경 로그가 없습니다.
 			title: <bold><cyan>%s<reset> (%s)
-			next page: <grey>page %s of %s. Type <gold>/skript update changes %s<gray> for the next page (hint: use the up arrow key)
+			next page: <grey>%s의 %s페이지입니다. 다음 페이지의 <gold>/skript update changes %s <gray>를 입력합니다 (위쪽 화살표 키 사용).
 	info:
-		aliases: Skript's aliases can be found here: <aqua>https://github.com/SkriptLang/skript-aliases
-		documentation: Skript's documentation can be found here: <aqua>https://skriptlang.github.io/Skript
-		version: Skript Version: <aqua>%s
-		server: Server Version: <aqua>%s
-		addons: Installed Skript Addons:
+		aliases: Skript의 별명은 여기에서 찾을 수 있습니다: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Skript의 문서는 여기에서 찾을 수 있습니다: <aqua>https://skriptlang.github.io/Skript
+		version: Skript 버전: <aqua>%s
+		server: 서버 버전: <aqua>%s
+		addons: 설치된 Skript 애드온:
 
 # -- Updater --
 updater:
-	not started: Skript has not yet checked for the latest version. Use <gold>/skript update check<reset> to do so.
-	checking: Checking for the latest version of Skript...
-	check in progress: Checking for a new version is currently in progress.
-	updater disabled: The updater is disabled, so a check for the latest version of Skript was not performed.
-	check error: <red>There was an error checking for the latest version of Skript:<light red> %s
-	running latest version: You're currently running the latest stable version of Skript.
-	running latest version (beta): You're currently running a <i>beta<r> version of Skript, and no new <i>stable<r> version is available. Please note that you have to update to newer beta versions manually!
-	update available: A new version of Skript is available: <gold>%s<reset> (you're currently running <gold>%s<reset>)
-	downloading: Downloading Skript <gold>%s<reset>...
-	download in progress: The latest version of Skript is currently being downloaded.
-	download error: <red>There was an error downloading the latest version of Skript:<light red> %s
-	downloaded: The latest version of Skript has been downloaded! Restart the server or use /reload to apply the changes.
-	internal error: An internal error occurred while checking for the latest version of Skript. Please refer to the server log for details.
-	custom version: You're currently running a custom Skript version. No updates will be automatically installed.
+	not started: Skript는 아직 최신 버전을 확인하지 않았습니다. <gold>/skript update check <reset>을 사용하십시오.
+	checking: Skript의 최신 버전 확인 중...
+	check in progress: 현재 새 버전 확인이 진행 중입니다.
+	updater disabled: 업데이터가 비활성화되어 있으므로 Skript의 최신 버전을 확인하지 않았습니다.
+	check error: <red>Skript의 최신 버전을 확인하는 동안 오류가 발생했습니다: <light red>%s
+	running latest version: 현재 안정적인 최신 Skript 버전을 실행하고 있습니다.
+	running latest version (beta): 현재 <i>베타<r>버전의 Skript을 실행하고 있으며 새로운 <i>stable<r>버전을 사용할 수 없습니다. 최신 베타 버전으로 수동 업데이트해야합니다.
+	update available: Skript의 새로운 버전을 사용할 수 있습니다: <gold>%s<reset> (현재 <gold>%s<reset>을(를) 실행 중입니다)
+	downloading: Skript <gold>%s<reset> 다운로드 중...
+	download in progress: Skript의 최신 버전은 현재 다운로드 중입니다.
+	download error: <red> Skript의 최신 버전을 다운로드하는 중에 오류가 발생했습니다: <light red>%s
+	downloaded: Skript의 최신 버전이 다운로드되었습니다! 서버를 다시 시작하거나 /reload를 사용하여 변경 사항을 적용하십시오.
+	internal error: <red>Skript의 최신 버전을 확인하는 중에 내부 오류가 발생했습니다. 자세한 내용은 서버 로그를 참조하십시오.
+	custom version: 현재 맞춤 Skript 버전을 실행하고 있습니다. 업데이트가 자동으로 설치되지 않습니다.
 
 # -- Commands --
 commands:
-	no permission message: You don't have the required permission to use this command
-	cooldown message: You are using this command too often, please try again later
-	executable by players: This command can only be used by players
-	executable by console: This command can only be used by the console
-	usage: Usage:
-	invalid argument: Invalid argument <gray>'%s<gray>'<reset>. Allowed are:
-	too many arguments: This command can only accept a single %2$s.
-	internal error: An internal error occurred while attempting to perform this command.
-	no player starts with: There is no player online whose name starts with '%s'
-	multiple players start with: There are several players online whose names start with '%s'
+	no permission message: <red>이 명령어를 사용할 권한이 없습니다
+	cooldown message: 이 명령어을 너무 자주 사용하고 있습니다. 나중에 다시 시도하십시오
+	executable by players: <red>이 명령어는 플레이어만 사용할 수 있습니다
+	executable by console: <red>이 명령어은 콘솔에서만 사용할 수 있습니다
+	usage: 사용법:
+	invalid argument: <gray>'%s <gray>'<reset> 인수가 잘못되었습니다:
+	too many arguments: 이 명령어는 단일 %2$s만 허용합니다.
+	internal error: <red>이 명령어를 수행하는 중 내부 오류가 발생했습니다.
+	no player starts with: 이름이 '%s'(으)로 시작하는 온라인 플레이어가 없습니다
+	multiple players start with: 온라인에서 이름이 '%s'(으)로 시작하는 여러 플레이어가 있습니다
 
 # -- Hooks --
 hooks:
-	hooked: Successfully hooked into %s
-	error: Could not hook into %1$s. This can happen if Skript doesn't support the installed version of %1$s
+	hooked: %s에 성공적으로 연결
+	error: %1$s에 연결할 수 없습니다. Skript가 %1$s의 설치된 버전을 지원하지 않는 경우 발생할 수 있습니다
 
 # -- Aliases --
 aliases:
@@ -185,25 +196,25 @@ aliases:
 	of: of(?: any)?
 
 	# Errors and warnings
-	empty string: '' is not an item type
-	invalid item type: '%s' is not an item type
-	empty name: An alias must have name
-	brackets error: Invalid use of brackets
-	not enough brackets: Section starting at character %s ('%s') must be closed
-	too many brackets: Character %s ('%s') closes a nonexistent section
-	unknown variation: The variation %s has not been defined before
-	missing aliases: Following Minecraft ids do not have any aliases:
-	empty alias: Alias has no Minecraft id or tags defined
-	invalid minecraft id: Minecraft id %s is not valid
-	useless variation: Variation has no Minecraft id or tags specified, so it is useless
-	invalid tags: Specified tags are not defined in valid JSON
-	unexpected section: Sections are not allowed here
-	invalid variation section: A section should be variation section, but %s is not valid variation name
-	outside section: Aliases must be put in sections
+	empty string: ''는 아이템 유형이 아닙니다
+	invalid item type: '%s'은(는) 아이템 유형이 아닙니다
+	empty name: Aliases에는 이름이 있어야합니다
+	brackets error: 대괄호의 잘못된 사용
+	not enough brackets: 문자 %s ('%s')로 시작하는 섹션을 닫아야합니다.
+	too many brackets: 문자 %s ('%s')가 존재하지 않는 섹션을 닫습니다.
+	unknown variation: 변형 %s이(가) 전에 정의되지 않았습니다
+	missing aliases: 다음 Minecraft ID에는 Aliases이 없습니다.
+	empty alias: Alias에 Minecraft ID 또는 태그가 정의되어 있지 않습니다
+	invalid minecraft id: Minecraft ID %s이(가) 유효하지 않습니다
+	useless variation: 변형에는 Minecraft ID 또는 태그가 지정되어 있지 않으므로 쓸모가 없습니다.
+	invalid tags: 지정된 태그가 유효한 JSON에 정의되어 있지 않습니다
+	unexpected section: 여기에는 섹션이 허용되지 않습니다
+	invalid variation section: 섹션은 변형 섹션이어야하지만 %s는 유효한 변형 이름이 아닙니다.
+	outside section: Aliases은 섹션에 넣어야합니다
 
 	# Other messages
-	loaded x aliases from: Loaded %s english aliases from %s
-	loaded x aliases: Loaded a total of %s english aliases
+	loaded x aliases from: %s에서 %s 한국 aliases을 로드했습니다.
+	loaded x aliases: 한국어 aliases 총 %s개를 로드했습니다.
 	anything: anything
 	named: named
 
@@ -398,49 +409,49 @@ tree types:
 		pattern: (any )?trees?
 	regular:
 		name: oak¦s
-		pattern: (any )?(regular|normal|oak)( tree)?s?
+		pattern: (any )?(regular tree|normal tree|oak)s?
 	small_regular:
 		name: small oak¦s
-		pattern: small (regular|normal|oak)( tree)?s?
+		pattern: small (regular tree|normal tree|oak)s?
 	big_regular:
 		name: big tree¦s
-		pattern: (big|large) (regular|normal|oak)( tree)?s?
+		pattern: (big|large) (regular tree|normal tree|oak)s?
 	redwood:
 		name: redwood¦s
-		pattern: (any )?(fir|pine|spruce|redwood)( tree)?s?
+		pattern: (any )?(fir|pine|spruce|redwood)s?
 	small_redwood:
 		name: small redwood¦s
-		pattern: small (fir|pine|spruce|redwood)( tree)?s?
+		pattern: small (fir|pine|spruce|redwood)s?
 	big_redwood:
 		name: tall redwood¦s
-		pattern: (big|tall) (fir|pine|spruce|redwood)( tree)?s?
+		pattern: (big|tall) (fir|pine|spruce|redwood)s?
 	mega_redwood:
 		name: mega redwood¦s
-		pattern: (mega|giant) (fir|pine|spruce|redwood)( tree)?s?
+		pattern: (mega|giant) (fir|pine|spruce|redwood)s?
 	birch:
 		name: birch¦es
-		pattern: birch( trees?|es)
+		pattern: birch(es)?
 	tall_birch:
 		name: tall birch¦es
-		pattern: (tall|big) birch( trees?|es)
+		pattern: (tall|big) birch(es)?
 	jungle:
 		name: jungle tree¦s
-		pattern: (any )?jungle( tree)?s?
+		pattern: (any )?jungle trees?
 	small_jungle:
 		name: small jungle tree¦s
-		pattern: small jungle( tree)?s?
+		pattern: small jungle trees?
 	big_jungle:
 		name: big jungle tree¦s
-		pattern: (big|tall|huge|giant|large) jungle( tree)?s?
+		pattern: (big|tall|huge|giant|large) jungle trees?
 	cocoa_tree:
 		name: cocoa tree¦s
 		pattern: cocoa trees?
 	acacia:
 		name: acacia¦s
-		pattern: acacia( tree)?s?
+		pattern: acacias?
 	dark_oak:
 		name: dark oak¦s
-		pattern: dark oak( tree)?s?
+		pattern: dark oaks?
 	jungle_bush:
 		name: bush¦es
 		pattern: (jungle )?bush(es)?
@@ -467,9 +478,9 @@ time:
 	real: real, rl, irl
 	minecraft: mc, minecraft
 	errors:
-		24 hours: A day only has 24 hours
-		12 hours: Using 12-hour format does not allow more than 12 hours
-		60 minutes: An hour only has 60 minutes
+		24 hours: 하루 24 시간 만 있습니다
+		12 hours: 12 시간 형식을 사용하면 12 시간을 초과 할 수 없습니다
+		60 minutes: 한 시간에 60 분만 있습니다
 
 # -- Chat and Wool Colours --
 colors:
@@ -1627,7 +1638,6 @@ inventory types:
 
 # -- Spawn Reasons --
 spawn reasons:
-	beehive: beehive
 	breeding: breed, breeding
 	build_irongolem: built iron golem, build iron golem
 	build_snowman: built snowman, build snowman
@@ -1640,7 +1650,6 @@ spawn reasons:
 	drowned: drowned
 	egg: egg
 	ender_pearl: ender pearl
-	explosion: explosion
 	infection: infection, infected
 	jockey: jockey
 	lightning: lightning
@@ -1648,8 +1657,6 @@ spawn reasons:
 	natural: natural
 	nether_portal: nether portal
 	ocelot_baby: ocelot baby
-	patrol: patrol
-	raid: raid
 	reinforcements: reinforcements
 	shoulder_entity: perching, shoulder
 	silverfish_block: silverfish reveal, silverfish trap
@@ -1705,7 +1712,7 @@ genes:
 	brown: brown, brownish
 	weak: weak
 	aggressive: aggressive, savage, wild
-
+	
 # -- Attribute Types --
 attribute types:
 	generic_armor: generic armor, armor attribute

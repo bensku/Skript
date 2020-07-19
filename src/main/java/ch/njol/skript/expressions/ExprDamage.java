@@ -49,9 +49,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"increase the damage by 2"})
 @Since("1.3.5")
 @Events("damage")
-public class ExprDamage extends SimpleExpression<Double> {
+public class ExprDamage extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
+		Skript.registerExpression(ExprDamage.class, Number.class, ExpressionType.SIMPLE, "[the] damage");
 	}
 	
 	@SuppressWarnings("null")
@@ -69,9 +70,9 @@ public class ExprDamage extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent || e instanceof VehicleDamageEvent))
-			return new Double[0];
+			return new Number[0];
 		
 		if (e instanceof VehicleDamageEvent)
 			return CollectionUtils.array(((VehicleDamageEvent) e).getDamage());
@@ -125,8 +126,8 @@ public class ExprDamage extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
