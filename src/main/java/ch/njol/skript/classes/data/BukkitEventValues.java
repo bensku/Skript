@@ -118,6 +118,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import ch.njol.skript.Skript;
@@ -125,6 +126,7 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.command.CommandEvent;
 import ch.njol.skript.events.EvtMoveOn;
+import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.BlockUtils;
@@ -464,6 +466,25 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0, "Use 'projectile' and/or 'shooter' in shoot events", ProjectileLaunchEvent.class);
+		//ProjectileCollideEvent
+		if (Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) {
+			if (Skript.methodExists(ProjectileCollideEvent.class, "getEntity"))
+				EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
+					@Nullable
+					@Override
+					public Projectile get(ProjectileCollideEvent evt) {
+						return evt.getEntity();
+					}
+				}, 0);
+			if (Skript.methodExists(ProjectileCollideEvent.class, "getCollidedWith"))
+				EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
+					@Nullable
+					@Override
+					public Entity get(ProjectileCollideEvent evt) {
+						return evt.getCollidedWith();
+					}
+				}, 0);
+		}
 		EventValues.registerEventValue(ProjectileLaunchEvent.class, Projectile.class, new Getter<Projectile, ProjectileLaunchEvent>() {
 			@Override
 			@Nullable
