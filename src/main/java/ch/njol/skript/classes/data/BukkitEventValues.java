@@ -137,7 +137,7 @@ import ch.njol.skript.util.slot.Slot;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings("deprecation")
 public final class BukkitEventValues {
 	
 	public BukkitEventValues() {}
@@ -898,7 +898,6 @@ public final class BukkitEventValues {
 //		}, 0);
 		// PrepareItemCraftEvent
 		EventValues.registerEventValue(PrepareItemCraftEvent.class, Slot.class, new Getter<Slot, PrepareItemCraftEvent>() {
-			@SuppressWarnings("null")
 			@Override
 			@Nullable
 			public Slot get(final PrepareItemCraftEvent e) {

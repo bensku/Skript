@@ -56,28 +56,24 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 	private enum Operator {
 		PLUS("++") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().add(v2);
 			}
 		},
 		MINUS("--") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().subtract(v2);
 			}
 		},
 		MULT("**") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().multiply(v2);
 			}
 		},
 		DIV("//") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().divide(v2);
 			}

@@ -48,7 +48,6 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 		}
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Long convert(ItemType item) {
 		ItemMeta meta = item.getItemMeta();
