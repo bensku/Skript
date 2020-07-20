@@ -57,7 +57,6 @@ public class RabbitData extends EntityData<Rabbit> {
         	entity.setRabbitType(typeFromInt(type));
     }
 
-    @SuppressWarnings("null")
 	@Override
     protected boolean match(Rabbit entity) {
         return type == 0 || intFromType(entity.getRabbitType()) == type;

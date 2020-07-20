@@ -37,7 +37,6 @@ import ch.njol.util.coll.CollectionUtils;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class EvtSkript extends SelfRegisteringSkriptEvent {
 	static {
 		Skript.registerEvent("Server Start/Stop", EvtSkript.class, CollectionUtils.array(SkriptStartEvent.class, SkriptStopEvent.class), "(0¦server|1¦skript) (start|load|enable)", "(0¦server|1¦skript) (stop|unload|disable)")

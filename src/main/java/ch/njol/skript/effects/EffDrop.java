@@ -76,7 +76,6 @@ public class EffDrop extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		final Object[] os = drops.getArray(e);

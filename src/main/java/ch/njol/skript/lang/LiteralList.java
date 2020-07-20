@@ -70,7 +70,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 				return null;
 			classes[i] = exprs[i].getReturnType();
 		}
-		return new LiteralList<R>(exprs, (Class<R>) Utils.getSuperType(classes), and, this);
+		return new LiteralList<>(exprs, (Class<R>) Utils.getSuperType(classes), and, this);
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 			final T[] values = (T[]) Array.newInstance(getReturnType(), expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<T>(values, getReturnType(), and);
+			return new SimpleLiteral<>(values, getReturnType(), and);
 		}
 		return this;
 	}
