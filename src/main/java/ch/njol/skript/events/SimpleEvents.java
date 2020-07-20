@@ -512,8 +512,9 @@ public class SimpleEvents {
 				.since("2.3");
 		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) Skript.registerEvent("Unknown Command", SimpleEvent.class, UnknownCommandEvent.class, "unknown command")
 			.description("Called when a player sends a command that isn't registered")
+			.requiredPlugins("Paper")
 			.examples("on unknown command:")
-			.since("INSERT VERSION").requiredPlugins("Paper");
+			.since("INSERT VERSION");
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
 					"[entity] swim toggl(e|ing)")
