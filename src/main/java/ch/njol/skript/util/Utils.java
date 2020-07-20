@@ -443,11 +443,6 @@ public abstract class Utils {
 			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
 		CompletableFuture<ByteArrayDataInput> completableFuture = new CompletableFuture<>();
 
-		if (player == null) {
-			completableFuture.completeExceptionally(new IllegalStateException("Can't send plugin messages from a null player"));
-			return completableFuture;
-		}
-
 		Skript skript = Skript.getInstance();
 		Messenger messenger = Bukkit.getMessenger();
 

@@ -77,7 +77,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 
 	@Nullable
 	private Expression<World> worlds;
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<Chunk> chunks;
 	@Nullable
 	private Expression<Number> radius;
@@ -135,6 +135,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		return false;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	protected Entity[] get(Event e) {

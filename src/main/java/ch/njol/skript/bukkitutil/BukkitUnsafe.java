@@ -60,10 +60,7 @@ public class BukkitUnsafe {
 	private static final boolean knownNullPtr = !Skript.isRunningMinecraft(1, 11);
 	
 	static {
-		UnsafeValues values = Bukkit.getUnsafe();
-		if (values == null)
-			throw new Error("UnsafeValues not available");
-		unsafe = values;
+		unsafe = Bukkit.getUnsafe();
 	}
 	
 	/**

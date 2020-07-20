@@ -101,7 +101,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	@Override
 	@Nullable
 	public Iterator<T> iterator(final Event e) {
-		return new ArrayIterator<T>(data);
+		return new ArrayIterator<>(data);
 	}
 	
 	@Override
