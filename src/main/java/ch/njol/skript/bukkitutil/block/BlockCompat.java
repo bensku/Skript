@@ -61,7 +61,6 @@ public interface BlockCompat {
 	 * @return Block values.
 	 */
 	@Nullable
-	@SuppressWarnings("null")
 	default BlockValues getBlockValues(Block block) {
 		return getBlockValues(block.getState());
 	}

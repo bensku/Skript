@@ -62,7 +62,6 @@ public class ExprPlayerViewDistance extends PropertyExpression<Player, Number> {
 	@Override
 	protected Number[] get(Event e, Player[] source) {
 		return get(source, new Getter<Integer, Player>() {
-			@SuppressWarnings("null")
 			@Override
 			public Integer get(Player arg) {
 				return arg.getViewDistance();

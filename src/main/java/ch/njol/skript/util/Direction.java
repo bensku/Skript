@@ -105,7 +105,6 @@ public class Direction implements YggdrasilRobustSerializable {
 		lengthOrZ = length;
 	}
 	
-	@SuppressWarnings("null")
 	public Direction(final BlockFace f, final double length) {
 		this(new Vector(f.getModX(), f.getModY(), f.getModZ()).normalize().multiply(length));
 	}
@@ -117,17 +116,14 @@ public class Direction implements YggdrasilRobustSerializable {
 		lengthOrZ = v.getZ();
 	}
 	
-	@SuppressWarnings("null")
 	public Location getRelative(final Location l) {
 		return l.clone().add(getDirection(l));
 	}
 	
-	@SuppressWarnings("null")
 	public Location getRelative(final Entity e) {
 		return e.getLocation().add(getDirection(e.getLocation()));
 	}
 	
-	@SuppressWarnings("null")
 	public Location getRelative(final Block b) {
 		return b.getLocation().add(getDirection(b));
 	}
@@ -138,7 +134,6 @@ public class Direction implements YggdrasilRobustSerializable {
 		return getDirection(pitchOrX == IGNORE_PITCH ? 0 : pitchToRadians(l.getPitch()), yawToRadians(l.getYaw()));
 	}
 	
-	@SuppressWarnings("null")
 	public Vector getDirection(final Entity e) {
 		return getDirection(e.getLocation());
 	}
@@ -221,7 +216,7 @@ public class Direction implements YggdrasilRobustSerializable {
 	 * @param b
 	 * @return The facing of the block or {@link BlockFace#SELF} if the block doesn't have a facing.
 	 */
-	@SuppressWarnings({"deprecation", "null"})
+	@SuppressWarnings("deprecation")
 	public static BlockFace getFacing(final Block b) {
 		final Material m = b.getType();
 		if (!Directional.class.isAssignableFrom(m.getData()))
@@ -229,7 +224,6 @@ public class Direction implements YggdrasilRobustSerializable {
 		return ((Directional) m.getNewData(b.getData())).getFacing();
 	}
 	
-	@SuppressWarnings("null")
 	public static BlockFace getFacing(final double yaw, final double pitch) {
 		if (-Math.PI / 4 < pitch && pitch < Math.PI / 4) {
 			if (yaw < Math.PI / 4 || yaw >= Math.PI * 7 / 4)
