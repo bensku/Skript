@@ -59,7 +59,7 @@ public class JavaClasses {
 				.user("num(ber)?s?")
 				.name("Number")
 				.description("A number, e.g. 2.5, 3, or -9812454.",
-						"Please note that many expressions only need integers, i.e. will discard any frational parts of any numbers without producing an error.")
+						"Please note that many expressions only need integers, i.e. will discard any fractional parts of any numbers without producing an error.")
 				.usage("[-]###[.###]</code> (any amount of digits; very large numbers will be truncated though)")
 				.examples("set the player's health to 5.5",
 						"set {_temp} to 2*{_temp} - 2.5")

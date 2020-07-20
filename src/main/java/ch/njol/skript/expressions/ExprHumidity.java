@@ -30,14 +30,14 @@ import org.bukkit.block.Block;
 @Description("Humidity of given blocks.")
 @Examples("set {_humidity} to event-block's humidity")
 @Since("2.2-dev35")
-public class ExprHumidity extends SimplePropertyExpression<Block, Double> {
+public class ExprHumidity extends SimplePropertyExpression<Block, Number> {
 
     static {
-        register(ExprHumidity.class, Double.class, "humidit(y|ies)", "blocks");
+        register(ExprHumidity.class, Number.class, "humidit(y|ies)", "blocks");
     }
 
     @Override
-    public Double convert(Block block) {
+    public Number convert(Block block) {
         return block.getHumidity();
     }
 
@@ -47,8 +47,8 @@ public class ExprHumidity extends SimplePropertyExpression<Block, Double> {
     }
 
     @Override
-    public Class<? extends Double> getReturnType() {
-        return Double.class;
+    public Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
 }

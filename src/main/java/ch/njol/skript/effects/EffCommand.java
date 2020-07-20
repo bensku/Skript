@@ -71,7 +71,6 @@ public class EffCommand extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		for (String command : commands.getArray(e)) {

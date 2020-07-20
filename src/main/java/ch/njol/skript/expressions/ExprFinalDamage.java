@@ -44,9 +44,10 @@ import ch.njol.util.Kleenean;
 @Examples({"send \"%final damage%\" to victim"})
 @Since("2.2-dev19")
 @Events("damage")
-public class ExprFinalDamage extends SimpleExpression<Double> {
+public class ExprFinalDamage extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprFinalDamage.class, Double.class, ExpressionType.SIMPLE, "[the] final damage");
+		Skript.registerExpression(ExprFinalDamage.class, Number.class, ExpressionType.SIMPLE, "[the] final damage");
 	}
 	
 	@Override
@@ -60,10 +61,10 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
-			return new Double[0];
-		return new Double[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
+			return new Number[0];
+		return new Number[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
 	}
 	
 	@Override
@@ -79,8 +80,8 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

@@ -85,7 +85,6 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 		return "the gamemode of " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

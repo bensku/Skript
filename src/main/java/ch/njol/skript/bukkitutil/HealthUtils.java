@@ -33,7 +33,6 @@ import ch.njol.util.Math2;
  * @author Peter Güttinger
  */
 
-@SuppressWarnings("null")
 public abstract class HealthUtils {
 	
 	private HealthUtils() {}
@@ -114,7 +113,6 @@ public abstract class HealthUtils {
 		e.setDamage(damage * 2);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void setDamageCause(final Damageable e, final DamageCause cause) {
 		e.setLastDamageCause(new EntityDamageEvent(e, cause, 0)); // Use deprecated way too keep it compatible and create cleaner code
 		// Non-deprecated way is really, really bad
