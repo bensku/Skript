@@ -41,6 +41,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.CondHasRelationalVariable;
+import ch.njol.skript.expressions.ExprRelationalVariable;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.SerializedVariable.Value;
@@ -52,8 +54,8 @@ import ch.njol.skript.variables.SerializedVariable.Value;
  * @author APickledWalrus
  * @see SingleVariablePersistentDataType
  * @see ListVariablePersistentDataType
- * @see ch.njol.skript.expressions.ExprPersistentData
- * @see ch.njol.skript.conditions.CondHasPersistentData
+ * @see ExprRelationalVariable
+ * @see CondHasRelationalVariable
  */
 public class PersistentDataUtils {
 
@@ -519,7 +521,7 @@ public class PersistentDataUtils {
 
 	/**
 	 * This returns the indexes of a stored list.
-	 * Mainly used for the ADD changer in {@link ch.njol.skript.expressions.ExprPersistentData}
+	 * Mainly used for the ADD changer in {@link ExprRelationalVariable}
 	 * @param name The full list variable (e.g. <b>"myList::*" from {myList::*}</b>)
 	 * If it is not provided in this format, nothing will be set.
 	 * @param holder The holder of the Persistent Data Tag. See {@link PersistentDataUtils#getConvertedHolders(Object[])}

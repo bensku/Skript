@@ -51,45 +51,39 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Persistent Data")
-@Description({"Persistent data is a way of storing data on entities, items, and some blocks.",
-			"Unlike metadata, it is not affected by server restarts.",
-			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders.",
-			"If the new value when changing a persistent data value can't be persistently stored in variables",
-			"(meaning it gets cleared on a restart), it will be set in metadata and a warning will be printed in console.",
-			"That value will still be accessible through this expression, but it will be from metadata."
+@Name("Relational Variable")
+@Description({"A relational variable is a variable stored on an entity, projectile, item, or certain blocks, and it can only be accessed using that entity.",
+			" See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders.",
+			" Relational Variables will persist through a server restart, however, just like normal variables,",
+			" not all values can be stored permanently (e.g. entities). If the value can't be stored permanently,",
+			" it will be stored until the server is restarted."
 })
-@Examples("set persistent data value {isAdmin} of player to true")
-@Since("INSERT VERSION")
+@Examples({"set {isAdmin} of player to true",
+			"set {oldNames::*} of player to \"Noob_Sl4yer\" and \"Skr1pt_M4st3r\""})
 @RequiredPlugins("1.14 or newer")
+@Since("INSERT VERSION")
 @SuppressWarnings({"null", "unchecked"})
-public class ExprPersistentData<T> extends SimpleExpression<T> {
+public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
-			Skript.registerExpression(ExprPersistentData.class, Object.class, ExpressionType.PROPERTY,
-					"[persistent data [(value|tag)[s]]] %objects% of %persistentdataholders/itemtypes/blocks%"
+			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.PROPERTY,
+					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
 		}
 	}
 
-	/**
-	 * Persistent data is meant to <i>look</i> like variables
-	 * <br>e.g. <b>set persistent data value {isCool} of player to true</b>
-	 * <br>e.g. <b>set {_value} to persistent data value {isCool} of player</b>
-	 */
-
 	private ExpressionList<Variable<?>> variables;
 	private Expression<Object> holders;
 
-	private ExprPersistentData<?> source;
+	private ExprRelationalVariable<?> source;
 	private Class<T> superType;
 
-	public ExprPersistentData() {
+	public ExprRelationalVariable() {
 		this(null, (Class<? extends T>) Object.class);
 	}
 
-	private ExprPersistentData(ExprPersistentData<?> source, Class<? extends T>... types) {
+	private ExprRelationalVariable(ExprRelationalVariable<?> source, Class<? extends T>... types) {
 		this.source = source;
 		if (source != null) {
 			this.variables = source.variables;
@@ -102,11 +96,10 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		ExpressionList<?> exprList = exprs[0] instanceof ExpressionList ? (ExpressionList<?>) exprs[0] : new ExpressionList<>(new Expression<?>[]{exprs[0]}, Object.class, false);
 		for (Expression<?> expr : exprList.getExpressions()) {
-			if (!(expr instanceof Variable<?>)) { // Input not a variable
-				Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
+			if (!(expr instanceof Variable<?>)) { // Input isn't a variable
 				return false;
 			} else if (((Variable<?>) expr).isLocal()) { // Input is a variable, but it's local
-				Skript.error("Using local variables in persistent data is not supported."
+				Skript.error("Setting a relational variable using a local variable is not supported."
 						+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
 				);
 				return false;
@@ -143,7 +136,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 		if (mode == ChangeMode.RESET)
 			return null;
 		for (Expression<?> expr : variables.getExpressions()) {
-			if (!((Variable<?>) expr).isList()) {
+			if (!((Variable<?>) expr).isList()) { // It's a single variable
 				if (mode == ChangeMode.REMOVE_ALL)
 					return null;
 				return CollectionUtils.array(Object.class);
@@ -262,7 +255,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	@Override
 	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
-		return new ExprPersistentData<>(this, to);
+		return new ExprRelationalVariable<>(this, to);
 	}
 
 	@Override
@@ -272,7 +265,7 @@ public class ExprPersistentData<T> extends SimpleExpression<T> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "persistent data value(s) " + variables.toString(e, debug) + " of " + holders.toString(e, debug);
+		return variables.toString(e, debug) + " of " + holders.toString(e, debug);
 	}
 
 }

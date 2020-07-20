@@ -40,21 +40,21 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.PersistentDataUtils;
 import ch.njol.util.Kleenean;
 
-@Name("Has Persistent Data")
-@Description({"Checks whether a persistent data holder has the specified value.",
-			"This condition will return true if the value also exists under metadata.",
+@Name("Has Relational Variable")
+@Description({"Checks whether the given relation variables are present on the given holders.",
 			"See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders."
 })
-@Examples("if player has persistent data \"epic\":")
+@Examples({"player holds relational variable {isAdmin}",
+			"player holds relational variable {oldNames::*}"})
 @RequiredPlugins("1.14 or newer")
 @Since("INSERT VERSION")
-public class CondHasPersistentData extends Condition {
+public class CondHasRelationalVariable extends Condition {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
-			Skript.registerCondition(CondHasPersistentData.class,
-					"%persistentdataholders/itemtypes/blocks% (has|have|holds) [persistent data [(value|tag)[s]]] %objects%",
-					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) (have|hold) [persistent data [(value|tag)[s]]] %objects%"
+			Skript.registerCondition(CondHasRelationalVariable.class,
+					"%persistentdataholders/itemtypes/blocks% (has|have|holds) [(relational|relation( |-)based) variable[s]] %objects%",
+					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) (have|hold) [(relational|relation( |-)based) variable[s]] %objects%"
 			);
 		}
 	}
@@ -70,10 +70,9 @@ public class CondHasPersistentData extends Condition {
 		ExpressionList<?> exprList = exprs[1] instanceof ExpressionList ? (ExpressionList<?>) exprs[1] : new ExpressionList<>(new Expression<?>[]{exprs[1]}, Object.class, false);
 		for (Expression<?> expr : exprList.getExpressions()) {
 			if (!(expr instanceof Variable<?>)) { // Input not a variable
-				Skript.error("Persistent Data values are formatted as variables (e.g. \"persistent data value {isAdmin}\")" , ErrorQuality.SEMANTIC_ERROR);
 				return false;
 			} else if (((Variable<?>) expr).isLocal()) { // Input is a variable, but it's local
-				Skript.error("Using local variables in persistent data is not supported."
+				Skript.error("Setting a relational variable using a local variable is not supported."
 						+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
 				);
 				return false;
@@ -98,7 +97,7 @@ public class CondHasPersistentData extends Condition {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, holders,
-				"persistent data value(s) " + variables.toString(e, debug));
+			"relational variable(s) " + variables.toString(e, debug));
 	}
 
 }
