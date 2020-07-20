@@ -89,8 +89,8 @@ skript command:
 		info: Skript의 별명 및 문서에 대한 링크가있는 메시지를 표시합니다
 		gen-docs: 플러그인 폴더의 문서 템플릿을 사용하여 문서를 생성합니다.
 		
-	invalid script: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red> 스크립트를 찾을 수 없습니다!
-	invalid folder: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red> 폴더를 찾을 수 없습니다!
+	invalid script: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red>라는 스크립트를 찾을 수 없습니다!
+	invalid folder: 스크립트 폴더에서 <grey>'<gold>%s<grey>'<red>라는 폴더를 찾을 수 없습니다!
 	reload:
 		reloading: %s을(를) 다시 로드하는 중입니다...
 		reloaded: %s을(를) 다시 로드했습니다.
@@ -102,8 +102,8 @@ skript command:
 		main config: 주요 구성
 		aliases: aliases
 		script: <gold>%s<reset>
-		scripts in folder: <gold>%s<reset>의 모든 스크립트
-		x scripts in folder: <gold> %1$s<reset>의 <gold>%2$s<reset>스크립트
+		scripts in folder: <gold>%s<reset>폴더속 모든 스크립트
+		x scripts in folder: <gold> %1$s<reset>폴더속 <gold>%2$s<reset>개의 스크립트
 		empty folder: <gold>%s<reset>에 활성화 된 스크립트가 없습니다.
 	enable:
 		all:
@@ -119,8 +119,8 @@ skript command:
 			io error: <gold>%s<red>을(를) 활성화 할 수 없습니다: %s
 		folder:
 			empty: <gold>%s<reset>에 비활성화 된 스크립트가 없습니다.
-			enabling: <gold>%1$s<reset>에서 <gold>%2$s<reset> 스크립트를 활성화하는 중...
-			enabled: <gold>%1$s<reset>에서 이전에 <gold>%2$s<reset> 스크립트를 성공적으로 활성화 및 구문 분석했습니다.
+			enabling: <gold>%1$s<reset>에서 <gold>%2$s<reset>개의 스크립트를 활성화하는 중...
+			enabled: <gold>%1$s<reset>에서 이전에 <gold>%2$s<reset>개의 스크립트를 성공적으로 활성화 및 구문 분석했습니다.
 			error: <gold>%1$s<red>에서 스크립트를 구문 분석하는 동안 %2$s개의 오류가 발생했습니다!
 			io error: <gold>%s<red>에서 스크립트를 활성화하는 동안 오류가 발생했습니다 (서버가 다시 시작될 때 일부 스크립트가 활성화 될 수 있음): %s
 	disable:
@@ -133,7 +133,7 @@ skript command:
 			io error: <gold>%s<red>의 이름을 바꿀 수 없습니다. 서버를 다시 시작할 때 다시 활성화됩니다: %s
 		folder:
 			empty: <gold>%s<reset>에 활성화 된 스크립트가 없습니다.
-			disabled: <gold>%1$s<reset>에서 <gold> % 2 $ s <reset> 스크립트를 성공적으로 비활성화했습니다.
+			disabled: <gold>%1$s<reset>에서 <gold>%2$s<reset>개의 스크립트를 성공적으로 비활성화했습니다.
 			io error: <gold>%s<red>에서 스크립트를 비활성화 할 수 없습니다 (서버가 다시 시작될 때 일부 스크립트가 비활성화 될 수 있음): %s
 	update:
 		# check/download: see Updater
@@ -1712,6 +1712,22 @@ genes:
 	brown: brown, brownish
 	weak: weak
 	aggressive: aggressive, savage, wild
+	
+# -- Attribute Types --
+attribute types:
+	generic_armor: generic armor, armor attribute
+	generic_armor_toughness: generic armor toughness, armor toughness attribute
+	generic_attack_damage: generic attack damage, attack damage attribute
+	generic_attack_knockback: generic attack knockback, attack knockback attribute
+	generic_attack_speed: generic attack speed, attack speed attribute
+	generic_flying_speed: generic flying speed, flying speed attribute
+	generic_follow_range: generic follow range, follow range attribute
+	generic_knockback_resistance: generic knockback resistance, knockback resistance attribute
+	generic_luck: generic luck, luck attribute
+	generic_max_health: generic max health, max health attribute
+	generic_movement_speed: generic movement speed, movement speed attribute
+	horse_jump_strength: horse jump strength, horse jump strength attribute
+	zombie_spawn_reinforcements: zombie spawn reinforcements, zombie spawn reinforcements attribute
 
 # -- Boolean --
 boolean:

@@ -51,7 +51,6 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	
 	private int time = 0;
 	
-	@SuppressWarnings("null")
 	protected SimpleExpression() {}
 	
 	@Override

@@ -105,7 +105,6 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 		return super.setTime(time, EntityTargetEvent.class, getExpr());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

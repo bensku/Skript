@@ -111,7 +111,7 @@ public class ExpressionList<T> implements Expression<T> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public T[] getAll(final Event e) {
-		final ArrayList<T> r = new ArrayList<T>();
+		final ArrayList<T> r = new ArrayList<>();
 		for (final Expression<? extends T> expr : expressions)
 			r.addAll(Arrays.asList(expr.getAll(e)));
 		return r.toArray((T[]) Array.newInstance(returnType, r.size()));
@@ -190,7 +190,7 @@ public class ExpressionList<T> implements Expression<T> {
 		for (int i = 0; i < exprs.length; i++)
 			if ((exprs[i] = expressions[i].getConvertedExpression(to)) == null)
 				return null;
-		return new ExpressionList<R>(exprs, (Class<R>) Utils.getSuperType(to), and, this);
+		return new ExpressionList<>(exprs, (Class<R>) Utils.getSuperType(to), and, this);
 	}
 	
 	@Override
@@ -334,12 +334,12 @@ public class ExpressionList<T> implements Expression<T> {
 			final T[] values = (T[]) Array.newInstance(returnType, expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<T>(values, returnType, and);
+			return new SimpleLiteral<>(values, returnType, and);
 		}
 		if (isLiteralList) {
 			final Literal<? extends T>[] ls = Arrays.copyOf(expressions, expressions.length, Literal[].class);
 			assert ls != null;
-			return new LiteralList<T>(ls, returnType, and);
+			return new LiteralList<>(ls, returnType, and);
 		}
 		return this;
 	}
