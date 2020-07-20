@@ -20,15 +20,12 @@
 package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -1717,7 +1714,7 @@ public class BukkitClasses {
 				
 				@Override
 				public String getVariableNamePattern() {
-					return "regainreason:\\w+";
+					return "regainreason:\\S+";
 				}
 			})
 			.serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));

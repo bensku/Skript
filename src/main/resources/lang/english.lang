@@ -1203,6 +1203,7 @@ entities:
 	strider:
 		name: strider¦s
 		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
+
 # -- Heal Reasons --
 heal reasons:
     custom: unknown, custom, plugin, a plugin
