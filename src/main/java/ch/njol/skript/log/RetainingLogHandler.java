@@ -37,7 +37,7 @@ import ch.njol.skript.Skript;
  */
 public class RetainingLogHandler extends LogHandler {
 	
-	private final Deque<LogEntry> log = new LinkedList<LogEntry>();
+	private final Deque<LogEntry> log = new LinkedList<>();
 	private int numErrors = 0;
 	
 	boolean printedErrorOrLog = false;
@@ -186,7 +186,7 @@ public class RetainingLogHandler extends LogHandler {
 	}
 	
 	public Collection<LogEntry> getErrors() {
-		final Collection<LogEntry> r = new ArrayList<LogEntry>();
+		final Collection<LogEntry> r = new ArrayList<>();
 		for (final LogEntry e : log) {
 			if (e.getLevel().intValue() >= Level.SEVERE.intValue())
 				r.add(e);

@@ -289,7 +289,6 @@ public class NewBlockCompat implements BlockCompat {
 	
 	private NewBlockSetter setter = new NewBlockSetter();
 	
-	@SuppressWarnings("null")
 	@Nullable
 	@Override
 	public BlockValues getBlockValues(BlockState block) {

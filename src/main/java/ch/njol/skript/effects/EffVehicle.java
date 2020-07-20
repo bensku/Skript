@@ -99,7 +99,6 @@ public class EffVehicle extends Effect {
 			} else {
 				for (final Entity p : ps) {
 					assert p != null : passengers;
-					@SuppressWarnings("null")
 					final Entity en = ((EntityData<?>) v).spawn(p.getLocation());
 					if (en == null)
 						return;

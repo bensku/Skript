@@ -107,7 +107,6 @@ import ch.njol.skript.lang.util.SimpleEvent;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")

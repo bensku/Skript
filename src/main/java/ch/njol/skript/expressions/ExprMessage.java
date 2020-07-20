@@ -189,7 +189,6 @@ public class ExprMessage extends SimpleExpression<String> {
 		return new String[0];
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

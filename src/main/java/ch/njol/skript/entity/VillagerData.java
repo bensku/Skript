@@ -69,7 +69,7 @@ public class VillagerData extends EntityData<Villager> {
 			professions = new ArrayList<>();
 			for (Profession prof : Profession.values()) {
 				// We're better off doing stringfying the constants since these don't exist in 1.14
-				if (!prof.toString().equals("NORMAL") || !prof.toString().equals("HUSK"))
+				if (!prof.toString().equals("NORMAL") && !prof.toString().equals("HUSK"))
 					professions.add(prof);
 			}
 		} else { // Pre 1.10: method Profession#isZombie() doesn't exist

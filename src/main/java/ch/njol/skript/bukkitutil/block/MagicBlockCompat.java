@@ -73,7 +73,6 @@ public class MagicBlockCompat implements BlockCompat {
 		short data;
 		private int itemFlags;
 
-		@SuppressWarnings("null")
 		public MagicBlockValues(BlockState block) {
 			this.id = ItemUtils.asItem(block.getType());
 			this.data = block.getRawData(); // Some black magic here, please look away...
@@ -193,7 +192,6 @@ public class MagicBlockCompat implements BlockCompat {
 		return type == Material.WATER || type == Material.LAVA;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	public BlockValues getBlockValues(ItemStack stack) {

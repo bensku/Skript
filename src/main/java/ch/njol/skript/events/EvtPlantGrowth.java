@@ -49,7 +49,6 @@ public class EvtPlantGrowth extends SkriptEvent {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public boolean check(Event e) {
 		if (types != null) {
