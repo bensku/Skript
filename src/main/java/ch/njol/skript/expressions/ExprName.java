@@ -124,7 +124,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	private int mark;
 	private static final ItemType AIR = Aliases.javaItemType("air");
 
-	@SuppressWarnings({"null", "unchecked"})
+	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		mark = parseResult.mark;

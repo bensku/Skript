@@ -741,7 +741,6 @@ public class SkriptClasses {
 				})
 				.serializer(new YggdrasilSerializer<EnchantmentType>() {
 //						return o.getType().getId() + ":" + o.getLevel();
-					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
 					public EnchantmentType deserialize(final String s) {

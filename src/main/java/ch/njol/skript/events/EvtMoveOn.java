@@ -123,7 +123,6 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 		return (int) Math.ceil(y) - 1;
 	}
 	
-	@SuppressWarnings("null")
 	public static Block getBlock(final PlayerMoveEvent e) {
 		return e.getTo().clone().subtract(0, 0.5, 0).getBlock();
 	}
