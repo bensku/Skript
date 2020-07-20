@@ -48,7 +48,6 @@ public class DefaultChangers {
 	public DefaultChangers() {}
 	
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<? extends Object>[] acceptChange(final ChangeMode mode) {
@@ -136,7 +135,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Entity> nonLivingEntityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<Object>[] acceptChange(final ChangeMode mode) {
@@ -157,7 +155,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Item> itemChanger = new Changer<Item>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<?>[] acceptChange(final ChangeMode mode) {

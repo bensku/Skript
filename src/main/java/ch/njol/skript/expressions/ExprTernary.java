@@ -77,7 +77,6 @@ public class ExprTernary<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		ifTrue = LiteralUtils.defendExpression(exprs[0]);
 		ifFalse = LiteralUtils.defendExpression(exprs[1]);
