@@ -37,10 +37,10 @@ import ch.njol.util.coll.CollectionUtils;
 	"on damage:",
 	"\tsend \"%victim's fall distance%\" to victim"})
 @Since("INSERT VERSION")
-public class ExprFallenDistance extends SimplePropertyExpression<Entity, Number> {
+public class ExprFallDistance extends SimplePropertyExpression<Entity, Number> {
 	
 	static {
-		register(ExprFallenDistance.class, Number.class, "[the] fall[en] (distance|height)", "entities");
+		register(ExprFallDistance.class, Number.class, "[the] fall[en] (distance|height)", "entities");
 	}
 	
 	@Nullable
