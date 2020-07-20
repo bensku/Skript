@@ -114,7 +114,6 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				return i <= max;
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Number next() {
 				if (!hasNext())

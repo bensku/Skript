@@ -252,7 +252,6 @@ public abstract class Commands {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
 	static boolean handleEffectCommand(final CommandSender sender, String command) {
 		if (!(sender instanceof ConsoleCommandSender || sender.hasPermission("skript.effectcommands") || SkriptConfig.allowOpsToUseEffectCommands.value() && sender.isOp()))
 			return false;

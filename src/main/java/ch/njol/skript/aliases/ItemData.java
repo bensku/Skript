@@ -56,7 +56,6 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.yggdrasil.Fields;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-@SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static {
@@ -74,7 +73,6 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		public short dataMax = -1;
 	}
 
-	@SuppressWarnings("null")
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
 	static final MaterialRegistry materialRegistry;
