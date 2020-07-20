@@ -1696,7 +1696,9 @@ public class BukkitClasses {
 			.name("Heal Reason")
 			.description("The heal reason in a heal event")
 			.usage(regainReasons.getAllNames())
-			.examples("").since("INSERT VERSION").parser(new Parser<EntityRegainHealthEvent.RegainReason>() {
+			.examples("")
+			.since("INSERT VERSION")
+			.parser(new Parser<EntityRegainHealthEvent.RegainReason>() {
 				@Override
 				@Nullable
 				public EntityRegainHealthEvent.RegainReason parse(String s, ParseContext parseContext) {
@@ -1717,7 +1719,8 @@ public class BukkitClasses {
 				public String getVariableNamePattern() {
 					return "regainreason:\\w+";
 				}
-			}).serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));
+			})
+			.serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));
 		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
 			EnumUtils<Cat.Type> races = new EnumUtils<>(Cat.Type.class, "cat types");
 			Classes.registerClass(new ClassInfo<>(Cat.Type.class, "cattype")
