@@ -52,6 +52,7 @@ import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
@@ -842,6 +843,16 @@ public class SkriptClasses {
 		} else {
 			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
 		}
+		
+		Classes.registerClass(new ClassInfo<>(GameruleValue.class, "gamerulevalue")
+				.user("gamerule values?")
+				.name("Gamerule Value")
+				.description("A wrapper for the value of a gamerule for a world.")
+				.usage("")
+				.examples("")
+				.since("INSERT VERSION")
+				.serializer(new YggdrasilSerializer<GameruleValue>())
+		);
 	}
 	
 }
