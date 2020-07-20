@@ -281,7 +281,6 @@ public class Config implements Comparable<Config> {
 				try {
 					if (OptionSection.class.isAssignableFrom(f.getType())) {
 						final Object p = f.get(o);
-						@SuppressWarnings("null")
 						@NonNull
 						final Class<?> pc = p.getClass();
 						load(pc, p, path + ((OptionSection) p).key + ".");
@@ -300,7 +299,6 @@ public class Config implements Comparable<Config> {
 	/**
 	 * Sets all {@link Option} fields of the given object to the values from this config
 	 */
-	@SuppressWarnings("null")
 	public void load(final Object o) {
 		load(o.getClass(), o, "");
 	}

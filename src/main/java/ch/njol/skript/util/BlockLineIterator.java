@@ -40,7 +40,6 @@ public class BlockLineIterator extends StoppableIterator<Block> {
 	 * @param end
 	 * @throws IllegalStateException randomly (Bukkit bug)
 	 */
-	@SuppressWarnings("null")
 	public BlockLineIterator(final Block start, final Block end) throws IllegalStateException {
 		super(new BlockIterator(start.getWorld(), fitInWorld(start.getLocation().add(0.5, 0.5, 0.5), end.getLocation().subtract(start.getLocation()).toVector()),
 				end.equals(start) ? new Vector(1, 0, 0) : end.getLocation().subtract(start.getLocation()).toVector(), 0, 0), // should prevent an error if start = end
@@ -80,12 +79,10 @@ public class BlockLineIterator extends StoppableIterator<Block> {
 	 * @param dist
 	 * @throws IllegalStateException randomly (Bukkit bug)
 	 */
-	@SuppressWarnings("null")
 	public BlockLineIterator(final Block start, final Vector dir, final double dist) throws IllegalStateException {
 		this(start.getLocation().add(0.5, 0.5, 0.5), dir, dist);
 	}
 	
-	@SuppressWarnings("null")
 	private static Vector fitInWorld(final Location l, final Vector dir) {
 		if (0 <= l.getBlockY() && l.getBlockY() < l.getWorld().getMaxHeight())
 			return l.toVector();

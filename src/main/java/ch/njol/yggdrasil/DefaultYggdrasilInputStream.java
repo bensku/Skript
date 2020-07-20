@@ -176,7 +176,6 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		throw new StreamCorruptedException("Invalid boolean value " + r);
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		switch (type) {
