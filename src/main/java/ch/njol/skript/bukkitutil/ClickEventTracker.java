@@ -49,6 +49,7 @@ public class ClickEventTracker {
 		/**
 		 * Hand used in event.
 		 */
+		@SuppressWarnings("unused")
 		final EquipmentSlot hand;
 
 		public TrackedEvent(Cancellable event, EquipmentSlot hand) {
