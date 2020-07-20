@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on damage of player:",
 		"	send \"You are wounded!\"",
 		"	set victim's attack speed attribute to 2"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	
 	static {

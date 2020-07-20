@@ -60,7 +60,7 @@ import ch.njol.util.coll.CollectionUtils;
 			"That value will still be accessible through this expression, but it will be from metadata."
 })
 @Examples("set persistent data value {isAdmin} of player to true")
-@Since("INSERT VERSION")
+@Since("2.5")
 @RequiredPlugins("1.14 or newer")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprPersistentData<T> extends SimpleExpression<T> {

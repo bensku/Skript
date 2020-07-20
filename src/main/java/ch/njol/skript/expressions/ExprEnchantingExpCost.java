@@ -46,7 +46,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on enchant:",
 			"\tsend \"Cost: %the displayed cost of enchanting%\" to player"})
 @Events("enchant")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 
 	static {

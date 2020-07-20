@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 })
 @Examples("if player has persistent data \"epic\":")
 @RequiredPlugins("1.14 or newer")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondHasPersistentData extends Condition {
 
 	static {
