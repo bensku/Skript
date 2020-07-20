@@ -76,7 +76,6 @@ public class ExprEventCancelled extends SimpleExpression<Boolean> {
 		return "is event cancelled";
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

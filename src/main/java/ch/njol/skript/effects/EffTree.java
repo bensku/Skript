@@ -64,7 +64,6 @@ public class EffTree extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		final StructureType type = this.type.getSingle(e);
