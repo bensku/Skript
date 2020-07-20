@@ -399,8 +399,7 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public World get(final EntityEvent e) {
-				Entity entity = e.getEntity();
-				return entity == null ? null : entity.getWorld(); // no idea why it could be null, but it can happen
+				return e.getEntity().getWorld();
 			}
 		}, 0);
 		// EntityDamageEvent
@@ -1031,7 +1030,7 @@ public final class BukkitEventValues {
 				@Nullable
 				public FireworkEffect get(FireworkExplodeEvent e) {
 					List<FireworkEffect> effects = e.getEntity().getFireworkMeta().getEffects();
-					if (effects == null || effects.size() == 0)
+					if (effects.size() == 0)
 						return null;
 					return effects.get(0);
 				}
