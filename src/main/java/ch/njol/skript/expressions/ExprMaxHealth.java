@@ -50,7 +50,6 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Number
 		register(ExprMaxHealth.class, Number.class, "max[imum] health", "livingentities");
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Number convert(final LivingEntity e) {
 		return HealthUtils.getMaxHealth(e);

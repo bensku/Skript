@@ -55,7 +55,6 @@ public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 	@Override
 	protected Integer[] get(final Event e, final Player[] source) {
 		return super.get(source, new Converter<Player, Integer>() {
-			@SuppressWarnings("null")
 			@Override
 			public Integer convert(final Player p) {
 				if (e instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e)) {

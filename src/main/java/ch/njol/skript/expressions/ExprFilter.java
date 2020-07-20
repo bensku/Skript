@@ -155,7 +155,6 @@ public class ExprFilter extends SimpleExpression<Object> {
 			"the condition would be checked twice, using \"something\" and \"something else\" as the inputs.")
 	@Examples("send \"congrats on being staff!\" to all players where [input has permission \"staff\"]")
 	@Since("2.2-dev36")
-	@SuppressWarnings({"null", "unchecked"})
 	public static class ExprInput<T> extends SimpleExpression<T> {
 
 		static {

@@ -122,7 +122,6 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 				((Entity) o).setPassenger(p);
 			} else if (o instanceof EntityData) {
 				for (final Entity p : ps) {
-					@SuppressWarnings("null")
 					final Entity v = ((EntityData<?>) o).spawn(p.getLocation());
 					if (v == null)
 						continue;

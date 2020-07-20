@@ -133,7 +133,6 @@ public class ExprGroup extends SimpleExpression<String> {
 		return players.isSingle() && primary;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
