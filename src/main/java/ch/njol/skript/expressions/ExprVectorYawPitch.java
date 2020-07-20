@@ -87,7 +87,6 @@ public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number>
 	}
 
 	@Override
-	@SuppressWarnings("null")
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		assert delta != null;
 		Vector v = getExpr().getSingle(e);

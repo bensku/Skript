@@ -119,7 +119,6 @@ public class DatabaseStorage extends VariablesStorage {
 	@Nullable
 	private String formattedCreateQuery;
 
-	@SuppressWarnings("null")
 	final SynchronizedReference<Database> db = new SynchronizedReference<Database>(null);
 
 	private boolean monitor = false;
@@ -527,7 +526,6 @@ public class DatabaseStorage extends VariablesStorage {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public void close() {
 		synchronized (db) {

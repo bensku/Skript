@@ -59,7 +59,6 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public Number convert(final Location l) {
 		return axis == 0 ? l.getX() : axis == 1 ? l.getY() : l.getZ();

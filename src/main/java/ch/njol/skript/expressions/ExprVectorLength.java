@@ -48,7 +48,7 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 	}
 
 	@Override
-	@SuppressWarnings({"unused", "null"})
+	@SuppressWarnings("unused")
 	public Number convert(Vector vector) {
 		return vector.length();
 	}

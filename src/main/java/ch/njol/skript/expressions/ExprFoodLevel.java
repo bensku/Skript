@@ -83,7 +83,6 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 		return "the food level of " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
