@@ -50,7 +50,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 				.since("2.4");
 	}
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Literal<Status> states;
 
 	@SuppressWarnings("unchecked")
@@ -61,6 +61,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 		return true;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public boolean check(final Event e) {
 		if (states != null) {
