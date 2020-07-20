@@ -1691,7 +1691,7 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(EntityRegainHealthEvent.RegainReason.class, "healreason")
 			.user("(regen|heal) (reason|cause)")
 			.name("Heal Reason")
-			.description("The heal reason in a heal event")
+			.description("The heal reason in a heal event.")
 			.usage(regainReasons.getAllNames())
 			.examples("")
 			.since("INSERT VERSION")
@@ -1714,7 +1714,7 @@ public class BukkitClasses {
 				
 				@Override
 				public String getVariableNamePattern() {
-					return "regainreason:\\S+";
+					return "\\S+";
 				}
 			})
 			.serializer(new EnumSerializer<>(EntityRegainHealthEvent.RegainReason.class)));
