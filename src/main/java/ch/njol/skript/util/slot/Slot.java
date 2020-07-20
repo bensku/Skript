@@ -19,12 +19,10 @@
  */
 package ch.njol.skript.util.slot;
 
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.registrations.Classes;
 
 /**
  * Represents a container for a single item. It could be an ordinary inventory

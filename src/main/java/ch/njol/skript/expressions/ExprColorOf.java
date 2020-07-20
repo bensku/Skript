@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;

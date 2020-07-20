@@ -63,7 +63,6 @@ public class CondHasScoreboardTag extends Condition {
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean check(Event e) {
 		List<String> tagsList = Arrays.asList(tags.getArray(e));

@@ -45,6 +45,7 @@ public class DroppedItemSlot extends Slot {
 
 	@Override
 	public void setItem(@Nullable ItemStack item) {
+		assert item != null;
 		entity.setItemStack(item);
 	}
 

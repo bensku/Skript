@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.util.Arrays;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -28,7 +26,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +48,6 @@ public class DefaultChangers {
 	public DefaultChangers() {}
 	
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<? extends Object>[] acceptChange(final ChangeMode mode) {
@@ -139,7 +135,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Entity> nonLivingEntityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<Object>[] acceptChange(final ChangeMode mode) {
@@ -160,7 +155,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Item> itemChanger = new Changer<Item>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<?>[] acceptChange(final ChangeMode mode) {

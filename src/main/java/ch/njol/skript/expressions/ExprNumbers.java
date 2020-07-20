@@ -37,7 +37,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
@@ -115,7 +114,6 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				return i <= max;
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Number next() {
 				if (!hasNext())

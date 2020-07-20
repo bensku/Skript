@@ -30,8 +30,6 @@ import java.util.function.Function;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.gson.Gson;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.AliasesProvider.Variation;
 import ch.njol.skript.aliases.AliasesProvider.VariationGroup;

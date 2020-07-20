@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.inventory.ItemStack;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;

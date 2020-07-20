@@ -19,7 +19,9 @@
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.Closeable;
 import java.io.IOException;

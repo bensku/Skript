@@ -42,7 +42,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 

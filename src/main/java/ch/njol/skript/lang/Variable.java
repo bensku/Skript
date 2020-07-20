@@ -312,7 +312,6 @@ public class Variable<T> implements Expression<T> {
 	 * because the player object inside the variable will be a (kinda) dead variable
 	 * as a new player object has been created by the server.
 	 */
-	@SuppressWarnings({"deprecation"})
 	@Nullable Object convertIfOldPlayer(String key, Event event, @Nullable Object t){
 		if(SkriptConfig.enablePlayerVariableFix.value() && t != null && t instanceof Player){
 			Player p = (Player) t;

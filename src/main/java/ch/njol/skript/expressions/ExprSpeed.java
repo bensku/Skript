@@ -44,9 +44,10 @@ import ch.njol.util.Math2;
 @Examples({"set the player's walk speed to 1",
 		"increase the argument's fly speed by 0.1"})
 @Since("<i>unknown</i> (before 2.1)")
-public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
+public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
+	
 	static {
-		register(ExprSpeed.class, Float.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
+		register(ExprSpeed.class, Number.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
 	}
 	
 	private boolean walk;
@@ -62,9 +63,8 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
-	public Float convert(final Player p) {
+	public Number convert(final Player p) {
 		return walk ? p.getWalkSpeed() : p.getFlySpeed();
 	}
 	
@@ -110,8 +110,8 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 	}
 	
 	@Override
-	public Class<Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
