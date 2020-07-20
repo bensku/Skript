@@ -43,7 +43,6 @@ public class ColorRGB implements Color {
 		this.dye = DyeColor.getByColor(bukkit);
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public org.bukkit.Color asBukkitColor() {
 		return bukkit;

@@ -182,7 +182,6 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writePrimitive_(final Object o) throws IOException {
-		@SuppressWarnings("null")
 		final Tag type = getPrimitiveFromWrapper(o.getClass());
 		final int size;
 		final long value;
