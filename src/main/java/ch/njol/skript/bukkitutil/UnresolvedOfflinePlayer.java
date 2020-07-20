@@ -108,7 +108,6 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	@Nullable
 	public Player getPlayer() {
 		return bukkitOfflinePlayer != null ? bukkitOfflinePlayer.getPlayer() : Bukkit.getPlayerExact(name);

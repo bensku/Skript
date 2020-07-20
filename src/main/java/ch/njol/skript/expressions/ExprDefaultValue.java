@@ -72,7 +72,6 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		first = LiteralUtils.defendExpression(exprs[0]);
 		second = LiteralUtils.defendExpression(exprs[1]);

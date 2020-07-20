@@ -54,7 +54,6 @@ public class ConfigurationSerializer<T extends ConfigurationSerializable> extend
 		return false;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	protected T deserialize(final Fields fields) throws StreamCorruptedException {
 		final String val = fields.getObject("value", String.class);
