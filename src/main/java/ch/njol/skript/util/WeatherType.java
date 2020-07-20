@@ -30,7 +30,6 @@ import org.bukkit.event.weather.WeatherEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
 
 /**
  * @author Peter Güttinger
@@ -104,16 +103,19 @@ public enum WeatherType {
 		return CLEAR;
 	}
 
+	@Nullable
 	public static WeatherType fromPlayer(final Player player) {
-		if (player.getPlayerWeather() == null) {
-			return CLEAR;
+		org.bukkit.WeatherType weather = player.getPlayerWeather();
+		if (weather == null) {
+			return null;
 		}
-		switch (player.getPlayerWeather()) {
+		switch (weather) {
 			case DOWNFALL:
 				return RAIN;
 			case CLEAR:
-			default:
 				return CLEAR;
+			default:
+				return null;
 		}
 	}
 
@@ -122,9 +124,12 @@ public enum WeatherType {
 			case RAIN:
 			case THUNDER:
 				player.setPlayerWeather(org.bukkit.WeatherType.DOWNFALL);
+				break;
 			case CLEAR:
-			default:
 				player.setPlayerWeather(org.bukkit.WeatherType.CLEAR);
+				break;
+			default:
+				player.resetPlayerWeather();
 		}
 	}
 

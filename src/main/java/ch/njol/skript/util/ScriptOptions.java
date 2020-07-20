@@ -43,12 +43,18 @@ package ch.njol.skript.util;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Mirreducki
  * 
  */
-public class ScriptOptions {
+public final class ScriptOptions {
+	
+	private HashMap<File, Set<String>> localWarningSuppression = new HashMap<>();
 	
 	private HashMap<File, Boolean> usesNewLoops = new HashMap<>();
 	
@@ -72,5 +78,14 @@ public class ScriptOptions {
 	
 	public void setUsesNewLoops(File file, boolean b){
 		usesNewLoops.put(file, b);
+	}
+	
+	public boolean suppressesWarning(@Nullable File scriptFile, String warning) {
+		Set<String> suppressed = localWarningSuppression.get(scriptFile);
+		return suppressed != null && suppressed.contains(warning);
+	}
+	
+ 	public void setSuppressWarning(@Nullable File scriptFile, String warning) {
+ 		localWarningSuppression.computeIfAbsent(scriptFile, k -> new HashSet<>()).add(warning);
 	}
 }

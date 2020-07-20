@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,38 +30,46 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
 @Name("Vectors - Create from XYZ")
-@Description("Creates a vector from an x, y and z value")
+@Description("Creates a vector from x, y and z values.")
 @Examples({"set {_v} to vector 0, 1, 0"})
 @Since("2.2-dev28")
 public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
+
 	static {
-		Skript.registerExpression(ExprVectorFromXYZ.class, Vector.class, ExpressionType.SIMPLE, "[new] vector [(from|at|to)] %number%,[ ]%number%(,[ ]| and )%number%");
+		Skript.registerExpression(ExprVectorFromXYZ.class, Vector.class, ExpressionType.SIMPLE,
+				"[a] [new] vector [(from|at|to)] %number%,[ ]%number%(,[ ]| and )%number%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Number> x, y, z;
 
 	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		x = (Expression<Number>) exprs[0];
+		y = (Expression<Number>) exprs[1];
+		z = (Expression<Number>) exprs[2];
+		return true;
+	}
+
+	@Override
 	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Number x = this.x.getSingle(event);
-		Number y = this.y.getSingle(event);
-		Number z = this.z.getSingle(event);
-		if ( x == null || y == null || z == null) {
+	protected Vector[] get(Event e) {
+		Number x = this.x.getSingle(e);
+		Number y = this.y.getSingle(e);
+		Number z = this.z.getSingle(e);
+		if (x == null || y == null || z == null)
 			return null;
-		}
-		return new Vector[] {new Vector(x.doubleValue(), y.doubleValue(), z.doubleValue())};
+		return CollectionUtils.array(new Vector(x.doubleValue(), y.doubleValue(), z.doubleValue()));
 	}
 
 	@Override
@@ -71,16 +83,8 @@ public class ExprVectorFromXYZ extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean b) {
-		return "vector from x " + x.toString() + ", y " + y.toString() + ", z " + z.toString();
+	public String toString(@Nullable Event e, boolean debug) {
+		return "vector from x " + x.toString(e, debug) + ", y " + y.toString(e, debug) + ", z " + z.toString(e, debug);
 	}
 
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		x = (Expression<Number>) expressions[0];
-		y = (Expression<Number>) expressions[1];
-		z = (Expression<Number>) expressions[2];
-		return true;
-	}
 }

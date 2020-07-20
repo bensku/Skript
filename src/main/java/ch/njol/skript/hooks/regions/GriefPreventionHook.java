@@ -162,7 +162,10 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		
 		@Override
 		public boolean isOwner(final OfflinePlayer p) {
-			return p.getName().equalsIgnoreCase(claim.getOwnerName());
+			String name = p.getName();
+			if (name != null)
+				return name.equalsIgnoreCase(claim.getOwnerName());
+			return false; // Assume no ownership when player has never visited server
 		}
 		
 		@SuppressWarnings({"null", "deprecation"})

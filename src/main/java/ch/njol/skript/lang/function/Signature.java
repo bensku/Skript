@@ -21,37 +21,55 @@ package ch.njol.skript.lang.function;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.util.NonNullPair;
 
 /**
  * Function signature: name, parameter types and a return type.
  */
 public class Signature<T> {
 	
+	/**
+	 * Name of the script that the function is inside.
+	 */
 	final String script;
+	
+	/**
+	 * Name of function this refers to.
+	 */
 	final String name; // Stored for hashCode
-	final List<Parameter<?>> parameters;
+	
+	/**
+	 * Parameters taken by this function, in order.
+	 */
+	final Parameter<?>[] parameters;
+	
+	/**
+	 * Return type of this function. For functions that return nothing, this
+	 * is null. void is never used as return type, because it is not registered
+	 * to Skript's type system.
+	 */
 	@Nullable
 	final ClassInfo<T> returnType;
-	@Nullable
-	final NonNullPair<String, Boolean> info;
+	
+	/**
+	 * Whether this function returns a single value, or multiple ones.
+	 * Unspecified and unused when {@link #returnType} is null.
+	 */
 	final boolean single;
 	
+	/**
+	 * References (function calls) to function with this signature.
+	 */
 	final Collection<FunctionReference<?>> calls;
 	
-	@SuppressWarnings("null")
-	public Signature(String script, String name, List<Parameter<?>> parameters, @Nullable final ClassInfo<T> returnType, @Nullable final NonNullPair<String, Boolean> info, boolean single) {
+	public Signature(String script, String name, Parameter<?>[] parameters, @Nullable final ClassInfo<T> returnType, boolean single) {
 		this.script = script;
 		this.name = name;
-		this.parameters = Collections.unmodifiableList(parameters);
+		this.parameters = parameters;
 		this.returnType = returnType;
-		this.info = info;
 		this.single = single;
 		
 		calls = new ArrayList<>();
@@ -62,11 +80,11 @@ public class Signature<T> {
 	}
 	
 	@SuppressWarnings("null")
-	public Parameter<?> getParameter(final int index) {
-		return parameters.get(index);
+	public Parameter<?> getParameter(int index) {
+		return parameters[index];
 	}
 	
-	public List<Parameter<?>> getParameters() {
+	public Parameter<?>[] getParameters() {
 		return parameters;
 	}
 	
@@ -79,16 +97,27 @@ public class Signature<T> {
 		return single;
 	}
 	
+	/**
+	 * Gets maximum number of parameters that the function described by this
+	 * signature is able to take.
+	 * @return Maximum number of parameters.
+	 */
 	public int getMaxParameters() {
-		return parameters.size();
+		return parameters.length;
 	}
 	
+	/**
+	 * Gets minimum number of parameters that the function described by this
+	 * signature is able to take. Parameters that have default values and do
+	 * not have any parameters that are mandatory after them, are optional.
+	 * @return Minimum number of parameters required.
+	 */
 	public int getMinParameters() {
-		for (int i = parameters.size() - 1; i >= 0; i--) {
-			if (parameters.get(i).def == null)
+		for (int i = parameters.length - 1; i >= 0; i--) {
+			if (parameters[i].def == null)
 				return i + 1;
 		}
-		return 0;
+		return 0; // No-args function
 	}
 	
 	@Override

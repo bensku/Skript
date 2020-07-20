@@ -36,31 +36,33 @@ import ch.njol.util.Math2;
  * @author Peter Güttinger
  */
 @Name("Level Progress")
-@Description({"The progress a player has made until the next level. Remember that this value is between 0 and 1, not 0 and 100!",
-		"Changing this value can cause a player's level to change if the resulting level progess is negative or larger than 1, e.g." +
-				"<code>increase the player's level progress by 0.5</code> will make the player gain a level if his progress was more than 50%."})
+@Description({"The player's progress in reaching the next level, this represents the experience bar in the game. " +
+		"Please note that this value is between 0 and 1 (e.g. 0.5 = half experience bar).",
+		"Changing this value can cause the player's level to change if the resulting level progess is negative or larger than 1, e.g. " +
+				"<code>increase the player's level progress by 0.5</code> will make the player gain a level if their progress was more than 50%."})
 @Examples({"# use the exp bar as mana",
 		"on rightclick with a blaze rod:",
-		"	player's level progress is larger than 0.2",
-		"	shoot a fireball from the player",
-		"	reduce the player's level progress by 0.2",
+		"\tplayer's level progress is larger than 0.2",
+		"\tshoot a fireball from the player",
+		"\treduce the player's level progress by 0.2",
 		"every 2 seconds:",
-		"	loop all players:",
-		"		level progress of loop-player is smaller than 0.9:",
-		"			increase level progress of the loop-player by 0.1",
-		"		else:",
-		"			set level progress of the loop-player to 0.99",
+		"\tloop all players:",
+		"\t\tlevel progress of loop-player is smaller than 0.9:",
+		"\t\t\tincrease level progress of the loop-player by 0.1",
+		"\t\telse:",
+		"\t\t\tset level progress of the loop-player to 0.99",
 		"on xp spawn:",
-		"	cancel event"})
+		"\tcancel event"})
 @Since("2.0")
 @Events("level change")
-public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
+public class ExprLevelProgress extends SimplePropertyExpression<Player, Number> {
+	
 	static {
-		register(ExprLevelProgress.class, Float.class, "level progress", "players");
+		register(ExprLevelProgress.class, Number.class, "level progress", "players");
 	}
 	
 	@Override
-	public Float convert(final Player p) {
+	public Number convert(final Player p) {
 		return p.getExp();
 	}
 	
@@ -99,13 +101,13 @@ public class ExprLevelProgress extends SimplePropertyExpression<Player, Float> {
 					return;
 			}
 			p.setLevel(Math.max(0, p.getLevel() + (int) Math.floor(c)));
-			p.setExp(Math2.mod(c, 1));
+			p.setExp(Math2.mod(Math2.safe(c), 1));
 		}
 	}
 	
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

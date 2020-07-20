@@ -23,10 +23,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Comparator.Relation;
 import ch.njol.skript.classes.data.DefaultComparators;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -42,20 +43,21 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Is of Type")
-@Description("Checks whether an item of entity is of the given type. This is mostly useful for variables, as you can use the general 'is' condition otherwise (e.g. 'victim is a creeper').")
-@Examples({"tool is of type {*selected type}",
+@Description("Checks whether an item of an entity is of the given type. This is mostly useful for variables," +
+		" as you can use the general 'is' condition otherwise (e.g. 'victim is a creeper').")
+@Examples({"tool is of type {selected type}",
 		"victim is of type {villager type}"})
 @Since("1.4")
 public class CondIsOfType extends Condition {
+	
 	static {
-		Skript.registerCondition(CondIsOfType.class,
-				"%itemstacks/entities% (is|are) of type[s] %itemtypes/entitydatas%", "%itemstacks/entities% (isn't|is not|aren't|are not) of type[s] %itemtypes/entitydatas%");
+		PropertyCondition.register(CondIsOfType.class, "of type[s] %entitytypes/entitydatas%", "itemstacks/entities");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<?> what;
 	@SuppressWarnings("null")
-	Expression<?> types;
+	private Expression<?> types;
 	
 	@SuppressWarnings("null")
 	@Override
@@ -68,30 +70,26 @@ public class CondIsOfType extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return what.check(e, new Checker<Object>() {
-			@Override
-			public boolean check(final Object o1) {
-				return types.check(e, new Checker<Object>() {
-					@Override
-					public boolean check(final Object o2) {
-						if (o2 instanceof ItemType && o1 instanceof ItemType) {
-							return ((ItemType) o2).isSupertypeOf((ItemType) o1);
-						} else if (o2 instanceof EntityData && o1 instanceof Entity) {
-							return ((EntityData<?>) o2).isInstance((Entity) o1);
-						} else if (o2 instanceof ItemType && o1 instanceof Entity) {
-							return Relation.EQUAL.is(DefaultComparators.entityItemComparator.compare(EntityData.fromEntity((Entity) o1), (ItemType) o2));
-						} else {
-							return false;
-						}
-					}
-				}, isNegated());
-			}
-		});
+		return what.check(e,
+				(Checker<Object>) o1 -> types.check(e,
+						(Checker<Object>) o2 -> {
+							if (o2 instanceof ItemType && o1 instanceof ItemType) {
+								return ((ItemType) o2).isSupertypeOf((ItemType) o1);
+							} else if (o2 instanceof EntityData && o1 instanceof Entity) {
+								return ((EntityData<?>) o2).isInstance((Entity) o1);
+							} else if (o2 instanceof ItemType && o1 instanceof Entity) {
+								return Relation.EQUAL.is(DefaultComparators.entityItemComparator.compare(EntityData.fromEntity((Entity) o1), (ItemType) o2));
+							} else {
+								return false;
+							}
+						}),
+				isNegated());
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return what.toString(e, debug) + (what.isSingle() ? " is " : " are ") + (isNegated() ? "not " : "") + "of type " + types.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.BE, e, debug, what,
+				"of " + (types.isSingle() ? "type " : "types") + types.toString(e, debug));
 	}
 	
 }

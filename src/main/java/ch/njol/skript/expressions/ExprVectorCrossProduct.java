@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,21 +30,20 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Cross product")
-@Description("Gets the cross product between two vectors")
+@Name("Vectors - Cross Product")
+@Description("Gets the cross product between two vectors.")
 @Examples({"send \"%vector 1, 0, 0 cross vector 0, 1, 0%\""})
 @Since("2.2-dev28")
 public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
+
 	static {
 		Skript.registerExpression(ExprVectorCrossProduct.class, Vector.class, ExpressionType.SIMPLE, "%vector% cross %vector%");
 	}
@@ -49,13 +52,26 @@ public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
 	private Expression<Vector> first, second;
 
 	@Override
-	public boolean isSingle() {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		first = (Expression<Vector>) exprs[0];
+		second = (Expression<Vector>) exprs[1];
 		return true;
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return  first.toString() + " cross " + second.toString();
+	@SuppressWarnings("null")
+	protected Vector[] get(Event e) {
+		Vector v1 = first.getSingle(e);
+		Vector v2 = second.getSingle(e);
+		if (v1 == null || v2 == null)
+			return null;
+		return CollectionUtils.array(v1.clone().crossProduct(v2));
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override
@@ -64,21 +80,8 @@ public class ExprVectorCrossProduct extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		first = (Expression<Vector>)expressions[0];
-		second = (Expression<Vector>)expressions[1];
-		return true;
+	public String toString(@Nullable Event e, boolean debug) {
+		return first.toString(e, debug) + " cross " + second.toString(e, debug);
 	}
 
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Vector v1 = first.getSingle(event);
-		Vector v2 = second.getSingle(event);
-		if (v1 == null || v2 == null) {
-			return null;
-		}
-		return new Vector[]{ v1.clone().crossProduct(v2)};
-	}
 }

@@ -35,9 +35,14 @@ out/
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/dbnavigator.xml
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator
 
 
 # ===== OTHER =====
 
 # [Maybe ECJ:] compiled stuff lands here
-/bin/
+**/bin/
+
+# Skript testing
+test_runners

@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 @Examples({"loop all items in the player's inventory:",
 		"	loop-item is enchanted",
 		"	remove loop-item from the player",
-		"set {inventory.%player%} to items in the player's inventory"})
+		"set {inventory::%uuid of player%::*} to items in the player's inventory"})
 @Since("2.0")
 public class ExprItemsIn extends SimpleExpression<Slot> {
 	static {

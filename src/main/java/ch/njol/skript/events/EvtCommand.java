@@ -39,7 +39,7 @@ public class EvtCommand extends SkriptEvent { // TODO condition to check whether
 	static {
 		Skript.registerEvent("Command", EvtCommand.class, CollectionUtils.array(PlayerCommandPreprocessEvent.class, ServerCommandEvent.class), "command [%-string%]")
 				.description("Called when a player enters a command (not neccessarily a Skript command).")
-				.examples("on command", "on command \"/stop\"", "on command \"pm Njol \"")
+				.examples("on command:", "on command \"/stop\":", "on command \"pm Njol \":")
 				.since("2.0");
 	}
 	

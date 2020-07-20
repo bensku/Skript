@@ -28,7 +28,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -40,7 +39,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Moved blocks")
-@Description("Blocks which are moved in piston event. Cannot be used outside of piston events.")
+@Description("Blocks which are moved in a piston event. Cannot be used outside of piston events.")
 @Examples("the moved blocks")
 @Since("2.2-dev27")
 public class ExprPushedBlocks extends SimpleExpression<Block> {

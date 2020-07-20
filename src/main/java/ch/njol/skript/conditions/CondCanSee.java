@@ -19,26 +19,27 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Checker;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.Bukkit;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Can See")
 @Description("Checks whether the given players can see another players.")
 @Examples({"if the player can't see the player-argument:",
-		"	message \"<light red>The player %player-argument% is not online!\""})
-@Since("INSERT VERSION")
+		"\tmessage \"<light red>The player %player-argument% is not online!\""})
+@Since("2.3")
 public class CondCanSee extends Condition {
 
 	static {
@@ -50,11 +51,13 @@ public class CondCanSee extends Condition {
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Player> players, targetPlayers;
+	private Expression<Player> players;
+	@SuppressWarnings("null")
+	private Expression<Player> targetPlayers;
 
+	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		setNegated(matchedPattern > 1 ^ parseResult.mark == 1);
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern == 1 || matchedPattern == 3) {
 			players = (Expression<Player>) exprs[0];
 			targetPlayers = (Expression<Player>) exprs[1];
@@ -62,27 +65,22 @@ public class CondCanSee extends Condition {
 			players = (Expression<Player>) exprs[1];
 			targetPlayers = (Expression<Player>) exprs[0];
 		}
+		setNegated(matchedPattern > 1 ^ parseResult.mark == 1);
 		return true;
 	}
 
 	@Override
 	public boolean check(Event e) {
-		return players.check(e, new Checker<Player>() {
-			@Override
-			public boolean check(final Player player) {
-				return targetPlayers.check(e, new Checker<Player>() {
-					@Override
-					public boolean check(final Player targetPlayer) {
-						return player.canSee(targetPlayer);
-					}
-				}, isNegated());
-			}
-		});
+		return players.check(e,
+				player -> targetPlayers.check(e,
+						player::canSee
+				), isNegated());
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return players.toString(e, debug) + (isNegated() ? " can't see " : " can see ") + targetPlayers.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.CAN, e, debug, players,
+				"see" + targetPlayers.toString(e, debug));
 	}
 
 }

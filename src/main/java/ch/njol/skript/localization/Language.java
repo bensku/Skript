@@ -78,7 +78,7 @@ public class Language {
 	}
 	
 	@Nullable
-	private final static String get_i(final String key) {
+	private static String get_i(final String key) {
 		if (useLocal && localized != null) {
 			final String s = localized.get(key);
 			if (s != null)
@@ -113,7 +113,7 @@ public class Language {
 		return get_i("" + key.toLowerCase(Locale.ENGLISH));
 	}
 	
-	public final static void missingEntryError(final String key) {
+	public static void missingEntryError(final String key) {
 		Skript.error("Missing entry '" + key.toLowerCase(Locale.ENGLISH) + "' in the default english language file");
 	}
 	
@@ -294,7 +294,7 @@ public class Language {
 			Skript.warning("The localized language file(s) has/ve superfluous entries: " + StringUtils.join(s, ", "));
 	}
 	
-	private final static void removeIgnored(final Set<String> keys) {
+	private static void removeIgnored(final Set<String> keys) {
 		final Iterator<String> i = keys.iterator();
 		while (i.hasNext()) {
 			if (i.next().startsWith(Noun.GENDERS_SECTION))

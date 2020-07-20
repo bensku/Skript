@@ -39,7 +39,7 @@ public class PluralizingArgsMessage extends Message {
 		return format("" + String.format(val, args));
 	}
 	
-	public final static String format(final String s) {
+	public static String format(final String s) {
 		final StringBuilder b = new StringBuilder();
 		int last = 0;
 		boolean plural = false;

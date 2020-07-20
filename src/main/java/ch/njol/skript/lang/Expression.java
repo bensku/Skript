@@ -19,13 +19,19 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
@@ -34,6 +40,7 @@ import ch.njol.skript.conditions.CondIsSet;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Checker;
 
 /**
@@ -81,6 +88,20 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return An array of all possible values of this expression for the given event which must neither be null nor contain nulls, and which must not be an internal array.
 	 */
 	public T[] getAll(final Event e);
+	
+	/**
+	 * Gets a non-null stream of this expression's values.
+	 *
+	 * @param e The event
+	 * @return A non-null stream of this expression's values
+	 */
+	default public Stream<? extends T> stream(final Event e) {
+		Iterator<? extends T> iter = iterator(e);
+		if (iter == null) {
+			return Stream.empty();
+		}
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iter, 0), false);
+	}
 	
 	/**
 	 * @return true if this expression will ever only return one value at most, false if it can return multiple values.
@@ -263,14 +284,53 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * The return value is what will be used for change. You can use modified
 	 * version of initial delta array or create a new one altogether
 	 * <p>
-	 * Default implementation will just return the parameter array.
+	 * Default implementation will convert slots to items when they're set
+	 * to variables, as specified in Skript documentation.
 	 * @param changed What is about to be set.
 	 * @param delta Initial delta array.
 	 * @return Delta array to use for change.
 	 */
 	@Nullable
 	default Object[] beforeChange(Expression<?> changed, @Nullable Object[] delta) {
-		return delta;
+		if (delta == null || delta.length == 0) // Nothing to nothing
+			return null;
+		
+		// Slots must be transformed to item stacks when writing to variables
+		// Also, item stacks must be cloned (to be safe from Vanilla /clear)
+		Object[] newDelta = null; // Created when a needs to be cloned
+		if (changed instanceof Variable) {
+			for (int i = 0; i < delta.length; i++) {
+				Object value = delta[i];
+				if (value instanceof Slot) {
+					ItemStack item = ((Slot) value).getItem();
+					if (item != null) {
+						item = item.clone(); // ItemStack in inventory is mutable
+					}
+					
+					if (newDelta == null) {
+						newDelta = new Object[delta.length];
+						System.arraycopy(delta, 0, newDelta, 0, delta.length);
+					}
+					newDelta[i] = item;
+				} else if (value instanceof ItemType) {
+					if (newDelta == null) {
+						newDelta = new Object[delta.length];
+						System.arraycopy(delta, 0, newDelta, 0, delta.length);
+					}
+					newDelta[i] = ((ItemType) value).clone();
+				} else if (value instanceof ItemStack) {
+					if (newDelta == null) {
+						newDelta = new Object[delta.length];
+						System.arraycopy(delta, 0, newDelta, 0, delta.length);
+					}
+					newDelta[i] = ((ItemStack) value).clone();
+				}
+			}
+		}
+		// Everything else (inventories, actions, etc.) does not need special handling
+		
+		// Return the given delta or an Object[] copy of it, with some values transformed
+		return newDelta == null ? delta : newDelta;
 	}
 	
 }

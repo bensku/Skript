@@ -38,9 +38,9 @@ import ch.njol.util.Kleenean;
  */
 @Name("Index Of")
 @Description("The first or last index of a character (or text) in a text, or -1 if it doesn't occur in the text. Indices range from 1 to the <a href='#ExprIndexOf'>length</a> of the text.")
-@Examples({"set {_@} to the first index of \"@\" in the text argument",
+@Examples({"set {_first} to the first index of \"@\" in the text argument",
 		"if {_s} contains \"abc\":",
-		"	set {_s} to the first (index of \"abc\" in {_s} + 3) characters of {_s} # removes everything after the first \"abc\" from {_s}"})
+		"\tset {_s} to the first (index of \"abc\" in {_s} + 3) characters of {_s} # removes everything after the first \"abc\" from {_s}"})
 @Since("2.1")
 public class ExprIndexOf extends SimpleExpression<Integer> {
 	static {

@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,18 +30,16 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Dot product")
-@Description("Gets the dot product between two vectors")
+@Name("Vectors - Dot Product")
+@Description("Gets the dot product between two vectors.")
 @Examples({"set {_v} to {_v2} dot {_v3}"})
 @Since("2.2-dev28")
 /**
@@ -47,14 +49,32 @@ import org.eclipse.jdt.annotation.Nullable;
  * "z" takes the value 18. There must be some black magic
  * going on.
  */
+public class ExprVectorDotProduct extends SimpleExpression<Number> {
 
-public class ExprVectorDotProduct extends SimpleExpression<Double> {
 	static {
-		Skript.registerExpression(ExprVectorDotProduct.class, Double.class, ExpressionType.SIMPLE, "%vector% dot %vector%");
+		Skript.registerExpression(ExprVectorDotProduct.class, Number.class, ExpressionType.SIMPLE, "%vector% dot %vector%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Vector> first, second;
+
+	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		first = (Expression<Vector>) exprs[0];
+		second = (Expression<Vector>) exprs[1];
+		return true;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	protected Number[] get(Event e) {
+		Vector v1 = first.getSingle(e);
+		Vector v2 = second.getSingle(e);
+		if (v1 == null || v2 == null)
+			return null;
+		return CollectionUtils.array(v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ());
+	}
 
 	@Override
 	public boolean isSingle() {
@@ -62,31 +82,13 @@ public class ExprVectorDotProduct extends SimpleExpression<Double> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return first.toString() + " dot " + second.toString();
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public String toString(@Nullable Event e, boolean debug) {
+		return first.toString(e, debug) + " dot " + second.toString(e, debug);
 	}
 
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		first = (Expression<Vector>)expressions[0];
-		second = (Expression<Vector>)expressions[1];
-		return true;
-	}
-
-	@Override
-	@SuppressWarnings("null")
-	protected Double[] get(Event event) {
-		Vector v1 = first.getSingle(event);
-		Vector v2 = second.getSingle(event);
-		if (v1 == null || v2 == null) {
-			return null;
-		}
-		return new Double[]{ v1.getX() * v2.getX() + v1.getY() * v2.getY() + v1.getZ() * v2.getZ()};
-	}
 }

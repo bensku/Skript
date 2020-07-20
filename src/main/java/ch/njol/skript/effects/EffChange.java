@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer;
@@ -45,6 +46,7 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Patterns;
+import ch.njol.skript.util.ScriptOptions;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 
@@ -63,7 +65,7 @@ import ch.njol.util.Kleenean;
 		"increase the data value of the clicked block by 1",
 		"# remove:",
 		"remove 2 pickaxes from the victim",
-		"subtract 2.5 from {points.%player%}",
+		"subtract 2.5 from {points::%uuid of player%}",
 		"# remove all:",
 		"remove every iron tool from the player",
 		"remove all minecarts from {entitylist::*}",
@@ -255,8 +257,15 @@ public class EffChange extends Effect {
 			
 			if (changed instanceof Variable && !((Variable<?>) changed).isLocal() && (mode == ChangeMode.SET || ((Variable<?>) changed).isList() && mode == ChangeMode.ADD)) {
 				final ClassInfo<?> ci = Classes.getSuperClassInfo(ch.getReturnType());
-				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value())
-					Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value()) {
+					if (ScriptLoader.currentScript != null) {
+						if (!ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "instance var")) {
+							Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+						}
+					} else {
+						Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
+					}
+				}
 			}
 		}
 		return true;
@@ -265,10 +274,13 @@ public class EffChange extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		final Expression<?> changer = this.changer;
-		final Object[] delta = changer == null ? null : changer.getArray(e);
+		Object[] delta = changer == null ? null : changer.getArray(e);
+		delta = changer == null ? delta : changer.beforeChange(changed, delta);
 		if (delta != null && delta.length == 0)
 			return;
-		changed.change(e, changer == null ? delta : changer.beforeChange(changed, delta), mode); // Trigger beforeChanged hook
+		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET))
+			return;
+		changed.change(e, delta, mode); // Trigger beforeChanged hook
 		// REMIND use a random element out of delta if changed only supports changing a single instance
 //		changed.change(e, new Changer2<Object>() {
 //			@Override

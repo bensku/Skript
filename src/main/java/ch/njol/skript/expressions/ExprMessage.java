@@ -58,6 +58,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"",
 		"on first join:",
 		"	set join message to \"Welcome %player% to our awesome server!\"",
+		"",
 		"on join:",
 		"	player has played before",
 		"	set join message to \"Welcome back, %player%!\"",
@@ -188,7 +189,6 @@ public class ExprMessage extends SimpleExpression<String> {
 		return new String[0];
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

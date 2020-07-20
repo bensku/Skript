@@ -19,6 +19,12 @@
  */
 package ch.njol.skript.lang.util;
 
+import java.lang.reflect.Array;
+import java.util.Iterator;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
@@ -28,18 +34,12 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.ArrayIterator;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.Iterator;
 
 /**
  * An implementation of the {@link Expression} interface. You should usually extend this class to make a new expression.
@@ -51,7 +51,6 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	
 	private int time = 0;
 	
-	@SuppressWarnings("null")
 	protected SimpleExpression() {}
 	
 	@Override
@@ -162,7 +161,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	}
 	
 	// TODO return a kleenean (UNKNOWN if 'all' is null or empty)
-	public final static <T> boolean check(final @Nullable T[] all, final Checker<? super T> c, final boolean invert, final boolean and) {
+	public static <T> boolean check(final @Nullable T[] all, final Checker<? super T> c, final boolean invert, final boolean and) {
 		if (all == null)
 			return invert;
 		boolean hasElement = false;
@@ -172,9 +171,9 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 			hasElement = true;
 			final boolean b = c.check(t);
 			if (and && !b)
-				return invert ^ false;
+				return invert;
 			if (!and && b)
-				return invert ^ true;
+				return !invert;
 		}
 		if (!hasElement)
 			return invert;
@@ -311,7 +310,7 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 	@Override
 	@Nullable
 	public Iterator<? extends T> iterator(final Event e) {
-		return new ArrayIterator<T>(getArray(e));
+		return new ArrayIterator<>(getArray(e));
 	}
 	
 	@Override

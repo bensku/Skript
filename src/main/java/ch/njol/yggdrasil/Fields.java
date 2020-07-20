@@ -243,7 +243,7 @@ public final class Fields implements Iterable<FieldContext> {
 	 * @return All non-static and non-transient fields of the given class and its superclasses
 	 * @throws NotSerializableException If a field occurs more than once (i.e. if a class has a field with the same name as a field in one of its superclasses)
 	 */
-	public final static Collection<Field> getFields(final Class<?> c) throws NotSerializableException {
+	public static Collection<Field> getFields(final Class<?> c) throws NotSerializableException {
 		Collection<Field> fields = cache.get(c);
 		if (fields != null)
 			return fields;

@@ -33,12 +33,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 
 @Name("Sorted List")
-@Description("Sorts given list in natural order. All objects in list must be comparable; usually if you think you can compare it, it can be compared.")
-@Examples({"set {_list::*} to sorted {_list::*}"})
+@Description({"Sorts given list in natural order. All objects in list must be comparable;",
+	"if they're not, this expression will return nothing."
+})
+@Examples({"set {_sorted::*} to sorted {_players::*}"})
 @Since("2.2-dev19")
 public class ExprSortedList extends SimpleExpression<Object> {
 	
@@ -52,11 +53,6 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		Class<? extends Object> type = exprs[0].getReturnType();
-		if (Comparable.class.isAssignableFrom(type)) {
-			Skript.error("List of type " + Classes.toString(type) + " does not support sorting.");
-			return false;
-		}
 		list = (Expression<Object>) exprs[0];
 		return true;
 	}
@@ -71,7 +67,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 			Object value = unsorted[i];
 			if (value instanceof Long) {
 				// Hope it fits to the double...
-				sorted[i] = new Double(((Long) value).longValue());
+				sorted[i] = Double.valueOf(((Long) value).longValue());
 			} else {
 				// No conversion needed
 				sorted[i] = value;
@@ -81,7 +77,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 		try {
 			Arrays.sort(sorted); // Now sorted
 		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to sort a list, but some objects are not comparable!");
+			return null; // We don't have a sorted array available
 		}
 		return sorted;
 	}

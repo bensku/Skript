@@ -41,7 +41,7 @@ public class Comparators {
 	
 	private Comparators() {}
 	
-	public final static Collection<ComparatorInfo<?, ?>> comparators = new ArrayList<ComparatorInfo<?, ?>>();
+	public final static Collection<ComparatorInfo<?, ?>> comparators = new ArrayList<>();
 	
 	/**
 	 * Registers a {@link Comparator}.
@@ -55,11 +55,11 @@ public class Comparators {
 		Skript.checkAcceptRegistrations();
 		if (t1 == Object.class && t2 == Object.class)
 			throw new IllegalArgumentException("You must not add a comparator for Objects");
-		comparators.add(new ComparatorInfo<T1, T2>(t1, t2, c));
+		comparators.add(new ComparatorInfo<>(t1, t2, c));
 	}
 	
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public final static Relation compare(final @Nullable Object o1, final @Nullable Object o2) {
+	public static Relation compare(final @Nullable Object o1, final @Nullable Object o2) {
 		if (o1 == null || o2 == null)
 			return Relation.NOT_EQUAL;
 		final Comparator c = getComparator(o1.getClass(), o2.getClass());
@@ -76,16 +76,16 @@ public class Comparators {
 		}
 	};
 	
-	public final static java.util.Comparator<Object> getJavaComparator() {
+	public static java.util.Comparator<Object> getJavaComparator() {
 		return javaComparator;
 	}
 	
-	private final static Map<Pair<Class<?>, Class<?>>, Comparator<?, ?>> comparatorsQuickAccess = new HashMap<Pair<Class<?>, Class<?>>, Comparator<?, ?>>();
+	private final static Map<Pair<Class<?>, Class<?>>, Comparator<?, ?>> comparatorsQuickAccess = new HashMap<>();
 	
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public final static <F, S> Comparator<? super F, ? super S> getComparator(final Class<F> f, final Class<S> s) {
-		final Pair<Class<?>, Class<?>> p = new Pair<Class<?>, Class<?>>(f, s);
+	public static <F, S> Comparator<? super F, ? super S> getComparator(final Class<F> f, final Class<S> s) {
+		final Pair<Class<?>, Class<?>> p = new Pair<>(f, s);
 		if (comparatorsQuickAccess.containsKey(p))
 			return (Comparator<? super F, ? super S>) comparatorsQuickAccess.get(p);
 		final Comparator<?, ?> comp = getComparator_i(f, s);
@@ -95,7 +95,7 @@ public class Comparators {
 	
 	@SuppressWarnings("unchecked")
 	@Nullable
-	private final static <F, S> Comparator<?, ?> getComparator_i(final Class<F> f, final Class<S> s) {
+	private static <F, S> Comparator<?, ?> getComparator_i(final Class<F> f, final Class<S> s) {
 		
 		// perfect match
 		for (final ComparatorInfo<?, ?> info : comparators) {
@@ -121,13 +121,13 @@ public class Comparators {
 				if (info.getType(first).isAssignableFrom(f)) {
 					c2 = Converters.getConverter(s, info.getType(!first));
 					if (c2 != null) {
-						return first ? new ConvertedComparator<F, S>(info.c, c2) : new InverseComparator<F, S>(new ConvertedComparator<S, F>(c2, info.c));
+						return first ? new ConvertedComparator<F, S>(info.c, c2) : new InverseComparator<>(new ConvertedComparator<S, F>(c2, info.c));
 					}
 				}
 				if (info.getType(first).isAssignableFrom(s)) {
 					c1 = Converters.getConverter(f, info.getType(!first));
 					if (c1 != null) {
-						return !first ? new ConvertedComparator<F, S>(c1, info.c) : new InverseComparator<F, S>(new ConvertedComparator<S, F>(info.c, c1));
+						return !first ? new ConvertedComparator<F, S>(c1, info.c) : new InverseComparator<>(new ConvertedComparator<S, F>(info.c, c1));
 					}
 				}
 			}
@@ -139,7 +139,7 @@ public class Comparators {
 				c1 = Converters.getConverter(f, info.getType(first));
 				c2 = Converters.getConverter(s, info.getType(!first));
 				if (c1 != null && c2 != null) {
-					return first ? new ConvertedComparator<F, S>(c1, info.c, c2) : new InverseComparator<F, S>(new ConvertedComparator<S, F>(c2, info.c, c1));
+					return first ? new ConvertedComparator<F, S>(c1, info.c, c2) : new InverseComparator<>(new ConvertedComparator<S, F>(c2, info.c, c1));
 				}
 			}
 		}

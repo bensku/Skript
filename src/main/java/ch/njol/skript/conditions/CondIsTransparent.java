@@ -19,34 +19,31 @@
  */
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
-import org.bukkit.inventory.ItemStack;
 
 @Name("Is Transparent")
-@Description("Checks whether an item is transparent.")
-@Examples({"glass is transparent", "player's tool is transparent."})
+@Description("Checks whether an item is transparent. Note that this condition may not work for all blocks, due to the transparency list used by Spigot not being completely accurate.")
+@Examples("player's tool is transparent.")
 @Since("2.2-dev36")
-public class CondIsTransparent extends PropertyCondition<ItemStack> {
-
+public class CondIsTransparent extends PropertyCondition<ItemType> {
+	
 	static {
-		PropertyCondition.register(CondIsTransparent.class, "transparent", "itemstacks");
+		register(CondIsTransparent.class, "transparent", "itemtypes");
 	}
-
+	
 	@Override
-	public boolean check(ItemStack i) {
-		return i.getType().isTransparent();
+	public boolean check(ItemType i) {
+		return i.getMaterial().isTransparent();
 	}
-
+	
 	@Override
 	protected String getPropertyName() {
 		return "transparent";
 	}
-
+	
 }

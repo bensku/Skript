@@ -22,6 +22,7 @@ package ch.njol.skript.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -34,7 +35,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -57,8 +57,9 @@ import ch.njol.yggdrasil.YggdrasilSerializable;
  * @author Peter Güttinger
  */
 public final class VisualEffect implements SyntaxElement, YggdrasilSerializable {
-	public static boolean EFFECT_LIB = false;
+
 	private final static String LANGUAGE_NODE = "visual effects";
+	static final boolean newEffectData = Skript.classExists("org.bukkit.block.data.BlockData");
 	
 	public static enum Type implements YggdrasilSerializable {
 		ENDER_SIGNAL(Effect.ENDER_SIGNAL),
@@ -78,10 +79,34 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		HURT(EntityEffect.HURT),
-		SHEEP_EAT("SHEEP_EAT", true), // Seriously, Spigot?
+		// Omit DEATH, because it causes client glitches
+		WOLF_SMOKE(EntityEffect.WOLF_SMOKE),
 		WOLF_HEARTS(EntityEffect.WOLF_HEARTS),
 		WOLF_SHAKE(EntityEffect.WOLF_SHAKE),
-		WOLF_SMOKE(EntityEffect.WOLF_SMOKE),
+		SHEEP_EAT("SHEEP_EAT", true), // Was once mistakenly removed from Spigot
+		IRON_GOLEM_ROSE(EntityEffect.IRON_GOLEM_ROSE),
+		VILLAGER_HEARTS(EntityEffect.VILLAGER_HEART),
+		VILLAGER_ENTITY_ANGRY(EntityEffect.VILLAGER_ANGRY),
+		VILLAGER_ENTITY_HAPPY(EntityEffect.VILLAGER_HAPPY),
+		WITCH_MAGIC(EntityEffect.WITCH_MAGIC),
+		ZOMBIE_TRANSFORM(EntityEffect.ZOMBIE_TRANSFORM),
+		FIREWORK_EXPLODE(EntityEffect.FIREWORK_EXPLODE),
+		
+		// Spigot 2017 entity effects update (1.10+)
+		ARROW_PARTICLES("ARROW_PARTICLES", true),
+		RABBIT_JUMP("RABBIT_JUMP", true),
+		LOVE_HEARTS("LOVE_HEARTS", true),
+		SQUID_ROTATE("SQUID_ROTATE", true),
+		ENTITY_POOF("ENTITY_POOF", true),
+		GUARDIAN_TARGET("GUARDIAN_TARGET", true),
+		SHIELD_BLOCK("SHIELD_BLOCK", true),
+		SHIELD_BREAK("SHIELD_BREAK", true),
+		ARMOR_STAND_HIT("ARMOR_STAND_HIT", true),
+		THORNS_HURT("THORNS_HURT", true),
+		IRON_GOLEM_SHEATH("IRON_GOLEM_SHEATH", true),
+		TOTEM_RESURRECT("TOTEM_RESURRECT", true),
+		HURT_DROWN("HURT_DROWN", true),
+		HURT_EXPLOSION("HURT_EXPLOSION", true),
 		
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
@@ -107,7 +132,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		FLYING_GLYPH(Particle.ENCHANTMENT_TABLE),
 		FLAME(Particle.FLAME),
 		LAVA_POP(Particle.LAVA),
-		FOOTSTEP(Particle.FOOTSTEP),
+		FOOTSTEP("FOOTSTEP"), // 1.13 removed
 		SPLASH(Particle.WATER_SPLASH),
 		PARTICLE_SMOKE(Particle.SMOKE_NORMAL), // Why separate particle... ?
 		EXPLOSION_HUGE(Particle.EXPLOSION_HUGE),
@@ -148,34 +173,50 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		BLOCK_BREAK(Particle.BLOCK_CRACK) {
-			@SuppressWarnings("null")
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
 					return Material.STONE.getData();
 				else if (raw instanceof ItemType) {
-					ItemStack rand = ((ItemType) raw).getRandom();
-					if (rand == null) return Material.STONE.getData();
-					MaterialData type = rand.getData();
-					assert type != null;
-					return type;
+					if (newEffectData) {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Bukkit.createBlockData(Material.STONE);
+						return Bukkit.createBlockData(rand.getType());
+					} else {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Material.STONE.getData();
+						@SuppressWarnings("deprecation")
+						MaterialData type = rand.getData();
+						assert type != null;
+						return type;
+					}
 				} else {
 					return raw;
 				}
 			}
 		},
 		BLOCK_DUST(Particle.BLOCK_DUST) {
-			@SuppressWarnings("null")
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
 				if (raw == null)
 					return Material.STONE.getData();
 				else if (raw instanceof ItemType) {
-					ItemStack rand = ((ItemType) raw).getRandom();
-					if (rand == null) return Material.STONE.getData();
-					MaterialData type = rand.getData();
-					assert type != null;
-					return type;
+					if (newEffectData) {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Bukkit.createBlockData(Material.STONE);
+						return Bukkit.createBlockData(rand.getType());
+					} else {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Material.STONE.getData();
+						@SuppressWarnings("deprecation")
+						MaterialData type = rand.getData();
+						assert type != null;
+						return type;
+					}
 				} else {
 					return raw;
 				}
@@ -184,17 +225,53 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		
 		// 1.11 particles
 		TOTEM("TOTEM"),
-		SPIT("SPIT");
+		SPIT("SPIT"),
+		
+		// 1.13 particles
+		SQUID_INK("SQUID_INK"),
+		BUBBLE_POP("BUBBLE_POP"),
+		CURRENT_DOWN("CURRENT_DOWN"),
+		BUBBLE_COLUMN_UP("BUBBLE_COLUMN_UP"),
+		NAUTILUS("NAUTILUS"),
+		DOLPHIN("DOLPHIN"),
+		
+		// 1.14 particles
+		SNEEZE("SNEEZE"),
+		CAMPFIRE_COSY_SMOKE("CAMPFIRE_COSY_SMOKE"),
+		CAMPFIRE_SIGNAL_SMOKE("CAMPFIRE_SIGNAL_SMOKE"),
+		COMPOSTER("COMPOSTER"),
+		FLASH("FLASH"),
+		FALLING_LAVA("FALLING_LAVA"),
+		LANDING_LAVA("LANDING_LAVA"),
+		FALLING_WATER("FALLING_WATER"),
+		
+		// 1.15 particles
+		DRIPPING_HONEY("DRIPPING_HONEY"),
+		FALLING_HONEY("FALLING_HONEY"),
+		LANDING_HONEY("LANDING_HONEY"),
+		FALLING_NECTAR("FALLING_NECTAR"),
+		
+		// 1.16 particles
+		ASH("ASH"),
+		CRIMSON_SPORE("CRIMSON_SPORE"),
+		SOUL_FIRE_FLAME("SOUL_FIRE_FLAME"),
+		WARPED_SPORE("WARPED_SPORE"),
+		DRIPPING_OBSIDIAN_TEAR("DRIPPING_OBSIDIAN_TEAR"),
+		FALLING_OBSIDIAN_TEAR("FALLING_OBSIDIAN_TEAR"),
+		LANDING_OBSIDIAN_TEAR("LANDING_OBSIDIAN_TEAR"),
+		SOUL("SOUL"),
+		REVERSE_PORTAL("REVERSE_PORTAL"),
+		WHITE_ASH("WHITE_ASH");
+		
 		
 		@Nullable
 		final Object effect;
 		@Nullable
 		final String name;
 		
-		@SuppressWarnings("deprecation")
 		private Type(final Effect effect) {
 			this.effect = effect;
-			this.name = effect.getName();
+			this.name = effect.name();
 		}
 		
 		private Type(final EntityEffect effect) {
@@ -337,7 +414,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			for (Expression<?> expr : exprs) {
 				if (expr == null) continue;
 				else if (expr.getReturnType().isAssignableFrom(Color.class)) {
-					org.bukkit.Color color = ((Color) expr.getSingle(null)).getBukkitColor();
+					org.bukkit.Color color = ((Color) expr.getSingle(null)).asBukkitColor();
 					
 					/*
 					 * Colored particles use dX, dY and dZ as RGB values which
@@ -384,12 +461,25 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		return true;
 	}
 	
+	/**
+	 * Entity effects are always played on entities.
+	 * @return If this is an entity effect.
+	 */
 	public boolean isEntityEffect() {
 		return type.effect instanceof EntityEffect;
 	}
 	
+	/**
+	 * Particles are implemented differently from traditional effects in
+	 * Minecraft. Most new visual effects are particles.
+	 * @return If this is a particle effect.
+	 */
+	public boolean isParticle() {
+		return type.effect instanceof Particle;
+	}
+	
 	@Nullable
-	public final static VisualEffect parse(final String s) {
+	public static VisualEffect parse(final String s) {
 		final SyntaxElementInfo<VisualEffect> info = VisualEffect.info;
 		if (info == null)
 			return null;
@@ -400,51 +490,58 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		play(ps, l, e, 0, 32);
 	}
 	
-	@SuppressWarnings({"deprecation"})
 	public void play(final @Nullable Player[] ps, final Location l, final @Nullable Entity e, final int count, final int radius) {
 		assert e == null || l.equals(e.getLocation());
 		if (isEntityEffect()) {
-			if (e != null)
+			if (e != null) {
+				assert type.effect != null;
 				e.playEffect((EntityEffect) type.effect);
+			}
 		} else {
 			if (type.effect instanceof Particle) {
 				// Particle effect...
+				Particle particle = (Particle) type.effect;
+				assert particle != null;
 				Object pData = type.getData(data, l);
 				
 				assert type.effect != null;
 				// Check that data has correct type (otherwise bad things will happen)
 				if (pData != null && !((Particle) type.effect).getDataType().isAssignableFrom(pData.getClass())) {
 					pData = null;
-					Skript.warning("Incompatible particle data, resetting it!");
+					if (Skript.debug())
+						Skript.warning("Incompatible particle data, resetting it!");
 				}
 				
 				if (ps == null) {
 					// Colored particles must be played one at time; otherwise, colors are broken
 					if (type.isColorable()) {
 						for (int i = 0; i < count; i++) {
-							l.getWorld().spawnParticle((Particle) type.effect, l, 0, dX, dY, dZ, speed, pData);
+							l.getWorld().spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 						}
 					} else {
-						l.getWorld().spawnParticle((Particle) type.effect, l, count, dX, dY, dZ, speed, pData);
+						l.getWorld().spawnParticle(particle, l, count, dX, dY, dZ, speed, pData);
 					}
 				} else {
 					for (final Player p : ps) {
 						if (type.isColorable()) {
 							for (int i = 0; i < count; i++) {
-								p.spawnParticle((Particle) type.effect, l, 0, dX, dY, dZ, speed, pData);
+								p.spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 							}
 						} else {
-							p.spawnParticle((Particle) type.effect, l, count, dX, dY, dZ, speed, pData);
+							p.spawnParticle(particle, l, count, dX, dY, dZ, speed, pData);
 						}
 					}
 				}
 			} else {
 				// Non-particle effect (whatever Spigot API says, there are a few)
+				Effect effect = (Effect) type.effect;
+				assert effect != null;
 				if (ps == null) {
-					l.getWorld().spigot().playEffect(l, (Effect) type.effect, 0, 0, dX, dY, dZ, speed, count, radius);
+					//l.getWorld().spigot().playEffect(l, (Effect) type.effect, 0, 0, dX, dY, dZ, speed, count, radius);
+					l.getWorld().playEffect(l, effect, 0, radius);
 				} else {
 					for (final Player p : ps)
-						p.playEffect(l, (Effect) type.effect, type.getData(data, l));
+						p.playEffect(l, effect, type.getData(data, l));
 				}
 			}
 		}
@@ -461,6 +558,23 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	
 	public static String getAllNames() {
 		return StringUtils.join(names, ", ");
+	}
+	
+	/**
+	 * Gets Bukkit effect backing this visual effect. It may be either
+	 * {@link Effect}, {@link EntityEffect} or {@link Particle}.
+	 * @return Backing effect.
+	 * @throws IllegalStateException When this is called before the effect
+	 * is initialized. Note that
+	 * {@link #init(Expression[], int, Kleenean, ParseResult)} may fail when
+	 * the used Minecraft version lacks support for effect used.
+	 */
+	public Object getEffect() {
+		Object effect = type.effect;
+		if (effect == null) { // init() not called or returned false
+			throw new IllegalStateException("effect not initialized");
+		}
+		return effect;
 	}
 	
 	@Override

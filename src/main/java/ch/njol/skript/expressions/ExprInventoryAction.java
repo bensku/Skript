@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryAction;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,7 +32,7 @@ import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ExpressionType;
 
 @Name("Inventory Action")
-@Description("The <a href='../classes/#inventoryaction'>inventory action</a> of an inventory event. Please click on the link for more information.")
+@Description("The <a href='../classes.html#inventoryaction'>inventory action</a> of an inventory event. Please click on the link for more information.")
 @Examples("inventory action is pickup all")
 @Since("2.2-dev16")
 public class ExprInventoryAction extends EventValueExpression<InventoryAction> {

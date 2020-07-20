@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -41,7 +42,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("X of Item")
-@Description("An expression to be able to use a certain amount of items where the amount can be any expression. Please note that is expression is not stable and might be replaced in the future.")
+@Description("An expression to be able to use a certain amount of items where the amount can be any expression. Please note that this expression is not stable and might be replaced in the future.")
 @Examples("give level of player of pickaxes to the player")
 @Since("1.2")
 public class ExprXOf extends PropertyExpression<Object, Object> {
@@ -80,6 +81,10 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 					final ItemStack is = ((ItemStack) o).clone();
 					is.setAmount(a.intValue());
 					return is;
+				} else if (o instanceof ItemType) {
+					ItemType type = ((ItemType) o).clone();
+					type.setAmount(a.intValue());
+					return type;
 				} else {
 					final EntityType t = ((EntityType) o).clone();
 					t.amount = a.intValue();
@@ -87,6 +92,24 @@ public class ExprXOf extends PropertyExpression<Object, Object> {
 				}
 			}
 		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Nullable
+	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
+		// Make sure we get converted expression from Variables etc. correctly
+		// Then, wrap it so that our 'X' is properly applied
+		// See #1747 for issue that was caused by failure to do this
+		
+		Expression<? extends R> converted = getExpr().getConvertedExpression(to);
+		if (converted == null) // Can't create converted expression
+			return null;
+		
+		ExprXOf wrapped = new ExprXOf();
+		wrapped.setExpr(converted);
+		wrapped.amount = amount;
+		return (Expression<? extends R>) wrapped;
 	}
 	
 	@Override

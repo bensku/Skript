@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.aliases;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
@@ -29,29 +28,21 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptCommand;
+import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.config.Config;
-import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.config.validate.SectionValidator;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -60,50 +51,69 @@ import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.Version;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.Setter;
 
-@SuppressWarnings("deprecation")
 public abstract class Aliases {
-		
-	private final static AliasesProvider provider = createProvider();
-	private static AliasesProvider localProvider = new AliasesProvider();
+
+	private static final AliasesProvider provider = createProvider(10000, null);
+	private static final AliasesParser parser = createParser(provider);
+	
+	/**
+	 * Current script aliases.
+	 */
+	@Nullable
+	private static ScriptAliases scriptAliases;
 	
 	@Nullable
-	private final static ItemType getAlias_i(final String s) {
-		final ItemType t = ScriptLoader.getScriptAliases().get(s);
-		if (t != null)
-			return t;
+	private static ItemType getAlias_i(final String s) {
+		// Check script aliases first
+		ScriptAliases aliases = scriptAliases;
+		if (aliases != null) {
+			return aliases.provider.getAlias(s); // Delegates to global provider if needed
+		}
+			
 		return provider.getAlias(s);
 	}
 	
 	/**
-	 * Creates an aliases provider and configures it a bit.
+	 * Creates an aliases provider with Skript's default configuration.
+	 * @param expectedCount Expected alias count.
+	 * @param parent Parent aliases provider.
 	 * @return Aliases provider.
 	 */
-	private static AliasesProvider createProvider() {
-		AliasesProvider provider = new AliasesProvider();
+	private static AliasesProvider createProvider(int expectedCount, @Nullable AliasesProvider parent) {
+		return new AliasesProvider(expectedCount, parent);
+	}
+	
+	/**
+	 * Creates an aliases parser with Skript's default configuration.
+	 * @return Aliases parser.
+	 */
+	private static AliasesParser createParser(AliasesProvider provider) {
+		AliasesParser parser = new AliasesParser(provider);
 		
 		// Register standard conditions
-		provider.registerCondition("minecraft version", (str) -> {
+		parser.registerCondition("minecraft version", (str) -> {
 			int orNewer = str.indexOf("or newer"); // For example: 1.12 or newer
 			if (orNewer != -1) {
+				@SuppressWarnings("null")
 				Version ver = new Version(str.substring(0, orNewer - 1));
 				return Skript.getMinecraftVersion().compareTo(ver) >= 0;
 			}
 			
 			int orOlder = str.indexOf("or older"); // For example: 1.11 or older
 			if (orOlder != -1) {
+				@SuppressWarnings("null")
 				Version ver = new Version(str.substring(0, orOlder - 1));
 				return Skript.getMinecraftVersion().compareTo(ver) <= 0;
 			}
 			
 			int to = str.indexOf("to"); // For example: 1.11 to 1.12
 			if (to != -1) {
+				@SuppressWarnings("null")
 				Version first = new Version(str.substring(0, to - 1));
+				@SuppressWarnings("null")
 				Version second = new Version(str.substring(to + 3));
 				Version current = Skript.getMinecraftVersion();
 				return current.compareTo(first) >= 0 && current.compareTo(second) <= 0;
@@ -112,7 +122,7 @@ public abstract class Aliases {
 			return Skript.getMinecraftVersion().equals(new Version(str));
 		});
 		
-		return provider;
+		return parser;
 	}
 
 	static String itemSingular = "item";
@@ -146,7 +156,7 @@ public abstract class Aliases {
 	 * 
 	 * @param parts
 	 */
-	final static String concatenate(final String... parts) {
+	static String concatenate(final String... parts) {
 		assert parts.length >= 2;
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0; i < parts.length; i++) {
@@ -169,50 +179,34 @@ public abstract class Aliases {
 	@SuppressWarnings("null")
 	private final static Pattern numberWordPattern = Pattern.compile("\\d+\\s+.+");
 	
-	public static final String getMaterialName(ItemData type, boolean plural) {
-		MaterialName name = provider.getMaterialName(type);
+	@Nullable
+	private static MaterialName getMaterialNameData(ItemData type) {
+		// Check script aliases first
+		ScriptAliases aliases = scriptAliases;
+		if (aliases != null) {
+			return aliases.provider.getMaterialName(type);
+		}
+		
+		// Then global aliases
+		return provider.getMaterialName(type);
+	}
+	
+	public static String getMaterialName(ItemData type, boolean plural) {
+		MaterialName name = getMaterialNameData(type);
 		if (name == null) {
 			return "" + type.type;
 		}
 		return name.toString(plural);
 	}
 	
-	public final static String getDebugMaterialName(ItemData type, boolean plural) {
-		final MaterialName n = provider.getMaterialName(type);
-		if (n == null) {
-			return "" + type.type;
-		}
-		return n.getDebugName(plural);
-	}
-	
 	/**
 	 * @return The ietm's gender or -1 if no name is found
 	 */
-	public final static int getGender(ItemData item) {
-		final MaterialName n = provider.getMaterialName(item);
+	public static int getGender(ItemData item) {
+		MaterialName n = getMaterialNameData(item);
 		if (n != null)
 			return n.gender;
 		return -1;
-	}
-	
-	/**
-	 * @return how many ids are missing an alias, including the 'any id' (-1)
-	 */
-	final static int addMissingMaterialNames() {
-		int r = 0;
-		StringBuilder missing = new StringBuilder(m_missing_aliases + " ");
-		for (final Material m : Material.values()) {
-			assert m != null;
-			ItemData data = new ItemData(m);
-			if (provider.getMaterialName(data) == null) { // Material name is missing
-				provider.setMaterialName(data, new MaterialName(m, "" + m.toString().toLowerCase().replace('_', ' '), "" + m.toString().toLowerCase().replace('_', ' '), 0));
-				missing.append(m.getId() + ", ");
-				r++;
-			}
-		}
-		if (r > 0) // Give a warning about missing aliases we just worked around
-			Skript.warning("" + missing.substring(0, missing.length() - 2));
-		return r;
 	}
 	
 	/**
@@ -295,15 +289,13 @@ public abstract class Aliases {
 			}
 			if (t2.numTypes() == 0)
 				continue;
-			final Map<Enchantment, Integer> enchantments = new HashMap<>();
-			final String[] enchs = lc.substring(c + of.length(), lc.length()).split("\\s*(,|" + Pattern.quote(Language.get("and")) + ")\\s*");
+			final String[] enchs = lc.substring(c + of.length()).split("\\s*(,|" + Pattern.quote(Language.get("and")) + ")\\s*");
 			for (final String ench : enchs) {
 				final EnchantmentType e = EnchantmentType.parse("" + ench);
 				if (e == null)
 					continue outer;
-				enchantments.put(e.getType(), e.getLevel());
+				t2.addEnchantments(e);
 			}
-			t2.addEnchantments(enchantments);
 			return t2;
 		}
 		
@@ -325,14 +317,14 @@ public abstract class Aliases {
 	 * @return The given item type or null if the input couldn't be parsed.
 	 */
 	@Nullable
-	private final static ItemType parseType(final String s, final ItemType t, final boolean isAlias) {
+	private static ItemType parseType(final String s, final ItemType t, final boolean isAlias) {
 		ItemType i;
 		final String type = s;
 		if (type.isEmpty()) {
 			t.add(new ItemData(Material.AIR));
 			return t;
 		} else if (type.matches("\\d+")) {
-			// TODO error: numeric ids are not supported anymore
+			Skript.error("Numeric ids are not supported anymore.");
 			return null;
 		} else if ((i = getAlias(type)) != null) {
 			for (ItemData d : i) {
@@ -353,7 +345,7 @@ public abstract class Aliases {
 	 * @return A copy of the ItemType represented by the given alias or null if no such alias exists.
 	 */
 	@Nullable
-	private final static ItemType getAlias(final String s) {
+	private static ItemType getAlias(final String s) {
 		ItemType i;
 		String lc = "" + s.toLowerCase();
 		final Matcher m = p_any.matcher(lc);
@@ -407,7 +399,9 @@ public abstract class Aliases {
 	 */
 	public static void load() {
 		try {
+			long start = System.currentTimeMillis();
 			loadInternal();
+			Skript.info("Loaded " + provider.getAliasCount() + " aliases in " + (System.currentTimeMillis() - start) + "ms");
 		} catch (IOException e) {
 			Skript.exception(e);
 		}
@@ -448,6 +442,17 @@ public abstract class Aliases {
 			assert aliasesFolder != null;
 			loadDirectory(aliasesFolder);
 		}
+		
+		// Update tracked item types
+		for (Map.Entry<String, ItemType> entry : trackedTypes.entrySet()) {
+			@SuppressWarnings("null") // No null keys in this map
+			ItemType type = parseItemType(entry.getKey());
+			if (type == null)
+				Skript.warning("Alias '" + entry.getKey() + "' is required by Skript, but does not exist anymore. "
+						+ "Make sure to fix this before restarting the server.");
+			else
+				entry.getValue().setTo(type);
+		}
 	}
 	
 	/**
@@ -457,7 +462,7 @@ public abstract class Aliases {
 	 */
 	public static void loadDirectory(Path dir) throws IOException {
 		try {
-			Files.list(dir).forEach((f) -> {
+			Files.list(dir).sorted().forEach((f) -> {
 				assert f != null;
 				try {
 					String name = f.getFileName().toString();
@@ -495,30 +500,105 @@ public abstract class Aliases {
 				continue;
 			}
 			
-			provider.load((SectionNode) n);
+			parser.load((SectionNode) n);
 		}
-	}
-	
-	/**
-	 * Checks if the first parameter is supertype of second.
-	 * @param first First item data.
-	 * @param second Second item data.
-	 * @return If first is supertype of second.
-	 */
-	public static boolean isSupertypeOf(ItemData first, ItemData second) {
-		Set<ItemData> subtypes = provider.getSubtypes(first);
-		if (subtypes != null)
-			return subtypes.contains(second);
-		return false;
 	}
 
 	/**
 	 * Gets a Vanilla Minecraft material id for given item data.
 	 * @param data Item data.
-	 * @return Minecraft item id.
+	 * @return Minecraft item id or null.
 	 */
 	@Nullable
 	public static String getMinecraftId(ItemData data) {
+		ScriptAliases aliases = scriptAliases;
+		if (aliases != null) {
+			return aliases.provider.getMinecraftId(data);
+		}
 		return provider.getMinecraftId(data);
+	}
+	
+	/**
+	 * Gets an entity type related to given item. For example, an armor stand
+	 * item is related with armor stand entity.
+	 * @param data Item data.
+	 * @return Entity type or null.
+	 */
+	@Nullable
+	public static EntityData<?> getRelatedEntity(ItemData data) {
+		ScriptAliases aliases = scriptAliases;
+		if (aliases != null) {
+			return aliases.provider.getRelatedEntity(data);
+		}
+		return provider.getRelatedEntity(data);
+	}
+	
+	/**
+	 * Go through these whenever aliases are reloaded, and update them.
+	 */
+	private static final Map<String, ItemType> trackedTypes = new HashMap<>();
+	
+	/**
+	 * If user had an obscure config option set, don't crash due to missing
+	 * Java item types.
+	 */
+	private static final boolean noHardExceptions = SkriptConfig.apiSoftExceptions.value();
+	
+	/**
+	 * Gets an item type that matches the given name.
+	 * If it doesn't exist, an exception is thrown instead.
+	 * 
+	 * <p>Item types provided by this method are updated when aliases are
+	 * reloaded. However, this also means they are tracked by aliases system
+	 * and NOT necessarily garbage-collected.
+	 * @param name Name of item to search from aliases.
+	 * @return An item.
+	 * @throws IllegalArgumentException When item is not found.
+	 */
+	public static ItemType javaItemType(String name) {
+		ItemType type = parseItemType(name);
+		if (type == null) {
+			if (noHardExceptions) {
+				Skript.error("type " + name + " not found");
+				type = new ItemType(); // Return garbage
+			} else {
+				throw new IllegalArgumentException("type " + name + " not found");
+			}
+		}
+		trackedTypes.put(name, type);
+		return type;
+	}
+	
+	/**
+	 * Creates an aliases provider to be used by given addon. It can be used to
+	 * register aliases and variations to be used in scripts.
+	 * @param addon Skript addon.
+	 * @return Aliases provider.
+	 */
+	public static AliasesProvider getAddonProvider(@Nullable SkriptAddon addon) {
+		if (addon == null) {
+			throw new IllegalArgumentException("addon needed");
+		}
+		
+		// TODO in future, maybe record and allow unloading addon-provided aliases?
+		return provider; // For now, just allow loading aliases easily
+	}
+	
+	/**
+	 * Creates script aliases.
+	 * @return Script aliases, ready to be added to.
+	 */
+	public static ScriptAliases createScriptAliases() {
+		AliasesProvider localProvider = createProvider(10, provider);
+		return new ScriptAliases(localProvider, createParser(localProvider));
+	}
+	
+	/**
+	 * Sets script aliases to be used for lookups. Remember to set them to
+	 * null when the script changes.
+	 * @param aliases Script aliases.
+	 */
+	public static void setScriptAliases(@Nullable ScriptAliases aliases) {
+		scriptAliases = aliases;
 	}
 }

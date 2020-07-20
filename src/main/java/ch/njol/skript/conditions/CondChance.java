@@ -39,23 +39,24 @@ import ch.njol.util.Kleenean;
 @Description({"A condition that randomly succeeds or fails.",
 		"Valid values are between 0% and 100%, or if the percent sign is omitted between 0 and 1."})
 @Examples({"chance of 50%:",
-		"	drop a diamond",
-		"chance of {var}% # {var} between 0 and 100",
-		"chance of {var} # {var} between 0 and 1"})
+		"\tdrop a diamond",
+		"chance of {chance}% # {chance} between 0 and 100",
+		"chance of {chance} # {chance} between 0 and 1"})
 @Since("1.0")
 public class CondChance extends Condition {
+	
 	static {
 		Skript.registerCondition(CondChance.class, "chance of %number%(1¦\\%|)");
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Double> chance;
-	boolean percent;
+	private Expression<Number> chance;
+	private boolean percent;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		chance = (Expression<Double>) exprs[0];
+		chance = (Expression<Number>) exprs[0];
 		percent = parser.mark == 1;
 		return true;
 	}

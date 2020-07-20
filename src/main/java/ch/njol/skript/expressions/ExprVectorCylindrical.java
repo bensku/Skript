@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,40 +30,54 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Cylindrical shape")
-@Description("Forms a 'cylindrical shaped' vector using yaw to manipulate the current point")
+@Name("Vectors - Cylindrical Shape")
+@Description("Forms a 'cylindrical shaped' vector using yaw to manipulate the current point.")
 @Examples({"loop 360 times:",
 		"	set {_v} to cylindrical vector radius 1, yaw loop-value, height 2",
 		"set {_v} to cylindrical vector radius 1, yaw 90, height 2"})
 @Since("2.2-dev28")
 public class ExprVectorCylindrical extends SimpleExpression<Vector> {
+
 	static {
-		Skript.registerExpression(ExprVectorCylindrical.class, Vector.class, ExpressionType.SIMPLE, "[new] cylindrical vector [(from|with)] [radius] %number%, [yaw] %number%(,| and) [height] %number%");
+		Skript.registerExpression(ExprVectorCylindrical.class, Vector.class, ExpressionType.SIMPLE,
+				"[a] [new] cylindrical vector [(from|with)] [radius] %number%, [yaw] %number%(,| and) [height] %number%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Number> radius, yaw, height;
 
 	@Override
-	public boolean isSingle() {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		radius = (Expression<Number>) exprs[0];
+		yaw = (Expression<Number>) exprs[1];
+		height = (Expression<Number>) exprs[2];
 		return true;
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return "cylindrical vector with radius " + radius.toString() + ", yaw " + yaw.toString() + " and height " + height.toString();
+	@SuppressWarnings("null")
+	protected Vector[] get(Event e) {
+		Number r = radius.getSingle(e);
+		Number y = yaw.getSingle(e);
+		Number h = height.getSingle(e);
+		if (r == null || y == null || h == null)
+			return null;
+		return CollectionUtils.array(VectorMath.fromCylindricalCoordinates(r.doubleValue(), VectorMath.fromSkriptYaw(y.floatValue()), h.doubleValue()));
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
 	}
 
 	@Override
@@ -68,24 +86,9 @@ public class ExprVectorCylindrical extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		radius = (Expression<Number>) expressions[0];
-		yaw = (Expression<Number>) expressions[1];
-		height = (Expression<Number>) expressions[2];
-		return true;
-	}
-
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Number r = radius.getSingle(event);
-		Number y = yaw.getSingle(event);
-		Number h = height.getSingle(event);
-		if (r == null || y == null || h == null) {
-			return null;
-		}
-		return new Vector[]{ VectorMath.fromCylindricalCoordinates(r.doubleValue(),VectorMath.fromSkriptYaw(y.floatValue()), h.doubleValue()) };
+	public String toString(@Nullable Event e, boolean debug) {
+		return "cylindrical vector with radius " + radius.toString(e, debug) + ", yaw " +
+				yaw.toString(e, debug) + " and height " + height.toString(e, debug);
 	}
 
 }

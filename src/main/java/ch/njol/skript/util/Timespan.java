@@ -59,7 +59,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 	}
 	
 	@Nullable
-	public final static Timespan parse(final String s) {
+	public static Timespan parse(final String s) {
 		if (s.isEmpty())
 			return null;
 		long t = 0;
@@ -93,7 +93,11 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 				} else if (sub.matches("^\\d+(.\\d+)?$")) {
 					if (i == subs.length - 1)
 						return null;
-					amount = Double.parseDouble(sub);
+					try {
+						amount = Double.parseDouble(sub);
+					} catch (NumberFormatException e) {
+						throw new IllegalArgumentException("invalid timespan: " + s);
+					}
 					sub = subs[++i];
 				}
 				

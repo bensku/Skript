@@ -20,12 +20,11 @@
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -33,7 +32,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -48,31 +46,31 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.slot.Slot;
-import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Clicked Block/Entity/Inventory/Slot")
-@Description("The clicked block, entity, inventory slot, inventory, type or action.")
+@Description("The clicked block, entity, inventory, inventory slot, inventory click type or inventory action.")
 @Examples({"message \"You clicked on a %type of clicked entity%!\"",
-		"clicked block is a chest:",
-		"	show the inventory of the clicked block to the player"})
+		"if the clicked block is a chest:",
+		"\tshow the inventory of the clicked block to the player"})
 @Since("1.0, 2.2-dev35 (more clickable things)")
 @Events({"click", "inventory click"})
 public class ExprClicked extends SimpleExpression<Object> {
 
 	private static enum ClickableType {
 		
-		BLOCK_AND_ITEMS(1, Block.class, "clicked block/itemtype/entity", " clicked (block|%-*itemtype/entitydata%)"),
+		BLOCK_AND_ITEMS(1, Block.class, "clicked block/itemtype/entity", "clicked (block|%-*itemtype/entitydata%)"),
 		SLOT(2, Slot.class, "clicked slot", "clicked slot"),
 		INVENTORY(3, Inventory.class, "clicked inventory", "clicked inventory"),
 		TYPE(4, ClickType.class, "click type", "click (type|action)"),
-		ACTION(5, InventoryAction.class, "inventory action", "inventory action");
+		ACTION(5, InventoryAction.class, "inventory action", "inventory action"),
+		ENCHANT_BUTTON(6, Number.class, "clicked enchantment button", "clicked [enchant[ment]] button");
 		
 		private String name, syntax;
 		private Class<?> c;
@@ -114,7 +112,8 @@ public class ExprClicked extends SimpleExpression<Object> {
 					+ ClickableType.SLOT.getSyntax(false)
 					+ ClickableType.INVENTORY.getSyntax(false)
 					+ ClickableType.TYPE.getSyntax(false)
-					+ ClickableType.ACTION.getSyntax(true) + ")");
+					+ ClickableType.ACTION.getSyntax(false) 
+					+ ClickableType.ENCHANT_BUTTON.getSyntax(true) + ")");
 	}
 	
 	@Nullable
@@ -149,6 +148,12 @@ public class ExprClicked extends SimpleExpression<Object> {
 			case SLOT:
 				if (!ScriptLoader.isCurrentEvent(InventoryClickEvent.class)) {
 					Skript.error("The expression '" + clickable.getName() + "' may only be used in an inventory click event", ErrorQuality.SEMANTIC_ERROR);
+					return false;
+				}
+				break;
+			case ENCHANT_BUTTON:
+				if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
+					Skript.error("The expression 'clicked enchantment button' is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
 					return false;
 				}
 				break;
@@ -209,28 +214,13 @@ public class ExprClicked extends SimpleExpression<Object> {
 				Inventory invi = ((InventoryClickEvent) e).getClickedInventory();
 				if (invi != null) // Inventory is technically not guaranteed to exist...
 					return CollectionUtils.array(new InventorySlot(invi, ((InventoryClickEvent) e).getSlot()));
-				return null;
+				break;
+			case ENCHANT_BUTTON:
+				if (e instanceof EnchantItemEvent)
+					return new Number[]{((EnchantItemEvent) e).whichButton() + 1};
+				break;
 		}
 		return null;
-	}
-	
-	@Override
-	@Nullable
-	public Object[] beforeChange(Expression<?> changed, @Nullable Object[] delta) {
-		if (delta == null) // Nothing to nothing
-			return null;
-		Object first = delta[0];
-		if (first == null) // ConvertedExpression might cause this
-			return null;
-		
-		// Slots must be transformed to item stacks when writing to variables
-		// Documentation by Njol states so, plus it is convenient
-		if (changed instanceof Variable && first instanceof Slot) {
-			return new ItemStack[] {((Slot) first).getItem()};
-		}
-		
-		// Everything else (inventories, actions, etc.) does not need special handling
-		return delta;
 	}
 	
 	@Override

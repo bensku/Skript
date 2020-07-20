@@ -23,16 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.ThrownPotion;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.LanguageChangeListener;
 
@@ -49,7 +45,7 @@ public abstract class PotionEffectUtils {
 	final static String[] names = new String[getMaxPotionId() + 1];
 	
 	// MCPC+ workaround
-	private final static int getMaxPotionId() {
+	private static int getMaxPotionId() {
 		int i = 0;
 		for (final PotionEffectType t : PotionEffectType.values()) {
 			if (t != null && t.getId() > i)
@@ -92,14 +88,16 @@ public abstract class PotionEffectUtils {
 		return names[t.getId()];
 	}
 	
-	public final static String[] getNames() {
+	public static String[] getNames() {
 		return names;
 	}
 	
 	public static short guessData(final ThrownPotion p) {
 		if (p.getEffects().size() == 1) {
 			final PotionEffect e = p.getEffects().iterator().next();
-			final Potion d = new Potion(PotionType.getByEffect(e.getType())).splash();
+			PotionType type = PotionType.getByEffect(e.getType());
+			assert type != null;
+			final Potion d = new Potion(type).splash();
 			return d.toDamageValue();
 		}
 		return 0;

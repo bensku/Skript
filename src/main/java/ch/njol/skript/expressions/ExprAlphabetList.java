@@ -19,17 +19,13 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -41,7 +37,7 @@ import ch.njol.util.Kleenean;
 
 @Name("Alphabetical Sort")
 @Description("Sorts given strings in alphabetical order.")
-@Examples({"set {_list::*} to alphabetically sorted {_list::*"})
+@Examples({"set {_list::*} to alphabetically sorted {_strings::*}"})
 @Since("2.2-dev18b")
 public class ExprAlphabetList extends SimpleExpression<String>{
 	

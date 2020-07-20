@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.classes;
 
-import ch.njol.skript.classes.Arithmetic;
 import org.bukkit.util.Vector;
 
 /**

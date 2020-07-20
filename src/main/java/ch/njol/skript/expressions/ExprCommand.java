@@ -44,10 +44,10 @@ import ch.njol.util.Kleenean;
 @Description("The command that caused an 'on command' event (excluding the leading slash and all arguments)")
 @Examples({"# prevent any commands except for the /exit command during some game",
 		"on command:",
-		"{game.%player%.is playing} is true",
-		"command is not \"exit\"",
-		"message \"You're not allowed to use commands during the game\"",
-		"cancel the event"})
+		"\tif {game::%player%::playing} is true:",
+		"\t\tif the command is not \"exit\":",
+		"\t\t\tmessage \"You're not allowed to use commands during the game\"",
+		"\t\t\tcancel the event"})
 @Since("2.0")
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {

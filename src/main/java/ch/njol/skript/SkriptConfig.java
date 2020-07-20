@@ -26,14 +26,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.locks.LockSupport;
-
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.function.Function;
+import java.util.Locale;
 
 import org.bukkit.event.EventPriority;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Converter;
@@ -42,12 +37,14 @@ import ch.njol.skript.config.EnumParser;
 import ch.njol.skript.config.Option;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
 import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.update.ReleaseChannel;
 import ch.njol.skript.util.FileUtils;
-import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
@@ -81,20 +78,62 @@ public abstract class SkriptConfig {
 				}
 			});
 	
-	final static Option<Boolean> checkForNewVersion = new Option<Boolean>("check for new version", false);
+	final static Option<Boolean> checkForNewVersion = new Option<Boolean>("check for new version", false)
+			.setter(new Setter<Boolean>() {
+
+				@Override
+				public void set(Boolean t) {
+					SkriptUpdater updater = Skript.getInstance().getUpdater();
+					if (updater != null)
+						updater.setEnabled(t);
+				}
+			});
 	final static Option<Timespan> updateCheckInterval = new Option<Timespan>("update check interval", new Timespan(12 * 60 * 60 * 1000))
 			.setter(new Setter<Timespan>() {
 				@Override
 				public void set(final Timespan t) {
-					final Task ct = Updater.checkerTask;
-					if (t.getTicks_i() != 0 && ct != null && !ct.isAlive())
-						ct.setNextExecution(t.getTicks_i());
+					SkriptUpdater updater = Skript.getInstance().getUpdater();
+					if (updater != null)
+						updater.setCheckFrequency(t.getTicks_i());
 				}
 			});
 	final static Option<Integer> updaterDownloadTries = new Option<Integer>("updater download tries", 7)
 			.optional(true);
-	final static Option<Boolean> updateToPrereleases = new Option<Boolean>("update to pre-releases", true);
-	final static Option<Boolean> automaticallyDownloadNewVersion = new Option<Boolean>("automatically download new version", false);
+	final static Option<String> releaseChannel = new Option<String>("release channel", "none")
+			.setter(new Setter<String>() {
+
+				@Override
+				public void set(String t) {
+					ReleaseChannel channel;
+					if (t.equals("alpha")) { // Everything goes in alpha channel
+						channel = new ReleaseChannel((name) -> true, t);
+					} else if (t.equals("beta")) {
+						channel = new ReleaseChannel((name) -> !name.contains("alpha"), t);
+					} else if (t.equals("stable")) {
+						channel = new ReleaseChannel((name) -> !name.contains("alpha") && !name.contains("beta"), t);
+					} else if (t.equals("none")) {
+						channel = new ReleaseChannel((name) -> false, t);
+					} else {
+						channel = new ReleaseChannel((name) -> false, t);
+						Skript.error("Unknown release channel '" + t + "'.");
+					}
+					SkriptUpdater updater = Skript.getInstance().getUpdater();
+					if (updater != null) {
+						if (updater.getCurrentRelease().flavor.contains("spigot") && !t.equals("stable")) {
+							Skript.error("Only stable Skript versions are uploaded to Spigot resources.");
+						}
+						updater.setReleaseChannel(channel);
+					}
+				}
+			});
+	
+	// Legacy updater options. They have no effect
+	@Deprecated
+	final static Option<Boolean> automaticallyDownloadNewVersion = new Option<Boolean>("automatically download new version", false)
+			.optional(true);
+	@Deprecated
+	final static Option<Boolean> updateToPrereleases = new Option<Boolean>("update to pre-releases", true)
+			.optional(true);
 	
 	public final static Option<Boolean> enableEffectCommands = new Option<Boolean>("enable effect commands", false);
 	public final static Option<String> effectCommandToken = new Option<String>("effect command token", "!");
@@ -123,7 +162,7 @@ public abstract class SkriptConfig {
 		}
 	});
 	
-	public final static String formatDate(final long timestamp) {
+	public static String formatDate(final long timestamp) {
 		final DateFormat f = dateFormat.value();
 		synchronized (f) {
 			return "" + f.format(timestamp);
@@ -143,7 +182,7 @@ public abstract class SkriptConfig {
 		@Nullable
 		public EventPriority convert(final String s) {
 			try {
-				return EventPriority.valueOf(s.toUpperCase());
+				return EventPriority.valueOf(s.toUpperCase(Locale.ENGLISH));
 			} catch (final IllegalArgumentException e) {
 				Skript.error("The plugin priority has to be one of lowest, low, normal, high, or highest.");
 				return null;
@@ -176,6 +215,7 @@ public abstract class SkriptConfig {
 				}
 			});
 	
+	@Deprecated
 	public final static Option<Boolean> enableScriptCaching = new Option<Boolean>("enable script caching", false)
 			.optional(true);
 	
@@ -294,7 +334,7 @@ public abstract class SkriptConfig {
 	 * This should only be used in special cases
 	 */
 	@Nullable
-	public final static Config getConfig() {
+	public static Config getConfig() {
 		return mainConfig;
 	}
 	
@@ -333,7 +373,7 @@ public abstract class SkriptConfig {
 				try {
 					final InputStream in = Skript.getInstance().getResource("config.sk");
 					if (in == null) {
-						Skript.error("Your config is outdated, but Skript couldn't find the newest config in its jar. Please download Skript again from dev.bukkit.org.");
+						Skript.error("Your config is outdated, but Skript couldn't find the newest config in its jar.");
 						return false;
 					}
 					final Config newConfig = new Config(in, "Skript.jar/config.sk", false, false, ":");

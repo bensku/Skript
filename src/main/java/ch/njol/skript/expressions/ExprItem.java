@@ -42,7 +42,7 @@ import ch.njol.skript.util.slot.Slot;
 @Description("The item involved in an event, e.g. in a drop, dispense, pickup or craft event.")
 @Examples({"on dispense:",
 		"	item is a clock",
-		"	set the time to 6:00"/*,"	delete the item"*/})
+		"	set the time to 6:00"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprItem extends EventValueExpression<ItemStack> {
 	static {
@@ -110,7 +110,7 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 			case RESET:
 				assert false;
 		}
-		if (i != null)
+		if (i != null && is != null)
 			i.setItemStack(is);
 		else if (s != null)
 			s.setItem(is);

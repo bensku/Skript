@@ -22,11 +22,9 @@ package ch.njol.skript.lang.function;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.effects.EffReturn;
 import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.function.Functions.FunctionData;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.variables.Variables;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -39,15 +37,13 @@ public class ScriptFunction<T> extends Function<T> {
 	final Trigger trigger;
 	
 	@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
-	public ScriptFunction(final String name, final Parameter<?>[] parameters, final SectionNode node, @Nullable final ClassInfo<T> returnType, final boolean single) {
-		super(name, parameters, returnType, single);
-		
-		// here to allow recursion
-		Functions.functions.put(name, new FunctionData(this));
+	public ScriptFunction(Signature<T> sign, SectionNode node) {
+		super(sign);
 		
 		Functions.currentFunction = this;
 		try {
-			trigger = new Trigger(node.getConfig().getFile(), "function " + name, new SimpleEvent(), ScriptLoader.loadItems(node));
+			trigger = new Trigger(node.getConfig().getFile(), "function " + sign.getName(),
+					new SimpleEvent(), ScriptLoader.loadItems(node));
 		} finally {
 			Functions.currentFunction = null;
 		}
@@ -77,6 +73,7 @@ public class ScriptFunction<T> extends Function<T> {
 		if (trigger == null)
 			throw new IllegalStateException("trigger for function is not available");
 		
+		Parameter<?>[] parameters = sign.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter<?> p = parameters[i];
 			final Object[] val = params[i];

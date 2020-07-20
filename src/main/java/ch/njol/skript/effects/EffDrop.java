@@ -27,7 +27,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -54,8 +53,8 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class EffDrop extends Effect {
 	static {
-		Skript.registerEffect(EffDrop.class, "drop %itemtypes/experience% [%directions% %locations%]",
-				"drop %itemtypes/experience% [%directions% %locations%] without velocity");
+		Skript.registerEffect(EffDrop.class, "drop %itemtypes/experiences% [%directions% %locations%]",
+				"drop %itemtypes/experiences% [%directions% %locations%] without velocity");
 	}
 	
 	@Nullable
@@ -77,7 +76,6 @@ public class EffDrop extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		final Object[] os = drops.getArray(e);

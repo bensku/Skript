@@ -46,7 +46,8 @@ import ch.njol.util.coll.iterator.IteratorIterable;
  */
 @Name("Block Sphere")
 @Description("All blocks in a sphere around a center, mostly useful for looping.")
-@Examples("loop blocks in radius 5 around the player:")
+@Examples({"loop blocks in radius 5 around the player:",
+			"\tset loop-block to air"})
 @Since("1.0")
 public class ExprBlockSphere extends SimpleExpression<Block> {
 	static {

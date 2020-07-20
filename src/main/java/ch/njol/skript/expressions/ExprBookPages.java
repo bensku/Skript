@@ -20,19 +20,17 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Converter;
+import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -41,29 +39,35 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.List;
 
 @Name("Book Pages")
-@Description("The pages of a book")
+@Description("The pages of a book.")
 @Examples({"on book sign:",
-			"	message \"Book Pages: %pages of event-item%\"",
-			"   message \"Book Page 1: %page 1 of event-item%\""})
+			"\tmessage \"Book Pages: %pages of event-item%\"",
+			"\tmessage \"Book Page 1: %page 1 of event-item%\""})
 @Since("2.2-dev31")
 public class ExprBookPages extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprBookPages.class, String.class, ExpressionType.PROPERTY, "[all] [the] [book] (pages|content) of %itemstack%", "%itemstack%'s [book] (pages|content)", "[book] page %number% of %itemstack%", "%itemstack%'s [book] page %number%");
+		Skript.registerExpression(ExprBookPages.class, String.class, ExpressionType.PROPERTY,
+				"[all] [the] [book] (pages|content) of %itemtypes%",
+				"%itemtypes%'s [book] (pages|content)",
+				"[book] page %number% of %itemtypes%", 
+				"%itemtypes%'s [book] page %number%");
 	}
 	
+	private static final ItemType bookItem = Aliases.javaItemType("book with text");
+	
 	@SuppressWarnings("null")
-	private Expression<ItemStack> book;
+	private Expression<ItemType> book;
 	@Nullable
 	private Expression<Number> page;
 	
+	@SuppressWarnings("null")
 	@Nullable
 	@Override
 	protected String[] get(Event e) {
-		ItemStack itemStack = book.getSingle(e);
-		if (itemStack == null || (itemStack.getType() != Material.BOOK_AND_QUILL && itemStack.getType() != Material.WRITTEN_BOOK)){
+		ItemStack itemStack = book.getSingle(e).getRandom();
+		if (itemStack == null || !bookItem.isOfType(itemStack))
 			return null;
-		}
 		List<String> pages = ((BookMeta) itemStack.getItemMeta()).getPages();
 		if (page != null){
 			Number pageNumber = page.getSingle(e);
@@ -99,13 +103,13 @@ public class ExprBookPages extends SimpleExpression<String> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (matchedPattern == 0 || matchedPattern == 1){
-			book = (Expression<ItemStack>) exprs[0];
+			book = (Expression<ItemType>) exprs[0];
 		}else{
 			if (matchedPattern == 2){
 				page =(Expression<Number>) exprs[0];
-				book = (Expression<ItemStack>) exprs[1];
+				book = (Expression<ItemType>) exprs[1];
 			}else{
-				book = (Expression<ItemStack>) exprs[0];
+				book = (Expression<ItemType>) exprs[0];
 				page = (Expression<Number>) exprs[1];
 			}
 		}

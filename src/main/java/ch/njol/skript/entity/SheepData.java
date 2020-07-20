@@ -31,7 +31,7 @@ import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.util.Color;
-import ch.njol.util.Checker;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -43,7 +43,7 @@ public class SheepData extends EntityData<Sheep> {
 	}
 	
 	@Nullable
-	private Color[] colors = null;
+	private Color[] colors;
 	private int sheared = 0;
 	
 	@SuppressWarnings("unchecked")
@@ -57,9 +57,11 @@ public class SheepData extends EntityData<Sheep> {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected boolean init(final @Nullable Class<? extends Sheep> c, final @Nullable Sheep e) {
-		sheared = e == null ? 0 : e.isSheared() ? 1 : -1;
-		colors = e == null ? null : new Color[] {Color.byWoolColor(e.getColor())};
+	protected boolean init(@Nullable Class<? extends Sheep> c, @Nullable Sheep e) {
+		if (e != null) {
+			sheared = e.isSheared() ? 1 : -1;
+			colors = CollectionUtils.array(SkriptColor.fromDyeColor(e.getColor()));
+		}
 		return true;
 	}
 	
@@ -68,19 +70,14 @@ public class SheepData extends EntityData<Sheep> {
 		if (colors != null) {
 			final Color c = CollectionUtils.getRandom(colors);
 			assert c != null;
-			entity.setColor(c.getWoolColor());
+			entity.setColor(c.asDyeColor());
 		}
 	}
 	
 	@Override
 	public boolean match(final Sheep entity) {
 		return (sheared == 0 || entity.isSheared() == (sheared == 1))
-				&& (colors == null || SimpleExpression.check(colors, new Checker<Color>() {
-					@Override
-					public boolean check(final @Nullable Color c) {
-						return c != null && entity.getColor() == c.getWoolColor();
-					}
-				}, false, false));
+				&& (colors == null || SimpleExpression.check(colors, c -> c != null && entity.getColor() == c.asDyeColor(), false, false));
 	}
 	
 	@Override
@@ -100,7 +97,8 @@ public class SheepData extends EntityData<Sheep> {
 		if (adjectives == null) {
 			this.adjectives = adjectives = new Adjective[colors.length];
 			for (int i = 0; i < colors.length; i++)
-				adjectives[i] = colors[i].getAdjective();
+				if (colors[i] instanceof SkriptColor)
+					adjectives[i] = ((SkriptColor)colors[i]).getAdjective();
 		}
 		final Noun name = getName();
 		final Adjective age = getAgeAdjective();
@@ -157,7 +155,7 @@ public class SheepData extends EntityData<Sheep> {
 					final String c = cs[i];
 					assert c != null;
 					assert colors != null;
-					colors[i] = Color.valueOf(c);
+					colors[i] = SkriptColor.valueOf(c);
 				} catch (final IllegalArgumentException e) {
 					return false;
 				}

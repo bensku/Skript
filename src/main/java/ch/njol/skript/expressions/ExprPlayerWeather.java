@@ -45,7 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherType> {
 
 	static {
-		register(ExprPlayerWeather.class, WeatherType.class, "weather", "players");
+		register(ExprPlayerWeather.class, WeatherType.class, "[(client|custom)] weather", "players");
 	}
 
 	@Override
@@ -54,6 +54,7 @@ public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherT
 	}
 
 	@Override
+	@Nullable
 	public WeatherType convert(Player player) {
 		return WeatherType.fromPlayer(player);
 	}
@@ -74,9 +75,13 @@ public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherT
 	@SuppressWarnings("null")
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		final WeatherType type = delta == null ? WeatherType.CLEAR : (WeatherType) delta[0];
-		for (final Player p : getExpr().getArray(e)) {
-			type.setWeather(p);
+		if (delta == null) {
+			for (Player p : getExpr().getArray(e))
+				p.resetPlayerWeather();
+		} else {
+			WeatherType type = (WeatherType) delta[0];
+			for (Player p : getExpr().getArray(e))
+				type.setWeather(p);
 		}
 	}
 

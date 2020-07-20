@@ -19,9 +19,7 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -31,31 +29,41 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Difficulty;
+import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Panda.Gene;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
+import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -63,6 +71,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.EnchantmentUtils;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.ConfigurationSerializer;
 import ch.njol.skript.classes.EnumSerializer;
@@ -89,17 +99,18 @@ import ch.njol.yggdrasil.Fields;
 /**
  * @author Peter Güttinger
  */
-// TODO vectors
 public class BukkitClasses {
-	
+
 	public BukkitClasses() {}
-	
+
 	static {
+		final boolean GET_ENTITY_METHOD_EXISTS = Skript.methodExists(Bukkit.class, "getEntity", UUID.class);
 		Classes.registerClass(new ClassInfo<>(Entity.class, "entity")
 				.user("entit(y|ies)")
 				.name("Entity")
 				.description("An entity is something in a <a href='#world'>world</a> that's not a <a href='#block'>block</a>, " +
-						"e.g. a <a href='#player'>player</a>, a skeleton, or a zombie, but also <a href='#projectile'>projectiles</a> like arrows, fireballs or thrown potions, " +
+						"e.g. a <a href='#player'>player</a>, a skeleton, or a zombie, but also " +
+						"<a href='#projectile'>projectiles</a> like arrows, fireballs or thrown potions, " +
 						"or special entities like dropped items, falling blocks or paintings.")
 				.usage("player, op, wolf, tamed ocelot, powered creeper, zombie, unsaddled pig, fireball, arrow, dropped item, item frame, etc.")
 				.examples("entity is a zombie or creeper",
@@ -112,12 +123,29 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public Entity parse(final String s, final ParseContext context) {
+						UUID uuid;
+						try {
+							uuid = UUID.fromString(s);
+						} catch (IllegalArgumentException iae) {
+							return null;
+						}
+						if (GET_ENTITY_METHOD_EXISTS) {
+							return Bukkit.getEntity(uuid);
+						} else {
+							for (World world : Bukkit.getWorlds()) {
+								for (Entity entity : world.getEntities()) {
+									if (entity.getUniqueId().equals(uuid)) {
+										return entity;
+									}
+								}
+							}
+						}
 						return null;
 					}
 					
 					@Override
 					public boolean canParse(final ParseContext context) {
-						return false;
+						return context == ParseContext.COMMAND;
 					}
 					
 					@Override
@@ -140,7 +168,8 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(LivingEntity.class, "livingentity")
 				.user("living ?entit(y|ies)")
 				.name("Living Entity")
-				.description("A living <a href='#entity'>entity</a>, i.e. a mob or <a href='#player'>player</a>, not inanimate entities like <a href='#projectile'>projectiles</a> or dropped items.")
+				.description("A living <a href='#entity'>entity</a>, i.e. a mob or <a href='#player'>player</a>, " +
+						"not inanimate entities like <a href='#projectile'>projectiles</a> or dropped items.")
 				.usage("see <a href='#entity'>entity</a>, but ignore inanimate objects")
 				.examples("spawn 5 powered creepers",
 						"shoot a zombie from the creeper")
@@ -163,7 +192,7 @@ public class BukkitClasses {
 				.user("blocks?")
 				.name("Block")
 				.description("A block in a <a href='#world'>world</a>. It has a <a href='#location'>location</a> and a <a href='#itemstack'>type</a>, " +
-						"and can also have a <a href='#direction'>direction</a> (mostly a <a href='../expressions/#ExprFacing'>facing</a>), an <a href='#inventory'>inventory</a>, or other special properties.")
+						"and can also have a <a href='#direction'>direction</a> (mostly a <a href='expressions.html#ExprFacing'>facing</a>), an <a href='#inventory'>inventory</a>, or other special properties.")
 				.usage("")
 				.examples("")
 				.since("1.0")
@@ -180,10 +209,9 @@ public class BukkitClasses {
 						return false;
 					}
 					
-					@SuppressWarnings("deprecation")
 					@Override
 					public String toString(final Block b, final int flags) {
-						return ItemType.toString(new ItemStack(b.getTypeId(), 1, b.getState().getRawData()), flags);
+						return ItemType.toString(b, flags);
 					}
 					
 					@Override
@@ -203,9 +231,7 @@ public class BukkitClasses {
 				})
 				.changer(DefaultChangers.blockChanger)
 				.serializer(new Serializer<Block>() {
-					@SuppressWarnings("null")
 					@Override
-					@Nullable
 					public Fields serialize(final Block b) {
 						final Fields f = new Fields();
 						f.putObject("world", b.getWorld());
@@ -240,7 +266,7 @@ public class BukkitClasses {
 						return false;
 					}
 					
-//					return b.getWorld().getName() + ":" + b.getX() + "," + b.getY() + "," + b.getZ();
+					// return b.getWorld().getName() + ":" + b.getX() + "," + b.getY() + "," + b.getZ();
 					@Override
 					@Nullable
 					public Block deserialize(final String s) {
@@ -248,9 +274,8 @@ public class BukkitClasses {
 						if (split.length != 4)
 							return null;
 						final World w = Bukkit.getWorld(split[0]);
-						if (w == null) {
+						if (w == null)
 							return null;
-						}
 						try {
 							final int[] l = new int[3];
 							for (int i = 0; i < 3; i++)
@@ -304,7 +329,7 @@ public class BukkitClasses {
 					}
 				}).serializer(new Serializer<Location>() {
 					@Override
-					public Fields serialize(final Location l) throws NotSerializableException {
+					public Fields serialize(final Location l) {
 						final Fields f = new Fields();
 						f.putObject("world", l.getWorld());
 						f.putPrimitive("x", l.getX());
@@ -316,12 +341,12 @@ public class BukkitClasses {
 					}
 					
 					@Override
-					public void deserialize(final Location o, final Fields f) throws StreamCorruptedException {
+					public void deserialize(final Location o, final Fields f) {
 						assert false;
 					}
 					
 					@Override
-					public Location deserialize(final Fields f) throws StreamCorruptedException, NotSerializableException {
+					public Location deserialize(final Fields f) throws StreamCorruptedException {
 						return new Location(f.getObject("world", World.class),
 								f.getPrimitive("x", double.class), f.getPrimitive("y", double.class), f.getPrimitive("z", double.class),
 								f.getPrimitive("yaw", float.class), f.getPrimitive("pitch", float.class));
@@ -337,7 +362,7 @@ public class BukkitClasses {
 						return true;
 					}
 					
-//					return l.getWorld().getName() + ":" + l.getX() + "," + l.getY() + "," + l.getZ() + "|" + l.getYaw() + "/" + l.getPitch();
+					// return l.getWorld().getName() + ":" + l.getX() + "," + l.getY() + "," + l.getZ() + "|" + l.getYaw() + "/" + l.getPitch();
 					@Override
 					@Nullable
 					public Location deserialize(final String s) {
@@ -357,6 +382,7 @@ public class BukkitClasses {
 						}
 					}
 				}));
+		
 		Classes.registerClass(new ClassInfo<>(Vector.class, "vector")
 				.user("vectors?")
 				.name("Vector")
@@ -398,40 +424,36 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new Serializer<Vector>() {
-
 					@Override
-					public Fields serialize(Vector o) throws NotSerializableException {
+					public Fields serialize(Vector o) {
 						Fields f = new Fields();
 						f.putPrimitive("x", o.getX());
 						f.putPrimitive("y", o.getY());
 						f.putPrimitive("z", o.getZ());
 						return f;
 					}
-
+					
 					@Override
-					public void deserialize(Vector o, Fields f) throws StreamCorruptedException, NotSerializableException {
+					public void deserialize(Vector o, Fields f) {
 						assert false;
 					}
 					
 					@Override
-					public Vector deserialize(final Fields f) throws StreamCorruptedException, NotSerializableException {
+					public Vector deserialize(final Fields f) throws StreamCorruptedException {
 						return new Vector(f.getPrimitive("x", double.class), f.getPrimitive("y", double.class), f.getPrimitive("z", double.class));
 					}
-
+					
 					@Override
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-
+					
 					@Override
 					protected boolean canBeInstantiated() {
 						return false;
 					}
-					
-				})
-				);
+				}));
 		
-		// FIXME update doc
 		Classes.registerClass(new ClassInfo<>(World.class, "world")
 				.user("worlds?")
 				.name("World")
@@ -493,13 +515,14 @@ public class BukkitClasses {
 					@Override
 					protected World deserialize(final Fields fields) throws StreamCorruptedException {
 						final String name = fields.getObject("name", String.class);
+						assert name != null;
 						final World w = Bukkit.getWorld(name);
 						if (w == null)
 							throw new StreamCorruptedException("Missing world " + name);
 						return w;
 					}
 					
-//					return w.getName();
+					// return w.getName();
 					@Override
 					@Nullable
 					public World deserialize(final String s) {
@@ -515,9 +538,11 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(Inventory.class, "inventory")
 				.user("inventor(y|ies)")
 				.name("Inventory")
-				.description("An inventory of a <a href='#player'>player</a> or <a href='#block'>block</a>. Inventories have many effects and conditions regarding the items contained.",
+				.description("An inventory of a <a href='#player'>player</a> or <a href='#block'>block</a>. " +
+								"Inventories have many effects and conditions regarding the items contained.",
 						"An inventory has a fixed amount of <a href='#slot'>slots</a> which represent a specific place in the inventory, " +
-								"e.g. the <a href='../expressions/#ExprArmorSlot'>helmet slot</a> for players (Please note that slot support is still very limited but will be improved eventually).")
+								"e.g. the <a href='expressions.html#ExprArmorSlot'>helmet slot</a> for players " +
+								"(Please note that slot support is still very limited but will be improved eventually).")
 				.usage("")
 				.examples("")
 				.since("1.0")
@@ -556,7 +581,7 @@ public class BukkitClasses {
 				}).changer(DefaultChangers.inventoryChanger));
 		
 		Classes.registerClass(new ClassInfo<>(InventoryAction.class, "inventoryaction")
-				.user("inventory actions?")
+				.user("inventory ?actions?")
 				.name("Inventory Action")
 				.description("What player just did in inventory event. Note that when in creative game mode, most actions do not work correctly.")
 				.usage(InventoryActions.getAllNames())
@@ -564,36 +589,35 @@ public class BukkitClasses {
 				.since("2.2-dev16")
 				.defaultExpression(new EventValueExpression<>(InventoryAction.class))
 				.parser(new Parser<InventoryAction>() {
-
 					@Override
 					@Nullable
 					public InventoryAction parse(String s, ParseContext context) {
 						return InventoryActions.parse(s);
 					}
-
+					
 					@Override
 					public String toString(InventoryAction o, int flags) {
 						return InventoryActions.toString(o, flags);
 					}
-
+					
 					@SuppressWarnings("null")
 					@Override
 					public String toVariableNameString(InventoryAction o) {
 						return o.name();
 					}
-
+					
 					@Override
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-					
 				}));
 		
-		final EnumUtils<ClickType> invClicks = new EnumUtils<>(ClickType.class, "click types"); // Less boilerplate code!
+		final EnumUtils<ClickType> invClicks = new EnumUtils<>(ClickType.class, "click types");
 		Classes.registerClass(new ClassInfo<>(ClickType.class, "clicktype")
-				.user("click types?")
+				.user("click ?types?")
 				.name("Click Type")
-				.description("Click type, mostly for inventory events. Tells exactly which keys/buttons player pressed, assuming that default keybindings are used in client side.")
+				.description("Click type, mostly for inventory events. Tells exactly which keys/buttons player pressed, " +
+						"assuming that default keybindings are used in client side.")
 				.usage(invClicks.getAllNames())
 				.examples("")
 				.since("2.2-dev16b, 2.2-dev35 (renamed to click type)")
@@ -604,28 +628,27 @@ public class BukkitClasses {
 					public ClickType parse(String s, ParseContext context) {
 						return invClicks.parse(s);
 					}
-
+					
 					@Override
 					public String toString(ClickType o, int flags) {
 						return invClicks.toString(o, flags);
 					}
-
+					
 					@SuppressWarnings("null")
 					@Override
 					public String toVariableNameString(ClickType o) {
 						return o.name();
 					}
-
+					
 					@Override
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-					
 				}));
 		
 		final EnumUtils<InventoryType> invTypes = new EnumUtils<>(InventoryType.class, "inventory types");
 		Classes.registerClass(new ClassInfo<>(InventoryType.class, "inventorytype")
-				.user("inventory types?")
+				.user("inventory ?types?")
 				.name("Inventory Type")
 				.description("Minecraft has several different inventory types with their own use cases.")
 				.usage(invTypes.getAllNames())
@@ -638,30 +661,29 @@ public class BukkitClasses {
 					public InventoryType parse(String s, ParseContext context) {
 						return invTypes.parse(s);
 					}
-
+					
 					@Override
 					public String toString(InventoryType o, int flags) {
 						return invTypes.toString(o, flags);
 					}
-
+					
 					@SuppressWarnings("null")
 					@Override
 					public String toVariableNameString(InventoryType o) {
 						return o.name();
 					}
-
+					
 					@Override
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-					
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(Player.class, "player")
 				.user("players?")
 				.name("Player")
 				.description("A player. Depending on whether a player is online or offline several actions can be performed with them, " +
-						"though you won't get any errors when using effects that only work if the player is online (e.g. changing his inventory) on an offline player.",
+								"though you won't get any errors when using effects that only work if the player is online (e.g. changing their inventory) on an offline player.",
 						"You have two possibilities to use players as command arguments: &lt;player&gt; and &lt;offline player&gt;. " +
 								"The first requires that the player is online and also accepts only part of the name, " +
 								"while the latter doesn't require that the player is online, but the player's name has to be entered exactly.")
@@ -686,8 +708,8 @@ public class BukkitClasses {
 								Skript.error(String.format(Language.get("commands.multiple players start with"), s));
 							return null;
 						}
-//						if (s.matches("\"\\S+\""))
-//							return Bukkit.getPlayerExact(s.substring(1, s.length() - 1));
+						// if (s.matches("\"\\S+\""))
+						// 	return Bukkit.getPlayerExact(s.substring(1, s.length() - 1));
 						assert false;
 						return null;
 					}
@@ -728,9 +750,10 @@ public class BukkitClasses {
 		
 		Classes.registerClass(new ClassInfo<>(OfflinePlayer.class, "offlineplayer")
 				.user("offline ?players?")
-				.name("Offlineplayer")
+				.name("Offline Player")
 				.description("A player that is possibly offline. See <a href='#player'>player</a> for more information. " +
-						"Please note that while all effects and conditions that require a player can be used with an offline player as well, they will not work if the player is not actually online.")
+						"Please note that while all effects and conditions that require a player can be used with an " +
+						"offline player as well, they will not work if the player is not actually online.")
 				.usage("")
 				.examples("")
 				.since("")
@@ -749,10 +772,10 @@ public class BukkitClasses {
 							return Bukkit.getOfflinePlayer(s);
 							// TODO return an unresolved player and resolve it on a different thread after the command was parsed, and block the command until it is ready
 							// FIXME add note to changelog if not fixed in the next update
-//							return new UnresolvedOfflinePlayer(s);
+							// return new UnresolvedOfflinePlayer(s);
 						}
-//						if (s.matches("\"\\S+\""))
-//							return Bukkit.getOfflinePlayer(s.substring(1, s.length() - 1));
+						// if (s.matches("\"\\S+\""))
+						// 	return Bukkit.getOfflinePlayer(s.substring(1, s.length() - 1));
 						assert false;
 						return null;
 					}
@@ -829,7 +852,7 @@ public class BukkitClasses {
 						}
 					}
 					
-//					return p.getName();
+					// return p.getName();
 					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
@@ -844,10 +867,10 @@ public class BukkitClasses {
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(CommandSender.class, "commandsender")
-				.user("(commands?)? ?(sender|executor)s?")
+				.user("((commands?)? ?)?(sender|executor)s?")
 				.name("Command Sender")
 				.description("A player or the console.")
-				.usage("use <a href='../expressions/#LitConsole'>the console</a> for the console",
+				.usage("use <a href='expressions.html#LitConsole'>the console</a> for the console",
 						"see <a href='#player'>player</a> for players.")
 				.examples("on command /pm:",
 						"	command sender is not the console",
@@ -887,19 +910,42 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(InventoryHolder.class, "inventoryholder")
 				.name(ClassInfo.NO_DOC)
 				.defaultExpression(new EventValueExpression<>(InventoryHolder.class))
-				.after("entity"));
+				.after("entity", "block")
+				.parser(new Parser<InventoryHolder>() {
+					
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(InventoryHolder holder, int flags) {
+						return Classes.toString(holder instanceof BlockState ? ((BlockState) holder).getBlock() : holder);
+					}
+					
+					@Override
+					public String toVariableNameString(InventoryHolder holder) {
+						return toString(holder, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")
 				.name("Game Mode")
-				.description("The game modes survival, creative and adventure.")
-				.usage("creative/survival/adventure")
+				.description("The game modes survival, creative, adventure and spectator.")
+				.usage("creative/survival/adventure/spectator")
 				.examples("player's gamemode is survival",
 						"set the player argument's game mode to creative")
 				.since("1.0")
 				.defaultExpression(new SimpleLiteral<>(GameMode.SURVIVAL, true))
 				.parser(new Parser<GameMode>() {
 					private final Message[] names = new Message[GameMode.values().length];
+					
 					{
 						int i = 0;
 						for (final GameMode m : GameMode.values()) {
@@ -937,8 +983,8 @@ public class BukkitClasses {
 				.user("item", "material")
 				.name("Item / Material")
 				.description("An item, e.g. a stack of torches, a furnace, or a wooden sword of sharpness 2. " +
-						"Unlike <a href='#itemtype'>item type</a> an item can only represent exactly one item (e.g. an upside-down cobblestone stair facing west), " +
-						"while an item type can represent a whole range of items (e.g. any cobble stone stairs regardless of direction).",
+								"Unlike <a href='#itemtype'>item type</a> an item can only represent exactly one item (e.g. an upside-down cobblestone stair facing west), " +
+								"while an item type can represent a whole range of items (e.g. any cobble stone stairs regardless of direction).",
 						"You don't usually need this type except when you want to make a command that only accepts an exact item.",
 						"Please note that currently 'material' is exactly the same as 'item', i.e. can have an amount & enchantments.")
 				.usage("<code>[&lt;number&gt; [of]] &lt;alias&gt; [of &lt;enchantment&gt; &lt;level&gt;]</code>, Where &lt;alias&gt; must be an alias that represents exactly one item " +
@@ -960,17 +1006,8 @@ public class BukkitClasses {
 							return null;
 						}
 						
-						// Legacy code; probably not needed
-//						if (!t.getTypes().get(0).hasDataRange())
-//							return t.getRandom();
-//						if (t.getTypes().get(0).dataMin > 0) {
-//							Skript.error("'" + s + "' represents multiple materials");
-//							return null;
-//						}
-						
 						final ItemStack i = t.getRandom();
 						assert i != null;
-						i.setDurability((short) 0);
 						return i;
 					}
 					
@@ -979,17 +1016,18 @@ public class BukkitClasses {
 						return ItemType.toString(i, flags);
 					}
 					
-					@SuppressWarnings("deprecation")
 					@Override
 					public String toVariableNameString(final ItemStack i) {
 						final StringBuilder b = new StringBuilder("item:");
 						b.append(i.getType().name());
-						b.append(":" + i.getDurability());
+						b.append(":" + ItemUtils.getDamage(i));
 						b.append("*" + i.getAmount());
-						for (final Entry<Enchantment, Integer> e : i.getEnchantments().entrySet()) {
-							b.append("#" + e.getKey().getId());
-							b.append(":" + e.getValue());
-						}
+						
+						for (Entry<Enchantment, Integer> entry : i.getEnchantments().entrySet())
+							b.append("#" + EnchantmentUtils.getKey(entry.getKey()))
+									.append(":" + entry.getValue());
+						
+						
 						return "" + b.toString();
 					}
 					
@@ -1003,7 +1041,6 @@ public class BukkitClasses {
 				.name(ClassInfo.NO_DOC)
 				.since("2.0")
 				.changer(DefaultChangers.itemChanger));
-		
 		
 		Classes.registerClass(new ClassInfo<>(Biome.class, "biome")
 				.user("biomes?")
@@ -1037,7 +1074,7 @@ public class BukkitClasses {
 				})
 				.serializer(new EnumSerializer<>(Biome.class)));
 		
-//		PotionEffect is not used; ItemType is used instead
+		// PotionEffect is not used; ItemType is used instead
 		Classes.registerClass(new ClassInfo<>(PotionEffectType.class, "potioneffecttype")
 				.user("potion( ?effect)?( ?type)?s?")
 				.name("Potion Effect Type")
@@ -1083,20 +1120,21 @@ public class BukkitClasses {
 					}
 					
 					@Override
-					public void deserialize(final PotionEffectType o, final Fields f) throws StreamCorruptedException {
+					public void deserialize(final PotionEffectType o, final Fields f) {
 						assert false;
 					}
 					
 					@Override
 					protected PotionEffectType deserialize(final Fields fields) throws StreamCorruptedException {
 						final String name = fields.getObject("name", String.class);
+						assert name != null;
 						final PotionEffectType t = PotionEffectType.getByName(name);
 						if (t == null)
 							throw new StreamCorruptedException("Invalid PotionEffectType " + name);
 						return t;
 					}
 					
-//					return o.getName();
+					// return o.getName();
 					@Override
 					@Nullable
 					public PotionEffectType deserialize(final String s) {
@@ -1111,10 +1149,11 @@ public class BukkitClasses {
 		
 		// REMIND make my own damage cause class (that e.g. stores the attacker entity, the projectile, or the attacking block)
 		Classes.registerClass(new ClassInfo<>(DamageCause.class, "damagecause")
-				.user("damage causes?")
+				.user("damage ?causes?")
 				.name("Damage Cause")
-				.description("The cause/type of a <a href='../events/#damage'>damage event</a>, e.g. lava, fall, fire, drowning, explosion, poison, etc.",
-						"Please note that support for this type is very rudimentary, e.g. lava, fire and burning, as well as projectile and attack are considered different types.")
+				.description("The cause/type of a <a href='events.html#damage'>damage event</a>, e.g. lava, fall, fire, drowning, explosion, poison, etc.",
+						"Please note that support for this type is very rudimentary, e.g. lava, fire and burning, " +
+								"as well as projectile and attack are considered different types.")
 				.usage(DamageCauseUtils.getAllNames())
 				.examples("")
 				.since("2.0")
@@ -1179,9 +1218,7 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new Serializer<Chunk>() {
-					@SuppressWarnings("null")
 					@Override
-					@Nullable
 					public Fields serialize(final Chunk c) {
 						final Fields f = new Fields();
 						f.putObject("world", c.getWorld());
@@ -1191,7 +1228,7 @@ public class BukkitClasses {
 					}
 					
 					@Override
-					public void deserialize(final Chunk o, final Fields f) throws StreamCorruptedException {
+					public void deserialize(final Chunk o, final Fields f) {
 						assert false;
 					}
 					
@@ -1210,7 +1247,7 @@ public class BukkitClasses {
 						return c;
 					}
 					
-//					return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
+					// return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
 					@Override
 					@Nullable
 					public Chunk deserialize(final String s) {
@@ -1238,7 +1275,8 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(Enchantment.class, "enchantment")
 				.user("enchantments?")
 				.name("Enchantment")
-				.description("An enchantment, e.g. 'sharpness' or 'furtune'. Unlike <a href='#enchantmenttype'>enchantment type</a> this type has no level, but you usually don't need to use this type anyway.")
+				.description("An enchantment, e.g. 'sharpness' or 'fortune'. Unlike <a href='#enchantmenttype'>enchantment type</a> " +
+						"this type has no level, but you usually don't need to use this type anyway.")
 				.usage(StringUtils.join(EnchantmentType.getNames(), ", "))
 				.examples("")
 				.since("1.4.6")
@@ -1257,7 +1295,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toVariableNameString(final Enchantment e) {
-						return "" + e.getName();
+						return "" + EnchantmentUtils.getKey(e);
 					}
 					
 					@Override
@@ -1267,9 +1305,9 @@ public class BukkitClasses {
 				})
 				.serializer(new Serializer<Enchantment>() {
 					@Override
-					public Fields serialize(final Enchantment e) {
+					public Fields serialize(final Enchantment ench) {
 						final Fields f = new Fields();
-						f.putObject("name", e.getName());
+						f.putObject("key", EnchantmentUtils.getKey(ench));
 						return f;
 					}
 					
@@ -1279,29 +1317,25 @@ public class BukkitClasses {
 					}
 					
 					@Override
-					public void deserialize(final Enchantment o, final Fields f) throws StreamCorruptedException {
+					public void deserialize(final Enchantment o, final Fields f) {
 						assert false;
 					}
 					
 					@Override
 					protected Enchantment deserialize(final Fields fields) throws StreamCorruptedException {
-						final String name = fields.getObject("name", String.class);
-						final Enchantment e = Enchantment.getByName(name);
+						final String key = fields.getObject("key", String.class);
+						assert key != null; // If a key happens to be null, something went really wrong...
+						final Enchantment e = EnchantmentUtils.getByKey(key);
 						if (e == null)
-							throw new StreamCorruptedException("Invalid enchantment " + name);
+							throw new StreamCorruptedException("Invalid enchantment " + key);
 						return e;
 					}
 					
-//					return "" + e.getId();
-					@SuppressWarnings("deprecation")
+					// return "" + e.getId();
 					@Override
 					@Nullable
-					public Enchantment deserialize(final String s) {
-						try {
-							return Enchantment.getById(Integer.parseInt(s));
-						} catch (final NumberFormatException e) {
-							return null;
-						}
+					public Enchantment deserialize(String s) {
+						return Enchantment.getByName(s);
 					}
 					
 					@Override
@@ -1315,16 +1349,15 @@ public class BukkitClasses {
 				.name(ClassInfo.NO_DOC)
 				.since("aliases-rework")
 				.serializer(new Serializer<Material>() {
-
 					@Override
-					public Fields serialize(Material o) throws NotSerializableException {
+					public Fields serialize(Material o) {
 						Fields f = new Fields();
 						f.putObject("i", o.ordinal());
 						return f;
 					}
-
+					
 					@Override
-					public void deserialize(Material o, Fields f) throws StreamCorruptedException, NotSerializableException {
+					public void deserialize(Material o, Fields f) {
 						assert false;
 					}
 					
@@ -1334,27 +1367,422 @@ public class BukkitClasses {
 						assert mat != null; // Hope server owner didn't mod too much...
 						return mat;
 					}
-
+					
 					@Override
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-
+					
 					@Override
 					protected boolean canBeInstantiated() {
 						return false; // It is an enum, come on
 					}
-					
 				}));
-
+		
 		Classes.registerClass(new ClassInfo<>(Metadatable.class, "metadataholder")
-				.user("metadata holders?")
+				.user("metadata ?holders?")
 				.name("Metadata Holder")
 				.description("Something that can hold metadata (e.g. an entity or block)")
 				.examples("set metadata value \"super cool\" of player to true")
-				.since("2.2-dev36")
-		);
+				.since("2.2-dev36"));
+		
+		EnumUtils<TeleportCause> teleportCauses = new EnumUtils<>(TeleportCause.class, "teleport causes");
+		Classes.registerClass(new ClassInfo<>(TeleportCause.class, "teleportcause")
+				.user("teleport ?(cause|reason|type)s?")
+				.name("Teleport Cause")
+				.description("The teleport cause in a <a href='events.html#teleport'>teleport</a> event.")
+				.usage(teleportCauses.getAllNames())
+				.since("2.2-dev35")
+				.parser(new Parser<TeleportCause>() {
+					@Override
+					@Nullable
+					public TeleportCause parse(String input, ParseContext context) {
+						return teleportCauses.parse(input);
+					}
+					
+					@Override
+					public String toString(TeleportCause teleportCause, int flags) {
+						return teleportCauses.toString(teleportCause, flags);
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(TeleportCause teleportCause) {
+						return teleportCause.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(TeleportCause.class)));
+		
+		EnumUtils<SpawnReason> spawnReasons = new EnumUtils<>(SpawnReason.class, "spawn reasons");
+		Classes.registerClass(new ClassInfo<>(SpawnReason.class, "spawnreason")
+				.user("spawn(ing)? ?reasons?")
+				.name("Spawn Reason")
+				.description("The spawn reason in a <a href='events.html#spawn'>spawn</a> event.")
+				.usage(spawnReasons.getAllNames())
+				.since("2.3")
+				.parser(new Parser<SpawnReason>() {
+					@Override
+					@Nullable
+					public SpawnReason parse(String input, ParseContext context) {
+						return spawnReasons.parse(input);
+					}
+					
+					@Override
+					public String toString(SpawnReason spawnReason, int flags) {
+						return spawnReasons.toString(spawnReason, flags);
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(SpawnReason spawnReason) {
+						return spawnReason.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(SpawnReason.class)));
+		
+		if (Skript.classExists("com.destroystokyo.paper.event.server.PaperServerListPingEvent")) {
+			Classes.registerClass(new ClassInfo<>(CachedServerIcon.class, "cachedservericon")
+					.user("server ?icons?")
+					.name("Server Icon")
+					.description("A server icon that was loaded using the <a href='effects.html#EffLoadServerIcon'>load server icon</a> effect.")
+					.examples("")
+					.since("2.3")
+					.parser(new Parser<CachedServerIcon>() {
+						@Override
+						@Nullable
+						public CachedServerIcon parse(final String s, final ParseContext context) {
+							return null;
+						}
+						
+						@Override
+						public boolean canParse(final ParseContext context) {
+							return false;
+						}
+						
+						@Override
+						public String toString(final CachedServerIcon o, int flags) {
+							return "server icon";
+						}
+						
+						@Override
+						public String toVariableNameString(final CachedServerIcon o) {
+							return "server icon";
+						}
+						
+						@Override
+						public String getVariableNamePattern() {
+							return "server icon";
+						}
+					}));
+		}
+		
+		EnumUtils<FireworkEffect.Type> fireworktypes = new EnumUtils<>(FireworkEffect.Type.class, "firework types");
+		Classes.registerClass(new ClassInfo<>(FireworkEffect.Type.class, "fireworktype")
+				.user("firework ?types?")
+				.name("Firework Type")
+				.description("The type of a <a href='#fireworkeffect'>fireworkeffect</a>.")
+				.defaultExpression(new EventValueExpression<>(FireworkEffect.Type.class))
+				.usage(fireworktypes.getAllNames())
+				.since("2.4")
+				.documentationId("FireworkType")
+				.parser(new Parser<FireworkEffect.Type>() {
+					@Override
+					@Nullable
+					public FireworkEffect.Type parse(String input, ParseContext context) {
+						return fireworktypes.parse(input);
+					}
+					
+					@Override
+					public String toString(FireworkEffect.Type type, int flags) {
+						return fireworktypes.toString(type, flags);
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(FireworkEffect.Type type) {
+						return type.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(FireworkEffect.Type.class)));
+		
+		Classes.registerClass(new ClassInfo<>(FireworkEffect.class, "fireworkeffect")
+				.user("firework ?effects?")
+				.name("Firework Effect")
+				.description("A configuration of effects that defines the firework when exploded.")
+				.defaultExpression(new EventValueExpression<>(FireworkEffect.class))
+				.since("2.4")
+				.parser(new Parser<FireworkEffect>() {
+					@Override
+					@Nullable
+					public FireworkEffect parse(String input, ParseContext context) {
+						return null;
+					}
+					
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(FireworkEffect effect, int flags) {
+						return "Firework effect " + effect.toString();
+					}
+					
+					@Override
+					public String toVariableNameString(FireworkEffect effect) {
+						return "firework effect " + effect.toString();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				}));
+		
+		EnumUtils<Difficulty> difficulties = new EnumUtils<>(Difficulty.class, "difficulties");
+		Classes.registerClass(new ClassInfo<>(Difficulty.class, "difficulty")
+				.user("difficult(y|ies)")
+				.name("Difficulty")
+				.description("The difficulty of a <a href='#world'>world</a>.")
+				.usage(difficulties.getAllNames())
+				.since("2.3")
+				.parser(new Parser<Difficulty>() {
+					@Override
+					@Nullable
+					public Difficulty parse(final String input, final ParseContext context) {
+						return difficulties.parse(input);
+					}
+					
+					@Override
+					public String toString(Difficulty difficulty, int flags) {
+						return difficulties.toString(difficulty, flags);
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(Difficulty difficulty) {
+						return difficulty.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Difficulty.class)));
+		
+		EnumUtils<Status> resourcePackStates = new EnumUtils<>(Status.class, "resource pack states");
+		Classes.registerClass(new ClassInfo<>(Status.class, "resourcepackstate")
+				.user("resource ?pack ?states?")
+				.name("Resource Pack State")
+				.description("The state in a <a href='events.html#resource_pack_request_action'>resource pack request response</a> event.")
+				.usage(resourcePackStates.getAllNames())
+				.since("2.4")
+				.parser(new Parser<Status>() {
+					@Override
+					public String toString(Status state, int flags) {
+						return resourcePackStates.toString(state, flags);
+					}
+					
+					@Override
+					@Nullable
+					public Status parse(final String s, final ParseContext context) {
+						return resourcePackStates.parse(s);
+					}
+					
+					@SuppressWarnings("null")
+					@Override
+					public String toVariableNameString(Status state) {
+						return state.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Status.class)));
+		
+		if (Skript.classExists("org.bukkit.SoundCategory")) {
+			EnumUtils<SoundCategory> soundCategories = new EnumUtils<>(SoundCategory.class, "sound categories");
+			Classes.registerClass(new ClassInfo<>(SoundCategory.class, "soundcategory")
+					.user("sound ?categor(y|ies)")
+					.name("Sound Category")
+					.description("The category of a sound, they are used for sound options of Minecraft. " +
+							"See the <a href='effects.html#EffPlaySound'>play sound</a> and <a href='effects.html#EffStopSound'>stop sound</a> effects.")
+					.usage(soundCategories.getAllNames())
+					.since("2.4")
+					.requiredPlugins("Minecraft 1.11 or newer")
+					.parser(new Parser<SoundCategory>() {
+						@Override
+						@Nullable
+						public SoundCategory parse(final String s, final ParseContext context) {
+							return soundCategories.parse(s);
+						}
+						
+						@Override
+						public String toString(SoundCategory state, int flags) {
+							return soundCategories.toString(state, flags);
+						}
+						
+						@SuppressWarnings("null")
+						@Override
+						public String toVariableNameString(SoundCategory category) {
+							return category.name();
+						}
+						
+						@Override
+						public String getVariableNamePattern() {
+							return "\\S+";
+						}
+					})
+					.serializer(new EnumSerializer<>(SoundCategory.class)));
+		}
+		if (Skript.classExists("org.bukkit.entity.Panda$Gene")) {
+			EnumUtils<Gene> genes = new EnumUtils<>(Gene.class, "genes");
+			Classes.registerClass(new ClassInfo<>(Gene.class, "gene")
+					.user("(panda )?genes?")
+					.name("Gene")
+					.description("Represents a Panda's main or hidden gene. " +
+							"See <a href='https://minecraft.gamepedia.com/Panda#Genetics'>genetics</a> for more info.")
+					.usage(genes.getAllNames())
+					.since("2.4")
+					.requiredPlugins("Minecraft 1.14 or newer")
+					.parser(new Parser<Gene>() {
+						@Nullable
+						@Override
+						public Gene parse(String expr, ParseContext context) {
+							return genes.parse(expr);
+						}
+						
+						@Override
+						public String toString(Gene gene, int flags) {
+							return genes.toString(gene, flags);
+						}
+						
+						@Override
+						public String toVariableNameString(Gene gene) {
+							return gene.name();
+						}
+						
+						@Override
+						public String getVariableNamePattern() {
+							return "\\S+";
+						}
+					})
+					.serializer(new EnumSerializer<>(Gene.class)));
+		}
+		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
+			EnumUtils<Cat.Type> races = new EnumUtils<>(Cat.Type.class, "cat types");
+			Classes.registerClass(new ClassInfo<>(Cat.Type.class, "cattype")
+					.user("cat ?(type|race)s?")
+					.name("Cat Type")
+					.description("Represents the race/type of a cat entity.")
+					.usage(races.getAllNames())
+					.since("2.4")
+					.requiredPlugins("Minecraft 1.14 or newer")
+					.documentationId("CatType")
+					.parser(new Parser<Cat.Type>() {
+						@Nullable
+						@Override
+						public Cat.Type parse(String expr, ParseContext context) {
+							return races.parse(expr);
+						}
+						
+						@Override
+						public String toString(Cat.Type race, int flags) {
+							return races.toString(race, flags);
+						}
+						
+						@Override
+						public String toVariableNameString(Cat.Type race) {
+							return race.name();
+						}
+						
+						@Override
+						public String getVariableNamePattern() {
+							return "\\S+";
+						}
+					})
+					.serializer(new EnumSerializer<>(Cat.Type.class)));
+		}
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+				.user("enchant[ment][ ]offers?")
+				.name("Enchantment Offer")
+				.description("The enchantmentoffer in an enchant prepare event.")
+				.examples("on enchant prepare:",
+					"\tset enchant offer 1 to sharpness 1",
+					"\tset the cost of enchant offer 1 to 10 levels")
+				.since("INSERT VERSION")
+				.parser(new Parser<EnchantmentOffer>() {
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
 
+					@Override
+					public String toString(EnchantmentOffer eo, int flags) {
+						return EnchantmentType.toString(eo.getEnchantment(), flags) + " " + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String toVariableNameString(EnchantmentOffer eo) {
+						return "offer:" + EnchantmentType.toString(eo.getEnchantment()) + "=" + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				}));
+		}
+		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
+		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
+				.user("attribute ?types?")
+				.name("Attribute Type")
+				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
+						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
+				.defaultExpression(new EventValueExpression<>(Attribute.class))
+				.usage(attributes.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Attribute>() {
+					@Override
+					@Nullable
+					public Attribute parse(String input, ParseContext context) {
+						return attributes.parse(input);
+					}
+					
+					@Override
+					public String toString(Attribute a, int flags) {
+						return attributes.toString(a, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Attribute a) {
+						return toString(a, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "[\\sA-Za-z]+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Attribute.class)));
 	}
-
 }

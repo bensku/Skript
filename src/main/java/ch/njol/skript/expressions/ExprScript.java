@@ -35,6 +35,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -42,14 +43,16 @@ import ch.njol.util.Kleenean;
 @Name("Script Name")
 @Description("Holds the current script's name (the file name without '.sk').")
 @Examples({"on script load:",
-		"	set {running.%script%} to true",
+		"	set {running::%script%} to true",
 		"on script unload:",
-		"	set {running.%script%} to false"})
+		"	set {running::%script%} to false"})
 @Since("2.0")
 @Events("Script Load/Unload")
 public class ExprScript extends SimpleExpression<String> {
+	
 	static {
-		Skript.registerExpression(ExprScript.class, String.class, ExpressionType.SIMPLE, "[the] script[['s] name]");
+		Skript.registerExpression(ExprScript.class, String.class, ExpressionType.SIMPLE,
+				"[the] script[['s] name]", "name of [the] script");
 	}
 	
 	@SuppressWarnings("null")
@@ -71,7 +74,7 @@ public class ExprScript extends SimpleExpression<String> {
 	
 	@Override
 	protected String[] get(final Event e) {
-		return new String[] {name};
+		return CollectionUtils.array(name);
 	}
 	
 	@Override

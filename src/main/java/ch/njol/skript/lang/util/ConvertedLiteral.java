@@ -26,6 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
@@ -41,15 +42,16 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	
 	protected transient T[] data;
 	
+	@SuppressWarnings("unchecked")
 	public ConvertedLiteral(final Literal<F> source, final T[] data, final Class<T> to) {
-		super(source, to, new Converter<F, T>() {
+		super(source, to, new ConverterInfo<>((Class<F>) source.getReturnType(), to, new Converter<F, T>() {
 			@Override
 			@Nullable
 			public T convert(final F f) {
 				assert false;
 				return Converters.convert(f, to);
 			}
-		});
+		}, 0));
 		this.data = data;
 		assert data.length > 0;
 	}
@@ -99,7 +101,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	@Override
 	@Nullable
 	public Iterator<T> iterator(final Event e) {
-		return new ArrayIterator<T>(data);
+		return new ArrayIterator<>(data);
 	}
 	
 	@Override

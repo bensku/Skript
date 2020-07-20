@@ -156,10 +156,9 @@ public class ExprItems extends SimpleExpression<ItemStack> {
 			return iter;
 		
 		return new CheckedIterator<>(iter, new NullableChecker<ItemStack>() {
-			@SuppressWarnings("deprecation")
 			@Override
 			public boolean check(final @Nullable ItemStack is) {
-				return is != null && is.getTypeId() <= Skript.MAXBLOCKID;
+				return is != null && is.getType().isBlock();
 			}
 		});
 	}

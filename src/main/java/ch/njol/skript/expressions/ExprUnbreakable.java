@@ -19,18 +19,17 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
-import org.bukkit.Location;
-import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -39,20 +38,30 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
-/**
- * @author bensku
- */
 @Name("Unbreakable Items")
 @Description("Creates unbreakable copies of given items.")
 @Examples("unbreakable iron sword #Creates unbreakable iron sword")
 @Since("2.2-dev13b")
 public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
+
+	private static final boolean USE_DEPRECATED_METHOD = !Skript.methodExists(ItemMeta.class, "setUnbreakable", boolean.class);
+	
+	@Nullable
+	private static final MethodHandle setUnbreakableMethod;
 	
 	static {
 		Skript.registerExpression(ExprUnbreakable.class, ItemType.class, ExpressionType.PROPERTY, "unbreakable %itemtypes%");
+		
+		MethodHandle handle;
+		try {
+			handle = MethodHandles.lookup().findVirtual(Class.forName("package org.bukkit.inventory.meta.ItemMeta.Spigot"),
+					"setUnbreakable", MethodType.methodType(void.class, boolean.class));
+		} catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+			handle = null;
+		}
+		setUnbreakableMethod = handle;
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -64,24 +73,23 @@ public class ExprUnbreakable extends PropertyExpression<ItemType, ItemType> {
 	
 	@Override
 	protected ItemType[] get(final Event e, final ItemType[] source) {
-		return get(source, new Converter<ItemType, ItemType>() {
-			@Override
-			public ItemType convert(final ItemType i) {
-				ItemType clone = i.clone();
-				
-				ItemMeta meta = clone.getItemMeta();
-				if (meta == null) {
-					ItemStack random = clone.getRandom(); // Should not happen, but...
-					if (random == null)
-						return clone;
-					meta = random.getItemMeta();
+		return get(source, itemType -> {
+			ItemType clone = itemType.clone();
+
+			ItemMeta meta = clone.getItemMeta();
+			if (USE_DEPRECATED_METHOD) {
+				assert setUnbreakableMethod != null;
+				try {
+					setUnbreakableMethod.invoke(true);
+				} catch (Throwable e1) {
+					Skript.exception(e1);
 				}
-				
-				((ItemMeta) meta).spigot().setUnbreakable(true);
-				clone.setItemMeta(meta);
-				
-				return clone;
+			} else {
+				meta.setUnbreakable(true);
 			}
+			clone.setItemMeta(meta);
+
+			return clone;
 		});
 	}
 

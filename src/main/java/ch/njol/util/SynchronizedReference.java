@@ -19,10 +19,10 @@
  */
 package ch.njol.util;
 
-import javax.annotation.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * @author Peter Güttinger
+ * @author Peter Gï¿½ttinger
  *
  */
 public class SynchronizedReference<V>
@@ -35,7 +35,6 @@ public class SynchronizedReference<V>
     this.value = initialValue;
   }
   
-  @SuppressWarnings("null")
   public SynchronizedReference() {}
   
   @Nullable

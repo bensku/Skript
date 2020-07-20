@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
@@ -27,6 +26,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -55,6 +56,8 @@ public class ExprSignText extends SimpleExpression<String> {
 		Skript.registerExpression(ExprSignText.class, String.class, ExpressionType.PROPERTY,
 				"[the] line %number% [of %block%]", "[the] (1¦1st|1¦first|2¦2nd|2¦second|3¦3rd|3¦third|4¦4th|4¦fourth) line [of %block%]");
 	}
+	
+	private static final ItemType sign = Aliases.javaItemType("sign");
 	
 	@SuppressWarnings("null")
 	private Expression<Number> line;
@@ -97,7 +100,7 @@ public class ExprSignText extends SimpleExpression<String> {
 		final Block b = block.getSingle(e);
 		if (b == null)
 			return new String[0];
-		if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN)
+		if (!sign.isOfType(b))
 			return new String[0];
 		return new String[] {((Sign) b.getState()).getLine(line)};
 	}
@@ -141,7 +144,7 @@ public class ExprSignText extends SimpleExpression<String> {
 					break;
 			}
 		} else {
-			if (b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN)
+			if (!sign.isOfType(b))
 				return;
 			final Sign s = (Sign) b.getState();
 			switch (mode) {

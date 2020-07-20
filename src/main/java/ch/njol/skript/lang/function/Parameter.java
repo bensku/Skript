@@ -35,13 +35,28 @@ import ch.njol.skript.util.Utils;
 
 public final class Parameter<T> {
 	
+	/**
+	 * Name of this parameter. Will be used as name for the local variable
+	 * that contains value of it inside function. This is always in lower case;
+	 * variable names are case-insensitive.
+	 */
 	final String name;
 	
+	/**
+	 * Type of the parameter.
+	 */
 	final ClassInfo<T> type;
 	
+	/**
+	 * Expression that will provide default value of this parameter
+	 * when the function is called.
+	 */
 	@Nullable
 	final Expression<? extends T> def;
 	
+	/**
+	 * Whether this parameter takes one or many values.
+	 */
 	final boolean single;
 	
 	@SuppressWarnings("null")
@@ -61,6 +76,7 @@ public final class Parameter<T> {
 	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def) {
 		if (!Variable.isValidVariableName(name, true, false)) {
 			Skript.error("An argument's name must be a valid variable name.");
+			// ... because it will be made available as local variable
 			return null;
 		}
 		Expression<? extends T> d = null;
@@ -79,11 +95,24 @@ public final class Parameter<T> {
 //				}
 //			} else {
 			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+			
+			// Parse the default value literal
 			try {
-				if (type.getC() == String.class) {
+				if (def.startsWith("\"") && def.endsWith("\"")) { // Quoted string; always parse as string
+					// Don't ever parse strings as objects, it creates UnparsedLiterals (see #2353)
+					d = (Expression<? extends T>) VariableString.newInstance("" + def.substring(1, def.length() - 1));
+				} else if (type.getC().equals(String.class)) { // String return type requested
+					/*
+					 * For historical reasons, default values of string
+					 * parameters needs not to be quoted. This is true even for
+					 * strings with spaces, which is very confusing. We issue a
+					 * warning for it now, and the behavior may be removed in a
+					 * future release.
+					 */
 					if (def.startsWith("\"") && def.endsWith("\"")) {
 						d = (Expression<? extends T>) VariableString.newInstance("" + def.substring(1, def.length() - 1));
 					} else {
+						// Usage of SimpleLiteral is also deprecated; not worth the risk to change it
 						if (def.contains(" ")) // Warn about whitespace in unquoted string
 							Skript.warning("'" + def + "' contains spaces and is unquoted, which is discouraged");
 						d = (Expression<? extends T>) new SimpleLiteral<>(def, false);

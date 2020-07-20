@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Experience")
-@Description("How much experience was spawned in an <a href='../events/#experience_spawn'>experience spawn</a> event. Can be changed.")
+@Description("How much experience was spawned in an <a href='../events.html#experience_spawn'>experience spawn</a> event. Can be changed.")
 @Examples({"on experience spawn:",
 		"	add 5 to the spawned experience"})
 @Since("2.1")

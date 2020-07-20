@@ -19,24 +19,40 @@
  */
 package ch.njol.skript.classes;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.lang.Debuggable;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 
 /**
- * used to convert data from one type to another.
+ * Converts data from type to another.
  * 
- * @param <F> the accepted type of objects to convert <u>f</u>rom
- * @param <T> the type to convert <u>t</u>o
- * @author Peter Güttinger
+ * @param <F> The accepted type of objects to convert <b>f</b>rom
+ * @param <T> The type to convert <b>t</b>o
  * @see Converters#registerConverter(Class, Class, Converter)
  */
 public interface Converter<F, T> {
 	
+	/**
+	 * Disallow other converters from being chained to this.
+	 */
 	public final static int NO_LEFT_CHAINING = 1;
+	
+	/**
+	 * Disallow chaining this with other converters.
+	 */
 	public final static int NO_RIGHT_CHAINING = 2;
+	
+	/**
+	 * Disallow all chaining.
+	 */
 	public final static int NO_CHAINING = NO_LEFT_CHAINING | NO_RIGHT_CHAINING;
+	
 	public final static int NO_COMMAND_ARGUMENTS = 4;
 	
 	/**
@@ -46,20 +62,48 @@ public interface Converter<F, T> {
 	 * @param <F> same as in {@link Converter}
 	 * @param <T> dito
 	 */
-	@SuppressWarnings("null")
-	@NonNullByDefault
-	public final static class ConverterInfo<F, T> {
+	public final static class ConverterInfo<F, T> implements Debuggable {
 		
 		public final Class<F> from;
 		public final Class<T> to;
 		public final Converter<F, T> converter;
 		public final int options;
 		
-		public ConverterInfo(final Class<F> from, final Class<T> to, final Converter<F, T> converter, final int options) {
+		/**
+		 * Chain of types this converter will go through from right to left.
+		 * For normal converters, contains from at 0 and to at 1. For chained
+		 * converters, chains of first and second converter are concatenated
+		 * together.
+		 */
+		private final Class<?>[] chain;
+		
+		public ConverterInfo(Class<F> from, Class<T> to, Converter<F, T> converter, int options) {
 			this.from = from;
 			this.to = to;
 			this.converter = converter;
 			this.options = options;
+			this.chain = new Class[] {from, to};
+		}
+		
+		@SuppressWarnings("unchecked")
+		public ConverterInfo(ConverterInfo<?,?> first, ConverterInfo<?,?> second, Converter<F, T> converter, int options) {
+			this.from = (Class<F>) first.from;
+			this.to = (Class<T>) second.to;
+			this.converter = converter;
+			this.options = options;
+			this.chain = new Class[first.chain.length + second.chain.length];
+			System.arraycopy(first.chain, 0, chain, 0, first.chain.length);
+			System.arraycopy(second.chain, 0, chain, first.chain.length, second.chain.length);
+		}
+
+		@Override
+		public String toString(@Nullable Event e, boolean debug) {
+			if (debug) {
+				String str = Arrays.stream(chain).map(c -> Classes.getExactClassName(c)).collect(Collectors.joining(" -> "));
+				assert str != null;
+				return str;
+			}
+			return Classes.getExactClassName(from) + " to " + Classes.getExactClassName(to);
 		}
 		
 	}
@@ -75,11 +119,11 @@ public interface Converter<F, T> {
 	
 	public final static class ConverterUtils {
 		
-		public final static <F, T> Converter<?, T> createInstanceofConverter(final ConverterInfo<F, T> conv) {
+		public static <F, T> Converter<?, T> createInstanceofConverter(final ConverterInfo<F, T> conv) {
 			return createInstanceofConverter(conv.from, conv.converter);
 		}
 		
-		public final static <F, T> Converter<?, T> createInstanceofConverter(final Class<F> from, final Converter<F, T> conv) {
+		public static <F, T> Converter<?, T> createInstanceofConverter(final Class<F> from, final Converter<F, T> conv) {
 			return new Converter<Object, T>() {
 				@SuppressWarnings("unchecked")
 				@Override
@@ -92,7 +136,14 @@ public interface Converter<F, T> {
 			};
 		}
 		
-		public final static <F, T> Converter<F, T> createInstanceofConverter(final Converter<F, ?> conv, final Class<T> to) {
+		/**
+		 * Wraps a converter in a filter that will only accept conversion
+		 * results of given type. All other results are replaced with nulls.
+		 * @param conv Converter to wrap.
+		 * @param to Accepted return type of the converter.
+		 * @return The wrapped converter.
+		 */
+		public static <F, T> Converter<F, T> createInstanceofConverter(final Converter<F, ?> conv, final Class<T> to) {
 			return new Converter<F, T>() {
 				@SuppressWarnings("unchecked")
 				@Override
@@ -106,11 +157,21 @@ public interface Converter<F, T> {
 			};
 		}
 		
-		public final static <F, T> Converter<?, T> createDoubleInstanceofConverter(final ConverterInfo<F, ?> conv, final Class<T> to) {
+		public static <F, T> Converter<?, T> createDoubleInstanceofConverter(final ConverterInfo<F, ?> conv, final Class<T> to) {
 			return createDoubleInstanceofConverter(conv.from, conv.converter, to);
 		}
 		
-		public final static <F, T> Converter<?, T> createDoubleInstanceofConverter(final Class<F> from, final Converter<F, ?> conv, final Class<T> to) {
+		/**
+		 * Wraps a converter. When values given to the wrapper converter are
+		 * not of accepted type, it will not be called; instead, a null is
+		 * returned. When it returns a value that is not of accepted type, the
+		 * wrapped converter will return null instead.
+		 * @param from Accepted type of input.
+		 * @param conv Converter to wrap.
+		 * @param to Accepted type of output.
+		 * @return A wrapped converter.
+		 */
+		public static <F, T> Converter<?, T> createDoubleInstanceofConverter(final Class<F> from, final Converter<F, ?> conv, final Class<T> to) {
 			return new Converter<Object, T>() {
 				@SuppressWarnings("unchecked")
 				@Override
@@ -127,5 +188,4 @@ public interface Converter<F, T> {
 		}
 		
 	}
-	
 }

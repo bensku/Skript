@@ -19,14 +19,12 @@
  */
 package ch.njol.skript.conditions;
 
-import java.util.Map;
-
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -35,7 +33,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -49,15 +46,13 @@ import ch.njol.util.Kleenean;
 public class CondIsEnchanted extends Condition {
 	
 	static {
-		Skript.registerCondition(CondIsEnchanted.class,
-				"%itemtypes% (is|are) enchanted [with %-enchantmenttype%]",
-				"%itemtypes% (isn't|is not|aren't|are not) enchanted [with %-enchantmenttype%]");
+		PropertyCondition.register(CondIsEnchanted.class, "enchanted [with %-enchantmenttype%]", "itemtypes");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<ItemType> items;
 	@Nullable
-	Expression<EnchantmentType> enchs;
+	private Expression<EnchantmentType> enchs;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -70,28 +65,19 @@ public class CondIsEnchanted extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return items.check(e, new Checker<ItemType>() {
-			@Override
-			public boolean check(final ItemType item) {
-				final Expression<EnchantmentType> es = enchs;
-				if (es == null) {
-					final Map<Enchantment, Integer> enchs = item.getEnchantments();
-					return isNegated() ^ (enchs != null && !enchs.isEmpty());
-				}
-				return es.check(e, new Checker<EnchantmentType>() {
-					@Override
-					public boolean check(final EnchantmentType ench) {
-						return ench.has(item);
-					}
-				}, isNegated());
-			}
-		});
+		if (enchs != null)
+			return items.check(e, item -> enchs.check(e, ench -> item.hasEnchantments(ench)), isNegated());
+		else
+			return items.check(e, ItemType::hasEnchantments, isNegated());
+		
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<EnchantmentType> es = enchs;
-		return items.toString(e, debug) + " " + (items.isSingle() ? "is" : "are") + (isNegated() ? " not" : "") + " enchanted" + (es == null ? "" : " with " + es.toString(e, debug));
+		
+		return PropertyCondition.toString(this, PropertyType.BE, e, debug, items,
+				"enchanted" + (es == null ? "" : " with " + es.toString(e, debug)));
 	}
 	
 }

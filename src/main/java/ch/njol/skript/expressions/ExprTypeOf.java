@@ -23,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -31,19 +32,18 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.registrations.Converters;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Type of")
-@Description("The type of a block/item or entity. The type of an item is only it's id and data value, i.e. it ignores the amount, enchantments etc., and the type of an entity is e.g. 'wolf' or 'player'.")
+@Description({"Type of a block, an item, en entity or an inventory.",
+	"Types of items and blocks are item types similar to them but have amounts",
+	"of one, no display names and, on Minecraft 1.13 and newer versions, are undamaged.",
+	"Types of entities and inventories are entity types and inventory types known to Skript."})
 @Examples({"on rightclick on an entity:",
 		"	message \"This is a %type of clicked entity%!\""})
 @Since("1.4")
 public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	static {
-		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemstacks/inventories");
+		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemtypes/inventories");
 	}
 	
 	@Override
@@ -56,8 +56,8 @@ public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	public Object convert(final Object o) {
 		if (o instanceof EntityData) {
 			return ((EntityData<?>) o).getSuperType();
-		} else if (o instanceof ItemStack) {
-			return new ItemStack(((ItemStack) o).getType(), 1, ((ItemStack) o).getDurability());
+		} else if (o instanceof ItemType) {
+			return ((ItemType) o).getBaseType();
 		} else if (o instanceof Inventory) {
 			return ((Inventory) o).getType();
 		}

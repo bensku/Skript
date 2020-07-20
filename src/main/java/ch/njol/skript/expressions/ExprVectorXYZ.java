@@ -19,78 +19,71 @@
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Coordinate")
-@Description("Gets or sets the x, y or z coordinate of a vector")
+@Name("Vectors - XYZ Component")
+@Description("Gets or changes the x, y or z component of a vector.")
 @Examples({"set {_v} to vector 1, 2, 3",
 		"send \"%x of {_v}%, %y of {_v}%, %z of {_v}%\"",
 		"add 1 to x of {_v}",
 		"add 2 to y of {_v}",
 		"add 3 to z of {_v}",
 		"send \"%x of {_v}%, %y of {_v}%, %z of {_v}%\"",
-		"set x of {_v} to 1",
-		"set y of {_v} to 2",
-		"set z of {_v} to 3",
-		"send \"%x of {_v}%, %y of {_v}%, %z of {_v}%\"",})
+		"set x component of {_v} to 1",
+		"set y component of {_v} to 2",
+		"set z component of {_v} to 3",
+		"send \"%x component of {_v}%, %y component of {_v}%, %z component of {_v}%\"",})
 @Since("2.2-dev28")
 public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
+	
 	static {
-		Skript.registerExpression(ExprVectorXYZ.class, Number.class, ExpressionType.PROPERTY, "(0¦x|1¦y|2¦z) of %vector%");
+		register(ExprVectorXYZ.class, Number.class, "[vector] (0¦x|1¦y|2¦z) [component[s]]", "vectors");
 	}
-
-	private final static String[] axes = {"xx", "yy", "zz"};
-
+	
+	private final static Character[] axes = new Character[] {'x', 'y', 'z'};
+	
 	private int axis;
-
+	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		super.init(exprs, matchedPattern, isDelayed, parseResult);
 		axis = parseResult.mark;
 		return true;
 	}
-
+	
 	@Override
-	public Double convert(final Vector v) {
-		return axis == 0 ? v.getX() : axis == 1 ? v.getY() : v.getZ();
+	public Number convert(Vector v) {
+		return axis == 0 ? v.getX() : (axis == 1 ? v.getY() : v.getZ());
 	}
-
-	@Override
-	protected String getPropertyName() {
-		return "the " + axes[axis] + "-coordinate";
-	}
-
-	@Override
-	public Class<Number> getReturnType() {
-		return Number.class;
-	}
-
+	
 	@Override
 	@SuppressWarnings("null")
-	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {
-		if ((mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) && getExpr().isSingle() && Changer.ChangerUtils.acceptsChange(getExpr(), Changer.ChangeMode.SET, Vector.class))
-			return new Class[] { Number.class };
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if ((mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.SET)
+				&& getExpr().isSingle() && Changer.ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Vector.class))
+			return CollectionUtils.array(Number.class);
 		return null;
 	}
-
+	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final Changer.ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		assert delta != null;
 		final Vector v = getExpr().getSingle(e);
 		if (v == null)
@@ -101,30 +94,33 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Vector, Number> {
 				n = -n;
 				//$FALL-THROUGH$
 			case ADD:
-				if (axis == 0) {
+				if (axis == 0)
 					v.setX(v.getX() + n);
-				} else if (axis == 1) {
+				else if (axis == 1)
 					v.setY(v.getY() + n);
-				} else {
+				else
 					v.setZ(v.getZ() + n);
-				}
-				getExpr().change(e, new Vector[] {v}, Changer.ChangeMode.SET);
+				getExpr().change(e, new Vector[] {v}, ChangeMode.SET);
 				break;
 			case SET:
-				if (axis == 0) {
+				if (axis == 0)
 					v.setX(n);
-				} else if (axis == 1) {
+				else if (axis == 1)
 					v.setY(n);
-				} else {
+				else
 					v.setZ(n);
-				}
-				getExpr().change(e, new Vector[] {v}, Changer.ChangeMode.SET);
-				break;
-			case DELETE:
-			case REMOVE_ALL:
-			case RESET:
-				assert false;
+				getExpr().change(e, new Vector[] {v}, ChangeMode.SET);
 		}
 	}
-
+	
+	@Override
+	protected String getPropertyName() {
+		return axes[axis] + " component";
+	}
+	
+	@Override
+	public Class<Number> getReturnType() {
+		return Number.class;
+	}
+	
 }

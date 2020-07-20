@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,13 +30,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
@@ -41,57 +41,56 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description("Rotates a vector around x, y, or z axis by some degrees")
 @Examples({"rotate {_v} around x-axis by 90",
 		"rotate {_v} around y-axis by 90",
-		"rotate {_v} around z-axis by 90"})
+		"rotate {_v} around z-axis by 90 degrees"})
 @Since("2.2-dev28")
-public class EffVectorRotateXYZ extends Effect{
+public class EffVectorRotateXYZ extends Effect {
+
 	static {
 		Skript.registerEffect(EffVectorRotateXYZ.class, "rotate %vectors% around (1¦x|2¦y|3¦z)(-| )axis by %number% [degrees]");
 	}
+
 	private final static Character[] axes = new Character[] {'x', 'y', 'z'};
 
 	@SuppressWarnings("null")
 	private Expression<Vector> vectors;
-	@SuppressWarnings("null")
-	private Expression<Number> number;
-	private int mark;
 
-	@Override
-	public String toString(@Nullable Event event, boolean b) {
-		return "rotate " + vectors.toString() + " around " + axes[mark] + "-axis";
-	}
+	@SuppressWarnings("null")
+	private Expression<Number> degree;
+	private int axis;
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		vectors = (Expression<Vector>)expressions[0];
-		number = (Expression<Number>)expressions[1];
-		mark = parseResult.mark;
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		vectors = (Expression<Vector>) expressions[0];
+		degree = (Expression<Number>) expressions[1];
+		axis = parseResult.mark;
 		return true;
 	}
 
 	@Override
 	@SuppressWarnings("null")
-	protected void execute(Event event) {
-		Number n = number.getSingle(event);
-		if (n == null){
+	protected void execute(Event e) {
+		Number d = degree.getSingle(e);
+		if (d == null)
 			return;
-		}
-		switch (mark) {
+		switch (axis) {
 			case 1:
-				for (Vector v : vectors.getAll(event)) {
-					VectorMath.rotX(v, n.doubleValue());
-				}
+				for (Vector v : vectors.getArray(e))
+					VectorMath.rotX(v, d.doubleValue());
 				break;
 			case 2:
-				for (Vector v : vectors.getAll(event)) {
-					VectorMath.rotY(v, n.doubleValue());
-				}
+				for (Vector v : vectors.getArray(e))
+					VectorMath.rotY(v, d.doubleValue());
 				break;
 			case 3:
-				for (Vector v : vectors.getAll(event)) {
-					VectorMath.rotZ(v, n.doubleValue());
-				}
-				break;
+				for (Vector v : vectors.getArray(e))
+					VectorMath.rotZ(v, d.doubleValue());
 		}
 	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "rotate " + vectors.toString(e, debug) + " around " + axes[axis] + "-axis" + " by " + degree + "degrees";
+	}
+
 }

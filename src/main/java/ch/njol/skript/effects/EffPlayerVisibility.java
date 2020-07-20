@@ -47,7 +47,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"		hide the player from all players",
 		"",
 		"reveal hidden players of {_player}"})
-@Since("INSERT VERSION")
+@Since("2.3")
 public class EffPlayerVisibility extends Effect {
 
 	private static final boolean USE_DEPRECATED_METHOD = !Skript.methodExists(Player.class, "hidePlayer", Plugin.class, Player.class);

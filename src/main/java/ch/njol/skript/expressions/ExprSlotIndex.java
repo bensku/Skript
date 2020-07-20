@@ -35,7 +35,8 @@ import ch.njol.skript.util.slot.SlotWithIndex;
 		+ "possible; if index of slot is same as the number, comparison"
 		+ "succeeds. This expression is mainly for the cases where you must "
 		+ "for some reason save the slot numbers.")
-@Examples("")
+@Examples({"if index of event-slot is 10:",
+			"\tsend \"You bought a pie!\""})
 @Since("2.2-dev35")
 public class ExprSlotIndex extends SimplePropertyExpression<Slot, Integer> {
 	

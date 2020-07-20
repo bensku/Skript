@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.events;
 
+import java.util.Locale;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Sheep;
@@ -28,6 +30,8 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -37,12 +41,17 @@ import ch.njol.util.Checker;
  * @author Peter Güttinger
  */
 public class EvtEntityBlockChange extends SkriptEvent {
+	
 	static {
 		Skript.registerEvent("Enderman/Sheep/Silverfish", EvtEntityBlockChange.class, EntityChangeBlockEvent.class, ChangeEvent.patterns)
 				.description("Called when an enderman places or picks up a block, a sheep eats grass or a silverfish boops into/out of a block respectively.")
-				.examples("")
-				.since("");
+				.examples("on sheep eat:",
+						"\tkill entity",
+						"\tbroadcast \"A sheep stole some grass!\"")
+				.since("<i>unknown</i>");
 	}
+	
+	static final ItemType monsterEgg = Aliases.javaItemType("any spawn egg");
 	
 	private static enum ChangeEvent {
 		ENDERMAN_PLACE("enderman place", new Checker<EntityChangeBlockEvent>() {
@@ -66,13 +75,13 @@ public class EvtEntityBlockChange extends SkriptEvent {
 		SILVERFISH_ENTER("silverfish enter", new Checker<EntityChangeBlockEvent>() {
 			@Override
 			public boolean check(final EntityChangeBlockEvent e) {
-				return e.getEntity() instanceof Silverfish && e.getTo() == Material.MONSTER_EGGS;
+				return e.getEntity() instanceof Silverfish && e.getTo() != monsterEgg.getMaterial();
 			}
 		}),
 		SILVERFISH_EXIT("silverfish exit", new Checker<EntityChangeBlockEvent>() {
 			@Override
 			public boolean check(final EntityChangeBlockEvent e) {
-				return e.getEntity() instanceof Silverfish && e.getTo() != Material.MONSTER_EGGS;
+				return e.getEntity() instanceof Silverfish && e.getTo() != monsterEgg.getMaterial();
 			}
 		});
 		
@@ -112,7 +121,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "" + event.name().replace('_', ' ').toLowerCase();
+		return "" + event.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 	}
 	
 }

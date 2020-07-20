@@ -19,7 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Map;
+import java.util.stream.Stream;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
@@ -27,59 +27,62 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Enchantment Level")
-@Description("The level of a particular <a href='classes.html#enchantment'>enchantment</a> on an item")
-@Examples({"player' tool is a sword of sharpness:",
+@Description("The level of a particular <a href='classes.html#enchantment'>enchantment</a> on an item.")
+@Examples({"player's tool is a sword of sharpness:",
 		"	message \"You have a sword of sharpness %level of sharpness of the player's tool% equipped\""})
 @Since("2.0")
-public class ExprEnchantmentLevel extends PropertyExpression<ItemType, Integer> {
+public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
+	
 	static {
 		Skript.registerExpression(ExprEnchantmentLevel.class, Integer.class, ExpressionType.PROPERTY,
-				"[the] (%-enchantment% level|level of [[the] enchant[ment]] %-enchantment%) o(f|n) %itemtypes%",
-				"%itemtypes%'[s] (%-enchantment% level|level of [[the] enchant[ment]] %-enchantment%)");
+				"[the] [enchant[ment]] level[s] of %enchantments% (on|of) %itemtypes%",
+				"[the] %enchantments% [enchant[ment]] level[s] (on|of) %itemtypes%",
+				"%itemtypes%'[s] %enchantments% [enchant[ment]] level[s]",
+				"%itemtypes%'[s] [enchant[ment]] level[s] of %enchantments%");
 	}
 	
 	@SuppressWarnings("null")
-	private Expression<Enchantment> enchantment;
+	private Expression<ItemType> items;
+	@SuppressWarnings("null")
+	private Expression<Enchantment> enchants;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		setExpr((Expression<? extends ItemType>) exprs[2 - 2 * matchedPattern]);
-		enchantment = (Expression<Enchantment>) (exprs[matchedPattern] == null ? exprs[matchedPattern + 1] : exprs[matchedPattern]);
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		int i = matchedPattern < 2 ? 1 : 0;
+		items = (Expression<ItemType>) exprs[i];
+		enchants = (Expression<Enchantment>) exprs[i ^ 1];
 		return true;
 	}
 	
 	@Override
-	protected Integer[] get(final Event e, final ItemType[] source) {
-		final Enchantment ench = enchantment.getSingle(e);
-		if (ench == null)
-			return new Integer[0];
-		return get(source, new Converter<ItemType, Integer>() {
-			@Override
-			@Nullable
-			public Integer convert(final ItemType i) {
-				final Map<Enchantment, Integer> enchs = i.getEnchantments();
-				if (enchs == null)
-					return Integer.valueOf(0);
-				final Integer l = enchs.get(ench);
-				return l == null ? Integer.valueOf(0) : l;
-			}
-		});
+	protected Integer[] get(final Event e) {
+		Enchantment[] enchantments = enchants.getArray(e);
+		return Stream.of(items.getArray(e))
+			.map(ItemType::getEnchantmentTypes)
+			.flatMap(Stream::of)
+			.filter(enchantment -> CollectionUtils.contains(enchantments, enchantment.getType()))
+			.map(EnchantmentType::getLevel)
+			.toArray(Integer[]::new);
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return items.isSingle() && enchants.isSingle();
 	}
 	
 	@Override
@@ -87,9 +90,54 @@ public class ExprEnchantmentLevel extends PropertyExpression<ItemType, Integer> 
 		return Integer.class;
 	}
 	
+	@Nullable
+	@Override
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		switch (mode) {
+			case SET:
+			case REMOVE:
+			case ADD:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
+	}
+	
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null)
+			return;
+		
+		ItemType[] source = items.getArray(e);
+		Enchantment[] enchantments = enchants.getArray(e);
+		int newLevel = ((Number) delta[0]).intValue();
+		
+		for (ItemType item : source) {
+			if (!item.hasAnyEnchantments(enchantments))
+				continue;
+			
+			EnchantmentType[] enchants = item.getEnchantmentTypes();
+			assert enchants != null; // Can't be null at this point due to the above check
+			for (EnchantmentType enchant : enchants) {
+				item.removeEnchantments(enchant);
+				Enchantment type = enchant.getType();
+				int changed = newLevel;
+				assert type != null;
+				
+				if (mode == ChangeMode.ADD)
+					changed = Math.max(0, enchant.getLevel() + changed);
+				else if (mode == ChangeMode.REMOVE)
+					changed = Math.max(0, enchant.getLevel() - changed);
+				
+				if (changed > 0)
+					item.addEnchantments(new EnchantmentType(type, newLevel));
+			}
+		}
+	}
+	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the level of " + enchantment.toString(e, debug) + " of " + getExpr().toString(e, debug);
+		return "the level of " + enchants.toString(e, debug) + " of " + items.toString(e, debug);
 	}
 	
 }

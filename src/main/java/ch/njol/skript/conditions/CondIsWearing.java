@@ -21,11 +21,13 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -33,7 +35,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -47,13 +48,13 @@ import ch.njol.util.Kleenean;
 public class CondIsWearing extends Condition {
 	
 	static {
-		Skript.registerCondition(CondIsWearing.class, "%livingentities% (is|are) wearing %itemtypes%", "%livingentities% (isn't|is not|aren't|are not) wearing %itemtypes%");
+		PropertyCondition.register(CondIsWearing.class, "wearing %itemtypes%", "livingentities");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
 	@SuppressWarnings("null")
-	Expression<ItemType> types;
+	private Expression<ItemType> types;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -66,26 +67,25 @@ public class CondIsWearing extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return entities.check(e, new Checker<LivingEntity>() {
-			@Override
-			public boolean check(final LivingEntity en) {
-				return types.check(e, new Checker<ItemType>() {
-					@Override
-					public boolean check(final ItemType t) {
-						for (final ItemStack is : en.getEquipment().getArmorContents()) {
-							if (t.isOfType(is) ^ t.isAll())
-								return !t.isAll();
-						}
-						return t.isAll();
-					}
-				}, isNegated());
-			}
-		});
+		return entities.check(e,
+				en -> types.check(e,
+						t -> {
+							EntityEquipment equip = en.getEquipment();
+							if (equip == null)
+								return false; // No equipment -> not wearing anything
+							for (final ItemStack is : equip.getArmorContents()) {
+								if (t.isOfType(is) ^ t.isAll())
+									return !t.isAll();
+							}
+							return t.isAll();
+						}),
+				isNegated());
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return entities.toString(e, debug) + (entities.isSingle() ? " is" : " are") + (isNegated() ? "not " : "") + " wearing " + types;
+		return PropertyCondition.toString(this, PropertyType.BE, e, debug, entities,
+				"wearing " + types.toString(e, debug));
 	}
 	
 }

@@ -19,6 +19,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,28 +31,44 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Create from location")
-@Description("Creates a vector from a location")
+@Name("Vectors - Vector from Location")
+@Description("Creates a vector from a location.")
 @Examples({"set {_v} to vector of {_loc}"})
 @Since("2.2-dev28")
 public class ExprVectorOfLocation extends SimpleExpression<Vector> {
+
 	static {
-		Skript.registerExpression(ExprVectorOfLocation.class, Vector.class, ExpressionType.SIMPLE, "vector (of|from|to) %location%", "%location%['s] vector");
+		Skript.registerExpression(ExprVectorOfLocation.class, Vector.class, ExpressionType.SIMPLE,
+				"[the] vector (of|from|to) %location%",
+				"%location%'s vector");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Location> location;
+
+	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		location = (Expression<Location>) exprs[0];
+		return true;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	protected Vector[] get(Event e) {
+		Location l = location.getSingle(e);
+		if (l == null)
+			return null;
+		return CollectionUtils.array(l.toVector());
+	}
 
 	@Override
 	public boolean isSingle() {
@@ -60,24 +81,8 @@ public class ExprVectorOfLocation extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		location = (Expression<Location>)expressions[0];
-		return true;
+	public String toString(@Nullable Event e, boolean debug) {
+		return "vector from " + location.toString(e, debug);
 	}
 
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Location l = location.getSingle(event);
-		if (l == null){
-			return null;
-		}
-		return new Vector[] { l.toVector() };
-	}
-
-	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return "vector of location " + location.toString();
-	}
 }

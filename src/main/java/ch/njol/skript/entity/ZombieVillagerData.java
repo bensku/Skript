@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.ZombieVillager;
@@ -33,6 +32,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 public class ZombieVillagerData extends EntityData<ZombieVillager> {
 	
 	private final static boolean villagerSupport = Skript.isRunningMinecraft(1, 11); // TODO test on 1.9/1.10
+	private final static boolean PROFESSION_UPDATE = Skript.isRunningMinecraft(1, 14);
 	private final static Villager.Profession[] professions = Villager.Profession.values();
 	
 	static {
@@ -43,7 +43,7 @@ public class ZombieVillagerData extends EntityData<ZombieVillager> {
 		
 	}
 	
-	private Villager.Profession profession = Villager.Profession.NORMAL;
+	private Villager.Profession profession = PROFESSION_UPDATE ? Profession.NONE : Profession.valueOf("NORMAL");
 	
 	public ZombieVillagerData() {}
 	
@@ -88,7 +88,7 @@ public class ZombieVillagerData extends EntityData<ZombieVillager> {
 	
 	@Override
 	protected boolean match(final ZombieVillager e) {
-		return e.getVillagerProfession().equals(profession);
+		return e.getVillagerProfession() == profession;
 	}
 	
 	@Override
@@ -100,7 +100,7 @@ public class ZombieVillagerData extends EntityData<ZombieVillager> {
 	protected boolean equals_i(final EntityData<?> obj) {
 		if (!(obj instanceof ZombieVillagerData))
 			return false;
-		return ((ZombieVillagerData) obj).profession.equals(profession);
+		return ((ZombieVillagerData) obj).profession == profession;
 	}
 	
 	@Override

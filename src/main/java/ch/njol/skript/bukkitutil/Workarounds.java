@@ -37,7 +37,7 @@ import ch.njol.skript.Skript;
 public abstract class Workarounds {
 	private Workarounds() {}
 	
-	public final static void init() {}
+	public static void init() {}
 	
 	static {
 		if (!Skript.isRunningMinecraft(1, 9)) {

@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -33,7 +32,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Gliding State")
-@Description("Sets of gets gliding state of player. It allows you to set gliding state of entity even if they do not have <a href=\"http://minecraft.gamepedia.com/Elytra\">Elytra</a> equipped.")
+@Description("Sets of gets gliding state of player. It allows you to set gliding state of entity even if they do not have an <a href=\"http://minecraft.gamepedia.com/Elytra\">Elytra</a> equipped.")
 @Examples({"set gliding of player to off"})
 @Since("2.2-dev21")
 public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boolean> {

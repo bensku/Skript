@@ -8,15 +8,11 @@
 </head>
 <body>
   ${include navbar.html}
-  <nav>
-    <p id="nav-title">Table of Contents</p>
+  <nav id="side-nav">
     <div id="nav-contents">
       ${generate ${pagename} desc_nav.html}
     </div>
   </nav>
-  <div id="content">
-    ${content}
-  </div>
-  <!-- other things are inserted here -->
+  ${content}
 </body>
 </html>

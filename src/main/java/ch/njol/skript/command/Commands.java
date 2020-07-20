@@ -31,16 +31,9 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Filter;
-import java.util.logging.LogRecord;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.util.StringMode;
-import ch.njol.skript.util.Timespan;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,14 +64,16 @@ import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.log.BukkitLoggerFilter;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.Task;
+import ch.njol.skript.util.StringMode;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Callback;
 import ch.njol.util.NonNullPair;
@@ -93,7 +88,6 @@ import ch.njol.util.StringUtils;
 public abstract class Commands {
 	
 	public final static ArgsMessage m_too_many_arguments = new ArgsMessage("commands.too many arguments");
-	public final static Message m_correct_usage = new Message("commands.correct usage");
 	public final static Message m_internal_error = new Message("commands.internal error");
 	
 	private final static Map<String, ScriptCommand> commands = new HashMap<>();
@@ -110,7 +104,7 @@ public abstract class Commands {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private final static void init() {
+	private static void init() {
 		try {
 			if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
 				final Field commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
@@ -157,11 +151,11 @@ public abstract class Commands {
 	@SuppressWarnings("null")
 	private final static Pattern unescape = Pattern.compile("\\\\[" + Pattern.quote("(|)<>%\\") + "]");
 	
-	private final static String escape(final String s) {
+	private static String escape(final String s) {
 		return "" + escape.matcher(s).replaceAll("\\\\$0");
 	}
 	
-	private final static String unescape(final String s) {
+	private static String unescape(final String s) {
 		return "" + unescape.matcher(s).replaceAll("$0");
 	}
 	
@@ -190,7 +184,6 @@ public abstract class Commands {
 	
 	@Nullable
 	private final static Listener pre1_3chatListener = Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final PlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -201,7 +194,6 @@ public abstract class Commands {
 	};
 	@Nullable
 	private final static Listener post1_3chatListener = !Skript.classExists("org.bukkit.event.player.AsyncPlayerChatEvent") ? null : new Listener() {
-		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 		public void onPlayerChat(final AsyncPlayerChatEvent e) {
 			if (!SkriptConfig.enableEffectCommands.value() || !e.getMessage().startsWith(SkriptConfig.effectCommandToken.value()))
@@ -236,7 +228,7 @@ public abstract class Commands {
 	 * @param command full command string without the slash
 	 * @return whether to cancel the event
 	 */
-	final static boolean handleCommand(final CommandSender sender, final String command) {
+	static boolean handleCommand(final CommandSender sender, final String command) {
 		final String[] cmd = command.split("\\s+", 2);
 		cmd[0] = cmd[0].toLowerCase();
 		if (cmd[0].endsWith("?")) {
@@ -260,8 +252,7 @@ public abstract class Commands {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
-	final static boolean handleEffectCommand(final CommandSender sender, String command) {
+	static boolean handleEffectCommand(final CommandSender sender, String command) {
 		if (!(sender instanceof ConsoleCommandSender || sender.hasPermission("skript.effectcommands") || SkriptConfig.allowOpsToUseEffectCommands.value() && sender.isOp()))
 			return false;
 		final boolean wasLocal = Language.setUseLocal(false);
@@ -280,7 +271,7 @@ public abstract class Commands {
 					sender.sendMessage(ChatColor.GRAY + "executing '" + ChatColor.stripColor(command) + "'");
 					if (SkriptConfig.logPlayerCommands.value() && !(sender instanceof ConsoleCommandSender))
 						Skript.info(sender.getName() + " issued effect command: " + command);
-					e.run(new EffectCommandEvent(sender, command));
+					TriggerItem.walk(e, new EffectCommandEvent(sender, command));
 				} else {
 					if (sender == Bukkit.getConsoleSender()) // log as SEVERE instead of INFO like printErrors below
 						SkriptLogger.LOGGER.severe("Error in: " + ChatColor.stripColor(command));
@@ -306,12 +297,12 @@ public abstract class Commands {
 			argumentPattern = Pattern.compile("<\\s*(?:(.+?)\\s*:\\s*)?(.+?)\\s*(?:=\\s*(" + SkriptParser.wildcard + "))?\\s*>");
 	
 	@Nullable
-	public final static ScriptCommand loadCommand(final SectionNode node) {
+	public static ScriptCommand loadCommand(final SectionNode node) {
 		return loadCommand(node, true);
 	}
 	
 	@Nullable
-	public final static ScriptCommand loadCommand(final SectionNode node, final boolean alsoRegister) {
+	public static ScriptCommand loadCommand(final SectionNode node, final boolean alsoRegister) {
 		final String key = node.getKey();
 		if (key == null)
 			return null;
@@ -427,13 +418,9 @@ public abstract class Commands {
 
 		final String rawPermissionMessage = ScriptLoader.replaceOptions(node.get("permission message", ""));
 
-		Expression<String> permissionMessage = rawPermissionMessage.isEmpty() ?
+		VariableString permissionMessage = rawPermissionMessage.isEmpty() ?
 				null
 				: VariableString.newInstance(rawPermissionMessage);
-
-		if (permissionMessage != null && ((VariableString) permissionMessage).isSimple()) {
-			permissionMessage = new SimpleLiteral<>(rawPermissionMessage, false);
-		}
 
 		final SectionNode trigger = (SectionNode) node.get("trigger");
 		if (trigger == null)
@@ -556,15 +543,23 @@ public abstract class Commands {
 	
 	private static boolean registeredListeners = false;
 	
-	public final static void registerListeners() {
+	public static void registerListeners() {
 		if (!registeredListeners) {
 			Bukkit.getPluginManager().registerEvents(commandListener, Skript.getInstance());
-			Bukkit.getPluginManager().registerEvents(post1_3chatListener != null ? post1_3chatListener : pre1_3chatListener, Skript.getInstance());
+			
+			Listener post13Listener = post1_3chatListener;
+			Listener pre13Listener = pre1_3chatListener;
+			if (post13Listener != null) {
+				Bukkit.getPluginManager().registerEvents(post13Listener, Skript.getInstance());
+			} else {
+				assert pre13Listener != null;
+				Bukkit.getPluginManager().registerEvents(pre13Listener, Skript.getInstance());
+			}
 			registeredListeners = true;
 		}
 	}
 	
-	public final static void clearCommands() {
+	public static void clearCommands() {
 		final SimpleCommandMap commandMap = Commands.commandMap;
 		if (commandMap != null) {
 			final Map<String, Command> cmKnownCommands = Commands.cmKnownCommands;
@@ -596,7 +591,7 @@ public abstract class Commands {
 		}
 		
 		@Override
-		public String getFullText(final @Nullable CommandSender forWho) {
+		public String getFullText(final CommandSender forWho) {
 			final StringBuilder sb = new StringBuilder(shortText);
 			final HelpTopic aliasForTopic = helpMap.getHelpTopic(aliasFor);
 			if (aliasForTopic != null) {
@@ -607,7 +602,7 @@ public abstract class Commands {
 		}
 		
 		@Override
-		public boolean canSee(final @Nullable CommandSender commandSender) {
+		public boolean canSee(final CommandSender commandSender) {
 			if (amendedPermission == null) {
 				final HelpTopic aliasForTopic = helpMap.getHelpTopic(aliasFor);
 				if (aliasForTopic != null) {
@@ -616,7 +611,8 @@ public abstract class Commands {
 					return false;
 				}
 			} else {
-				return commandSender != null && commandSender.hasPermission(amendedPermission);
+				assert amendedPermission != null;
+				return commandSender.hasPermission(amendedPermission);
 			}
 		}
 	}

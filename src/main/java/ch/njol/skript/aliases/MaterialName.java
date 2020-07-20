@@ -19,12 +19,7 @@
  */
 package ch.njol.skript.aliases;
 
-import java.util.HashMap;
-
 import org.bukkit.Material;
-
-import ch.njol.skript.Skript;
-import ch.njol.util.NonNullPair;
 
 final class MaterialName {
 	String singular;

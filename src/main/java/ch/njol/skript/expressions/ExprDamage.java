@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -48,9 +49,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"increase the damage by 2"})
 @Since("1.3.5")
 @Events("damage")
-public class ExprDamage extends SimpleExpression<Double> {
+public class ExprDamage extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
+		Skript.registerExpression(ExprDamage.class, Number.class, ExpressionType.SIMPLE, "[the] damage");
 	}
 	
 	@SuppressWarnings("null")
@@ -58,7 +60,7 @@ public class ExprDamage extends SimpleExpression<Double> {
 	
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class)) {
+		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, VehicleDamageEvent.class)) {
 			Skript.error("The expression 'damage' may only be used in damage events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
@@ -68,13 +70,15 @@ public class ExprDamage extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
-		if (!(e instanceof EntityDamageEvent))
-			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+	protected Number[] get(final Event e) {
+		if (!(e instanceof EntityDamageEvent || e instanceof VehicleDamageEvent))
+			return new Number[0];
+		
+		if (e instanceof VehicleDamageEvent)
+			return CollectionUtils.array(((VehicleDamageEvent) e).getDamage());
+		return CollectionUtils.array(HealthUtils.getDamage((EntityDamageEvent) e));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -89,19 +93,25 @@ public class ExprDamage extends SimpleExpression<Double> {
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		if (!(e instanceof EntityDamageEvent))
+		if (!(e instanceof EntityDamageEvent || e instanceof VehicleDamageEvent))
 			return;
 		double d = delta == null ? 0 : ((Number) delta[0]).doubleValue();
 		switch (mode) {
 			case SET:
 			case DELETE:
-				HealthUtils.setDamage((EntityDamageEvent) e, d);
+				if (e instanceof VehicleDamageEvent)
+					((VehicleDamageEvent) e).setDamage(d);
+				else
+					HealthUtils.setDamage((EntityDamageEvent) e, d);
 				break;
 			case REMOVE:
 				d = -d;
 				//$FALL-THROUGH$
 			case ADD:
-				HealthUtils.setDamage((EntityDamageEvent) e, HealthUtils.getDamage((EntityDamageEvent) e) + d);
+				if (e instanceof VehicleDamageEvent)
+					((VehicleDamageEvent) e).setDamage(((VehicleDamageEvent) e).getDamage() + d);
+				else
+					HealthUtils.setDamage((EntityDamageEvent) e, HealthUtils.getDamage((EntityDamageEvent) e) + d);
 				break;
 			case REMOVE_ALL:
 			case RESET:
@@ -115,8 +125,8 @@ public class ExprDamage extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

@@ -34,7 +34,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -100,7 +99,6 @@ public class EffVehicle extends Effect {
 			} else {
 				for (final Entity p : ps) {
 					assert p != null : passengers;
-					@SuppressWarnings("null")
 					final Entity en = ((EntityData<?>) v).spawn(p.getLocation());
 					if (en == null)
 						return;

@@ -21,8 +21,6 @@ package ch.njol.skript.log;
 
 import java.util.logging.Filter;
 
-import org.bukkit.Bukkit;
-
 import ch.njol.skript.Skript;
 import ch.njol.util.LoggerFilter;
 
@@ -50,11 +48,11 @@ public class BukkitLoggerFilter {
 	 * 
 	 * @param f A filter to filter log messages
 	 */
-	public final static void addFilter(final Filter f) {
+	public static void addFilter(final Filter f) {
 		filter.addFilter(f);
 	}
 	
-	public final static boolean removeFilter(final Filter f) {
+	public static boolean removeFilter(final Filter f) {
 		return filter.removeFilter(f);
 	}
 	

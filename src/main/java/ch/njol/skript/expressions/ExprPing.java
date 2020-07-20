@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 @Name("Ping")
 @Description("Pings of players, as Minecraft server knows them. Note that they will almost certainly"
 		+ " be different from the ones you'd get from using ICMP echo requests."
-		+ " This expression is only supported on some server software.")
+		+ " This expression is only supported on some server software (PaperSpigot).")
 @Examples({"command /ping <player=%player%>:",
 			"\ttrigger:",
 			"\t\tsend \"%arg-1%'s ping is %arg-1's ping%\""})

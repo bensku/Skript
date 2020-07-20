@@ -131,7 +131,6 @@ public class Money {
 		});
 		
 		Converters.registerConverter(Money.class, Double.class, new Converter<Money, Double>() {
-			@SuppressWarnings("null")
 			@Override
 			public Double convert(final Money m) {
 				return Double.valueOf(m.getAmount());
@@ -151,13 +150,13 @@ public class Money {
 	
 	@SuppressWarnings({"null", "unused"})
 	@Nullable
-	public final static Money parse(final String s) {
+	public static Money parse(final String s) {
 		if (VaultHook.economy == null) {
 //			Skript.error("No economy plugin detected");
 			return null;
 		}
 		final String singular = VaultHook.economy.currencyNameSingular(), plural = VaultHook.economy.currencyNamePlural();
-		if (!plural.isEmpty()) {
+		if (plural != null && !plural.isEmpty()) {
 			if (StringUtils.endsWithIgnoreCase(s, plural)) {
 				try {
 					final double d = Double.parseDouble(s.substring(0, s.length() - plural.length()).trim());
@@ -170,7 +169,7 @@ public class Money {
 				} catch (final NumberFormatException e) {}
 			}
 		}
-		if (!singular.isEmpty()) {
+		if (singular != null && !singular.isEmpty()) {
 			if (StringUtils.endsWithIgnoreCase(s, singular)) {
 				try {
 					final double d = Double.parseDouble(s.substring(0, s.length() - singular.length()).trim());

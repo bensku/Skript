@@ -29,7 +29,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
- * @author Peter Güttinger
+ * Functions can be called using arguments.
  */
 public abstract class Function<T> {
 	
@@ -39,93 +39,121 @@ public abstract class Function<T> {
 	 */
 	public static boolean executeWithNulls = SkriptConfig.executeFunctionsWithMissingParams.value();
 
-	final String name;
+	final Signature<T> sign;
 	
-	final Parameter<?>[] parameters;
+	public Function(Signature<T> sign) {
+		this.sign = sign;
+	}
 	
-	@Nullable
-	final ClassInfo<T> returnType;
-	final boolean single;
-	
-	public Function(final String name, final Parameter<?>[] parameters, final @Nullable ClassInfo<T> returnType, final boolean single) {
-		this.name = name;
-		this.parameters = parameters;
-		this.returnType = returnType;
-		this.single = single;
+	/**
+	 * Gets signature of this function that contains all metadata about it.
+	 * @return A function signature.
+	 */
+	public Signature<T> getSignature() {
+		return sign;
 	}
 	
 	public String getName() {
-		return name;
-	}
-	
-	@SuppressWarnings("null")
-	public Parameter<?> getParameter(final int index) {
-		return parameters[index];
+		return sign.getName();
 	}
 	
 	public Parameter<?>[] getParameters() {
-		return parameters;
+		return sign.getParameters();
+	}
+	
+	@SuppressWarnings("null")
+	public Parameter<?> getParameter(int index) {
+		return getParameters()[index];
+	}
+	
+	public boolean isSingle() {
+		return sign.isSingle();
 	}
 	
 	@Nullable
 	public ClassInfo<T> getReturnType() {
-		return returnType;
-	}
-	
-	public boolean isSingle() {
-		return single;
-	}
-	
-	// TODO allow setting parameters by name
-	public int getMinParameters() {
-		for (int i = parameters.length - 1; i >= 0; i--) {
-			if (parameters[i].def == null)
-				return i + 1;
-		}
-		return 0;
-	}
-	
-	public int getMaxParameters() {
-		return parameters.length;
+		return sign.getReturnType();
 	}
 	
 	// FIXME what happens with a delay in a function?
 	
 	/**
-	 * @param params An array with at least {@link #getMinParameters()} elements and at most {@link #getMaxParameters()} elements.
-	 * @return The result of the function
+	 * Executes this function with given parameter.
+	 * @param params Function parameters. Must contain at least
+	 * {@link #getMinParameters()} elements and at most
+	 * {@link #getMaxParameters()} elements.
+	 * @return The result(s) of this function
 	 */
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(final Object[][] params) {
+		if (params.length > 0 && params[0].length == 0) // Parameters exist, but parameters are not of the correct type 
+			return null;
+		
 		final FunctionEvent<? extends T> e = new FunctionEvent<>(this);
 		
+		// Call function event only if requested by addon
+		// Functions may be called VERY often, so this might have performance impact
 		if (Functions.callFunctionEvents)
 			Bukkit.getPluginManager().callEvent(e);
 		
+		/**
+		 * Parameters taken by the function.
+		 */
+		Parameter<?>[] parameters = sign.getParameters();
+		
 		if (params.length > parameters.length) {
+			// Too many parameters, should have failed to parse
 			assert false : params.length;
 			return null;
 		}
+		
+		// If given less that max amount of parameters, pad remaining with nulls
 		final Object[][] ps = params.length < parameters.length ? Arrays.copyOf(params, parameters.length) : params;
 		assert ps != null;
+		
+		// Execute parameters or default value expressions
 		for (int i = 0; i < parameters.length; i++) {
-			final Parameter<?> p = parameters[i];
-			final Object[] val = i < params.length ? params[i] : p.def != null ? p.def.getArray(e) : null;
+			Parameter<?> p = parameters[i];
+			Object[] val = ps[i];
+			if (val == null) { // Go for default value
+				assert p.def != null; // Should've been parse error
+				val = p.def.getArray(e);
+			}
+			
+			/*
+			 * Cancel execution of function if one of parameters produces null.
+			 * This used to be the default behavior, but since scripts don't
+			 * really have a concept of nulls, it was changed. The config
+			 * option may be removed in future.
+			 */
 			if (!executeWithNulls && (val == null || val.length == 0))
 				return null;
 			ps[i] = val;
 		}
+		
+		// Execute function contents
 		final T[] r = execute(e, ps);
-		assert returnType == null ? r == null : r == null || (r.length <= 1 || !single) && !CollectionUtils.contains(r, null) && returnType.getC().isAssignableFrom(r.getClass().getComponentType()) : this + "; " + Arrays.toString(r);
+		// Assert that return value type makes sense
+		assert sign.getReturnType() == null ? r == null : r == null
+				|| (r.length <= 1 || !sign.isSingle()) && !CollectionUtils.contains(r, null)
+				&& sign.getReturnType().getC().isAssignableFrom(r.getClass().getComponentType())
+				: this + "; " + Arrays.toString(r);
+				
+		// If return value is empty array, return null
+		// Otherwise, return the value (nullable)
 		return r == null || r.length > 0 ? r : null;
 	}
 	
 	/**
-	 * @param e
-	 * @param params An array containing as many arrays as this function has parameters. The contained arrays are neither null nor empty, and are of type Object[] (i.e. not of the
-	 *            actual parameters' types).
-	 * @return Whatever this function is supposed to return. May be null or empty, but must not contain null elements.
+	 * Executes this function with given parameters. Usually, using
+	 * {@link #execute(Object[][])} is better; it handles optional arguments
+	 * and function event creation automatically.
+	 * @param e Associated function event. This is usually created by Skript.
+	 * @param params Function parameters.
+	 * There must be {@link Signature#getMaxParameters()} amount of them, and
+	 * you need to manually handle default values.
+	 * @return Function return value(s).
 	 */
 	@Nullable
 	public abstract T[] execute(FunctionEvent<?> e, final Object[][] params);
@@ -140,17 +168,7 @@ public abstract class Function<T> {
 
 	@Override
 	public String toString() {
-		return "function " + name;
-	}
-	
-	/**
-	 * Generates a signature for this function. Should only be used to validate
-	 * (Java) function references.
-	 * @return Signature.
-	 */
-	@SuppressWarnings("null")
-	public Signature<T> getSignature() {
-		return new Signature<>("unknown", name, Arrays.asList(parameters), returnType, null, single);
+		return "function " + sign.getName();
 	}
 	
 }

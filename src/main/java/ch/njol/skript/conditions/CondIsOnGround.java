@@ -32,18 +32,19 @@ import ch.njol.skript.doc.Since;
 @Examples("player is not on ground")
 @Since("2.2-dev26")
 public class CondIsOnGround extends PropertyCondition<Entity> {
-
+	
 	static {
-		PropertyCondition.register(CondIsOnGround.class, "on ground", "entities");
+		PropertyCondition.register(CondIsOnGround.class, "on [the] ground", "entities");
 	}
-
+	
 	@Override
 	public boolean check(Entity entity) {
 		return entity.isOnGround();
 	}
-
+	
 	@Override
 	protected String getPropertyName() {
 		return "on ground";
 	}
+	
 }

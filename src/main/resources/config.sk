@@ -31,7 +31,7 @@
 # ==== General Options ====
 
 language: english
-# Which language to use. Currently english and german are included in the download, but custom languages can be created as well.
+# Which language to use. Currently english, german and korean are included in the download, but custom languages can be created as well.
 # Please note that not everything can be translated yet, i.e. parts of Skript will still be english if you use another language.
 # If you want to translate Skript to your language please read the readme.txt located in the /lang/ folder in the jar
 # (open the jar as zip or rename it to Skript.zip to access it)
@@ -50,16 +50,11 @@ update check interval: 12 hours
 # Please note that this option is currently the only means of making Skript check for an update more than once,
 # as '/skript update check' does only display the results of the last check if a check has been made before.
 
-automatically download new version: false
-# Whether Skript should automatically download & install the newest version if one is available.
-# I suggest to disable this feature if your server restarts automatically as you likely won't be informed
-# of any incompatibilities of your scripts and the newest version of Skript.
-# If you disable this you can still use '/skript update download' to make Skript download the newest version.
-# If you're concerned about changes use '/skript update changes' for a full list of changes since your current version.
-
-update to pre-releases: true
-# Indicates if Skript should update to pre-release builds, which might be unstable. This is enabled by default, if
-# your first Skript version in this server is pre-release.
+release channel: @release-channel@
+# If 'check for new version' is enabled, this determines how stable the updates must be.
+# 'stable' means that only stable releases of Skript will be considered updates.
+# 'beta' and 'alpha' mean that also development releases will be checked for.
+# Initial value of this depends on the Skript version you first installed; it was '@release-channel@'.
 
 enable effect commands: false
 effect command token: !
@@ -73,7 +68,7 @@ effect command token: !
 #	!broadcast "<red>Please read the rules!" - if you want to get rid of the quotes you have to define a custom command
 #	!set time to 6:00 - sets the time in the current world
 # The command can also be abused, so only give the permission to trusted players, like owners & co-owners:
-#	!spawn 20 ender dragons - will destroy a large part of the world in a short time if no protection is present
+#	!set player's balance to 999999999 - when a compatible economy plugin is installed, this will give the command sender as much money as desired
 #	!create explosion of force 10000 - likely crashes the server or at least hangs it up for a long time
 #	!ban all players - as the effect implies
 
@@ -81,15 +76,13 @@ allow ops to use effect commands: false
 # Whether server operators which do not have the permission "skript.effectcommands" should have access to effect commands.
 # This setting is mainly useful for servers that do not run any permissions plugin.
 
-
 player variable fix: true
-#Whether to enable the player variable fix if a player has rejoined and was reciding inside a variable.
-#Player objects inside a variable(list or normal) are not updated to the new player object
-#A server creates whenever a player rejoins.
-#Basicly the variable holds the old player object when a player has rejoined thus rendering the variable kinda broken.
-#This fix should work around that and whenever a invalid(old) player object is attempted to be get through a variable
-#It will check if the player is online and then get the valid(new) player object and update the variable object to that one.
-#By Mirre
+# Whether to enable the player variable fix if a player has rejoined and was reciding inside a variable.
+# Player objects inside a variable(list or normal) are not updated to the new player object
+# A server creates whenever a player rejoins.
+# Basically the variable holds the old player object when a player has rejoined thus rendering the variable kinda broken.
+# This fix should work around that and whenever a invalid(old) player object is attempted to be get through a variable
+# It will check if the player is online and then get the valid(new) player object and update the variable object to that one.
 
 use player UUIDs in variable names: false
 # Whether to use a player's UUID instead of their name in variables, e.g. {home.%player%} will look like
@@ -199,7 +192,7 @@ databases:
 	#
 	# You can define as many databases as you want, just make sure to choose a distinct name for each one, and don't forget to set all options correctly.
 	#
-	# To be able to use a database you'll need to download the plugin 'SQLibrary' from http://dev.bukkit.org/server-mods/sqlibrary/files/
+	# To be able to use a database you'll need to download the plugin 'SQLibrary' from https://dev.bukkit.org/projects/sqlibrary/files
 	# and install it in your server's plugin directory like other plugins.
 	#
 	# Please note that '/skript reload' will not reload this section, i.e. you'll have to restart Skript for changes to take effect.

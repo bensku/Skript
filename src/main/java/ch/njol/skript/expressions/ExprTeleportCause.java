@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,22 +32,23 @@ import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ExpressionType;
 
 @Name("Teleport Cause")
-@Description("The <a href='../classes/#teleportcause'>teleport cause</a> within a player teleport event.")
-@Examples("teleport cause is nether portal, end portal or end gateway")
+@Description("The <a href='classes.html#teleportcause'>teleport cause</a> within a player <a href='events.html#teleport'>teleport</a> event.")
+@Examples({"on teleport",
+	"\tteleport cause is nether portal, end portal or end gateway"})
 @Since("2.2-dev35")
 public class ExprTeleportCause extends EventValueExpression<TeleportCause> {
-	
+
 	static {
 		Skript.registerExpression(ExprTeleportCause.class, TeleportCause.class, ExpressionType.SIMPLE, "[the] teleport (cause|reason|type)");
 	}
-	
+
 	public ExprTeleportCause() {
 		super(TeleportCause.class);
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the teleport cause";
 	}
-	
+
 }

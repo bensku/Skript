@@ -21,12 +21,13 @@ package ch.njol.skript.entity;
 
 import java.util.Random;
 
-import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.entity.Boat;
+import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -108,22 +109,33 @@ public class BoatData extends EntityData<Boat> {
 		return false;
 	}
 	
-	@SuppressWarnings("null")
+	private static final ItemType oakBoat = Aliases.javaItemType("oak boat");
+	private static final ItemType spruceBoat = Aliases.javaItemType("spruce boat");
+	private static final ItemType birchBoat = Aliases.javaItemType("birch boat");
+	private static final ItemType jungleBoat = Aliases.javaItemType("jungle boat");
+	private static final ItemType acaciaBoat = Aliases.javaItemType("acacia boat");
+	private static final ItemType darkOakBoat = Aliases.javaItemType("dark oak boat");
+
+	
 	public boolean isOfItemType(ItemType i){
 		if (i.getRandom() == null)
 			return false;
 		int ordinal = -1;
-		switch (i.getRandom().getType()){
-			case BOAT: ordinal = 0 ; break; //It is to make 'boat' and 'any boat' works as supertype when comparing.
-			case BOAT_SPRUCE: ordinal = TreeSpecies.REDWOOD.ordinal(); break;
-			case BOAT_BIRCH: ordinal = TreeSpecies.BIRCH.ordinal(); break;
-			case BOAT_JUNGLE: ordinal = TreeSpecies.JUNGLE.ordinal(); break;
-			case BOAT_ACACIA: ordinal = TreeSpecies.ACACIA.ordinal(); break;
-			case BOAT_DARK_OAK: ordinal = TreeSpecies.DARK_OAK.ordinal(); break;
-				//$CASES-OMITTED$
-			default: return false;
-		}
-		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 2) || ordinal == 0;
+		
+		ItemStack stack = i.getRandom();
+		if (oakBoat.isOfType(stack))
+			ordinal = 0;
+		else if (spruceBoat.isOfType(stack))
+			ordinal = TreeSpecies.REDWOOD.ordinal();
+		else if (birchBoat.isOfType(stack))
+			ordinal = TreeSpecies.BIRCH.ordinal();
+		else if (jungleBoat.isOfType(stack))
+			ordinal = TreeSpecies.JUNGLE.ordinal();
+		else if (acaciaBoat.isOfType(stack))
+			ordinal = TreeSpecies.ACACIA.ordinal();
+		else if (darkOakBoat.isOfType(stack))
+			ordinal = TreeSpecies.DARK_OAK.ordinal();
+		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 0) || ordinal == 0;
 		
 	}
 }

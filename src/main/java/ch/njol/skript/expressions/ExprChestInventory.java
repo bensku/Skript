@@ -36,8 +36,8 @@ import org.bukkit.inventory.Inventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Custom Chest Inventory")
-@Description("Returns a chest inventory with the given amount of rows and the name. Use the <a href=effects.html#EffOpenInventory>open inventory</a>effect to open it.")
-@Examples({"open chest inventory with 1 rows named \"test\"",
+@Description("Returns a chest inventory with the given amount of rows and the name. Use the <a href=effects.html#EffOpenInventory>open inventory</a> effect to open it.")
+@Examples({"open chest inventory with 1 row named \"test\" to player",
            "set {_inventory} to chest inventory with 1 row"})
 @Since("2.2-dev34")
 public class ExprChestInventory extends SimpleExpression<Inventory> {
@@ -98,6 +98,5 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
         return "chest inventory" + " named " + (name != null ? name.toString(e, debug) : "\"Chest\"") +
                 " with " + (rows != null ? rows.toString(e, debug) : "3" + " rows");
     }
-
 
 }

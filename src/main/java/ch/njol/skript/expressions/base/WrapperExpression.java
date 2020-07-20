@@ -25,8 +25,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
@@ -72,7 +71,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 		for (final Class<R> c : to) {
 			assert c != null;
 			@SuppressWarnings("unchecked")
-			final Converter<? super T, ? extends R> conv = (Converter<? super T, ? extends R>) Converters.getConverter(getReturnType(), c);
+			final ConverterInfo<? super T, ? extends R> conv = (ConverterInfo<? super T, ? extends R>) Converters.getConverterInfo(getReturnType(), c);
 			if (conv == null)
 				continue;
 			return new ConvertedExpression<T, R>(expr, c, conv) {

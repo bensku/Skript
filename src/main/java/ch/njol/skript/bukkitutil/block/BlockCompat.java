@@ -19,12 +19,17 @@
  */
 package ch.njol.skript.bukkitutil.block;
 
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemFlags;
 
 /**
  * Methods which operate with blocks but are not compatible across some
@@ -35,7 +40,10 @@ public interface BlockCompat {
 	/**
 	 * Instance of BlockCompat for current Minecraft version.
 	 */
-	static final BlockCompat INSTANCE = new MagicBlockCompat();
+	static final BlockCompat INSTANCE = Skript.isRunningMinecraft(1, 13)
+			? new NewBlockCompat() : new MagicBlockCompat();
+	
+	static final BlockSetter SETTER = INSTANCE.getSetter();
 	
 	/**
 	 * Gets block values from a block state. They can be compared to other
@@ -43,6 +51,7 @@ public interface BlockCompat {
 	 * @param block Block state to retrieve value from.
 	 * @return Block values.
 	 */
+	@Nullable
 	BlockValues getBlockValues(BlockState block);
 	
 	/**
@@ -51,17 +60,18 @@ public interface BlockCompat {
 	 * @param block Block to retrieve value from.
 	 * @return Block values.
 	 */
-	@SuppressWarnings("null")
+	@Nullable
 	default BlockValues getBlockValues(Block block) {
 		return getBlockValues(block.getState());
 	}
-
+	
 	/**
 	 * Gets block values from a item stack. They can be compared to other values
 	 * if needed, but cannot be used to retrieve any other data.
 	 * @param stack Item that would be placed as the block
 	 * @return Block values.
 	 */
+	@Nullable
 	BlockValues getBlockValues(ItemStack stack);
 	
 	/**
@@ -71,16 +81,54 @@ public interface BlockCompat {
 	 */
 	BlockState fallingBlockToState(FallingBlock entity);
 	
+	@Nullable
 	default BlockValues getBlockValues(FallingBlock entity) {
 		return getBlockValues(fallingBlockToState(entity));
 	}
 
 	/**
-	 * Creates new block values for given material and state.
+	 * Creates new block values for given material and state. Item, if given,
+	 * will be used to correct data value etc. when needed.
 	 * @param type Block material.
-	 * @param state Block state, as used in /setblock command in Minecraft.
+	 * @param states Block states, as used in /setblock command in Minecraft.
+	 * @param item Item form that may or may not provide additional
+	 * information. Optional, but very useful on 1.12 and older.
+	 * @param itemFlags Additional information about item. See {@link ItemFlags}.
 	 * @return Block values, or null if given state was invalid.
 	 */
 	@Nullable
-	BlockValues createBlockValues(Material type, String state);
+	BlockValues createBlockValues(Material type, Map<String, String> states, @Nullable ItemStack item, int itemFlags);
+	
+	/**
+	 * Creates new block values for given material and state.
+	 * @param type Block material.
+	 * @param states Block states, as used in /setblock command in Minecraft.
+	 * @return Block values, or null if given state was invalid.
+	 */
+	@Nullable
+	default BlockValues createBlockValues(Material type, Map<String, String> states) {
+		return createBlockValues(type, states, null, 0);
+	}
+	
+	/**
+	 * Gets block setter that understands block values produced by this
+	 * compatibility layer.
+	 * @return Block setter.
+	 */
+	BlockSetter getSetter();
+		
+	/**
+	 * Checks whether the given material implies emptiness. On Minecraft 1.13+,
+	 * there are several blocks that do so.
+	 * @param type Material of block.
+	 * @return Whether the material implies empty block.
+	 */
+	boolean isEmpty(Material type);
+	
+	/**
+	 * Checks whether the given material is a liquid.
+	 * @param type Material of block.
+	 * @return Whether the material is liquid.
+	 */
+	boolean isLiquid(Material type);
 }

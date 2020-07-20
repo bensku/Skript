@@ -31,8 +31,8 @@ public class EvtBookSign extends SkriptEvent{
 	
 	static {
 		Skript.registerEvent("Book Sign", EvtBookSign.class, PlayerEditBookEvent.class, "book sign[ing]")
-				.description("Called when a player signs a book")
-				.examples("")
+				.description("Called when a player signs a book.")
+				.examples("on book sign:")
 				.since("2.2-dev31");
 	}
 	

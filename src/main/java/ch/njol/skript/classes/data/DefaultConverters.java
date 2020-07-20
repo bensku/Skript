@@ -19,15 +19,15 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.util.Collection;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -38,13 +38,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.entity.XpOrbData;
 import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.BlockInventoryHolder;
 import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
@@ -68,7 +69,9 @@ public class DefaultConverters {
 			public PlayerInventory convert(final OfflinePlayer p) {
 				if (!p.isOnline())
 					return null;
-				return p.getPlayer().getInventory();
+				Player online = p.getPlayer();
+				assert online != null;
+				return online.getInventory();
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
 		// OfflinePlayer - Player
@@ -89,6 +92,14 @@ public class DefaultConverters {
 				if (s instanceof Player)
 					return (Player) s;
 				return null;
+			}
+		});
+		// BlockCommandSender - Block
+		Converters.registerConverter(BlockCommandSender.class, Block.class, new Converter<BlockCommandSender, Block>() {
+			@Override
+			@Nullable
+			public Block convert(final BlockCommandSender s) {
+				return s.getBlock();
 			}
 		});
 		// Entity - Player
@@ -134,12 +145,11 @@ public class DefaultConverters {
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
 		
-		// Block - ItemStack
-		Converters.registerConverter(Block.class, ItemStack.class, new Converter<Block, ItemStack>() {
-			@SuppressWarnings("deprecation")
+		// Block - ItemType
+		Converters.registerConverter(Block.class, ItemType.class, new Converter<Block, ItemType>() {
 			@Override
-			public ItemStack convert(final Block b) {
-				return new ItemStack(b.getTypeId(), 1, b.getData());
+			public ItemType convert(final Block b) {
+				return new ItemType(b);
 			}
 		}, Converter.NO_LEFT_CHAINING | Converter.NO_COMMAND_ARGUMENTS);
 		
@@ -230,14 +240,12 @@ public class DefaultConverters {
 //			}
 //		});
 		
-		// Slot - ItemStack
-		Converters.registerConverter(Slot.class, ItemStack.class, new Converter<Slot, ItemStack>() {
+		// Slot - ItemType
+		Converters.registerConverter(Slot.class, ItemType.class, new Converter<Slot, ItemType>() {
 			@Override
-			public ItemStack convert(final Slot s) {
+			public ItemType convert(final Slot s) {
 				final ItemStack i = s.getItem();
-				if (i == null)
-					return new ItemStack(Material.AIR, 1);
-				return i;
+				return new ItemType(i != null ? i : new ItemStack(Material.AIR, 1));
 			}
 		});
 //		// Slot - Inventory
@@ -255,24 +263,32 @@ public class DefaultConverters {
 			@Override
 			@Nullable
 			public InventoryHolder convert(final Block b) {
-				if (b.getState() == null)
-					return null;
 				final BlockState s = b.getState();
 				if (s instanceof InventoryHolder)
 					return (InventoryHolder) s;
 				return null;
 			}
-		}, Converter.NO_COMMAND_ARGUMENTS);
-//		Skript.registerConverter(InventoryHolder.class, Block.class, new Converter<InventoryHolder, Block>() {
-//			@Override
-//			public Block convert(final InventoryHolder h) {
-//				if (h == null)
-//					return null;
-//				if (h instanceof BlockState)
-//					return ((BlockState) h).getBlock();
-//				return null;
-//			}
-//		});
+		}, Converter.NO_RIGHT_CHAINING | Converter.NO_COMMAND_ARGUMENTS);
+		
+		Converters.registerConverter(InventoryHolder.class, Block.class, new Converter<InventoryHolder, Block>() {
+			@Override
+			@Nullable
+			public Block convert(final InventoryHolder holder) {
+				if (holder instanceof BlockState)
+					return new BlockInventoryHolder((BlockState) holder);
+				return null;
+			}
+		});
+		
+		Converters.registerConverter(InventoryHolder.class, Entity.class, new Converter<InventoryHolder, Entity>() {
+			@Override
+			@Nullable
+			public Entity convert(InventoryHolder holder) {
+				if (holder instanceof Entity)
+					return (Entity) holder;
+				return null;
+			}
+		});
 		
 //		// World - Time
 //		Skript.registerConverter(World.class, Time.class, new Converter<World, Time>() {
@@ -325,6 +341,18 @@ public class DefaultConverters {
 			public Direction convert(Vector vector) {
 				return new Direction(vector);
 			}
-});
+		});
+		
+		// EnchantmentOffer Converters
+		if (Skript.isRunningMinecraft(1, 11)) {
+			// EnchantmentOffer - EnchantmentType
+			Converters.registerConverter(EnchantmentOffer.class, EnchantmentType.class, new Converter<EnchantmentOffer, EnchantmentType>() {
+				@Nullable
+				@Override
+				public EnchantmentType convert(EnchantmentOffer eo) {
+					return new EnchantmentType(eo.getEnchantment(), eo.getEnchantmentLevel());
+				}
+			});
+		}
 	}
 }

@@ -20,8 +20,10 @@
 package ch.njol.skript.entity;
 
 import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Tameable;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 
@@ -29,33 +31,42 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
  * @author Peter Güttinger
  */
 public class OcelotData extends EntityData<Ocelot> {
+	
+	private static final boolean TAMEABLE = Skript.methodExists(Ocelot.class, "setTamed");
 	static {
-		EntityData.register(OcelotData.class, "ocelot", Ocelot.class, 1, "wild ocelot", "ocelot", "cat");
+		if (TAMEABLE) {
+			EntityData.register(OcelotData.class, "ocelot", Ocelot.class, 1,
+					"wild ocelot", "ocelot", "cat");
+		} else {
+			EntityData.register(OcelotData.class, "ocelot", Ocelot.class, "ocelot");
+		}
 	}
 	
 	int tamed = 0;
 	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
-		tamed = matchedPattern - 1;
+		tamed = TAMEABLE ? matchedPattern - 1 : 0;
 		return true;
 	}
 	
 	@Override
 	protected boolean init(final @Nullable Class<? extends Ocelot> c, final @Nullable Ocelot e) {
-		tamed = e == null ? 0 : e.isTamed() ? 1 : -1;
+		if (TAMEABLE)
+			tamed = e == null ? 0 : ((Tameable) e).isTamed() ? 1 : -1;
 		return true;
 	}
 	
 	@Override
 	public void set(final Ocelot entity) {
-		if (tamed != 0)
-			entity.setTamed(tamed == 1);
+		if (TAMEABLE) {
+			((Tameable) entity).setTamed(tamed != 0);
+		}
 	}
 	
 	@Override
 	protected boolean match(final Ocelot entity) {
-		return tamed == 0 || entity.isTamed() == (tamed == 1);
+		return tamed == 0 || ((Tameable) entity).isTamed() == (tamed == 1);
 	}
 	
 	@Override

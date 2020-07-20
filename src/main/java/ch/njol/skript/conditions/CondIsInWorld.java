@@ -24,7 +24,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -32,7 +33,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -45,14 +45,15 @@ import ch.njol.util.Kleenean;
 		"the player is in the world of the victim"})
 @Since("1.4")
 public class CondIsInWorld extends Condition {
+	
 	static {
-		Skript.registerCondition(CondIsInWorld.class, "%entities% (is|are) in [[the] world[s]] %worlds%", "%entities% (is not|isn't|are not|aren't) in [[the] world[s]] %worlds%");
+		PropertyCondition.register(CondIsInWorld.class, "in [[the] world[s]] %worlds%", "entities");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	@SuppressWarnings("null")
-	Expression<World> worlds;
+	private Expression<World> worlds;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -65,22 +66,16 @@ public class CondIsInWorld extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return entities.check(e, new Checker<Entity>() {
-			@Override
-			public boolean check(final Entity en) {
-				return worlds.check(e, new Checker<World>() {
-					@Override
-					public boolean check(final World w) {
-						return en.getWorld() == w;
-					}
-				}, isNegated());
-			}
-		});
+		return entities.check(e,
+				entity -> worlds.check(e,
+						world -> entity.getWorld() == world
+				), isNegated());
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return entities.toString(e, debug) + " " + (entities.isSingle() ? "is" : "are") + " " + (isNegated() ? "not " : "") + "in the world " + worlds.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.BE, e, debug, entities,
+				"in the " + (worlds.isSingle() ? "world " : "worlds ") + worlds.toString(e, debug));
 	}
 	
 }

@@ -33,7 +33,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
  * @author Peter Güttinger
  */
 @Name("Ender Chest")
-@Description("The ender chest of a player")
+@Description("The ender chest of a player.")
 @Examples("open the player's ender chest to the player")
 @Since("2.0")
 public class ExprEnderChest extends SimplePropertyExpression<Player, Inventory> {

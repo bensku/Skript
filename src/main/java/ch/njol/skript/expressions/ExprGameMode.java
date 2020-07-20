@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 @Name("Game Mode")
-@Description("The gamemode of a player.")
+@Description("The gamemode of a player. (<a href=\"classes.html#gamemode\">Gamemodes</a>)")
 @Examples({"player's gamemode is survival",
 		"set the player's gamemode to creative"})
 @Since("1.0")
@@ -85,7 +85,6 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 		return "the gamemode of " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

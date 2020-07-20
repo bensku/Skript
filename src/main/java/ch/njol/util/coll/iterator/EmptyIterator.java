@@ -32,7 +32,7 @@ public final class EmptyIterator<T> implements Iterator<T> {
 	public final static EmptyIterator<Object> instance = new EmptyIterator<>();
 	
 	@SuppressWarnings("unchecked")
-	public final static <T> EmptyIterator<T> get() {
+	public static <T> EmptyIterator<T> get() {
 		return (EmptyIterator<T>) instance;
 	}
 	

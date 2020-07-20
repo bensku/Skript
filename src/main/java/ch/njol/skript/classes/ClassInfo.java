@@ -79,6 +79,14 @@ public class ClassInfo<T> implements Debuggable {
 	private String[] examples = null;
 	@Nullable
 	private String since = null;
+	@Nullable
+	private String[] requiredPlugins = null;
+	
+	/**
+	 * Overrides documentation id assigned from class name.
+	 */
+	@Nullable
+	private String documentationId = null;
 	
 	/**
 	 * @param c The class
@@ -92,7 +100,7 @@ public class ClassInfo<T> implements Debuggable {
 		name = new Noun("types." + codeName);
 	}
 	
-	public final static boolean isVaildCodeName(final String name) {
+	public static boolean isVaildCodeName(final String name) {
 		return name.matches("[a-z0-9]+");
 	}
 	
@@ -235,6 +243,33 @@ public class ClassInfo<T> implements Debuggable {
 		return this;
 	}
 	
+	/**
+	 * Other plugin dependencies for this ClassInfo.
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param pluginNames
+	 * @return This ClassInfo object
+	 */
+	public ClassInfo<T> requiredPlugins(final String... pluginNames) {
+		assert this.requiredPlugins == null;
+		this.requiredPlugins = pluginNames;
+		return this;
+	}
+	
+	/**
+	 * Overrides default documentation id, which is assigned from class name.
+	 * This is especially useful for inner classes whose names are useless without
+	 * parent class name as a context.
+	 * @param id Documentation id override.
+	 * @return This ClassInfo object.
+	 */
+	public ClassInfo<T> documentationId(String id) {
+		assert this.documentationId == null;
+		this.documentationId = id;
+		return this;
+	}
+	
 	// === GETTERS ===
 	
 	public Class<T> getC() {
@@ -317,6 +352,17 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public String getDocName() {
 		return docName;
+	}
+	
+	/**
+	 * Gets overridden documentation id of this this type. If no override has
+	 * been set, null is returned and the caller may try to derive this from
+	 * name of {@code #getC()}.
+	 * @return Documentation id override, or null.
+	 */
+	@Nullable
+	public String getDocumentationId() {
+		return documentationId;
 	}
 	
 	// === ORDERING ===

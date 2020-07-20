@@ -19,7 +19,9 @@
  */
 package ch.njol.yggdrasil.xml;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -115,12 +117,12 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	@SuppressWarnings("null")
 	private final static Pattern valid = Pattern.compile("[\\u0009 \\u000A \\u000D \\u0020-\\u007E \\u0085 \\u00A0-\\uD7FF \\uE000-\\uFFFD \\x{10000}–\\x{10FFFF}]*", Pattern.COMMENTS);
 	
-	private final static void validateString(final String s) throws IOException {
+	private static void validateString(final String s) throws IOException {
 		if (!valid.matcher(s).matches())
 			throw new IOException("The string '" + s + "' contains characters illegal in XML 1.0: '" + toUnicodeEscapes("" + valid.matcher(s).replaceAll("")) + "'");
 	}
 	
-	private final static String toUnicodeEscapes(final String s) {
+	private static String toUnicodeEscapes(final String s) {
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0; i < s.length(); i++) {
 			b.append(String.format("\\u%04x", (int) s.charAt(i)));
@@ -180,7 +182,6 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writePrimitive_(final Object o) throws IOException {
-		@SuppressWarnings("null")
 		final Tag type = getPrimitiveFromWrapper(o.getClass());
 		final int size;
 		final long value;

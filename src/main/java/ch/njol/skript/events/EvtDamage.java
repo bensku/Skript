@@ -42,7 +42,7 @@ public class EvtDamage extends SkriptEvent {
 	static {
 		Skript.registerEvent("Damage", EvtDamage.class, EntityDamageEvent.class, "damag(e|ing) [of %entitydata%]")
 				.description("Called when an entity receives damage, e.g. by an attack from another entity, lava, fire, drowning, fall, suffocation, etc.")
-				.examples("on damage", "on damage of a player")
+				.examples("on damage:", "on damage of a player:")
 				.since("1.0");
 	}
 	
@@ -55,7 +55,6 @@ public class EvtDamage extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public boolean check(final Event evt) {
 		final EntityDamageEvent e = (EntityDamageEvent) evt;
@@ -84,7 +83,6 @@ public class EvtDamage extends SkriptEvent {
 	
 //	private final static WeakHashMap<LivingEntity, Integer> lastDamages = new WeakHashMap<LivingEntity, Integer>();
 	
-	@SuppressWarnings("null")
 	private static boolean checkDamage(final EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof LivingEntity))
 			return true;

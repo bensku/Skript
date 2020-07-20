@@ -19,6 +19,13 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
@@ -29,103 +36,174 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.SkriptColor;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Colour of")
-@Description("The <a href='../classes/#color'>colour</a> of an item, can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
+@Description("The <a href='../classes.html#color'>colour</a> of an item, can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
 @Examples({"on click on wool:",
 		"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
 		"	set the colour of the block to black"})
 @Since("1.2")
-public class ExprColorOf extends SimplePropertyExpression<Object, Color> {
+public class ExprColorOf extends PropertyExpression<Object, Color> {
+
 	static {
-		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "itemstacks/entities");
+		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects");
 	}
 	
 	@SuppressWarnings("null")
 	@Override
-	@Nullable
-	public Color convert(final Object o) {
-		if (o instanceof ItemStack || o instanceof Item) {
-			final ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
-			final MaterialData d = is.getData();
-			if (d instanceof Colorable)
-				return Color.byWoolColor(((Colorable) d).getColor());
-		} else if (o instanceof Colorable) { // Sheep
-			return Color.byWoolColor(((Colorable) o).getColor());
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		setExpr(exprs[0]);
+		return true;
+	}
+	
+	@SuppressWarnings("null")
+	@Override
+	protected Color[] get(Event e, Object[] source) {
+		if (source instanceof FireworkEffect[]) {
+			List<Color> colors = new ArrayList<>();
+			
+			for (FireworkEffect effect : (FireworkEffect[]) source) {
+				effect.getColors().stream()
+					.map(SkriptColor::fromBukkitColor)
+					.forEach(colors::add);
+			}
+			
+			if (colors.size() == 0)
+				return null;
+			return colors.toArray(new Color[0]);
 		}
-		return null;
+		return get(source, o -> {
+				Colorable colorable = getColorable(o);
+				
+				if (colorable == null)
+					return null;
+				return SkriptColor.fromDyeColor(colorable.getColor());
+		});
 	}
-	
 	@Override
-	protected String getPropertyName() {
-		return "colour";
-	}
-	
-	@Override
-	public Class<Color> getReturnType() {
+	public Class<? extends Color> getReturnType() {
 		return Color.class;
 	}
 	
-	boolean changeItemStack = false;
-
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "colour of " + getExpr().toString(e, debug);
+	}
+	
+	
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode != ChangeMode.SET)
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		Class<?> returnType = getExpr().getReturnType();
+		
+		if (FireworkEffect.class.isAssignableFrom(returnType))
+			return CollectionUtils.array(Color[].class);
+		
+		if (mode != ChangeMode.SET && !getExpr().isSingle())
 			return null;
-		if (Entity.class.isAssignableFrom(getExpr().getReturnType()))
+		
+		if (Entity.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
-		if (!getExpr().isSingle())
-			return null;
-		if (ChangerUtils.acceptsChange(getExpr(), mode, ItemStack.class, ItemType.class)) {
-			changeItemStack = ChangerUtils.acceptsChange(getExpr(), mode, ItemStack.class);
+		else if (Block.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
-		}
+		if (ItemType.class.isAssignableFrom(returnType))
+			return CollectionUtils.array(Color.class);
 		return null;
 	}
 	
+	@SuppressWarnings("deprecated")
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		assert mode == ChangeMode.SET;
-		assert delta != null;
-		
-		final Color c = (Color) delta[0];
-		final Object[] os = getExpr().getArray(e);
-		if (os.length == 0)
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null)
 			return;
+		DyeColor color = ((Color) delta[0]).asDyeColor();
 		
-		for (final Object o : os) {
-			if (o instanceof ItemStack || o instanceof Item) {
-				final ItemStack is = o instanceof ItemStack ? (ItemStack) o : ((Item) o).getItemStack();
-				final MaterialData d = is.getData();
-				if (d instanceof Colorable)
-					((Colorable) d).setColor(c.getWoolColor());
-				else
+		for (Object o : getExpr().getArray(e)) {
+			if (o instanceof Item || o instanceof ItemType) {
+				ItemStack stack = o instanceof Item ? ((Item) o).getItemStack() : ((ItemType) o).getRandom();
+				
+				if (stack == null)
 					continue;
 				
-				if (o instanceof ItemStack) {
-					if (changeItemStack)
-						getExpr().change(e, new ItemStack[] {is}, mode);
-					else
-						getExpr().change(e, new ItemType[] {new ItemType(is)}, mode);
-				} else {
-					((Item) o).setItemStack(is);
+				MaterialData data = stack.getData();
+				
+				if (!(data instanceof Colorable))
+					continue;
+				
+				((Colorable) data).setColor(color);
+				stack.setData(data);
+				
+				if (o instanceof Item)
+					((Item) o).setItemStack(stack);
+			} else if (o instanceof Block || o instanceof Colorable) {
+				Colorable colorable = getColorable(o);
+				
+				if (colorable != null)
+					colorable.setColor(color);
+			} else if (o instanceof FireworkEffect) {
+				Color[] input = (Color[]) delta;
+				FireworkEffect effect = ((FireworkEffect) o);
+				switch (mode) {
+					case ADD:
+						for (Color c : input)
+							effect.getColors().add(c.asBukkitColor());
+						break;
+					case REMOVE:
+					case REMOVE_ALL:
+						for (Color c : input)
+							effect.getColors().remove(c.asBukkitColor());
+						break;
+					case DELETE:
+					case RESET:
+						effect.getColors().clear();
+						break;
+					case SET:
+						effect.getColors().clear();
+						for (Color c : input)
+							effect.getColors().add(c.asBukkitColor());
+						break;
+					default:
+						break;
 				}
-			} else if (o instanceof Colorable) {
-				((Colorable) o).setColor(c.getWoolColor());
 			}
 		}
 	}
 	
+	@SuppressWarnings("deprecated")
+	@Nullable
+	private Colorable getColorable(Object colorable) {
+		if (colorable instanceof Item || colorable instanceof ItemType) {
+			ItemStack item = colorable instanceof Item ?
+					((Item) colorable).getItemStack() : ((ItemType) colorable).getRandom();
+			
+			if (item == null)
+				return null;
+			MaterialData data = item.getData();
+			
+			if (data instanceof Colorable)
+				return (Colorable) data;
+		} else if (colorable instanceof Block) {
+			BlockState state = ((Block) colorable).getState();
+			
+			if (state instanceof Colorable)
+				return (Colorable) state;
+		} else if (colorable instanceof Colorable) {
+			return (Colorable) colorable;
+		}
+		return null;
+	}
 }

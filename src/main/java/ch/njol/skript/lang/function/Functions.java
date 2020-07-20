@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.lang.function;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,13 +26,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.ScriptLoader;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptAddon;
@@ -41,8 +39,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
@@ -50,7 +46,7 @@ import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 
 /**
- * @author Peter Güttinger
+ * Static methods to work with functions.
  */
 public abstract class Functions {
 
@@ -73,38 +69,43 @@ public abstract class Functions {
 	@Nullable
 	public static ScriptFunction<?> currentFunction = null;
 	
-	final static Map<String, JavaFunction<?>> javaFunctions = new HashMap<>();
-	final static Map<String, FunctionData> functions = new ConcurrentHashMap<>();
-	final static Map<String, Signature<?>> javaSignatures = new HashMap<>();
-	final static Map<String, Signature<?>> signatures = new ConcurrentHashMap<>();
+	/**
+	 * Function namespaces.
+	 */
+	private static final Map<Namespace.Key, Namespace> namespaces = new HashMap<>();
 	
-	final static List<FunctionReference<?>> postCheckNeeded = new ArrayList<>();
+	/**
+	 * Namespace of Java functions.
+	 */
+	private static final Namespace javaNamespace;
+		
+	static {
+		javaNamespace = new Namespace();
+		namespaces.put(new Namespace.Key(Namespace.Origin.JAVA, "unknown"), javaNamespace);
+	}
 	
+	/**
+	 * Namespaces of functions that are globally available.
+	 */
+	private static final Map<String, Namespace> globalFunctions = new HashMap<>();
+		
 	static boolean callFunctionEvents = false;
 	
 	/**
-	 * Register a function written in Java.
+	 * Registers a function written in Java.
 	 * @param function
 	 * @return The passed function
 	 */
-	public final static JavaFunction<?> registerFunction(final JavaFunction<?> function) {
+	public static JavaFunction<?> registerFunction(JavaFunction<?> function) {
 		Skript.checkAcceptRegistrations();
-		if (!function.name.matches(functionNamePattern))
-			throw new SkriptAPIException("Invalid function name '" + function.name + "'");
-		if (functions.containsKey(function.name))
-			throw new SkriptAPIException("Duplicate function " + function.name);
-		functions.put(function.name, new FunctionData(function));
-		javaFunctions.put(function.name, function);
-		Signature<?> sign = function.getSignature();
-		javaSignatures.put(function.name, sign); // This is backup for full reloads (reload all/scripts)
-		signatures.put(function.name, sign);
+		String name = function.getName();
+		if (!name.matches(functionNamePattern))
+			throw new SkriptAPIException("Invalid function name '" + name + "'");
+		javaNamespace.addSignature(function.getSignature());
+		javaNamespace.addFunction(function);
+		globalFunctions.put(function.getName(), javaNamespace);
+		
 		return function;
-	}
-	
-	final static void registerCaller(final FunctionReference<?> r) {
-		final Signature<?> sign = signatures.get(r.functionName);
-		assert sign != null;
-		sign.calls.add(r);
 	}
 	
 	public final static String functionNamePattern = "[\\p{IsAlphabetic}][\\p{IsAlphabetic}\\p{IsDigit}_]*";
@@ -114,13 +115,12 @@ public abstract class Functions {
 			paramPattern = Pattern.compile("\\s*(.+?)\\s*:(?=[^:]*$)\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
 	
 	/**
-	 * Loads a function from given node.
+	 * Loads a script function from given node.
 	 * @param node Section node.
 	 * @return Script function, or null if something went wrong.
 	 */
-	@SuppressWarnings("unchecked")
 	@Nullable
-	public final static Function<?> loadFunction(final SectionNode node) {
+	public static Function<?> loadFunction(SectionNode node) {
 		SkriptLogger.setNode(node);
 		final String key = node.getKey();
 		final String definition = ScriptLoader.replaceOptions(key == null ? "" : key);
@@ -129,19 +129,26 @@ public abstract class Functions {
 		if (!m.matches()) // We have checks when loading the signature, but matches() must be called anyway
 			return error(INVALID_FUNCTION_DEFINITION);
 		final String name = "" + m.group(1);
-		Signature<?> sign = signatures.get(name);
+		
+		Namespace namespace = globalFunctions.get(name);
+		if (namespace == null) {
+			return null; // Probably duplicate signature; reported before
+		}
+		Signature<?> sign = namespace.getSignature(name);
 		if (sign == null) // Signature parsing failed, probably: null signature
 			return null; // This has been reported before...
-		final List<Parameter<?>> params = sign.parameters;
+		final Parameter<?>[] params = sign.parameters;
 		final ClassInfo<?> c = sign.returnType;
-		final NonNullPair<String, Boolean> p = sign.info;
 		
 		if (Skript.debug() || node.debug())
-			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")" + (c != null && p != null ? " :: " + Utils.toEnglishPlural(c.getCodeName(), p.getSecond()) : "") + ":");
+			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")"
+					+ (c != null ? " :: " + (sign.isSingle() ? c.getName().getSingular() : c.getName().getPlural()) : "") + ":");
 		
-		@SuppressWarnings("null")
-		final Function<?> f = new ScriptFunction<>(name, params.toArray(new Parameter[params.size()]), node, (ClassInfo<Object>) c, p == null ? false : !p.getSecond());
-//		functions.put(name, new FunctionData(f)); // in constructor
+		final Function<?> f = new ScriptFunction<>(sign, node);
+		
+		// Register the function for signature
+		namespace.addFunction(f);
+		
 		return f;
 	}
 	
@@ -152,7 +159,7 @@ public abstract class Functions {
 	 * @return Signature of function, or null if something went wrong.
 	 */
 	@Nullable
-	public static Signature<?> loadSignature(String script, final SectionNode node) {
+	public static Signature<?> loadSignature(String script, SectionNode node) {
 		SkriptLogger.setNode(node);
 		final String key = node.getKey();
 		final String definition = ScriptLoader.replaceOptions(key == null ? "" : key);
@@ -160,7 +167,20 @@ public abstract class Functions {
 		final Matcher m = functionPattern.matcher(definition);
 		if (!m.matches())
 			return signError(INVALID_FUNCTION_DEFINITION);
-		final String name = "" + m.group(1); // TODO check for name uniqueness (currently functions with same name silently override each other)
+		final String name = "" + m.group(1);
+		
+		// Ensure there are no duplicate functions
+		if (globalFunctions.containsKey(name)) {
+			Namespace namespace = globalFunctions.get(name);
+			if (namespace == javaNamespace) { // Special messages for built-in functions
+				return signError("Function name '" + name + "' is reserved by Skript");
+			} else {
+				Signature<?> sign = namespace.getSignature(name);
+				assert sign != null : "globalFunctions points to a wrong namespace";
+				return signError("A function named '" + name + "' already exists in script '" + sign.script + "'");
+			}
+		}
+		
 		final String args = m.group(2);
 		final String returnType = m.group(3);
 		final List<Parameter<?>> params = new ArrayList<>();
@@ -202,24 +222,33 @@ public abstract class Functions {
 			if (i == args.length())
 				break;
 		}
-		ClassInfo<?> c;
-		final NonNullPair<String, Boolean> p;
+		
+		// Parse return type if one exists
+		ClassInfo<?> returnClass;
+		boolean singleReturn;
 		if (returnType == null) {
-			c = null;
-			p = null;
+			returnClass = null;
+			singleReturn = false; // Ignored, nothing is returned
 		} else {
-			c = Classes.getClassInfoFromUserInput(returnType);
-			p = Utils.getEnglishPlural(returnType);
-			if (c == null)
-				c = Classes.getClassInfoFromUserInput(p.getFirst());
-			if (c == null) {
+			returnClass = Classes.getClassInfoFromUserInput(returnType);
+			NonNullPair<String, Boolean> p = Utils.getEnglishPlural(returnType);
+			singleReturn = !p.getSecond();
+			if (returnClass == null)
+				returnClass = Classes.getClassInfoFromUserInput(p.getFirst());
+			if (returnClass == null) {
 				return signError("Cannot recognise the type '" + returnType + "'");
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
-		Signature<?> sign = new Signature<>(script, name, params, (ClassInfo<Object>) c, p, p == null ? false : !p.getSecond());
-		Functions.signatures.put(name, sign);
+		@SuppressWarnings({"unchecked", "null"})
+		Signature<?> sign = new Signature<>(script, name, params.toArray(new Parameter[params.size()]), (ClassInfo<Object>) returnClass, singleReturn);
+
+		// Register this signature
+		Namespace.Key namespaceKey = new Namespace.Key(Namespace.Origin.SCRIPT, script);
+		Namespace namespace = namespaces.computeIfAbsent(namespaceKey, k -> new Namespace());
+		namespace.addSignature(sign);
+		globalFunctions.put(name, namespace);
+		
 		Skript.debug("Registered function signature: " + name);
 		return sign;
 	}
@@ -230,7 +259,7 @@ public abstract class Functions {
 	 * @return Null.
 	 */
 	@Nullable
-	private final static Function<?> error(final String error) {
+	private static Function<?> error(final String error) {
 		Skript.error(error);
 		return null;
 	}
@@ -241,7 +270,7 @@ public abstract class Functions {
 	 * @return Null.
 	 */
 	@Nullable
-	private final static Signature<?> signError(final String error) {
+	private static Signature<?> signError(final String error) {
 		Skript.error(error);
 		return null;
 	}
@@ -254,21 +283,26 @@ public abstract class Functions {
 	 * @return Function, or null if it does not exist.
 	 */
 	@Nullable
-	public final static Function<?> getFunction(final String name) {
-		final FunctionData d = functions.get(name);
-		if (d == null)
+	public static Function<?> getFunction(String name) {
+		Namespace namespace = globalFunctions.get(name);
+		if (namespace == null) {
 			return null;
-		return d.function;
+		}
+		return namespace.getFunction(name);
 	}
 	
 	/**
-	 * Gets a signature of function with given name
+	 * Gets a signature of function with given name.
 	 * @param name Name of function.
 	 * @return Signature, or null if function does not exist.
 	 */
 	@Nullable
-	public final static Signature<?> getSignature(final String name) {
-		return signatures.get(name);
+	public static Signature<?> getSignature(String name) {
+		Namespace namespace = globalFunctions.get(name);
+		if (namespace == null) {
+			return null;
+		}
+		return namespace.getSignature(name);
 	}
 	
 	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<>();
@@ -279,37 +313,34 @@ public abstract class Functions {
 	 * @param script
 	 * @return How many functions were removed
 	 */
-	public final static int clearFunctions(final File script) {
-		int r = 0;
-		final Iterator<FunctionData> iter = functions.values().iterator();
-		while (iter.hasNext()) {
-			final FunctionData d = iter.next();
-			if (d != null && d.function instanceof ScriptFunction) {
-				Trigger trigger = ((ScriptFunction<?>) d.function).trigger;
-				if (trigger == null) // Triggers can be null, make sure this isn't
-					continue;
-				if (!script.equals(trigger.getScript())) // Is this trigger in correct script?
-					continue;
-				
-				iter.remove();
-				r++;
-				final Signature<?> sign = signatures.get(d.function.name);
-				assert sign != null; // Function must have signature
-				
-				final Iterator<FunctionReference<?>> it = sign.calls.iterator();
-				while (it.hasNext()) {
-					final FunctionReference<?> c = it.next();
-					if (script.equals(c.script))
-						it.remove();
-					else
-						toValidate.add(c);
+	public static int clearFunctions(String script) {
+		// Get and remove function namespace of script
+		Namespace namespace = namespaces.remove(new Namespace.Key(Namespace.Origin.SCRIPT, script));
+		if (namespace == null) { // No functions defined
+			return 0;
+		}
+		
+		// Remove references to this namespace from global functions
+		Iterator<Namespace> it = globalFunctions.values().iterator();
+		while (it.hasNext()) {
+			if (it.next() == namespace) {
+				it.remove();
+			}
+		}
+		
+		// Queue references to signatures we have for revalidation
+		// Can't validate here, because other scripts might be loaded soon
+		for (Signature<?> sign : namespace.getSignatures()) {
+			for (FunctionReference<?> ref : sign.calls) {
+				if (!script.equals(ref.script)) {
+					toValidate.add(ref);
 				}
 			}
 		}
-		return r;
+		return namespace.getSignatures().size();
 	}
 	
-	public final static void validateFunctions() {
+	public static void validateFunctions() {
 		for (final FunctionReference<?> c : toValidate)
 			c.validateFunction(false);
 		toValidate.clear();
@@ -318,35 +349,24 @@ public abstract class Functions {
 	/**
 	 * Clears all function calls and removes script functions.
 	 */
-	public final static void clearFunctions() {
-		final Iterator<FunctionData> iter = functions.values().iterator();
-		while (iter.hasNext()) {
-			final FunctionData d = iter.next();
-			if (d.function instanceof ScriptFunction) {
-				iter.remove();
-			} else {
-				final Signature<?> sign = signatures.get(d.function.name);
-				assert sign != null; // Function must have signature
-				sign.calls.clear();
+	public static void clearFunctions() {
+		// Keep Java functions, remove everything else		
+		Iterator<Namespace> it = globalFunctions.values().iterator();
+		while (it.hasNext()) {
+			if (it.next() != javaNamespace) {
+				it.remove();
 			}
 		}
-		signatures.clear();
-		signatures.putAll(javaSignatures);
+		namespaces.clear();
+		
 		assert toValidate.isEmpty() : toValidate;
 		toValidate.clear();
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings({"unchecked"})
 	public static Collection<JavaFunction<?>> getJavaFunctions() {
-		return javaFunctions.values();
-	}
-
-	/**
-	 * Puts a function directly to map. Usually no need to do so.
-	 * @param func
-	 */
-	public static void putFunction(Function<?> func) {
-		functions.put(func.name, new FunctionData(func));
+		// We know there are only Java functions in that namespace
+		return (Collection<JavaFunction<?>>) (Object) javaNamespace.getFunctions();
 	}
 	
 	/**
@@ -358,9 +378,10 @@ public abstract class Functions {
 	 * Note that calling events is not free; performance might vary
 	 * once you have enabled that.
 	 * 
-	 * @param addon Addon instance. Nullness is checked runtime.
+	 * @param addon Addon instance.
 	 */
-	public static void enableFunctionEvents(@Nullable SkriptAddon addon) {
+	@SuppressWarnings({"null", "unused"})
+	public static void enableFunctionEvents(SkriptAddon addon) {
 		if (addon == null) {
 			throw new SkriptAPIException("enabling function events requires addon instance");
 		}

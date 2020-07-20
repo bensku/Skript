@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,28 +30,32 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Random")
-@Description("Creates a random vector")
-@Examples({"set {_v} to random vector"})
+@Name("Vectors - Random Vector")
+@Description("Creates a random vector.")
+@Examples({"set {_v} to a random vector"})
 @Since("2.2-dev28")
 public class ExprVectorRandom extends SimpleExpression<Vector> {
+
 	static {
-		Skript.registerExpression(ExprVectorRandom.class, Vector.class, ExpressionType.SIMPLE, "random vector");
+		Skript.registerExpression(ExprVectorRandom.class, Vector.class, ExpressionType.SIMPLE, "[a] random vector");
 	}
 
 	@Override
-	protected Vector[] get(Event event) {
-		return new Vector[] {Vector.getRandom()};
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		return true;
+	}
+
+	@Override
+	protected Vector[] get(Event e) {
+		return CollectionUtils.array(Vector.getRandom());
 	}
 
 	@Override
@@ -61,12 +69,8 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
+	public String toString(@Nullable Event e, boolean debug) {
 		return "random vector";
 	}
 
-	@Override
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		return true;
-	}
 }

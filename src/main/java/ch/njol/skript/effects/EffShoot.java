@@ -127,7 +127,7 @@ public class EffShoot extends Effect {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private final static <E extends Entity> void set(final Entity e, final EntityData<E> d) {
+	private static <E extends Entity> void set(final Entity e, final EntityData<E> d) {
 		d.set((E) e);
 	}
 	

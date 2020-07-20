@@ -19,6 +19,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,44 +31,51 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Location vector offset")
-@Description("Offset a location by a vector")
+@Name("Vectors - Location Vector Offset")
+@Description("Returns the location offset by vectors.")
 @Examples({"set {_loc} to {_loc} ~ {_v}"})
 @Since("2.2-dev28")
 public class ExprLocationVectorOffset extends SimpleExpression<Location> {
+
 	static {
-		Skript.registerExpression(ExprLocationVectorOffset.class, Location.class, ExpressionType.SIMPLE, "%location%[ ]~[~][ ]%vectors%");
+		Skript.registerExpression(ExprLocationVectorOffset.class, Location.class, ExpressionType.SIMPLE,
+				"%location% offset by [[the] vectors] %vectors%",
+				"%location%[ ]~[~][ ]%vectors%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Location> location;
+
 	@SuppressWarnings("null")
 	private Expression<Vector> vectors;
 
+	@Override
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		location = (Expression<Location>) exprs[0];
+		vectors = (Expression<Vector>) exprs[1];
+		return true;
+	}
+
 	@SuppressWarnings("null")
 	@Override
-	protected Location[] get(Event event) {
-		Location l = location.getSingle(event);
-		if (l == null) {
+	protected Location[] get(Event e) {
+		Location l = location.getSingle(e);
+		if (l == null)
 			return null;
-		}
 		Location clone = l.clone();
-		for (Vector v : vectors.getArray(event)) {
+		for (Vector v : vectors.getArray(e))
 			clone.add(v);
-		}
-		return new Location[] {clone};
+		return CollectionUtils.array(clone);
 	}
 
 	@Override
@@ -77,15 +89,8 @@ public class ExprLocationVectorOffset extends SimpleExpression<Location> {
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return location.toString() + " offset by vector " + vectors.toString();
+	public String toString(@Nullable Event e, boolean debug) {
+		return location.toString() + " offset by " + vectors.toString();
 	}
 
-	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		location = (Expression<Location>) expressions[0];
-		vectors = (Expression<Vector>) expressions[1];
-		return true;
-	}
 }

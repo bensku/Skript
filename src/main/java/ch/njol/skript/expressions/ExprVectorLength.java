@@ -19,73 +19,56 @@
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
-
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
 @Name("Vectors - Length")
-@Description("Gets or sets the length of a vector")
+@Description("Gets or sets the length of a vector.")
 @Examples({"send \"%standard length of vector 1, 2, 3%\"",
 		"set {_v} to vector 1, 2, 3",
 		"set standard length of {_v} to 2",
 		"send \"%standard length of {_v}%\""})
 @Since("2.2-dev28")
-public class ExprVectorLength extends SimplePropertyExpression<Vector, Double> {
+public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
+
 	static {
-		Skript.registerExpression(ExprVectorLength.class, Double.class, ExpressionType.PROPERTY, "(vector|standard|normal) length of %vector%", "%vector%['s] (vector|standard|normal) length");
+		register(ExprVectorLength.class, Number.class, "(vector|standard|normal) length[s]", "vectors");
 	}
 
 	@Override
-	@SuppressWarnings({"unused", "null"})
-	public Double convert(Vector vector) {
-		if (vector == null) {
-			return null;
-		}
+	@SuppressWarnings("unused")
+	public Number convert(Vector vector) {
 		return vector.length();
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "length of vector";
-	}
-
-	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
-	}
-
-	@Override
 	@SuppressWarnings("null")
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE || mode == Changer.ChangeMode.SET){
-			return new Class[]{ Number.class };
-		}
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.SET)
+			return CollectionUtils.array(Number.class);
 		return null;
 	}
 
 	@Override
-	public void change(Event e, final @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		assert delta != null;
 		final Vector v = getExpr().getSingle(e);
 		if (v == null)
 			return;
 		double n = ((Number) delta[0]).doubleValue();
 		switch (mode) {
-			case REMOVE:
-				n = -n;
-				//$FALL-THROUGH$
 			case ADD:
 				if (n < 0 && v.lengthSquared() < n * n) {
 					v.zero();
@@ -93,20 +76,29 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Double> {
 					double l = n + v.length();
 					v.normalize().multiply(l);
 				}
-				getExpr().change(e, new Vector[]{v}, Changer.ChangeMode.SET);
+				getExpr().change(e, new Vector[]{v}, ChangeMode.SET);
 				break;
+			case REMOVE:
+				n = -n;
+				//$FALL-THROUGH$
 			case SET:
-				if (n < 0) {
+				if (n < 0)
 					v.zero();
-				} else {
+				else
 					v.normalize().multiply(n);
-				}
-				getExpr().change(e, new Vector[]{v}, Changer.ChangeMode.SET);
+				getExpr().change(e, new Vector[]{v}, ChangeMode.SET);
 				break;
-			case DELETE:
-			case REMOVE_ALL:
-			case RESET:
-				assert false;
 		}
 	}
+
+	@Override
+	protected String getPropertyName() {
+		return "vector length";
+	}
+
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
+	}
+
 }

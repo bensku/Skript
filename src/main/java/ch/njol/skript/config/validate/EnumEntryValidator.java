@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.config.validate;
 
+import java.util.Locale;
+
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -64,7 +66,7 @@ public class EnumEntryValidator<E extends Enum<E>> extends EntryValidator {
 			return false;
 		final EntryNode n = (EntryNode) node;
 		try {
-			final E e = Enum.valueOf(enumType, n.getValue().toUpperCase().replace(' ', '_'));
+			final E e = Enum.valueOf(enumType, n.getValue().toUpperCase(Locale.ENGLISH).replace(' ', '_'));
 			assert e != null;
 //			if (setter != null)
 			setter.set(e);

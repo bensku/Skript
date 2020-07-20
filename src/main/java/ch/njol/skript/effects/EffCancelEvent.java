@@ -35,6 +35,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.events.EvtClick;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -63,7 +64,7 @@ public class EffCancelEvent extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (isDelayed == Kleenean.TRUE) {
-			Skript.error("Can't cancel an event anymore after is has already passed", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("Can't cancel an event anymore after it has already passed", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		cancel = matchedPattern == 0;
@@ -86,6 +87,7 @@ public class EffCancelEvent extends Effect {
 		if (e instanceof Cancellable)
 			((Cancellable) e).setCancelled(cancel);
 		if (e instanceof PlayerInteractEvent) {
+			EvtClick.interactTracker.eventModified((Cancellable) e);
 			((PlayerInteractEvent) e).setUseItemInHand(cancel ? Result.DENY : Result.DEFAULT);
 			((PlayerInteractEvent) e).setUseInteractedBlock(cancel ? Result.DENY : Result.DEFAULT);
 		} else if (e instanceof BlockCanBuildEvent) {

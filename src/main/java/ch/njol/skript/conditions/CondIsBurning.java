@@ -37,6 +37,7 @@ import ch.njol.skript.doc.Since;
 		"	increase damage by 2"})
 @Since("1.4.4")
 public class CondIsBurning extends PropertyCondition<Entity> {
+	
 	static {
 		register(CondIsBurning.class, "(burning|ignited|on fire)", "entities");
 	}

@@ -23,7 +23,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -32,7 +33,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -43,16 +43,15 @@ import ch.njol.util.Kleenean;
 @Examples({"player is riding a saddled pig"})
 @Since("2.0")
 public class CondIsRiding extends Condition {
+	
 	static {
-		Skript.registerCondition(CondIsRiding.class,
-				"%entities% (is|are) riding [%entitydatas%]",
-				"%entities% (isn't|is not|aren't|are not) riding [%entitydatas%]");
+		PropertyCondition.register(CondIsRiding.class, "riding [%entitydatas%]", "entities");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	@SuppressWarnings("null")
-	Expression<EntityData<?>> types;
+	private Expression<EntityData<?>> types;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -65,22 +64,16 @@ public class CondIsRiding extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return entities.check(e, new Checker<Entity>() {
-			@Override
-			public boolean check(final Entity en) {
-				return types.check(e, new Checker<EntityData<?>>() {
-					@Override
-					public boolean check(final EntityData<?> d) {
-						return d.isInstance(en.getVehicle());
-					}
-				}, isNegated());
-			}
-		});
+		return entities.check(e,
+				entity -> types.check(e,
+						data -> data.isInstance(entity.getVehicle())
+				), isNegated());
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return entities.toString(e, debug) + (isNegated() ? " is" : " isn't") + " riding" + types.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.BE, e, debug, entities,
+				"riding " + types.toString(e, debug));
 	}
 	
 }

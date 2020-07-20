@@ -66,7 +66,7 @@ public interface Changer<T> {
 	public static abstract class ChangerUtils {
 		
 		@SuppressWarnings("unchecked")
-		public final static <T, V> void change(final Changer<T> changer, final Object[] what, final @Nullable Object[] delta, final ChangeMode mode) {
+		public static <T, V> void change(final Changer<T> changer, final Object[] what, final @Nullable Object[] delta, final ChangeMode mode) {
 			changer.change((T[]) what, delta, mode);
 		}
 		
@@ -78,7 +78,7 @@ public interface Changer<T> {
 		 * @param types The types to test for
 		 * @return Whether <tt>e.{@link Expression#change(Event, Object[], ChangeMode) change}(event, type[], mode)</tt> can be used or not.
 		 */
-		public final static boolean acceptsChange(final Expression<?> e, final ChangeMode mode, final Class<?>... types) {
+		public static boolean acceptsChange(final Expression<?> e, final ChangeMode mode, final Class<?>... types) {
 			final Class<?>[] cs = e.acceptChange(mode);
 			if (cs == null)
 				return false;

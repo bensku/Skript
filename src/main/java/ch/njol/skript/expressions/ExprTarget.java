@@ -50,8 +50,8 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Target")
 @Description("For players this is the entity at the crosshair, while for mobs and experience orbs it represents the entity they are attacking/following (if any).")
 @Examples({"on entity target:",
-		"    entity's target is a player",
-		"    send \"You're being followed by an %entity%!\" to target of entity"})
+			"\tentity's target is a player",
+			"\tsend \"You're being followed by an %entity%!\" to target of entity"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	static {
@@ -105,7 +105,6 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 		return super.setTime(time, EntityTargetEvent.class, getExpr());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

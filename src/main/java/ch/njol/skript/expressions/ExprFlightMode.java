@@ -39,17 +39,7 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 	static {
 		register(ExprFlightMode.class, Boolean.class, "fl(y[ing]|ight) (mode|state)", "players");
 	}
-	
-	@Override
-	public Class<Boolean> getReturnType() {
-		return Boolean.class;
-	}
-	
-	@Override
-	protected String getPropertyName() {
-		return "fl(y[ing]|ight) (mode|state)";
-	}
-	
+
 	@Override
 	public Boolean convert(final Player player) {
 		return player.getAllowFlight();
@@ -66,11 +56,19 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		boolean state = mode == Changer.ChangeMode.RESET || delta == null ? false : (boolean) delta[0];
+		boolean state = mode != Changer.ChangeMode.RESET && delta != null && (boolean) delta[0];
 		for (Player player : getExpr().getArray(event)) {
 			player.setAllowFlight(state);
 		}
 	}
 
+	@Override
+	protected String getPropertyName() {
+		return "flight mode";
+	}
 
+	@Override
+	public Class<Boolean> getReturnType() {
+		return Boolean.class;
+	}
 }

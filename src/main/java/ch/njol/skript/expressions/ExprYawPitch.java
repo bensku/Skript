@@ -79,7 +79,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Location, Number> {
 			return null;
 		}
 	
-		@SuppressWarnings({"incomplete-switch", "null"})
+		@SuppressWarnings("null")
 		@Override
 		public void change(Event e, Object[] delta, ChangeMode mode) {
 			Location l = getExpr().getSingle(e);

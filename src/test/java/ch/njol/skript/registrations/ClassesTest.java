@@ -19,8 +19,10 @@
  */
 package ch.njol.skript.registrations;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assume.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,11 +34,11 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,10 +59,10 @@ import ch.njol.skript.entity.SimpleEntityData;
 import ch.njol.skript.entity.WolfData;
 import ch.njol.skript.entity.XpOrbData;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
@@ -131,7 +133,7 @@ public class ClassesTest {
 				"String",
 				
 				// Skript
-				Color.BLACK, StructureType.RED_MUSHROOM, WeatherType.THUNDER,
+				SkriptColor.BLACK, StructureType.RED_MUSHROOM, WeatherType.THUNDER,
 				new Date(System.currentTimeMillis()), new Timespan(1337), new Time(12000), new Timeperiod(1000, 23000),
 				new Experience(15), new Direction(0, Math.PI, 10), new Direction(new double[] {0, 1, 0}),
 				new EntityType(new SimpleEntityData(HumanEntity.class), 300),
@@ -142,7 +144,7 @@ public class ClassesTest {
 				new XpOrbData(50),
 				
 				// Bukkit - simple classes only
-				GameMode.ADVENTURE, Biome.EXTREME_HILLS, DamageCause.FALL,
+				GameMode.ADVENTURE, InventoryType.CHEST, DamageCause.FALL,
 				
 				// there is also at least one variable for each class on my test server which are tested whenever the server shuts down.
 		};

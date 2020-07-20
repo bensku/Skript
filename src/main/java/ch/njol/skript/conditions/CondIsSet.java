@@ -83,7 +83,7 @@ public class CondIsSet extends Condition {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return expr.toString(e, debug) + " " + (isNegated() ? "isn't" : "is") + " set";
+		return expr.toString(e, debug) + (isNegated() ? " isn't" : " is") + " set";
 	}
 	
 }

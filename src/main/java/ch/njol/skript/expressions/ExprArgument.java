@@ -20,6 +20,7 @@
 package ch.njol.skript.expressions;
 
 import java.util.List;
+import java.util.regex.MatchResult;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -48,7 +49,7 @@ import ch.njol.util.StringUtils;
  * @author Peter Güttinger
  */
 @Name("Argument")
-@Description({"Only usable in command events. Holds the value of the nth argument given to the command, " +
+@Description({"Only usable in command events. Holds the value of an argument given to the command, " +
 		"e.g. if the command \"/tell &lt;player&gt; &lt;text&gt;\" is used like \"/tell Njol Hello Njol!\" argument 1 is the player named \"Njol\" and argument 2 is \"Hello Njol!\".",
 		"One can also use the type of the argument instead of its index to address the argument, e.g. in the above example 'player-argument' is the same as 'argument 1'."})
 @Examples({"give the item-argument to the player-argument",
@@ -87,10 +88,23 @@ public class ExprArgument extends SimpleExpression<Object> {
 				break;
 			case 1:
 			case 2:
-				@SuppressWarnings("null")
-				final int i = Utils.parseInt(parser.regexes.get(0).group(1));
+				// Figure out in which format (1st, 2nd, 3rd, Nth) argument was given in
+				MatchResult regex = parser.regexes.get(0);
+				String argMatch = null;
+				for (int i = 1; i <= 4; i++) {
+					argMatch = regex.group(i);
+					if (argMatch != null) {
+						break; // Found format
+					}
+				}
+				assert argMatch != null;
+				int i = Utils.parseInt(argMatch);
+				
 				if (i > currentArguments.size()) {
 					Skript.error("The command doesn't have a " + StringUtils.fancyOrderNumber(i) + " argument", ErrorQuality.SEMANTIC_ERROR);
+					return false;
+				} else if (i < 1) {
+					Skript.error("Command arguments start from one; argument number " + i + " is invalid", ErrorQuality.SEMANTIC_ERROR);
 					return false;
 				}
 				arg = currentArguments.get(i - 1);

@@ -37,7 +37,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
@@ -46,16 +45,14 @@ import ch.njol.util.Kleenean;
 @Name("Numbers")
 @Description({"All numbers between two given numbers, useful for looping.",
 		"Use 'numbers' if your start is not an integer and you want to keep the fractional part of the start number constant, or use 'integers' if you only want to loop integers.",
-		"An integer loop from 1 to a number x can also be written as 'loop x times'."})
-@Examples({"loop 5 times: # loops 1, 2, 3, 4, 5",
-		"loop numbers from 2.5 to 5.5: # loops 2.5, 3.5, 4.5, 5.5",
+		"You may want to use the 'times' expression instead, for instance 'loop 5 times:'"})
+@Examples({"loop numbers from 2.5 to 5.5: # loops 2.5, 3.5, 4.5, 5.5",
 		"loop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5"})
 @Since("1.4.6")
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
-				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%",
-				"%number% times");
+				"[(all [[of] the]|the)] (numbers|1¦integers) (between|from) %number% (and|to) %number%");
 	}
 	
 	@SuppressWarnings("null")
@@ -65,9 +62,9 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		start = matchedPattern == 0 ? (Expression<Number>) exprs[0] : new SimpleLiteral<>(1, false);
-		end = (Expression<Number>) exprs[1 - matchedPattern];
-		integer = parseResult.mark == 1 || matchedPattern == 1;
+		start = (Expression<Number>) exprs[0];
+		end = (Expression<Number>) exprs[1];
+		integer = parseResult.mark == 1;
 		return true;
 	}
 	
@@ -88,12 +85,12 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		final double low = integer ? Math.ceil(s.doubleValue()) : s.doubleValue();
 		for (int i = 0; i < amount; i++) {
 			if (integer)
-				list.add(Long.valueOf((long) low + i));
+				list.add((long) low + i);
 			else
-				list.add(Double.valueOf(low + i));
+				list.add(low + i);
 		}
 		if (reverse) Collections.reverse(list);
-		return list.toArray(new Number[list.size()]);
+		return list.toArray(new Number[0]);
 	}
 	
 	@Override
@@ -117,20 +114,14 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				return i <= max;
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Number next() {
 				if (!hasNext())
 					throw new NoSuchElementException();
 				if (integer)
-					return Long.valueOf((long) (reverse ? max-- : i++));
+					return (long) (reverse ? max-- : i++);
 				else
-					return Double.valueOf(reverse ? max-- : i++);
-			}
-			
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
+					return reverse ? max-- : i++;
 			}
 		};
 	}

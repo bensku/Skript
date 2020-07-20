@@ -36,6 +36,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
@@ -113,6 +114,18 @@ public class ExprEntity extends SimpleExpression<Entity> {
 		if (es.length == 0 || type.isInstance(es[0]))
 			return es;
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Nullable
+	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
+		for (Class<R> t : to) {
+			if (t.equals(EntityData.class)) {
+				return new SimpleLiteral<>((R) type, false);
+			}
+		}
+		return super.getConvertedExpression(to);
 	}
 	
 	@Override

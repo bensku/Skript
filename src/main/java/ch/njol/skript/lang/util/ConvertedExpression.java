@@ -25,11 +25,11 @@ import java.util.NoSuchElementException;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
@@ -54,16 +54,23 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	protected Class<T> to;
 	final Converter<? super F, ? extends T> conv;
 	
-	public ConvertedExpression(final Expression<? extends F> source, final Class<T> to, final Converter<? super F, ? extends T> conv) {
+	/**
+	 * Converter information.
+	 */
+	private final ConverterInfo<? super F, ? extends T> converterInfo;
+	
+	public ConvertedExpression(Expression<? extends F> source, Class<T> to, ConverterInfo<? super F, ? extends T> info) {
 		assert source != null;
 		assert to != null;
-		assert conv != null;
+		assert info != null;
 		
 		this.source = source;
 		this.to = to;
-		this.conv = conv;
+		this.conv = info.converter;
+		this.converterInfo = info;
 	}
 	
+	@SafeVarargs
 	@Nullable
 	public static <F, T> ConvertedExpression<F, T> newInstance(final Expression<F> v, final Class<T>... to) {
 		assert !CollectionUtils.containsSuperclass(to, v.getReturnType());
@@ -72,10 +79,10 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			// casting <? super ? extends F> to <? super F> is wrong, but since the converter is only used for values returned by the expression
 			// (which are instances of "<? extends F>") this won't result in any ClassCastExceptions.
 			@SuppressWarnings("unchecked")
-			final Converter<? super F, ? extends T> conv = (Converter<? super F, ? extends T>) Converters.getConverter(v.getReturnType(), c);
+			final ConverterInfo<? super F, ? extends T> conv = (ConverterInfo<? super F, ? extends T>) Converters.getConverterInfo(v.getReturnType(), c);
 			if (conv == null)
 				continue;
-			return new ConvertedExpression<F, T>(v, c, conv);
+			return new ConvertedExpression<>(v, c, conv);
 		}
 		return null;
 	}
@@ -88,7 +95,8 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (debug && e == null)
-			return "(" + source.toString(e, debug) + " >> " + conv + ": " + source.getReturnType().getName() + "->" + to.getName() + ")";
+			return "(" + source.toString(e, debug) + " >> " + conv + ": "
+				+ converterInfo.toString(e, true) + ")";
 		return source.toString(e, debug);
 	}
 	

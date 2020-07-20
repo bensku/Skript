@@ -33,8 +33,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -44,7 +48,6 @@ import ch.njol.skript.ScriptLoader.ScriptInfo;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.timings.SkriptTimings;
 
 /**
@@ -57,7 +60,7 @@ public abstract class SkriptEventHandler {
 	
 	private final static List<Trigger> selfRegisteredTriggers = new ArrayList<>();
 	
-	private final static Iterator<Trigger> getTriggers(final Class<? extends Event> event) {
+	private static Iterator<Trigger> getTriggers(final Class<? extends Event> event) {
 		return new Iterator<Trigger>() {
 			@Nullable
 			private Class<?> e = event;
@@ -236,9 +239,7 @@ public abstract class SkriptEventHandler {
 		}
 		
 		info.commands = Commands.unregisterCommands(script);
-		
-		info.functions = Functions.clearFunctions(script);
-		
+				
 		return info;
 	}
 	
@@ -261,11 +262,26 @@ public abstract class SkriptEventHandler {
 	 * triggers are using.
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	final static void registerBukkitEvents() {
+	static void registerBukkitEvents() {
+		EventPriority priority = SkriptConfig.defaultEventPriority.value();
 		for (final Class<? extends Event> e : triggers.keySet()) {
 			assert e != null;
+			// PlayerInteractEntityEvent has a subclass we need for armor stands
+			if (e.equals(PlayerInteractEntityEvent.class)) {
+				if (!registeredEvents.contains(e)) {
+					registeredEvents.add(e);
+					Bukkit.getPluginManager().registerEvent(e, listener, priority, ee, Skript.getInstance());
+					Bukkit.getPluginManager().registerEvent(PlayerInteractAtEntityEvent.class, listener, priority, ee, Skript.getInstance());
+					//Bukkit.getPluginManager().registerEvent(PlayerArmorStandManipulateEvent.class, listener, priority, ee, Skript.getInstance());
+				}
+				continue;
+			}
+			if (e.equals(PlayerInteractAtEntityEvent.class) || e.equals(PlayerArmorStandManipulateEvent.class)) {
+				continue; // Ignore. Registered with PlayerInteractEntityEvent above
+			}
+				
 			if (!containsSuperclass((Set) registeredEvents, e)) { // I just love Java's generics
-				Bukkit.getPluginManager().registerEvent(e, listener, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance());
+				Bukkit.getPluginManager().registerEvent(e, listener, priority, ee, Skript.getInstance());
 				registeredEvents.add(e);
 //				for (final Iterator<Class<? extends Event>> i = registeredEvents.iterator(); i.hasNext();) {
 //					final Class<? extends Event> ev = i.next();
@@ -278,7 +294,7 @@ public abstract class SkriptEventHandler {
 		}
 	}
 	
-	public final static boolean containsSuperclass(final Set<Class<?>> classes, final Class<?> c) {
+	public static boolean containsSuperclass(final Set<Class<?>> classes, final Class<?> c) {
 		if (classes.contains(c))
 			return true;
 		for (final Class<?> cl : classes) {

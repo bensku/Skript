@@ -2,8 +2,7 @@
   <code_scheme name="Project" version="173">
     <option name="LINE_SEPARATOR" value="&#10;" />
     <JavaCodeStyleSettings>
-      <option name="REPLACE_INSTANCEOF" value="true" />
-      <option name="REPLACE_CAST" value="true" />
+      <option name="REPLACE_INSTANCEOF_AND_CAST" value="true" />
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
       <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
@@ -28,8 +27,10 @@
       </REPEAT_ANNOTATIONS>
     </JavaCodeStyleSettings>
     <codeStyleSettings language="JAVA">
+      <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
       <indentOptions>
         <option name="USE_TAB_CHARACTER" value="true" />
+        <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
       </indentOptions>
     </codeStyleSettings>
   </code_scheme>

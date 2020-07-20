@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -48,11 +47,11 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Targeted Block")
-@Description("The block at the crosshair. This regards all blocks that are not air as fully opaque, e.g. torches will be like a solid stone block for this expression.")
+@Description("The block at the crosshair. This regards all blocks that are not air as fully solid, e.g. torches will be like a solid stone block for this expression.")
 @Examples({"# A command to set the block a player looks at to a specific type:",
 		"command /setblock <material>:",
-		"    trigger:",
-		"        set targeted block to argument"})
+		"\ttrigger:",
+		"\t\tset targeted block to argument"})
 @Since("1.0")
 public class ExprTargetedBlock extends PropertyExpression<Player, Block> {
 	static {

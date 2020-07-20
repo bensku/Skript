@@ -21,24 +21,32 @@ package ch.njol.skript.hooks.biomes;
 
 import java.io.IOException;
 
-import org.bukkit.block.Biome;
+import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.hooks.Hook;
 import ch.njol.skript.hooks.biomes.BiomeMapUtil.To19Mapping;
 import ch.njol.skript.util.EnumUtils;
-import ch.njol.skript.util.VisualEffect;
 
 /**
- * Hook for multi version biomes.
+ * Hook for using 1.13 biome names on older Minecraft versions. note that this
+ * class used to allow using 1.8 biome names on 1.9 or newer.
  */
 public class BiomeHook extends Hook<Skript> {
 	
 	@SuppressWarnings("null")
 	public static BiomeHook instance;
-	@SuppressWarnings("null")
-	public static EnumUtils<To19Mapping> util19; // Can be null, but doesn't matter; when used, always not null
-	// SO, be careful when using this
+	
+	/**
+	 * Used on Minecraft 1.9-1.12 to provide biome support.
+	 */
+	@Nullable
+	public static EnumUtils<To19Mapping> util19;
+	
+	public static EnumUtils<To19Mapping> getUtil() {
+		assert util19 != null;
+		return util19;
+	}
 
 	public BiomeHook() throws IOException {}
 	
@@ -57,7 +65,7 @@ public class BiomeHook extends Hook<Skript> {
 	@SuppressWarnings("null")
 	@Override
 	protected void loadClasses() throws IOException {
-		if (Skript.isRunningMinecraft(1, 9)) {// Load only if running 1.9+
+		if (!Skript.isRunningMinecraft(1, 13)) {// Load only if running MC<1.13
 			Skript.getAddonInstance().loadClasses(getClass().getPackage().getName());
 			util19 = new EnumUtils<>(To19Mapping.class, "biomes");
 		}

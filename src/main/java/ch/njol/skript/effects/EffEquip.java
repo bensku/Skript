@@ -24,15 +24,19 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Llama;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.LlamaInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.doc.Description;
@@ -49,7 +53,7 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Equip")
-@Description("Equips a player with some given armor. This will replace any armor that the player is wearing.")
+@Description("Equips an entity with some given armor. This will replace any armor that the entity is wearing.")
 @Examples({"equip player with diamond helmet",
 		"equip player with all diamond armor"})
 @Since("1.0")
@@ -75,6 +79,16 @@ public class EffEquip extends Effect implements Testable {
 	
 	private final static boolean supportsHorses = Skript.classExists("org.bukkit.entity.Horse");
 	private final static boolean newHorses = Skript.classExists("org.bukkit.entity.AbstractHorse");
+	private final static boolean supportsLlamas = Skript.classExists("org.bukkit.entity.Llama");
+	
+	private static final ItemType helmet = Aliases.javaItemType("helmet");
+	private static final ItemType chestplate = Aliases.javaItemType("chestplate");
+	private static final ItemType leggings = Aliases.javaItemType("leggings");
+	private static final ItemType boots = Aliases.javaItemType("boots");
+	private static final ItemType horseArmor = Aliases.javaItemType("horse armor");
+	private static final ItemType saddle = Aliases.javaItemType("saddle");
+	private static final ItemType chest = Aliases.javaItemType("chest");
+	private static final ItemType carpet = Aliases.javaItemType("carpet");
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -89,16 +103,28 @@ public class EffEquip extends Effect implements Testable {
 					}
 				}
 				continue;
+			} else if (supportsLlamas && en instanceof Llama) {
+				LlamaInventory invi = ((Llama) en).getInventory();
+				for (ItemType t : ts) {
+					for (ItemStack item : t.getAll()) {
+						if (carpet.isOfType(item)) {
+							invi.setDecor(item);
+						} else if (chest.isOfType(item)) {
+							((Llama) en).setCarryingChest(true);
+						}
+					}
+				}
+				continue;
 			} else if (newHorses && en instanceof AbstractHorse) {
 				// Spigot's API is bad, just bad... Abstract horse doesn't have horse inventory!
 				final Inventory invi = ((AbstractHorse) en).getInventory();
 				for (final ItemType t : ts) {
 					for (final ItemStack item : t.getAll()) {
-						if (item.getType() == Material.SADDLE) {
+						if (saddle.isOfType(item)) {
 							invi.setItem(0, item); // Slot 0=saddle
-						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
+						} else if (horseArmor.isOfType(item)) {
 							invi.setItem(1, item); // Slot 1=armor
-						} else if (item.getType() == Material.CHEST && en instanceof ChestedHorse) {
+						} else if (chest.isOfType(item) && en instanceof ChestedHorse) {
 							((ChestedHorse) en).setCarryingChest(true);
 						}
 					}
@@ -108,55 +134,35 @@ public class EffEquip extends Effect implements Testable {
 				final HorseInventory invi = ((Horse) en).getInventory();
 				for (final ItemType t : ts) {
 					for (final ItemStack item : t.getAll()) {
-						if (item.getType() == Material.SADDLE) {
+						if (saddle.isOfType(item)) {
 							invi.setSaddle(item);
-						} else if (item.getType() == Material.IRON_BARDING || item.getType() == Material.GOLD_BARDING || item.getType() == Material.DIAMOND_BARDING) {
+						} else if (horseArmor.isOfType(item)) {
 							invi.setArmor(item);
-						} else if (item.getType() == Material.CHEST) {
+						} else if (chest.isOfType(item)) {
 							((Horse) en).setCarryingChest(true);
 						}
 					}
 				}
 				continue;
 			}
-			if (en.getEquipment() == null)
+			EntityEquipment equip = en.getEquipment();
+			if (equip == null)
 				continue;
 			for (final ItemType t : ts) {
 				for (final ItemStack item : t.getAll()) {
-					switch (item.getType()) {// TODO !Update with every version [items]
-						case LEATHER_BOOTS:
-						case IRON_BOOTS:
-						case GOLD_BOOTS:
-						case CHAINMAIL_BOOTS:
-						case DIAMOND_BOOTS:
-							en.getEquipment().setBoots(item);
-							break;
-						case LEATHER_LEGGINGS:
-						case IRON_LEGGINGS:
-						case GOLD_LEGGINGS:
-						case CHAINMAIL_LEGGINGS:
-						case DIAMOND_LEGGINGS:
-							en.getEquipment().setLeggings(item);
-							break;
-						case LEATHER_CHESTPLATE:
-						case IRON_CHESTPLATE:
-						case GOLD_CHESTPLATE:
-						case CHAINMAIL_CHESTPLATE:
-						case DIAMOND_CHESTPLATE:
-							en.getEquipment().setChestplate(item);
-							break;
-						//$CASES-OMITTED$
-						default:
-							if (!(item.getType().isBlock() || item.getTypeId() == 397 /* mob head */))
-								continue;
-							//$FALL-THROUGH$
-						case LEATHER_HELMET:
-						case IRON_HELMET:
-						case GOLD_HELMET:
-						case CHAINMAIL_HELMET:
-						case DIAMOND_HELMET:
-							en.getEquipment().setHelmet(item);
-					}
+					// Blocks are visible in head slot, too
+					// TODO skulls; waiting for decoration aliases
+					if (helmet.isOfType(item) || item.getType().isBlock())
+						equip.setHelmet(item);
+					else if (chestplate.isOfType(item))
+						equip.setChestplate(item);
+					else if (leggings.isOfType(item))
+						equip.setLeggings(item);
+					else if (boots.isOfType(item))
+						equip.setBoots(item);
+					
+					// We have no idea where to equip other items
+					// User can set them to slot they need custom hats etc.
 				}
 			}
 			if (en instanceof Player)

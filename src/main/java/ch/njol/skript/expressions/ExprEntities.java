@@ -26,10 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -44,119 +44,85 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
-import ch.njol.util.NullableChecker;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
 import ch.njol.util.coll.iterator.NonNullIterator;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Entities")
-@Description("all entities in all world, in a specific world or in a radius around a certain location, e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.")
+@Description("All entities in all worlds, in a specific world, in a chunk or in a radius around a certain location, " +
+		"e.g. 'all players', 'all creepers in the player's world', or 'players in radius 100 of the player'.")
 @Examples({"kill all creepers in the player's world",
-		"send \"Psst!\" to all players witin 100 meters of the player",
+		"send \"Psst!\" to all players within 100 meters of the player",
 		"give a diamond to all ops",
-		"heal all tamed wolves in radius 2000 around {town center}"})
-@Since("1.2.1")
+		"heal all tamed wolves in radius 2000 around {town center}",
+		"delete all monsters in chunk at player"})
+@Since("1.2.1, 2.5 (chunks)")
 public class ExprEntities extends SimpleExpression<Entity> {
+
 	static {
 		Skript.registerExpression(ExprEntities.class, Entity.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
-				"[(all [[of] the]|the)] %*entitydatas% [(in|of) [world[s]] %-worlds%]",
-				"[(all [[of] the]|the)] entities of type[s] %entitydatas% [(in|of) [world[s]] %-worlds%]",
+				"[(all [[of] the]|the)] %*entitydatas% [(in|of) ([world[s]] %-worlds%|1¦%-chunks%)]",
+				"[(all [[of] the]|the)] entities of type[s] %entitydatas% [(in|of) ([world[s]] %-worlds%|1¦%-chunks%)]",
 				"[(all [[of] the]|the)] %*entitydatas% (within|[with]in radius) %number% [(block[s]|met(er|re)[s])] (of|around) %location%",
 				"[(all [[of] the]|the)] entities of type[s] %entitydatas% in radius %number% (of|around) %location%");
 	}
-	
+
 	@SuppressWarnings("null")
 	Expression<? extends EntityData<?>> types;
-	
+
 	@Nullable
-	Expression<World> worlds;
-	
+	private Expression<World> worlds;
+	@SuppressWarnings("null")
+	private Expression<Chunk> chunks;
 	@Nullable
 	private Expression<Number> radius;
 	@Nullable
 	private Expression<Location> center;
-	@Nullable
-	private Expression<? extends Entity> centerEntity;
-	
-	Class<? extends Entity> returnType = Entity.class;
-	
-	private int matchedPattern;
-	
-	@SuppressWarnings({"unchecked", "null"})
+
+	private Class<? extends Entity> returnType = Entity.class;
+	private boolean isUsingRadius;
+
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		this.matchedPattern = matchedPattern;
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		types = (Expression<? extends EntityData<?>>) exprs[0];
 		if (matchedPattern % 2 == 0) {
-			for (final EntityData<?> d : ((Literal<EntityData<?>>) types).getAll()) {
+			for (EntityData<?> d : ((Literal<EntityData<?>>) types).getAll()) {
 				if (d.isPlural().isFalse() || d.isPlural().isUnknown() && !StringUtils.startsWithIgnoreCase(parseResult.expr, "all"))
 					return false;
 			}
 		}
-		if (matchedPattern < 2) {
-			worlds = (Expression<World>) exprs[exprs.length - 1];
-		} else {
+		isUsingRadius = matchedPattern >= 2;
+		if (isUsingRadius) {
 			radius = (Expression<Number>) exprs[exprs.length - 2];
 			center = (Expression<Location>) exprs[exprs.length - 1];
-			final BlockingLogHandler log = SkriptLogger.startLogHandler(new BlockingLogHandler());
-			try {
-				if (!center.getSource().getReturnType().equals(Location.class)) // Ensure that no location -> entity...
-					centerEntity = center.getSource().getConvertedExpression(Entity.class); // ... when no entity exists
-			} finally {
-				log.stop();
+		} else {
+			if (parseResult.mark == 1) {
+				chunks = (Expression<Chunk>) exprs[2];
+			} else {
+				worlds = (Expression<World>) exprs[1];
 			}
 		}
-		if (types instanceof Literal && ((Literal<EntityData<?>>) types).getAll().length == 1) {
+		if (types instanceof Literal && ((Literal<EntityData<?>>) types).getAll().length == 1)
 			returnType = ((Literal<EntityData<?>>) types).getSingle().getType();
-		}
 		return true;
 	}
-	
+
 	@Override
-	public boolean isSingle() {
-		return false;
-	}
-	
-	@Override
-	public Class<? extends Entity> getReturnType() {
-		return returnType;
-	}
-	
-	@Override
-	@Nullable
-	protected Entity[] get(final Event e) {
-		if (matchedPattern >= 2) {
-			final Iterator<? extends Entity> iter = iterator(e);
-			if (iter == null || !iter.hasNext())
-				return new Entity[0];
-			final List<Entity> l = new ArrayList<>();
-			while (iter.hasNext())
-				l.add(iter.next());
-			return l.toArray((Entity[]) Array.newInstance(returnType, l.size()));
-		} else {
-			return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
-	@Override
-	public boolean isLoopOf(final String s) {
+	public boolean isLoopOf(String s) {
 		if (!(types instanceof Literal<?>))
 			return false;
-		final LogHandler h = SkriptLogger.startLogHandler(new BlockingLogHandler());
+		LogHandler h = SkriptLogger.startLogHandler(new BlockingLogHandler());
 		try {
-			final EntityData<?> d = EntityData.parseWithoutIndefiniteArticle(s);
+			EntityData<?> d = EntityData.parseWithoutIndefiniteArticle(s);
 			if (d != null) {
-				for (final EntityData<?> t : ((Literal<EntityData<?>>) types).getAll()) {
+				for (EntityData<?> t : ((Literal<EntityData<?>>) types).getAll()) {
 					assert t != null;
 					if (!d.isSupertypeOf(t))
 						return false;
@@ -168,86 +134,103 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		}
 		return false;
 	}
-	
-	@SuppressWarnings("null")
+
 	@Override
 	@Nullable
-	public Iterator<? extends Entity> iterator(final Event e) {
-		if (matchedPattern >= 2) {
-			final Location l;
-			if (centerEntity != null) {
-				Entity en = centerEntity.getSingle(e);
-				if (en == null)
-					return null;
-				l = en.getLocation();
+	protected Entity[] get(Event e) {
+		if (isUsingRadius) {
+			Iterator<? extends Entity> iter = iterator(e);
+			if (iter == null || !iter.hasNext())
+				return new Entity[0];
+
+			List<Entity> l = new ArrayList<>();
+			while (iter.hasNext())
+				l.add(iter.next());
+			return l.toArray((Entity[]) Array.newInstance(returnType, l.size()));
+		} else {
+			if (chunks != null) {
+				return EntityData.getAll(types.getArray(e), returnType, chunks.getArray(e));
 			} else {
-				assert center != null;
-				l = center.getSingle(e);
-				if (l == null)
-					return null;
+				return EntityData.getAll(types.getAll(e), returnType, worlds != null ? worlds.getArray(e) : null);
 			}
+		}
+	}
+
+	@Override
+	@Nullable
+	@SuppressWarnings("null")
+	public Iterator<? extends Entity> iterator(Event e) {
+		if (isUsingRadius) {
+			assert center != null;
+			Location l = center.getSingle(e);
+			if (l == null)
+				return null;
 			assert radius != null;
-			final Number n = radius.getSingle(e);
+			Number n = radius.getSingle(e);
 			if (n == null)
 				return null;
-			final double d = n.doubleValue();
-			final Collection<Entity> es = l.getWorld().getNearbyEntities(l, d, d, d);
-			final double radiusSquared = d * d * Skript.EPSILON_MULT;
-			final EntityData<?>[] ts = types.getAll(e);
-			return new CheckedIterator<>(es.iterator(), new NullableChecker<Entity>() {
-				@Override
-				public boolean check(final @Nullable Entity e) {
-					if (e == null || e.getLocation().distanceSquared(l) > radiusSquared)
+			double d = n.doubleValue();
+
+			Collection<Entity> es = l.getWorld().getNearbyEntities(l, d, d, d);
+			double radiusSquared = d * d * Skript.EPSILON_MULT;
+			EntityData<?>[] ts = types.getAll(e);
+			return new CheckedIterator<>(es.iterator(), e1 -> {
+					if (e1 == null || e1.getLocation().distanceSquared(l) > radiusSquared)
 						return false;
-					for (final EntityData<?> t : ts) {
-						if (t.isInstance(e))
+					for (EntityData<?> t : ts) {
+						if (t.isInstance(e1))
 							return true;
 					}
 					return false;
-				}
-			});
+				});
 		} else {
 			if (worlds == null && returnType == Player.class)
 				return super.iterator(e);
+
 			return new NonNullIterator<Entity>() {
-				
-				private final World[] ws = worlds == null ? Bukkit.getWorlds().toArray(new World[0]) : worlds.getArray(e);
-				private int w = -1;
-				
-				private final EntityData<?>[] ts = types.getAll(e);
-				
-				@Nullable
-				private Iterator<? extends Entity> curIter = null;
-				
-				@Override
-				@Nullable
-				protected Entity getNext() {
-					while (true) {
-						while (curIter == null || !curIter.hasNext()) {
-							w++;
-							if (w == ws.length)
-								return null;
-							curIter = ws[w].getEntitiesByClass(returnType).iterator();
-						}
-						while (curIter.hasNext()) {
-							final Entity current = curIter.next();
-							for (final EntityData<?> t : ts) {
-								if (t.isInstance(current))
-									return current;
+					private World[] ws = worlds == null ? Bukkit.getWorlds().toArray(new World[0]) : worlds.getArray(e);
+					private EntityData<?>[] ts = types.getAll(e);
+					private int w = -1;
+					@Nullable
+					private Iterator<? extends Entity> curIter = null;
+
+					@Override
+					@Nullable
+					protected Entity getNext() {
+						while (true) {
+							while (curIter == null || !curIter.hasNext()) {
+								w++;
+								if (w == ws.length)
+									return null;
+								curIter = ws[w].getEntitiesByClass(returnType).iterator();
+							}
+							while (curIter.hasNext()) {
+								Entity current = curIter.next();
+								for (EntityData<?> t : ts) {
+									if (t.isInstance(current))
+										return current;
+								}
 							}
 						}
-					}
-				}
-			};
+					}};
 		}
 	}
-	
-	@SuppressWarnings("null")
+
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "all entities of types " + types.toString(e, debug) +
-				(worlds != null ? " in " + worlds.toString(e, debug) :
-						radius != null && center != null ? " in radius " + radius.toString(e, debug) + " around " + center.toString(e, debug) : "");
+	public boolean isSingle() {
+		return false;
 	}
-	
+
+	@Override
+	public Class<? extends Entity> getReturnType() {
+		return returnType;
+	}
+
+	@Override
+	@SuppressWarnings("null")
+	public String toString(@Nullable Event e, boolean debug) {
+		return "all entities of type " + types.toString(e, debug) + (worlds != null ? " in " + worlds.toString(e, debug) :
+				radius != null && center != null ? " in radius " + radius.toString(e, debug) + " around " + center.toString(e, debug) : "");
+	}
+
 }

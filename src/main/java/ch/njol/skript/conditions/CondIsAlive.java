@@ -19,7 +19,7 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Entity;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
@@ -30,34 +30,35 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Is Alive")
-@Description("Checks whether an entity is alive. This is mostly useful to check whether an entity stored in a variable does still exist.")
-@Examples({"{villager-buddy::%player's uuid%} is dead"})
-@Since("2.0")
-public class CondIsAlive extends PropertyCondition<LivingEntity> {
+@Description("Checks whether an entity is alive. Works for non-living entities too.")
+@Examples({"if {villager-buddy::%player's uuid%} is not dead:",
+	"",
+	"on shoot:",
+	"\twhile the projectile is alive:"})
+@Since("2.0, 2.4-alpha4 (non-living entity support)")
+public class CondIsAlive extends PropertyCondition<Entity> {
+
 	static {
-		register(CondIsAlive.class, "(1¦alive|0¦dead)", "livingentities");
+		register(CondIsAlive.class, "(alive|1¦dead)", "entities");
 	}
-	
-	private boolean alive;
-	
+
+	private boolean isNegated;
+
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		alive = parseResult.mark == 1;
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		isNegated = parseResult.mark == 1;
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
-	
+
 	@Override
-	public boolean check(final LivingEntity e) {
-		return alive != e.isDead();
+	public boolean check(Entity e) {
+		return isNegated == e.isDead();
 	}
-	
+
 	@Override
 	protected String getPropertyName() {
-		return alive ? "alive" : "dead";
+		return isNegated ? "dead" : "alive";
 	}
-	
+
 }

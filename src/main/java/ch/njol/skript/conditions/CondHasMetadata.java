@@ -20,6 +20,8 @@
 package ch.njol.skript.conditions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -39,17 +41,15 @@ import org.eclipse.jdt.annotation.Nullable;
 @SuppressWarnings("null")
 public class CondHasMetadata extends Condition {
 
-	@Nullable
-	private Expression<Metadatable> holders;
-	@Nullable
-	private Expression<String> values;
-
 	static {
 		Skript.registerCondition(CondHasMetadata.class,
 				"%metadataholders% (has|have) metadata [(value|tag)[s]] %strings%",
 				"%metadataholders% (doesn't|does not|do not|don't) have metadata [(value|tag)[s]] %strings%"
 		);
 	}
+	
+	private Expression<Metadatable> holders;
+	private Expression<String> values;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -62,22 +62,16 @@ public class CondHasMetadata extends Condition {
 
 	@Override
 	public boolean check(Event e) {
-		String[] values = this.values.getArray(e);
-		if (values == null || values.length == 0)
-			return false;
-		return holders.check(e, h -> {
-			for (String value : values) {
-				if (!h.hasMetadata(value))
-					return false;
-			}
-			return true;
-		}, isNegated());
+		return holders.check(e,
+				holder -> values.check(e,
+						holder::hasMetadata
+				), isNegated());
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		if (!isNegated())
-			return holders.toString(e, debug) + " has metadata value " + values.toString(e, debug);
-		return holders.toString(e, debug) + " does not have metadata value " + values.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, holders,
+				"metadata " + (values.isSingle() ? "value " : "values ") + values.toString(e, debug));
 	}
+	
 }

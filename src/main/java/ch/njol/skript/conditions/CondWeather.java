@@ -34,7 +34,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.WeatherType;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -47,12 +46,14 @@ import ch.njol.util.Kleenean;
 		"is raining in \"world\" or \"world2\""})
 @Since("1.0")
 public class CondWeather extends Condition {
+	
 	static {
+		// TODO a better alternative syntax, without the 'is' at the beginning
 		Skript.registerCondition(CondWeather.class, "is %weathertypes% [in %worlds%]");
 	}
 	
 	@SuppressWarnings("null")
-	Expression<WeatherType> weathers;
+	private Expression<WeatherType> weathers;
 	@SuppressWarnings("null")
 	private Expression<World> worlds;
 	
@@ -66,23 +67,16 @@ public class CondWeather extends Condition {
 	
 	@Override
 	public boolean check(final Event e) {
-		return worlds.check(e, new Checker<World>() {
-			@Override
-			public boolean check(final World w) {
-				final WeatherType t;
-				if (e instanceof WeatherEvent && w.equals(((WeatherEvent) e).getWorld()) && !Delay.isDelayed(e)) {
-					t = WeatherType.fromEvent((WeatherEvent) e);
-				} else {
-					t = WeatherType.fromWorld(w);
-				}
-				return weathers.check(e, new Checker<WeatherType>() {
-					@Override
-					public boolean check(final WeatherType wt) {
-						return wt == t;
-					}
-				}, isNegated());
+		return worlds.check(e, w -> {
+			final WeatherType weatherType;
+			if (e instanceof WeatherEvent && w.equals(((WeatherEvent) e).getWorld()) && !Delay.isDelayed(e)) {
+				weatherType = WeatherType.fromEvent((WeatherEvent) e);
+			} else {
+				weatherType = WeatherType.fromWorld(w);
 			}
-		});
+			return weathers.check(e,
+					expectedType -> expectedType == weatherType);
+		}, isNegated());
 	}
 	
 	@Override

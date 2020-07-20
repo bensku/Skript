@@ -36,11 +36,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Broadcast")
-@Description("Broadcasts a message to the server.")
+@Description({"Broadcasts a message to the server. Only formatting options supported by console",
+		"(i.e. colors) are supported. If you need to use advanced chat formatting, send the",
+		"message to all players instead of broadcasting it."})
 @Examples({"broadcast \"Welcome %player% to the server!\"",
 		"broadcast \"Woah! It's a message!\""})
 @Since("1.0")

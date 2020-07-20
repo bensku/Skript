@@ -28,20 +28,18 @@ import ch.njol.skript.hooks.biomes.BiomeMapUtil.To19Mapping;
 import ch.njol.skript.util.EnumUtils;
 
 /**
- * 1.8 to 1.9 biome name mappings. 1.9 names make no sense.
- * Should be 1.8 compatible, if it's not there is a bug.
- * @author bensku
+ * 1.13 to 1.9+ biome name mappings.
  */
 public abstract class BiomeMappings {
 	
 	private final static EnumUtils<Biome> util = new EnumUtils<>(Biome.class, "biomes");
 	
-	private final static boolean mapFor19 = Skript.isRunningMinecraft(1, 9);
+	private final static boolean mapFor19 = !Skript.isRunningMinecraft(1, 13);
 	
 	public static @Nullable Biome parse(final String name) {
 		if (!mapFor19) return util.parse(name);
 		
-		To19Mapping mapping = BiomeHook.util19.parse(name);
+		To19Mapping mapping = BiomeHook.getUtil().parse(name);
 		if (mapping == null) return util.parse(name); // Should not happen - incomplete maps are a mess to work with for programmer
 		return mapping.getHandle();
 	}
@@ -50,11 +48,11 @@ public abstract class BiomeMappings {
 		if (!mapFor19) return util.toString(biome, flags);
 		To19Mapping mapping = To19Mapping.getMapping(biome);
 		if (mapping == null) return "";
-		return BiomeHook.util19.toString(mapping, flags);
+		return BiomeHook.getUtil().toString(mapping, flags);
 	}
 	
 	public static String getAllNames() {
 		if (!mapFor19) return util.getAllNames();
-		return BiomeHook.util19.getAllNames();
+		return BiomeHook.getUtil().getAllNames();
 	}
 }

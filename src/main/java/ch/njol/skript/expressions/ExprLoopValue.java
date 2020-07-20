@@ -20,18 +20,17 @@
 package ch.njol.skript.expressions;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
-import org.mozilla.javascript.Script;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -138,13 +137,15 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	@Nullable
 	protected <R> ConvertedExpression<Object, ? extends R> getConvertedExpr(final Class<R>... to) {
 		if (isVariableLoop && !isIndex) {
-			return new ConvertedExpression<>(this, (Class<R>) Utils.getSuperType(to), new Converter<Object, R>() {
+			Class<R> superType = (Class<R>) Utils.getSuperType(to);
+			return new ConvertedExpression<>(this, superType,
+					new ConverterInfo<>(Object.class, superType, new Converter<Object, R>() {
 				@Override
 				@Nullable
 				public R convert(final Object o) {
 					return Converters.convert(o, to);
 				}
-			});
+			}, 0));
 		} else {
 			return super.getConvertedExpr(to);
 		}

@@ -19,9 +19,6 @@
  */
 package ch.njol.skript.conditions;
 
-import java.util.Arrays;
-
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -32,13 +29,13 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.UnparsedLiteral;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -64,7 +61,7 @@ import ch.njol.util.Kleenean;
 @Since("1.0")
 public class CondCompare extends Condition {
 	
-	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][] {
+	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][]{
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above)|\\>) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\>=) %objects%", Relation.GREATER_OR_EQUAL},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((less|smaller) than|below)|\\<) %objects%", Relation.SMALLER},
@@ -100,14 +97,14 @@ public class CondCompare extends Condition {
 	@SuppressWarnings("null")
 	private Expression<?> first;
 	@SuppressWarnings("null")
-	Expression<?> second;
+	private Expression<?> second;
 	@Nullable
-	Expression<?> third;
+	private Expression<?> third;
 	@SuppressWarnings("null")
-	Relation relation;
+	private Relation relation;
 	@SuppressWarnings("rawtypes")
 	@Nullable
-	Comparator comp;
+	private Comparator comp;
 	
 	@SuppressWarnings("null")
 	@Override
@@ -121,7 +118,7 @@ public class CondCompare extends Condition {
 			setNegated(true);
 		if ((parser.mark & 0x1) != 0) // "neither" on the left side
 			setNegated(!isNegated());
-		if ((parser.mark & 0x4) != 0) {// "neither" on the right side
+		if ((parser.mark & 0x4) != 0) { // "neither" on the right side
 			if (second instanceof ExpressionList)
 				((ExpressionList<?>) second).invertAnd();
 			if (third instanceof ExpressionList)
@@ -156,7 +153,7 @@ public class CondCompare extends Condition {
 		return true;
 	}
 	
-	public final static String f(final Expression<?> e) {
+	public static String f(final Expression<?> e) {
 		if (e.getReturnType() == Object.class)
 			return e.toString(null, false);
 		return Classes.getSuperClassInfo(e.getReturnType()).getName().withIndefiniteArticle();
@@ -215,7 +212,60 @@ public class CondCompare extends Condition {
 		
 		comp = Comparators.getComparator(f, s);
 		
+		if (comp == null) { // Try to re-parse with more context
+			/*
+			 * SkriptParser sees that CondCompare takes two objects. Most of the time,
+			 * this works fine. However, when there are multiple conflicting literals,
+			 * it just picks one of them at random.
+			 * 
+			 * If our other parameter is not a literal, we can try parsing the other
+			 * explicitly with same return type. This is not guaranteed to succeed,
+			 * but will in work in some cases that were previously ambiguous.
+			 * 
+			 * Some damage types not working (issue #2184) would be a good example
+			 * of issues that SkriptParser's lack of context can cause.
+			 */
+			SimpleLiteral<?> reparsedSecond = reparseLiteral(first.getReturnType(), second);
+			if (reparsedSecond != null) {
+				second = reparsedSecond;
+				comp = Comparators.getComparator(f, second.getReturnType());
+			} else {
+				SimpleLiteral<?> reparsedFirst = reparseLiteral(second.getReturnType(), first);
+				if (reparsedFirst != null) {
+					first = reparsedFirst;
+					comp = Comparators.getComparator(first.getReturnType(), s);
+				}
+			}
+			
+		}
+		
 		return comp != null;
+	}
+	
+	/**
+	 * Attempts to parse given expression again as a literal of given type.
+	 * This will only work if the expression is a literal and its unparsed
+	 * form can be accessed.
+	 * @param <T> Wanted type.
+	 * @param type Wanted class of literal.
+	 * @param expr Expression we currently have.
+	 * @return A literal value, or null if parsing failed.
+	 */
+	@Nullable
+	private <T> SimpleLiteral<T> reparseLiteral(Class<T> type, Expression<?> expr) {
+		if (expr instanceof SimpleLiteral) { // Only works for simple literals
+			Expression<?> source = expr.getSource();
+			
+			// Try to get access to unparsed content of it
+			if (source instanceof UnparsedLiteral) {
+				String unparsed = ((UnparsedLiteral) source).getData();
+				T data = Classes.parse(unparsed, type, ParseContext.DEFAULT);
+				if (data != null) { // Success, let's make a literal of it
+					return new SimpleLiteral<>(data, false, new UnparsedLiteral(unparsed));
+				}
+			}
+		}
+		return null; // Context-sensitive parsing failed; can't really help it
 	}
 	
 	/*
@@ -252,29 +302,20 @@ public class CondCompare extends Condition {
 	 * neither a nor b # x and y === a !# x and y && b !# x and y		// nor = and
 	 * neither a nor b # x or y === a !# x or y && b !# x or y			// nor = and
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean check(final Event e) {
 		final Expression<?> third = this.third;
-		return first.check(e, new Checker<Object>() {
-			@Override
-			public boolean check(final Object o1) {
-				return second.check(e, new Checker<Object>() {
-					@Override
-					public boolean check(final Object o2) {
-						if (third == null)
-							return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
-						return third.check(e, new Checker<Object>() {
-							@Override
-							public boolean check(final Object o3) {
-								return relation == Relation.NOT_EQUAL ^
-										(Relation.GREATER_OR_EQUAL.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2))
-										&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3)));
-							}
-						});
-					}
-				});
-			}
-		}, isNegated());
+		return first.check(e,
+				(Checker<Object>) o1 -> second.check(e,
+						(Checker<Object>) o2 -> {
+							if (third == null)
+								return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
+							return third.check(e,
+									(Checker<Object>) o3 -> relation == Relation.NOT_EQUAL ^
+											(Relation.GREATER_OR_EQUAL.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2))
+													&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3))));
+						}), isNegated());
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.variables.Variables;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -38,6 +39,7 @@ import java.util.concurrent.Executors;
  * in main server thread, as if there had been a delay before.
  * <p>
  * Majority of Skript and Minecraft APIs are not thread-safe, so be careful.
+ * Also, local variables are not available while executing asynchronous code.
  */
 public abstract class AsyncEffect extends Effect {
 	
@@ -46,16 +48,24 @@ public abstract class AsyncEffect extends Effect {
 	protected TriggerItem walk(Event e) {
 		debug(e, true);
 		TriggerItem next = getNext();
-		Delay.addDelayedEvent(e);
-		Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
-	        	@SuppressWarnings("synthetic-access")
-			@Override
-	            	public void run() {
-				execute(e); // Execute this effect
-	                	if (next != null) {
+		
+		if (next != null) {
+			Delay.addDelayedEvent(e); // Mark this event as delayed
+			Object localVars = Variables.removeLocals(e); // Back up local variables
+			
+			Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
+				@SuppressWarnings("synthetic-access")
+				@Override
+				public void run() {
+					execute(e); // Execute this effect
+					
 					Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
 						@Override
 						public void run() { // Walk to next item synchronously
+							// Re-set local variables
+							if (localVars != null)
+								Variables.setLocalVariables(e, localVars);
+							
 							Object timing = null;
 							if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
 								Trigger trigger = getTrigger();
@@ -63,15 +73,16 @@ public abstract class AsyncEffect extends Effect {
 									timing = SkriptTimings.start(trigger.getDebugLabel());
 								}
 							}
-
+							
 							TriggerItem.walk(next, e);
-
+							Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+							
 							SkriptTimings.stop(timing); // Stop timing if it was even started
 						}
 					});	
 				}
-	            	}
-	        });
-        return null;
-    }
+			});
+		}
+		return null;
+	}
 }

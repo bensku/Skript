@@ -55,7 +55,7 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		Skript.registerEvent("Region Enter/Leave", EvtRegionBorder.class, RegionBorderEvent.class,
 				"(0¦enter[ing]|1¦leav(e|ing)|1¦exit[ing]) [of] ([a] region|[[the] region] %-regions%)",
 				"region (0¦enter[ing]|1¦leav(e|ing)|1¦exit[ing])")
-				.description("Called when a player enters or leaves a <a href='../classes/#region'>region</a>.",
+				.description("Called when a player enters or leaves a <a href='../classes.html#region'>region</a>.",
 						"This event requires a supported regions plugin to be installed.")
 				.examples("on region exit:",
 						"	message \"Leaving %region%.\"")
@@ -127,7 +127,7 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 		});
 	}
 	
-	final static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
+	static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
 		final Player p = me.getPlayer();
 		assert p != null;
 		final RegionBorderEvent e = new RegionBorderEvent(r, p, enter);
@@ -170,7 +170,7 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 	
 	private static boolean registered = false;
 	
-	private final static void register() {
+	private static void register() {
 		if (registered)
 			return;
 		Bukkit.getPluginManager().registerEvent(PlayerMoveEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), ee, Skript.getInstance(), true);

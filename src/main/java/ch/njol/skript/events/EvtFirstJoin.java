@@ -35,7 +35,8 @@ public class EvtFirstJoin extends SkriptEvent {
 	static {
 		Skript.registerEvent("First Join", EvtFirstJoin.class, PlayerJoinEvent.class, "first (join|login)")
 				.description("Called when a player joins the server for the first time.")
-				.examples("")
+				.examples("on first join:",
+						"\tbroadcast \"Welcome %player% to the server!\"")
 				.since("1.3.7");
 	}
 	

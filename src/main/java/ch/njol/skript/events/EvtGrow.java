@@ -19,8 +19,6 @@
  */
 package ch.njol.skript.events;
 
-import java.util.Arrays;
-
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -50,7 +48,7 @@ public class EvtGrow extends SkriptEvent {
 		Skript.registerEvent("Grow", EvtGrow.class, CollectionUtils.array(StructureGrowEvent.class, BlockGrowEvent.class),
 				"grow [of (1¦%-structuretype%|2¦%-itemtype%)]")
 				.description("Called when a tree, giant mushroom or plant grows to next stage.")
-				.examples("on grow", "on grow of a tree", "on grow of a huge jungle tree")
+				.examples("on grow:", "on grow of a tree:", "on grow of a huge jungle tree:")
 				.since("1.0 (2.2-dev20 for plants)");
 	}
 	
@@ -73,34 +71,34 @@ public class EvtGrow extends SkriptEvent {
 	}
 	
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		if (evtType == STRUCTURE)
-			return "grow" + (types != null ? " of " + types.toString(e, debug) : "");
-		else if (evtType == BLOCK)
-			return "grow" + (blocks != null ? " of " + blocks.toString(e, debug) : "");
-		return "grow";
-	}
-	
-	@Override
 	public boolean check(final Event e) {
 		if (evtType == STRUCTURE  && types != null && e instanceof StructureGrowEvent) {
 			return types.check(e, new Checker<StructureType>() {
-				@SuppressWarnings("null")
 				@Override
 				public boolean check(final StructureType t) {
 					return t.is(((StructureGrowEvent) e).getSpecies());
 				}
 			});
 		} else if (evtType == BLOCK && blocks != null && e instanceof BlockGrowEvent) {
+			assert blocks != null;
 			return blocks.check(e, new Checker<ItemType>() {
-				@SuppressWarnings("null")
 				@Override
 				public boolean check(final ItemType t) {
-					return t.getRandom().getType() == ((BlockGrowEvent) e).getBlock().getType();
+					return t.isOfType(((BlockGrowEvent) e).getBlock());
 				}
 			});
 		}
-		return true;
+
+		return false;
+	}
+	
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		if (evtType == STRUCTURE)
+			return "grow" + (types != null ? " of " + types.toString(e, debug) : "");
+		else if (evtType == BLOCK)
+			return "grow" + (blocks != null ? " of " + blocks.toString(e, debug) : "");
+		return "grow";
 	}
 	
 }

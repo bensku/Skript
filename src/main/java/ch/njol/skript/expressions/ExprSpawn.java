@@ -44,7 +44,7 @@ import ch.njol.util.coll.CollectionUtils;
  * @author Peter Güttinger
  */
 @Name("Spawn")
-@Description("The spawnpoint of a world.")
+@Description("The spawn point of a world.")
 @Examples({"teleport all players to spawn",
 		"set the spawn point of \"world\" to the player's location"})
 @Since("1.4.2")
@@ -84,7 +84,6 @@ public class ExprSpawn extends PropertyExpression<World, Location> {
 		return "spawn of " + getExpr().toString(e, debug);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -94,7 +93,7 @@ public class ExprSpawn extends PropertyExpression<World, Location> {
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.SET;
 		assert delta != null;
 		

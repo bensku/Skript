@@ -36,7 +36,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.While;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
@@ -99,7 +98,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		return true;
 	}
 	
-	private final static int numLevels(final int type) {
+	private static int numLevels(final int type) {
 		if (type == EVERYTHING)
 			return ScriptLoader.currentSections.size();
 		int r = 0;
@@ -123,6 +122,9 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 			}
 			if (type == EVERYTHING || type == CONDITIONALS && n instanceof Conditional || type == LOOPS && (n instanceof Loop || n instanceof While))
 				i--;
+		}
+		if (n instanceof Loop) {
+			((Loop) n).getCurrentIter().remove(e);
 		}
 		return n instanceof Loop ? ((Loop) n).getActualNext() : n instanceof While ? ((While) n).getActualNext() : n.getNext();
 	}

@@ -26,6 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
+import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -64,12 +65,14 @@ public class ExprBlock extends WrapperExpression<Block> {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (exprs.length > 0) {
-			setExpr(new ConvertedExpression<>(Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]), Block.class, new Converter<Location, Block>() {
+			setExpr(new ConvertedExpression<>(Direction.combine((Expression<? extends Direction>) exprs[0],
+					(Expression<? extends Location>) exprs[1]), Block.class,
+					new ConverterInfo<>(Location.class, Block.class, new Converter<Location, Block>() {
 				@Override
 				public Block convert(final Location l) {
 					return l.getBlock();
 				}
-			}));
+			}, 0)));
 			return true;
 		} else {
 			setExpr(new EventValueExpression<>(Block.class));

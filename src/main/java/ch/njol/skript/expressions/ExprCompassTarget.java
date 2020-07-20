@@ -36,10 +36,10 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
  */
 @Name("Compass Target")
 @Description("The location a player's compass is pointing at.")
-@Examples({"# make all player's compasses target a player stored in {compass target.%player%}",
+@Examples({"# make all player's compasses target a player stored in {compass::target::%player%}",
 		"every 5 seconds:",
-		"	loop all players:",
-		"		set the loop-player's compass target to location of {compass target.%loop-player%}"})
+		"\tloop all players:",
+		"\t\tset the loop-player's compass target to location of {compass::target::%%loop-player%}"})
 @Since("2.0")
 public class ExprCompassTarget extends SimplePropertyExpression<Player, Location> {
 	

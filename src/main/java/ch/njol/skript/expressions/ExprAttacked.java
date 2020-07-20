@@ -26,6 +26,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.event.vehicle.VehicleEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -64,7 +67,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class)) {
+		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class)) {
 			Skript.error("The expression 'victim' can only be used in a damage or death event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
@@ -86,7 +89,11 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 	@Nullable
 	protected Entity[] get(final Event e) {
 		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
-		final Entity entity = ((EntityEvent) e).getEntity();
+		Entity entity;
+		if (e instanceof EntityEvent)
+			entity = ((EntityEvent) e).getEntity();
+		else
+			entity = ((VehicleEvent) e).getVehicle();
 		if (type.isInstance(entity)) {
 			one[0] = entity;
 			return one;

@@ -27,7 +27,8 @@ import java.lang.annotation.Target;
 
 /**
  * Provides a list of plugins other than Skript that the annotated
- * element requires to be used.
+ * element requires to be used. Non-Spigot server software can be considered
+ * to be plugins.
  * 
  */
 @Target(ElementType.TYPE)

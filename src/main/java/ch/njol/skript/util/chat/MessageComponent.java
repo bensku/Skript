@@ -22,20 +22,16 @@
 package ch.njol.skript.util.chat;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.lang.VariableString;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Component for chat messages. This can be serialized with GSON and then
@@ -79,7 +75,7 @@ public class MessageComponent {
 	/**
 	 * Color of this text. Defaults to reseting it.
 	 */
-	public @Nullable String color;
+	public @Nullable ChatColor color;
 	
 	/**
 	 * Value of this, if present, will appended on what player is currently
@@ -112,7 +108,7 @@ public class MessageComponent {
 			
 			@SuppressWarnings("null")
 			Action() {
-				spigotName = this.name().toUpperCase();
+				spigotName = this.name().toUpperCase(Locale.ENGLISH);
 			}
 		}
 		

@@ -47,10 +47,9 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Difference")
-@Description("The difference between two values, e.g. <a href='../classes/#number'>numbers</a>, <a href='../classes/#date'>dates</a> or <a href='../classes/#time'>times</a>.")
-@Examples({"difference between {command.%player%.lastuse} and now is smaller than a minute:",
-		"  message \"You have to wait a minute before using this command again!\"",
-		"  stop"})
+@Description("The difference between two values, e.g. <a href='../classes.html#number'>numbers</a>, <a href='../classes/#date'>dates</a> or <a href='../classes/#time'>times</a>.")
+@Examples({"if difference between {command::%player%::lastuse} and now is smaller than a minute:",
+		"\tmessage \"You have to wait a minute before using this command again!\""})
 @Since("1.4")
 public class ExprDifference extends SimpleExpression<Object> {
 	

@@ -19,39 +19,43 @@
  */
 package ch.njol.skript.aliases;
 
+import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-
+import com.google.gson.GsonBuilder;
+import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.BlockValues;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-@SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static {
@@ -69,10 +73,47 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		public short dataMax = -1;
 	}
 
-	@SuppressWarnings("null")
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
+	static final MaterialRegistry materialRegistry;
+	
+	// Load or create material registry
+	static {
+		Gson gson = new GsonBuilder().serializeNulls().create();
+		Path materialsFile = Paths.get(Skript.getInstance().getDataFolder().getAbsolutePath(), "materials.json");
+		if (Files.exists(materialsFile)) {
+			String content = null;
+			try {
+				content = new String(Files.readAllBytes(materialsFile), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				Skript.exception(e, "Loading material registry failed!");
+			}
+			if (content != null) {
+				String[] names = gson.fromJson(content, String[].class);
+				assert names != null;
+				materialRegistry = MaterialRegistry.load(names);
+			} else {
+				materialRegistry = new MaterialRegistry();
+			}
+		} else {
+			materialRegistry = new MaterialRegistry();
+		}
+		
+		// Always rewrite material registry, in case some updates got applied to it
+		String content = gson.toJson(materialRegistry.getMaterials());
+		try {
+			Files.write(materialsFile, content.getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			Skript.exception(e, "Saving material registry failed!");
+		}
+	}
+	
 	private final static Message m_named = new Message("aliases.named");
+	
+	/**
+	 * Before 1.13, data values ("block states") are applicable to items.
+	 */
+	private static final boolean itemDataValues = !Skript.isRunningMinecraft(1, 13);
 	
 	/**
 	 * ItemStack, which is used for everything but serialization.
@@ -80,14 +121,9 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	transient ItemStack stack;
 	
 	/**
-	 * ItemMeta of stack.
+	 * Type of the item as Bukkit material. Serialized manually.
 	 */
-	ItemMeta meta;
-	
-	/**
-	 * Type of the item as Bukkit material.
-	 */
-	Material type;
+	transient Material type;
 	
 	/**
 	 * If this represents all possible items.
@@ -101,58 +137,78 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	@Nullable
 	transient BlockValues blockValues;
 	
+	/**
+	 * Whether this represents an item (that definitely cannot have
+	 * block states) or a block, which might have them.
+	 */
+	boolean itemForm;
+	
+	/**
+	 * If this item is an alias or a clone of one that has not been
+	 * modified after loading the aliases.
+	 */
+	boolean isAlias = false;
+	
+	/**
+	 * Some properties about this item.
+	 */
+	int itemFlags;
+	
 	public ItemData(Material type, @Nullable String tags) {
 		this.type = type;
 		
 		this.stack = new ItemStack(type);
-		if (tags != null)
-			BukkitUnsafe.modifyItemStack(stack, tags);
-		assert stack != null; // Yeah nope; modifyItemStack is not THAT Unsafe
-		
-		// Initialize block values with a terrible hack
 		this.blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
-		
-		// Grab item meta (may be null)
-		assert stack != null;
-		this.meta = stack.getItemMeta();
+		if (tags != null) {
+			applyTags(tags);
+		}
 	}
 	
 	public ItemData(Material type, int amount) {
 		this.type = type;
-		
 		this.stack = new ItemStack(type, Math.abs(amount));
-		blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
-		this.meta = itemFactory.getItemMeta(type);
+		this.blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
 	}
 	
 	public ItemData(Material type) {
 		this(type, 1);
 	}
 	
-	@SuppressWarnings("null") // clone() always returns stuff
 	public ItemData(ItemData data) {
 		this.stack = data.stack.clone();
 		this.type = data.type;
 		this.blockValues = data.blockValues;
-		this.meta = data.meta;
+		this.isAlias = data.isAlias;
+		this.itemFlags = data.itemFlags;
 	}
 	
-	public ItemData(ItemStack stack, BlockValues values) {
+	public ItemData(ItemStack stack, @Nullable BlockValues values) {
 		this.stack = stack;
 		this.type = stack.getType();
 		this.blockValues = values;
-		this.meta = stack.getItemMeta(); // Grab meta from stack
+		
+		// Set ItemFlags as accurately as possible based on given stack
+		if (type.getMaxDurability() != 0) {
+			// We're not checking current damage; when it is 0, it might still be explicitly set
+			// Play safe and mark ALL items that may have durability to have it changed
+			itemFlags |= ItemFlags.CHANGED_DURABILITY;
+		}
+		// All data made from stacks may have changed tags
+		// We cannot assume that lack of tags indicates that they can be
+		// ignored in comparisons; they may well have been explicitly removed
+		// See issue #2714 for examples of bad things that this causes
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 	public ItemData(ItemStack stack) {
-		this(stack, BlockCompat.INSTANCE.getBlockValues(stack)); // Grab block values from stack)
+		this(stack, BlockCompat.INSTANCE.getBlockValues(stack));
+		this.itemForm = true;
 	}
 	
 	public ItemData(BlockState block) {
-		this.type = block.getType();
+		this.type = ItemUtils.asItem(block.getType());
 		this.stack = new ItemStack(type);
 		this.blockValues = BlockCompat.INSTANCE.getBlockValues(block);
-		this.meta = stack.getItemMeta();
 	}
 	
 	public ItemData(Block block) {
@@ -174,12 +230,19 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	public boolean isOfType(@Nullable ItemStack item) {
 		if (item == null)
 			return type == Material.AIR;
-		return item.isSimilar(stack);
-	}
-	
-	public boolean isSupertypeOf(ItemData o) {
-		// Since numeric ids are not used anymore, supertype-ness is based on aliases
-		return Aliases.isSupertypeOf(this, o);
+		
+		if (type != item.getType())
+			return false; // Obvious mismatch
+		
+		if (itemFlags != 0) { // Either stack has tags (or durability)
+			if (ItemUtils.getDamage(stack) != ItemUtils.getDamage(item))
+				return false; // On 1.12 and below, damage is not in meta
+			if (stack.hasItemMeta() == item.hasItemMeta()) // Compare ItemMeta as in isSimilar() of ItemStack
+				return stack.hasItemMeta() ? itemFactory.equals(stack.getItemMeta(), item.getItemMeta()) : true;
+			else
+				return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -188,16 +251,17 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder(Aliases.getMaterialName(this, false));
-		if (meta.hasDisplayName()) {
+		return toString(false, false);
+	}
+	
+	public String toString(final boolean debug, final boolean plural) {
+		StringBuilder builder = new StringBuilder(Aliases.getMaterialName(this, plural));
+		ItemMeta meta = stack.getItemMeta();
+		if (meta != null && meta.hasDisplayName()) {
 			builder.append(" ").append(m_named).append(" ");
 			builder.append(meta.getDisplayName());
 		}
 		return builder.toString();
-	}
-	
-	public String toString(final boolean debug, final boolean plural) {
-		return toString(); // TODO better debug info
 	}
 	
 	/**
@@ -215,15 +279,174 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			return false;
 		
 		ItemData other = (ItemData) obj;
-		if (isAnything || other.isAnything) // First, isAnything check
-			return true;
-		
-		return other.stack.isSimilar(stack);
+		if (isAlias) { // This is alias, other item might not be
+			return other.matchAlias(this).isAtLeast(MatchQuality.SAME_ITEM);
+		} else { // This is not alias, but other might be
+			return matchAlias(other).isAtLeast(MatchQuality.SAME_ITEM);
+		}
 	}
 	
 	@Override
 	public int hashCode() {
-		return stack.hashCode();
+		int hash = type.hashCode(); // Has collisions, but probably not too many of them
+		if (blockValues == null || (blockValues != null && blockValues.isDefault())) {
+			hash = hash * 37 + 1;
+		}
+		return hash;
+	}
+	
+	/**
+	 * Checks how well this item matches the given item.
+	 * @param item Other item, preferably an alias.
+	 * @return Match quality, according to following criteria:
+	 * <table>
+	 * <tr><td>{@link MatchQuality#EXACT}
+	 * 	<td>This and the given item have exactly same
+	 * 	{@link Material}, {@link ItemMeta} and {@link BlockValues}.
+	 * <tr><td>{@link MatchQuality#SAME_ITEM}
+	 * 	<td>This and the given item share a {@link Material}. {@link ItemMeta}
+	 * 	of this item contains all values that {@link ItemMeta} of given has.
+	 *  In addition to that, it may contain other values. {@link BlockValues}
+	 *  are handled similarly.
+	 * <tr><td>{@link MatchQuality#SAME_MATERIAL}
+	 * 	<td>This and the given item share a material.
+	 * <tr><td>{@link MatchQuality#DIFFERENT}
+	 * 	<td>This and the given item do not meet any of above criteria.
+	 *  They are completely different.
+	 * </table>
+	 */
+	public MatchQuality matchAlias(ItemData item) {
+		if (isAnything || item.isAnything) {
+			return MatchQuality.EXACT; // TODO different match quality?
+		}
+		
+		// Ensure that both items share the material
+		if (item.getType() != getType()) {
+			return MatchQuality.DIFFERENT;
+		}
+		
+		BlockValues values = blockValues;
+		if (!itemDataValues) {
+			// Items (held in inventories) don't have block values
+			// If this is an item, given item must not have them either
+			if (itemForm && item.blockValues != null
+					&& !item.blockValues.isDefault()) {
+				return MatchQuality.SAME_MATERIAL;
+			}
+		}
+		
+		/**
+		 * Initially, expect exact match. Lower expectations as new differences
+		 * between items are discovered.
+		 */
+		MatchQuality quality = MatchQuality.EXACT;
+		
+		// Check that block values of given item match ours
+		if (values != null) {
+			if (item.blockValues != null) { // Other item has block values, so match against them
+				quality = values.match(item.blockValues);
+			} else { // Other item has no block values, but we do
+				quality = MatchQuality.SAME_MATERIAL;
+			}
+		}
+		
+		// See if we need to compare durability; for blocks, BlockValues handles this when needed
+		// From API perspective, durability is part of ItemMeta; however, we need to support 1.12 and older
+		if (itemForm && ItemUtils.getDamage(stack) != ItemUtils.getDamage(item.stack)) {
+			if (item.hasFlag(ItemFlags.CHANGED_DURABILITY)) { // Given item requests we match its durability
+				quality = MatchQuality.SAME_MATERIAL;
+			} else { // Given item doesn't care about durability, so are still same enough
+				quality = MatchQuality.SAME_ITEM;
+			}
+		}
+		
+		// See if we need to compare item metas (excluding durability)
+		if (quality.isAtLeast(MatchQuality.SAME_ITEM)) { // Item meta checks could lower this
+			MatchQuality metaQuality = compareItemMetas(getItemMeta(), item.getItemMeta());
+			
+			// If given item doesn't care about meta, promote to SAME_ITEM
+			// I.e. we checked meta only to eliminate EXACT match
+			if (metaQuality == MatchQuality.SAME_MATERIAL && !item.hasFlag(ItemFlags.CHANGED_TAGS)) {
+				quality = MatchQuality.SAME_ITEM;
+			} else if (quality.isBetter(metaQuality)) { // Otherwise just allow meta to lower quality
+				quality = metaQuality;
+			}
+		}
+		
+		return quality;
+	}
+	
+	/**
+	 * Checks if this item has given flag.
+	 * @param flag Flag found in {@link ItemFlags}.
+	 * @return If this item has the flag.
+	 */
+	private boolean hasFlag(int flag) {
+		return (itemFlags & flag) != 0;
+	}
+	
+	/**
+	 * Compares {@link ItemMeta}s for {@link #matchAlias(ItemData)}.
+	 * Note that this does NOT compare everything; only the most
+	 * important bits.
+	 * @param first Meta of this item.
+	 * @param second Meta of given item.
+	 * @return Match quality of metas.
+	 * Lowest is {@link MatchQuality#SAME_MATERIAL}.
+	 */
+	private static MatchQuality compareItemMetas(ItemMeta first, ItemMeta second) {
+		MatchQuality quality = MatchQuality.EXACT; // Lowered as we go on
+		
+		// Display name
+		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
+		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
+		if (!Objects.equals(ourName, theirName)) {
+			quality = ourName != null ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Lore
+		List<String> ourLore = first.hasLore() ? first.getLore() : null;
+		List<String> theirLore = second.hasLore() ? second.getLore() : null;
+		if (!Objects.equals(ourLore, theirLore)) {
+			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Enchantments
+		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
+		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
+		if (!Objects.equals(ourEnchants, theirEnchants)) {
+			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Item flags
+		Set<ItemFlag> ourFlags = first.getItemFlags();
+		Set<ItemFlag> theirFlags = second.getItemFlags();
+		if (!Objects.equals(ourFlags, theirFlags)) {
+			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Potion data
+		if (second instanceof PotionMeta) {
+			if (!(first instanceof PotionMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a potion, first is clearly not
+			}
+			// Compare potion type, including extended and level 2 attributes
+			PotionData ourPotion = ((PotionMeta) first).getBasePotionData();
+			PotionData theirPotion = ((PotionMeta) second).getBasePotionData();
+			return !Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		return quality;
+	}
+	
+	/**
+	 * Checks if this item is a 'default' of type. Default items must have not
+	 * had their ItemMeta (tags) modified or have block states. Only aliases
+	 * can be default items.
+	 * @return If this item can be considered the default item of its type.
+	 */
+	public boolean isDefault() {
+		return itemFlags == 0 && blockValues == null;
 	}
 	
 	/**
@@ -240,7 +463,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			return null;
 		
 		// TODO implement meta intersection
-		return null;
+		return this;
 	}
 	
 	/**
@@ -267,33 +490,114 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	}
 	
 	public ItemMeta getItemMeta() {
+		ItemMeta meta = stack.getItemMeta();
+		if (meta == null) { // AIR has null item meta!
+			meta = itemFactory.getItemMeta(Material.STONE);
+		}
+		assert meta != null;
 		return meta;
 	}
 	
 	public void setItemMeta(ItemMeta meta) {
-		this.meta = meta;
 		stack.setItemMeta(meta);
-		if (blockValues != null) { // If block values exist, update them from stack
-			assert stack != null;
-			blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
-		}
+		isAlias = false; // This is no longer exact alias
+		itemFlags |= ItemFlags.CHANGED_TAGS;
+	}
+	
+	public int getDurability() {
+		return ItemUtils.getDamage(stack);
+	}
+	
+	public void setDurability(int durability) {
+		ItemUtils.setDamage(stack, durability);
+		isAlias = false; // Change happened
+		itemFlags |= ItemFlags.CHANGED_DURABILITY;
 	}
 
 	@Override
 	public Fields serialize() throws NotSerializableException {
-		return new Fields(this); // ItemStack is transient, will be ignored
+		Fields fields = new Fields(this); // ItemStack is transient, will be ignored
+		fields.putPrimitive("id", materialRegistry.getId(type));
+		fields.putObject("meta", stack.getItemMeta());
+		return fields;
 	}
 
 	@Override
 	public void deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
-		fields.setFields(this); // Everything but ItemStack
+		this.type = materialRegistry.getMaterial(fields.getAndRemovePrimitive("id", int.class));
+		ItemMeta meta = fields.getAndRemoveObject("meta", ItemMeta.class);
+		fields.setFields(this); // Everything but ItemStack and Material
 		
 		// Initialize ItemStack
 		this.stack = new ItemStack(type);
 		stack.setItemMeta(meta); // Just set meta to it
+	}
+	
+	/**
+	 * Creates a plain copy of this ItemData. It will have same material,
+	 * amount of 1 and same block values. Tags will also be copied, with
+	 * following exceptions:
+	 * <ul>
+	 * <li>Damage: 1.13 tag-damage is only used for actual durability.
+	 * Present on 1.12 and older versions.
+	 * <li>Name: custom names made with anvil do not change item type
+	 * </ul>
+	 * @return A modified copy of this item data.
+	 */
+	public ItemData aliasCopy() {
+		ItemData data = new ItemData();
+		data.stack = new ItemStack(type, 1);
 		
-		// Initialize block values with a terrible hack
-		this.blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
+		if (stack.hasItemMeta()) {
+			ItemMeta meta = stack.getItemMeta(); // Creates a copy
+			meta.setDisplayName(null); // Clear display name
+			data.stack.setItemMeta(meta);
+		}
+		if (!itemDataValues) {
+			ItemUtils.setDamage(data.stack, 0); // Set to undamaged
+		}
+		
+		data.type = type;
+		data.blockValues = blockValues;
+		data.itemForm = itemForm;
+		return data;
+	}
+
+	/**
+	 * Applies an item meta to this item. Currently, it copies the following,
+	 * provided that they exist in given meta:
+	 * <ul>
+	 * <li>Lore
+	 * <li>Display name
+	 * <li>Enchantments
+	 * <li>Item flags
+	 * </ul>
+	 * @param meta Item meta.
+	 */
+	public void applyMeta(ItemMeta meta) {
+		ItemMeta our = getItemMeta();
+		if (meta.hasLore())
+			our.setLore(meta.getLore());
+		if (meta.hasDisplayName())
+			our.setDisplayName(meta.getDisplayName());
+		if (meta.hasEnchants()) {
+			for (Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
+				our.addEnchant(entry.getKey(), entry.getValue(), true);
+			}
+		}
+		for (ItemFlag flag : meta.getItemFlags()) {
+			our.addItemFlags(flag);
+		}
+		setItemMeta(meta);
+	}
+	
+	/**
+	 * Applies tags to this item.
+	 * @param tags Tags in Mojang's JSON format.
+	 */
+	public void applyTags(String tags) {
+		BukkitUnsafe.modifyItemStack(stack, tags);
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 }

@@ -27,7 +27,6 @@ import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.function.FunctionEvent;
@@ -36,9 +35,12 @@ import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * FIXME generate/write documentation
@@ -49,7 +51,7 @@ import ch.njol.util.StringUtils;
 public class DefaultFunctions {
 	public DefaultFunctions() {}
 	
-	private final static String s(final double n) {
+	private static String s(final double n) {
 		return StringUtils.toString(n, 4);
 	}
 	
@@ -342,7 +344,7 @@ public class DefaultFunctions {
 					0, 0,
 					0};
 			{
-				assert fields.length == offsets.length && offsets.length == scale.length && scale.length == relations.length && getMaxParameters() == fields.length;
+				assert fields.length == offsets.length && offsets.length == scale.length && scale.length == relations.length && getSignature().getMaxParameters() == fields.length;
 			}
 			
 			@Override
@@ -396,16 +398,35 @@ public class DefaultFunctions {
 			    else if (level >= 1 && level <= 15)
 			        exp = level * level + 6 * level;
 			    else if (level >= 16 && level <= 30) // Truncating decimal parts probably works
-			        exp = (int) (2.5 * level * level - 40.5 * level - 360);
+			        exp = (int) (2.5 * level * level - 40.5 * level + 360);
 			    else // Half experience points do not exist, anyway
-			        exp = (int) (4.5 * level * level - 162.5 * level - 2220);
+			        exp = (int) (4.5 * level * level - 162.5 * level + 2220);
 				
 				return new Long[] {exp};
 			}
 			
-		}.description("Calculates experience needed to achieve given level in Minecraft.")
+		}.description("Calculates the total amount of experience needed to achieve given level from scratch in Minecraft.")
 				.since("2.2-dev32"));
 		
+		Functions.registerFunction(new JavaFunction<Color>("rgb", new Parameter[] {
+			new Parameter<>("red", longClass, true, null),
+			new Parameter<>("green", longClass, true, null),
+			new Parameter<>("blue", longClass, true, null)}, Classes.getExactClassInfo(Color.class), true) {
+			
+			@Nullable
+			@Override
+			public ColorRGB[] execute(FunctionEvent e, Object[][] params) {
+				Long red = (Long) params[0][0],
+					green = (Long) params[1][0],
+					blue = (Long) params[2][0];
+				
+				if (red == null || green == null || blue == null)
+					return null;
+				return CollectionUtils.array(new ColorRGB(red.intValue(), green.intValue(), blue.intValue()));
+			}
+		}).description("Returns a RGB color from the given red, green and blue parameters.")
+			.examples("dye player's leggings rgb(120, 30, 45)")
+			.since("2.5");
 	}
 	
 }

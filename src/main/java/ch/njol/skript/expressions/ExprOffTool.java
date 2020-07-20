@@ -29,11 +29,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.registrations.Classes;
@@ -63,12 +59,10 @@ public class ExprOffTool extends ExprTool {
 			public Slot get(final LivingEntity p) {
 				if (!delayed) {
 					if (e instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) e).getPlayer() == p) {
-						Skript.info("ItemHeldEvent");
 						final PlayerInventory i = ((PlayerItemHeldEvent) e).getPlayer().getInventory();
 						assert i != null;
 						return new InventorySlot(i, getTime() >= 0 ? ((PlayerItemHeldEvent) e).getNewSlot() : ((PlayerItemHeldEvent) e).getPreviousSlot());
 					} else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == p) {
-						Skript.info("PlayerBucketEvent");
 						final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
 						assert i != null;
 						return new InventorySlot(i, ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {

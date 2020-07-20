@@ -54,10 +54,10 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @param name The unique name of this constant.
 	 * @throws IllegalArgumentException If the given name is already in use.
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	protected PseudoEnum(final String name) throws IllegalArgumentException {
 		this.name = name;
-		info = (Info<T>) getInfo(getClass());
+		info = getInfo(getClass());
 		info.writeLock.lock();
 		try {
 			if (info.map.containsKey(name))
@@ -136,7 +136,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @return This constant's pseudo-enum class.
 	 * @see Enum#getDeclaringClass()
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	public final Class<T> getDeclaringClass() {
 		return getDeclaringClass(getClass());
 	}
@@ -147,7 +147,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @return The pseudo-enum class of the given class.
 	 * @see Enum#getDeclaringClass()
 	 */
-	public final static <T extends PseudoEnum<T>> Class<? super T> getDeclaringClass(final Class<T> type) {
+	public static <T extends PseudoEnum<T>> Class<? super T> getDeclaringClass(final Class<T> type) {
 		Class<? super T> c = type;
 		while (c.isAnonymousClass())
 			c = c.getSuperclass();
@@ -178,13 +178,13 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @throws IllegalArgumentException If <tt>{@link #getDeclaringClass(Class) getDeclaringClass}(c) != c</tt> (i.e. if the given class is anonymous).
 	 * @see Enum#valueOf(Class, String)
 	 */
-	public final static <T extends PseudoEnum<T>> List<T> values(final Class<T> c) throws IllegalArgumentException {
+	public static <T extends PseudoEnum<T>> List<T> values(final Class<T> c) throws IllegalArgumentException {
 		if (c != getDeclaringClass(c))
 			throw new IllegalArgumentException(c + " != " + getDeclaringClass(c));
 		return values(c, getInfo(c));
 	}
 	
-	private final static <T extends PseudoEnum<T>> List<T> values(final Class<T> c, final Info<T> info) {
+	private static <T extends PseudoEnum<T>> List<T> values(final Class<T> c, final Info<T> info) {
 		info.readLock.lock();
 		try {
 			return new ArrayList<>(info.values);
@@ -245,7 +245,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @see Enum#valueOf(Class, String)
 	 */
 	@Nullable
-	public final static <T extends PseudoEnum<T>> T valueOf(final Class<T> c, final String name) {
+	public static <T extends PseudoEnum<T>> T valueOf(final Class<T> c, final String name) {
 		final Info<T> info = getInfo(c);
 		info.readLock.lock();
 		try {
@@ -271,7 +271,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 */
 	private final static Map<Class<? extends PseudoEnum<?>>, Info<?>> infos = new HashMap<>();
 	
-	private final static <T extends PseudoEnum<T>> Info<T> getInfo(final Class<T> c) {
+	private static <T extends PseudoEnum<T>> Info<T> getInfo(final Class<T> c) {
 		synchronized (infos) {
 			Info<T> info = (Info<T>) infos.get(getDeclaringClass(c));
 			if (info == null)

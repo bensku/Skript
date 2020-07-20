@@ -23,18 +23,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.messaging.Messenger;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.aliases.ItemType;
+import net.md_5.bungee.api.ChatColor;
+
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import ch.njol.skript.Skript;
 import ch.njol.skript.effects.EffTeleport;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.localization.Language;
@@ -44,6 +55,7 @@ import ch.njol.util.Callback;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * Utility class.
@@ -81,18 +93,9 @@ public abstract class Utils {
 		return "" + b.toString();
 	}
 	
-	/**
-	 * Tests whether two item stacks are of the same type, i.e. it ignores the amounts.
-	 * 
-	 * @param is1
-	 * @param is2
-	 * @return Whether the item stacks are of the same type
-	 */
-	public static boolean itemStacksEqual(final @Nullable ItemStack is1, final @Nullable ItemStack is2) {
-		if (is1 == null || is2 == null)
-			return is1 == is2;
-		return is1.getType() == is2.getType() && is1.getDurability() == is2.getDurability()
-				&& is1.getItemMeta().equals(is2.getItemMeta());
+	
+	public static <T> boolean isEither(@Nullable T compared, @Nullable T... types) {
+		return CollectionUtils.contains(types, compared);
 	}
 	
 	/**
@@ -127,7 +130,7 @@ public abstract class Utils {
 		return target;
 	}
 	
-	public final static Pair<String, Integer> getAmount(final String s) {
+	public static Pair<String, Integer> getAmount(final String s) {
 		if (s.matches("\\d+ of .+")) {
 			return new Pair<>(s.split(" ", 3)[2], Utils.parseInt("" + s.split(" ", 2)[0]));
 		} else if (s.matches("\\d+ .+")) {
@@ -225,7 +228,7 @@ public abstract class Utils {
 	 * @return Pair of singular string + boolean whether it was plural
 	 */
 	@SuppressWarnings("null")
-	public final static NonNullPair<String, Boolean> getEnglishPlural(final String s) {
+	public static NonNullPair<String, Boolean> getEnglishPlural(final String s) {
 		assert s != null;
 		if (s.isEmpty())
 			return new NonNullPair<>("", Boolean.FALSE);
@@ -244,7 +247,7 @@ public abstract class Utils {
 	 * @param s
 	 * @return The english plural of the given word
 	 */
-	public final static String toEnglishPlural(final String s) {
+	public static String toEnglishPlural(final String s) {
 		assert s != null && s.length() != 0;
 		for (final String[] p : plurals) {
 			if (s.endsWith(p[0]))
@@ -261,7 +264,7 @@ public abstract class Utils {
 	 * @param p
 	 * @return The english plural of the given word, or the word itself if p is false.
 	 */
-	public final static String toEnglishPlural(final String s, final boolean p) {
+	public static String toEnglishPlural(final String s, final boolean p) {
 		if (p)
 			return toEnglishPlural(s);
 		return s;
@@ -275,7 +278,7 @@ public abstract class Utils {
 	 * @see #A(String)
 	 * @see #a(String, boolean)
 	 */
-	public final static String a(final String s) {
+	public static String a(final String s) {
 		return a(s, false);
 	}
 	
@@ -287,7 +290,7 @@ public abstract class Utils {
 	 * @see #a(String)
 	 * @see #a(String, boolean)
 	 */
-	public final static String A(final String s) {
+	public static String A(final String s) {
 		return a(s, true);
 	}
 	
@@ -299,7 +302,7 @@ public abstract class Utils {
 	 * @return The given string with an appended a/an (or A/An if capA is true) and a space at the beginning
 	 * @see #a(String)
 	 */
-	public final static String a(final String s, final boolean capA) {
+	public static String a(final String s, final boolean capA) {
 		assert s != null && s.length() != 0;
 		if ("aeiouAEIOU".indexOf(s.charAt(0)) != -1) {
 			if (capA)
@@ -313,9 +316,11 @@ public abstract class Utils {
 	}
 	
 	/**
-	 * Gets the collision height of solid or partially-solid blocks at the center of the block. This is mostly for use in the {@link EffTeleport teleport effect}.
+	 * Gets the collision height of solid or partially-solid blocks at the center of the block.
+	 * This is mostly for use in the {@link EffTeleport teleport effect}.
 	 * <p>
-	 * TODO !Update with every version [blocks]
+	 * This version operates on numeric ids, thus only working on
+	 * Minecraft 1.12 or older.
 	 * 
 	 * @param type
 	 * @return The block's height at the center
@@ -367,10 +372,118 @@ public abstract class Utils {
 				return 1;
 		}
 	}
+
+	/**
+	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
+	 *
+	 * The next plugin message to be received through {@code channel} will be assumed to be
+	 * the response.
+	 *
+	 * @param channel the channel for this plugin message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if no players are online.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel, String... data) {
+		return sendPluginMessage(channel, r -> true, data);
+	}
+
+	/**
+	 * Sends a plugin message using the from {@code player}.
+	 *
+	 * The next plugin message to be received through {@code channel} will be assumed to be
+	 * the response.
+	 *
+	 * @param player the player to send the plugin message through
+	 * @param channel the channel for this plugin message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if no players are online.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel, String... data) {
+		return sendPluginMessage(player, channel, r -> true, data);
+	}
+
+	/**
+	 * Sends a plugin message using the first player from {@link Bukkit#getOnlinePlayers()}.
+	 *
+	 * @param channel the channel for this plugin message
+	 * @param messageVerifier verifies that a plugin message is the response to the sent message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if the player is null.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(String channel,
+			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
+		Player firstPlayer = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+		return sendPluginMessage(firstPlayer, channel, messageVerifier, data);
+	}
+
+	/**
+	 * Sends a plugin message.
+	 *
+	 * Example usage using the "GetServers" bungee plugin message channel via an overload:
+	 * <code>
+	 *     Utils.sendPluginMessage("BungeeCord", r -> "GetServers".equals(r.readUTF()), "GetServers")
+	 *     			.thenAccept(response -> Bukkit.broadcastMessage(response.readUTF()) // comma delimited server broadcast
+	 *     			.exceptionally(ex -> {
+	 *     			 	Skript.warning("Failed to get servers because there are no players online");
+	 *     			 	return null;
+	 *     			});
+	 * </code>
+	 *
+	 * @param player the player to send the plugin message through
+	 * @param channel the channel for this plugin message
+	 * @param messageVerifier verifies that a plugin message is the response to the sent message
+	 * @param data the data to add to the outgoing message
+	 * @return a completable future for the message of the responding plugin message, if there is one.
+	 * this completable future will complete exceptionally if the player is null.
+	 */
+	public static CompletableFuture<ByteArrayDataInput> sendPluginMessage(Player player, String channel,
+			Predicate<ByteArrayDataInput> messageVerifier, String... data) {
+		CompletableFuture<ByteArrayDataInput> completableFuture = new CompletableFuture<>();
+
+		if (player == null) {
+			completableFuture.completeExceptionally(new IllegalStateException("Can't send plugin messages from a null player"));
+			return completableFuture;
+		}
+
+		Skript skript = Skript.getInstance();
+		Messenger messenger = Bukkit.getMessenger();
+
+		messenger.registerOutgoingPluginChannel(skript, channel);
+
+		PluginMessageListener listener = (sendingChannel, sendingPlayer, message) -> {
+			ByteArrayDataInput input = ByteStreams.newDataInput(message);
+			if (channel.equals(sendingChannel) && sendingPlayer == player && !completableFuture.isDone()
+					&& !completableFuture.isCancelled() && messageVerifier.test(input)) {
+				completableFuture.complete(input);
+			}
+		};
+
+		messenger.registerIncomingPluginChannel(skript, channel, listener);
+
+		completableFuture.whenComplete((r, ex) -> messenger.unregisterIncomingPluginChannel(skript, channel, listener));
+
+		// if we haven't gotten a response after a minute, let's just assume there wil never be one
+		Bukkit.getScheduler().scheduleSyncDelayedTask(skript, () -> {
+
+			if (!completableFuture.isDone())
+				completableFuture.cancel(true);
+
+		}, 60 * 20);
+
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		Stream.of(data).forEach(out::writeUTF);
+		player.sendPluginMessage(Skript.getInstance(), channel, out.toByteArray());
+
+		return completableFuture;
+	}
 	
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
+	public final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
 	static {
 		Language.addListener(new LanguageChangeListener() {
 			@Override
@@ -389,10 +502,11 @@ public abstract class Utils {
 	}
 	
 	@Nullable
-	public final static String getChatStyle(final String s) {
-		final Color c = Color.byName(s);
-		if (c != null)
-			return c.getChat();
+	public static String getChatStyle(final String s) {
+		SkriptColor color = SkriptColor.fromName(s);
+		
+		if (color != null)
+			return color.getFormattedChat();
 		return chat.get(s);
 	}
 	
@@ -404,18 +518,24 @@ public abstract class Utils {
 	 * @param message
 	 * @return message with localised chat styles converted to Minecraft's format
 	 */
-	public final static String replaceChatStyles(final String message) {
+	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
 		String m = StringUtils.replaceAll("" + message.replace("<<none>>", ""), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
-				final Color c = Color.byName("" + m.group(1));
-				if (c != null)
-					return c.getChat();
-				final String f = chat.get(m.group(1).toLowerCase());
+				SkriptColor color = SkriptColor.fromName("" + m.group(1));
+				if (color != null)
+					return color.getFormattedChat();
+				final String tag = m.group(1).toLowerCase();
+				final String f = chat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
+				}
 				return "" + m.group();
 			}
 		});
@@ -431,24 +551,48 @@ public abstract class Utils {
 	 * @param message
 	 * @return message with english chat styles converted to Minecraft's format
 	 */
-	public final static String replaceEnglishChatStyles(final String message) {
+	public static String replaceEnglishChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
 		String m = StringUtils.replaceAll(message, stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
-				final Color c = Color.byEnglishName("" + m.group(1));
-				if (c != null)
-					return c.getChat();
-				final String f = englishChat.get(m.group(1).toLowerCase());
+				SkriptColor color = SkriptColor.fromName("" + m.group(1));
+				if (color != null)
+					return color.getFormattedChat();
+				final String tag = m.group(1).toLowerCase();
+				final String f = englishChat.get(tag);
 				if (f != null)
 					return f;
+				if (HEX_SUPPORTED && tag.startsWith("#")) { // Check for parsing hex colors
+					ChatColor chatColor = parseHexColor(tag);
+					if (chatColor != null)
+						return chatColor.toString();
+				}
 				return "" + m.group();
 			}
 		});
 		assert m != null;
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
+	}
+	
+	/**
+	 * Tries to get a {@link ChatColor} from the given string.
+	 * @param hex The hex code to parse.
+	 * @return The ChatColor, or null if it couldn't be parsed.
+	 */
+	@SuppressWarnings("null")
+	@Nullable
+	public static ChatColor parseHexColor(String hex) {
+		hex = hex.replace("#", "");
+		if (hex.length() < 6)
+			return null;
+		try {
+			return ChatColor.of('#' + hex.substring(0, 6));
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
 	}
 	
 	/**
@@ -465,7 +609,7 @@ public abstract class Utils {
 	}
 	
 	// TODO improve
-	public final static Class<?> getSuperType(final Class<?>... cs) {
+	public static Class<?> getSuperType(final Class<?>... cs) {
 		assert cs.length > 0;
 		Class<?> r = cs[0];
 		assert r != null;
@@ -493,7 +637,11 @@ public abstract class Utils {
 				return Object.class;
 			}
 		}
-		return r;
+		
+		// Cloneable is about as useful as object as super type
+		// However, it lacks special handling used for Object supertype
+		// See #1747 to learn how it broke returning items from functions
+		return r.equals(Cloneable.class) ? Object.class : r;
 	}
 	
 	/**
@@ -504,7 +652,7 @@ public abstract class Utils {
 	 * @param s
 	 * @return The parsed integer, {@link Integer#MIN_VALUE} or {@link Integer#MAX_VALUE} respectively
 	 */
-	public final static int parseInt(final String s) {
+	public static int parseInt(final String s) {
 		assert s.matches("-?\\d+");
 		try {
 			return Integer.parseInt(s);
@@ -521,7 +669,7 @@ public abstract class Utils {
 	 * @param s
 	 * @return The parsed long, {@link Long#MIN_VALUE} or {@link Long#MAX_VALUE} respectively
 	 */
-	public final static long parseLong(final String s) {
+	public static long parseLong(final String s) {
 		assert s.matches("-?\\d+");
 		try {
 			return Long.parseLong(s);
@@ -536,7 +684,7 @@ public abstract class Utils {
 	 * @param name Class name.
 	 * @return The class.
 	 */
-	public final static Class<?> classForName(String name) {
+	public static Class<?> classForName(String name) {
 		Class<?> c;
 		try {
 			c = Class.forName(name);

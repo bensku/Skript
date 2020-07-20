@@ -19,10 +19,10 @@
  */
 package ch.njol.util;
 
-import javax.annotation.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * @author Peter Güttinger
+ * @author Peter Gï¿½ttinger
  *
  */
 public class NotifyingReference<V>
@@ -43,7 +43,6 @@ public class NotifyingReference<V>
     this.notifyAll = true;
   }
   
-  @SuppressWarnings("null")
   public NotifyingReference()
   {
     this.value = null;

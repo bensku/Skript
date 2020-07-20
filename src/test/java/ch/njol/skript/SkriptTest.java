@@ -19,12 +19,13 @@
  */
 package ch.njol.skript;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -70,7 +71,7 @@ public class SkriptTest {
 		
 		final Trigger t = ScriptLoader.loadTrigger(nodeFromString("on rightclick on air:\n kill player"));
 		assert t != null;
-		t.execute(new PlayerInteractEvent(njol, Action.LEFT_CLICK_AIR, null, null, null));
+		t.execute(new PlayerInteractEvent(njol, Action.LEFT_CLICK_AIR, null, null, BlockFace.SELF));
 		
 	}
 	

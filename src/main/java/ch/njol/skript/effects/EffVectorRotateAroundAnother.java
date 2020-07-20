@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.effects;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,59 +30,52 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.VectorMath;
-
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Rotate around vector")
+@Name("Vectors - Rotate Around Vector")
 @Description("Rotates a vector around another vector")
 @Examples({"rotate {_v} around vector 1, 0, 0 by 90"})
 @Since("2.2-dev28")
-public class EffVectorRotateAroundAnother extends Effect{
+public class EffVectorRotateAroundAnother extends Effect {
+
 	static {
 		Skript.registerEffect(EffVectorRotateAroundAnother.class, "rotate %vectors% around %vector% by %number% [degrees]");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Vector> first, second;
+
 	@SuppressWarnings("null")
-	private Expression<Number> number;
+	private Expression<Number> degree;
 
-	
-	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "rotate " + first.toString(e, debug) + " around " + second.toString(e, debug);
-	}
-
-	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		first = (Expression<Vector>)expressions[0];
-		second = (Expression<Vector>)expressions[1];
-		number = (Expression<Number>)expressions[2];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+		first = (Expression<Vector>) exprs[0];
+		second = (Expression<Vector>) exprs[1];
+		degree = (Expression<Number>) exprs[2];
 		return true;
 	}
 
 	@SuppressWarnings("null")
 	@Override
-	protected void execute(Event event) {
-		Vector v2 = second.getSingle(event);
-		Number n = number.getSingle(event);
-		if (v2 == null || n == null ){
+	protected void execute(Event e) {
+		Vector v2 = second.getSingle(e);
+		Number d = degree.getSingle(e);
+		if (v2 == null || d == null)
 			return;
-		}
-		for (Vector v1 : first.getArray(event)) {
-			VectorMath.rot(v1, v2, n.doubleValue());
-		}
+		for (Vector v1 : first.getArray(e))
+			VectorMath.rot(v1, v2, d.doubleValue());
 	}
 
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "rotate " + first.toString(e, debug) + " around " + second.toString(e, debug) + " by " + degree + "degrees";
+	}
 
 }

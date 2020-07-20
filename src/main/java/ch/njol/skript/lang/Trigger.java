@@ -25,6 +25,8 @@ import java.util.List;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.variables.Variables;
+
 /**
  * @author Peter Güttinger
  */
@@ -52,7 +54,23 @@ public class Trigger extends TriggerSection {
 	 * @return false if an exception occurred
 	 */
 	public boolean execute(final Event e) {
-		return TriggerItem.walk(this, e);
+		boolean success = TriggerItem.walk(this, e);
+		// Clear local variables
+		Variables.removeLocals(e);
+		/*
+		 * Local variables can be used in delayed effects by backing reference
+		 * of VariablesMap up. Basically:
+		 * 
+		 * Object localVars = Variables.removeLocals(e);
+		 * 
+		 * ... and when you want to continue execution:
+		 * 
+		 * Variables.setLocalVariables(e, localVars);
+		 * 
+		 * See Delay effect for reference.
+		 */
+		
+		return success;
 	}
 	
 	@Override

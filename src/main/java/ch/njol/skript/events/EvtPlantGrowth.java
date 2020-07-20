@@ -34,7 +34,7 @@ public class EvtPlantGrowth extends SkriptEvent {
 	static {
 		Skript.registerEvent("Block Growth", EvtPlantGrowth.class, BlockGrowEvent.class, "(plant|crop|block) grow[(th|ing)] [[of] %itemtypes%]")
 				.description("Called when a crop grows. Alternative to new form of generic grow event.")
-				.examples("on crop growth")
+				.examples("on crop growth:")
 				.since("2.2-Fixes-V10");
 	}
 	
@@ -49,7 +49,6 @@ public class EvtPlantGrowth extends SkriptEvent {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public boolean check(Event e) {
 		if (types != null) {

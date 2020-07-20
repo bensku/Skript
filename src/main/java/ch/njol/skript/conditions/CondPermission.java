@@ -24,6 +24,8 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -31,7 +33,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -44,53 +45,50 @@ import ch.njol.util.Kleenean;
 		"	send \"You're attacking an admin!\" to attacker"})
 @Since("1.0")
 public class CondPermission extends Condition {
+	
 	static {
 		Skript.registerCondition(CondPermission.class,
-				"[%commandsenders%] (do[es]n't|don't|do[es] not) have [the] permission[s] %strings%",
-				"[%commandsenders%] ha(s|ve) [the] permission[s] %strings%");
+				"%commandsenders% (has|have) [the] permission[s] %strings%",
+				"%commandsenders% (doesn't|does not|do not|don't) have [the] permission[s] %strings%");
 	}
 	
 	@SuppressWarnings("null")
-	Expression<String> permissions;
+	private Expression<String> permissions;
 	@SuppressWarnings("null")
 	private Expression<CommandSender> senders;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		senders = (Expression<CommandSender>) vars[0];
-		permissions = (Expression<String>) vars[1];
-		setNegated(matchedPattern == 0);
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		senders = (Expression<CommandSender>) exprs[0];
+		permissions = (Expression<String>) exprs[1];
+		setNegated(matchedPattern == 1);
 		return true;
 	}
 	
 	@Override
 	public boolean check(final Event e) {
-		return senders.check(e, new Checker<CommandSender>() {
-			@Override
-			public boolean check(final CommandSender s) {
-				return permissions.check(e, new Checker<String>() {
-					@Override
-					public boolean check(final String perm) {
-						if (s.hasPermission(perm))
-							return true;
-						// player has perm skript.foo.bar if he has skript.foo.* or skript.*, but not for other plugin's permissions since they can define their own *
-						if (perm.startsWith("skript.")) {
-							for (int i = perm.lastIndexOf('.'); i != -1; i = perm.lastIndexOf('.', i - 1)) {
-								if (s.hasPermission(perm.substring(0, i + 1) + "*"))
-									return true;
+		return senders.check(e,
+				s -> permissions.check(e,
+						perm -> {
+							if (s.hasPermission(perm))
+								return true;
+							// player has perm skript.foo.bar if he has skript.foo.* or skript.*,
+							// but not for other plugin's permissions since they can define their own *
+							if (perm.startsWith("skript.")) {
+								for (int i = perm.lastIndexOf('.'); i != -1; i = perm.lastIndexOf('.', i - 1)) {
+									if (s.hasPermission(perm.substring(0, i + 1) + "*"))
+										return true;
+								}
 							}
-						}
-						return false;
-					}
-				}, isNegated());
-			}
-		});
+							return false;
+						}), isNegated());
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return senders.toString(e, debug) + " " + (isNegated() ? "doesn't have" : "has") + " the permission " + permissions.toString(e, debug);
+		return PropertyCondition.toString(this, PropertyType.HAVE, e, debug, senders,
+				"the permission" + (permissions.isSingle() ? " " : "s ") + permissions.toString());
 	}
 	
 }

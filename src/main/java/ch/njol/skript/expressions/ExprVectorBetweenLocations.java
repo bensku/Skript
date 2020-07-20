@@ -19,6 +19,11 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Location;
+import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,60 +31,58 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.event.Event;
-import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.Nullable;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Between locations")
-@Description("Creates a vector between two locations")
+@Name("Vectors - Vector Between Locations")
+@Description("Creates a vector between two locations.")
 @Examples({"set {_v} to vector between {_loc1} and {_loc2}"})
 @Since("2.2-dev28")
 public class ExprVectorBetweenLocations extends SimpleExpression<Vector> {
+
 	static {
-		Skript.registerExpression(ExprVectorBetweenLocations.class, Vector.class, ExpressionType.SIMPLE, "vector (from|between) %location% (to|and) %location%");
+		Skript.registerExpression(ExprVectorBetweenLocations.class, Vector.class, ExpressionType.SIMPLE,
+				"[the] vector (from|between) %location% (to|and) %location%");
 	}
 
 	@SuppressWarnings("null")
 	private Expression<Location> from, to;
 
 	@Override
-	public boolean isSingle() {
+	@SuppressWarnings({"unchecked", "null"})
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		from = (Expression<Location>) exprs[0];
+		to = (Expression<Location>) exprs[1];
 		return true;
 	}
 
 	@Override
-	public String toString(final @Nullable Event event, boolean b) {
-		return "vector from " + from.toString() + " to " + to.toString();
+	@SuppressWarnings("null")
+	protected Vector[] get(Event e) {
+		Location l1 = from.getSingle(e);
+		Location l2 = to.getSingle(e);
+		if (l1 == null || l2 == null)
+			return null;
+		return CollectionUtils.array(new Vector(l2.getX() - l1.getX(), l2.getY() - l1.getY(), l2.getZ() - l1.getZ()));
 	}
 
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
 	@Override
 	public Class<? extends Vector> getReturnType() {
 		return Vector.class;
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-		from = (Expression<Location>)expressions[0];
-		to = (Expression<Location>)expressions[1];
-		return true;
+	public String toString(@Nullable Event e, boolean debug) {
+		return "vector from " + from.toString(e, debug) + " to " + to.toString(e, debug);
 	}
 
-	@Override
-	@SuppressWarnings("null")
-	protected Vector[] get(Event event) {
-		Location l1 = from.getSingle(event);
-		Location l2 = to.getSingle(event);
-		if (l1 == null || l2 == null){
-			return null;
-		}
-		return new Vector[]{ new Vector(l2.getX() - l1.getX(), l2.getY() - l1.getY(), l2.getZ() - l1.getZ())};
-	}
 }

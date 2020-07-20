@@ -39,6 +39,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.config.Config;
+import ch.njol.skript.expressions.ExprColoured;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.localization.Language;
@@ -47,6 +48,7 @@ import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.ScriptOptions;
 import ch.njol.skript.util.StringMode;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.util.chat.ChatMessages;
@@ -86,6 +88,12 @@ public class VariableString implements Expression<String> {
 	@Nullable
 	private final String simpleUnformatted;
 	private final StringMode mode;
+	
+	/**
+	 * Message components that this string consists of. Only simple parts have
+	 * been evaluated here.
+	 */
+	private final MessageComponent[] components;
 
 	public static boolean disableVariableStartingWithExpressionWarnings = false;
 	
@@ -98,11 +106,14 @@ public class VariableString implements Expression<String> {
 		simpleUnformatted = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
 		assert simpleUnformatted != null;
 		simple = Utils.replaceChatStyles(simpleUnformatted);
-		
+				
 		orig = simple;
 		string = null;
 		assert simple != null;
 		mode = StringMode.MESSAGE;
+		
+		assert simpleUnformatted != null;
+		components = new MessageComponent[] {ChatMessages.plainText(simpleUnformatted)};
 	}
 	
 	/**
@@ -115,20 +126,28 @@ public class VariableString implements Expression<String> {
 		this.orig = orig;
 		this.string = new Object[string.length];
 		this.stringUnformatted = new Object[string.length];
+		
+		// Construct unformatted string and components
+		List<MessageComponent> components = new ArrayList<>(string.length);
 		for (int i = 0; i < string.length; i++) {
 			Object o = string[i];
 			if (o instanceof String) {
 				assert this.string != null;
 				this.string[i] = Utils.replaceChatStyles((String) o);
+				components.addAll(ChatMessages.parse((String) o));
 			} else {
 				assert this.string != null;
 				this.string[i] = o;
+				components.add(null); // Not known parse-time
 			}
 			
 			// For unformatted string, don't format stuff
 			assert this.stringUnformatted != null;
 			this.stringUnformatted[i] = o;
 		}
+		MessageComponent[] array = components.toArray(new MessageComponent[components.size()]);
+		assert array != null;
+		this.components = array;
 		
 		this.mode = mode;
 		
@@ -154,7 +173,7 @@ public class VariableString implements Expression<String> {
 	 * @param withQuotes Whether s must be surrounded by double quotes or not
 	 * @return Whether the string is quoted correctly
 	 */
-	public final static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
+	public static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
 		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
 			return false;
 		boolean quote = false;
@@ -176,7 +195,7 @@ public class VariableString implements Expression<String> {
 	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
 	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
 	 */
-	public final static String unquote(final String s, final boolean surroundingQuotes) {
+	public static String unquote(final String s, final boolean surroundingQuotes) {
 		assert isQuotedCorrectly(s, surroundingQuotes);
 		if (surroundingQuotes)
 			return "" + s.substring(1, s.length() - 1).replace("\"\"", "\"");
@@ -317,7 +336,7 @@ public class VariableString implements Expression<String> {
 		if (name.startsWith("%")) {// inside the if to only print this message once per variable
 			final Config script = ScriptLoader.currentScript;
 			if (script != null) {
-				if (disableVariableStartingWithExpressionWarnings) {
+				if (disableVariableStartingWithExpressionWarnings && !ScriptOptions.getInstance().suppressesWarning(script.getFile(), "start expression")) {
 					Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). You could prefix it with the script's name: {" + StringUtils.substring(script.getFileName(), 0, -3) + "." + name + "}");
 				}
 			}
@@ -345,10 +364,22 @@ public class VariableString implements Expression<String> {
 			pattern = Pattern.compile(Pattern.quote(name));
 		}
 		if (!SkriptConfig.disableVariableConflictWarnings.value()) {
-			for (final Entry<String, Pattern> e : variableNames.entrySet()) {
-				if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
-					Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
-					break;
+			Config cs = ScriptLoader.currentScript; //Eclipse's nullness forced me to do this
+			if (cs != null) {
+				if (!ScriptOptions.getInstance().suppressesWarning(cs.getFile(), "conflict")) {
+					for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+						if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
+							Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
+							break;
+						}
+					}
+				}
+			} else {
+				for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+					if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
+						Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
+						break;
+					}
 				}
 			}
 		}
@@ -409,15 +440,21 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Parses all expressions in the string and returns it.
+	 * If this is a simple string, the event may be null.
 	 * 
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toString(final Event e) {
+	public String toString(@Nullable final Event e) {
 		if (isSimple) {
 			assert simple != null;
 			return simple;
 		}
+
+		if (e == null) {
+			throw new IllegalArgumentException("Event may not be null in non-simple VariableStrings!");
+		}
+
 		final Object[] string = this.string;
 		assert string != null;
 		final StringBuilder b = new StringBuilder();
@@ -449,7 +486,6 @@ public class VariableString implements Expression<String> {
 	/**
 	 * Parses all expressions in the string and returns it.
 	 * Does not parse formatting codes!
-	 * 
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
@@ -486,8 +522,94 @@ public class VariableString implements Expression<String> {
 		return "" + b.toString();
 	}
 	
-	public List<MessageComponent> getMessageComponents(final Event e) {
-		if (isSimple) {
+	/**
+	 * Gets message components from this string. Formatting is parsed only
+	 * in simple parts for security reasons.
+	 * @param e Currently running event.
+	 * @return Message components.
+	 */
+	public List<MessageComponent> getMessageComponents(Event e) {
+		if (isSimple) { // Trusted, constant string in a script
+			assert simpleUnformatted != null;
+			return ChatMessages.parse(simpleUnformatted);
+		}
+		
+		// Parse formating
+		Object[] string = this.stringUnformatted;
+		assert string != null;
+		List<MessageComponent> message = new ArrayList<>(components.length); // At least this much space
+		int stringPart = -1;
+		MessageComponent previous = null;
+		for (MessageComponent component : components) {
+			if (component == null) { // This component holds place for variable part
+				// Go over previous expression part (stringPart >= 0) or take first part (stringPart == 0)
+				stringPart++;
+				if (previous != null) { // Also jump over literal part
+					stringPart++;
+				}
+				Object o = string[stringPart];
+				previous = null;
+				
+				// Convert it to plain text
+				String text = null;
+				if (o instanceof ExprColoured) { // Special case: user wants to process formatting
+					String unformatted = ((ExprColoured) o).getSingle(e);
+					if (unformatted != null) {
+						message.addAll(ChatMessages.parse(unformatted));
+					}
+					continue;
+				} else if (o instanceof Expression<?>) {
+					assert mode != StringMode.MESSAGE;
+					text = Classes.toString(((Expression<?>) o).getArray(e), true, mode);
+				} else if (o instanceof ExpressionInfo) {
+					assert mode == StringMode.MESSAGE;
+					final ExpressionInfo info = (ExpressionInfo) o;
+					int flags = info.flags;
+					
+					// TODO plural handling?
+//					if ((flags & Language.F_PLURAL) == 0 && b.length() > 0 && Math.abs(StringUtils.numberBefore(b, b.length() - 1)) != 1)
+//						flags |= Language.F_PLURAL;
+					if (info.toChatStyle) {
+						final String s = Classes.toString(info.expr.getArray(e), flags, null);
+						final String style = Utils.getChatStyle(s);
+						text = style == null ? "<" + s + ">" : style;
+					} else {
+						if (info.expr instanceof ExprColoured && ((ExprColoured) info.expr).isUnsafeFormat()) { // Special case: user wants to process formatting
+							String unformatted = ((ExprColoured) info.expr).getSingle(e);
+							if (unformatted != null) {
+								message.addAll(ChatMessages.parse(unformatted));
+							}
+							continue;
+						}
+						text = Classes.toString(info.expr.getArray(e), flags, null);
+					}
+				} else {
+					assert false;
+				}
+				
+				assert text != null;
+				MessageComponent plain = ChatMessages.plainText(text);
+				if (!message.isEmpty()) { // Copy styles from previous component
+					ChatMessages.copyStyles(message.get(message.size() - 1), plain);
+				}
+				message.add(plain);
+			} else {
+				message.add(component);
+				previous = component;
+			}
+		}
+		
+		return message;
+	}
+	
+	/**
+	 * Gets message components from this string. Formatting is parsed
+	 * everywhere, which is a potential security risk.
+	 * @param e Currently running event.
+	 * @return Message components.
+	 */
+	public List<MessageComponent> getMessageComponentsUnsafe(Event e) {
+		if (isSimple) { // Trusted, constant string in a script
 			assert simpleUnformatted != null;
 			return ChatMessages.parse(simpleUnformatted);
 		}
@@ -506,7 +628,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Nullable
-	private final static ChatColor getLastColor(final CharSequence s) {
+	private static ChatColor getLastColor(final CharSequence s) {
 		for (int i = s.length() - 2; i >= 0; i--) {
 			if (s.charAt(i) == ChatColor.COLOR_CHAR) {
 				final ChatColor c = ChatColor.getByChar(s.charAt(i + 1));
@@ -685,7 +807,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public final static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
+	public static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
 		if (e instanceof ExpressionList) {
 			final Expression<?>[] ls = ((ExpressionList<?>) e).getExpressions();
 			for (int i = 0; i < ls.length; i++) {

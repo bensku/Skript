@@ -1,0 +1,8 @@
+{
+	"id": "@version@",
+	"date": "@today@",
+	"flavor": "@release-flavor@",
+	"updateCheckerType": "@release-updater@",
+	"updateSource": "@release-source@",
+	"downloadSource": @release-download@
+}

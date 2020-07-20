@@ -35,13 +35,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
 /**
  * @author Peter Güttinger
@@ -84,11 +84,19 @@ public class Delay extends Effect {
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
 				return null;
+			
+			// Back up local variables
+			Object localVars = Variables.removeLocals(e);
+			
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 				@Override
 				public void run() {
 					if (Skript.debug())
 						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+					
+					// Re-set local variables
+					if (localVars != null)
+						Variables.setLocalVariables(e, localVars);
 					
 					Object timing = null;
 					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
@@ -99,6 +107,7 @@ public class Delay extends Effect {
 					}
 					
 					TriggerItem.walk(next, e);
+					Variables.removeLocals(e); // Clean up local vars, we may be exiting now
 					
 					SkriptTimings.stop(timing); // Stop timing if it was even started
 				}
@@ -110,7 +119,7 @@ public class Delay extends Effect {
 	@SuppressWarnings("null")
 	protected final static Set<Event> delayed = Collections.newSetFromMap(new WeakHashMap<Event, Boolean>());
 
-	public final static boolean isDelayed(final Event e) {
+	public static boolean isDelayed(final Event e) {
 		return delayed.contains(e);
 	}
 

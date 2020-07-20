@@ -108,7 +108,7 @@ public enum Kleenean {
 	 * @param b
 	 * @return <tt>b ? TRUE : FALSE</tt>
 	 */
-	public final static Kleenean get(final boolean b) {
+	public static Kleenean get(final boolean b) {
 		return b ? TRUE : FALSE;
 	}
 	
@@ -116,7 +116,7 @@ public enum Kleenean {
 	 * @param i
 	 * @return <tt>i > 0 ? TRUE : i < 0 ? FALSE : UNKNOWN</tt>
 	 */
-	public final static Kleenean get(final int i) {
+	public static Kleenean get(final int i) {
 		return i > 0 ? TRUE : i < 0 ? FALSE : UNKNOWN;
 	}
 	
@@ -124,7 +124,7 @@ public enum Kleenean {
 	 * @param d
 	 * @return <tt>return d > 0 ? TRUE : d < 0 ? FALSE : UNKNOWN</tt>
 	 */
-	public final static Kleenean get(final double d) {
+	public static Kleenean get(final double d) {
 		return d > 0 ? TRUE : d < 0 ? FALSE : UNKNOWN;
 	}
 	

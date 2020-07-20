@@ -19,32 +19,30 @@
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
+import org.bukkit.util.Vector;
+
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
-
-import org.bukkit.util.Vector;
 
 /**
  * @author bi0qaw
  */
-@Name("Vectors - Squared length")
-@Description("Gets the squared length of a vector")
+@Name("Vectors - Squared Length")
+@Description("Gets the squared length of a vector.")
 @Examples({"send \"%squared length of vector 1, 2, 3%\""})
 @Since("2.2-dev28")
-public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Double> {
+public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Number> {
+
 	static {
-		Skript.registerExpression(ExprVectorSquaredLength.class, Double.class, ExpressionType.SIMPLE, "squared length of %vector%", "%vector%['s] squared length");
+		register(ExprVectorSquaredLength.class, Number.class, "squared length[s]", "vectors");
 	}
 
-	@SuppressWarnings({"null", "unused"})
+	@SuppressWarnings("unused")
 	@Override
-	public Double convert(Vector vector) {
-		if (vector == null) return null;
+	public Number convert(Vector vector) {
 		return vector.lengthSquared();
 	}
 
@@ -54,7 +52,8 @@ public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Do
 	}
 
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
+
 }

@@ -32,7 +32,7 @@ import org.bukkit.block.Block;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Highest Solid Block")
-@Description("Returns the highest solid block at the x and z coordinates of the world of given location")
+@Description("Returns the highest solid block at the x and z coordinates of the world of a given location.")
 @Examples("highest block at location of arg-player")
 @Since("2.2-dev34")
 public class ExprHighestSolidBlock extends SimplePropertyExpression<Location, Block> {

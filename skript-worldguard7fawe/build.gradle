@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+repositories {
+	maven {
+		url 'https://ci.athion.net/job/FAWE-WorldGuard-1.13/ws/mvn'
+	}
+	maven {
+		url 'http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/'
+	}
+}
+
+dependencies {
+	implementation rootProject
+	implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:1.1.0'
+	implementation 'com.destroystokyo.paper:paper-api:1.13.2-R0.1-SNAPSHOT'
+	implementation 'com.sk89q:worldguard-legacy:latest'
+	implementation 'com.sk89q:worldguard-core:latest'
+	implementation 'com.sk89q.worldedit:worldedit-core:7.0.0-SNAPSHOT'
+	implementation 'com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT'
+	implementation 'com.boydti:fawe-api:latest'
+}
+
+sourceCompatibility = 1.8
+jar {
+	archiveName 'Skript-worldguard7fawe.jar'
+}

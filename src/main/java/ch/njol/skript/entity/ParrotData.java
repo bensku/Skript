@@ -21,7 +21,6 @@ package ch.njol.skript.entity;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Parrot.Variant;
 import org.eclipse.jdt.annotation.Nullable;

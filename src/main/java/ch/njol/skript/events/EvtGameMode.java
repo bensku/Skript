@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.events;
 
+import java.util.Locale;
+
 import org.bukkit.GameMode;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
@@ -36,8 +38,8 @@ import ch.njol.util.Checker;
 public final class EvtGameMode extends SkriptEvent {
 	static {
 		Skript.registerEvent("Gamemode Change", EvtGameMode.class, PlayerGameModeChangeEvent.class, "game[ ]mode change [to %gamemode%]")
-				.description("Called when a player's <a href='../classes/#gamemode'>gamemode</a> changes.")
-				.examples("on gamemode change", "on gamemode change to adventure")
+				.description("Called when a player's <a href='../classes.html#gamemode'>gamemode</a> changes.")
+				.examples("on gamemode change:", "on gamemode change to adventure:")
 				.since("1.0");
 	}
 	
@@ -66,7 +68,7 @@ public final class EvtGameMode extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "gamemode change" + (mode != null ? " to " + mode.toString().toLowerCase() : "");
+		return "gamemode change" + (mode != null ? " to " + mode.toString().toLowerCase(Locale.ENGLISH) : "");
 	}
 	
 }

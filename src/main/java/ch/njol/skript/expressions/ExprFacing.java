@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.material.Directional;
@@ -28,6 +29,8 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -47,9 +50,12 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The facing of an entity or block, i.e. exactly north, south, east, west, up or down (unlike <a href='#ExprDirection'>direction</a> which is the exact direction, e.g. '0.5 south and 0.7 east')")
 @Examples({"# makes a bridge",
 		"loop blocks from the block below the player in the horizontal facing of the player:",
-		"	set block to cobblestone"})
+		"\tset loop-block to cobblestone"})
 @Since("1.4")
 public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
+	
+	private static final boolean useBlockData = Skript.isRunningMinecraft(1, 13);
+	
 	static {
 		register(ExprFacing.class, Direction.class, "(1¦horizontal|) facing", "livingentities/blocks");
 	}
@@ -62,14 +68,21 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 	
-	@SuppressWarnings({"deprecation", "null"})
+	@SuppressWarnings("deprecation")
 	@Override
 	@Nullable
 	public Direction convert(final Object o) {
 		if (o instanceof Block) {
-			final MaterialData d = ((Block) o).getType().getNewData(((Block) o).getData());
-			if (d instanceof Directional)
-				return new Direction(((Directional) d).getFacing(), 1);
+			if (useBlockData) {
+				BlockData data = ((Block) o).getBlockData();
+				if (data instanceof org.bukkit.block.data.Directional) {
+					return new Direction(((org.bukkit.block.data.Directional) data).getFacing(), 1);
+				}
+			} else {
+				final MaterialData d = ((Block) o).getType().getNewData(((Block) o).getData());
+				if (d instanceof Directional)
+					return new Direction(((Directional) d).getFacing(), 1);
+			}
 			return null;
 		} else if (o instanceof LivingEntity) {
 			return new Direction(Direction.getFacing(((LivingEntity) o).getLocation(), horizontal), 1);
@@ -88,7 +101,6 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 		return Direction.class;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -108,14 +120,26 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 		final Block b = (Block) getExpr().getSingle(e);
 		if (b == null)
 			return;
-		final MaterialData d = b.getType().getNewData(b.getData());
-		if (!(d instanceof Directional))
-			return;
-		((Directional) d).setFacingDirection(toBlockFace(((Direction) delta[0]).getDirection(b)));
-		b.setData(d.getData());
+		if (useBlockData) {
+			BlockData data = b.getBlockData();
+			if (data instanceof org.bukkit.block.data.Directional) {
+				((org.bukkit.block.data.Directional) data).setFacing(toBlockFace(((Direction) delta[0]).getDirection(b)));
+				b.setBlockData(data, false);
+			}
+		} else {
+			final MaterialData d = b.getType().getNewData(b.getData());
+			if (!(d instanceof Directional))
+				return;
+			((Directional) d).setFacingDirection(toBlockFace(((Direction) delta[0]).getDirection(b)));
+			try { // Quick and dirty fix for getting pre-1.13 setData(byte)
+				MagicBlockCompat.setDataMethod.invokeExact(b, d.getData());
+			} catch (Throwable ex) {
+				Skript.exception(ex);
+			}
+		}
 	}
 	
-	private final static BlockFace toBlockFace(final Vector dir) {
+	private static BlockFace toBlockFace(final Vector dir) {
 //		dir.normalize();
 		BlockFace r = null;
 		double d = Double.MAX_VALUE;

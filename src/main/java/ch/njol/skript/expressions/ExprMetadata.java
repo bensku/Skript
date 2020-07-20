@@ -19,6 +19,16 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.event.Event;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
@@ -33,18 +43,9 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.event.Event;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.Metadatable;
-import org.eclipse.jdt.annotation.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 @Name("Metadata")
-@Description("Metadata is a way to store temporary data on entities, blocks and more that" +
+@Description("Metadata is a way to store temporary data on entities, blocks and more that " +
 		"disappears after a server restart.")
 @Examples({"set metadata value \"healer\" of player to true",
 		"broadcast \"%metadata value \"\"healer\"\" of player%\"",
