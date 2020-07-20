@@ -50,7 +50,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     private Expression<Timespan> timespan;
     @SuppressWarnings("null")
     private Expression<Date> date;
-    @SuppressWarnings("null")
+
     private boolean ago;
 
     @Nullable

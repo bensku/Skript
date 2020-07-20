@@ -56,7 +56,6 @@ public class ExprMOTD extends SimpleExpression<String> {
 
 	private boolean isDefault;
 
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		boolean isServerPingEvent = ScriptLoader.isCurrentEvent(ServerListPingEvent.class) ||

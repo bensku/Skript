@@ -79,7 +79,6 @@ public class ExprDamage extends SimpleExpression<Number> {
 		return CollectionUtils.array(HealthUtils.getDamage((EntityDamageEvent) e));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

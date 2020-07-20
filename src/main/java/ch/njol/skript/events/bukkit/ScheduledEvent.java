@@ -30,7 +30,6 @@ import ch.njol.skript.util.Getter;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class ScheduledEvent extends Event {
 	static {
 		EventValues.registerEventValue(ScheduledEvent.class, World.class, new Getter<World, ScheduledEvent>() {
