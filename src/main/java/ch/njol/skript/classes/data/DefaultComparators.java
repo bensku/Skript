@@ -21,6 +21,7 @@ package ch.njol.skript.classes.data;
 
 import java.util.Objects;
 
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
@@ -468,6 +469,45 @@ public class DefaultComparators {
 			}
 		});
 		
+		Comparators.registerComparator(GameruleValue.class, GameruleValue.class, new Comparator<GameruleValue, GameruleValue>() {
+			@Override
+			public Relation compare(GameruleValue o1, GameruleValue o2) {
+				return Relation.get(o1.equals(o2));
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+		});
+		
+		Comparators.registerComparator(GameruleValue.class, Number.class, new Comparator<GameruleValue, Number>() {
+			@Override
+			public Relation compare(GameruleValue o1, Number o2) {
+				if (!(o1.getGameruleValue() instanceof Number)) return Relation.NOT_EQUAL;
+				Number gameruleValue = (Number) o1.getGameruleValue();
+				return Comparators.compare(gameruleValue, o2);
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return true;
+			}
+		});
+		
+		Comparators.registerComparator(GameruleValue.class, Boolean.class, new Comparator<GameruleValue, Boolean>() {
+			@Override
+			public Relation compare(GameruleValue o1, Boolean o2) {
+				if (!(o1.getGameruleValue() instanceof Boolean)) return Relation.NOT_EQUAL;
+				return Relation.get(o2.equals(o1.getGameruleValue()));
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+		});
+
 		// EnchantmentOffer Comparators
 		if (Skript.isRunningMinecraft(1, 11)) {
 			// EnchantmentOffer - EnchantmentType

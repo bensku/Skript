@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
@@ -54,7 +55,7 @@ import ch.njol.util.coll.CollectionUtils;
 import net.md_5.bungee.api.ChatColor;
 
 @Name("Name / Display Name / Tab List Name")
-@Description({"Represents the Minecraft account, display or tab list name of a player, or the custom name of an item, entity or inventory.",
+@Description({"Represents the Minecraft account, display or tab list name of a player, or the custom name of an item, entity, inventory, or gamerule.",
 		"",
 		"<ul>",
 		"\t<li><strong>Players</strong>",
@@ -83,6 +84,11 @@ import net.md_5.bungee.api.ChatColor;
 			"Changing name of an inventory means opening the same inventory with the same contents but with a different name to its current viewers.</li>",
 		"\t\t</ul>",
 		"\t</li>",
+		"\t<li><strong>Gamerules (1.13+)</strong>",
+		"\t\t<ul>",
+		"\t\t\t<li><strong>Name:</strong> The name of the gamerule. Cannot be changed.</li>",
+		"\t\t</ul>",
+		"\t</li>",
 		"</ul>"})
 @Examples({"on join:",
 		"	player has permission \"name.red\"",
@@ -94,13 +100,15 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 
 	@Nullable
 	static final MethodHandle TITLE_METHOD;
+	static final boolean HAS_GAMERULES;
 
 	static {
-		register(ExprName.class, String.class, "(1¦name[s]|2¦(display|nick|chat|custom)[ ]name[s])", "players/entities/itemtypes/inventories/slots");
+		HAS_GAMERULES = Skript.classExists("org.bukkit.GameRule");
+		register(ExprName.class, String.class, "(1¦name[s]|2¦(display|nick|chat|custom)[ ]name[s])", "players/entities/itemtypes/inventories/slots" 
+                + (HAS_GAMERULES ? "/gamerules" : ""));
 		register(ExprName.class, String.class, "(3¦(player|tab)[ ]list name[s])", "players");
 
 		// Get the old method for getting the name of an inventory.
-
 		MethodHandle _METHOD = null;
 		try {
 			_METHOD = MethodHandles.lookup().findVirtual(Inventory.class, "getTitle", MethodType.methodType(String.class));
@@ -114,7 +122,6 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	 * 3 = "tablist name"
 	 */
 	private int mark;
-
 	private static final ItemType AIR = Aliases.javaItemType("air");
 
 	@SuppressWarnings("null")
@@ -158,7 +165,9 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				ItemMeta m = is.getItemMeta();
 				return m.hasDisplayName() ? m.getDisplayName() : null;
 			}
-		}
+		} else if (HAS_GAMERULES && o instanceof GameRule) {
+            return ((GameRule) o).getName();
+        }
 		return null;
 	}
 
