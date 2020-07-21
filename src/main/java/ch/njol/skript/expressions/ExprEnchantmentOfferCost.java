@@ -40,7 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 			" This changes how many levels are required to enchant, but does not change the number of levels removed.",
 			" To change the number of levels removed, use the enchant event."})
 @Examples("set cost of enchantment offer 1 to 50")
-@Since("INSERT VERSION")
+@Since("2.5")
 @RequiredPlugins("1.11 or newer")
 public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number>{
 
