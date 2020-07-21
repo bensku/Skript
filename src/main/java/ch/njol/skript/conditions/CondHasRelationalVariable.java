@@ -47,7 +47,7 @@ import ch.njol.util.Kleenean;
 @Examples({"player holds relational variable {isAdmin}",
 			"player holds relational variable {oldNames::*}"})
 @RequiredPlugins("1.14 or newer")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondHasRelationalVariable extends Condition {
 
 	static {

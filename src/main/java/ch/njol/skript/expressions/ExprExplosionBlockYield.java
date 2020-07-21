@@ -46,7 +46,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on explode:",
 			"set the explosion's block yield to 10%"})
 @Events("explosion")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 
 	static {

@@ -61,7 +61,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set {isAdmin} of player to true",
 			"set {oldNames::*} of player to \"Noob_Sl4yer\" and \"Skr1pt_M4st3r\""})
 @RequiredPlugins("1.14 or newer")
-@Since("INSERT VERSION")
+@Since("2.5")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
