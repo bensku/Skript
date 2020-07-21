@@ -58,7 +58,7 @@ public class EffPlayerVisibility extends Effect {
 				"reveal %players% [(to|for|from) %-players%]");
 	}
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Expression<Player> players, targetPlayers;
 	private boolean reveal;
 
@@ -74,10 +74,13 @@ public class EffPlayerVisibility extends Effect {
 		return true;
 	}
 
-    @Override
+    @SuppressWarnings("null")
+	@Override
     protected void execute(Event e) {
         Player[] targets = targetPlayers == null ? Bukkit.getOnlinePlayers().toArray(new Player[0]) : targetPlayers.getArray(e);
         for (Player targetPlayer : targets) {
+        	if (players == null)
+        		return;
             for (Player player : players.getArray(e)) {
                 if (reveal) {
                     if (USE_DEPRECATED_METHOD)
@@ -96,7 +99,7 @@ public class EffPlayerVisibility extends Effect {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (reveal ? "show " : "hide ") + players.toString(e, debug) + (reveal ? " to " : " from ") + targetPlayers.toString(e, debug);
+		return (reveal ? "show " : "hide ") + (players != null ? players.toString(e, debug) : "") + (reveal ? " to " : " from ") + (targetPlayers != null ? targetPlayers.toString(e, debug) : "");
 	}
 
 }
