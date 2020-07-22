@@ -38,7 +38,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Matches")
-@Description("Test whether strings match defined regular expressions")
+@Description("Test whether strings match defined regular expressions.")
 @Examples({"on chat:",
 	"\tif message matches \"\\d\":",
 	"\t\tsend \"Message contains a digit!\""})
