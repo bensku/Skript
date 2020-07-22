@@ -50,6 +50,7 @@ import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /*
  *   This file is part of Skript.
  *
@@ -65,10 +66,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * 
+ * 
  * Copyright 2011-2014 Peter Güttinger
- *
+ * 
  */
 
 /**
@@ -76,7 +77,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class SkriptCommand implements TabExecutor {
 	private final static String NODE = "skript command";
-
+	
 	// TODO /skript scripts show/list - lists all enabled and/or disabled scripts in the scripts folder and/or subfolders (maybe add a pattern [using * and **])
 	// TODO document this command on the website
 	private final static CommandHelp skriptCommandHelp = new CommandHelp("<gray>/<gold>skript", SkriptColor.LIGHT_CYAN, NODE + ".help")
@@ -111,19 +112,19 @@ public class SkriptCommand implements TabExecutor {
 			skriptCommandHelp.add("test");
 		}
 	}
-
+	
 	private final static ArgsMessage m_reloading = new ArgsMessage(NODE + ".reload.reloading");
-
+	
 	private static void reloading(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : Language.format(NODE + ".reload." + what, args);
 		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what)));
 	}
-
+	
 	private final static ArgsMessage m_reloaded = new ArgsMessage(NODE + ".reload.reloaded");
 	private final static ArgsMessage m_reload_error = new ArgsMessage(NODE + ".reload.error");
-
+	
 	private final static ArgsMessage m_changes_title = new ArgsMessage(NODE + ".update.changes.title");
-
+	
 	private static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
@@ -131,22 +132,22 @@ public class SkriptCommand implements TabExecutor {
 		else
 			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors()))));
 	}
-
+	
 	private static void info(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.info(sender, StringUtils.fixCapitalization(what));
 	}
-
+	
 	private static void message(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.message(sender, StringUtils.fixCapitalization(what));
 	}
-
+	
 	private static void error(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + "." + what) : PluralizingArgsMessage.format(Language.format(NODE + "." + what, args));
 		Skript.error(sender, StringUtils.fixCapitalization(what));
 	}
-
+	
 	@Override
 	@SuppressFBWarnings("REC_CATCH_EXCEPTION")
 	public boolean onCommand(final @Nullable CommandSender sender, final @Nullable Command command, final @Nullable String label, final @Nullable String[] args) {
@@ -219,14 +220,14 @@ public class SkriptCommand implements TabExecutor {
 							info(sender, "enable.single.already enabled", f.getName(), StringUtils.join(args, " ", 1, args.length));
 							return true;
 						}
-
+						
 						try {
 							f = FileUtils.move(f, new File(f.getParentFile(), f.getName().substring(1)), false);
 						} catch (final IOException e) {
 							error(sender, "enable.single.io error", f.getName().substring(1), ExceptionUtils.toString(e));
 							return true;
 						}
-
+						
 						info(sender, "enable.single.enabling", f.getName());
 						Config config = ScriptLoader.loadStructure(f);
 						ScriptLoader.loadScripts(config);
@@ -251,7 +252,7 @@ public class SkriptCommand implements TabExecutor {
 						info(sender, "enable.folder.enabling", f.getName(), scripts.size());
 						final File[] ss = scripts.toArray(new File[scripts.size()]);
 						assert ss != null;
-
+						
 						List<Config> configs = ScriptLoader.loadStructures(ss);
 						final ScriptInfo i = ScriptLoader.loadScripts(configs);
 						assert i.files == scripts.size();
@@ -281,9 +282,9 @@ public class SkriptCommand implements TabExecutor {
 							info(sender, "disable.single.already disabled", f.getName().substring(1));
 							return true;
 						}
-
+						
 						ScriptLoader.unloadScript(f);
-
+						
 						try {
 							FileUtils.move(f, new File(f.getParentFile(), "-" + f.getName()), false);
 						} catch (final IOException e) {
@@ -304,10 +305,10 @@ public class SkriptCommand implements TabExecutor {
 							info(sender, "disable.folder.empty", f.getName());
 							return true;
 						}
-
+						
 						for (final File script : scripts)
 							ScriptLoader.unloadScript(new File(script.getParentFile(), script.getName().substring(1)));
-
+						
 						info(sender, "disable.folder.disabled", f.getName(), scripts.size());
 						return true;
 					}
@@ -368,11 +369,11 @@ public class SkriptCommand implements TabExecutor {
 					Skript.error(sender, "Test script doesn't exist!");
 					return true;
 				}
-
+				
 				ScriptLoader.loadScripts(ScriptLoader.loadStructure(script)); // Load test
 				Bukkit.getPluginManager().callEvent(new SkriptTestEvent()); // Run it
 				Skript.disableScripts(); // Clean state for next test
-
+				
 				// Get results and show them
 				String[] lines = TestTracker.collectResults().createReport().split("\n");
 				for (String line : lines) {
@@ -387,10 +388,10 @@ public class SkriptCommand implements TabExecutor {
 		}
 		return true;
 	}
-
+	
 	private final static ArgsMessage m_invalid_script = new ArgsMessage(NODE + ".invalid script");
 	private final static ArgsMessage m_invalid_folder = new ArgsMessage(NODE + ".invalid folder");
-
+	
 	@Nullable
 	private static File getScriptFromArgs(final CommandSender sender, final String[] args, final int start) {
 		String script = StringUtils.join(args, " ", start, args.length);
@@ -401,7 +402,7 @@ public class SkriptCommand implements TabExecutor {
 		}
 		return f;
 	}
-
+	
 	@Nullable
 	public static File getScriptFromName(String script){
 		final boolean isFolder = script.endsWith("/") || script.endsWith("\\");
@@ -425,7 +426,7 @@ public class SkriptCommand implements TabExecutor {
 		}
 		return f;
 	}
-
+	
 	private static Collection<File> toggleScripts(final File folder, final boolean enable) throws IOException {
 		return FileUtils.renameAll(folder, new Converter<String, String>() {
 			@Override
@@ -464,7 +465,7 @@ public class SkriptCommand implements TabExecutor {
 									reload.add(f.getName());
 								}
 							}
-
+							
 							StringUtil.copyPartialMatches(args[1], reload, list);
 							break;
 						case "enable":
@@ -473,7 +474,7 @@ public class SkriptCommand implements TabExecutor {
 									enable.add(f.getName().replace("-", ""));
 								}
 							}
-
+							
 							StringUtil.copyPartialMatches(args[1], enable, list);
 							break;
 						case "disable":
@@ -482,7 +483,7 @@ public class SkriptCommand implements TabExecutor {
 									disable.add(f.getName());
 								}
 							}
-
+							
 							StringUtil.copyPartialMatches(args[1], disable, list);
 							break;
 						case "update":
