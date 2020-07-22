@@ -34,16 +34,12 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.ReplacementTypes;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 
-enum ReplacementTypes {
-	ALL,
-	FIRST,
-	LAST
-}
 
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
@@ -60,7 +56,7 @@ public class ExprReplace extends SimpleExpression<String> {
 				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
 	}
 	
-	String type = "ALL";
+	private ReplacementTypes type = ReplacementTypes.ALL;
 	@SuppressWarnings("null")
 	private Expression<String> textToReplace, replacement, storage;
 	private boolean caseSensitive = false;
@@ -76,7 +72,7 @@ public class ExprReplace extends SimpleExpression<String> {
 		textToReplace = (Expression<String>) expressions[0];
 		replacement = (Expression<String>) expressions[1];
 		storage = (Expression<String>) expressions[2];
-		type = ReplacementTypes.values()[mark < 4 ? mark : (mark ^ 4)].name();
+		type = ReplacementTypes.values()[mark < 4 ? mark : (mark ^ 4)];
 		return true;
 	}
 	
@@ -88,7 +84,7 @@ public class ExprReplace extends SimpleExpression<String> {
 		String newText = replacement.getSingle(event);
 		if (!regex) newText = newText.replace("$", "\\$");
 		String newStorage = storage.getSingle(event);
-		switch (type) {
+		switch (type.name()) {
 			case "ALL":
 				for (Object s : oldtextToReplace) {
 					newStorage = newStorage.replaceAll((String) s, newText);
