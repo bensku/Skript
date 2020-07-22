@@ -40,14 +40,14 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Unknown command message")
-@Description({"The message sent to the player in an unknown command event"})
+@Description({"The message sent to the player in an unknown command event."})
 @Examples({"on unknown command:", "\tset unknown command message to \"Error: Command not found!\""})
 @Since("INSERT VERSION")
 public class ExprUnknownCommandMessage extends SimpleExpression<String> {
 	
 	static {
 		if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
-			Skript.registerExpression(ExprUnknownCommandMessage.class, String.class, ExpressionType.SIMPLE, "[the] (unknown command message|unknown cmd message)");
+			Skript.registerExpression(ExprUnknownCommandMessage.class, String.class, ExpressionType.SIMPLE, "[the] unknown (command|cmd) message");
 	}
 	
 	@Override
