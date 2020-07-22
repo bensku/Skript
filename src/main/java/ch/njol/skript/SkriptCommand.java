@@ -103,7 +103,7 @@ public class SkriptCommand implements TabExecutor {
 //					.add("delete", "Deletes a variable")
 //					.add("find", "Find variables")
 			).add("help");
-
+	
 	static {
 		if (new File(Skript.getInstance().getDataFolder() + "/doc-templates").exists()) {
 			skriptCommandHelp.add("gen-docs");
