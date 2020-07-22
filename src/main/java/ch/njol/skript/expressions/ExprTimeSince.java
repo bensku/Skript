@@ -35,7 +35,7 @@ import ch.njol.skript.util.Timespan;
 @Name("Time Since")
 @Description("The time that has passed since a date. If the given date is in the future, a value will not be returned.")
 @Examples("send \"%time since 5 minecraft days ago% has passed since 5 minecraft days ago!\" to player")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprTimeSince extends SimplePropertyExpression<Date, Timespan> {
 
 	static {
