@@ -1732,7 +1732,7 @@ public class BukkitClasses {
 				.name("Gamerule")
 				.description("A gamerule")
 				.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining(", ")))
-				.since("INSERT VERSION")
+				.since("2.5")
 				.requiredPlugins("Minecraft 1.13 or newer")
 				.parser(new Parser<GameRule>() {
 					@Override
@@ -1774,7 +1774,7 @@ public class BukkitClasses {
 					)
 					.examples("set persistent data value \"epic\" of player to true")
 					.requiredPlugins("1.14 or newer")
-					.since("INSERT VERSION"));
+					.since("2.5"));
 		}
 
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
@@ -1785,7 +1785,7 @@ public class BukkitClasses {
 				.examples("on enchant prepare:",
 					"\tset enchant offer 1 to sharpness 1",
 					"\tset the cost of enchant offer 1 to 10 levels")
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<EnchantmentOffer>() {
 					@Override
 					public boolean canParse(ParseContext context) {
@@ -1816,7 +1816,7 @@ public class BukkitClasses {
 						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
 				.defaultExpression(new EventValueExpression<>(Attribute.class))
 				.usage(attributes.getAllNames())
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<Attribute>() {
 					@Override
 					@Nullable

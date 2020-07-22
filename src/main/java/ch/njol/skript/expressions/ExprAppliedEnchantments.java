@@ -47,7 +47,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on enchant",
 			"\tset the applied enchantments to sharpness 10 and fire aspect 5"})
 @Events("enchant")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 
 	static {

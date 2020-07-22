@@ -51,7 +51,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The enchantment offer in enchant prepare events.")
 @Examples({"on enchant prepare:",
 			"\tsend \"Your enchantment offers are: %the enchantment offers%\" to player"})
-@Since("INSERT VERSION")
+@Since("2.5")
 @Events("enchant prepare")
 @RequiredPlugins("1.11 or newer")
 public class ExprEnchantmentOffer extends SimpleExpression<EnchantmentOffer> {
