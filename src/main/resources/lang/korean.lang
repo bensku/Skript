@@ -1715,19 +1715,19 @@ genes:
 	
 # -- Attribute Types --
 attribute types:
-	generic_armor: generic armor, armor attribute
-	generic_armor_toughness: generic armor toughness, armor toughness attribute
-	generic_attack_damage: generic attack damage, attack damage attribute
-	generic_attack_knockback: generic attack knockback, attack knockback attribute
-	generic_attack_speed: generic attack speed, attack speed attribute
-	generic_flying_speed: generic flying speed, flying speed attribute
-	generic_follow_range: generic follow range, follow range attribute
-	generic_knockback_resistance: generic knockback resistance, knockback resistance attribute
-	generic_luck: generic luck, luck attribute
-	generic_max_health: generic max health, max health attribute
-	generic_movement_speed: generic movement speed, movement speed attribute
-	horse_jump_strength: horse jump strength, horse jump strength attribute
-	zombie_spawn_reinforcements: zombie spawn reinforcements, zombie spawn reinforcements attribute
+	generic_armor: generic armor, armor
+	generic_armor_toughness: generic armor toughness, armor toughness
+	generic_attack_damage: generic attack damage, attack damage
+	generic_attack_knockback: generic attack knockback, attack knockback
+	generic_attack_speed: generic attack speed, attack speed
+	generic_flying_speed: generic flying speed, flying speed
+	generic_follow_range: generic follow range, follow range
+	generic_knockback_resistance: generic knockback resistance, knockback resistance
+	generic_luck: generic luck, luck
+	generic_max_health: generic max health, max health
+	generic_movement_speed: generic movement speed, movement speed
+	horse_jump_strength: horse jump strength
+	zombie_spawn_reinforcements: zombie spawn reinforcements
 
 # -- Boolean --
 boolean:
