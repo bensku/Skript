@@ -98,7 +98,7 @@ public class SkriptCommand implements TabExecutor {
 					.add("changes")
 					.add("download")
 			).add("info"
-					//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
+			//			).add(new CommandHelp("variable", "Commands for modifying variables", ChatColor.DARK_RED)
 //					.add("set", "Creates a new variable or changes an existing one")
 //					.add("delete", "Deletes a variable")
 //					.add("find", "Find variables")
