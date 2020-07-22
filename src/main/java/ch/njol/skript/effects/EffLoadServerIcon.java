@@ -1,56 +1,51 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.util.AsyncEffect;
+import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.util.CachedServerIcon;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.util.AsyncEffect;
-import ch.njol.util.Kleenean;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Name("Load Server Icon")
 @Description({"Loads server icons from the given files. You can get the loaded icon using the",
-		"<a href='expressions.html#ExprLastLoadedServerIcon'>last loaded server icon</a> expression.",
-		"Please note that the image must be 64x64 and the file path starts from the server folder.",})
+	"<a href='expressions.html#ExprLastLoadedServerIcon'>last loaded server icon</a> expression.",
+	"Please note that the image must be 64x64 and the file path starts from the server folder.",})
 @Examples({"on load:",
-		"	clear {server-icons::*}",
-		"	loop 5 times:",
-		"		load server icon from file \"icons/%loop-number%.png\"",
-		"		add the last loaded server icon to {server-icons::*}",
-		"",
-		"on server list ping:",
-		"	set the icon to a random server icon out of {server-icons::*}"})
+	"	clear {server-icons::*}",
+	"	loop 5 times:",
+	"		load server icon from file \"icons/%loop-number%.png\"",
+	"		add the last loaded server icon to {server-icons::*}",
+	"",
+	"on server list ping:",
+	"	set the icon to a random server icon out of {server-icons::*}"})
 @Since("2.3")
 @RequiredPlugins("Paper 1.12.2 or newer")
 public class EffLoadServerIcon extends AsyncEffect {
@@ -78,8 +73,8 @@ public class EffLoadServerIcon extends AsyncEffect {
 		return true;
 	}
 
-    @Override
-    protected void execute(Event e) {
+	@Override
+	protected void execute(Event e) {
 		Path p = Paths.get(path.getSingle(e));
 		if (Files.isRegularFile(p)) {
 			try {
@@ -89,7 +84,7 @@ public class EffLoadServerIcon extends AsyncEffect {
 				Skript.exception(ex);
 			}
 		}
-    }
+	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {

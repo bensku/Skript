@@ -1,110 +1,55 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
-import java.util.List;
-
-import org.bukkit.Chunk;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.command.CommandEvent;
+import ch.njol.skript.events.EvtMoveOn;
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.*;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockCanBuildEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.entity.*;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.entity.FireworkExplodeEvent;
-import org.bukkit.event.entity.ItemDespawnEvent;
-import org.bukkit.event.entity.ItemMergeEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerRiptideEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.bukkit.event.vehicle.VehicleDamageEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.bukkit.event.world.ChunkEvent;
@@ -118,34 +63,21 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.Aliases;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.command.CommandEvent;
-import ch.njol.skript.events.EvtMoveOn;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.BlockStateBlock;
-import ch.njol.skript.util.BlockUtils;
-import ch.njol.skript.util.DelayedChangeBlock;
-import ch.njol.skript.util.Direction;
-import ch.njol.skript.util.Getter;
-import ch.njol.skript.util.slot.InventorySlot;
-import ch.njol.skript.util.slot.Slot;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("deprecation")
 public final class BukkitEventValues {
-	
-	public BukkitEventValues() {}
-	
+
+	public BukkitEventValues() {
+	}
+
 	private static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
-	
+
 	static {
-		
+
 		// === WorldEvents ===
 		EventValues.registerEventValue(WorldEvent.class, World.class, new Getter<World, WorldEvent>() {
 			@Override
@@ -189,7 +121,7 @@ public final class BukkitEventValues {
 				return e.getChunk();
 			}
 		}, 0);
-		
+
 		// === BlockEvents ===
 		EventValues.registerEventValue(BlockEvent.class, Block.class, new Getter<Block, BlockEvent>() {
 			@Override
@@ -233,7 +165,7 @@ public final class BukkitEventValues {
 			public Direction get(final BlockPlaceEvent e) {
 				BlockFace bf = e.getBlockPlaced().getFace(e.getBlockAgainst());
 				if (bf != null) {
-					return new Direction(new double[] {bf.getModX(), bf.getModY(), bf.getModZ()});
+					return new Direction(new double[]{bf.getModX(), bf.getModY(), bf.getModZ()});
 				}
 				return Direction.ZERO;
 			}
@@ -379,7 +311,7 @@ public final class BukkitEventValues {
 				return e.getPlayer();
 			}
 		}, 0);
-		
+
 		// === EntityEvents ===
 		EventValues.registerEventValue(EntityEvent.class, Entity.class, new Getter<Entity, EntityEvent>() {
 			@Override
@@ -511,7 +443,7 @@ public final class BukkitEventValues {
 				return event.getLightning();
 			}
 		}, 0);
-		
+
 		// --- PlayerEvents ---
 		EventValues.registerEventValue(PlayerEvent.class, Player.class, new Getter<Player, PlayerEvent>() {
 			@Override
@@ -674,7 +606,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Direction get(final PlayerInteractEvent e) {
 				if (e.getBlockFace() != null)
-					return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
+					return new Direction(new double[]{e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
 				return Direction.ZERO; // Same as 'BlockFace.SELF' or literal 'at'
 			}
 		}, 0);
@@ -701,9 +633,9 @@ public final class BukkitEventValues {
 				return new ItemType(event.getItem());
 			}
 		}, 0);
-		
+
 		// --- HangingEvents ---
-		
+
 		EventValues.registerEventValue(HangingEvent.class, Hanging.class, new Getter<Hanging, HangingEvent>() {
 			@Override
 			@Nullable
@@ -725,7 +657,7 @@ public final class BukkitEventValues {
 				return e.getEntity().getLocation();
 			}
 		}, 0);
-			
+
 		// HangingBreakEvent
 		EventValues.registerEventValue(HangingBreakEvent.class, Entity.class, new Getter<Entity, HangingBreakEvent>() {
 			@Nullable
@@ -744,7 +676,7 @@ public final class BukkitEventValues {
 				return e.getPlayer();
 			}
 		}, 0);
-		
+
 		// --- VehicleEvents ---
 		EventValues.registerEventValue(VehicleEvent.class, Vehicle.class, new Getter<Vehicle, VehicleEvent>() {
 			@Override
@@ -767,7 +699,7 @@ public final class BukkitEventValues {
 				return e.getExited();
 			}
 		}, 0);
-		
+
 		EventValues.registerEventValue(VehicleEnterEvent.class, Entity.class, new Getter<Entity, VehicleEnterEvent>() {
 			@Nullable
 			@Override
@@ -775,7 +707,7 @@ public final class BukkitEventValues {
 				return e.getEntered();
 			}
 		}, 0);
-		
+
 		// We could error here instead but it's preferable to not do it in this case
 		EventValues.registerEventValue(VehicleDamageEvent.class, Entity.class, new Getter<Entity, VehicleDamageEvent>() {
 			@Nullable
@@ -784,7 +716,7 @@ public final class BukkitEventValues {
 				return e.getAttacker();
 			}
 		}, 0);
-		
+
 		EventValues.registerEventValue(VehicleDestroyEvent.class, Entity.class, new Getter<Entity, VehicleDestroyEvent>() {
 			@Nullable
 			@Override
@@ -792,7 +724,7 @@ public final class BukkitEventValues {
 				return e.getAttacker();
 			}
 		}, 0);
-		
+
 		EventValues.registerEventValue(VehicleEvent.class, Entity.class, new Getter<Entity, VehicleEvent>() {
 			@Override
 			@Nullable
@@ -800,8 +732,8 @@ public final class BukkitEventValues {
 				return e.getVehicle().getPassenger();
 			}
 		}, 0);
-		
-		
+
+
 		// === CommandEvents ===
 		// PlayerCommandPreprocessEvent is a PlayerEvent
 		EventValues.registerEventValue(ServerCommandEvent.class, CommandSender.class, new Getter<CommandSender, ServerCommandEvent>() {
@@ -824,7 +756,7 @@ public final class BukkitEventValues {
 				return e.getSender() instanceof Player ? ((Player) e.getSender()).getWorld() : null;
 			}
 		}, 0);
-		
+
 		// === InventoryEvents ===
 		// InventoryClickEvent
 		EventValues.registerEventValue(InventoryClickEvent.class, Player.class, new Getter<Player, InventoryClickEvent>() {
@@ -858,7 +790,7 @@ public final class BukkitEventValues {
 			public Slot get(final InventoryClickEvent e) {
 				Inventory invi = e.getClickedInventory(); // getInventory is WRONG and dangerous
 				int slotIndex = e.getSlot();
-				
+
 				// Not all indices point to inventory slots. Equipment, for example
 				if (invi instanceof PlayerInventory && slotIndex >= 36) {
 					return new ch.njol.skript.util.slot.EquipmentSlot(((PlayerInventory) invi).getHolder(), slotIndex);

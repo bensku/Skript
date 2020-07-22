@@ -1,23 +1,34 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.util.Version;
+import com.google.common.io.ByteStreams;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.UnsafeValues;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,90 +40,78 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.io.ByteStreams;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import ch.njol.skript.Skript;
-import ch.njol.skript.util.Version;
-
 /**
  * Contains helpers for Bukkit's not so safe stuff.
  */
 @SuppressWarnings("deprecation")
 public class BukkitUnsafe {
-	
+
 	/**
 	 * Bukkit's UnsafeValues allows us to do stuff that would otherwise
 	 * require NMS. It has existed for a long time, too, so 1.9 support is
 	 * not particularly hard to achieve.
 	 */
 	private static final UnsafeValues unsafe;
-	
+
 	/**
 	 * 1.9 Spigot has some "fun" bugs.
 	 */
 	private static final boolean knownNullPtr = !Skript.isRunningMinecraft(1, 11);
-	
+
 	static {
 		UnsafeValues values = Bukkit.getUnsafe();
 		if (values == null)
 			throw new Error("UnsafeValues not available");
 		unsafe = values;
 	}
-	
+
 	/**
 	 * Before 1.13, Vanilla material names were translated using
 	 * this + a lookup table.
 	 */
 	@Nullable
 	private static MethodHandle unsafeFromInternalNameMethod;
-	
+
 	private static final boolean newMaterials = Skript.isRunningMinecraft(1, 13);
-	
+
 	/**
 	 * Vanilla material names to Bukkit materials.
 	 */
 	@Nullable
-	private static Map<String,Material> materialMap;
-	
+	private static Map<String, Material> materialMap;
+
 	/**
 	 * If we have material map for this version, using it is preferred.
 	 * Otherwise, it can be used as fallback.
 	 */
 	private static boolean preferMaterialMap = true;
-	
+
 	/**
 	 * We only spit one exception (unless debugging) from UnsafeValues. Some
 	 * users might not care, and find 1.12 material mappings accurate enough.
 	 */
 	private static boolean unsafeValuesErrored;
-	
+
 	/**
 	 * Maps pre 1.12 ids to materials for variable conversions.
 	 */
 	@Nullable
-	private static Map<Integer,Material> idMappings;
-	
+	private static Map<Integer, Material> idMappings;
+
 	public static void initialize() {
 		if (!newMaterials) {
 			MethodHandle mh;
 			try {
 				mh = MethodHandles.lookup().findVirtual(UnsafeValues.class,
-						"getMaterialFromInternalName", MethodType.methodType(Material.class, String.class));
+					"getMaterialFromInternalName", MethodType.methodType(Material.class, String.class));
 			} catch (NoSuchMethodException | IllegalAccessException e) {
 				mh = null;
 			}
 			unsafeFromInternalNameMethod = mh;
-			
+
 			try {
 				Version version = Skript.getMinecraftVersion();
-				boolean mapExists = loadMaterialMap("materials/" + version.getMajor() + "." +  version.getMinor() + ".json");
+				boolean mapExists = loadMaterialMap("materials/" + version.getMajor() + "." + version.getMinor() + ".json");
 				if (!mapExists) {
 					loadMaterialMap("materials/1.9.json"); // 1.9 is oldest we have mappings for
 					preferMaterialMap = false;
@@ -124,7 +123,7 @@ public class BukkitUnsafe {
 			}
 		}
 	}
-	
+
 	@Nullable
 	public static Material getMaterialFromMinecraftId(String id) {
 		if (newMaterials) {
@@ -141,7 +140,7 @@ public class BukkitUnsafe {
 					return materialMap.get(id.substring(10)); // Strip 'minecraft:' out
 				}
 			}
-			
+
 			// Otherwise, hacks
 			Material type = null;
 			try {
@@ -162,21 +161,22 @@ public class BukkitUnsafe {
 			return type;
 		}
 	}
-	
+
 	private static boolean loadMaterialMap(String name) throws IOException {
 		try (InputStream is = Skript.getInstance().getResource(name)) {
 			if (is == null) { // No mappings for this Minecraft version
 				return false;
 			}
 			String data = new String(ByteStreams.toByteArray(is), StandardCharsets.UTF_8);
-			
-			Type type = new TypeToken<Map<String,Material>>(){}.getType();
+
+			Type type = new TypeToken<Map<String, Material>>() {
+			}.getType();
 			materialMap = new Gson().fromJson(data, type);
 		}
-		
+
 		return true;
 	}
-	
+
 	public static void modifyItemStack(ItemStack stack, String arguments) {
 		try {
 			unsafe.modifyItemStack(stack, arguments);
@@ -189,17 +189,18 @@ public class BukkitUnsafe {
 			}
 		}
 	}
-	
+
 	private static void initIdMappings() {
 		try (InputStream is = Skript.getInstance().getResource("materials/ids.json")) {
 			if (is == null) {
 				throw new AssertionError("missing id mappings");
 			}
 			String data = new String(ByteStreams.toByteArray(is), StandardCharsets.UTF_8);
-			
-			Type type = new TypeToken<Map<Integer,String>>(){}.getType();
+
+			Type type = new TypeToken<Map<Integer, String>>() {
+			}.getType();
 			Map<Integer, String> rawMappings = new Gson().fromJson(data, type);
-			
+
 			// Process raw mappings
 			Map<Integer, Material> parsed = new HashMap<>(rawMappings.size());
 			if (newMaterials) { // Legacy material conversion API
@@ -216,7 +217,7 @@ public class BukkitUnsafe {
 			throw new AssertionError(e);
 		}
 	}
-	
+
 	@Nullable
 	public static Material getMaterialFromId(int id) {
 		if (idMappings == null) {

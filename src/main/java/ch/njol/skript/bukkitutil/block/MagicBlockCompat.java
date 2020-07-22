@@ -1,29 +1,28 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil.block;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.util.Map;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemFlags;
+import ch.njol.skript.aliases.MatchQuality;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -31,47 +30,47 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemFlags;
-import ch.njol.skript.aliases.MatchQuality;
-import ch.njol.skript.bukkitutil.ItemUtils;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.Map;
 
 /**
  * Block compatibility implemented with magic numbers. No other choice until
  * Spigot 1.13.
  */
 public class MagicBlockCompat implements BlockCompat {
-	
+
 	public static final MethodHandle setRawDataMethod;
 	private static final MethodHandle getBlockDataMethod;
 	public static final MethodHandle setDataMethod;
-	
+
 	static {
 		MethodHandles.Lookup lookup = MethodHandles.lookup();
 		try {
 			MethodHandle mh = lookup.findVirtual(BlockState.class, "setRawData",
-					MethodType.methodType(void.class, byte.class));
+				MethodType.methodType(void.class, byte.class));
 			assert mh != null;
 			setRawDataMethod = mh;
 			mh = lookup.findVirtual(FallingBlock.class, "getBlockData",
-					MethodType.methodType(byte.class));
+				MethodType.methodType(byte.class));
 			assert mh != null;
 			getBlockDataMethod = mh;
 			mh = lookup.findVirtual(Block.class, "setData",
-					MethodType.methodType(void.class, byte.class));
+				MethodType.methodType(void.class, byte.class));
 			assert mh != null;
 			setDataMethod = mh;
 		} catch (NoSuchMethodException | IllegalAccessException e) {
 			throw new Error(e);
 		}
 	}
-	
+
 	@SuppressWarnings({"deprecation"})
 	private class MagicBlockValues extends BlockValues {
 
-		private Material id;
+		private final Material id;
 		short data;
-		private int itemFlags;
+		private final int itemFlags;
 
 		public MagicBlockValues(BlockState block) {
 			this.id = ItemUtils.asItem(block.getType());
@@ -79,13 +78,13 @@ public class MagicBlockCompat implements BlockCompat {
 			// We don't know whether block data 0 has been set explicitly
 			this.itemFlags = ItemFlags.CHANGED_DURABILITY;
 		}
-		
+
 		public MagicBlockValues(Material id, short data, int itemFlags) {
 			this.id = id;
 			this.data = data;
 			this.itemFlags = itemFlags;
 		}
-		
+
 		@Override
 		public boolean isDefault() {
 			return itemFlags == 0; // No tag or durability changes
@@ -131,15 +130,16 @@ public class MagicBlockCompat implements BlockCompat {
 			}
 		}
 	}
-	
+
 	private static class MagicBlockSetter implements BlockSetter {
 
-		public MagicBlockSetter() {}
+		public MagicBlockSetter() {
+		}
 
 		@Override
 		public void setBlock(Block block, Material type, @Nullable BlockValues values, int flags) {
 			block.setType(type);
-			
+
 			if (values != null) {
 				MagicBlockValues ourValues = (MagicBlockValues) values;
 				try {
@@ -149,8 +149,7 @@ public class MagicBlockCompat implements BlockCompat {
 				}
 			}
 		}
-		
-		
+
 	}
 
 	@Override
@@ -170,7 +169,7 @@ public class MagicBlockCompat implements BlockCompat {
 		}
 		return state;
 	}
-	
+
 	@Nullable
 	@Override
 	public BlockValues createBlockValues(Material type, Map<String, String> states, @Nullable ItemStack item, int itemFlags) {
@@ -203,5 +202,5 @@ public class MagicBlockCompat implements BlockCompat {
 	public BlockSetter getSetter() {
 		return new MagicBlockSetter();
 	}
-	
+
 }

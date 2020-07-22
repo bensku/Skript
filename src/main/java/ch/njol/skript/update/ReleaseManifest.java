@@ -1,43 +1,35 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.update;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-
+import com.google.gson.*;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 
 /**
  * Describes a Skript release.
  */
 public class ReleaseManifest {
-	
+
 	/**
 	 * Loads a release manifest from JSON.
 	 * @param json Release manifest.
@@ -47,43 +39,43 @@ public class ReleaseManifest {
 	@SuppressWarnings("null")
 	public static ReleaseManifest load(String json) throws JsonParseException {
 		return new GsonBuilder().registerTypeAdapter(Class.class, new ClassSerializer())
-				.create().fromJson(json, ReleaseManifest.class);
+			.create().fromJson(json, ReleaseManifest.class);
 	}
-	
+
 	/**
 	 * Release id, for example "2.3".
 	 */
 	public final String id;
-	
+
 	/**
 	 * When the release was published.
 	 */
 	public final String date;
-	
+
 	/**
 	 * Flavor of the release. For example "github" or "custom".
 	 */
 	public final String flavor;
-	
+
 	/**
 	 * Type of update checker to use for this release.
 	 */
 	public final Class<? extends UpdateChecker> updateCheckerType;
-	
+
 	/**
 	 * Source where updates for this release can be found,
 	 * if there are updates.
 	 */
 	public final String updateSource;
-	
+
 	/**
 	 * Source for downloads. If null, update checker will figure out it.
 	 */
 	@Nullable
 	public final String downloadSource;
-	
+
 	public ReleaseManifest(String id, String date, String flavor, Class<? extends UpdateChecker> updateCheckerType,
-			String updateSource, @Nullable String downloadSource) {
+						   String updateSource, @Nullable String downloadSource) {
 		this.id = id;
 		this.date = date;
 		this.flavor = flavor;
@@ -91,16 +83,17 @@ public class ReleaseManifest {
 		this.updateSource = updateSource;
 		this.downloadSource = downloadSource;
 	}
-	
+
 	/**
 	 * Serializes class to JSON and back.
 	 */
 	static class ClassSerializer implements JsonSerializer<Class<?>>, JsonDeserializer<Class<?>> {
 
 		@Override
-		public @Nullable Class<?> deserialize(@Nullable JsonElement json, @Nullable Type typeOfT,
-				@Nullable JsonDeserializationContext context)
-				throws JsonParseException {
+		public @Nullable
+		Class<?> deserialize(@Nullable JsonElement json, @Nullable Type typeOfT,
+							 @Nullable JsonDeserializationContext context)
+			throws JsonParseException {
 			try {
 				assert json != null;
 				return Class.forName(json.getAsJsonPrimitive().getAsString());
@@ -111,11 +104,11 @@ public class ReleaseManifest {
 
 		@Override
 		public JsonElement serialize(@Nullable Class<?> src, @Nullable Type typeOfSrc,
-				@Nullable JsonSerializationContext context) {
+									 @Nullable JsonSerializationContext context) {
 			assert src != null;
 			return new JsonPrimitive(src.getName());
 		}
-		
+
 	}
 
 	/**
@@ -127,7 +120,7 @@ public class ReleaseManifest {
 		try {
 			return updateCheckerType.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new IllegalStateException("updater class cannot be created", e);
 		}
 	}

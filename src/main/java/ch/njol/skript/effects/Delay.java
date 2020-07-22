@@ -1,47 +1,42 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * @author Peter Güttinger
@@ -49,8 +44,8 @@ import ch.njol.util.Kleenean;
 @Name("Delay")
 @Description("Delays the script's execution by a given timespan. Please note that delays are not persistent, e.g. trying to create a tempban script with <code>ban player → wait 7 days → unban player</code> will not work if you restart your server anytime within these 7 days. You also have to be careful even when using small delays!")
 @Examples({"wait 2 minutes",
-		"halt for 5 minecraft hours",
-		"wait a tick"})
+	"halt for 5 minecraft hours",
+	"wait a tick"})
 @Since("1.4")
 public class Delay extends Effect {
 	static {
@@ -84,20 +79,20 @@ public class Delay extends Effect {
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
 				return null;
-			
+
 			// Back up local variables
 			Object localVars = Variables.removeLocals(e);
-			
+
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
 				@Override
 				public void run() {
 					if (Skript.debug())
 						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
-					
+
 					// Re-set local variables
 					if (localVars != null)
 						Variables.setLocalVariables(e, localVars);
-					
+
 					Object timing = null;
 					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
 						Trigger trigger = getTrigger();
@@ -105,10 +100,10 @@ public class Delay extends Effect {
 							timing = SkriptTimings.start(trigger.getDebugLabel());
 						}
 					}
-					
+
 					TriggerItem.walk(next, e);
 					Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-					
+
 					SkriptTimings.stop(timing); // Stop timing if it was even started
 				}
 			}, d.getTicks_i() < 1 ? 1 : d.getTicks_i()); // Minimum delay is one tick, less than it is useless!
@@ -123,7 +118,7 @@ public class Delay extends Effect {
 		return delayed.contains(e);
 	}
 
-	public static void addDelayedEvent(Event event){
+	public static void addDelayedEvent(Event event) {
 		delayed.add(event);
 	}
 

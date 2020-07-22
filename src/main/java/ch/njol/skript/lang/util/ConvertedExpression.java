@@ -1,29 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.util;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -37,6 +31,11 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Represents a expression converted to another type. This, and not Expression, is the required return type of {@link SimpleExpression#getConvertedExpr(Class...)} because this
@@ -45,31 +44,31 @@ import ch.njol.util.coll.CollectionUtils;
  * <li>automatically lets the source expression handle everything apart from the get() methods</li>
  * <li>will never convert itself to another type, but rather request a new converted expression from the source expression.</li>
  * </ol>
- * 
+ *
  * @author Peter Güttinger
  */
 public class ConvertedExpression<F, T> implements Expression<T> {
-	
+
 	protected Expression<? extends F> source;
 	protected Class<T> to;
 	final Converter<? super F, ? extends T> conv;
-	
+
 	/**
 	 * Converter information.
 	 */
 	private final ConverterInfo<? super F, ? extends T> converterInfo;
-	
+
 	public ConvertedExpression(Expression<? extends F> source, Class<T> to, ConverterInfo<? super F, ? extends T> info) {
 		assert source != null;
 		assert to != null;
 		assert info != null;
-		
+
 		this.source = source;
 		this.to = to;
 		this.conv = info.converter;
 		this.converterInfo = info;
 	}
-	
+
 	@SafeVarargs
 	@Nullable
 	public static <F, T> ConvertedExpression<F, T> newInstance(final Expression<F> v, final Class<T>... to) {
@@ -78,20 +77,19 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			assert c != null;
 			// casting <? super ? extends F> to <? super F> is wrong, but since the converter is only used for values returned by the expression
 			// (which are instances of "<? extends F>") this won't result in any ClassCastExceptions.
-			@SuppressWarnings("unchecked")
-			final ConverterInfo<? super F, ? extends T> conv = (ConverterInfo<? super F, ? extends T>) Converters.getConverterInfo(v.getReturnType(), c);
+			@SuppressWarnings("unchecked") final ConverterInfo<? super F, ? extends T> conv = (ConverterInfo<? super F, ? extends T>) Converters.getConverterInfo(v.getReturnType(), c);
 			if (conv == null)
 				continue;
 			return new ConvertedExpression<>(v, c, conv);
 		}
 		return null;
 	}
-	
+
 	@Override
 	public final boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult matcher) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (debug && e == null)
@@ -99,22 +97,22 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 				+ converterInfo.toString(e, true) + ")";
 		return source.toString(e, debug);
 	}
-	
+
 	@Override
 	public String toString() {
 		return toString(null, false);
 	}
-	
+
 	@Override
 	public Class<T> getReturnType() {
 		return to;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return source.isSingle();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -123,10 +121,10 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			return (Expression<? extends R>) this;
 		return source.getConvertedExpression(to);
 	}
-	
+
 	@Nullable
 	private ClassInfo<? super T> returnTypeInfo;
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -139,7 +137,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 		}
 		return r;
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		final ClassInfo<? super T> rti = returnTypeInfo;
@@ -151,7 +149,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			source.change(e, delta, mode);
 		}
 	}
-	
+
 	@Override
 	@Nullable
 	public T getSingle(final Event e) {
@@ -160,22 +158,22 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			return null;
 		return conv.convert(f);
 	}
-	
+
 	@Override
 	public T[] getArray(final Event e) {
 		return Converters.convert(source.getArray(e), to, conv);
 	}
-	
+
 	@Override
 	public T[] getAll(final Event e) {
 		return Converters.convert(source.getAll(e), to, conv);
 	}
-	
+
 	@Override
 	public boolean check(final Event e, final Checker<? super T> c, final boolean negated) {
 		return negated ^ check(e, c);
 	}
-	
+
 	@Override
 	public boolean check(final Event e, final Checker<? super T> c) {
 		return source.check(e, new Checker<F>() {
@@ -189,32 +187,32 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean getAnd() {
 		return source.getAnd();
 	}
-	
+
 	@Override
 	public boolean setTime(final int time) {
 		return source.setTime(time);
 	}
-	
+
 	@Override
 	public int getTime() {
 		return source.getTime();
 	}
-	
+
 	@Override
 	public boolean isDefault() {
 		return source.isDefault();
 	}
-	
+
 	@Override
 	public boolean isLoopOf(final String s) {
 		return false;// A loop does not convert the expression to loop
 	}
-	
+
 	@Override
 	@Nullable
 	public Iterator<T> iterator(final Event e) {
@@ -224,7 +222,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 		return new Iterator<T>() {
 			@Nullable
 			T next = null;
-			
+
 			@Override
 			public boolean hasNext() {
 				if (next != null)
@@ -235,7 +233,7 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 				}
 				return next != null;
 			}
-			
+
 			@Override
 			public T next() {
 				if (!hasNext())
@@ -245,19 +243,19 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 				assert n != null;
 				return n;
 			}
-			
+
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
 	}
-	
+
 	@Override
 	public Expression<?> getSource() {
 		return source;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Expression<? extends T> simplify() {
@@ -266,12 +264,12 @@ public class ConvertedExpression<F, T> implements Expression<T> {
 			return c;
 		return this;
 	}
-	
+
 	@Override
 	@Nullable
 	public Object[] beforeChange(Expression<?> changed, @Nullable Object[] delta) {
 		return source.beforeChange(changed, delta); // Forward to source
 		// TODO this is not entirely safe, even though probably works well enough
 	}
-	
+
 }

@@ -1,30 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
-import java.util.concurrent.CompletableFuture;
-
-import org.bukkit.command.CommandSender;
 
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Message;
@@ -34,12 +27,18 @@ import ch.njol.skript.update.UpdateManifest;
 import ch.njol.skript.update.Updater;
 import ch.njol.skript.util.chat.BungeeConverter;
 import ch.njol.skript.util.chat.ChatMessages;
+import org.bukkit.command.CommandSender;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Skript's update checker.
  */
 public class SkriptUpdater extends Updater {
-	
+
 	public final static Message m_not_started = new Message("updater.not started");
 	public final static Message m_checking = new Message("updater.checking");
 	public final static Message m_check_in_progress = new Message("updater.check in progress");
@@ -54,11 +53,11 @@ public class SkriptUpdater extends Updater {
 	public final static ArgsMessage m_downloaded = new ArgsMessage("updater.downloaded");
 	public final static Message m_internal_error = new Message("updater.internal error");
 	public final static Message m_custom_version = new Message("updater.custom version");
-	
+
 	SkriptUpdater() {
 		super(loadManifest());
 	}
-	
+
 	/**
 	 * Loads the release manifest from Skript jar.
 	 * @return Release manifest.
@@ -66,7 +65,7 @@ public class SkriptUpdater extends Updater {
 	private static ReleaseManifest loadManifest() {
 		String manifest;
 		try (InputStream is = Skript.getInstance().getResource("release-manifest.json");
-				Scanner s = new Scanner(is)) {
+			 Scanner s = new Scanner(is)) {
 			s.useDelimiter("\\\\A");
 			manifest = s.next();
 		} catch (IOException e) {
@@ -75,7 +74,7 @@ public class SkriptUpdater extends Updater {
 		assert manifest != null;
 		return ReleaseManifest.load(manifest);
 	}
-	
+
 	/**
 	 * Checks for updates and messages the sender.
 	 * @param sender Who should we message.
@@ -96,7 +95,7 @@ public class SkriptUpdater extends Updater {
 					assert update != null; // Because we just checked that one is available
 					Skript.info(sender, "" + m_update_available.toString(update.id, Skript.getVersion()));
 					sender.spigot().sendMessage(BungeeConverter.convert(ChatMessages.parseToArray(
-							"Download it at: <aqua><u><link:" + update.downloadUrl + ">" + update.downloadUrl)));
+						"Download it at: <aqua><u><link:" + update.downloadUrl + ">" + update.downloadUrl)));
 					break;
 				case UNKNOWN:
 					if (isEnabled()) {
@@ -126,12 +125,12 @@ public class SkriptUpdater extends Updater {
 					for (String line : update.patchNotes.split("\\n")) {
 						// Minecraft doesn't like CRLF, remove it
 						line = line.replace("\r", "");
-						
+
 						// Find #issue references and make them links
 						String processed = line;
 						for (int start = line.indexOf('#'); start != -1; start = line.indexOf('#', start + 1)) {
 							StringBuilder issue = new StringBuilder();
-							for (int i = start + 1; i < line.length();) {
+							for (int i = start + 1; i < line.length(); ) {
 								int c = line.codePointAt(i);
 								if (Character.isDigit(c)) {
 									issue.appendCodePoint(c);
@@ -140,17 +139,17 @@ public class SkriptUpdater extends Updater {
 								}
 								i += Character.charCount(c);
 							}
-							
+
 							// Ok, looks like valid issue reference
 							if (issue.length() > 0) {
 								// TODO get issue tracker URL from manifest or something
 								processed = processed.replace("#" + issue,
-										"<aqua><u><link:https://github.com/SkriptLang/Skript/issues/"
+									"<aqua><u><link:https://github.com/SkriptLang/Skript/issues/"
 										+ issue + ">#" + issue + "<r>");
 							}
 						}
 						line = processed;
-						
+
 						assert line != null;
 						sender.spigot().sendMessage(BungeeConverter.convert(ChatMessages.parseToArray(line)));
 					}

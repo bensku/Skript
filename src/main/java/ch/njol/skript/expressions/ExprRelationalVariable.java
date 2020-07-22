@@ -1,42 +1,28 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Comparator.Relation;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
@@ -50,16 +36,21 @@ import ch.njol.skript.util.PersistentDataUtils;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Name("Relational Variable")
 @Description({"A relational variable is a variable stored on an entity, projectile, item, or certain blocks, and it can only be accessed using that entity.",
-			" See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders.",
-			" Relational Variables will persist through a server restart, however, just like normal variables,",
-			" not all values can be stored permanently (e.g. entities). If the value can't be stored permanently,",
-			" it will be stored until the server is restarted."
+	" See <a href='classes.html#persistentdataholder'>persistent data holder</a> for a list of all holders.",
+	" Relational Variables will persist through a server restart, however, just like normal variables,",
+	" not all values can be stored permanently (e.g. entities). If the value can't be stored permanently,",
+	" it will be stored until the server is restarted."
 })
 @Examples({"set {isAdmin} of player to true",
-			"set {oldNames::*} of player to \"Noob_Sl4yer\" and \"Skr1pt_M4st3r\""})
+	"set {oldNames::*} of player to \"Noob_Sl4yer\" and \"Skr1pt_M4st3r\""})
 @RequiredPlugins("1.14 or newer")
 @Since("2.5")
 @SuppressWarnings({"null", "unchecked"})
@@ -68,7 +59,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 	static {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.PROPERTY,
-					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
+				"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
 		}
 	}
@@ -76,8 +67,8 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 	private ExpressionList<Variable<?>> variables;
 	private Expression<Object> holders;
 
-	private ExprRelationalVariable<?> source;
-	private Class<T> superType;
+	private final ExprRelationalVariable<?> source;
+	private final Class<T> superType;
 
 	public ExprRelationalVariable() {
 		this(null, (Class<? extends T>) Object.class);
@@ -100,7 +91,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 				return false;
 			} else if (((Variable<?>) expr).isLocal()) { // Input is a variable, but it's local
 				Skript.error("Setting a relational variable using a local variable is not supported."
-						+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
+					+ " If you are trying to set a value temporarily, consider using metadata", ErrorQuality.SEMANTIC_ERROR
 				);
 				return false;
 			}

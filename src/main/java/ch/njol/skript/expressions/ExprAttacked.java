@@ -1,26 +1,35 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
-import java.lang.reflect.Array;
-
+import ch.njol.skript.ScriptLoader;
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -31,21 +40,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.util.Kleenean;
+import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -53,15 +48,15 @@ import ch.njol.util.Kleenean;
 @Name("Attacked")
 @Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie.")
 @Examples({"on damage:",
-		"	victim is a creeper",
-		"	damage the attacked by 1 heart"})
+	"	victim is a creeper",
+	"	damage the attacked by 1 heart"})
 @Since("1.3")
 @Events({"damage", "death"})
 public class ExprAttacked extends SimpleExpression<Entity> {
 	static {
 		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private EntityData<?> type;
 
@@ -84,7 +79,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Entity[] get(final Event e) {
@@ -100,22 +95,22 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Class<? extends Entity> getReturnType() {
 		return type.getType();
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the attacked " + type;
 		return Classes.getDebugMessage(getSingle(e));
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 }

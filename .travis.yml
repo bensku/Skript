@@ -1,4 +1,4 @@
 language: java
 cache:
-  directories:
-    - $HOME/.gradle
+    directories:
+        - $HOME/.gradle

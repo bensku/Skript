@@ -1,43 +1,41 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Guardian;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import org.bukkit.entity.Guardian;
 
 
 public class GuardianData extends EntityData<Guardian> {
 
 	static {
-		if(Skript.classExists("org.bukkit.entity.Guardian") && !Skript.isRunningMinecraft(1, 11)){
+		if (Skript.classExists("org.bukkit.entity.Guardian") && !Skript.isRunningMinecraft(1, 11)) {
 			EntityData.register(GuardianData.class, "guardian", Guardian.class, 1, "normal guardian", "guardian", "elder guardian");
 		}
 	}
-	
-	
-	
+
+
 	private boolean isElder = false;
-	
+
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		isElder = matchedPattern == 2;
@@ -47,7 +45,7 @@ public class GuardianData extends EntityData<Guardian> {
 	@SuppressWarnings({"null", "deprecation"})
 	@Override
 	protected boolean init(Class<? extends Guardian> c, Guardian e) {
-		if(e != null)
+		if (e != null)
 			isElder = e.isElder();
 		return true;
 	}
@@ -55,9 +53,9 @@ public class GuardianData extends EntityData<Guardian> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void set(Guardian entity) {
-		if(isElder)
+		if (isElder)
 			entity.setElder(true);
-		
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -95,5 +93,5 @@ public class GuardianData extends EntityData<Guardian> {
 			return ((GuardianData) e).isElder == isElder;
 		return false;
 	}
-	
+
 }

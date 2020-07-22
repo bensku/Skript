@@ -1,33 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ChainedConverter;
@@ -35,24 +25,29 @@ import ch.njol.skript.classes.Converter;
 import ch.njol.skript.classes.Converter.ConverterInfo;
 import ch.njol.skript.classes.Converter.ConverterUtils;
 import ch.njol.util.Pair;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Contains all registered converters and allows operating with them.
  */
 public abstract class Converters {
-	
-	private Converters() {}
-	
-	private static List<ConverterInfo<?, ?>> converters = new ArrayList<>(50);
-	
+
+	private Converters() {
+	}
+
+	private static final List<ConverterInfo<?, ?>> converters = new ArrayList<>(50);
+
 	@SuppressWarnings("null")
 	public static List<ConverterInfo<?, ?>> getConverters() {
 		return Collections.unmodifiableList(converters);
 	}
-	
+
 	/**
 	 * Registers a converter.
-	 * 
+	 *
 	 * @param from Type that the converter converts from.
 	 * @param to  Type that the converter converts to.
 	 * @param converter Actual converter.
@@ -60,7 +55,7 @@ public abstract class Converters {
 	public static <F, T> void registerConverter(final Class<F> from, final Class<T> to, final Converter<F, T> converter) {
 		registerConverter(from, to, converter, 0);
 	}
-	
+
 	public static <F, T> void registerConverter(final Class<F> from, final Class<T> to, final Converter<F, T> converter, final int options) {
 		Skript.checkAcceptRegistrations();
 		final ConverterInfo<F, T> info = new ConverterInfo<>(from, to, converter, options);
@@ -73,27 +68,27 @@ public abstract class Converters {
 		}
 		converters.add(info);
 	}
-	
+
 	// REMIND how to manage overriding of converters? - shouldn't actually matter
 	public static void createMissingConverters() {
 		for (int i = 0; i < converters.size(); i++) {
 			final ConverterInfo<?, ?> info = converters.get(i);
 			for (int j = 0; j < converters.size(); j++) {// not from j = i+1 since new converters get added during the loops
 				final ConverterInfo<?, ?> info2 = converters.get(j);
-				
+
 				// info -> info2
 				if ((info.options & Converter.NO_RIGHT_CHAINING) == 0 && (info2.options & Converter.NO_LEFT_CHAINING) == 0
-						&& info2.from.isAssignableFrom(info.to) && !converterExistsSlow(info.from, info2.to)) {
+					&& info2.from.isAssignableFrom(info.to) && !converterExistsSlow(info.from, info2.to)) {
 					converters.add(createChainedConverter(info, info2));
 					// info2 -> info
 				} else if ((info.options & Converter.NO_LEFT_CHAINING) == 0 && (info2.options & Converter.NO_RIGHT_CHAINING) == 0
-						&& info.from.isAssignableFrom(info2.to) && !converterExistsSlow(info2.from, info.to)) {
+					&& info.from.isAssignableFrom(info2.to) && !converterExistsSlow(info2.from, info.to)) {
 					converters.add(createChainedConverter(info2, info));
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if a converter between given classes exists. This iterates over
 	 * all converters, which may take a while.
@@ -109,16 +104,16 @@ public abstract class Converters {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static <F, M, T> ConverterInfo<F, T> createChainedConverter(final ConverterInfo<?, ?> first, final ConverterInfo<?, ?> second) {
 		return new ConverterInfo<>(first, second, new ChainedConverter<>((Converter<F, M>) first.converter, (Converter<M, T>) second.converter), first.options | second.options);
 	}
-	
+
 	/**
 	 * Converts the given value to the desired type. If you want to convert multiple values of the same type you should use {@link #getConverter(Class, Class)} to get a
 	 * converter to convert the values.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @return The converted value or null if no converter exists or the converter returned null for the given value.
@@ -135,12 +130,12 @@ public abstract class Converters {
 			return null;
 		return conv.convert(o);
 	}
-	
+
 	/**
 	 * Converts an object into one of the given types.
 	 * <p>
 	 * This method does not convert the object if it is already an instance of any of the given classes.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @return The converted object
@@ -155,18 +150,17 @@ public abstract class Converters {
 				return (T) o;
 		final Class<F> c = (Class<F>) o.getClass();
 		for (final Class<? extends T> t : to) {
-			@SuppressWarnings("null")
-			final Converter<? super F, ? extends T> conv = getConverter(c, t);
+			@SuppressWarnings("null") final Converter<? super F, ? extends T> conv = getConverter(c, t);
 			if (conv != null)
 				return conv.convert(o);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Converts all entries in the given array to the desired type, using {@link #convert(Object, Class)} to convert every single value. If you want to convert an array of values
 	 * of a known type, consider using {@link #convert(Object[], Class, Converter)} for much better performance.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @return A T[] array without null elements
@@ -187,10 +181,10 @@ public abstract class Converters {
 		}
 		return l.toArray((T[]) Array.newInstance(to, l.size()));
 	}
-	
+
 	/**
 	 * Converts multiple objects into any of the given classes.
-	 * 
+	 *
 	 * @param o
 	 * @param to
 	 * @param superType The component type of the returned array
@@ -257,10 +251,10 @@ public abstract class Converters {
 	}
 
 	private final static Map<Pair<Class<?>, Class<?>>, ConverterInfo<?, ?>> convertersCache = new HashMap<>();
-	
+
 	/**
 	 * Tests whether a converter between the given classes exists.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return Whether a converter exists
@@ -270,7 +264,7 @@ public abstract class Converters {
 			return true;
 		return getConverter(from, to) != null;
 	}
-	
+
 	public static boolean converterExists(final Class<?> from, final Class<?>... to) {
 		for (final Class<?> t : to) {
 			assert t != null;
@@ -279,10 +273,10 @@ public abstract class Converters {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets a converter
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return the converter or null if none exist
@@ -292,10 +286,10 @@ public abstract class Converters {
 		ConverterInfo<? super F, ? extends T> info = getConverterInfo(from, to);
 		return info != null ? info.converter : null;
 	}
-	
+
 	/**
 	 * Gets a converter that has been registered before.
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return The converter info or null if no converters were found.
@@ -310,7 +304,7 @@ public abstract class Converters {
 		convertersCache.put(p, c);
 		return c;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	private static <F, T> ConverterInfo<? super F, ? extends T> lookupConverterInfo(Class<F> from, Class<T> to) {
@@ -320,33 +314,33 @@ public abstract class Converters {
 				return (ConverterInfo<? super F, ? extends T>) conv;
 			}
 		}
-		
+
 		// None found? Try the converters that have either from OR to not match
 		for (final ConverterInfo<?, ?> conv : converters) {
 			if (conv.from.isAssignableFrom(from) && conv.to.isAssignableFrom(to)) {
 				// from matches, but to doesn't exactly and needs to be filtered
 
 				return new ConverterInfo<>(from, to, (Converter<F, T>) ConverterUtils
-						.createInstanceofConverter(conv.converter, to), 0);
+					.createInstanceofConverter(conv.converter, to), 0);
 			} else if (from.isAssignableFrom(conv.from) && to.isAssignableFrom(conv.to)) {
 				// to matches, from doesn't exactly, and needs filtering 
 				return new ConverterInfo<>(from, to, (Converter<F, T>) ConverterUtils
-						.createInstanceofConverter(conv), 0);
+					.createInstanceofConverter(conv), 0);
 			}
 		}
-		
+
 		// Begin accepting both to and from not exactly matching
 		for (final ConverterInfo<?, ?> conv : converters) {
 			if (from.isAssignableFrom(conv.from) && conv.to.isAssignableFrom(to)) {
 				return new ConverterInfo<>(from, to, (Converter<F, T>) ConverterUtils
-						.createDoubleInstanceofConverter(conv, to), 0);
+					.createDoubleInstanceofConverter(conv, to), 0);
 			}
 		}
-		
+
 		// No converter available
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	private static <F, T> Converter<? super F, ? extends T> getConverter_i(final Class<F> from, final Class<T> to) {
@@ -369,7 +363,7 @@ public abstract class Converters {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param from
 	 * @param to
@@ -381,7 +375,7 @@ public abstract class Converters {
 	public static <F, T> T[] convertUnsafe(final F[] from, final Class<?> to, final Converter<? super F, ? extends T> conv) {
 		return convert(from, (Class<T>) to, conv);
 	}
-	
+
 	public static <F, T> T[] convert(final F[] from, final Class<T> to, final Converter<? super F, ? extends T> conv) {
 		@SuppressWarnings("unchecked")
 		T[] ts = (T[]) Array.newInstance(to, from.length);
@@ -397,5 +391,5 @@ public abstract class Converters {
 		assert ts != null;
 		return ts;
 	}
-	
+
 }

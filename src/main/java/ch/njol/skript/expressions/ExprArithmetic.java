@@ -1,28 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.lang.reflect.Array;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -37,6 +32,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Patterns;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
 
 /**
  * @author Peter Güttinger
@@ -44,13 +43,13 @@ import ch.njol.util.Kleenean;
 @Name("Arithmetic")
 @Description("Arithmetic expressions, e.g. 1 + 2, (health of player - 2) / 3, etc.")
 @Examples({"set the player's health to 10 - the player's health",
-		"loop (argument + 2) / 5 times:",
-		"\tmessage \"Two useless numbers: %loop-num * 2 - 5%, %2^loop-num - 1%\"",
-		"message \"You have %health of player * 2% half hearts of HP!\""})
+	"loop (argument + 2) / 5 times:",
+	"\tmessage \"Two useless numbers: %loop-num * 2 - 5%, %2^loop-num - 1%\"",
+	"message \"You have %health of player * 2% half hearts of HP!\""})
 @Since("1.4.2")
 public class ExprArithmetic extends SimpleExpression<Number> {
-	
-	private static enum Operator {
+
+	private enum Operator {
 		PLUS('+') {
 			@SuppressWarnings("null")
 			@Override
@@ -100,46 +99,46 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 				return Double.valueOf(Math.pow(n1.doubleValue(), n2.doubleValue()));
 			}
 		};
-		
+
 		public final char sign;
-		
-		private Operator(final char sign) {
+
+		Operator(final char sign) {
 			this.sign = sign;
 		}
-		
+
 		public abstract Number calculate(Number n1, Number n2, boolean integer);
-		
+
 		@Override
 		public String toString() {
 			return "" + sign;
 		}
 	}
-	
-	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][] {
-			
-			{"%number%[ ]+[ ]%number%", Operator.PLUS},
-			{"%number%[ ]-[ ]%number%", Operator.MINUS},
-			
-			{"%number%[ ]*[ ]%number%", Operator.MULT},
-			{"%number%[ ]/[ ]%number%", Operator.DIV},
-			
-			{"%number%[ ]^[ ]%number%", Operator.EXP},
-	
+
+	private final static Patterns<Operator> patterns = new Patterns<>(new Object[][]{
+
+		{"%number%[ ]+[ ]%number%", Operator.PLUS},
+		{"%number%[ ]-[ ]%number%", Operator.MINUS},
+
+		{"%number%[ ]*[ ]%number%", Operator.MULT},
+		{"%number%[ ]/[ ]%number%", Operator.DIV},
+
+		{"%number%[ ]^[ ]%number%", Operator.EXP},
+
 	});
-	
+
 	static {
 		Skript.registerExpression(ExprArithmetic.class, Number.class, ExpressionType.PATTERN_MATCHES_EVERYTHING, patterns.getPatterns());
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<? extends Number> first, second;
 	@SuppressWarnings("null")
 	private Operator op;
-	
+
 	@SuppressWarnings("null")
 	private Class<? extends Number> returnType;
 	private boolean integer;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -164,7 +163,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 		integer = returnType == Long.class;
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected Number[] get(final Event e) {
@@ -177,22 +176,22 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 		one[0] = op.calculate(n1, n2, integer);
 		return one;
 	}
-	
+
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return returnType;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return first.toString(e, debug) + " " + op + " " + second.toString(e, debug);
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public Expression<? extends Number> simplify() {
@@ -200,5 +199,5 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			return new SimpleLiteral<>(getArray(null), Number.class, false);
 		return this;
 	}
-	
+
 }

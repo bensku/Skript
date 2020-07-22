@@ -1,58 +1,53 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.util.Task;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.util.Task;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * TODO check all updates and find out which ones are not required
- * 
+ *
  * @author Peter Güttinger
  */
 public abstract class PlayerUtils {
-	private PlayerUtils() {}
-	
+	private PlayerUtils() {
+	}
+
 	final static Set<Player> inviUpdate = new HashSet<>();
-	
+
 	public static void updateInventory(final @Nullable Player p) {
 		if (p != null)
 			inviUpdate.add(p);
 	}
-	
+
 	// created when first used
 	final static Task task = new Task(Skript.getInstance(), 1, 1) {
 		@Override
@@ -67,11 +62,11 @@ public abstract class PlayerUtils {
 			inviUpdate.clear();
 		}
 	};
-	
+
 	private final static boolean hasCollecionGetOnlinePlayers = Skript.methodExists(Bukkit.class, "getOnlinePlayers", new Class[0], Collection.class);
 	@Nullable
 	private static Method getOnlinePlayers = null;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	public static Collection<? extends Player> getOnlinePlayers() {
 		if (hasCollecionGetOnlinePlayers) {
@@ -102,13 +97,13 @@ public abstract class PlayerUtils {
 			return Collections.emptyList();
 		}
 	}
-	
-	
+
+
 	public static boolean canEat(Player p, Material food) {
 		GameMode gm = p.getGameMode();
 		if (gm == GameMode.CREATIVE || gm == GameMode.SPECTATOR)
 			return false; // Can't eat anything in those gamemodes
-		
+
 		boolean edible = food.isEdible();
 		if (!edible)
 			return false;
@@ -118,13 +113,10 @@ public abstract class PlayerUtils {
 			case CHORUS_FRUIT:
 				special = true;
 				break;
-				//$CASES-OMITTED$
+			//$CASES-OMITTED$
 			default:
 				special = false;
 		}
-		if (p.getFoodLevel() < 20 || special)
-			return true;
-		
-		return false;
+		return p.getFoodLevel() < 20 || special;
 	}
 }

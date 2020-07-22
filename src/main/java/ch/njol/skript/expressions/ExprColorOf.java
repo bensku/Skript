@@ -1,38 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.DyeColor;
-import org.bukkit.FireworkEffect;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Colorable;
-import org.bukkit.material.MaterialData;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -47,6 +32,20 @@ import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Colorable;
+import org.bukkit.material.MaterialData;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
@@ -54,68 +53,69 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Colour of")
 @Description("The <a href='../classes.html#color'>colour</a> of an item, can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
 @Examples({"on click on wool:",
-		"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
-		"	set the colour of the block to black"})
+	"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
+	"	set the colour of the block to black"})
 @Since("1.2")
 public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 	static {
 		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects");
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr(exprs[0]);
 		return true;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	protected Color[] get(Event e, Object[] source) {
 		if (source instanceof FireworkEffect[]) {
 			List<Color> colors = new ArrayList<>();
-			
+
 			for (FireworkEffect effect : (FireworkEffect[]) source) {
 				effect.getColors().stream()
 					.map(SkriptColor::fromBukkitColor)
 					.forEach(colors::add);
 			}
-			
+
 			if (colors.size() == 0)
 				return null;
 			return colors.toArray(new Color[0]);
 		}
 		return get(source, o -> {
-				Colorable colorable = getColorable(o);
-				
-				if (colorable == null)
-					return null;
-				return SkriptColor.fromDyeColor(colorable.getColor());
+			Colorable colorable = getColorable(o);
+
+			if (colorable == null)
+				return null;
+			return SkriptColor.fromDyeColor(colorable.getColor());
 		});
 	}
+
 	@Override
 	public Class<? extends Color> getReturnType() {
 		return Color.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "colour of " + getExpr().toString(e, debug);
 	}
-	
-	
+
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		Class<?> returnType = getExpr().getReturnType();
-		
+
 		if (FireworkEffect.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color[].class);
-		
+
 		if (mode != ChangeMode.SET && !getExpr().isSingle())
 			return null;
-		
+
 		if (Entity.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
 		else if (Block.class.isAssignableFrom(returnType))
@@ -124,34 +124,34 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 			return CollectionUtils.array(Color.class);
 		return null;
 	}
-	
+
 	@SuppressWarnings("deprecated")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
 		DyeColor color = ((Color) delta[0]).asDyeColor();
-		
+
 		for (Object o : getExpr().getArray(e)) {
 			if (o instanceof Item || o instanceof ItemType) {
 				ItemStack stack = o instanceof Item ? ((Item) o).getItemStack() : ((ItemType) o).getRandom();
-				
+
 				if (stack == null)
 					continue;
-				
+
 				MaterialData data = stack.getData();
-				
+
 				if (!(data instanceof Colorable))
 					continue;
-				
+
 				((Colorable) data).setColor(color);
 				stack.setData(data);
-				
+
 				if (o instanceof Item)
 					((Item) o).setItemStack(stack);
 			} else if (o instanceof Block || o instanceof Colorable) {
 				Colorable colorable = getColorable(o);
-				
+
 				if (colorable != null)
 					colorable.setColor(color);
 			} else if (o instanceof FireworkEffect) {
@@ -182,23 +182,23 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("deprecated")
 	@Nullable
 	private Colorable getColorable(Object colorable) {
 		if (colorable instanceof Item || colorable instanceof ItemType) {
 			ItemStack item = colorable instanceof Item ?
-					((Item) colorable).getItemStack() : ((ItemType) colorable).getRandom();
-			
+				((Item) colorable).getItemStack() : ((ItemType) colorable).getRandom();
+
 			if (item == null)
 				return null;
 			MaterialData data = item.getData();
-			
+
 			if (data instanceof Colorable)
 				return (Colorable) data;
 		} else if (colorable instanceof Block) {
 			BlockState state = ((Block) colorable).getState();
-			
+
 			if (state instanceof Colorable)
 				return (Colorable) state;
 		} else if (colorable instanceof Colorable) {

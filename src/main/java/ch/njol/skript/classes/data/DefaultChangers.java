@@ -1,24 +1,30 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.PlayerUtils;
+import ch.njol.skript.classes.Changer;
+import ch.njol.skript.util.Experience;
+import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -33,20 +39,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.bukkitutil.PlayerUtils;
-import ch.njol.skript.classes.Changer;
-import ch.njol.skript.util.Experience;
-import ch.njol.util.coll.CollectionUtils;
-
 /**
  * @author Peter Güttinger
  */
 public class DefaultChangers {
-	
-	public DefaultChangers() {}
-	
+
+	public DefaultChangers() {
+	}
+
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
 		@Override
 		@Nullable
@@ -67,7 +67,7 @@ public class DefaultChangers {
 			assert false;
 			return null;
 		}
-		
+
 		@Override
 		public void change(final Entity[] entities, final @Nullable Object[] delta, final ChangeMode mode) {
 			if (delta == null) {
@@ -118,7 +118,7 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
+
 	public final static Changer<Player> playerChanger = new Changer<Player>() {
 		@Override
 		@Nullable
@@ -127,13 +127,13 @@ public class DefaultChangers {
 				return null;
 			return entityChanger.acceptChange(mode);
 		}
-		
+
 		@Override
 		public void change(final Player[] players, final @Nullable Object[] delta, final ChangeMode mode) {
 			entityChanger.change(players, delta, mode);
 		}
 	};
-	
+
 	public final static Changer<Entity> nonLivingEntityChanger = new Changer<Entity>() {
 		@Override
 		@Nullable
@@ -142,7 +142,7 @@ public class DefaultChangers {
 				return CollectionUtils.array();
 			return null;
 		}
-		
+
 		@Override
 		public void change(final Entity[] entities, final @Nullable Object[] delta, final ChangeMode mode) {
 			assert mode == ChangeMode.DELETE;
@@ -153,7 +153,7 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
+
 	public final static Changer<Item> itemChanger = new Changer<Item>() {
 		@Override
 		@Nullable
@@ -162,7 +162,7 @@ public class DefaultChangers {
 				return CollectionUtils.array(ItemStack.class);
 			return nonLivingEntityChanger.acceptChange(mode);
 		}
-		
+
 		@Override
 		public void change(final Item[] what, final @Nullable Object[] delta, final ChangeMode mode) {
 			if (mode == ChangeMode.SET) {
@@ -174,11 +174,11 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
+
 	public final static Changer<Inventory> inventoryChanger = new Changer<Inventory>() {
-		
-		private Material[] cachedMaterials = Material.values();
-		
+
+		private final Material[] cachedMaterials = Material.values();
+
 		@Override
 		@Nullable
 		public Class<? extends Object>[] acceptChange(final ChangeMode mode) {
@@ -190,7 +190,7 @@ public class DefaultChangers {
 				return CollectionUtils.array(ItemType[].class, Inventory.class);
 			return CollectionUtils.array(ItemType[].class, Inventory[].class);
 		}
-		
+
 		@Override
 		public void change(final Inventory[] invis, final @Nullable Object[] delta, final ChangeMode mode) {
 			for (final Inventory invi : invis) {
@@ -204,10 +204,10 @@ public class DefaultChangers {
 						//$FALL-THROUGH$
 					case ADD:
 						assert delta != null;
-						
-						if(delta instanceof ItemStack[]) { // Old behavior - legacy code (is it used? no idea)
+
+						if (delta instanceof ItemStack[]) { // Old behavior - legacy code (is it used? no idea)
 							ItemStack[] items = (ItemStack[]) delta;
-							if(items.length > 36) {
+							if (items.length > 36) {
 								return;
 							}
 							for (final Object d : delta) {
@@ -233,7 +233,7 @@ public class DefaultChangers {
 								}
 							}
 						}
-						
+
 						break;
 					case REMOVE:
 					case REMOVE_ALL:
@@ -256,7 +256,7 @@ public class DefaultChangers {
 								break;
 							}
 						}
-						
+
 						// Slow path
 						for (final Object d : delta) {
 							if (d instanceof Inventory) {
@@ -280,7 +280,7 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
+
 	public final static Changer<Block> blockChanger = new Changer<Block>() {
 		@Override
 		@Nullable
@@ -291,7 +291,7 @@ public class DefaultChangers {
 				return CollectionUtils.array(ItemType.class);
 			return CollectionUtils.array(ItemType[].class, Inventory[].class);
 		}
-		
+
 		@Override
 		public void change(final Block[] blocks, final @Nullable Object[] delta, final ChangeMode mode) {
 			for (final Block block : blocks) {
@@ -343,5 +343,5 @@ public class DefaultChangers {
 			}
 		}
 	};
-	
+
 }

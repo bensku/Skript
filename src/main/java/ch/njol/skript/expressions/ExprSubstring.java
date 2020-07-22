@@ -1,26 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -33,28 +30,30 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
  */
 @Name("Subtext")
 @Description("Extracts part of a text. You can either get the first &lt;x&gt; characters, the last &lt;x&gt; characters, or the characters between indices &lt;x&gt; and &lt;y&gt;."
-		+ " The indices &lt;x&gt; and &lt;y&gt; should be between 1 and the <a href='#ExprLength'>length</a> of the text (other values will be fit into this range).")
+	+ " The indices &lt;x&gt; and &lt;y&gt; should be between 1 and the <a href='#ExprLength'>length</a> of the text (other values will be fit into this range).")
 @Examples({"set {_s} to the first 5 characters of the text argument"
-		, "message \"%subtext of {_s} from characters 2 to (the length of {_s} - 1)%\" # removes the first and last character from {_s} and sends it to the player or console"})
+	, "message \"%subtext of {_s} from characters 2 to (the length of {_s} - 1)%\" # removes the first and last character from {_s} and sends it to the player or console"})
 @Since("2.1")
 public class ExprSubstring extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprSubstring.class, String.class, ExpressionType.COMBINED,
-				"[the] (part|sub[ ](text|string)) of %strings% (between|from) (ind(ex|ices)|character[s]|) %number% (and|to) (index|character|) %number%",
-				"[the] (1¦first|2¦last) [%-number%] character[s] of %strings%", "[the] %number% (1¦first|2¦last) characters of %strings%");
+			"[the] (part|sub[ ](text|string)) of %strings% (between|from) (ind(ex|ices)|character[s]|) %number% (and|to) (index|character|) %number%",
+			"[the] (1¦first|2¦last) [%-number%] character[s] of %strings%", "[the] %number% (1¦first|2¦last) characters of %strings%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<String> string;
 	@Nullable
 	private Expression<Number> start, end;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -64,7 +63,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 		assert end != null || start != null;
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected String[] get(final Event e) {
@@ -80,19 +79,19 @@ public class ExprSubstring extends SimpleExpression<String> {
 		final int i1 = Math.max(0, (int) Math.round(d1.doubleValue()) - 1), i2 = Math.min((int) Math.round(d2.doubleValue()), s.length());
 		if (i1 >= i2)
 			return new String[0];
-		return new String[] {s.substring(i1, i2)};
+		return new String[]{s.substring(i1, i2)};
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
@@ -106,5 +105,5 @@ public class ExprSubstring extends SimpleExpression<String> {
 			return "the substring of " + string.toString(e, debug) + " from index " + start.toString(e, debug) + " to " + end.toString(e, debug);
 		}
 	}
-	
+
 }

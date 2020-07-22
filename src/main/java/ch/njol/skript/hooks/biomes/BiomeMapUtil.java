@@ -1,20 +1,20 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.hooks.biomes;
@@ -26,7 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * Hooks to provide MC<1.13 support.
  */
 public class BiomeMapUtil {
-	
+
 	public enum To19Mapping {
 		SWAMP("SWAMPLAND"),
 		FOREST(Biome.FOREST),
@@ -90,29 +90,30 @@ public class BiomeMapUtil {
 		MODIFIED_GRAVELLY_MOUNTAINS("MUTATED_EXTREME_HILLS_WITH_TREES"),
 		GIANT_SPRUCE_TAIGA_HILLS("MUTATED_REDWOOD_TAIGA_HILLS"),
 		THE_VOID("VOID");
-		
-		public static @Nullable To19Mapping getMapping(Biome biome) {
+
+		public static @Nullable
+		To19Mapping getMapping(Biome biome) {
 			To19Mapping[] values = values();
-			
+
 			for (To19Mapping value : values) {
 				if (value.getHandle().equals(biome)) {
 					return value;
 				}
 			}
-			
+
 			return null;
 		}
-		
-		private Biome handle;
-		
+
+		private final Biome handle;
+
 		To19Mapping(Biome handle) {
 			this.handle = handle;
 		}
-		
+
 		To19Mapping(String name) {
 			this.handle = Biome.valueOf(name);
 		}
-		
+
 		public Biome getHandle() {
 			return this.handle;
 		}

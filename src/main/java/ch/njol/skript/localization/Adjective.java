@@ -1,47 +1,46 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.localization;
 
-import java.util.HashMap;
-
+import ch.njol.skript.Skript;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import java.util.HashMap;
 
 /**
  * @author Peter Güttinger
  */
 public class Adjective extends Message {
-	
+
 	// at least in German adjectives behave differently with a definite article. Cases are still not supported though and will likely never be.
 	private final static int DEFINITE_ARTICLE = -100;
 	private final static String DEFINITE_ARTICLE_TOKEN = "+";
-	
+
 	private final HashMap<Integer, String> genders = new HashMap<>();
 	@Nullable
 	String def;
-	
+
 	public Adjective(final String key) {
 		super(key);
 	}
-	
+
 	@Override
 	protected void onValueChange() {
 		genders.clear();
@@ -72,7 +71,7 @@ public class Adjective extends Message {
 			c = c2;
 		} while (c < e);
 	}
-	
+
 	@Override
 	public String toString() {
 		validate();
@@ -80,7 +79,7 @@ public class Adjective extends Message {
 			Skript.warning("Invalid use of Adjective.toString()");
 		return "" + def;
 	}
-	
+
 	public String toString(int gender, final int flags) {
 		validate();
 		if ((flags & Language.F_DEFINITE_ARTICLE) != 0 && genders.containsKey(DEFINITE_ARTICLE))
@@ -92,7 +91,7 @@ public class Adjective extends Message {
 			return a;
 		return "" + def;
 	}
-	
+
 	public static String toString(final Adjective[] adjectives, final int gender, final int flags, final boolean and) {
 		final StringBuilder b = new StringBuilder();
 		for (int i = 0; i < adjectives.length; i++) {
@@ -106,9 +105,9 @@ public class Adjective extends Message {
 		}
 		return "" + b.toString();
 	}
-	
+
 	public String toString(final Noun n, final int flags) {
 		return n.toString(this, flags);
 	}
-	
+
 }

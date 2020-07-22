@@ -1,31 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.entity;
-
-import java.util.Arrays;
-
-import org.bukkit.Location;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
@@ -38,6 +30,13 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.Location;
+import org.bukkit.entity.ThrownPotion;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
@@ -46,16 +45,16 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	static {
 		EntityData.register(ThrownPotionData.class, "thrown potion", ThrownPotion.class, "thrown potion");
 	}
-	
+
 	private static final Adjective m_adjective = new Adjective("entities.thrown potion.adjective");
 	private static final boolean RUNNING_LEGACY = !Skript.isRunningMinecraft(1, 13);
 	private static final ItemType POTION = Aliases.javaItemType("potion");
 	private static final ItemType SPLASH_POTION = Aliases.javaItemType("splash potion");
 	private static final ItemType LINGER_POTION = Aliases.javaItemType("lingering potion");
-	
+
 	@Nullable
 	private ItemType[] types;
-	
+
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null) {
@@ -67,7 +66,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 					ItemType itemType = SPLASH_POTION.clone();
 					itemType.setItemMeta(meta);
 					return itemType;
-				} else if (!t.isSupertypeOf(SPLASH_POTION ) && !t.isSupertypeOf(LINGER_POTION)) {
+				} else if (!t.isSupertypeOf(SPLASH_POTION) && !t.isSupertypeOf(LINGER_POTION)) {
 					return null;
 				}
 				return t;
@@ -77,18 +76,18 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected boolean init(final @Nullable Class<? extends ThrownPotion> c, final @Nullable ThrownPotion e) {
 		if (e != null) {
 			final ItemStack i = e.getItem();
 			if (i == null)
 				return false;
-			types = new ItemType[] {new ItemType(i)};
+			types = new ItemType[]{new ItemType(i)};
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected boolean match(final ThrownPotion entity) {
 		if (types != null) {
@@ -100,7 +99,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		}
 		return true;
 	}
-	
+
 	@Nullable
 	@Override
 	public ThrownPotion spawn(Location loc) {
@@ -114,7 +113,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		potion.setItem(i);
 		return potion;
 	}
-	
+
 	@Override
 	public void set(final ThrownPotion entity) {
 		if (types != null) {
@@ -127,17 +126,17 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		}
 		assert false;
 	}
-	
+
 	@Override
 	public Class<? extends ThrownPotion> getType() {
 		return ThrownPotion.class;
 	}
-	
+
 	@Override
 	public EntityData getSuperType() {
 		return new ThrownPotionData();
 	}
-	
+
 	@Override
 	public boolean isSupertypeOf(final EntityData<?> e) {
 		if (!(e instanceof ThrownPotionData))
@@ -148,7 +147,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(final int flags) {
 		final ItemType[] types = this.types;
@@ -161,7 +160,7 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 		b.append(Classes.toString(types, flags & Language.NO_ARTICLE_MASK, false));
 		return "" + b.toString();
 	}
-	
+
 	//		return ItemType.serialize(types);
 	@Override
 	@Deprecated
@@ -172,17 +171,17 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 //		types = ItemType.deserialize(s);
 //		return types != null;
 	}
-	
+
 	@Override
 	protected boolean equals_i(final EntityData<?> obj) {
 		if (!(obj instanceof ThrownPotionData))
 			return false;
 		return Arrays.equals(types, ((ThrownPotionData) obj).types);
 	}
-	
+
 	@Override
 	protected int hashCode_i() {
 		return Arrays.hashCode(types);
 	}
-	
+
 }

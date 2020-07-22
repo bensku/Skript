@@ -1,33 +1,31 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.CondHasRelationalVariable;
+import ch.njol.skript.expressions.ExprRelationalVariable;
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.variables.SerializedVariable.Value;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -39,13 +37,9 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.conditions.CondHasRelationalVariable;
-import ch.njol.skript.expressions.ExprRelationalVariable;
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.variables.SerializedVariable.Value;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * This class allows Persistent Data to work properly with Skript.
@@ -85,7 +79,7 @@ public class PersistentDataUtils {
 		}
 		return actualHolders;
 	}
-	
+
 	/**
 	 * This returns a {@link NamespacedKey} from the provided name with Skript as the namespace being used.
 	 * The name will be encoded in Base64 to make sure the key name is valid.
@@ -130,7 +124,7 @@ public class PersistentDataUtils {
 			if (actualHolder.getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE)) {
 				Value value = actualHolder.getPersistentDataContainer().get(key, SINGLE_VARIABLE_TYPE);
 				if (value != null)
-					 returnValues.add(Classes.deserialize(value.type, value.data));
+					returnValues.add(Classes.deserialize(value.type, value.data));
 			}
 			// Try to get as Metadata instead
 			if (holder instanceof Metadatable) {
@@ -262,7 +256,7 @@ public class PersistentDataUtils {
 			String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
 			if (index.equals("*")) { // Return all values
 				returnValues.addAll(listVar.values());
-			} else if (listVar.containsKey(index)){ // Return the value under the given index (if it exists)
+			} else if (listVar.containsKey(index)) { // Return the value under the given index (if it exists)
 				returnValues.add(listVar.get(index));
 			}
 		}
@@ -282,7 +276,7 @@ public class PersistentDataUtils {
 	 * @see PersistentDataUtils#setListMap(String, Map, Object)
 	 */
 	@SuppressWarnings("unchecked")
-	public static void 	setList(String name, Object value, Object... holders) {
+	public static void setList(String name, Object value, Object... holders) {
 		if (!name.contains(Variable.SEPARATOR)) // This is a single variable..
 			return;
 
@@ -372,7 +366,7 @@ public class PersistentDataUtils {
 		NamespacedKey key = getNamespacedKey(keyName);
 
 		String index = name.substring(name.lastIndexOf(Variable.SEPARATOR) + Variable.SEPARATOR.length());
-		
+
 		for (Entry<Object, PersistentDataHolder> entry : actualHolders.entrySet()) {
 			Object holder = entry.getKey();
 			PersistentDataHolder actualHolder = entry.getValue();
@@ -391,7 +385,7 @@ public class PersistentDataUtils {
 						}
 					}
 				}
-				
+
 				// This is to store the data on the ItemType or TileState
 				if (holder instanceof ItemType) {
 					((ItemType) holder).setItemMeta((ItemMeta) actualHolder);
@@ -400,12 +394,12 @@ public class PersistentDataUtils {
 				}
 			} else if (holder instanceof Metadatable) { // Try metadata
 				Metadatable mHolder = (Metadatable) holder;
-				
+
 				if (index.equals("*")) { // Remove ALL values
 					mHolder.removeMetadata(keyName, Skript.getInstance());
 				} else { // Remove just one
 					List<MetadataValue> mValues = mHolder.getMetadata(keyName);
-					
+
 					if (!mValues.isEmpty()) {
 						Map<String, Object> mMap = null;
 						for (MetadataValue mv : mValues) { // Get the latest value set by Skript
@@ -414,7 +408,7 @@ public class PersistentDataUtils {
 								break;
 							}
 						}
-						
+
 						if (mMap != null) {
 							mMap.remove(index);
 							if (mMap.isEmpty()) { // No point in storing an empty map. The last value was removed.
@@ -570,13 +564,13 @@ public class PersistentDataUtils {
 		Map<Object, PersistentDataHolder> actualHolders = getConvertedHolders(holders);
 		if (actualHolders.isEmpty())
 			return false;
-		
+
 		boolean isList = name.contains(Variable.SEPARATOR);
 		String keyName = isList ? "!!LIST!!" + name.substring(0, name.lastIndexOf(Variable.SEPARATOR)) : "!!SINGLE!!" + name;
 		NamespacedKey key = getNamespacedKey(keyName);
 
 		if (isList) {
-			for (Entry<Object, PersistentDataHolder> entry: actualHolders.entrySet()) {
+			for (Entry<Object, PersistentDataHolder> entry : actualHolders.entrySet()) {
 				Object holder = entry.getKey();
 				PersistentDataHolder actualHolder = entry.getValue();
 
@@ -602,7 +596,7 @@ public class PersistentDataUtils {
 				}
 			}
 		} else {
-			for (Entry<Object, PersistentDataHolder> entry: actualHolders.entrySet()) {
+			for (Entry<Object, PersistentDataHolder> entry : actualHolders.entrySet()) {
 				if (entry.getValue().getPersistentDataContainer().has(key, SINGLE_VARIABLE_TYPE))
 					continue;
 				if (((Metadatable) entry.getKey()).hasMetadata(keyName))

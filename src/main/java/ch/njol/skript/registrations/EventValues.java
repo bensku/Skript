@@ -1,44 +1,44 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.registrations;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.util.Getter;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Peter Güttinger
  */
 public class EventValues {
-	
-	private EventValues() {}
-	
+
+	private EventValues() {
+	}
+
 	private final static class EventValueInfo<E extends Event, T> {
-		
+
 		public final Class<E> event;
 		public final Class<T> c;
 		public final Getter<T, E> getter;
@@ -46,7 +46,7 @@ public class EventValues {
 		public final Class<? extends E>[] exculdes;
 		@Nullable
 		public final String excludeErrorMessage;
-		
+
 		public EventValueInfo(Class<E> event, Class<T> c, Getter<T, E> getter, @Nullable String excludeErrorMessage, @Nullable Class<? extends E>[] exculdes) {
 			assert event != null;
 			assert c != null;
@@ -58,11 +58,11 @@ public class EventValues {
 			this.excludeErrorMessage = excludeErrorMessage;
 		}
 	}
-	
+
 	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
 	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
 	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
-	
+
 	private static List<EventValueInfo<?, ?>> getEventValuesList(int time) {
 		if (time == -1)
 			return pastEventValues;
@@ -72,10 +72,10 @@ public class EventValues {
 			return futureEventValues;
 		throw new IllegalArgumentException("time must be -1, 0, or 1");
 	}
-	
+
 	/**
 	 * Registers an event value.
-	 * 
+	 *
 	 * @param e the event type
 	 * @param c the type of the default value
 	 * @param g the getter to get the value
@@ -86,10 +86,10 @@ public class EventValues {
 	public static <T, E extends Event> void registerEventValue(Class<E> e, Class<T> c, Getter<T, E> g, int time) {
 		registerEventValue(e, c, g, time, null, (Class<? extends E>[]) null);
 	}
-	
+
 	/**
 	 * Same as {@link #registerEventValue(Class, Class, Getter, int)}
-	 * 
+	 *
 	 * @param e
 	 * @param c
 	 * @param g
@@ -111,13 +111,13 @@ public class EventValues {
 		}
 		eventValues.add(new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
 	}
-	
+
 	/**
 	 * Gets a specific value from an event. Returns null if the event doesn't have such a value (conversions are done to try and get the desired value).
 	 * <p>
 	 * It is recommended to use {@link EventValues#getEventValueGetter(Class, Class, int)} or {@link EventValueExpression#EventValueExpression(Class)} instead of invoking this
 	 * method repeatedly.
-	 * 
+	 *
 	 * @param e event
 	 * @param c return type of getter
 	 * @param time -1 if this is the value before the event, 1 if after, and 0 if it's the default or this value doesn't have distinct states.
@@ -134,12 +134,12 @@ public class EventValues {
 			return null;
 		return getter.get(e);
 	}
-	
+
 	/**
 	 * Returns a getter to get a value from in an event.
 	 * <p>
 	 * Can print an error if the event value is blocked for the given event.
-	 * 
+	 *
 	 * @param e the event class the getter will be getting from
 	 * @param c type of getter
 	 * @param time the event-value's time
@@ -151,7 +151,7 @@ public class EventValues {
 	public static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(Class<E> e, Class<T> c, int time) {
 		return getEventValueGetter(e, c, time, true);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	private static <T, E extends Event> Getter<? extends T, ? super E> getEventValueGetter(Class<E> e, Class<T> c, int time, boolean allowDefault) {
@@ -227,7 +227,7 @@ public class EventValues {
 
 	/**
 	 * Check if the event value states to exclude events.
-	 * 
+	 *
 	 * @param ev
 	 * @param e
 	 * @return boolean if true the event value passes for the events.
@@ -244,7 +244,7 @@ public class EventValues {
 		}
 		return true;
 	}
-	
+
 	@Nullable
 	private static <E extends Event, F, T> Getter<? extends T, ? super E> getConvertedGetter(EventValueInfo<E, F> i, Class<T> to, boolean checkInstanceOf) {
 		Converter<? super F, ? extends T> converter = Converters.getConverter(i.c, to);
@@ -263,9 +263,9 @@ public class EventValues {
 			}
 		};
 	}
-	
+
 	public static boolean doesEventValueHaveTimeStates(Class<? extends Event> e, Class<?> c) {
 		return getEventValueGetter(e, c, -1, false) != null || getEventValueGetter(e, c, 1, false) != null;
 	}
-	
+
 }

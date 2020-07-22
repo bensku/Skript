@@ -1,28 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.conditions;
-
-import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
@@ -41,25 +36,29 @@ import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Contains")
 @Description("Checks whether an inventory contains an item, a text contains another piece of text, " +
-		"or a list (e.g. {list variable::*} or 'drops') contains another object.")
+	"or a list (e.g. {list variable::*} or 'drops') contains another object.")
 @Examples({"block contains 20 cobblestone",
-		"player has 4 flint and 2 iron ingots",
-		"{list::*} contains 5"})
+	"player has 4 flint and 2 iron ingots",
+	"{list::*} contains 5"})
 @Since("1.0")
 public class CondContains extends Condition {
 
 	static {
 		Skript.registerCondition(CondContains.class,
-				"%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
-				"%inventories% (doesn't|does not|do not|don't) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
-				"%inventories/strings/objects% contain[s] %itemtypes/strings/objects%",
-				"%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%",
-				"[the] list [of] %objects% (doesn't|does not|do not|don't) contain %objects%", // comes before 'contains' because of a parser bug
-				"[the] list [of] %objects% contain[s] %objects%",
-				"(all|1¦any|2¦none) of %strings% contain[s] %strings%");
+			"%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+			"%inventories% (doesn't|does not|do not|don't) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+			"%inventories/strings/objects% contain[s] %itemtypes/strings/objects%",
+			"%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%",
+			"[the] list [of] %objects% (doesn't|does not|do not|don't) contain %objects%", // comes before 'contains' because of a parser bug
+			"[the] list [of] %objects% contain[s] %objects%",
+			"(all|1¦any|2¦none) of %strings% contain[s] %strings%");
 	}
 
 	@SuppressWarnings("null")
@@ -78,7 +77,7 @@ public class CondContains extends Condition {
 		isStringCheck = matchedPattern == 6;
 
 		if (!isListCheck && !(containers instanceof Variable) && containers.getReturnType() != Inventory.class &&
-				containers.getReturnType() != String.class && containers.getReturnType() != Object.class) {
+			containers.getReturnType() != String.class && containers.getReturnType() != Object.class) {
 			Expression<?> converted = containers.getConvertedExpression(Inventory.class);
 			if (converted == null)
 				converted = containers.getConvertedExpression(String.class);
@@ -105,7 +104,7 @@ public class CondContains extends Condition {
 					}
 				}
 			} else if (containers.getReturnType() != Inventory.class && containers.getReturnType() != String.class &&
-					!containers.isSingle()) {
+				!containers.isSingle()) {
 				isListCheck = true;
 			}
 		}
@@ -130,7 +129,7 @@ public class CondContains extends Condition {
 				String str = (String) container;
 				assert str != null;
 				if (items.check(e, (Checker<Object>) type ->
-						type instanceof String && StringUtils.contains(str, (String) type, caseSensitive)))
+					type instanceof String && StringUtils.contains(str, (String) type, caseSensitive)))
 					return !isNegated();
 			}
 			return isNegated();
@@ -155,7 +154,7 @@ public class CondContains extends Condition {
 			return false;
 		}, isNegated());
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return containers.toString(e, debug) + (isNegated() ? " doesn't contain " : " contains ") + items.toString(e, debug);

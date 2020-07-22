@@ -1,48 +1,43 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.*;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.util.Experience;
+import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.util.Experience;
-import ch.njol.util.coll.CollectionUtils;
-
 @Name("Enchantment Offer Enchantment Cost")
 @Description({"The cost of an enchantment offer. This is displayed to the right of an enchantment offer.",
-			" If the cost is changed, it will always be at least 1.",
-			" This changes how many levels are required to enchant, but does not change the number of levels removed.",
-			" To change the number of levels removed, use the enchant event."})
+	" If the cost is changed, it will always be at least 1.",
+	" This changes how many levels are required to enchant, but does not change the number of levels removed.",
+	" To change the number of levels removed, use the enchant event."})
 @Examples("set cost of enchantment offer 1 to 50")
 @Since("2.5")
 @RequiredPlugins("1.11 or newer")
-public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number>{
+public class ExprEnchantmentOfferCost extends SimplePropertyExpression<EnchantmentOffer, Number> {
 
 	static {
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer"))
@@ -69,7 +64,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 			return;
 		Object c = delta[0];
 		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
-		if (cost < 1) 
+		if (cost < 1)
 			return;
 		int change;
 		switch (mode) {
@@ -80,7 +75,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 			case ADD:
 				for (EnchantmentOffer offer : offers) {
 					change = offer.getCost() + cost;
-					if (change < 1) 
+					if (change < 1)
 						return;
 					offer.setCost(change);
 				}
@@ -88,7 +83,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 			case REMOVE:
 				for (EnchantmentOffer offer : offers) {
 					change = offer.getCost() - cost;
-					if (change < 1) 
+					if (change < 1)
 						return;
 					offer.setCost(change);
 				}

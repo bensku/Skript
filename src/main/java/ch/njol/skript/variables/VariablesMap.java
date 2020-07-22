@@ -1,23 +1,28 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.variables;
+
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.util.Utils;
+import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,14 +30,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.util.Utils;
-import ch.njol.util.StringUtils;
-
 final class VariablesMap {
-	
+
 	final static Comparator<String> variableNameComparator = new Comparator<String>() {
 		@Override
 		public int compare(final @Nullable String s1, final @Nullable String s2) {
@@ -69,15 +68,15 @@ final class VariablesMap {
 			return 0;
 		}
 	};
-	
+
 	final HashMap<String, Object> hashMap = new HashMap<>();
 	final TreeMap<String, Object> treeMap = new TreeMap<>();
-	
+
 	/**
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
 	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
 	 */
@@ -109,10 +108,10 @@ final class VariablesMap {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Sets a variable.
-	 * 
+	 *
 	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
@@ -180,7 +179,7 @@ final class VariablesMap {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	void deleteFromHashMap(final String parent, final TreeMap<String, Object> current) {
 		for (final Entry<String, Object> e : current.entrySet()) {
@@ -193,5 +192,5 @@ final class VariablesMap {
 			}
 		}
 	}
-	
+
 }

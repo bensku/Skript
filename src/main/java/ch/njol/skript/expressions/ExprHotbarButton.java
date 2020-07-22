@@ -1,27 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -34,18 +30,21 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Hotbar Button")
 @Description("The hotbar button clicked in an <a href='events.html#inventory_click'>inventory click</a> event.")
 @Examples({"on inventory click:",
-		"	send \"You clicked the hotbar button %hotbar button%!\""})
+	"	send \"You clicked the hotbar button %hotbar button%!\""})
 @Since("2.5")
 public class ExprHotbarButton extends SimpleExpression<Number> {
-	
+
 	static {
 		Skript.registerExpression(ExprHotbarButton.class, Number.class, ExpressionType.SIMPLE, "[the] hotbar button");
 	}
-	
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(InventoryClickEvent.class)) {
@@ -54,25 +53,25 @@ public class ExprHotbarButton extends SimpleExpression<Number> {
 		}
 		return true;
 	}
-	
+
 	@Nullable
 	@Override
 	protected Number[] get(Event e) {
 		if (e instanceof InventoryClickEvent)
-			return new Number[] {Integer.valueOf(((InventoryClickEvent) e).getHotbarButton())};
+			return new Number[]{Integer.valueOf(((InventoryClickEvent) e).getHotbarButton())};
 		return null;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the hotbar button";

@@ -1,64 +1,28 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.command;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.help.GenericCommandHelpTopic;
-import org.bukkit.help.HelpMap;
-import org.bukkit.help.HelpTopic;
-import org.bukkit.help.HelpTopicComparator;
-import org.bukkit.help.IndexHelpTopic;
-import org.bukkit.plugin.Plugin;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.command.Commands.CommandAliasHelpTopic;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Language;
@@ -76,6 +40,21 @@ import ch.njol.skript.util.chat.MessageComponent;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.StringUtils;
 import ch.njol.util.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.help.*;
+import org.bukkit.plugin.Plugin;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * This class is used for user-defined commands.
@@ -89,7 +68,7 @@ public class ScriptCommand implements TabExecutor {
 	private final String label;
 	private final List<String> aliases;
 	private List<String> activeAliases;
-	private String permission;
+	private final String permission;
 	private final VariableString permissionMessage;
 	private final String description;
 	@Nullable
@@ -108,13 +87,13 @@ public class ScriptCommand implements TabExecutor {
 	public final static int PLAYERS = 0x1, CONSOLE = 0x2, BOTH = PLAYERS | CONSOLE;
 	final int executableBy;
 
-	private transient PluginCommand bukkitCommand;
+	private final transient PluginCommand bukkitCommand;
 
-	private Map<UUID,Date> lastUsageMap = new HashMap<>();
+	private final Map<UUID, Date> lastUsageMap = new HashMap<>();
 
 	/**
 	 * Creates a new SkriptCommand.
-	 * 
+	 *
 	 * @param name /name
 	 * @param pattern
 	 * @param arguments the list of Arguments this command takes
@@ -144,8 +123,8 @@ public class ScriptCommand implements TabExecutor {
 
 		this.cooldown = cooldown;
 		this.cooldownMessage = cooldownMessage == null
-				? new SimpleLiteral<>(Language.get("commands.cooldown message"),false)
-				: cooldownMessage;
+			? new SimpleLiteral<>(Language.get("commands.cooldown message"), false)
+			: cooldownMessage;
 		this.cooldownBypass = cooldownBypass;
 		this.cooldownStorage = cooldownStorage;
 
@@ -214,7 +193,7 @@ public class ScriptCommand implements TabExecutor {
 		if (!permission.isEmpty() && !sender.hasPermission(permission)) {
 			if (sender instanceof Player) {
 				List<MessageComponent> components =
-						permissionMessage.getMessageComponents(event);
+					permissionMessage.getMessageComponents(event);
 				((Player) sender).spigot().sendMessage(BungeeConverter.convert(components));
 			} else {
 				sender.sendMessage(permissionMessage.getSingle(event));
@@ -222,7 +201,8 @@ public class ScriptCommand implements TabExecutor {
 			return false;
 		}
 
-		cooldownCheck : {
+		cooldownCheck:
+		{
 			if (sender instanceof Player && cooldown != null) {
 				Player player = ((Player) sender);
 				UUID uuid = player.getUniqueId();
@@ -284,14 +264,14 @@ public class ScriptCommand implements TabExecutor {
 		} finally {
 			log.stop();
 		}
-		
+
 		if (Skript.log(Verbosity.VERY_HIGH))
 			Skript.info("# /" + name + " " + rest);
 		final long startTrigger = System.nanoTime();
-		
+
 		if (!trigger.execute(event))
 			sender.sendMessage(Commands.m_internal_error.toString());
-		
+
 		if (Skript.log(Verbosity.VERY_HIGH))
 			Skript.info("# " + name + " took " + 1. * (System.nanoTime() - startTrigger) / 1000000. + " milliseconds");
 		return true;
@@ -305,7 +285,7 @@ public class ScriptCommand implements TabExecutor {
 
 	/**
 	 * Gets the arguments this command takes.
-	 * 
+	 *
 	 * @return The internal list of arguments. Do not modify it!
 	 */
 	public List<Argument<?>> getArguments() {
@@ -318,7 +298,7 @@ public class ScriptCommand implements TabExecutor {
 
 	@Nullable
 	private transient Command overridden = null;
-	private transient Map<String, Command> overriddenAliases = new HashMap<>();
+	private final transient Map<String, Command> overriddenAliases = new HashMap<>();
 
 	public void register(final SimpleCommandMap commandMap, final Map<String, Command> knownCommands, final @Nullable Set<String> aliases) {
 		synchronized (commandMap) {
@@ -370,7 +350,7 @@ public class ScriptCommand implements TabExecutor {
 		}
 	}
 
-	private transient Collection<HelpTopic> helps = new ArrayList<>();
+	private final transient Collection<HelpTopic> helps = new ArrayList<>();
 
 	public void registerHelp() {
 		helps.clear();
@@ -384,8 +364,7 @@ public class ScriptCommand implements TabExecutor {
 			try {
 				final Field topics = IndexHelpTopic.class.getDeclaredField("allTopics");
 				topics.setAccessible(true);
-				@SuppressWarnings("unchecked")
-				final ArrayList<HelpTopic> as = new ArrayList<>((Collection<HelpTopic>) topics.get(aliases));
+				@SuppressWarnings("unchecked") final ArrayList<HelpTopic> as = new ArrayList<>((Collection<HelpTopic>) topics.get(aliases));
 				for (final String alias : activeAliases) {
 					final HelpTopic at = new CommandAliasHelpTopic("/" + alias, "/" + getLabel(), help);
 					as.add(at);
@@ -406,8 +385,7 @@ public class ScriptCommand implements TabExecutor {
 			try {
 				final Field topics = IndexHelpTopic.class.getDeclaredField("allTopics");
 				topics.setAccessible(true);
-				@SuppressWarnings("unchecked")
-				final ArrayList<HelpTopic> as = new ArrayList<>((Collection<HelpTopic>) topics.get(aliases));
+				@SuppressWarnings("unchecked") final ArrayList<HelpTopic> as = new ArrayList<>((Collection<HelpTopic>) topics.get(aliases));
 				as.removeAll(helps);
 				topics.set(aliases, as);
 			} catch (final Exception e) {
@@ -533,7 +511,7 @@ public class ScriptCommand implements TabExecutor {
 		Class<?> argType = arg.getType();
 		if (argType.equals(Player.class) || argType.equals(OfflinePlayer.class))
 			return null; // Default completion
-		
+
 		return Collections.emptyList(); // No tab completion here!
 	}
 

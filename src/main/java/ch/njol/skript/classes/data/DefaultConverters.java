@@ -1,24 +1,33 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.classes.data;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Converter;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.entity.EntityType;
+import ch.njol.skript.entity.XpOrbData;
+import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.*;
+import ch.njol.skript.util.slot.Slot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -38,30 +47,17 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Converter;
-import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.entity.EntityType;
-import ch.njol.skript.entity.XpOrbData;
-import ch.njol.skript.registrations.Converters;
-import ch.njol.skript.util.BlockInventoryHolder;
-import ch.njol.skript.util.BlockUtils;
-import ch.njol.skript.util.Direction;
-import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.Experience;
-import ch.njol.skript.util.slot.Slot;
-
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("rawtypes")
 public class DefaultConverters {
-	
-	public DefaultConverters() {}
-	
+
+	public DefaultConverters() {
+	}
+
 	static {
-		
+
 		// OfflinePlayer - PlayerInventory
 		Converters.registerConverter(OfflinePlayer.class, PlayerInventory.class, new Converter<OfflinePlayer, PlayerInventory>() {
 			@Override
@@ -82,7 +78,7 @@ public class DefaultConverters {
 				return p.getPlayer();
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		// TODO improve handling of interfaces
 		// CommandSender - Player
 		Converters.registerConverter(CommandSender.class, Player.class, new Converter<CommandSender, Player>() {
@@ -122,7 +118,7 @@ public class DefaultConverters {
 				return null;
 			}
 		});
-		
+
 		// Block - Inventory
 		Converters.registerConverter(Block.class, Inventory.class, new Converter<Block, Inventory>() {
 			@Override
@@ -133,7 +129,7 @@ public class DefaultConverters {
 				return null;
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		// Entity - Inventory
 		Converters.registerConverter(Entity.class, Inventory.class, new Converter<Entity, Inventory>() {
 			@Override
@@ -144,7 +140,7 @@ public class DefaultConverters {
 				return null;
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		// Block - ItemType
 		Converters.registerConverter(Block.class, ItemType.class, new Converter<Block, ItemType>() {
 			@Override
@@ -152,7 +148,7 @@ public class DefaultConverters {
 				return new ItemType(b);
 			}
 		}, Converter.NO_LEFT_CHAINING | Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		// Location - Block
 //		Converters.registerConverter(Location.class, Block.class, new Converter<Location, Block>() {
 //			@Override
@@ -167,7 +163,7 @@ public class DefaultConverters {
 				return BlockUtils.getLocation(b);
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		// Entity - Location
 		Converters.registerConverter(Entity.class, Location.class, new Converter<Entity, Location>() {
 			@Override
@@ -190,7 +186,7 @@ public class DefaultConverters {
 				return new EntityType(data, -1);
 			}
 		});
-		
+
 		// Location - World
 //		Skript.registerConverter(Location.class, World.class, new Converter<Location, World>() {
 //			private final static long serialVersionUID = 3270661123492313649L;
@@ -202,7 +198,7 @@ public class DefaultConverters {
 //				return l.getWorld();
 //			}
 //		});
-		
+
 		// ItemType - ItemStack
 		Converters.registerConverter(ItemType.class, ItemStack.class, new Converter<ItemType, ItemStack>() {
 			@Override
@@ -217,7 +213,7 @@ public class DefaultConverters {
 				return new ItemType(i);
 			}
 		});
-		
+
 		// Experience - XpOrbData
 		Converters.registerConverter(Experience.class, XpOrbData.class, new Converter<Experience, XpOrbData>() {
 			@Override
@@ -231,7 +227,7 @@ public class DefaultConverters {
 				return new Experience(e.getExperience());
 			}
 		});
-		
+
 //		// Item - ItemStack
 //		Converters.registerConverter(Item.class, ItemStack.class, new Converter<Item, ItemStack>() {
 //			@Override
@@ -239,7 +235,7 @@ public class DefaultConverters {
 //				return i.getItemStack();
 //			}
 //		});
-		
+
 		// Slot - ItemType
 		Converters.registerConverter(Slot.class, ItemType.class, new Converter<Slot, ItemType>() {
 			@Override
@@ -257,7 +253,7 @@ public class DefaultConverters {
 //				return s.getInventory();
 //			}
 //		});
-		
+
 		// Block - InventoryHolder
 		Converters.registerConverter(Block.class, InventoryHolder.class, new Converter<Block, InventoryHolder>() {
 			@Override
@@ -269,7 +265,7 @@ public class DefaultConverters {
 				return null;
 			}
 		}, Converter.NO_RIGHT_CHAINING | Converter.NO_COMMAND_ARGUMENTS);
-		
+
 		Converters.registerConverter(InventoryHolder.class, Block.class, new Converter<InventoryHolder, Block>() {
 			@Override
 			@Nullable
@@ -279,7 +275,7 @@ public class DefaultConverters {
 				return null;
 			}
 		});
-		
+
 		Converters.registerConverter(InventoryHolder.class, Entity.class, new Converter<InventoryHolder, Entity>() {
 			@Override
 			@Nullable
@@ -289,7 +285,7 @@ public class DefaultConverters {
 				return null;
 			}
 		});
-		
+
 //		// World - Time
 //		Skript.registerConverter(World.class, Time.class, new Converter<World, Time>() {
 //			@Override
@@ -299,7 +295,7 @@ public class DefaultConverters {
 //				return new Time((int) w.getTime());
 //			}
 //		});
-		
+
 		// Enchantment - EnchantmentType
 		Converters.registerConverter(Enchantment.class, EnchantmentType.class, new Converter<Enchantment, EnchantmentType>() {
 			@Override
@@ -307,7 +303,7 @@ public class DefaultConverters {
 				return new EnchantmentType(e, -1);
 			}
 		});
-		
+
 //		// Entity - String (UUID) // Very slow, thus disabled for now
 //		Converters.registerConverter(String.class, Entity.class, new Converter<String, Entity>() {
 //
@@ -324,7 +320,7 @@ public class DefaultConverters {
 //			}
 //			
 //		});
-		
+
 		// Number - Vector; DISABLED due to performance problems
 //		Converters.registerConverter(Number.class, Vector.class, new Converter<Number, Vector>() {
 //			@Override
@@ -342,7 +338,7 @@ public class DefaultConverters {
 				return new Direction(vector);
 			}
 		});
-		
+
 		// EnchantmentOffer Converters
 		if (Skript.isRunningMinecraft(1, 11)) {
 			// EnchantmentOffer - EnchantmentType

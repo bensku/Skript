@@ -13,24 +13,23 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ *
  */
 
 package ch.njol.skript.util.chat;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.util.chat.MessageComponent.ClickEvent;
 import ch.njol.skript.util.chat.MessageComponent.HoverEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Chat codes that come with Skript by default.
  */
 public enum SkriptChatCode implements ChatCode {
-	
+
 	reset {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -39,7 +38,7 @@ public enum SkriptChatCode implements ChatCode {
 	},
 
 	// Colors (Vanilla color code, Skript color code if different)
-	
+
 	black("black", '0'),
 	dark_blue("dark_blue", '1'),
 	dark_green("dark_green", '2'),
@@ -56,46 +55,46 @@ public enum SkriptChatCode implements ChatCode {
 	light_purple("light_purple", 'd'),
 	yellow("yellow", 'e'),
 	white("white", 'f'),
-	
+
 	// Formatting
-	
+
 	bold {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.bold = true;
 		}
 	},
-	
+
 	italic {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.italic = true;
 		}
 	},
-	
+
 	underlined(null, "underline") {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.underlined = true;
 		}
 	},
-	
+
 	strikethrough {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.strikethrough = true;
 		}
 	},
-	
+
 	obfuscated(null, "magic") {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
 			component.obfuscated = true;
 		}
 	},
-	
+
 	// clickEvent
-	
+
 	open_url(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -103,7 +102,7 @@ public enum SkriptChatCode implements ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	run_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -111,7 +110,7 @@ public enum SkriptChatCode implements ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	suggest_command(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -119,7 +118,7 @@ public enum SkriptChatCode implements ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	change_page(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -127,9 +126,9 @@ public enum SkriptChatCode implements ChatCode {
 			component.clickEvent = e;
 		}
 	},
-	
+
 	// hoverEvent
-	
+
 	show_text(true) {
 		@Override
 		public void updateComponent(MessageComponent component, String param) {
@@ -142,77 +141,79 @@ public enum SkriptChatCode implements ChatCode {
 
 	// Other
 
-    insertion(true) {
-	    @Override
-        public void updateComponent(MessageComponent component, String param) { component.insertion = param; }
-    };
-	
-	private boolean hasParam;
-	
+	insertion(true) {
+		@Override
+		public void updateComponent(MessageComponent component, String param) {
+			component.insertion = param;
+		}
+	};
+
+	private final boolean hasParam;
+
 	@Nullable
 	private String colorCode;
-	
+
 	@Nullable
-	private String langName;
-	
+	private final String langName;
+
 	private char colorChar;
-	
+
 	SkriptChatCode(@Nullable String colorCode, String langName, char colorChar) {
 		this.colorCode = colorCode;
 		this.langName = langName;
 		this.hasParam = false;
 		this.colorChar = colorChar;
 	}
-	
+
 	SkriptChatCode(@Nullable String colorCode, String langName) {
 		this.colorCode = colorCode;
 		this.langName = langName;
 		this.hasParam = false;
 	}
-	
+
 	SkriptChatCode(String colorCode, char colorChar) {
 		this.colorCode = colorCode;
 		this.langName = colorCode;
 		this.hasParam = false;
 		this.colorChar = colorChar;
 	}
-	
+
 	SkriptChatCode(boolean hasParam) {
 		this.hasParam = hasParam;
 		this.langName = this.name(); // Default to enum name
 	}
-	
+
 	SkriptChatCode() {
 		this(false);
 	}
-	
+
 	@Override
 	public boolean hasParam() {
 		return hasParam;
 	}
-	
+
 	@Override
 	@Nullable
 	public String getColorCode() {
 		return colorCode;
 	}
-	
+
 	@Override
 	@Nullable
 	public String getLangName() {
 		return langName;
 	}
-	
+
 	@Override
 	public boolean isLocalized() {
 		return true;
 	}
-	
+
 	@Override
 	public char getColorChar() {
 		return colorChar;
 	}
-	
+
 	@Override
 	public void updateComponent(MessageComponent component, String param) {
 		// Default: do nothing

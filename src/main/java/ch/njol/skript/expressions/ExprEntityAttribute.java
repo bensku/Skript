@@ -1,33 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.attribute.Attribute;
-
-import java.util.stream.Stream;
-
-import org.bukkit.attribute.Attributable;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -41,28 +31,36 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.stream.Stream;
 
 @Name("Entity Attribute")
 @Description({"The numerical value of an entity's particular attribute.",
-			 "Note that the movement speed attribute cannot be reliably used for players. For that purpose, use the speed expression instead.",
-			 "Resetting an entity's attribute is only available in Minecraft 1.11 and above."})
+	"Note that the movement speed attribute cannot be reliably used for players. For that purpose, use the speed expression instead.",
+	"Resetting an entity's attribute is only available in Minecraft 1.11 and above."})
 @Examples({"on damage of player:",
-		"	send \"You are wounded!\"",
-		"	set victim's attack speed attribute to 2"})
+	"	send \"You are wounded!\"",
+	"	set victim's attack speed attribute to 2"})
 @Since("2.5")
 public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
-	
+
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
-				"%attributetype% [value] of %entities%",
-				"%entities%'[s] %attributetype% [value]");
+			"%attributetype% [value] of %entities%",
+			"%entities%'[s] %attributetype% [value]");
 	}
-	
+
 	private static final boolean DEFAULTVALUE_EXISTS = Skript.isRunningMinecraft(1, 11);
-	
+
 	@Nullable
 	private Expression<Attribute> attributes;
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -76,8 +74,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
 		return Stream.of(entities)
-		    .map(ent -> getAttribute(ent, a).getBaseValue())
-		    .toArray(Number[]::new);
+			.map(ent -> getAttribute(ent, a).getBaseValue())
+			.toArray(Number[]::new);
 	}
 
 	@Override
@@ -95,8 +93,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 		double d = delta == null ? 0 : ((Number) delta[0]).doubleValue();
 		for (Entity entity : getExpr().getArray(e)) {
 			AttributeInstance ai = getAttribute(entity, a);
-			if(ai != null) {
-				switch(mode) {
+			if (ai != null) {
+				switch (mode) {
 					case ADD:
 						ai.setBaseValue(ai.getBaseValue() + d);
 						break;
@@ -124,18 +122,18 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 		return Number.class;
 	}
 
-	@SuppressWarnings("null") 
+	@SuppressWarnings("null")
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "entity " + getExpr().toString(e, debug) + "'s " + (attributes == null ? "" : attributes.toString(e, debug)) + "attribute";
 	}
-	
+
 	@Nullable
 	private static AttributeInstance getAttribute(Entity e, @Nullable Attribute a) {
-	    if (a != null && e instanceof Attributable) {
-	        return ((Attributable) e).getAttribute(a);
-	    }
-	   return null;
+		if (a != null && e instanceof Attributable) {
+			return ((Attributable) e).getAttribute(a);
+		}
+		return null;
 	}
-	
+
 }

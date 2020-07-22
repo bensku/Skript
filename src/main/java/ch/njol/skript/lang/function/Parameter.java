@@ -1,64 +1,59 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.function;
 
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.*;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.Utils;
+import org.eclipse.jdt.annotation.Nullable;
 
 public final class Parameter<T> {
-	
+
 	/**
 	 * Name of this parameter. Will be used as name for the local variable
 	 * that contains value of it inside function. This is always in lower case;
 	 * variable names are case-insensitive.
 	 */
 	final String name;
-	
+
 	/**
 	 * Type of the parameter.
 	 */
 	final ClassInfo<T> type;
-	
+
 	/**
 	 * Expression that will provide default value of this parameter
 	 * when the function is called.
 	 */
 	@Nullable
 	final Expression<? extends T> def;
-	
+
 	/**
 	 * Whether this parameter takes one or many values.
 	 */
 	final boolean single;
-	
+
 	@SuppressWarnings("null")
 	public Parameter(final String name, final ClassInfo<T> type, final boolean single, final @Nullable Expression<? extends T> def) {
 		this.name = name != null ? name.toLowerCase() : null;
@@ -66,11 +61,11 @@ public final class Parameter<T> {
 		this.def = def;
 		this.single = single;
 	}
-	
+
 	public ClassInfo<T> getType() {
 		return type;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public static <T> Parameter<T> newInstance(final String name, final ClassInfo<T> type, final boolean single, final @Nullable String def) {
@@ -95,7 +90,7 @@ public final class Parameter<T> {
 //				}
 //			} else {
 			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
-			
+
 			// Parse the default value literal
 			try {
 				if (def.startsWith("\"") && def.endsWith("\"")) { // Quoted string; always parse as string
@@ -132,14 +127,14 @@ public final class Parameter<T> {
 		}
 		return new Parameter<>(name, type, single, d);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name + ": " + Utils.toEnglishPlural(type.getCodeName(), !single) + (def != null ? " = " + def.toString(null, true) : "");
 	}
-	
+
 }

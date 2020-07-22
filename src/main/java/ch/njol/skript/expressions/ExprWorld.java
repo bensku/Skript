@@ -1,30 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
@@ -42,6 +35,12 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -49,15 +48,15 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("World")
 @Description("The world the event occurred in.")
 @Examples({"world is \"world_nether\"",
-		"teleport the player to the world's spawn",
-		"set the weather in the player's world to rain"})
+	"teleport the player to the world's spawn",
+	"set the weather in the player's world to rain"})
 @Since("1.0")
 public class ExprWorld extends PropertyExpression<Object, World> {
 
 	static {
 		Skript.registerExpression(ExprWorld.class, World.class, ExpressionType.PROPERTY, "[the] world [of %locations/entities%]", "%locations/entities%'[s] world");
 	}
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		Expression<?> expr = exprs[0];
@@ -69,12 +68,12 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 		setExpr(expr);
 		return true;
 	}
-	
+
 	@Override
 	public Class<World> getReturnType() {
 		return World.class;
 	}
-	
+
 	@Override
 	protected World[] get(final Event e, final Object[] source) {
 		if (source instanceof World[]) // event value (see init)
@@ -96,27 +95,27 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 			}
 		});
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the world" + (getExpr().isDefault() ? "" : " of " + getExpr().toString(e, debug));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, getExpr(), PlayerTeleportEvent.class);
 	}
-	
+
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (!(getExpr().getAll(e) instanceof Location[] && delta != null)) return;
 
 		for (final Location loc : (Location[]) getExpr().getAll(e)) {
-				loc.setWorld((World) delta[0]);
-		}	
+			loc.setWorld((World) delta[0]);
+		}
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final Changer.ChangeMode mode) {

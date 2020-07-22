@@ -1,30 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -43,6 +36,12 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -50,19 +49,19 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Target")
 @Description("For players this is the entity at the crosshair, while for mobs and experience orbs it represents the entity they are attacking/following (if any).")
 @Examples({"on entity target:",
-			"\tentity's target is a player",
-			"\tsend \"You're being followed by an %entity%!\" to target of entity"})
+	"\tentity's target is a player",
+	"\tsend \"You're being followed by an %entity%!\" to target of entity"})
 @Since("<i>unknown</i> (before 2.1)")
 public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	static {
 		Skript.registerExpression(ExprTarget.class, Entity.class, ExpressionType.PROPERTY,
-				"[the] target[[ed] %-*entitydata%] [of %livingentities%]",
-				"%livingentities%'[s] target[[ed] %-*entitydata%]");
+			"[the] target[[ed] %-*entitydata%] [of %livingentities%]",
+			"%livingentities%'[s] target[[ed] %-*entitydata%]");
 	}
-	
+
 	@Nullable
 	EntityData<?> type;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -70,7 +69,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 		setExpr((Expression<? extends LivingEntity>) exprs[1 - matchedPattern]);
 		return true;
 	}
-	
+
 	@Override
 	protected Entity[] get(final Event e, final LivingEntity[] source) {
 		return get(source, new Converter<LivingEntity, Entity>() {
@@ -87,24 +86,24 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 			}
 		});
 	}
-	
+
 	@Override
 	public Class<? extends Entity> getReturnType() {
 		return type != null ? type.getType() : Entity.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (e == null)
 			return "the target" + (type == null ? "" : "ed " + type) + (getExpr().isDefault() ? "" : " of " + getExpr().toString(e, debug));
 		return Classes.getDebugMessage(getAll(e));
 	}
-	
+
 	@Override
 	public boolean setTime(final int time) {
 		return super.setTime(time, EntityTargetEvent.class, getExpr());
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -112,7 +111,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 			return CollectionUtils.array(LivingEntity.class);
 		return super.acceptChange(mode);
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
@@ -129,5 +128,5 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 			super.change(e, delta, mode);
 		}
 	}
-	
+
 }

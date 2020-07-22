@@ -1,42 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
@@ -53,48 +34,66 @@ import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Name / Display Name / Tab List Name")
 @Description({"Represents the Minecraft account, display or tab list name of a player, or the custom name of an item, entity, inventory, or gamerule.",
-		"",
-		"<ul>",
-		"\t<li><strong>Players</strong>",
-		"\t\t<ul>",
-		"\t\t\t<li><strong>Name:</strong> The Minecraft account name of the player. Can't be changed, but 'display name' can be changed.</li>",
-		"\t\t\t<li><strong>Display Name:</strong> The name of the player that is displayed in messages. " +
-			"This name can be changed freely and can include colour codes, and is shared among all plugins (e.g. chat plugins will use the display name).</li>",
-		"\t\t</ul>",
-		"\t</li>",
-		"\t<li><strong>Entities</strong>",
-		"\t\t<ul>",
-		"\t\t\t<li><strong>Name:</strong> The custom name of the entity. Can be changed. But for living entities, " +
-			"the players will have to target the entity to see its name tag. For non-living entities, the name will not be visible at all. To prevent this, use 'display name'.</li>",
-		"\t\t\t<li><strong>Display Name:</strong> The custom name of the entity. Can be changed, " +
-			"which will also enable <em>custom name visibility</em> of the entity so name tag of the entity will be visible always.</li>",
-		"\t\t</ul>",
-		"\t</li>",
-		"\t<li><strong>Items</strong>",
-		"\t\t<ul>",
-		"\t\t\t<li><strong>Name and Display Name:</strong> The <em>custom</em> name of the item (not the Minecraft locale name). Can be changed.</li>",
-		"\t\t</ul>",
-		"\t</li>",
-		"\t<li><strong>Inventories</strong>",
-		"\t\t<ul>",
-		"\t\t\t<li><strong>Name and Display Name:</strong> The name/title of the inventory. " +
-			"Changing name of an inventory means opening the same inventory with the same contents but with a different name to its current viewers.</li>",
-		"\t\t</ul>",
-		"\t</li>",
-		"\t<li><strong>Gamerules (1.13+)</strong>",
-		"\t\t<ul>",
-		"\t\t\t<li><strong>Name:</strong> The name of the gamerule. Cannot be changed.</li>",
-		"\t\t</ul>",
-		"\t</li>",
-		"</ul>"})
+	"",
+	"<ul>",
+	"\t<li><strong>Players</strong>",
+	"\t\t<ul>",
+	"\t\t\t<li><strong>Name:</strong> The Minecraft account name of the player. Can't be changed, but 'display name' can be changed.</li>",
+	"\t\t\t<li><strong>Display Name:</strong> The name of the player that is displayed in messages. " +
+		"This name can be changed freely and can include colour codes, and is shared among all plugins (e.g. chat plugins will use the display name).</li>",
+	"\t\t</ul>",
+	"\t</li>",
+	"\t<li><strong>Entities</strong>",
+	"\t\t<ul>",
+	"\t\t\t<li><strong>Name:</strong> The custom name of the entity. Can be changed. But for living entities, " +
+		"the players will have to target the entity to see its name tag. For non-living entities, the name will not be visible at all. To prevent this, use 'display name'.</li>",
+	"\t\t\t<li><strong>Display Name:</strong> The custom name of the entity. Can be changed, " +
+		"which will also enable <em>custom name visibility</em> of the entity so name tag of the entity will be visible always.</li>",
+	"\t\t</ul>",
+	"\t</li>",
+	"\t<li><strong>Items</strong>",
+	"\t\t<ul>",
+	"\t\t\t<li><strong>Name and Display Name:</strong> The <em>custom</em> name of the item (not the Minecraft locale name). Can be changed.</li>",
+	"\t\t</ul>",
+	"\t</li>",
+	"\t<li><strong>Inventories</strong>",
+	"\t\t<ul>",
+	"\t\t\t<li><strong>Name and Display Name:</strong> The name/title of the inventory. " +
+		"Changing name of an inventory means opening the same inventory with the same contents but with a different name to its current viewers.</li>",
+	"\t\t</ul>",
+	"\t</li>",
+	"\t<li><strong>Gamerules (1.13+)</strong>",
+	"\t\t<ul>",
+	"\t\t\t<li><strong>Name:</strong> The name of the gamerule. Cannot be changed.</li>",
+	"\t\t</ul>",
+	"\t</li>",
+	"</ul>"})
 @Examples({"on join:",
-		"	player has permission \"name.red\"",
-		"	set the player's display name to \"<red>[admin] <gold>%name of player%\"",
-		"	set the player's tab list name to \"<green>%player's name%\"",
-		"set the name of the player's tool to \"Legendary Sword of Awesomeness\""})
+	"	player has permission \"name.red\"",
+	"	set the player's display name to \"<red>[admin] <gold>%name of player%\"",
+	"	set the player's tab list name to \"<green>%player's name%\"",
+	"set the name of the player's tool to \"Legendary Sword of Awesomeness\""})
 @Since("before 2.1, 2.2-dev20 (inventory name), 2.4 (non-living entity support, changeable inventory name)")
 public class ExprName extends SimplePropertyExpression<Object, String> {
 
@@ -104,15 +103,16 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 
 	static {
 		HAS_GAMERULES = Skript.classExists("org.bukkit.GameRule");
-		register(ExprName.class, String.class, "(1¦name[s]|2¦(display|nick|chat|custom)[ ]name[s])", "players/entities/itemtypes/inventories/slots" 
-                + (HAS_GAMERULES ? "/gamerules" : ""));
+		register(ExprName.class, String.class, "(1¦name[s]|2¦(display|nick|chat|custom)[ ]name[s])", "players/entities/itemtypes/inventories/slots"
+			+ (HAS_GAMERULES ? "/gamerules" : ""));
 		register(ExprName.class, String.class, "(3¦(player|tab)[ ]list name[s])", "players");
 
 		// Get the old method for getting the name of an inventory.
 		MethodHandle _METHOD = null;
 		try {
 			_METHOD = MethodHandles.lookup().findVirtual(Inventory.class, "getTitle", MethodType.methodType(String.class));
-		} catch (IllegalAccessException | NoSuchMethodException ignored) {}
+		} catch (IllegalAccessException | NoSuchMethodException ignored) {
+		}
 		TITLE_METHOD = _METHOD;
 	}
 
@@ -137,9 +137,12 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	public String convert(Object o) {
 		if (o instanceof Player) {
 			switch (mark) {
-				case 1: return ((Player) o).getName();
-				case 2: return ((Player) o).getDisplayName();
-				case 3: return ((Player) o).getPlayerListName();
+				case 1:
+					return ((Player) o).getName();
+				case 2:
+					return ((Player) o).getDisplayName();
+				case 3:
+					return ((Player) o).getPlayerListName();
 			}
 		} else if (o instanceof Entity) {
 			return ((Entity) o).getCustomName();
@@ -166,8 +169,8 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 				return m.hasDisplayName() ? m.getDisplayName() : null;
 			}
 		} else if (HAS_GAMERULES && o instanceof GameRule) {
-            return ((GameRule) o).getName();
-        }
+			return ((GameRule) o).getName();
+		}
 		return null;
 	}
 
@@ -181,7 +184,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			}
 			return CollectionUtils.array(String.class);
 		}
-		return null;	
+		return null;
 	}
 
 	@Override
@@ -190,7 +193,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		for (Object o : getExpr().getArray(e)) {
 			if (o instanceof Player) {
 				switch (mark) {
-					case 2: 
+					case 2:
 						((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
 						break;
 					case 3: // Null check not necessary. This method will use the player's name if 'name' is null.
@@ -251,10 +254,14 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	@Override
 	protected String getPropertyName() {
 		switch (mark) {
-			case 1: return "name";
-			case 2: return "display name";
-			case 3: return "tablist name";
-			default: return "name";
+			case 1:
+				return "name";
+			case 2:
+				return "display name";
+			case 3:
+				return "tablist name";
+			default:
+				return "name";
 		}
 	}
 

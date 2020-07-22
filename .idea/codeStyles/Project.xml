@@ -1,6 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
-    <option name="LINE_SEPARATOR" value="&#10;" />
+    <option name="LINE_SEPARATOR" value="&#13;&#10;" />
     <JavaCodeStyleSettings>
       <option name="REPLACE_INSTANCEOF_AND_CAST" value="true" />
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
@@ -26,6 +26,9 @@
         <ANNO name="org.eclipse.jdt.annotation.Nullable" />
       </REPEAT_ANNOTATIONS>
     </JavaCodeStyleSettings>
+    <editorconfig>
+      <option name="ENABLED" value="false" />
+    </editorconfig>
     <codeStyleSettings language="JAVA">
       <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
       <indentOptions>

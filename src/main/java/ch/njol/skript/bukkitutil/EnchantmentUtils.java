@@ -1,40 +1,39 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
+import ch.njol.skript.Skript;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import ch.njol.skript.Skript;
 
 /**
  * Maps enchantments to their ids in Minecraft 1.12.
  */
 public class EnchantmentUtils {
-	
+
 	private static final boolean KEY_METHOD_EXISTS = Skript.methodExists(Enchantment.class, "getKey");
 	private static final BiMap<Enchantment, String> ENCHANTMENTS = HashBiMap.create();
-	
+
 	static {
 		ENCHANTMENTS.put(Enchantment.PROTECTION_ENVIRONMENTAL, "protection");
 		ENCHANTMENTS.put(Enchantment.PROTECTION_FIRE, "fire_protection");
@@ -61,22 +60,22 @@ public class EnchantmentUtils {
 		ENCHANTMENTS.put(Enchantment.ARROW_INFINITE, "infinity");
 		ENCHANTMENTS.put(Enchantment.LUCK, "luck_of_the_sea");
 		ENCHANTMENTS.put(Enchantment.LURE, "lure");
-		
+
 		if (Skript.isRunningMinecraft(1, 9)) {
 			ENCHANTMENTS.put(Enchantment.FROST_WALKER, "frost_walker");
 			ENCHANTMENTS.put(Enchantment.MENDING, "mending");
 		}
-		
+
 		if (Skript.isRunningMinecraft(1, 11)) {
 			ENCHANTMENTS.put(Enchantment.BINDING_CURSE, "binding_curse");
 			ENCHANTMENTS.put(Enchantment.VANISHING_CURSE, "vanishing_curse");
 		}
-		
+
 		if (Skript.isRunningMinecraft(1, 12)) {
 			ENCHANTMENTS.put(Enchantment.SWEEPING_EDGE, "sweeping_edge");
 		}
 	}
-	
+
 	public static String getKey(Enchantment ench) {
 		if (KEY_METHOD_EXISTS)
 			return ench.getKey().getKey();
@@ -84,7 +83,7 @@ public class EnchantmentUtils {
 		assert name != null : "missing name for " + ench;
 		return name;
 	}
-	
+
 	@Nullable
 	public static Enchantment getByKey(String key) {
 		if (KEY_METHOD_EXISTS)

@@ -1,34 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.events;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
@@ -41,6 +30,16 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Time;
 import ch.njol.util.Math2;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 /**
  * @author Peter Güttinger
@@ -49,27 +48,28 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<EvtAtTime> {
 	static {
 		Skript.registerEvent("*At Time", EvtAtTime.class, ScheduledEvent.class, "at %time% [in %worlds%]")
-				.description("An event that occurs at a given <a href='../classes.html#time'>minecraft time</a> in every world or only in specific worlds.")
-				.examples("at 18:00", "at 7am in \"world\"")
-				.since("1.3.4");
+			.description("An event that occurs at a given <a href='../classes.html#time'>minecraft time</a> in every world or only in specific worlds.")
+			.examples("at 18:00", "at 7am in \"world\"")
+			.since("1.3.4");
 	}
-	
+
 	private final static int CHECKPERIOD = 10;
-	
+
 	private final static class EvtAtInfo {
-		public EvtAtInfo() {}
-		
+		public EvtAtInfo() {
+		}
+
 		int lastTick; // as Bukkit's scheduler is inconsistent this saves the exact tick when the events were last checked
 		int currentIndex;
 		ArrayList<EvtAtTime> list = new ArrayList<>();
 	}
-	
+
 	final static HashMap<World, EvtAtInfo> triggers = new HashMap<>();
-	
+
 	@Nullable
 	private Trigger t;
 	int tick;
-	
+
 	@SuppressWarnings("null")
 	private transient World[] worlds;
 	/**
@@ -77,7 +77,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 	 */
 	@Nullable
 	private String[] worldNames = null;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
@@ -90,9 +90,9 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		}
 		return true;
 	}
-	
+
 	private static int taskID = -1;
-	
+
 	private static void registerListener() {
 		if (taskID != -1)
 			return;
@@ -131,7 +131,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 			}
 		}, 0, CHECKPERIOD);
 	}
-	
+
 	void execute(final World w) {
 		final Trigger t = this.t;
 		if (t == null) {
@@ -145,7 +145,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		SkriptEventHandler.logTriggerEnd(t);
 		SkriptEventHandler.logEventEnd();
 	}
-	
+
 	@Override
 	public void register(final Trigger t) {
 		this.t = t;
@@ -160,7 +160,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		}
 		registerListener();
 	}
-	
+
 	@Override
 	public void unregister(final Trigger t) {
 		assert t == this.t;
@@ -177,7 +177,7 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		if (triggers.isEmpty())
 			unregisterAll();
 	}
-	
+
 	@Override
 	public void unregisterAll() {
 		if (taskID != -1)
@@ -186,15 +186,15 @@ public class EvtAtTime extends SelfRegisteringSkriptEvent implements Comparable<
 		taskID = -1;
 		triggers.clear();
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "at " + Time.toString(tick) + " in worlds " + Classes.toString(worlds, true);
 	}
-	
+
 	@Override
 	public int compareTo(final @Nullable EvtAtTime e) {
 		return e == null ? tick : tick - e.tick;
 	}
-	
+
 }

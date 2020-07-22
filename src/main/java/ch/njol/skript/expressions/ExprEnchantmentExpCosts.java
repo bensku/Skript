@@ -1,40 +1,29 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.util.Arrays;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -43,25 +32,30 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Arrays;
 
 @Name("Enchantment Experience Level Costs")
 @Description({"The experience cost of an enchantment in an enchant prepare event.",
-			" If the cost is changed, it will always be at least 1."})
+	" If the cost is changed, it will always be at least 1."})
 @Examples({"on enchant prepare:",
-			"\tset the cost of enchantment 1 to 50"})
+	"\tset the cost of enchantment 1 to 50"})
 @Since("2.5")
 @Events("enchant prepare")
 @RequiredPlugins("1.9 or 1.10")
 @SuppressWarnings("deprecation")
-public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
+public class ExprEnchantmentExpCosts extends SimpleExpression<Number> {
 
 	static {
 		if (!Skript.isRunningMinecraft(1, 11)) { // This expression should only be usable on 1.9 and 1.10.
 			Skript.registerExpression(ExprEnchantmentExpCosts.class, Number.class, ExpressionType.SIMPLE,
-					"[the] cost of (enchant[ment]s|enchant[ment] offers)",
-					"[the] cost of enchant[ment] [offer] %number%",
-					"enchant[ment] [offer] %number%'[s] cost",
-					"[the] cost of [the] %number%(st|nd|rd|th) enchant[ment] [offer]");
+				"[the] cost of (enchant[ment]s|enchant[ment] offers)",
+				"[the] cost of enchant[ment] [offer] %number%",
+				"enchant[ment] [offer] %number%'[s] cost",
+				"[the] cost of [the] %number%(st|nd|rd|th) enchant[ment] [offer]");
 		}
 	}
 
@@ -85,15 +79,15 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 		}
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Number[] get(Event event) {
 		PrepareItemEnchantEvent e = (PrepareItemEnchantEvent) event;
 		if (multiple) {
 			return Arrays.stream(e.getExpLevelCostsOffered())
-					.boxed()
-					.toArray(Number[]::new);
+				.boxed()
+				.toArray(Number[]::new);
 		}
 		Number offerNumber = exprOfferNumber.getSingle(e);
 		if (offerNumber == null)
@@ -119,7 +113,7 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 			return;
 		Object c = delta[0];
 		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
-		if (cost < 1) 
+		if (cost < 1)
 			return;
 		int offer = 0;
 		if (exprOfferNumber != null) {

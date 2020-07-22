@@ -1,35 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang.function;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -44,6 +32,11 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Static methods to work with functions.
@@ -51,46 +44,47 @@ import ch.njol.util.StringUtils;
 public abstract class Functions {
 
 	private static final String INVALID_FUNCTION_DEFINITION =
-			"Invalid function definition. Please check for " +
-					"typos and make sure that the function's name " +
-					"only contains letters and underscores. " +
-					"Refer to the documentation for more information.";
+		"Invalid function definition. Please check for " +
+			"typos and make sure that the function's name " +
+			"only contains letters and underscores. " +
+			"Refer to the documentation for more information.";
 
-	private Functions() {}
-	
+	private Functions() {
+	}
+
 	final static class FunctionData {
 		final Function<?> function;
-		
+
 		public FunctionData(final Function<?> function) {
 			this.function = function;
 		}
 	}
-	
+
 	@Nullable
 	public static ScriptFunction<?> currentFunction = null;
-	
+
 	/**
 	 * Function namespaces.
 	 */
 	private static final Map<Namespace.Key, Namespace> namespaces = new HashMap<>();
-	
+
 	/**
 	 * Namespace of Java functions.
 	 */
 	private static final Namespace javaNamespace;
-		
+
 	static {
 		javaNamespace = new Namespace();
 		namespaces.put(new Namespace.Key(Namespace.Origin.JAVA, "unknown"), javaNamespace);
 	}
-	
+
 	/**
 	 * Namespaces of functions that are globally available.
 	 */
 	private static final Map<String, Namespace> globalFunctions = new HashMap<>();
-		
+
 	static boolean callFunctionEvents = false;
-	
+
 	/**
 	 * Registers a function written in Java.
 	 * @param function
@@ -104,16 +98,16 @@ public abstract class Functions {
 		javaNamespace.addSignature(function.getSignature());
 		javaNamespace.addFunction(function);
 		globalFunctions.put(function.getName(), javaNamespace);
-		
+
 		return function;
 	}
-	
+
 	public final static String functionNamePattern = "[\\p{IsAlphabetic}][\\p{IsAlphabetic}\\p{IsDigit}_]*";
-	
+
 	@SuppressWarnings("null")
 	private final static Pattern functionPattern = Pattern.compile("function (" + functionNamePattern + ")\\((.*)\\)(?: :: (.+))?", Pattern.CASE_INSENSITIVE),
-			paramPattern = Pattern.compile("\\s*(.+?)\\s*:(?=[^:]*$)\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
-	
+		paramPattern = Pattern.compile("\\s*(.+?)\\s*:(?=[^:]*$)\\s*(.+?)(?:\\s*=\\s*(.+))?\\s*");
+
 	/**
 	 * Loads a script function from given node.
 	 * @param node Section node.
@@ -129,7 +123,7 @@ public abstract class Functions {
 		if (!m.matches()) // We have checks when loading the signature, but matches() must be called anyway
 			return error(INVALID_FUNCTION_DEFINITION);
 		final String name = "" + m.group(1);
-		
+
 		Namespace namespace = globalFunctions.get(name);
 		if (namespace == null) {
 			return null; // Probably duplicate signature; reported before
@@ -139,19 +133,19 @@ public abstract class Functions {
 			return null; // This has been reported before...
 		final Parameter<?>[] params = sign.parameters;
 		final ClassInfo<?> c = sign.returnType;
-		
+
 		if (Skript.debug() || node.debug())
 			Skript.debug("function " + name + "(" + StringUtils.join(params, ", ") + ")"
-					+ (c != null ? " :: " + (sign.isSingle() ? c.getName().getSingular() : c.getName().getPlural()) : "") + ":");
-		
+				+ (c != null ? " :: " + (sign.isSingle() ? c.getName().getSingular() : c.getName().getPlural()) : "") + ":");
+
 		final Function<?> f = new ScriptFunction<>(sign, node);
-		
+
 		// Register the function for signature
 		namespace.addFunction(f);
-		
+
 		return f;
 	}
-	
+
 	/**
 	 * Loads the signature of function from given node.
 	 * @param script Script file name (<b>might</b> be used for some checks).
@@ -168,7 +162,7 @@ public abstract class Functions {
 		if (!m.matches())
 			return signError(INVALID_FUNCTION_DEFINITION);
 		final String name = "" + m.group(1);
-		
+
 		// Ensure there are no duplicate functions
 		if (globalFunctions.containsKey(name)) {
 			Namespace namespace = globalFunctions.get(name);
@@ -180,7 +174,7 @@ public abstract class Functions {
 				return signError("A function named '" + name + "' already exists in script '" + sign.script + "'");
 			}
 		}
-		
+
 		final String args = m.group(2);
 		final String returnType = m.group(3);
 		final List<Parameter<?>> params = new ArrayList<>();
@@ -190,10 +184,10 @@ public abstract class Functions {
 				return signError("Invalid text/variables/parentheses in the arguments of this function");
 			if (i == args.length() || args.charAt(i) == ',') {
 				final String arg = args.substring(j, i);
-				
+
 				if (arg.isEmpty()) // Zero-argument function
 					break;
-				
+
 				// One ore more arguments for this function
 				final Matcher n = paramPattern.matcher(arg);
 				if (!n.matches())
@@ -211,18 +205,18 @@ public abstract class Functions {
 				if (c == null)
 					return signError("Cannot recognise the type '" + n.group(2) + "'");
 				String rParamName = paramName.endsWith("*") ? paramName.substring(0, paramName.length() - 3) +
-									(!pl.getSecond() ? "::1" : "") : paramName;
+					(!pl.getSecond() ? "::1" : "") : paramName;
 				final Parameter<?> p = Parameter.newInstance(rParamName, c, !pl.getSecond(), n.group(3));
 				if (p == null)
 					return null;
 				params.add(p);
-				
+
 				j = i + 1;
 			}
 			if (i == args.length())
 				break;
 		}
-		
+
 		// Parse return type if one exists
 		ClassInfo<?> returnClass;
 		boolean singleReturn;
@@ -239,7 +233,7 @@ public abstract class Functions {
 				return signError("Cannot recognise the type '" + returnType + "'");
 			}
 		}
-		
+
 		@SuppressWarnings({"unchecked", "null"})
 		Signature<?> sign = new Signature<>(script, name, params.toArray(new Parameter[params.size()]), (ClassInfo<Object>) returnClass, singleReturn);
 
@@ -248,11 +242,11 @@ public abstract class Functions {
 		Namespace namespace = namespaces.computeIfAbsent(namespaceKey, k -> new Namespace());
 		namespace.addSignature(sign);
 		globalFunctions.put(name, namespace);
-		
+
 		Skript.debug("Registered function signature: " + name);
 		return sign;
 	}
-	
+
 	/**
 	 * Creates an error and returns Function null.
 	 * @param error Error message.
@@ -263,7 +257,7 @@ public abstract class Functions {
 		Skript.error(error);
 		return null;
 	}
-	
+
 	/**
 	 * Creates an error and returns Signature null.
 	 * @param error Error message.
@@ -274,7 +268,7 @@ public abstract class Functions {
 		Skript.error(error);
 		return null;
 	}
-	
+
 	/**
 	 * Gets a function, if it exists. Note that even if function exists in scripts,
 	 * it might not have been parsed yet. If you want to check for existance,
@@ -290,7 +284,7 @@ public abstract class Functions {
 		}
 		return namespace.getFunction(name);
 	}
-	
+
 	/**
 	 * Gets a signature of function with given name.
 	 * @param name Name of function.
@@ -304,12 +298,12 @@ public abstract class Functions {
 		}
 		return namespace.getSignature(name);
 	}
-	
+
 	private final static Collection<FunctionReference<?>> toValidate = new ArrayList<>();
-	
+
 	/**
 	 * Remember to call {@link #validateFunctions()} after calling this
-	 * 
+	 *
 	 * @param script
 	 * @return How many functions were removed
 	 */
@@ -319,7 +313,7 @@ public abstract class Functions {
 		if (namespace == null) { // No functions defined
 			return 0;
 		}
-		
+
 		// Remove references to this namespace from global functions
 		Iterator<Namespace> it = globalFunctions.values().iterator();
 		while (it.hasNext()) {
@@ -327,7 +321,7 @@ public abstract class Functions {
 				it.remove();
 			}
 		}
-		
+
 		// Queue references to signatures we have for revalidation
 		// Can't validate here, because other scripts might be loaded soon
 		for (Signature<?> sign : namespace.getSignatures()) {
@@ -339,13 +333,13 @@ public abstract class Functions {
 		}
 		return namespace.getSignatures().size();
 	}
-	
+
 	public static void validateFunctions() {
 		for (final FunctionReference<?> c : toValidate)
 			c.validateFunction(false);
 		toValidate.clear();
 	}
-	
+
 	/**
 	 * Clears all function calls and removes script functions.
 	 */
@@ -358,17 +352,17 @@ public abstract class Functions {
 			}
 		}
 		namespaces.clear();
-		
+
 		assert toValidate.isEmpty() : toValidate;
 		toValidate.clear();
 	}
-	
+
 	@SuppressWarnings({"unchecked"})
 	public static Collection<JavaFunction<?>> getJavaFunctions() {
 		// We know there are only Java functions in that namespace
 		return (Collection<JavaFunction<?>>) (Object) javaNamespace.getFunctions();
 	}
-	
+
 	/**
 	 * Normally, function calls do not cause actual Bukkit events to be
 	 * called. If an addon requires such functionality, it should call this
@@ -377,7 +371,7 @@ public abstract class Functions {
 	 * <p>
 	 * Note that calling events is not free; performance might vary
 	 * once you have enabled that.
-	 * 
+	 *
 	 * @param addon Addon instance.
 	 */
 	@SuppressWarnings({"null", "unused"})
@@ -385,7 +379,7 @@ public abstract class Functions {
 		if (addon == null) {
 			throw new SkriptAPIException("enabling function events requires addon instance");
 		}
-		
+
 		callFunctionEvents = true;
 	}
 }

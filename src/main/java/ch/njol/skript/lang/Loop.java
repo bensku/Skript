@@ -1,30 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.SkriptAPIException;
@@ -32,22 +25,28 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.util.ContainerExpression;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * A trigger section which represents a loop.
- * 
+ *
  * @author Peter Güttinger
  */
 public class Loop extends TriggerSection {
-	
+
 	private final Expression<?> expr;
-	
-	private transient Map<Event, Object> current = new WeakHashMap<>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
-	
+
+	private final transient Map<Event, Object> current = new WeakHashMap<>();
+	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
+
 	@Nullable
 	private TriggerItem actualNext;
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> Loop(final Expression<?> expr, final SectionNode node) {
 		assert expr != null;
@@ -70,7 +69,7 @@ public class Loop extends TriggerSection {
 		}
 		super.setNext(this);
 	}
-	
+
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {
@@ -94,32 +93,32 @@ public class Loop extends TriggerSection {
 			return walk(e, true);
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "loop " + expr.toString(e, debug);
 	}
-	
+
 	@Nullable
 	public Object getCurrent(final Event e) {
 		return current.get(e);
 	}
-	
+
 	public Expression<?> getLoopedExpression() {
 		return expr;
 	}
-	
+
 	@Override
 	public Loop setNext(final @Nullable TriggerItem next) {
 		actualNext = next;
 		return this;
 	}
-	
+
 	@Nullable
 	public TriggerItem getActualNext() {
 		return actualNext;
 	}
-	
+
 	public Map<Event, Iterator<?>> getCurrentIter() {
 		return currentIter;
 	}

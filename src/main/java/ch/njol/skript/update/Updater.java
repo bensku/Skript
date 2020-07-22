@@ -1,80 +1,79 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.update;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.util.Task;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Extensible updater system. Note: starts disabled, must be enabled using
  * {@link #setEnabled(boolean)}.
  */
 public abstract class Updater {
-	
+
 	/**
 	 * Release that is currently in use.
 	 */
 	private final ReleaseManifest currentRelease;
-	
+
 	/**
 	 * Update checker used by this build.
 	 */
 	private final UpdateChecker updateChecker;
-	
+
 	/**
 	 * Release channel currently in use.
 	 */
 	@Nullable
 	private volatile ReleaseChannel releaseChannel;
-	
+
 	/**
 	 * Current state of the updater.
 	 */
 	private volatile UpdaterState state;
-	
+
 	/**
 	 * Status of the release.
 	 */
 	private volatile ReleaseStatus releaseStatus;
-	
+
 	/**
 	 * How often to check for updates. 0 to not check automatically at all.
 	 */
 	private volatile long checkFrequency;
-	
+
 	/**
 	 * Update manifest, if it exists.
 	 */
 	@Nullable
 	private volatile UpdateManifest updateManifest;
-	
+
 	/**
 	 * Whether this checker is enabled or not. Disabled checkers never report
 	 * any updates or make network connections.
 	 */
 	private volatile boolean enabled;
-	
+
 	protected Updater(ReleaseManifest manifest) {
 		this.currentRelease = manifest;
 		this.updateChecker = manifest.createUpdateChecker();
@@ -82,7 +81,7 @@ public abstract class Updater {
 		this.releaseStatus = ReleaseStatus.UNKNOWN;
 		this.enabled = false;
 	}
-	
+
 	/**
 	 * Fetches the update manifest. Release channel must have been set before
 	 * this is done. Note that this will not have side effects to this Updater
@@ -103,7 +102,7 @@ public abstract class Updater {
 		// Just check that channel name is in update name
 		return updateChecker.check(currentRelease, channel);
 	}
-	
+
 	/**
 	 * Checks for updates asynchronously, without blocking the caller.
 	 * This updater instance will be mutated with new data.
@@ -116,7 +115,7 @@ public abstract class Updater {
 			assert future != null;
 			return future;
 		}
-		
+
 		// Custom releases have updating disabled
 		if (currentRelease.flavor.contains("selfbuilt")) {
 			releaseStatus = ReleaseStatus.CUSTOM;
@@ -124,7 +123,7 @@ public abstract class Updater {
 			assert future != null;
 			return future;
 		}
-		
+
 		state = UpdaterState.CHECKING; // We started checking for updates
 		CompletableFuture<Void> completed = fetchUpdateManifest().thenAccept((manifest) -> {
 			synchronized (this) { // Avoid corrupting updater state
@@ -134,14 +133,14 @@ public abstract class Updater {
 				} else {
 					releaseStatus = ReleaseStatus.LATEST;
 				}
-				
+
 				state = UpdaterState.INACTIVE; // In any case, we finished now
-				
+
 				// Call this again later
 				long ticks = checkFrequency;
 				if (ticks > 0) {
 					new Task(Skript.getInstance(), ticks, true) {
-						
+
 						@Override
 						public void run() {
 							checkUpdates();
@@ -163,15 +162,15 @@ public abstract class Updater {
 		assert completed != null;
 		return completed;
 	}
-	
+
 	public ReleaseManifest getCurrentRelease() {
 		return currentRelease;
 	}
-	
+
 	public void setReleaseChannel(ReleaseChannel channel) {
 		this.releaseChannel = channel;
 	}
-	
+
 	/**
 	 * Sets update check frequency.
 	 * @param ticks Frequency in ticks.
@@ -179,24 +178,24 @@ public abstract class Updater {
 	public void setCheckFrequency(long ticks) {
 		this.checkFrequency = ticks;
 	}
-	
+
 	public UpdaterState getState() {
 		return state;
 	}
-	
+
 	public ReleaseStatus getReleaseStatus() {
 		return releaseStatus;
 	}
-	
+
 	@Nullable
 	public UpdateManifest getUpdateManifest() {
 		return updateManifest;
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}

@@ -1,29 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -38,24 +32,29 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.File;
+import java.io.IOException;
 
 @Name("Enable/Disable/Reload Script File")
 @Description("Enables, disables, or reloads a script file.")
 @Examples({"reload script \"test\"",
-			"enable script file \"testing\"",
-			"unload script file \"script.sk\""})
+	"enable script file \"testing\"",
+	"unload script file \"script.sk\""})
 @Since("2.4")
 public class EffScriptFile extends Effect {
 	static {
 		Skript.registerEffect(EffScriptFile.class, "(1¦enable|1¦load|2¦reload|3¦disable|3¦unload) s(c|k)ript [file] %string%");
 	}
-	
+
 	private static final int ENABLE = 1, RELOAD = 2, DISABLE = 3;
-	
+
 	private int mark;
 	@Nullable
 	private Expression<String> fileName;
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -63,12 +62,12 @@ public class EffScriptFile extends Effect {
 		fileName = (Expression<String>) exprs[0];
 		return true;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return (mark == ENABLE ? "enable" : mark == RELOAD ? "disable" : mark == DISABLE ? "unload" : "") + " script file " + (fileName != null ? fileName.toString(e, debug) : "");
 	}
-	
+
 	@Override
 	protected void execute(Event e) {
 		String name = fileName != null ? fileName.getSingle(e) : "";
@@ -81,7 +80,7 @@ public class EffScriptFile extends Effect {
 				if (!f.getName().startsWith("-")) {
 					return;
 				}
-				
+
 				try {
 					f = FileUtils.move(f, new File(f.getParentFile(), f.getName().substring(1)), false);
 				} catch (final IOException ex) {
@@ -96,7 +95,7 @@ public class EffScriptFile extends Effect {
 				if (f.getName().startsWith("-")) {
 					return;
 				}
-				
+
 				ScriptLoader.reloadScript(f);
 				break;
 			}
@@ -104,7 +103,7 @@ public class EffScriptFile extends Effect {
 				if (f.getName().startsWith("-")) {
 					return;
 				}
-				
+
 				ScriptLoader.unloadScript(f);
 				try {
 					FileUtils.move(f, new File(f.getParentFile(), "-" + f.getName()), false);

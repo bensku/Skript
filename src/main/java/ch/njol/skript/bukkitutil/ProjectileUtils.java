@@ -1,42 +1,43 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import ch.njol.skript.Skript;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author Peter Güttinger
  */
 @SuppressWarnings("null")
 public abstract class ProjectileUtils {
-	private ProjectileUtils() {}
-	
+	private ProjectileUtils() {
+	}
+
 	private static Method getShooter, setShooter;
+
 	static {
 		try {
 			getShooter = Projectile.class.getMethod("getShooter");
@@ -51,7 +52,7 @@ public abstract class ProjectileUtils {
 			Skript.exception(e, "security manager present");
 		}
 	}
-	
+
 	@Nullable
 	public static Object getShooter(final @Nullable Projectile p) {
 		if (p == null)
@@ -69,7 +70,7 @@ public abstract class ProjectileUtils {
 			return null;
 		}
 	}
-	
+
 	public static void setShooter(final Projectile p, final @Nullable Object shooter) {
 		try {
 			setShooter.invoke(p, shooter);
@@ -81,5 +82,5 @@ public abstract class ProjectileUtils {
 			Skript.exception(e);
 		}
 	}
-	
+
 }

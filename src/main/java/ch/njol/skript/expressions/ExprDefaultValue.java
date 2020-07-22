@@ -1,20 +1,20 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.expressions;
@@ -46,7 +46,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 
 	static {
 		Skript.registerExpression(ExprDefaultValue.class, Object.class, ExpressionType.COMBINED,
-				"%objects% (otherwise|?) %objects%");
+			"%objects% (otherwise|?) %objects%");
 	}
 
 	private final ExprDefaultValue<?> source;
@@ -82,7 +82,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 	@SuppressWarnings("unchecked")
 	protected T[] get(Event e) {
 		Object[] first = this.first.getArray(e);
-		Object values[] = first.length != 0 ? first : second.getArray(e);
+		Object[] values = first.length != 0 ? first : second.getArray(e);
 		try {
 			return Converters.convertStrictly(values, superType);
 		} catch (ClassCastException e1) {

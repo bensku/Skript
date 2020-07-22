@@ -1,32 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.lang;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.conditions.CondCompare;
@@ -36,25 +27,33 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A list of expressions.
- * 
+ *
  * @author Peter Güttinger
  */
 public class ExpressionList<T> implements Expression<T> {
-	
+
 	protected final Expression<? extends T>[] expressions;
 	protected boolean and;
 	private final boolean single;
 	private final Class<T> returnType;
 	@Nullable
-	private ExpressionList<?> source;
-	
+	private final ExpressionList<?> source;
+
 	public ExpressionList(final Expression<? extends T>[] expressions, final Class<T> returnType, final boolean and) {
 		this(expressions, returnType, and, null);
 	}
-	
+
 	protected ExpressionList(final Expression<? extends T>[] expressions, final Class<T> returnType, final boolean and, final @Nullable ExpressionList<?> source) {
 		assert expressions != null;
 		this.expressions = expressions;
@@ -74,12 +73,12 @@ public class ExpressionList<T> implements Expression<T> {
 		}
 		this.source = source;
 	}
-	
+
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	@Nullable
 	public T getSingle(final Event e) {
@@ -92,7 +91,7 @@ public class ExpressionList<T> implements Expression<T> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public T[] getArray(final Event e) {
 		if (and)
@@ -102,12 +101,11 @@ public class ExpressionList<T> implements Expression<T> {
 			if (t.length > 0)
 				return t;
 		}
-		@SuppressWarnings("unchecked")
-		final T[] r = (T[]) Array.newInstance(returnType, 0);
+		@SuppressWarnings("unchecked") final T[] r = (T[]) Array.newInstance(returnType, 0);
 		assert r != null;
 		return r;
 	}
-	
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public T[] getAll(final Event e) {
@@ -116,7 +114,7 @@ public class ExpressionList<T> implements Expression<T> {
 			r.addAll(Arrays.asList(expr.getAll(e)));
 		return r.toArray((T[]) Array.newInstance(returnType, r.size()));
 	}
-	
+
 	@Override
 	@Nullable
 	public Iterator<? extends T> iterator(final Event e) {
@@ -132,7 +130,7 @@ public class ExpressionList<T> implements Expression<T> {
 			private int i = 0;
 			@Nullable
 			private Iterator<? extends T> current = null;
-			
+
 			@Override
 			public boolean hasNext() {
 				Iterator<? extends T> c = current;
@@ -140,7 +138,7 @@ public class ExpressionList<T> implements Expression<T> {
 					current = c = expressions[i++].iterator(e);
 				return c != null && c.hasNext();
 			}
-			
+
 			@Override
 			public T next() {
 				if (!hasNext())
@@ -152,24 +150,24 @@ public class ExpressionList<T> implements Expression<T> {
 				assert t != null : current;
 				return t;
 			}
-			
+
 			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return single;
 	}
-	
+
 	@Override
 	public boolean check(final Event e, final Checker<? super T> c, final boolean negated) {
 		return negated ^ check(e, c);
 	}
-	
+
 	@Override
 	public boolean check(final Event e, final Checker<? super T> c) {
 		for (final Expression<? extends T> expr : expressions) {
@@ -181,7 +179,7 @@ public class ExpressionList<T> implements Expression<T> {
 		}
 		return and;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
@@ -192,20 +190,20 @@ public class ExpressionList<T> implements Expression<T> {
 				return null;
 		return new ExpressionList<>(exprs, (Class<R>) Utils.getSuperType(to), and, this);
 	}
-	
+
 	@Override
 	public Class<T> getReturnType() {
 		return returnType;
 	}
-	
+
 	@Override
 	public boolean getAnd() {
 		return and;
 	}
-	
+
 	/**
 	 * For use in {@link CondCompare} only.
-	 * 
+	 *
 	 * @return The old 'and' value
 	 */
 	public boolean setAnd(final boolean and) {
@@ -213,14 +211,14 @@ public class ExpressionList<T> implements Expression<T> {
 		this.and = and;
 		return r;
 	}
-	
+
 	/**
 	 * For use in {@link CondCompare} only.
 	 */
 	public void invertAnd() {
 		and = !and;
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -238,7 +236,7 @@ public class ExpressionList<T> implements Expression<T> {
 		}
 		return r.toArray(new Class[r.size()]);
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		if (delta == null || delta.length < expressions.length) {
@@ -248,13 +246,13 @@ public class ExpressionList<T> implements Expression<T> {
 		} else {
 			for (int i = 0; i < expressions.length; i++) {
 				Expression<?> expr = expressions[i];
-				expr.change(e, new Object[] {delta[i]}, mode);
+				expr.change(e, new Object[]{delta[i]}, mode);
 			}
 		}
 	}
-	
+
 	private int time = 0;
-	
+
 	@Override
 	public boolean setTime(final int time) {
 		boolean ok = false;
@@ -265,17 +263,17 @@ public class ExpressionList<T> implements Expression<T> {
 			this.time = time;
 		return ok;
 	}
-	
+
 	@Override
 	public int getTime() {
 		return time;
 	}
-	
+
 	@Override
 	public boolean isDefault() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isLoopOf(final String s) {
 		for (final Expression<?> e : expressions)
@@ -283,13 +281,13 @@ public class ExpressionList<T> implements Expression<T> {
 				return true;
 		return false;
 	}
-	
+
 	@Override
 	public Expression<?> getSource() {
 		final ExpressionList<?> s = source;
 		return s == null ? this : s;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final StringBuilder b = new StringBuilder("(");
@@ -307,19 +305,19 @@ public class ExpressionList<T> implements Expression<T> {
 			b.append("[").append(returnType).append("]");
 		return "" + b;
 	}
-	
+
 	@Override
 	public String toString() {
 		return toString(null, false);
 	}
-	
+
 	/**
 	 * @return The internal list of expressions. Can be modified with care.
 	 */
 	public Expression<? extends T>[] getExpressions() {
 		return expressions;
 	}
-	
+
 	@Override
 	public Expression<T> simplify() {
 		boolean isLiteralList = true;
@@ -330,8 +328,7 @@ public class ExpressionList<T> implements Expression<T> {
 			isSimpleList &= expressions[i].isSingle();
 		}
 		if (isLiteralList && isSimpleList) {
-			@SuppressWarnings("unchecked")
-			final T[] values = (T[]) Array.newInstance(returnType, expressions.length);
+			@SuppressWarnings("unchecked") final T[] values = (T[]) Array.newInstance(returnType, expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
 			return new SimpleLiteral<>(values, returnType, and);
@@ -343,5 +340,5 @@ public class ExpressionList<T> implements Expression<T> {
 		}
 		return this;
 	}
-	
+
 }

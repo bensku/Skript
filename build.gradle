@@ -18,44 +18,44 @@ allprojects {
 	repositories {
 		jcenter()
 		mavenCentral()
-	
+
 		maven {
 			url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 		}
-	
+
 		maven {
 			url 'http://maven.sk89q.com/repo'
 		}
-	
+
 		maven {
 			url 'https://repo.destroystokyo.com/repository/maven-public//'
 		}
-	
+
 		maven {
 			url 'http://ci.emc.gs/nexus/content/groups/aikar/'
 		}
-	
+
 		maven {
 			url 'https://jitpack.io'
 		}
-	
+
 		maven {
 			url 'https://oss.sonatype.org/content/repositories/snapshots/'
 		}
-	
+
 		maven {
 			url 'https://repo.codemc.org/repository/maven-public'
 		}
 	}
-	
+
 	configurations {
 		ecj
 	}
-	
+
 	dependencies {
 		ecj 'org.eclipse.jdt:ecj:3.15.0'
 	}
-	
+
 	sourceCompatibility = 1.8
 	compileJava {
 		options.fork = true
@@ -87,12 +87,12 @@ dependencies {
 
 processResources {
 	filter ReplaceTokens, tokens: [
-		"version": System.getenv("SKRIPT_VERSION") == null ? project.property("version") : System.getenv("SKRIPT_VERSION"),
-		'today': "unknown", // Don't leak information about system this was built on
-		"release-flavor": "selfbuilt-unknown", // Note: 'selfbuilt' prefix makes updater report a custom build
-		"release-channel": "none", // No updates, so anything else wouldn't make sense
-		"release-updater": "ch.njol.skript.update.NoUpdateChecker", // Disable update checking
-		"release-source": "",
+		"version"         : System.getenv("SKRIPT_VERSION") == null ? project.property("version") : System.getenv("SKRIPT_VERSION"),
+		'today'           : "unknown", // Don't leak information about system this was built on
+		"release-flavor"  : "selfbuilt-unknown", // Note: 'selfbuilt' prefix makes updater report a custom build
+		"release-channel" : "none", // No updates, so anything else wouldn't make sense
+		"release-updater" : "ch.njol.skript.update.NoUpdateChecker", // Disable update checking
+		"release-source"  : "",
 		"release-download": "null"
 	]
 }
@@ -102,13 +102,13 @@ jar {
 
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+			"Sealed": "true")
 	}
 
 	from('skript-aliases') {
 		into('aliases-english') // Change this if we get aliases in other languages
 	}
-	
+
 	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 	from 'skript-worldguard7fawe/build/classes/java/main'
@@ -176,7 +176,7 @@ tasks.create('testNaming') {
 				throw new InvalidUserDataException('invalid test name: ' + name)
 			}
 		}
-		
+
 		// Syntax tests
 		for (def dir : project.file('src/test/skript/tests/syntaxes').listFiles()) {
 			for (def file : dir.listFiles()) {
@@ -198,10 +198,10 @@ void createTestTask(String name, String environments, boolean devMode) {
 			standardInput = System.in
 		}
 		commandLine 'java', '-cp',
-				"build${File.separator}libs${File.separator}Skript.jar${File.pathSeparator}" +
-					project.configurations.runtimeClasspath.find {it.name.startsWith('gson')},
-				'ch.njol.skript.tests.platform.PlatformMain',
-				'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, "" + devMode
+			"build${File.separator}libs${File.separator}Skript.jar${File.pathSeparator}" +
+				project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
+			'ch.njol.skript.tests.platform.PlatformMain',
+			'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, "" + devMode
 	}
 }
 
@@ -210,11 +210,11 @@ createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.15.2.json
 createTestTask('skriptTest', 'src/test/skript/environments/main', false)
 createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
 createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (System.getProperty('skript.testEnv') == null
-		? 'paper-1.15.2.json' : System.getProperty('skript.testEnv') + '.json'), true)
+	? 'paper-1.15.2.json' : System.getProperty('skript.testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
-	from ('src/main/resources') {
+	from('src/main/resources') {
 		include '**'
 		version = System.getenv("SKRIPT_VERSION") == null ? project.property("version") : System.getenv("SKRIPT_VERSION")
 		def channel = "stable"
@@ -224,12 +224,12 @@ task githubResources(type: ProcessResources) {
 			channel = "beta"
 		}
 		filter ReplaceTokens, tokens: [
-			"version": version,
-			"today": "" + LocalDate.now(),
-			"release-flavor": "skriptlang-github", // SkriptLang build, distributed on Github
-			"release-channel": channel, // Release channel, see above
-			"release-updater": "ch.njol.skript.update.GithubChecker", // Github API client
-			"release-source": "https://api.github.com/repos/SkriptLang/Skript/releases", // Github API URL
+			"version"         : version,
+			"today"           : "" + LocalDate.now(),
+			"release-flavor"  : "skriptlang-github", // SkriptLang build, distributed on Github
+			"release-channel" : channel, // Release channel, see above
+			"release-updater" : "ch.njol.skript.update.GithubChecker", // Github API client
+			"release-source"  : "https://api.github.com/repos/SkriptLang/Skript/releases", // Github API URL
 			"release-download": "null" // Update checker will figure it out
 		]
 	}
@@ -240,23 +240,23 @@ task githubRelease(type: Jar) {
 	from sourceSets.main.output
 	dependsOn githubResources
 	archiveName = 'Skript-github.jar'
-	
+
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+			"Sealed": "true")
 	}
-	
+
 	from('skript-aliases') {
 		into('aliases-english')
 	}
-	
+
 	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 	from 'skript-worldguard7fawe/build/classes/java/main'
 }
 
 task spigotResources(type: ProcessResources) {
-	from ('src/main/resources') {
+	from('src/main/resources') {
 		include '**'
 		version = System.getenv("SKRIPT_VERSION") == null ? project.property("version") : System.getenv("SKRIPT_VERSION")
 		def channel = "stable"
@@ -266,12 +266,12 @@ task spigotResources(type: ProcessResources) {
 			channel = "beta"
 		}
 		filter ReplaceTokens, tokens: [
-			"version": version,
-			"today": "" + LocalDate.now(),
-			"release-flavor": "skriptlang-spigot", // SkriptLang build, distributed on Spigot resources
-			"release-channel": channel, // Release channel, see above
-			"release-updater": "ch.njol.skript.update.GithubChecker", // Github API client
-			"release-source": "https://api.github.com/repos/SkriptLang/Skript/releases", // Github API URL
+			"version"         : version,
+			"today"           : "" + LocalDate.now(),
+			"release-flavor"  : "skriptlang-spigot", // SkriptLang build, distributed on Spigot resources
+			"release-channel" : channel, // Release channel, see above
+			"release-updater" : "ch.njol.skript.update.GithubChecker", // Github API client
+			"release-source"  : "https://api.github.com/repos/SkriptLang/Skript/releases", // Github API URL
 			"release-download": "\"http://example.com\"" // TODO insert Spigot URL
 		]
 	}
@@ -282,33 +282,33 @@ task spigotRelease(type: Jar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
 	archiveName = 'Skript-spigot.jar'
-	
+
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+			"Sealed": "true")
 	}
-	
+
 	from('skript-aliases') {
 		into('aliases-english')
 	}
-	
+
 	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 	from 'skript-worldguard7fawe/build/classes/java/main'
 }
 
 task nightlyResources(type: ProcessResources) {
-	from ('src/main/resources') {
+	from('src/main/resources') {
 		include '**'
 		def hash = "git rev-parse --short HEAD".execute().text.trim()
 		version = project.property("version") + "-nightly-" + hash
 		filter ReplaceTokens, tokens: [
-			"version": version,
-			"today": "" + LocalDate.now(),
-			"release-flavor": "skriptlang-nightly", // SkriptLang build, automatically done by CI
-			"release-channel": "alpha", // No update checking, but these are VERY unstable
-			"release-updater": "ch.njol.skript.update.NoUpdateChecker", // No autoupdates for now
-			"release-source": "",
+			"version"         : version,
+			"today"           : "" + LocalDate.now(),
+			"release-flavor"  : "skriptlang-nightly", // SkriptLang build, automatically done by CI
+			"release-channel" : "alpha", // No update checking, but these are VERY unstable
+			"release-updater" : "ch.njol.skript.update.NoUpdateChecker", // No autoupdates for now
+			"release-source"  : "",
 			"release-download": "null"
 		]
 	}
@@ -319,16 +319,16 @@ task nightlyRelease(type: Jar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources
 	archiveName = 'Skript-nightly.jar'
-	
+
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+			"Sealed": "true")
 	}
-	
+
 	from('skript-aliases') {
 		into('aliases-english')
 	}
-	
+
 	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 	from 'skript-worldguard7fawe/build/classes/java/main'

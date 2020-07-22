@@ -1,29 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -35,6 +29,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -42,23 +41,23 @@ import ch.njol.util.Kleenean;
 @Name("Potion Effects")
 @Description("Apply or remove potion effects to/from entities.")
 @Examples({"apply swiftness 2 to the player",
-		"remove haste from the victim",
-		"on join:",
-		"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
+	"remove haste from the victim",
+	"on join:",
+	"	apply potion of strength of tier {strength.%player%} to the player for 999 days"})
 @Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect)")
 public class EffPotion extends Effect {
 	static {
 		Skript.registerEffect(EffPotion.class,
-				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
-				"apply ambient [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
-				"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] without [any] particles to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]"
-				//, "apply %itemtypes% to %livingentities%"
-				/*,"remove %potioneffecttypes% from %livingentities%"*/);
+			"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
+			"apply ambient [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]",
+			"apply [potion of] %potioneffecttypes% [potion] [[[of] tier] %-number%] without [any] particles to %livingentities% [for %-timespan%] [(1¦replacing [the] existing effect)]"
+			//, "apply %itemtypes% to %livingentities%"
+			/*,"remove %potioneffecttypes% from %livingentities%"*/);
 	}
-	
+
 	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds, same as EffPoison
 	private boolean replaceExisting;
-	
+
 	@SuppressWarnings("null")
 	private Expression<PotionEffectType> potions;
 	@Nullable
@@ -70,7 +69,7 @@ public class EffPotion extends Effect {
 	private boolean apply;
 	private boolean ambient; // Ambient means less particles
 	private boolean particles; // Particles or no particles?
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -85,7 +84,7 @@ public class EffPotion extends Effect {
 			potions = (Expression<PotionEffectType>) exprs[0];
 			entities = (Expression<LivingEntity>) exprs[1];
 		}
-		
+
 		// Ambience and particles
 		switch (matchedPattern) {
 			case 0:
@@ -101,10 +100,10 @@ public class EffPotion extends Effect {
 				particles = false;
 				break;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	protected void execute(final Event e) {
 		final PotionEffectType[] ts = potions.getArray(e);
@@ -129,7 +128,7 @@ public class EffPotion extends Effect {
 			final Timespan dur = duration.getSingle(e);
 			if (dur == null)
 				return;
-			d = (int) (dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE: dur.getTicks_i());
+			d = (int) (dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : dur.getTicks_i());
 		}
 		for (final LivingEntity en : entities.getArray(e)) {
 			for (final PotionEffectType t : ts) {
@@ -148,7 +147,7 @@ public class EffPotion extends Effect {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		if (apply)
@@ -156,5 +155,5 @@ public class EffPotion extends Effect {
 		else
 			return "remove " + potions.toString(e, debug) + " from " + entities.toString(e, debug);
 	}
-	
+
 }

@@ -1,41 +1,41 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.bukkitutil;
 
+import ch.njol.skript.Skript;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-
 /**
  * Miscellaneous static utility methods related to items.
  */
 public class ItemUtils {
-	
-	private ItemUtils() {} // Not to be instanced
-	
+
+	private ItemUtils() {
+	} // Not to be instanced
+
 	private static final boolean damageMeta = Skript.classExists("org.bukkit.inventory.meta.Damageable");
-	
+
 	/**
 	 * Gets damage/durability of an item, or 0 if it does not have damage.
 	 * @param stack Item.
@@ -52,7 +52,7 @@ public class ItemUtils {
 			return stack.getDurability();
 		}
 	}
-	
+
 	/**
 	 * Sets damage/durability of an item if possible.
 	 * @param stack Item to modify.
@@ -71,12 +71,12 @@ public class ItemUtils {
 			stack.setDurability((short) damage);
 		}
 	}
-	
+
 	@Nullable
 	private static final Material bedItem;
 	@Nullable
 	private static final Material bedBlock;
-	
+
 	static {
 		if (!damageMeta) {
 			bedItem = Material.valueOf("BED");
@@ -86,7 +86,7 @@ public class ItemUtils {
 			bedBlock = null;
 		}
 	}
-	
+
 	/**
 	 * Gets a block material corresponding to given item material, which might
 	 * be the given material. If no block material is found, null is returned.
@@ -100,14 +100,14 @@ public class ItemUtils {
 				return bedBlock;
 			}
 		}
-		
+
 		if (type.isBlock()) {
 			return type;
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Gets an item material corresponding to given block material, which might
 	 * be the given material.
@@ -121,11 +121,11 @@ public class ItemUtils {
 				return bedItem;
 			}
 		}
-		
+
 		// Assume (naively) that all types are valid items
 		return type;
 	}
-	
+
 	/**
 	 * Tests whether two item stacks are of the same type, i.e. it ignores the amounts.
 	 *
@@ -139,5 +139,5 @@ public class ItemUtils {
 		return is1.getType() == is2.getType() && ItemUtils.getDamage(is1) == ItemUtils.getDamage(is2)
 			&& is1.getItemMeta().equals(is2.getItemMeta());
 	}
-	
+
 }

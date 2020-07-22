@@ -1,39 +1,23 @@
 /**
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Skript.
+ * <p>
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
 package ch.njol.skript.effects;
-
-import org.bukkit.Material;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.ChestedHorse;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Llama;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.HorseInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.LlamaInventory;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
@@ -48,6 +32,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Testable;
 import ch.njol.util.Kleenean;
+import org.bukkit.Material;
+import org.bukkit.entity.*;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.*;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -55,20 +44,20 @@ import ch.njol.util.Kleenean;
 @Name("Equip")
 @Description("Equips an entity with some given armor. This will replace any armor that the entity is wearing.")
 @Examples({"equip player with diamond helmet",
-		"equip player with all diamond armor"})
+	"equip player with all diamond armor"})
 @Since("1.0")
 public class EffEquip extends Effect implements Testable {
 	static {
 		Skript.registerEffect(EffEquip.class,
-				"equip [%livingentity%] with %itemtypes%",
-				"make %livingentity% wear %itemtypes%");
+			"equip [%livingentity%] with %itemtypes%",
+			"make %livingentity% wear %itemtypes%");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
 	@SuppressWarnings("null")
 	private Expression<ItemType> types;
-	
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -76,11 +65,11 @@ public class EffEquip extends Effect implements Testable {
 		types = (Expression<ItemType>) vars[1];
 		return true;
 	}
-	
+
 	private final static boolean supportsHorses = Skript.classExists("org.bukkit.entity.Horse");
 	private final static boolean newHorses = Skript.classExists("org.bukkit.entity.AbstractHorse");
 	private final static boolean supportsLlamas = Skript.classExists("org.bukkit.entity.Llama");
-	
+
 	private static final ItemType helmet = Aliases.javaItemType("helmet");
 	private static final ItemType chestplate = Aliases.javaItemType("chestplate");
 	private static final ItemType leggings = Aliases.javaItemType("leggings");
@@ -89,7 +78,7 @@ public class EffEquip extends Effect implements Testable {
 	private static final ItemType saddle = Aliases.javaItemType("saddle");
 	private static final ItemType chest = Aliases.javaItemType("chest");
 	private static final ItemType carpet = Aliases.javaItemType("carpet");
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void execute(final Event e) {
@@ -160,7 +149,7 @@ public class EffEquip extends Effect implements Testable {
 						equip.setLeggings(item);
 					else if (boots.isOfType(item))
 						equip.setBoots(item);
-					
+
 					// We have no idea where to equip other items
 					// User can set them to slot they need custom hats etc.
 				}
@@ -169,7 +158,7 @@ public class EffEquip extends Effect implements Testable {
 				PlayerUtils.updateInventory((Player) en);
 		}
 	}
-	
+
 	@Override
 	public boolean test(final Event e) {
 //		final Iterable<Player> ps = players.getArray(e);
@@ -180,10 +169,10 @@ public class EffEquip extends Effect implements Testable {
 //		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "equip " + entities.toString(e, debug) + " with " + types.toString(e, debug);
 	}
-	
+
 }
