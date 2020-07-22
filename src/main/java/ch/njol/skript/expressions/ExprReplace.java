@@ -93,6 +93,7 @@ public class ExprReplace extends SimpleExpression<String> {
 				for (Object s : oldtextToReplace) {
 					newStorage = newStorage.replaceAll((String) s, newText);
 				}
+				break;
 			case "FIRST":
 				for (Object s : oldtextToReplace) {
 					newStorage = newStorage.replaceFirst((String) s, newText);
