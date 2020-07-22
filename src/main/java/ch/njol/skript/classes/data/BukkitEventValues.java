@@ -827,7 +827,8 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		//UnknownCommandEvent
-		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, new Getter<CommandSender, UnknownCommandEvent>() {
+		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
+			EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, new Getter<CommandSender, UnknownCommandEvent>() {
 			@Nullable
 			@Override
 			public CommandSender get(UnknownCommandEvent event) {
