@@ -1,37 +1,30 @@
-test "replace strings":
-	loop 16 times:
+test "replace":
+	loop 9 times:
 		set {_text::%loop-number%} to "My name is bob and this is my friend bob! Say hi, bob!"
 
 	# Original Replace
-	set {_text::1} to replace all "bob" in {_text::1} with "bobby"
-	set {_text::2} to replace all "bob" with "bobby" in {_text::2}
+	set {_text::1} to replace all "bob" with "bobby" in {_text::1}
 
 	# Replace First
-	set {_text::3} to replace first "bob" in {_text::3} with "bobby"
-	set {_text::4} to replace first "bob" with "bobby" in {_text::4}
+	set {_text::2} to replace first "bob" with "bobby" in {_text::2}
 
 	#Replace Last
-	set {_text::5} to replace last "bob" with "bobby" in {_text::5}
-	set {_text::6} to replace last "bob" in {_text::6} with "bobby"
+	set {_text::3} to replace last "bob" with "bobby" in {_text::3}
 
 
 	# Case Sensitivity
-	set {_text::9} to case-sensitive replace all "bob" in {_text::9} with "BOBBY"
-	set {_text::10} to case-sensitive replace all "BOB" with "bobby" in {_text::10}
-	set {_text::11} to case-sensitive replace first "bob" in {_text::11} with "BOBBY"
-	set {_text::12} to case-sensitive replace first "BOB" with "bobby" in {_text::12}
-	set {_text::13} to case-sensitive replace last "bob" in {_text::13} with "BOBBY"
-	set {_text::14} to case-sensitive replace last "BOB" with "bobby" in {_text::14}
-
-	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
-	assert {_text::2} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
-	assert {_text::3} is "My name is bobby and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity disabled) (%{_text::3}%) failed"
-	assert {_text::4} is "My name is bobby and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity disabled) (%{_text::4}%) failed"
-	assert {_text::5} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 1 (case sensitivity disabled) (%{_text::6}%) failed"
-	assert {_text::6} is "My name is bob and this is my friend bob! Say hi, bobby!" with "replace last pattern 2 (case sensitivity disabled) (%{_text::5}%) failed"
-	assert {_text::9} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::9}%) failed"
-	assert {_text::10} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::10}%) failed"
-	assert {_text::11} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::11}%) failed"
-	assert {_text::12} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::12}%) failed"
-	assert {_text::13} is "My name is bob and this is my friend bob! Say hi, BOBBY!" with "replace last pattern 1 (case sensitivity enabled) (%{_text::13}%) failed"
-	assert {_text::14} is "My name is bob and this is my friend bob! Say hi, bob!" with "replace last pattern 2 (case sensitivity enabled) (%{_text::14}%) failed"
+	set {_text::4} to case-sensitive replace all "bob" with "BOBBY" in {_text::4}
+	set {_text::5} to case-sensitive replace all "BOB" with "bobby" in {_text::5}
+	set {_text::6} to case-sensitive replace first "bob" with "BOBBY" in {_text::6}
+	set {_text::7} to case-sensitive replace first "BOB" with "bobby" in {_text::7}
+	set {_text::8} to case-sensitive replace last "bob" with "BOBBY" in {_text::8}
+	set {_text::9} to case-sensitive replace last "BOB" with "bobby" in {_text::9}
+	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "Replace all failed"
+	assert {_text::2} is "My name is bobby and this is my friend bob! Say hi, bob!" with "Replace first failed"
+    assert {_text::3} is "My name is bob and this is my friend bob! Say hi, bobby!" with "Replace last failed"
+    assert {_text::4} is "My name is BOBBY and this is my friend BOBBY! Say hi, BOBBY!" with "1st Replace all case-sensitive failed"
+    assert {_text::5} is "My name is bob and this is my friend bob! Say hi, bob!" with "2nd Replace all case-sensitive failed"
+    assert {_text::6} is "My name is BOBBY and this is my friend bob! Say hi, bob!" with "1st Replace first case-sensitive failed"
+    assert {_text::7} is "My name is bob and this is my friend bob! Say hi, bob!" with "2nd Replace first case-sensitive failed"
+    assert {_text::8} is "My name is bob and this is my friend bob! Say hi, BOBBY!" with "1st Replace last case-sensitive failed"
+    assert {_text::9} is "My name is bob and this is my friend bob! Say hi, bob!" with "2nd Replace last case-sensitive failed"

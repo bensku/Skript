@@ -1,27 +1,27 @@
 test "replace strings":
-	loop 16 times:
+	loop 14 times:
 		set {_text::%loop-number%} to "My name is bob and this is my friend bob! Say hi, bob!"
 
 	# Original Replace
-	set {_text::1} to replace all "bob" in {_text::1} with "bobby"
-	set {_text::2} to replace all "bob" with "bobby" in {_text::2}
+	replace all "bob" in {_text::1} with "bobby"
+	replace all "bob" with "bobby" in {_text::2}
 
 	# Replace First
-	set {_text::3} to replace first "bob" in {_text::3} with "bobby"
-	set {_text::4} to replace first "bob" with "bobby" in {_text::4}
+	replace first "bob" in {_text::3} with "bobby"
+	replace first "bob" with "bobby" in {_text::4}
 
 	#Replace Last
-	set {_text::5} to replace last "bob" with "bobby" in {_text::5}
-	set {_text::6} to replace last "bob" in {_text::6} with "bobby"
+	replace last "bob" with "bobby" in {_text::5}
+	replace last "bob" in {_text::6} with "bobby"
 
 
 	# Case Sensitivity
-	set {_text::9} to case-sensitive replace all "bob" in {_text::9} with "BOBBY"
-	set {_text::10} to case-sensitive replace all "BOB" with "bobby" in {_text::10}
-	set {_text::11} to case-sensitive replace first "bob" in {_text::11} with "BOBBY"
-	set {_text::12} to case-sensitive replace first "BOB" with "bobby" in {_text::12}
-	set {_text::13} to case-sensitive replace last "bob" in {_text::13} with "BOBBY"
-	set {_text::14} to case-sensitive replace last "BOB" with "bobby" in {_text::14}
+	case-sensitive replace all "bob" in {_text::9} with "BOBBY"
+	case-sensitive replace all "BOB" with "bobby" in {_text::10}
+	case-sensitive replace first "bob" in {_text::11} with "BOBBY"
+	case-sensitive replace first "BOB" with "bobby" in {_text::12}
+	case-sensitive replace last "bob" in {_text::13} with "BOBBY"
+	case-sensitive replace last "BOB" with "bobby" in {_text::14}
 
 	assert {_text::1} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
 	assert {_text::2} is "My name is bobby and this is my friend bobby! Say hi, bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
