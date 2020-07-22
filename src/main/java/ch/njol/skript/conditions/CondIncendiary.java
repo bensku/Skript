@@ -42,7 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on explosion prime:", 
 			"\tif the explosion is fiery:",
 			"\t\tbroadcast \"A fiery explosive has been ignited!\""})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class CondIncendiary extends Condition {
 
 	static {

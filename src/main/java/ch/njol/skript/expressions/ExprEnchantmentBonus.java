@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
 @Examples({"on enchant:", 
 			"\tsend \"There are %enchantment bonus% bookshelves surrounding this enchantment table!\" to player"})
 @Events("enchant prepare")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprEnchantmentBonus extends SimpleExpression<Number> {
 
 	static {

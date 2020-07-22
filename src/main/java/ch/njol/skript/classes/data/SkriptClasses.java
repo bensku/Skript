@@ -850,7 +850,7 @@ public class SkriptClasses {
 				.description("A wrapper for the value of a gamerule for a world.")
 				.usage("")
 				.examples("")
-				.since("INSERT VERSION")
+				.since("2.5")
 				.serializer(new YggdrasilSerializer<GameruleValue>())
 		);
 	}
