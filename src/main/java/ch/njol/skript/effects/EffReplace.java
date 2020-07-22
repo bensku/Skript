@@ -71,13 +71,13 @@ public class EffReplace extends Effect {
 	
 	private String type = "ALL";
 	@SuppressWarnings("null")
-	private Expression<?> storage, textToReplace, replacement;
+	private Expression<?> storage, objToReplace, replacement;
 	private boolean caseSensitive = false;
 	private boolean regex = false;
 	private boolean replaceString = false;
 	
 	@Override
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings({"null"})
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (matchedPattern < 3) {
 			replaceString = true;
@@ -88,11 +88,11 @@ public class EffReplace extends Effect {
 			type = ReplacementTypes.values()[mark < 4 ? mark : (mark ^ 4)].name();
 		}
 		if (matchedPattern % 2 == 1) {
-			textToReplace = expressions[0];
+			objToReplace = expressions[0];
 			replacement = expressions[2];
 			storage = expressions[1];
 		} else {
-			textToReplace = expressions[0];
+			objToReplace = expressions[0];
 			replacement = expressions[1];
 			storage = expressions[2];
 		}
@@ -103,11 +103,11 @@ public class EffReplace extends Effect {
 	@SuppressWarnings("null")
 	protected void execute(Event e) {
 		Object[] storage = this.storage.getAll(e);
-		Object[] textToReplace = this.textToReplace.getAll(e);
+		Object[] objToReplace = this.objToReplace.getAll(e);
 		Object replacement = this.replacement.getSingle(e);
+		if (storage == null || objToReplace == null || replacement == null) return;
 		if (replaceString) {
-			if (storage == null || textToReplace == null || replacement == null) return;
-			Object[] oldtextToReplace = Arrays.stream((String[]) textToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
+			Object[] oldtextToReplace = Arrays.stream((String[]) objToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
 			String newText = (String) replacement;
 			if (!regex) newText = newText.replace("$", "\\$");
 			switch (type) {
@@ -146,7 +146,7 @@ public class EffReplace extends Effect {
 			this.storage.change(e, storage, Changer.ChangeMode.SET);
 		} else {
 			for (Inventory inv : (Inventory[]) storage)
-				for (ItemType item : (ItemType[]) textToReplace)
+				for (ItemType item : (ItemType[]) objToReplace)
 					for (Integer slot : inv.all(item.getRandom()).keySet()) {
 						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
 					}
@@ -156,7 +156,7 @@ public class EffReplace extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "replace " + type + " " + textToReplace.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + storage.toString(e, debug);
+		return "replace " + type + " " + objToReplace.toString(e, debug) + " with " + replacement.toString(e, debug) + " in " + storage.toString(e, debug);
 		
 	}
 }
