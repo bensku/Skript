@@ -41,7 +41,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on spawn of a creeper:",
 			"\tset the explosive yield of the event-entity to 10"})
 @RequiredPlugins("Minecraft 1.12 or newer for creepers")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number> {
 
 	static {

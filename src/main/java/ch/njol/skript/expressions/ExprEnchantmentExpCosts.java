@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 			" If the cost is changed, it will always be at least 1."})
 @Examples({"on enchant prepare:",
 			"\tset the cost of enchantment 1 to 50"})
-@Since("INSERT VERSION")
+@Since("2.5")
 @Events("enchant prepare")
 @RequiredPlugins("1.9 or 1.10")
 @SuppressWarnings("deprecation")

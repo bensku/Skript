@@ -41,7 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description("Sets if an entity's explosion will leave behind fire. This effect is also usable in an explosion prime event.")
 @Examples({"on explosion prime:",
 			"\tmake the explosion fiery"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class EffIncendiary extends Effect {
 
 	static {

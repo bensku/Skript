@@ -46,7 +46,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on explosion prime:",
 		"\tset the yield of the explosion to 10"})
 @Events("explosion prime")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprExplosionYield extends SimpleExpression<Number> {
 
 	static {
