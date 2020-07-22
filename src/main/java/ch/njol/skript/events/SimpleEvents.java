@@ -512,7 +512,7 @@ public class SimpleEvents {
 				.since("2.3");
 		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
 			Skript.registerEvent("Unknown Command", SimpleEvent.class, UnknownCommandEvent.class, "unknown command")
-			.description("Called when a player sends a command that isn't registered")
+			.description("Called when a player sends a command that isn't registered.")
 			.requiredPlugins("Paper")
 			.examples("on unknown command:")
 			.since("INSERT VERSION");

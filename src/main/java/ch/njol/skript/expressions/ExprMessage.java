@@ -20,6 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -67,9 +68,12 @@ import ch.njol.util.coll.CollectionUtils;
 		"	set quit message to \"%player% left this awesome server!\"",
 		"",
 		"on death:",
-		"	set the death message to \"%player% died!\""})
-@Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message)")
-@Events({"chat", "join", "quit", "death"})
+		"	set the death message to \"%player% died!\"",
+		"",
+		"on unknown command: #Requires Paper",
+			"set the unknown command message to \"Unknown command! If you need help type /help.\""})
+@Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (unknown command message)")
+@Events({"chat", "join", "quit", "death", "unknown command"})
 public class ExprMessage extends SimpleExpression<String> {
 	
 	@SuppressWarnings("unchecked")
@@ -136,6 +140,22 @@ public class ExprMessage extends SimpleExpression<String> {
 				if (e instanceof PlayerDeathEvent)
 					((PlayerDeathEvent) e).setDeathMessage(message);
 			}
+		},
+		UNKNOWNCOMMAND("unknown command", "[unknown (cmd|command) ]message", UnknownCommandEvent.class){
+			@Override
+			@Nullable
+			String get(final Event e){
+				if(!Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) return null;
+				if(e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
+				return null;
+			}
+			
+			@Override
+			void set(Event e, String message) {
+				if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
+				if(e instanceof  UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
+			}
+			
 		};
 		
 		final String name;
