@@ -32,7 +32,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.registrations.Converters;
-import edu.umd.cs.findbugs.ba.bcp.New;
 
 @Name("Type of")
 @Description({"Type of a block, an item, en entity or an inventory.",

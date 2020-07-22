@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -79,11 +78,10 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 			
 			for (FireworkEffect effect : (FireworkEffect[]) source) {
 				effect.getColors().stream()
-						.map(SkriptColor::fromBukkitColor)  //TODO: Skript's color only supports 16 colors, not a plethora of RGB from fireworks.
-						.filter(Optional::isPresent)
-						.map(Optional::get)
-						.forEach(colors::add);
+					.map(SkriptColor::fromBukkitColor)
+					.forEach(colors::add);
 			}
+			
 			if (colors.size() == 0)
 				return null;
 			return colors.toArray(new Color[0]);
@@ -93,9 +91,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 				
 				if (colorable == null)
 					return null;
-				
-				Optional<SkriptColor> color = SkriptColor.fromDyeColor(colorable.getColor());
-				return color.orElse(null);
+				return SkriptColor.fromDyeColor(colorable.getColor());
 		});
 	}
 	@Override

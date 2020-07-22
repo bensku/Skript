@@ -31,6 +31,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import net.md_5.bungee.api.ChatColor;
+
 /**
  * Component for chat messages. This can be serialized with GSON and then
  * sent to client.
@@ -73,7 +75,7 @@ public class MessageComponent {
 	/**
 	 * Color of this text. Defaults to reseting it.
 	 */
-	public @Nullable String color;
+	public @Nullable ChatColor color;
 	
 	/**
 	 * Value of this, if present, will appended on what player is currently

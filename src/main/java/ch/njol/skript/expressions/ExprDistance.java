@@ -42,9 +42,10 @@ import ch.njol.util.Kleenean;
 @Examples({"if the distance between the player and {home::%uuid of player%} is smaller than 20:",
 		"\tmessage \"You're very close to your home!\""})
 @Since("1.0")
-public class ExprDistance extends SimpleExpression<Double> {
+public class ExprDistance extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprDistance.class, Double.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
+		Skript.registerExpression(ExprDistance.class, Number.class, ExpressionType.COMBINED, "[the] distance between %location% and %location%");
 	}
 	
 	@SuppressWarnings("null")
@@ -60,11 +61,11 @@ public class ExprDistance extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		final Location l1 = loc1.getSingle(e), l2 = loc2.getSingle(e);
 		if (l1 == null || l2 == null || l1.getWorld() != l2.getWorld())
-			return new Double[0];
-		return new Double[] {l1.distance(l2)};
+			return new Number[0];
+		return new Number[] {l1.distance(l2)};
 	}
 	
 	@Override
@@ -78,8 +79,8 @@ public class ExprDistance extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 }

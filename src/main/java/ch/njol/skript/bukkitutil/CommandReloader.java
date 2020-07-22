@@ -19,11 +19,9 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,11 +38,9 @@ public class CommandReloader {
 	static {
 		try {
 			Class<?> craftServer;
-			if (Skript.classExists("org.bukkit.craftbukkit.v1_14_R1.CraftServer")) {
-				craftServer = Class.forName("org.bukkit.craftbukkit.v1_14_R1.CraftServer");
-			} else {
-				craftServer = Class.forName("org.bukkit.craftbukkit.v1_13_R2.CraftServer");
-			}
+			String revision = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+			craftServer = Class.forName("org.bukkit.craftbukkit." + revision + ".CraftServer");
+			
 			syncCommandsMethod = craftServer.getDeclaredMethod("syncCommands");
 			if (syncCommandsMethod != null)
 				syncCommandsMethod.setAccessible(true);

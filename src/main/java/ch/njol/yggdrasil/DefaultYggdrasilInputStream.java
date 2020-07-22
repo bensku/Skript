@@ -19,7 +19,8 @@
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -175,7 +176,6 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		throw new StreamCorruptedException("Invalid boolean value " + r);
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		switch (type) {

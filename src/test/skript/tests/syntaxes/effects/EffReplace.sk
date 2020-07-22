@@ -1,0 +1,45 @@
+test "replace items":
+	set {_inv} to chest inventory with 3 rows
+	set slot 2 of {_inv} to 54 dirt
+	set slot 3 of {_inv} to 30 bone
+	set slot 5 of {_inv} to (45 dirt) named "test"
+	set slot 6 of {_inv} to 20 iron ingot
+	replace all dirt in {_inv} with bone
+	set {_n::*} to 54, 30 and 45
+	loop all items in inventory {_inv}:
+		assert loop-item is not dirt with "replace was incomplete"
+		if loop-item is bone:
+			increase {_i} by 1
+			assert item amount of loop-item is {_n::%{_i}%} with "replacement item amount not preserved %{_i}%"
+	set {_inv2} to {_inv}
+	replace all emerald in {_inv} with diamond
+	assert {_inv} is {_inv2} with "replace non-existent item changed inventory"
+
+test "replace strings":
+	loop 8 times:
+		set {_text::%loop-number%} to "My name is bob and this is my friend bob!"
+
+	# Original Replace
+	replace all "bob" in {_text::1} with "bobby"
+	replace all "bob" with "bobby" in {_text::2}
+
+	# Replace First
+	replace first "bob" in {_text::3} with "bobby"
+	replace first "bob" with "bobby" in {_text::4}
+
+	# Case Sensitivity
+	replace all "bob" in {_text::5} with "BOBBY" with case sensitivity
+	replace all "BOB" with "bobby" in {_text::6} with case sensitivity
+	replace first "bob" in {_text::7} with "BOBBY" with case sensitivity
+	replace first "BOB" with "bobby" in {_text::8} with case sensitivity
+
+	assert {_text::1} is "My name is bobby and this is my friend bobby!" with "replace all pattern 1 (case sensitivity disabled) (%{_text::1}%) failed"
+	assert {_text::2} is "My name is bobby and this is my friend bobby!" with "replace all pattern 2 (case sensitivity disabled) (%{_text::2}%) failed"
+	assert {_text::3} is "My name is bobby and this is my friend bob!" with "replace first pattern 1 (case sensitivity disabled) (%{_text::3}%) failed"
+	assert {_text::4} is "My name is bobby and this is my friend bob!" with "replace first pattern 2 (case sensitivity disabled) (%{_text::4}%) failed"
+	assert {_text::5} is "My name is BOBBY and this is my friend BOBBY!" with "replace all pattern 2 (case sensitivity enabled) (%{_text::6}%) failed"
+	assert {_text::6} is "My name is bob and this is my friend bob!" with "replace all pattern 1 (case sensitivity enabled) (%{_text::5}%) failed"
+	assert {_text::7} is "My name is BOBBY and this is my friend bob!" with "replace first pattern 2 (case sensitivity enabled) (%{_text::8}%) failed"
+	assert {_text::8} is "My name is bob and this is my friend bob!" with "replace first pattern 1 (case sensitivity enabled) (%{_text::7}%) failed"
+
+	

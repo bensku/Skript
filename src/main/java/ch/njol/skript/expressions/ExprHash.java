@@ -51,7 +51,7 @@ import ch.njol.util.Kleenean;
 		"\t\tset {password::%uuid of player%} to text-argument hashed with SHA-256",
 		"command /login <text>:",
 		"\ttrigger:",
-		"\t\ttif text-argument hashed with SHA-256 is {password::%uuid of player%}:",
+		"\t\tif text-argument hashed with SHA-256 is {password::%uuid of player%}:",
 		"\t\t\tmessage \"Login successful.\"",
 		"\t\telse:",
 		"\t\t\tmessage \"Wrong password!\""})

@@ -1,5 +1,3 @@
-enableFeaturePreview('STABLE_PUBLISHING')
-
 rootProject.name = 'Skript'
 include 'skript-worldguard6'
 //include 'skript-worldguard7fawe' // Maven repositories are broken

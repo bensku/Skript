@@ -62,12 +62,10 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -90,7 +88,6 @@ import ch.njol.util.StringUtils;
 public abstract class Commands {
 	
 	public final static ArgsMessage m_too_many_arguments = new ArgsMessage("commands.too many arguments");
-	public final static Message m_correct_usage = new Message("commands.correct usage");
 	public final static Message m_internal_error = new Message("commands.internal error");
 	
 	private final static Map<String, ScriptCommand> commands = new HashMap<>();
@@ -255,7 +252,6 @@ public abstract class Commands {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
 	static boolean handleEffectCommand(final CommandSender sender, String command) {
 		if (!(sender instanceof ConsoleCommandSender || sender.hasPermission("skript.effectcommands") || SkriptConfig.allowOpsToUseEffectCommands.value() && sender.isOp()))
 			return false;

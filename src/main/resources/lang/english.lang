@@ -75,6 +75,7 @@ skript command:
 			check: Checks for a new version
 			changes: Lists all changes since the current version
 			download: Download the newest version
+		info: Prints a message with links to Skript's aliases and documentation
 		gen-docs: Generates documentation using doc-templates in plugin folder
 
 	invalid script: Can't find the script <grey>'<gold>%s<grey>'<red> in the scripts folder!
@@ -132,12 +133,19 @@ skript command:
 			# invalid version: No changelog for the version <gold>%s<red> available
 			title: <bold><cyan>%s<reset> (%s)
 			next page: <grey>page %s of %s. Type <gold>/skript update changes %s<gray> for the next page (hint: use the up arrow key)
+	info:
+		aliases: Skript's aliases can be found here: <aqua>https://github.com/SkriptLang/skript-aliases
+		documentation: Skript's documentation can be found here: <aqua>https://skriptlang.github.io/Skript
+		version: Skript Version: <aqua>%s
+		server: Server Version: <aqua>%s
+		addons: Installed Skript Addons:
 
 # -- Updater --
 updater:
 	not started: Skript has not yet checked for the latest version. Use <gold>/skript update check<reset> to do so.
 	checking: Checking for the latest version of Skript...
 	check in progress: Checking for a new version is currently in progress.
+	updater disabled: The updater is disabled, so a check for the latest version of Skript was not performed.
 	check error: <red>There was an error checking for the latest version of Skript:<light red> %s
 	running latest version: You're currently running the latest stable version of Skript.
 	running latest version (beta): You're currently running a <i>beta<r> version of Skript, and no new <i>stable<r> version is available. Please note that you have to update to newer beta versions manually!
@@ -147,7 +155,7 @@ updater:
 	download error: <red>There was an error downloading the latest version of Skript:<light red> %s
 	downloaded: The latest version of Skript has been downloaded! Restart the server or use /reload to apply the changes.
 	internal error: An internal error occurred while checking for the latest version of Skript. Please refer to the server log for details.
-	custom version: You're currently running custom Skript version. No updates will be automatically installed.
+	custom version: You're currently running a custom Skript version. No updates will be automatically installed.
 
 # -- Commands --
 commands:
@@ -156,7 +164,6 @@ commands:
 	executable by players: This command can only be used by players
 	executable by console: This command can only be used by the console
 	usage: Usage:
-	correct usage: Correct usage:
 	invalid argument: Invalid argument <gray>'%s<gray>'<reset>. Allowed are:
 	too many arguments: This command can only accept a single %2$s.
 	internal error: An internal error occurred while attempting to perform this command.
@@ -245,6 +252,8 @@ enchantments:
 		multishot: Multishot, Multi-Shot
 		piercing: Piercing
 		quick_charge: Quick Charge
+		# new 1.16 Enchantment
+		soul_speed: Soul Speed
 
 # -- Potion Effects --
 potions:
@@ -372,6 +381,15 @@ biomes:
 	deep_lukewarm_ocean: deep lukewarm ocean
 	deep_cold_ocean: deep cold ocean
 	deep_frozen_ocean: deep frozen ocean
+	# 1.14 biomes
+	bamboo_jungle: bamboo jungle
+	bamboo_jungle_hills: bamboo jungle hills
+	# 1.16 biomes
+	nether_wastes: nether wastes, nether, hell
+	crimson_forest: crimson forest
+	soul_sand_valley: soul sand valley
+	warped_forest: warped forest
+	basalt_deltas: basalt deltas
 
 # -- Tree Types --
 tree types:
@@ -380,49 +398,49 @@ tree types:
 		pattern: (any )?trees?
 	regular:
 		name: oak¦s
-		pattern: (any )?(regular tree|normal tree|oak)s?
+		pattern: (any )?(regular|normal|oak)( tree)?s?
 	small_regular:
 		name: small oak¦s
-		pattern: small (regular tree|normal tree|oak)s?
+		pattern: small (regular|normal|oak)( tree)?s?
 	big_regular:
 		name: big tree¦s
-		pattern: (big|large) (regular tree|normal tree|oak)s?
+		pattern: (big|large) (regular|normal|oak)( tree)?s?
 	redwood:
 		name: redwood¦s
-		pattern: (any )?(fir|pine|spruce|redwood)s?
+		pattern: (any )?(fir|pine|spruce|redwood)( tree)?s?
 	small_redwood:
 		name: small redwood¦s
-		pattern: small (fir|pine|spruce|redwood)s?
+		pattern: small (fir|pine|spruce|redwood)( tree)?s?
 	big_redwood:
 		name: tall redwood¦s
-		pattern: (big|tall) (fir|pine|spruce|redwood)s?
+		pattern: (big|tall) (fir|pine|spruce|redwood)( tree)?s?
 	mega_redwood:
 		name: mega redwood¦s
-		pattern: (mega|giant) (fir|pine|spruce|redwood)s?
+		pattern: (mega|giant) (fir|pine|spruce|redwood)( tree)?s?
 	birch:
 		name: birch¦es
-		pattern: birch(es)?
+		pattern: birch( trees?|es)
 	tall_birch:
 		name: tall birch¦es
-		pattern: (tall|big) birch(es)?
+		pattern: (tall|big) birch( trees?|es)
 	jungle:
 		name: jungle tree¦s
-		pattern: (any )?jungle trees?
+		pattern: (any )?jungle( tree)?s?
 	small_jungle:
 		name: small jungle tree¦s
-		pattern: small jungle trees?
+		pattern: small jungle( tree)?s?
 	big_jungle:
 		name: big jungle tree¦s
-		pattern: (big|tall|huge|giant|large) jungle trees?
+		pattern: (big|tall|huge|giant|large) jungle( tree)?s?
 	cocoa_tree:
 		name: cocoa tree¦s
 		pattern: cocoa trees?
 	acacia:
 		name: acacia¦s
-		pattern: acacias?
+		pattern: acacia( tree)?s?
 	dark_oak:
 		name: dark oak¦s
-		pattern: dark oaks?
+		pattern: dark oak( tree)?s?
 	jungle_bush:
 		name: bush¦es
 		pattern: (jungle )?bush(es)?
@@ -700,7 +718,7 @@ entities:
 		name: giant¦s
 		pattern: giant(|1¦s)
 	iron golem:
-		name: iron golems¦s @an
+		name: iron golem¦s @an
 		pattern: iron golem(|1¦s)
 	item frame:
 		name: item frame¦s @an
@@ -732,6 +750,12 @@ entities:
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
+	red mooshroom:
+		name: red mooshroom¦s
+		pattern: <age> red mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
+	brown mooshroom:
+		name: brown mooshroom¦s
+		pattern: <age> brown mooshroom(|1¦s)|(4¦)mooshroom (kid(|1¦s)|child(|1¦ren))
 	ocelot:
 		name: ocelot¦s @an
 		pattern: <age> ocelot(|1¦s)
@@ -740,7 +764,7 @@ entities:
 		pattern: (wild|untamed) <age> ocelot(|1¦s)
 	cat:
 		name: cat¦s
-		pattern: <age> cat(|1¦s)|tamed <age> ocelot(|1¦s)|(4¦)kitten(|1¦s)
+		pattern: <age> [%-cattype%] cat(|1¦s)|tamed <age> ocelot(|1¦s)|(4¦)[%-cattype%] kitten(|1¦s)
 	painting:
 		name: painting¦s
 		pattern: painting(|1¦s)
@@ -763,8 +787,8 @@ entities:
 		name: non-op¦s
 		pattern: non(-| |)op(|1¦s)
 	zombie pigman:
-		name: zombie pig¦man¦men
-		pattern: <age> zombie pigm(an|1¦en)|(4¦)zombie pigletboy(|1¦s)
+		name: (zombie pig¦man¦men|zombified piglin)
+		pattern: <age> (zombie pigm(an|1¦en)|zombified piglin(|1¦s))|(4¦)(zombie pigletboy(|1¦s)|zombified piglin (kid(|1¦s)|child(|1¦ren)))
 	sheep:
 		name: sheep
 		# while sheep is ambiguous, sheeps is plural (even though it's wrong)
@@ -807,7 +831,7 @@ entities:
 		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
 	normal:
 		name: villager¦s
-		pattern: <age> villager(|1¦s)|(4¦)[villager] (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> [unemployed] villager(|1¦s)|(4¦)[[unemployed] villager] (kid(|1¦s)|child(|1¦ren))
 	armorer:
 		name: armorer¦s
 		pattern: <age> armorer(|1¦s)|(4¦)armorer (kid(|1¦s)|child(|1¦ren))
@@ -816,7 +840,7 @@ entities:
 		pattern: <age> cartographer(|1¦s)|(4¦)cartographer (kid(|1¦s)|child(|1¦ren))
 	cleric:
 		name: cleric¦s
-		pattern: <age> cleric(|1¦s)|(4¦)cleric (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	fisherman:
 		name: fisherman¦s
 		pattern: <age> fisherman(|1¦s)|(4¦)fisherman (kid(|1¦s)|child(|1¦ren))
@@ -846,7 +870,7 @@ entities:
 		pattern: <age> librarian(|1¦s)|(4¦)librarian (kid(|1¦s)|child(|1¦ren))
 	priest:
 		name: priest¦s
-		pattern: <age> priest(|1¦s)|(4¦)priest (kid(|1¦s)|child(|1¦ren))
+		pattern: <age> (priest|cleric)(|1¦s)|(4¦)(priest|cleric) (kid(|1¦s)|child(|1¦ren))
 	blacksmith:
 		name: blacksmith¦s
 		pattern: <age> [black]smith(|1¦s)|(4¦)[black]smith (kid(|1¦s)|child(|1¦ren))
@@ -900,11 +924,11 @@ entities:
 		not a block error: Falling blocks must be blocks, not items
 	thrown potion:
 		name: thrown potion¦s
-		pattern: thrown (potion(|1¦s)|(¦2)%-itemtypes%)
+		pattern: thrown (potion(|1¦s)|(2¦)%-itemtypes%)
 		adjective: thrown
 	dropped item:
 		name: dropped item¦s
-		pattern: dropped (item(|1¦s)|(¦2)%-itemtypes%)|item entit(y|1¦ies)
+		pattern: dropped (item(|1¦s)|(2¦)%-itemtypes%)|item entit(y|1¦ies)
 		adjective: dropped
 	horse:
 		name: horse¦s
@@ -920,7 +944,7 @@ entities:
 		pattern: <age> chested horse(|1¦s)
 	undead horse:
 		name: undead horse¦s @an
-		pattern: <age> undead horse(|1¦s)|undead <age> horse(|1¦s)|undead (4¦)foal(|1¦s)
+		pattern: <age> (zombie|undead) horse(|1¦s)|(zombie|undead) <age> horse(|1¦s)|(zombie|undead) (4¦)foal(|1¦s)
 	skeleton horse:
 		name: skeleton horse¦s
 		pattern: <age> skeleton horse(|1¦s)|skeleton <age> horse(|1¦s)|skeleton (4¦)foal(|1¦s)
@@ -930,21 +954,33 @@ entities:
 	llama:
 		name: llama¦s
 		pattern: llama(|1¦s)|llama (4¦)cria(|1¦s)
+	creamy llama:
+		name: creamy llama¦s
+		pattern: creamy llama(|1¦s)|creamy llama (4¦)cria(|1¦s)
+	white llama:
+		name: white llama¦s
+		pattern: white llama(|1¦s)|white llama (4¦)cria(|1¦s)
+	brown llama:
+		name: brown llama¦s
+		pattern: brown llama(|1¦s)|brown llama (4¦)cria(|1¦s)
+	gray llama:
+		name: gray llama¦s
+		pattern: gray llama(|1¦s)|gray llama (4¦)cria(|1¦s)
 	trader llama:
 		name: trader llama¦s
 		pattern: trader llama(|1¦s)|trader llama (4¦)cria(|1¦s)
-	creamy llama:
-		name: creamy llama¦s
-		pattern: creamy [(2¦trader)] llama(|1¦s)|creamy [(2¦trader)] llama (4¦)cria(|1¦s)
-	white llama:
-		name: white llama¦s
-		pattern: white [(2¦trader)] llama(|1¦s)|white [(2¦trader)] llama (4¦)cria(|1¦s)
-	brown llama:
-		name: brown llama¦s
-		pattern: brown [(2¦trader)] llama(|1¦s)|brown [(2¦trader)] llama (4¦)cria(|1¦s)
-	gray llama:
-		name: gray llama¦s
-		pattern: gray [(2¦trader)] llama(|1¦s)|gray [(2¦trader)] llama (4¦)cria(|1¦s)
+	creamy trader llama:
+		name: creamy trader llama¦s
+		pattern: creamy trader llama(|1¦s)|creamy trader llama (4¦)cria(|1¦s)
+	white trader llama:
+		name: white trader llama¦s
+		pattern: white trader llama(|1¦s)|white trader llama (4¦)cria(|1¦s)
+	brown trader llama:
+		name: brown trader llama¦s
+		pattern: brown trader llama(|1¦s)|brown trader llama (4¦)cria(|1¦s)
+	gray trader llama:
+		name: gray trader llama¦s
+		pattern: gray trader llama(|1¦s)|gray trader llama (4¦)cria(|1¦s)
 	llama spit:
 		name: llama spit¦s
 		pattern: llama spit(|1¦s)
@@ -1135,7 +1171,52 @@ entities:
 	panda:
 		name: panda¦s
 		pattern: <age> [%-gene%[%-gene%]] panda(|1¦s)
+	#1.15 entity
+	no nectar bee:
+		name: no nectar bee¦s
+		pattern: <age> bee(|1¦s) without nectar
+	happy bee:
+		name: happy bee¦s
+		pattern: <age> happy bee(|1¦s)
+	bee:
+		name: bee¦s
+		pattern: <age> bee(|1¦s)
+	nectar bee:
+		name: nectar bee¦s
+		pattern: <age> bee(|1¦s) with nectar
+	angry bee:
+		name: angry bee¦s
+		pattern: <age> angry bee(|1¦s)
+	angry nectar bee:
+		name: angry nectar bee¦s
+		pattern: <age> angry bee(|1¦s) with nectar
+	#1.16 entities
+	piglin:
+		name: piglin¦s
+		pattern: <age> piglin(|1¦s)|(4¦)piglin (kid(|1¦s)|child(|1¦ren))
+	hoglin:
+		name: hoglin¦s
+		pattern: <age> hoglin(|1¦s)|(4¦)hoglin (kid(|1¦s)|child(|1¦ren))
+	zoglin:
+		name: zoglin¦s
+		pattern: <age> zoglin(|1¦s)|(4¦)zoglin (kid(|1¦s)|child(|1¦ren))
+	strider:
+		name: strider¦s
+		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
 
+# -- Cat Types --
+cat types:
+	tabby: tabby
+	black: black
+	red: red
+	siamese: siamese
+	british_shorthair: british shorthair
+	calico: calico
+	persian: persian
+	ragdoll: ragdoll
+	white: white
+	jellie: jellie
+	all_black: all black
 
 # -- Damage Causes --
 damage causes:
@@ -1413,9 +1494,9 @@ visual effects:
 	sneeze:
 		name: sneeze @-
 		pattern: sneeze
-	campfire_cozy_smoke:
-		name: campfire cozy smoke @-
-		pattern: campfire cozy smoke
+	campfire_cosy_smoke:
+		name: campfire cosy smoke @-
+		pattern: campfire co(s|z)y smoke
 	campfire_signal_smoke:
 		name: campfire signal smoke @-
 		pattern: campfire signal smoke
@@ -1434,6 +1515,50 @@ visual effects:
 	falling_water:
 		name: falling water @-
 		pattern: falling water
+	# 1.15 particles
+	dripping_honey:
+		name: dripping honey @-
+		pattern: dripping honey
+	falling_honey:
+		name: falling honey @-
+		pattern: falling honey
+	landing_honey:
+		name: landing honey @-
+		pattern: landing honey
+	falling_nectar:
+		name: falling nectar @-
+		pattern: falling nectar
+	# 1.16 particles
+	ash:
+		name: ash @-
+		pattern: ash
+	crimson_spore:
+		name: crimson spore @-
+		pattern: crimson spore
+	soul_fire_flame:
+		name: soul fire flame @-
+		pattern: soul fire flame
+	warped_spore:
+		name: warped spore @-
+		pattern: warped spore
+	dripping_obsidian_tear:
+		name: dripping obsidian tear @-
+		pattern: dripping obsidian tear
+	falling_obsidian_tear:
+		name: falling obsidian tear @-
+		pattern: falling obsidian tear
+	landing_obsidian_tear:
+		name: landing obsidian tear @-
+		pattern: landing obsidian tear
+	soul:
+		name: soul @-
+		pattern: soul
+	reverse_portal:
+		name: reverse portal @-
+		pattern: reverse portal
+	white_ash:
+		name: white ash @-
+		pattern: white ash
 
 # -- Inventory Actions --
 inventory actions:
@@ -1502,6 +1627,7 @@ inventory types:
 
 # -- Spawn Reasons --
 spawn reasons:
+	beehive: beehive
 	breeding: breed, breeding
 	build_irongolem: built iron golem, build iron golem
 	build_snowman: built snowman, build snowman
@@ -1514,6 +1640,7 @@ spawn reasons:
 	drowned: drowned
 	egg: egg
 	ender_pearl: ender pearl
+	explosion: explosion
 	infection: infection, infected
 	jockey: jockey
 	lightning: lightning
@@ -1521,6 +1648,8 @@ spawn reasons:
 	natural: natural
 	nether_portal: nether portal
 	ocelot_baby: ocelot baby
+	patrol: patrol
+	raid: raid
 	reinforcements: reinforcements
 	shoulder_entity: perching, shoulder
 	silverfish_block: silverfish reveal, silverfish trap
@@ -1577,6 +1706,22 @@ genes:
 	weak: weak
 	aggressive: aggressive, savage, wild
 
+# -- Attribute Types --
+attribute types:
+	generic_armor: generic armor, armor attribute
+	generic_armor_toughness: generic armor toughness, armor toughness attribute
+	generic_attack_damage: generic attack damage, attack damage attribute
+	generic_attack_knockback: generic attack knockback, attack knockback attribute
+	generic_attack_speed: generic attack speed, attack speed attribute
+	generic_flying_speed: generic flying speed, flying speed attribute
+	generic_follow_range: generic follow range, follow range attribute
+	generic_knockback_resistance: generic knockback resistance, knockback resistance attribute
+	generic_luck: generic luck, luck attribute
+	generic_max_health: generic max health, max health attribute
+	generic_movement_speed: generic movement speed, movement speed attribute
+	horse_jump_strength: horse jump strength, horse jump strength attribute
+	zombie_spawn_reinforcements: zombie spawn reinforcements, zombie spawn reinforcements attribute
+
 # -- Boolean --
 boolean:
 	true:
@@ -1627,6 +1772,7 @@ types:
 	vector: vector¦s @a
 	inventorytype: inventory type¦s @an
 	metadataholder: metadata holder¦s @a
+	persistentdataholder: persistent data holder¦s @
 	spawnreason: spawn reason¦s @a
 	cachedservericon: server icon¦s @a
 	difficulty: difficult¦y¦ies @a

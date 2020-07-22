@@ -51,6 +51,7 @@ public class EffFunctionCall extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		function.execute(e);
+		function.resetReturnValue(); // Function might have return value that we're ignoring
 	}
 	
 	@Override

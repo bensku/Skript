@@ -30,7 +30,6 @@ import org.bukkit.event.weather.WeatherEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.LanguageChangeListener;
 
 /**
  * @author Peter Güttinger
@@ -125,6 +124,7 @@ public enum WeatherType {
 			case RAIN:
 			case THUNDER:
 				player.setPlayerWeather(org.bukkit.WeatherType.DOWNFALL);
+				break;
 			case CLEAR:
 				player.setPlayerWeather(org.bukkit.WeatherType.CLEAR);
 				break;

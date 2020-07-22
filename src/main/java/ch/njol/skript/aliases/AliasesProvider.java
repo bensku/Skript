@@ -160,12 +160,6 @@ public class AliasesProvider {
 	private final AliasesMap aliasesMap;
 	
 	/**
-	 * Contains known item datas. Used for deduplicating them when aliases
-	 * are loaded.
-	 */
-	private final Map<ItemData,ItemData> knownItems;
-	
-	/**
 	 * Constructs a new aliases provider with no data.
 	 */
 	public AliasesProvider(int expectedCount, @Nullable AliasesProvider parent) {
@@ -173,7 +167,6 @@ public class AliasesProvider {
 		this.aliases = new HashMap<>(expectedCount);
 		this.variations = new HashMap<>(expectedCount / 20);
 		this.aliasesMap = new AliasesMap();
-		this.knownItems = new HashMap<>(1000);
 		
 		this.gson = new Gson();
 	}
@@ -288,12 +281,12 @@ public class AliasesProvider {
 			data.isAlias = true;
 			data.itemFlags = itemFlags;
 			
-			// Deduplicate item data
-			ItemData canonical = knownItems.get(data);
-			if (canonical != null) {
-				data = canonical;
-			} else {
-				knownItems.put(data, data);
+			// Deduplicate item data if this has been loaded before
+			AliasesMap.Match canonical = aliasesMap.exactMatch(data);
+			if (canonical.getQuality().isAtLeast(MatchQuality.EXACT)) {
+				AliasesMap.AliasData aliasData = canonical.getData();
+				assert aliasData != null; // Match quality guarantees this
+				data = aliasData.getItem();
 			}
 			
 			datas = Collections.singletonList(data);
@@ -380,7 +373,6 @@ public class AliasesProvider {
 		aliases.clear();
 		variations.clear();
 		aliasesMap.clear();
-		knownItems.clear();
 	}
 
 	public int getAliasCount() {
