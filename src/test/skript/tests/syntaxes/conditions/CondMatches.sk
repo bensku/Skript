@@ -1,0 +1,3 @@
+test "matches condition":
+	assert "hey" doesn't match "heyo" with "Hey matches heyo"
+	assert "115" matches "^\d+$" with "115 is not only made by digits"

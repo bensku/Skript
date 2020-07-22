@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 public class CondMatches extends Condition {
 	
 	static {
-		Skript.registerCondition(CondMatches.class, "%strings% match[es] %strings%");
+		Skript.registerCondition(CondMatches.class, "%strings% (1¦match[es]|2¦does(n't| not) match) %strings%");
 	}
 	
 	@SuppressWarnings("null")
@@ -58,20 +58,18 @@ public class CondMatches extends Condition {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		regex = (Expression<String>) exprs[1];
+		setNegated(parseResult.mark == 1);
 		return true;
 	}
 	
 	@Override
 	public boolean check(Event e) {
 		String[] txt1 = strings.getArray(e);
-		String[] txt2 = regex.getArray(e);
-		if (txt1.length < 1 || txt2.length < 1) return false;
-		Object[] patterns = Arrays.stream(txt2)
-			.map((str) -> Pattern.compile(str))
-			.toArray();
+		String[] patterns = regex.getArray(e);
+		if (txt1.length < 1 || patterns.length < 1) return false;
 		return Arrays.stream(txt1)
 			.allMatch((str) -> Arrays.stream(patterns)
-				.allMatch((pattern) -> ((Pattern) pattern).matcher(str).find()));
+				.allMatch((pattern) -> (Pattern.compile(pattern).matcher(str).find()))) == isNegated();
 	}
 	
 	@Override
