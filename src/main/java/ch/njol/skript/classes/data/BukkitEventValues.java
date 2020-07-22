@@ -467,22 +467,20 @@ public final class BukkitEventValues {
 		}, 0, "Use 'projectile' and/or 'shooter' in shoot events", ProjectileLaunchEvent.class);
 		//ProjectileCollideEvent
 		if (Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) {
-			if (Skript.methodExists(ProjectileCollideEvent.class, "getEntity"))
-				EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
-					@Nullable
-					@Override
-					public Projectile get(ProjectileCollideEvent evt) {
-						return evt.getEntity();
-					}
-				}, 0);
-			if (Skript.methodExists(ProjectileCollideEvent.class, "getCollidedWith"))
-				EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
-					@Nullable
-					@Override
-					public Entity get(ProjectileCollideEvent evt) {
-						return evt.getCollidedWith();
-					}
-				}, 0);
+			EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
+				@Nullable
+				@Override
+				public Projectile get(ProjectileCollideEvent evt) {
+					return evt.getEntity();
+				}
+			}, 0);
+			EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
+				@Nullable
+				@Override
+				public Entity get(ProjectileCollideEvent evt) {
+					return evt.getCollidedWith();
+				}
+			}, 0);
 		}
 		EventValues.registerEventValue(ProjectileLaunchEvent.class, Projectile.class, new Getter<Projectile, ProjectileLaunchEvent>() {
 			@Override
