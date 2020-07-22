@@ -20,7 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -36,28 +36,30 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchanting Experience Cost")
-@Description({"The cost of enchanting in an enchant event.", 
-				"This is number that was displayed in the enchantment table, not the actual number of levels removed."})
-@Examples({"on enchant:",
-			"\tsend \"Cost: %the displayed cost of enchanting%\" to player"})
-@Events("enchant")
+@Name("Explosion Block Yield")
+@Description({"The percentage of exploded blocks dropped in an explosion event.",
+				"When changing the yield, a value greater than 1 will function the same as using 1.",
+				"Attempting to change the yield to a value less than 0 will have no effect."})
+@Examples({"on explode:",
+			"set the explosion's block yield to 10%"})
+@Events("explosion")
 @Since("2.5")
-public class ExprEnchantingExpCost extends SimpleExpression<Number> {
+public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE,
-				"[the] [displayed] ([e]xp[erience]|enchanting) cost");
+		Skript.registerExpression(ExprExplosionBlockYield.class, Number.class, ExpressionType.PROPERTY,
+				"[the] [explosion['s]] block (yield|amount)",
+				"[the] percentage of blocks dropped"
+		);
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
-			Skript.error("The experience cost of enchanting is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(EntityExplodeEvent.class)) {
+			Skript.error("The 'explosion block yield' is only usable in an explosion event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -66,39 +68,50 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		return new Number[]{((EnchantItemEvent) e).getExpLevelCost()};
+		return new Number[]{((EntityExplodeEvent) e).getYield()};
 	}
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
-		return CollectionUtils.array(Number.class, Experience.class);
+		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null)
+	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
+		float n = delta == null ? 0 : ((Number) delta[0]).floatValue();
+		if (n < 0) // Yield can't be negative
 			return;
-		Object c = delta[0];
-		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
-		EnchantItemEvent e = (EnchantItemEvent) event;
+		if (n > 1) // Treat 'set the explosion's block yield to 500' as setting it to the maximum value (i.e. 1)
+			n = 1;
+		EntityExplodeEvent e = (EntityExplodeEvent) event;
 		switch (mode) {
 			case SET:
-				e.setExpLevelCost(cost);
+				e.setYield(n);
 				break;
 			case ADD:
-				int add = e.getExpLevelCost() + cost;
-				e.setExpLevelCost(add);
+				float add = e.getYield() + n;
+				if (add < 0)
+					return;
+				if (add > 1)
+					add = 1;
+				e.setYield(add);
 				break;
 			case REMOVE:
-				int subtract = e.getExpLevelCost() - cost;
-				e.setExpLevelCost(subtract);
+				float subtract = e.getYield() - n;
+				if (subtract < 0)
+					return;
+				if (subtract > 1)
+					subtract = 1;
+				e.setYield(subtract);
 				break;
-			case RESET:
 			case DELETE:
+				e.setYield(0);
+				break;
 			case REMOVE_ALL:
+			case RESET:
 				assert false;
 		}
 	}
@@ -115,7 +128,7 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the displayed cost of enchanting";
+		return "the explosion's block yield";
 	}
 
 }

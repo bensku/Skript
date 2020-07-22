@@ -20,7 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
@@ -36,28 +36,30 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchanting Experience Cost")
-@Description({"The cost of enchanting in an enchant event.", 
-				"This is number that was displayed in the enchantment table, not the actual number of levels removed."})
-@Examples({"on enchant:",
-			"\tsend \"Cost: %the displayed cost of enchanting%\" to player"})
-@Events("enchant")
+@Name("Explosion Yield")
+@Description({"The yield of the explosion in an explosion prime event. This is how big the explosion is.",
+				" When changing the yield, values less than 0 will be ignored.",
+				" Read <a href='https://minecraft.gamepedia.com/Explosion'>this wiki page</a> for more information"})
+@Examples({"on explosion prime:",
+		"\tset the yield of the explosion to 10"})
+@Events("explosion prime")
 @Since("2.5")
-public class ExprEnchantingExpCost extends SimpleExpression<Number> {
+public class ExprExplosionYield extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE,
-				"[the] [displayed] ([e]xp[erience]|enchanting) cost");
+		Skript.registerExpression(ExprExplosionYield.class, Number.class, ExpressionType.SIMPLE,
+			"[the] explosion (yield|radius|size)",
+			"[the] (yield|radius|size) of [the] explosion"
+		);
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
-			Skript.error("The experience cost of enchanting is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(ExplosionPrimeEvent.class)) {
+			Skript.error("The explosion radius is only usable in explosion prime events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -66,39 +68,44 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		return new Number[]{((EnchantItemEvent) e).getExpLevelCost()};
+		return new Number[]{((ExplosionPrimeEvent) e).getRadius()};
 	}
 
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
 			return null;
-		return CollectionUtils.array(Number.class, Experience.class);
+		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
-	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null)
+	public void change(final Event event, final @Nullable Object[] delta, final ChangeMode mode) {
+		float f = delta == null ? 0 : ((Number) delta[0]).floatValue();
+		if (f < 0) // Negative values will throw an error.
 			return;
-		Object c = delta[0];
-		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
-		EnchantItemEvent e = (EnchantItemEvent) event;
+		ExplosionPrimeEvent e = (ExplosionPrimeEvent) event;
 		switch (mode) {
 			case SET:
-				e.setExpLevelCost(cost);
+				e.setRadius(f);
 				break;
 			case ADD:
-				int add = e.getExpLevelCost() + cost;
-				e.setExpLevelCost(add);
+				float add = e.getRadius() + f;
+				if (add < 0)
+					return;
+				e.setRadius(add);
 				break;
 			case REMOVE:
-				int subtract = e.getExpLevelCost() - cost;
-				e.setExpLevelCost(subtract);
+				float subtract = e.getRadius() - f;
+				if (subtract < 0)
+					return;
+				e.setRadius(subtract);
 				break;
-			case RESET:
 			case DELETE:
+				e.setRadius(0);
+				break;
 			case REMOVE_ALL:
+			case RESET:
 				assert false;
 		}
 	}
@@ -115,7 +122,7 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the displayed cost of enchanting";
+		return "the yield of the explosion";
 	}
 
 }
