@@ -121,7 +121,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import ch.njol.skript.ServerPlatform;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
