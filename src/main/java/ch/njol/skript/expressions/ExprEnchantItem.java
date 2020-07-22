@@ -49,7 +49,7 @@ import ch.njol.util.coll.CollectionUtils;
 			"on enchant prepare:",
 			"\tset the enchant item to a wooden sword"})
 @Events({"enchant prepare", "enchant"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprEnchantItem extends SimpleExpression<ItemType> {
 
 	static {

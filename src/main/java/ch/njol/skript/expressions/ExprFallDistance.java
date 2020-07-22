@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set all entities' fall distance to 10",
 	"on damage:",
 	"\tsend \"%victim's fall distance%\" to victim"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprFallDistance extends SimplePropertyExpression<Entity, Number> {
 	
 	static {
