@@ -20,18 +20,21 @@
 package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -63,6 +66,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
@@ -1752,6 +1756,58 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
+
+		if (Skript.classExists("org.bukkit.GameRule")) {
+			Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
+				.user("gamerules?")
+				.name("Gamerule")
+				.description("A gamerule")
+				.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining(", ")))
+				.since("2.5")
+				.requiredPlugins("Minecraft 1.13 or newer")
+				.parser(new Parser<GameRule>() {
+					@Override
+					@Nullable
+					public GameRule parse(final String input, final ParseContext context) {
+						return GameRule.getByName(input);
+					}
+					
+					@Override
+					public String toString(GameRule o, int flags) {
+						return o.getName();
+					}
+					
+					@Override
+					public String toVariableNameString(GameRule o) {
+						return o.getName();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+			);
+		}
+
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
+			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
+					.user("persistent data ?holders?")
+					.name("Persistent Data Holder")
+					.description(
+							"Represents something that can have persistent data. " 
+							+ "The following can all hold persistent data: "
+							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
+							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
+							+ "daylight detectors, dispensers, droppers, enchanting tables, ender chests, end gateways, furnaces, "
+							+ "hoppers, jigsaw blocks, jukeboxes, lecterns, shulker boxes, signs, skulls, smokers, and structure blocks. "
+							+ "For the source list, <a href='https://hub.spigotmc.org/javadocs/spigot/org/bukkit/persistence/PersistentDataHolder.html'>see this page</a>."
+					)
+					.examples("set persistent data value \"epic\" of player to true")
+					.requiredPlugins("1.14 or newer")
+					.since("2.5"));
+		}
+
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
 			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
 				.user("enchant[ment][ ]offers?")
@@ -1760,7 +1816,7 @@ public class BukkitClasses {
 				.examples("on enchant prepare:",
 					"\tset enchant offer 1 to sharpness 1",
 					"\tset the cost of enchant offer 1 to 10 levels")
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<EnchantmentOffer>() {
 					@Override
 					public boolean canParse(ParseContext context) {
@@ -1791,7 +1847,7 @@ public class BukkitClasses {
 						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
 				.defaultExpression(new EventValueExpression<>(Attribute.class))
 				.usage(attributes.getAllNames())
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<Attribute>() {
 					@Override
 					@Nullable
