@@ -339,8 +339,10 @@ public class SimpleEvents {
 						"\tdelete event-projectile")
 				.since("1.0");
 		
-		if(Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
+		if(Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent"))
+			Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
 			.description("Called when a projectile collides with an entity")
+			.requiredPlugins("Paper")
 			.examples("on projectile collide:",
 				"\tteleport shooter of event-projectile to event-entity")
 			.since("INSERT VERSION");
