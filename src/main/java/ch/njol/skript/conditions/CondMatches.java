@@ -22,6 +22,7 @@ package ch.njol.skript.conditions;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -33,7 +34,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Matches")
@@ -45,7 +46,7 @@ import ch.njol.util.Kleenean;
 public class CondMatches extends Condition {
 	
 	static {
-		Skript.registerCondition(CondMatches.class, "%strings% (1¦match[es]|2¦does(n't| not) match) %strings%");
+		Skript.registerCondition(CondMatches.class, "%strings% (1¦match[es]|2¦do[es](n't| not) match) %strings%");
 	}
 	
 	@SuppressWarnings("null")
@@ -55,7 +56,7 @@ public class CondMatches extends Condition {
 	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		regex = (Expression<String>) exprs[1];
 		setNegated(parseResult.mark == 1);
@@ -64,17 +65,30 @@ public class CondMatches extends Condition {
 	
 	@Override
 	public boolean check(Event e) {
-		String[] txt1 = strings.getArray(e);
-		String[] patterns = regex.getArray(e);
-		if (txt1.length < 1 || patterns.length < 1) return false;
-		return Arrays.stream(txt1)
-			.allMatch((str) -> Arrays.stream(patterns)
-				.allMatch((pattern) -> (Pattern.compile(pattern).matcher(str).find()))) == isNegated();
+		String[] txt = strings.getAll(e);
+		String[] regexes = regex.getAll(e);
+		if (txt.length < 1 || regexes.length < 1) return false;
+		boolean result;
+		boolean stringAnd = strings.getAnd();
+		boolean regexAnd = regex.getAnd();
+		if (stringAnd) {
+			if (regexAnd) {
+				result = Arrays.stream(txt).parallel().allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+			} else {
+				result = Arrays.stream(txt).parallel().allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+			}
+		} else if (regexAnd) {
+			result = Arrays.stream(txt).parallel().anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+		} else {
+			result = Arrays.stream(txt).parallel().anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+			
+		}
+		return result == isNegated();
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return strings.toString(e, debug) + " matches " + regex.toString(e, debug);
+		return strings.toString(e, debug) + " "+(isNegated() ? "matches" : "doesn't match") +" " + regex.toString(e, debug);
 	}
 	
 }
