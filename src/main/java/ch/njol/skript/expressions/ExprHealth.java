@@ -69,7 +69,6 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 //			});
 //		}
 		return get(source, new Getter<Number, LivingEntity>() {
-			@SuppressWarnings("null")
 			@Override
 			public Number get(final LivingEntity entity) {
 				return HealthUtils.getHealth(entity);
@@ -98,7 +97,6 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
 //		});
 //	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {

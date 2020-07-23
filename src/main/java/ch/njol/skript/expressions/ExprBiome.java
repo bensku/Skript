@@ -64,7 +64,6 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	@Override
 	protected Biome[] get(final Event e, final Location[] source) {
 		return get(source, new Converter<Location, Biome>() {
-			@SuppressWarnings("null")
 			@Override
 			public Biome convert(final Location l) {
 				return l.getWorld().getBiome(l.getBlockX(), l.getBlockZ());

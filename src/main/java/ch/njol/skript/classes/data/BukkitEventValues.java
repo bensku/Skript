@@ -137,7 +137,7 @@ import ch.njol.skript.util.slot.Slot;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings("deprecation")
 public final class BukkitEventValues {
 	
 	public BukkitEventValues() {}
@@ -440,6 +440,15 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// ProjectileHitEvent
+		// ProjectileHitEvent#getHitBlock was added in 1.11
+		if(Skript.methodExists(ProjectileHitEvent.class, "getHitBlock"))
+			EventValues.registerEventValue(ProjectileHitEvent.class, Block.class, new Getter<Block, ProjectileHitEvent>() {
+				@Nullable
+				@Override
+				public Block get(ProjectileHitEvent e) {
+					return e.getHitBlock();
+				}
+			}, 0);
 		EventValues.registerEventValue(ProjectileHitEvent.class, Entity.class, new Getter<Entity, ProjectileHitEvent>() {
 			@Override
 			@Nullable
@@ -898,7 +907,6 @@ public final class BukkitEventValues {
 //		}, 0);
 		// PrepareItemCraftEvent
 		EventValues.registerEventValue(PrepareItemCraftEvent.class, Slot.class, new Getter<Slot, PrepareItemCraftEvent>() {
-			@SuppressWarnings("null")
 			@Override
 			@Nullable
 			public Slot get(final PrepareItemCraftEvent e) {
