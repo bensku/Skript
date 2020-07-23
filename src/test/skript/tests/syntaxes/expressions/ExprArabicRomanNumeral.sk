@@ -1,5 +1,6 @@
 test "arabic numeral":
 	assert arabic numeral of "XVI" is 16 with "XVI isn't the roman numeral of 16"
+
 test "roman numeral":
 	assert roman numeral of 16 is "XVI" with "16 isn't the arabic numeral of XVI"
 	assert roman numeral of 947 is "CMXLVII" with "CMXLVII isn't the roman numeral of 947"
