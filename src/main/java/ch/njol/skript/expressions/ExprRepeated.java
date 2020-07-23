@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Arrays;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -36,7 +35,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 @Name("Repeated")
-@Description("A string repeated a number times")
+@Description("A string repeated a number times.")
 @Examples({"on chat:",
 	"\tset {_t} to message repeated 3 times",
 	"\tsend {_t}"})
@@ -68,11 +67,11 @@ public class ExprRepeated extends SimpleExpression<String> {
 		String string = text.getSingle(e);
 		Number num = times.getSingle(e);
 		if (string == null || num == null) return null;
-		Integer number = num.intValue();
+		int number = num.intValue();
 		if (number < 0) return null;
 		else if (number == 0) return new String[]{""};
 		StringBuilder builder = new StringBuilder();
-		for(int x = 0; x < number; x++){
+		for (int i = 0; i < number; i++) {
 			builder.append(string);
 		}
 		return new String[]{builder.toString()};
