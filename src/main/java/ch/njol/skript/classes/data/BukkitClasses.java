@@ -295,7 +295,7 @@ public class BukkitClasses {
 		
 		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
 			Classes.registerClass(new ClassInfo<>(BlockData.class, "blockdata")
-				.user("blockdata?")
+				.user("block ?datas?")
 				.name("Block Data")
 				.description("Block data is the detailed information about a block, referred to in Minecraft as BlockStates, " +
 					"allowing for the manipulation of different aspects of the block, including shape, waterlogging, direction the block is facing, " +
