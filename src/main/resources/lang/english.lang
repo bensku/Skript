@@ -1779,6 +1779,7 @@ types:
 	fireworkeffect: firework effect¦s @a
 	fireworktype: firework type¦s @a
 	soundcategory: sound categor¦y¦ies @a
+	blockdata: block data¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a

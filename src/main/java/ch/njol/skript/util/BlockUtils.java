@@ -21,10 +21,12 @@ package ch.njol.skript.util;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemData;
@@ -97,6 +99,22 @@ public abstract class BlockUtils {
 //		}
 		// TODO figure out what this code means
 		return l;
+	}
+	
+	public static BlockData createBlockData(String dataString) {
+		String data = dataString.replace(";", ",");
+		// remove white space within square brackets ([ lit = false] -> [lit=false])
+		data = data.replaceAll(" (?=[^\\[]*])", "");
+		// if there are spaces before the square bracket we remove that
+		data = data.replace(" [", "[");
+		// and replace white space between namespace with underscores
+		data = data.replace(" ", "_");
+		
+		try {
+			return Bukkit.createBlockData(data.startsWith("minecraft:") ? data : "minecraft:" + data);
+		} catch (IllegalArgumentException ignore) {
+			return Material.AIR.createBlockData();
+		}
 	}
 	
 }
