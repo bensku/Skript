@@ -312,6 +312,8 @@ public class BukkitClasses {
 				.requiredPlugins("Minecraft 1.13+")
 				.since("INSERT VERSION")
 				.parser(new Parser<BlockData>() {
+					
+					@Nullable
 					@Override
 					public BlockData parse(String s, ParseContext context) {
 						return BlockUtils.createBlockData(s);
@@ -330,6 +332,41 @@ public class BukkitClasses {
 					@Override
 					public String getVariableNamePattern() {
 						return "blockdata:.+";
+					}
+				})
+				.serializer(new Serializer<BlockData>() {
+					
+					@Override
+					public Fields serialize(BlockData o) {
+						Fields f = new Fields();
+						f.putObject("blockdata", o.getAsString());
+						return f;
+					}
+					
+					@Override
+					public void deserialize(BlockData o, Fields f) {
+						assert false;
+					}
+					
+					@Override
+					protected BlockData deserialize(Fields f) throws StreamCorruptedException {
+						String data = f.getObject("blockdata", String.class);
+						assert data != null;
+						try {
+							return Bukkit.createBlockData(data);
+						} catch (IllegalArgumentException ex) {
+							throw new StreamCorruptedException("Invalid block data: " + data);
+						}
+					}
+					
+					@Override
+					public boolean mustSyncDeserialization() {
+						return true;
+					}
+					
+					@Override
+					protected boolean canBeInstantiated() {
+						return false;
 					}
 				}));
 		}
