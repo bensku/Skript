@@ -34,26 +34,25 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.ReplacementTypes;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.ReplacementTypes;
 import ch.njol.util.Kleenean;
-
 
 
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"on chat:",
-		"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
-		"\tsend {_hey}",
-		"set {_no} to case-sensitive replace first \"yes\" in \"Yes, yes\" with \"no\" #Only the second yes gets replaced with no"
+	"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
+	"\tsend {_hey}",
+	"set {_no} to case-sensitive replace first \"yes\" in \"Yes, yes\" with \"no\" #Only the second yes gets replaced with no"
 })
 @Since("INSERT VERSION")
 public class ExprReplace extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED,
-				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%",
-				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
+			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%",
+			"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
 	}
 	
 	private ReplacementTypes type = ReplacementTypes.ALL;
@@ -82,24 +81,25 @@ public class ExprReplace extends SimpleExpression<String> {
 	protected String[] get(Event event) {
 		Object[] oldtextToReplace = Arrays.stream(textToReplace.getAll(event)).map((String he) -> ((caseSensitive && !regex ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
 		String newText = replacement.getSingle(event);
-		if (!regex) newText = newText.replace("$", "\\$");
 		String newStorage = storage.getSingle(event);
-		switch (type.name()) {
-			case "ALL":
+		if (newText == null || newStorage == null || oldtextToReplace.length < 1) return null;
+		if (!regex) newText = newText.replace("$", "\\$");
+		switch (type) {
+			case ALL:
 				for (Object s : oldtextToReplace) {
 					newStorage = newStorage.replaceAll((String) s, newText);
 				}
 				break;
-			case "FIRST":
+			case FIRST:
 				for (Object s : oldtextToReplace) {
 					newStorage = newStorage.replaceFirst((String) s, newText);
 				}
 				break;
-			case "LAST":
+			case LAST:
 				for (Object s : oldtextToReplace) {
 					Matcher matcher = Pattern.compile((String) s).matcher(newStorage);
 					if (!matcher.find()) continue;
-					int lastMatchStart = 0;
+					int lastMatchStart;
 					do {
 						lastMatchStart = matcher.start();
 					} while (matcher.find());

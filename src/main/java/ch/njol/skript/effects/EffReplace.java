@@ -37,31 +37,31 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ReplacementTypes;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.ReplacementTypes;
 import ch.njol.util.Kleenean;
 
 
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"replace \"<item>\" in {textvar} with \"%item%\"",
-		"replace every \"&\" with \"§\" in line 1",
-		"# The following acts as a simple chat censor:",
-		"on chat:",
-		"\treplace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
-		"#If you'd like a more advanced chat censor you can use regex:",
-		"on chat:",
-		"\treplace all \"(i|1)d(i|1)(o|0)(t|7)\" with \"****\" in message # which will block 'idiot' but also words in which a vowel is replaced with a number",
-		"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
+	"replace every \"&\" with \"§\" in line 1",
+	"# The following acts as a simple chat censor:",
+	"on chat:",
+	"\treplace all \"kys\", \"idiot\" and \"noob\" with \"****\" in the message",
+	"#If you'd like a more advanced chat censor you can use regex:",
+	"on chat:",
+	"\treplace all \"(i|1)d(i|1)(o|0)(t|7)\" with \"****\" in message # which will block 'idiot' but also words in which a vowel is replaced with a number",
+	"replace all stone and dirt in player's inventory and player's top inventory with diamond"})
 @Since("2.0, 2.2-dev24 (replace in muliple strings and replace items in inventory), INSERT VERSION (replace first, replace last, case sensitivity and regex support)")
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
-				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
-				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% in %strings% with %string%",
-				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
-				"replace (all|every|) %itemtypes% in %inventories% with %itemtype%",
-				"replace (all|every|) %itemtypes% with %itemtype% in %inventories%"
+			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
+			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% in %strings% with %string%",
+			"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
+			"replace (all|every|) %itemtypes% in %inventories% with %itemtype%",
+			"replace (all|every|) %itemtypes% with %itemtype% in %inventories%"
 		);
 	}
 	
@@ -101,27 +101,27 @@ public class EffReplace extends Effect {
 		Object[] storage = this.storage.getAll(e);
 		Object[] objToReplace = this.objToReplace.getAll(e);
 		Object replacement = this.replacement.getSingle(e);
-		if (storage == null || objToReplace == null || replacement == null) return;
+		if (storage.length < 1 || objToReplace.length < 1 || replacement == null) return;
 		if (replaceString) {
-			Object[] oldtextToReplace = Arrays.stream((String[]) objToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote((String) he)))).toArray();
+			Object[] oldtextToReplace = Arrays.stream((String[]) objToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
 			String newText = (String) replacement;
 			if (!regex) newText = newText.replace("$", "\\$");
-			switch (type.name()) {
-				case "ALL":
+			switch (type) {
+				case ALL:
 					for (int x = 0; x < storage.length; x++) {
 						for (Object s : oldtextToReplace) {
 							storage[x] = ((String) storage[x]).replaceAll((String) s, newText);
 						}
 					}
 					break;
-				case "FIRST":
+				case FIRST:
 					for (int x = 0; x < storage.length; x++) {
 						for (Object s : oldtextToReplace) {
 							storage[x] = ((String) storage[x]).replaceFirst((String) s, newText);
 						}
 					}
 					break;
-				case "LAST":
+				case LAST:
 					for (int x = 0; x < storage.length; x++) {
 						for (Object s : oldtextToReplace) {
 							Matcher matcher = Pattern.compile((String) s).matcher((String) storage[x]);
@@ -144,7 +144,7 @@ public class EffReplace extends Effect {
 			for (Inventory inv : (Inventory[]) storage)
 				for (ItemType item : (ItemType[]) objToReplace)
 					for (Integer slot : inv.all(item.getRandom()).keySet()) {
-						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
+						inv.setItem(slot, ((ItemType) replacement).getRandom());
 					}
 		}
 	}
