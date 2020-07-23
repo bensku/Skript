@@ -277,6 +277,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			Skript.warning("It will still probably work, but if it does not, you are on your own.");
 			Skript.warning("Skript officially supports Paper and Spigot.");
 		}
+		
+		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
+		if (System.getProperty("java.vm.name").contains("32")) {
+			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when parsing scripts.");
+			Skript.warning("Please update to 64-bit Java to remove this warning.");
+		}
+		
 		// If nothing got triggered, everything is probably ok
 		return true;
 	}
