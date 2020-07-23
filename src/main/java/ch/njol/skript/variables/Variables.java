@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -86,7 +85,7 @@ public abstract class Variables {
 			@SuppressWarnings("unchecked")
 			private final void init() {
 				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo) Classes.getExactClassInfo(Object.class);
+				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
 			}
 			
 			@SuppressWarnings({"unchecked"})

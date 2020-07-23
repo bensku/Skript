@@ -79,7 +79,6 @@ public class ExprChatFormat extends SimpleExpression<String>{
 		return "chat format";
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	protected String[] get(Event e) {

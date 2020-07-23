@@ -47,10 +47,8 @@ public class CatData extends EntityData<Cat> {
 	
 	@Override
 	protected boolean init(@Nullable Class<? extends Cat> c, @Nullable Cat cat) {
-		if (cat != null)
-			race = cat.getCatType();
-		race = Cat.Type.TABBY;
-		return false;
+		race = (cat == null) ? Cat.Type.TABBY : cat.getCatType();
+		return true;
 	}
 	
 	@Override

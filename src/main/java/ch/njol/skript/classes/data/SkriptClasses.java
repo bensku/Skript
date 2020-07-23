@@ -21,7 +21,6 @@ package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
@@ -34,6 +33,7 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EnchantmentUtils;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.Arithmetic;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
@@ -52,6 +52,7 @@ import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
@@ -600,7 +601,7 @@ public class SkriptClasses {
 									assert delta != null;
 									if (delta instanceof ItemStack) {
 										final ItemStack i = slot.getItem();
-										if (i == null || i.getType() == Material.AIR || Utils.itemStacksEqual(i, (ItemStack) delta)) {
+										if (i == null || i.getType() == Material.AIR || ItemUtils.itemStacksEqual(i, (ItemStack) delta)) {
 											if (i != null && i.getType() != Material.AIR) {
 												i.setAmount(Math.min(i.getAmount() + ((ItemStack) delta).getAmount(), i.getMaxStackSize()));
 												slot.setItem(i);
@@ -617,7 +618,7 @@ public class SkriptClasses {
 									assert delta != null;
 									if (delta instanceof ItemStack) {
 										final ItemStack i = slot.getItem();
-										if (i != null && Utils.itemStacksEqual(i, (ItemStack) delta)) {
+										if (i != null && ItemUtils.itemStacksEqual(i, (ItemStack) delta)) {
 											final int a = mode == ChangeMode.REMOVE_ALL ? 0 : i.getAmount() - ((ItemStack) delta).getAmount();
 											if (a <= 0) {
 												slot.setItem(null);
@@ -657,8 +658,7 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
-						Optional<SkriptColor> color = SkriptColor.fromName(input);
-						return color.isPresent() ? color.get() : null;
+						return SkriptColor.fromName(input);
 					}
 					
 					@Override
@@ -675,7 +675,7 @@ public class SkriptClasses {
 					public String getVariableNamePattern() {
 						return "[a-z ]+";
 					}
-				}).serializer(new YggdrasilSerializer<>()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(StructureType.class, "structuretype")
 				.user("tree ?types?", "trees?")
@@ -741,7 +741,6 @@ public class SkriptClasses {
 				})
 				.serializer(new YggdrasilSerializer<EnchantmentType>() {
 //						return o.getType().getId() + ":" + o.getLevel();
-					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
 					public EnchantmentType deserialize(final String s) {
@@ -844,6 +843,16 @@ public class SkriptClasses {
 		} else {
 			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
 		}
+		
+		Classes.registerClass(new ClassInfo<>(GameruleValue.class, "gamerulevalue")
+				.user("gamerule values?")
+				.name("Gamerule Value")
+				.description("A wrapper for the value of a gamerule for a world.")
+				.usage("")
+				.examples("")
+				.since("2.5")
+				.serializer(new YggdrasilSerializer<GameruleValue>())
+		);
 	}
 	
 }

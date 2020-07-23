@@ -447,7 +447,7 @@ public class SkriptParser {
 						return null;
 					}
 				} else { // Mixed plurals/singulars
-					@SuppressWarnings("unchecked") final Variable<?> var = parseVariable(expr, types);
+					final Variable<?> var = parseVariable(expr, types);
 					if (var != null) { // Parsing succeeded, we have a variable
 						// If variables cannot be used here, it is now allowed
 						if ((flags & PARSE_EXPRESSIONS) == 0) {
@@ -574,7 +574,7 @@ public class SkriptParser {
 				final Object t = Classes.parse(expr, ci.getC(), context);
 				if (t != null) {
 					log.printLog();
-					return new SimpleLiteral<>(t, false);
+					return new SimpleLiteral<>(t, false, new UnparsedLiteral(expr));
 				}
 			}
 			log.printError();
@@ -619,10 +619,13 @@ public class SkriptParser {
 				if ((flags & PARSE_LITERALS) != 0) {
 					// Hack as items use '..., ... and ...' for enchantments. Numbers and times are parsed beforehand as they use the same (deprecated) id[:data] syntax.
 					final SkriptParser p = new SkriptParser(expr, PARSE_LITERALS, context);
-					p.suppressMissingAndOrWarnings = suppressMissingAndOrWarnings; // If we suppress warnings here, we suppress them in parser what we created too
 					if (ScriptLoader.currentScript != null) {
 						Config cs = ScriptLoader.currentScript;
 						p.suppressMissingAndOrWarnings = ScriptOptions.getInstance().suppressesWarning(cs.getFile(), "conjunction");
+					}
+					if (!p.suppressMissingAndOrWarnings) {
+						p.suppressMissingAndOrWarnings = suppressMissingAndOrWarnings;
+						// If we suppress warnings here, we suppress them in parser what we created too
 					}
 					for (final Class<?> c : new Class[] {Number.class, Time.class, ItemType.class, ItemStack.class}) {
 						final Expression<?> e = p.parseExpression(c);
@@ -776,8 +779,9 @@ public class SkriptParser {
 			if (and.isUnknown() && !suppressMissingAndOrWarnings) {
 				if (ScriptLoader.currentScript != null) {
 					Config cs = ScriptLoader.currentScript;
-					if (!ScriptOptions.getInstance().suppressesWarning(cs.getFile(), "conjunction"))
+					if (!ScriptOptions.getInstance().suppressesWarning(cs.getFile(), "conjunction")) {
 						Skript.warning(MISSING_AND_OR + ": " + expr);
+					}
 				} else {
 					Skript.warning(MISSING_AND_OR + ": " + expr);
 				}
@@ -1181,7 +1185,8 @@ public class SkriptParser {
 //			}
 //			@SuppressWarnings("null")
 			
-			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
+			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(),
+					ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFileName() : null, types, params);//.toArray(new Expression[params.size()]));
 			if (!e.validateFunction(true)) {
 				log.printError();
 				return null;

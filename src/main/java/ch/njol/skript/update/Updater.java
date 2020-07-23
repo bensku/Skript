@@ -21,11 +21,9 @@ package ch.njol.skript.update;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.bukkit.Bukkit;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.util.Task;
 
 /**

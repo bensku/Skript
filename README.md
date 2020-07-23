@@ -1,5 +1,5 @@
 # Skript [![Build Status](https://travis-ci.org/SkriptLang/Skript.svg?branch=master)](https://travis-ci.org/SkriptLang/Skript)
-Skript is a plugin for Bukkit/Spigot, which allows server owners and other people
+Skript is a plugin for Paper/Spigot, which allows server owners and other people
 to modify their servers without learning Java. It can also be useful if you
 *do* know Java; some tasks are quicker to do with Skript, and so it can be used
 for prototyping etc.
@@ -12,7 +12,7 @@ Skript requires **Spigot** to work. You heard it right, Bukkit does *not* work.
 **Paper**, which is a fork of Spigot, is recommended; it is required for some
 parts of Skript to be available.
 
-Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12 and 1.13.
+Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12, 1.13, 1.14 and 1.15.
 For example, this means that 1.12.2 is supported, but 1.12.1 is *not*.
 Testing with all old patch versions is not feasible for us.
 
@@ -58,6 +58,21 @@ embedded in Skript jar, you must re-package it after compiling once. For example
 
 Note that modules are not necessary for Skript to work. Currently, they are
 only used to provide compatibility with old WorldGuard versions.
+
+### Testing
+Skript has some tests written in Skript. Running them requires a Minecraft
+server, but our build script can fetch it for you. Running tests is easy:
+
+```
+./gradlew (quickTest|skriptTest|skriptTestFull)
+```
+
+<code>quickTest</code> runs the test suite on newest supported server.
+<code>skriptTest</code> additionally runs the tests on oldest supported
+server, and on 1.12 (pre-flattening). <code>skriptTestFull</code> runs
+tests on **ALL** supported versions, some of which do not work on Java 9+.
+
+By running tests, you agree to Mojang's End User License Agreement.
 
 ### Importing to Eclipse
 With new Eclipse versions, there is integrated Gradle support, and it actually works now.

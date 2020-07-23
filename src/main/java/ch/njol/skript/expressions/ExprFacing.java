@@ -68,7 +68,7 @@ public class ExprFacing extends SimplePropertyExpression<Object, Direction> {
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 	
-	@SuppressWarnings({"deprecation", "null"})
+	@SuppressWarnings("deprecation")
 	@Override
 	@Nullable
 	public Direction convert(final Object o) {

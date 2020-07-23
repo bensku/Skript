@@ -43,3 +43,6 @@ out/
 
 # [Maybe ECJ:] compiled stuff lands here
 **/bin/
+
+# Skript testing
+test_runners

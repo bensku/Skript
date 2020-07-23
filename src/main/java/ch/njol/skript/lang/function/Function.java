@@ -61,6 +61,11 @@ public abstract class Function<T> {
 		return sign.getParameters();
 	}
 	
+	@SuppressWarnings("null")
+	public Parameter<?> getParameter(int index) {
+		return getParameters()[index];
+	}
+	
 	public boolean isSingle() {
 		return sign.isSingle();
 	}
@@ -82,6 +87,9 @@ public abstract class Function<T> {
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(final Object[][] params) {
+		if (params.length > 0 && params[0].length == 0) // Parameters exist, but parameters are not of the correct type 
+			return null;
+		
 		final FunctionEvent<? extends T> e = new FunctionEvent<>(this);
 		
 		// Call function event only if requested by addon
@@ -107,7 +115,7 @@ public abstract class Function<T> {
 		// Execute parameters or default value expressions
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter<?> p = parameters[i];
-			Object[] val = params[i];
+			Object[] val = ps[i];
 			if (val == null) { // Go for default value
 				assert p.def != null; // Should've been parse error
 				val = p.def.getArray(e);

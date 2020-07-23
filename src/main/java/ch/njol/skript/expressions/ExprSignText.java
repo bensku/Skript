@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;

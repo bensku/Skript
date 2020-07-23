@@ -59,6 +59,15 @@ public abstract class SkriptEvent implements SyntaxElement, Debuggable {
 	 */
 	public abstract boolean check(Event e);
 	
+	/**
+	 * Script loader checks this before loading items in event. If false is
+	 * returned, they are not parsed and the event is not registered.
+	 * @return If this event should be loaded.
+	 */
+	public boolean shouldLoadEvent() {
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		return toString(null, false);

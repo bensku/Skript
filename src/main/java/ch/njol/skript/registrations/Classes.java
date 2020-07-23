@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import ch.njol.skript.localization.Language;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -52,6 +51,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.StringMode;
@@ -75,10 +75,10 @@ public abstract class Classes {
 	
 	@Nullable
 	private static ClassInfo<?>[] classInfos = null;
-	private final static List<ClassInfo<?>> tempClassInfos = new ArrayList<ClassInfo<?>>();
-	private final static HashMap<Class<?>, ClassInfo<?>> exactClassInfos = new HashMap<Class<?>, ClassInfo<?>>();
-	private final static HashMap<Class<?>, ClassInfo<?>> superClassInfos = new HashMap<Class<?>, ClassInfo<?>>();
-	private final static HashMap<String, ClassInfo<?>> classInfosByCodeName = new HashMap<String, ClassInfo<?>>();
+	private final static List<ClassInfo<?>> tempClassInfos = new ArrayList<>();
+	private final static HashMap<Class<?>, ClassInfo<?>> exactClassInfos = new HashMap<>();
+	private final static HashMap<Class<?>, ClassInfo<?>> superClassInfos = new HashMap<>();
+	private final static HashMap<String, ClassInfo<?>> classInfosByCodeName = new HashMap<>();
 	
 	/**
 	 * @param info info about the class to register
@@ -162,7 +162,7 @@ public abstract class Classes {
 		
 		// remove unresolvable dependencies (and print a warning if testing)
 		for (final ClassInfo<?> ci : tempClassInfos) {
-			final Set<String> s = new HashSet<String>();
+			final Set<String> s = new HashSet<>();
 			final Set<String> before = ci.before();
 			if (before != null) {
 				for (final String b : before) {
@@ -182,7 +182,7 @@ public abstract class Classes {
 				Skript.warning(s.size() + " dependency/ies could not be resolved for " + ci + ": " + StringUtils.join(s, ", "));
 		}
 		
-		final List<ClassInfo<?>> classInfos = new ArrayList<ClassInfo<?>>(tempClassInfos.size());
+		final List<ClassInfo<?>> classInfos = new ArrayList<>(tempClassInfos.size());
 		
 		boolean changed = true;
 		while (changed) {
@@ -681,7 +681,6 @@ public abstract class Classes {
 		// temporary
 		assert Bukkit.isPrimaryThread();
 		
-		@SuppressWarnings("null")
 		ClassInfo<?> ci = getSuperClassInfo(o.getClass());
 		if (ci.getSerializeAs() != null) {
 			ci = getExactClassInfo(ci.getSerializeAs());

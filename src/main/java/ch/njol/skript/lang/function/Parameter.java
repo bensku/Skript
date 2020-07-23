@@ -98,7 +98,10 @@ public final class Parameter<T> {
 			
 			// Parse the default value literal
 			try {
-				if (type.getC() == String.class) {
+				if (def.startsWith("\"") && def.endsWith("\"")) { // Quoted string; always parse as string
+					// Don't ever parse strings as objects, it creates UnparsedLiterals (see #2353)
+					d = (Expression<? extends T>) VariableString.newInstance("" + def.substring(1, def.length() - 1));
+				} else if (type.getC().equals(String.class)) { // String return type requested
 					/*
 					 * For historical reasons, default values of string
 					 * parameters needs not to be quoted. This is true even for

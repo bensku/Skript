@@ -24,8 +24,6 @@ import java.lang.reflect.Method;
 import org.bukkit.entity.Entity;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.expressions.ExprPassenger;
-import ch.njol.skript.lang.ExpressionType;
 
 /**
  * @author Peter Güttinger and contributors

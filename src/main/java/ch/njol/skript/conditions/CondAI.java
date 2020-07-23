@@ -17,13 +17,34 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.lang.function;
+package ch.njol.skript.conditions;
 
-/**
- * Function reference, which is impossible to validate has
- * unknown return types. Can not be instantiated.
- */
-public class Unknown {
+import org.bukkit.entity.LivingEntity;
+
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+
+@Name("Has AI")
+@Description("Checks whether an entity has AI.")
+@Examples("target entity has ai")
+@Since("2.5")
+public class CondAI extends PropertyCondition<LivingEntity> {
 	
-	private Unknown() {}
+	static {
+		register(CondAI.class, PropertyType.HAVE, "(ai|artificial intelligence)", "livingentities");
+	}
+	
+	@Override
+	public boolean check(LivingEntity entity) {
+		return entity.hasAI();
+	}
+	
+	@Override
+	protected String getPropertyName() {
+		return "artificial intelligence";
+	}
+	
 }

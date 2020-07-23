@@ -26,45 +26,36 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.BlockValues;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-@SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static {
@@ -82,7 +73,6 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		public short dataMax = -1;
 	}
 
-	@SuppressWarnings("null")
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
 	static final MaterialRegistry materialRegistry;
@@ -169,13 +159,13 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		
 		this.stack = new ItemStack(type);
 		this.blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
-		if (tags != null)
-			BukkitUnsafe.modifyItemStack(stack, tags);
+		if (tags != null) {
+			applyTags(tags);
+		}
 	}
 	
 	public ItemData(Material type, int amount) {
 		this.type = type;
-		
 		this.stack = new ItemStack(type, Math.abs(amount));
 		this.blockValues = BlockCompat.INSTANCE.getBlockValues(stack);
 	}
@@ -184,7 +174,6 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		this(type, 1);
 	}
 	
-	@SuppressWarnings("null") // clone() always returns stuff
 	public ItemData(ItemData data) {
 		this.stack = data.stack.clone();
 		this.type = data.type;
@@ -197,6 +186,18 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		this.stack = stack;
 		this.type = stack.getType();
 		this.blockValues = values;
+		
+		// Set ItemFlags as accurately as possible based on given stack
+		if (type.getMaxDurability() != 0) {
+			// We're not checking current damage; when it is 0, it might still be explicitly set
+			// Play safe and mark ALL items that may have durability to have it changed
+			itemFlags |= ItemFlags.CHANGED_DURABILITY;
+		}
+		// All data made from stacks may have changed tags
+		// We cannot assume that lack of tags indicates that they can be
+		// ignored in comparisons; they may well have been explicitly removed
+		// See issue #2714 for examples of bad things that this causes
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 	public ItemData(ItemStack stack) {
@@ -295,9 +296,24 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	}
 	
 	/**
-	 * Checks how well this item is matching with given item.
+	 * Checks how well this item matches the given item.
 	 * @param item Other item, preferably an alias.
-	 * @return Match quality.
+	 * @return Match quality, according to following criteria:
+	 * <table>
+	 * <tr><td>{@link MatchQuality#EXACT}
+	 * 	<td>This and the given item have exactly same
+	 * 	{@link Material}, {@link ItemMeta} and {@link BlockValues}.
+	 * <tr><td>{@link MatchQuality#SAME_ITEM}
+	 * 	<td>This and the given item share a {@link Material}. {@link ItemMeta}
+	 * 	of this item contains all values that {@link ItemMeta} of given has.
+	 *  In addition to that, it may contain other values. {@link BlockValues}
+	 *  are handled similarly.
+	 * <tr><td>{@link MatchQuality#SAME_MATERIAL}
+	 * 	<td>This and the given item share a material.
+	 * <tr><td>{@link MatchQuality#DIFFERENT}
+	 * 	<td>This and the given item do not meet any of above criteria.
+	 *  They are completely different.
+	 * </table>
 	 */
 	public MatchQuality matchAlias(ItemData item) {
 		if (isAnything || item.isAnything) {
@@ -335,18 +351,89 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		}
 		
 		// See if we need to compare durability; for blocks, BlockValues handles this when needed
-		if (itemForm && (item.itemFlags & ItemFlags.CHANGED_DURABILITY) != 0) {
-			// We need, so do it
-			if (ItemUtils.getDamage(stack) != ItemUtils.getDamage(item.stack)) {
+		// From API perspective, durability is part of ItemMeta; however, we need to support 1.12 and older
+		if (itemForm && ItemUtils.getDamage(stack) != ItemUtils.getDamage(item.stack)) {
+			if (item.hasFlag(ItemFlags.CHANGED_DURABILITY)) { // Given item requests we match its durability
 				quality = MatchQuality.SAME_MATERIAL;
+			} else { // Given item doesn't care about durability, so are still same enough
+				quality = MatchQuality.SAME_ITEM;
 			}
 		}
 		
 		// See if we need to compare item metas (excluding durability)
-		if ((item.itemFlags & ItemFlags.CHANGED_TAGS) != 0) {
-			if (!itemFactory.equals(getItemMeta(), item.getItemMeta())) {
-				quality = MatchQuality.SAME_MATERIAL;
+		if (quality.isAtLeast(MatchQuality.SAME_ITEM)) { // Item meta checks could lower this
+			MatchQuality metaQuality = compareItemMetas(getItemMeta(), item.getItemMeta());
+			
+			// If given item doesn't care about meta, promote to SAME_ITEM
+			// I.e. we checked meta only to eliminate EXACT match
+			if (metaQuality == MatchQuality.SAME_MATERIAL && !item.hasFlag(ItemFlags.CHANGED_TAGS)) {
+				quality = MatchQuality.SAME_ITEM;
+			} else if (quality.isBetter(metaQuality)) { // Otherwise just allow meta to lower quality
+				quality = metaQuality;
 			}
+		}
+		
+		return quality;
+	}
+	
+	/**
+	 * Checks if this item has given flag.
+	 * @param flag Flag found in {@link ItemFlags}.
+	 * @return If this item has the flag.
+	 */
+	private boolean hasFlag(int flag) {
+		return (itemFlags & flag) != 0;
+	}
+	
+	/**
+	 * Compares {@link ItemMeta}s for {@link #matchAlias(ItemData)}.
+	 * Note that this does NOT compare everything; only the most
+	 * important bits.
+	 * @param first Meta of this item.
+	 * @param second Meta of given item.
+	 * @return Match quality of metas.
+	 * Lowest is {@link MatchQuality#SAME_MATERIAL}.
+	 */
+	private static MatchQuality compareItemMetas(ItemMeta first, ItemMeta second) {
+		MatchQuality quality = MatchQuality.EXACT; // Lowered as we go on
+		
+		// Display name
+		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
+		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
+		if (!Objects.equals(ourName, theirName)) {
+			quality = ourName != null ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Lore
+		List<String> ourLore = first.hasLore() ? first.getLore() : null;
+		List<String> theirLore = second.hasLore() ? second.getLore() : null;
+		if (!Objects.equals(ourLore, theirLore)) {
+			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Enchantments
+		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
+		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
+		if (!Objects.equals(ourEnchants, theirEnchants)) {
+			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Item flags
+		Set<ItemFlag> ourFlags = first.getItemFlags();
+		Set<ItemFlag> theirFlags = second.getItemFlags();
+		if (!Objects.equals(ourFlags, theirFlags)) {
+			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Potion data
+		if (second instanceof PotionMeta) {
+			if (!(first instanceof PotionMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a potion, first is clearly not
+			}
+			// Compare potion type, including extended and level 2 attributes
+			PotionData ourPotion = ((PotionMeta) first).getBasePotionData();
+			PotionData theirPotion = ((PotionMeta) second).getBasePotionData();
+			return !Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		return quality;
@@ -502,6 +589,15 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			our.addItemFlags(flag);
 		}
 		setItemMeta(meta);
+	}
+	
+	/**
+	 * Applies tags to this item.
+	 * @param tags Tags in Mojang's JSON format.
+	 */
+	public void applyTags(String tags) {
+		BukkitUnsafe.modifyItemStack(stack, tags);
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 }

@@ -22,13 +22,11 @@ package ch.njol.skript.bukkitutil.block;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -75,7 +73,6 @@ public class MagicBlockCompat implements BlockCompat {
 		short data;
 		private int itemFlags;
 
-		@SuppressWarnings("null")
 		public MagicBlockValues(BlockState block) {
 			this.id = ItemUtils.asItem(block.getType());
 			this.data = block.getRawData(); // Some black magic here, please look away...
@@ -195,7 +192,6 @@ public class MagicBlockCompat implements BlockCompat {
 		return type == Material.WATER || type == Material.LAVA;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	public BlockValues getBlockValues(ItemStack stack) {

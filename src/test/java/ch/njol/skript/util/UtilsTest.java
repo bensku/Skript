@@ -19,7 +19,7 @@
  */
 package ch.njol.skript.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

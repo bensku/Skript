@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -54,7 +55,7 @@ public class EffSendBlockChange extends Effect {
 
 	static {
 		Skript.registerEffect(EffSendBlockChange.class,
-				"make %players% see %blocks% as %itemstack%"
+				"make %players% see %blocks% as %itemtype%"
 		);
 	}
 
@@ -65,19 +66,22 @@ public class EffSendBlockChange extends Effect {
 	private Expression<Block> blocks;
 
 	@SuppressWarnings("null")
-	private Expression<ItemStack> as;
+	private Expression<ItemType> as;
 
 	@Override
 	protected void execute(Event e) {
-		ItemStack as = this.as.getSingle(e);
+		ItemType as = this.as.getSingle(e);
 		if (as == null)
 			return;
 		for (Player player : players.getArray(e)) {
 			for (Block block : blocks.getArray(e)) {
+				Material m = as.getMaterial();
+				ItemStack stack = as.getRandom();
+				assert stack != null;
 				if (Skript.isRunningMinecraft(1, 13))
-					player.sendBlockChange(block.getLocation(), as.getType().createBlockData());
+					player.sendBlockChange(block.getLocation(), m.createBlockData());
 				else
-					player.sendBlockChange(block.getLocation(), as.getType(), (byte) as.getDurability());
+					player.sendBlockChange(block.getLocation(), m, (byte) stack.getDurability());
 			}
 		}
 	}
@@ -104,7 +108,7 @@ public class EffSendBlockChange extends Effect {
 		}
 		players = (Expression<Player>) exprs[0];
 		blocks = (Expression<Block>) exprs[1];
-		as = (Expression<ItemStack>) exprs[2];
+		as = (Expression<ItemType>) exprs[2];
 		return true;
 	}
 }

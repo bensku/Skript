@@ -39,18 +39,18 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 @Name("Affected Entities")
-@Description("The affected entities in the <a href='events.html#aoe_cloud_effect>area cloud effect</a> event.")
+@Description("The affected entities in the <a href='events.html#aoe_cloud_effect'>area cloud effect</a> event.")
 @Examples({"on area cloud effect:",
-		"	loop affected entities:",
-		"		if loop-value is a player:",
-		"			send \"WARNING: you've step on a area cloud!\""})
+		"\tloop affected entities:",
+		"\t\tif loop-value is a player:",
+		"\t\t\tsend \"WARNING: you've step on an area effect cloud!\" to loop-value"})
 @Since("2.4")
 public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
-	
+
 	static {
 		Skript.registerExpression(ExprAffectedEntities.class, LivingEntity.class, ExpressionType.SIMPLE, "[the] affected entities");
 	}
-	
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(AreaEffectCloudApplyEvent.class)) {
@@ -59,7 +59,7 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 		}
 		return true;
 	}
-	
+
 	@Nullable
 	@Override
 	protected LivingEntity[] get(Event e) {
@@ -67,7 +67,7 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 			return ((AreaEffectCloudApplyEvent) e).getAffectedEntities().toArray(new LivingEntity[0]);
 		return null;
 	}
-	
+
 	@Nullable
 	@Override
 	public Iterator<? extends LivingEntity> iterator(Event e) {
@@ -75,24 +75,25 @@ public class ExprAffectedEntities extends SimpleExpression<LivingEntity> {
 			return ((AreaEffectCloudApplyEvent) e).getAffectedEntities().iterator();
 		return super.iterator(e);
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isDefault() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends LivingEntity> getReturnType() {
 		return LivingEntity.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the affected entities";
 	}
+
 }
