@@ -103,6 +103,8 @@ public abstract class BlockUtils {
 	
 	@Nullable
 	public static BlockData createBlockData(String dataString) {
+		// Skript uses a comma to separate lists, so we use a semi colon as a delimiter
+		// Here we are just replacing it back to a comma to create a new block data
 		String data = dataString.replace(";", ",");
 		// remove white space within square brackets ([ lit = false] -> [lit=false])
 		data = data.replaceAll(" (?=[^\\[]*])", "");
