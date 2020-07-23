@@ -140,22 +140,6 @@ public class ExprMessage extends SimpleExpression<String> {
 				if (e instanceof PlayerDeathEvent)
 					((PlayerDeathEvent) e).setDeathMessage(message);
 			}
-		},
-		UNKNOWNCOMMAND("unknown command", "[unknown (cmd|command) ]message", UnknownCommandEvent.class){
-			@Override
-			@Nullable
-			String get(final Event e){
-				if(!Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) return null;
-				if(e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
-				return null;
-			}
-			
-			@Override
-			void set(Event e, String message) {
-				if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
-				if(e instanceof  UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
-			}
-			
 		};
 		
 		final String name;
