@@ -101,6 +101,7 @@ public abstract class BlockUtils {
 		return l;
 	}
 	
+	@Nullable
 	public static BlockData createBlockData(String dataString) {
 		String data = dataString.replace(";", ",");
 		// remove white space within square brackets ([ lit = false] -> [lit=false])
@@ -113,7 +114,7 @@ public abstract class BlockUtils {
 		try {
 			return Bukkit.createBlockData(data.startsWith("minecraft:") ? data : "minecraft:" + data);
 		} catch (IllegalArgumentException ignore) {
-			return Material.AIR.createBlockData();
+			return null;
 		}
 	}
 	
