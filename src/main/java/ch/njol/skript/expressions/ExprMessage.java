@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -69,11 +68,9 @@ import ch.njol.util.coll.CollectionUtils;
 		"",
 		"on death:",
 		"	set the death message to \"%player% died!\"",
-		"",
-		"on unknown command: #Requires Paper",
-			"set the unknown command message to \"Unknown command! If you need help type /help.\""})
-@Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (unknown command message)")
-@Events({"chat", "join", "quit", "death", "unknown command"})
+		"" })
+@Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message)")
+@Events({"chat", "join", "quit", "death"})
 public class ExprMessage extends SimpleExpression<String> {
 	
 	@SuppressWarnings("unchecked")
