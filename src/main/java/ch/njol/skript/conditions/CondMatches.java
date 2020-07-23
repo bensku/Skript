@@ -22,7 +22,6 @@ package ch.njol.skript.conditions;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -73,14 +72,14 @@ public class CondMatches extends Condition {
 		boolean regexAnd = regex.getAnd();
 		if (stringAnd) {
 			if (regexAnd) {
-				result = Arrays.stream(txt).parallel().allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
 			} else {
-				result = Arrays.stream(txt).parallel().allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
 			}
 		} else if (regexAnd) {
-			result = Arrays.stream(txt).parallel().anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
 		} else {
-			result = Arrays.stream(txt).parallel().anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
 			
 		}
 		return result == isNegated();
@@ -88,7 +87,7 @@ public class CondMatches extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return strings.toString(e, debug) + " "+(isNegated() ? "matches" : "doesn't match") +" " + regex.toString(e, debug);
+		return strings.toString(e, debug) + " " + (isNegated() ? "matches" : "doesn't match") + " " + regex.toString(e, debug);
 	}
 	
 }
