@@ -227,6 +227,10 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public static boolean using64BitJava() {
+		return System.getProperty("java.vm.name").contains("64");
+	}
+	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -279,7 +283,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 		
 		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
-		if (System.getProperty("java.vm.name").contains("32")) {
+		if (!using64BitJava()) {
 			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when parsing scripts.");
 			Skript.warning("Please update to 64-bit Java to remove this warning.");
 		}
@@ -586,7 +590,19 @@ public final class Skript extends JavaPlugin implements Listener {
 				if (logNormal())
 					info("Loaded " + Variables.numVariables() + " variables in " + ((vld / 100) / 10.) + " seconds");
 				
-				ScriptLoader.loadScripts();
+				try {
+					ScriptLoader.loadScripts();
+				} catch (StackOverflowError e) {
+					if (using64BitJava()) {
+						throw e; // Uh oh, this shouldn't happen. Re-throw the error.
+					} else {
+						Skript.error("");
+						Skript.error("There was a StackOverflowError that occured while loading scripts.");
+						Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
+						Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
+						Skript.error("");
+					}
+				}
 				
 				Skript.info(m_finished_loading.toString());
 				
