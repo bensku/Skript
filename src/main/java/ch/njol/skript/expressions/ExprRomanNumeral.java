@@ -35,6 +35,10 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("INSERT VERSION")
 public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
 	
+	static {
+		register(ExprRomanNumeral.class, String.class, "roman num(ber|eral)", "number");
+	}
+	
 	private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>() {{
 		put(1000, "M");
 		put(900, "CM");
@@ -50,10 +54,6 @@ public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
 		put(4, "IV");
 		put(1, "I");
 	}};
-	
-	static {
-		register(ExprRomanNumeral.class, String.class, "roman num(ber|eral)", "number");
-	}
 	
 	public static String toRoman(int number) {
 		int l = map.floorKey(number);
