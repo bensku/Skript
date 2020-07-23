@@ -1,0 +1,8 @@
+test "arabic numeral":
+	assert arabic numeral of "XVI" is 16 with "XVI isn't the roman numeral of 16"
+test "roman numeral":
+	assert roman numeral of 16 is "XVI" with "16 isn't the arabic numeral of XVI"
+	assert roman numeral of 947 is "CMXLVII" with "CMXLVII isn't the roman numeral of 947"
+	loop 100 times:
+		set {_n} to random integer from 1 to 3333
+	assert (arabic numeral of (roman numeral of {_n})) is {_n} with "%{_n}% didn't correctly convert to roman and then numeral (Roman: %roman numeral of {_n}%) %{_n}%"
