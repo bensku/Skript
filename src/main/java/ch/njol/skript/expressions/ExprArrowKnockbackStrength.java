@@ -67,7 +67,6 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 		int strength = delta != null ? Math.max(((Number) delta[0]).intValue(), 0) : 1;
 		for (Projectile entity : getExpr().getAll(e)) {
 			if (abstractArrowExists) {
-				System.out.println(entity.getType().name());
 				if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setKnockbackStrength(strength);
 			} else if (entity instanceof Arrow)
 				((Arrow) entity).setKnockbackStrength(strength);
