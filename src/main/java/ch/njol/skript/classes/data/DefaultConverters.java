@@ -27,6 +27,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -37,6 +38,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.entity.EntityData;
@@ -238,14 +240,12 @@ public class DefaultConverters {
 //			}
 //		});
 		
-		// Slot - ItemStack
-		Converters.registerConverter(Slot.class, ItemStack.class, new Converter<Slot, ItemStack>() {
+		// Slot - ItemType
+		Converters.registerConverter(Slot.class, ItemType.class, new Converter<Slot, ItemType>() {
 			@Override
-			public ItemStack convert(final Slot s) {
+			public ItemType convert(final Slot s) {
 				final ItemStack i = s.getItem();
-				if (i == null)
-					return new ItemStack(Material.AIR, 1);
-				return i;
+				return new ItemType(i != null ? i : new ItemStack(Material.AIR, 1));
 			}
 		});
 //		// Slot - Inventory
@@ -341,6 +341,18 @@ public class DefaultConverters {
 			public Direction convert(Vector vector) {
 				return new Direction(vector);
 			}
-});
+		});
+		
+		// EnchantmentOffer Converters
+		if (Skript.isRunningMinecraft(1, 11)) {
+			// EnchantmentOffer - EnchantmentType
+			Converters.registerConverter(EnchantmentOffer.class, EnchantmentType.class, new Converter<EnchantmentOffer, EnchantmentType>() {
+				@Nullable
+				@Override
+				public EnchantmentType convert(EnchantmentOffer eo) {
+					return new EnchantmentType(eo.getEnchantment(), eo.getEnchantmentLevel());
+				}
+			});
+		}
 	}
 }

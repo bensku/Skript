@@ -29,14 +29,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -108,7 +106,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		IRON_GOLEM_SHEATH("IRON_GOLEM_SHEATH", true),
 		TOTEM_RESURRECT("TOTEM_RESURRECT", true),
 		HURT_DROWN("HURT_DROWN", true),
-		HURT_EXPLOSIION("HURT_EXPLOSION", true),
+		HURT_EXPLOSION("HURT_EXPLOSION", true),
 		
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
@@ -251,7 +249,19 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		DRIPPING_HONEY("DRIPPING_HONEY"),
 		FALLING_HONEY("FALLING_HONEY"),
 		LANDING_HONEY("LANDING_HONEY"),
-		FALLING_NECTAR("FALLING_NECTAR");
+		FALLING_NECTAR("FALLING_NECTAR"),
+		
+		// 1.16 particles
+		ASH("ASH"),
+		CRIMSON_SPORE("CRIMSON_SPORE"),
+		SOUL_FIRE_FLAME("SOUL_FIRE_FLAME"),
+		WARPED_SPORE("WARPED_SPORE"),
+		DRIPPING_OBSIDIAN_TEAR("DRIPPING_OBSIDIAN_TEAR"),
+		FALLING_OBSIDIAN_TEAR("FALLING_OBSIDIAN_TEAR"),
+		LANDING_OBSIDIAN_TEAR("LANDING_OBSIDIAN_TEAR"),
+		SOUL("SOUL"),
+		REVERSE_PORTAL("REVERSE_PORTAL"),
+		WHITE_ASH("WHITE_ASH");
 		
 		
 		@Nullable

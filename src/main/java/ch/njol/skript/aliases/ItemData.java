@@ -26,49 +26,36 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.BlockValues;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-@SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static {
@@ -86,7 +73,6 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		public short dataMax = -1;
 	}
 
-	@SuppressWarnings("null")
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
 	static final MaterialRegistry materialRegistry;
@@ -207,9 +193,11 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			// Play safe and mark ALL items that may have durability to have it changed
 			itemFlags |= ItemFlags.CHANGED_DURABILITY;
 		}
-		if (stack.hasItemMeta()) {
-			itemFlags |= ItemFlags.CHANGED_TAGS;
-		}
+		// All data made from stacks may have changed tags
+		// We cannot assume that lack of tags indicates that they can be
+		// ignored in comparisons; they may well have been explicitly removed
+		// See issue #2714 for examples of bad things that this causes
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 	public ItemData(ItemStack stack) {
@@ -413,28 +401,28 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
 		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
 		if (!Objects.equals(ourName, theirName)) {
-			quality = theirName != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourName != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Lore
 		List<String> ourLore = first.hasLore() ? first.getLore() : null;
 		List<String> theirLore = second.hasLore() ? second.getLore() : null;
 		if (!Objects.equals(ourLore, theirLore)) {
-			quality = theirLore != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Enchantments
 		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
 		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
 		if (!Objects.equals(ourEnchants, theirEnchants)) {
-			quality = !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Item flags
 		Set<ItemFlag> ourFlags = first.getItemFlags();
 		Set<ItemFlag> theirFlags = second.getItemFlags();
 		if (!Objects.equals(ourFlags, theirFlags)) {
-			quality = !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Potion data

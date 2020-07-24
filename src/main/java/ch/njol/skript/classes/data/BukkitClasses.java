@@ -20,28 +20,33 @@
 package ch.njol.skript.classes.data;
 
 import java.io.StreamCorruptedException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -60,6 +65,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
@@ -1389,7 +1395,7 @@ public class BukkitClasses {
 				.user("teleport ?(cause|reason|type)s?")
 				.name("Teleport Cause")
 				.description("The teleport cause in a <a href='events.html#teleport'>teleport</a> event.")
-				.examples(teleportCauses.getAllNames())
+				.usage(teleportCauses.getAllNames())
 				.since("2.2-dev35")
 				.parser(new Parser<TeleportCause>() {
 					@Override
@@ -1421,7 +1427,7 @@ public class BukkitClasses {
 				.user("spawn(ing)? ?reasons?")
 				.name("Spawn Reason")
 				.description("The spawn reason in a <a href='events.html#spawn'>spawn</a> event.")
-				.examples(spawnReasons.getAllNames())
+				.usage(spawnReasons.getAllNames())
 				.since("2.3")
 				.parser(new Parser<SpawnReason>() {
 					@Override
@@ -1490,7 +1496,7 @@ public class BukkitClasses {
 				.name("Firework Type")
 				.description("The type of a <a href='#fireworkeffect'>fireworkeffect</a>.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.Type.class))
-				.examples(fireworktypes.getAllNames())
+				.usage(fireworktypes.getAllNames())
 				.since("2.4")
 				.documentationId("FireworkType")
 				.parser(new Parser<FireworkEffect.Type>() {
@@ -1557,7 +1563,7 @@ public class BukkitClasses {
 				.user("difficult(y|ies)")
 				.name("Difficulty")
 				.description("The difficulty of a <a href='#world'>world</a>.")
-				.examples(difficulties.getAllNames())
+				.usage(difficulties.getAllNames())
 				.since("2.3")
 				.parser(new Parser<Difficulty>() {
 					@Override
@@ -1589,7 +1595,7 @@ public class BukkitClasses {
 				.user("resource ?pack ?states?")
 				.name("Resource Pack State")
 				.description("The state in a <a href='events.html#resource_pack_request_action'>resource pack request response</a> event.")
-				.examples(resourcePackStates.getAllNames())
+				.usage(resourcePackStates.getAllNames())
 				.since("2.4")
 				.parser(new Parser<Status>() {
 					@Override
@@ -1623,7 +1629,7 @@ public class BukkitClasses {
 					.name("Sound Category")
 					.description("The category of a sound, they are used for sound options of Minecraft. " +
 							"See the <a href='effects.html#EffPlaySound'>play sound</a> and <a href='effects.html#EffStopSound'>stop sound</a> effects.")
-					.examples(soundCategories.getAllNames())
+					.usage(soundCategories.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.11 or newer")
 					.parser(new Parser<SoundCategory>() {
@@ -1658,7 +1664,7 @@ public class BukkitClasses {
 					.name("Gene")
 					.description("Represents a Panda's main or hidden gene. " +
 							"See <a href='https://minecraft.gamepedia.com/Panda#Genetics'>genetics</a> for more info.")
-					.examples(genes.getAllNames())
+					.usage(genes.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.14 or newer")
 					.parser(new Parser<Gene>() {
@@ -1691,7 +1697,7 @@ public class BukkitClasses {
 					.user("cat ?(type|race)s?")
 					.name("Cat Type")
 					.description("Represents the race/type of a cat entity.")
-					.examples(races.getAllNames())
+					.usage(races.getAllNames())
 					.since("2.4")
 					.requiredPlugins("Minecraft 1.14 or newer")
 					.documentationId("CatType")
@@ -1719,6 +1725,120 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
-	}
 
+		if (Skript.classExists("org.bukkit.GameRule")) {
+			Classes.registerClass(new ClassInfo<>(GameRule.class, "gamerule")
+				.user("gamerules?")
+				.name("Gamerule")
+				.description("A gamerule")
+				.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining(", ")))
+				.since("2.5")
+				.requiredPlugins("Minecraft 1.13 or newer")
+				.parser(new Parser<GameRule>() {
+					@Override
+					@Nullable
+					public GameRule parse(final String input, final ParseContext context) {
+						return GameRule.getByName(input);
+					}
+					
+					@Override
+					public String toString(GameRule o, int flags) {
+						return o.getName();
+					}
+					
+					@Override
+					public String toVariableNameString(GameRule o) {
+						return o.getName();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+			);
+		}
+
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
+			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
+					.user("persistent data ?holders?")
+					.name("Persistent Data Holder")
+					.description(
+							"Represents something that can have persistent data. " 
+							+ "The following can all hold persistent data: "
+							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
+							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
+							+ "daylight detectors, dispensers, droppers, enchanting tables, ender chests, end gateways, furnaces, "
+							+ "hoppers, jigsaw blocks, jukeboxes, lecterns, shulker boxes, signs, skulls, smokers, and structure blocks. "
+							+ "For the source list, <a href='https://hub.spigotmc.org/javadocs/spigot/org/bukkit/persistence/PersistentDataHolder.html'>see this page</a>."
+					)
+					.examples("set persistent data value \"epic\" of player to true")
+					.requiredPlugins("1.14 or newer")
+					.since("2.5"));
+		}
+
+		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
+			Classes.registerClass(new ClassInfo<>(EnchantmentOffer.class, "enchantmentoffer")
+				.user("enchant[ment][ ]offers?")
+				.name("Enchantment Offer")
+				.description("The enchantmentoffer in an enchant prepare event.")
+				.examples("on enchant prepare:",
+					"\tset enchant offer 1 to sharpness 1",
+					"\tset the cost of enchant offer 1 to 10 levels")
+				.since("2.5")
+				.parser(new Parser<EnchantmentOffer>() {
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(EnchantmentOffer eo, int flags) {
+						return EnchantmentType.toString(eo.getEnchantment(), flags) + " " + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String toVariableNameString(EnchantmentOffer eo) {
+						return "offer:" + EnchantmentType.toString(eo.getEnchantment()) + "=" + eo.getEnchantmentLevel();
+					}
+	
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				}));
+		}
+		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
+		Classes.registerClass(new ClassInfo<>(Attribute.class, "attributetype")
+				.user("attribute ?types?")
+				.name("Attribute Type")
+				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
+						+ "See <a href='https://minecraft.gamepedia.com/Attribute#Attributes'>attribute types</a> for more info.")
+				.defaultExpression(new EventValueExpression<>(Attribute.class))
+				.usage(attributes.getAllNames())
+				.since("2.5")
+				.parser(new Parser<Attribute>() {
+					@Override
+					@Nullable
+					public Attribute parse(String input, ParseContext context) {
+						return attributes.parse(input);
+					}
+					
+					@Override
+					public String toString(Attribute a, int flags) {
+						return attributes.toString(a, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Attribute a) {
+						return toString(a, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "[\\sA-Za-z]+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Attribute.class)));
+	}
 }

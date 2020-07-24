@@ -19,10 +19,6 @@
  */
 package ch.njol.skript.entity;
 
-import java.util.HashMap;
-
-import javax.annotation.Nullable;
-
 import org.bukkit.entity.Rabbit;
 
 import ch.njol.skript.Skript;
@@ -61,7 +57,6 @@ public class RabbitData extends EntityData<Rabbit> {
         	entity.setRabbitType(typeFromInt(type));
     }
 
-    @SuppressWarnings("null")
 	@Override
     protected boolean match(Rabbit entity) {
         return type == 0 || intFromType(entity.getRabbitType()) == type;

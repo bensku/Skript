@@ -38,7 +38,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 
@@ -107,6 +106,10 @@ public class EffHealth extends Effect {
 				}
 				newarr[i] = new ItemType(is);
 			}
+			
+			// Set changed item back to source
+			// We KNOW this is supported, but have to check anyway to prepare SimpleExpression for change
+			damageables.acceptChange(ChangeMode.SET);
 			damageables.change(e, newarr, ChangeMode.SET);
 		} else {
 			for (final Object damageable : arr) {

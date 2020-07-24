@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +34,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -48,28 +43,21 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemData.OldItemData;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
-import ch.njol.skript.bukkitutil.block.BlockValues;
-import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.Unit;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.Noun;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.iterator.EmptyIterable;
 import ch.njol.util.coll.iterator.SingleItemIterable;
 import ch.njol.yggdrasil.FieldHandler;
@@ -276,25 +264,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	public boolean isOfType(@Nullable ItemStack item) {
-		// Duplicate code to avoid creating ItemData
-		for (ItemData myType : types) {
-			if (item == null) { // Given item null
-				if (myType.type == Material.AIR)
-					return true; // Both items AIR/null
-			} else if (myType.isAlias) {
-				if (!myType.isOfType(item))
-					continue;
-				return true;
-			} else {
-				return item.isSimilar(myType.stack);
-			}
-		}
-		return false;
-		
-		// Alternative, simpler implementation
-//		if (item == null)
-//			return isOfType(Material.AIR, null);
-//		return isOfType(new ItemData(item));
+		if (item == null)
+			return isOfType(Material.AIR, null);
+		return isOfType(new ItemData(item));
 	}
 	
 	public boolean isOfType(@Nullable BlockState block) {
@@ -312,8 +284,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	public boolean isOfType(ItemData type) {
 		for (final ItemData myType : types) {
-			if (myType.equals(type))
+			if (myType.equals(type)) {
 				return true;
+			}
 		}
 		return false;
 	}

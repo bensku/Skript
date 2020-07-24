@@ -30,6 +30,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
@@ -105,7 +107,6 @@ import ch.njol.skript.lang.util.SimpleEvent;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
@@ -226,7 +227,7 @@ public class SimpleEvents {
 				.since("1.0");
 		Skript.registerEvent("Lightning Strike", SimpleEvent.class, LightningStrikeEvent.class, "lightning [strike]")
 				.description("Called when lightning strikes.")
-				.examples("on lightning:")
+				.examples("on lightning:", "\tspawn a zombie at location of event-entity")
 				.since("1.0");
 		Skript.registerEvent("Pig Zap", SimpleEvent.class, PigZapEvent.class, "pig[ ]zap")
 				.description("Called when a pig is stroke by lightning and transformed into a zombie pigman. Cancel the event to prevent the transformation.")
@@ -543,5 +544,19 @@ public class SimpleEvents {
 							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
 					.since("2.5");
 		}
+		Skript.registerEvent("Enchant Prepare", SimpleEvent.class, PrepareItemEnchantEvent.class, "[item] enchant prepare")
+			.description("Called when a player puts an item into enchantment table. This event may be called multiple times.",
+				" To get the enchant item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
+			.examples("on enchant prepare:",
+				"\tset enchant offer 1 to sharpness 1",
+				"\tset the cost of enchant offer 1 to 10 levels")
+			.since("2.5");
+		Skript.registerEvent("Enchant", SimpleEvent.class, EnchantItemEvent.class, "[item] enchant")
+		.description("Called when a player successfully enchants an item.",
+			" To get the enchanted item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
+		.examples("on enchant:",
+			"\tif the clicked button is enchantment option 1:",
+			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
+		.since("2.5");
 	}
 }

@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Creeper Max Fuse Ticks")
 @Description("The max fuse ticks that a creeper has.")
 @Examples("set target entity's max fuse ticks to 20 #1 second")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEntity, Number> {
 	
 	static {

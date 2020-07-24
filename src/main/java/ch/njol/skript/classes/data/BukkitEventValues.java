@@ -51,6 +51,8 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -89,6 +91,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
@@ -102,6 +105,7 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.PortalCreateEvent;
@@ -133,7 +137,7 @@ import ch.njol.skript.util.slot.Slot;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings("deprecation")
 public final class BukkitEventValues {
 	
 	public BukkitEventValues() {}
@@ -384,11 +388,19 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0, "Use 'attacker' and/or 'victim' in damage events", EntityDamageEvent.class);
+		EventValues.registerEventValue(EntityEvent.class, CommandSender.class, new Getter<CommandSender, EntityEvent>() {
+			@Override
+			@Nullable
+			public CommandSender get(final EntityEvent e) {
+				return e.getEntity();
+			}
+		}, 0, "Use 'attacker' and/or 'victim' in damage events", EntityDamageEvent.class);
 		EventValues.registerEventValue(EntityEvent.class, World.class, new Getter<World, EntityEvent>() {
 			@Override
 			@Nullable
 			public World get(final EntityEvent e) {
-				return e.getEntity() == null ? null : e.getEntity().getWorld(); // no idea why it could be null, but it can happen
+				Entity entity = e.getEntity();
+				return entity == null ? null : entity.getWorld(); // no idea why it could be null, but it can happen
 			}
 		}, 0);
 		// EntityDamageEvent
@@ -428,6 +440,15 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// ProjectileHitEvent
+		// ProjectileHitEvent#getHitBlock was added in 1.11
+		if(Skript.methodExists(ProjectileHitEvent.class, "getHitBlock"))
+			EventValues.registerEventValue(ProjectileHitEvent.class, Block.class, new Getter<Block, ProjectileHitEvent>() {
+				@Nullable
+				@Override
+				public Block get(ProjectileHitEvent e) {
+					return e.getHitBlock();
+				}
+			}, 0);
 		EventValues.registerEventValue(ProjectileHitEvent.class, Entity.class, new Getter<Entity, ProjectileHitEvent>() {
 			@Override
 			@Nullable
@@ -490,6 +511,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public ItemType get(final ItemSpawnEvent e) {
 				return new ItemType(e.getEntity().getItemStack());
+			}
+		}, 0);
+		// LightningStrikeEvent
+		EventValues.registerEventValue(LightningStrikeEvent.class, Entity.class, new Getter<Entity, LightningStrikeEvent>() {
+			@Override
+			public Entity get(LightningStrikeEvent event) {
+				return event.getLightning();
 			}
 		}, 0);
 		
@@ -635,19 +663,19 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// PlayerInteractEvent
-		EventValues.registerEventValue(PlayerInteractEvent.class, Block.class, new Getter<Block, PlayerInteractEvent>() {
-			@Override
-			@Nullable
-			public Block get(final PlayerInteractEvent e) {
-				return e.getClickedBlock();
-			}
-		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, ItemType.class, new Getter<ItemType, PlayerInteractEvent>() {
 			@Override
 			@Nullable
 			public ItemType get(final PlayerInteractEvent e) {
 				ItemStack item = e.getItem();
 				return item == null ? null : new ItemType(item);
+			}
+		}, 0);
+		EventValues.registerEventValue(PlayerInteractEvent.class, Block.class, new Getter<Block, PlayerInteractEvent>() {
+			@Override
+			@Nullable
+			public Block get(final PlayerInteractEvent e) {
+				return e.getClickedBlock();
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerInteractEvent.class, Direction.class, new Getter<Direction, PlayerInteractEvent>() {
@@ -673,6 +701,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(final PlayerMoveEvent e) {
 				return EvtMoveOn.getBlock(e);
+			}
+		}, 0);
+		// PlayerItemDamageEvent
+		EventValues.registerEventValue(PlayerItemDamageEvent.class, ItemType.class, new Getter<ItemType, PlayerItemDamageEvent>() {
+			@Override
+			public ItemType get(PlayerItemDamageEvent event) {
+				return new ItemType(event.getItem());
 			}
 		}, 0);
 		
@@ -872,7 +907,6 @@ public final class BukkitEventValues {
 //		}, 0);
 		// PrepareItemCraftEvent
 		EventValues.registerEventValue(PrepareItemCraftEvent.class, Slot.class, new Getter<Slot, PrepareItemCraftEvent>() {
-			@SuppressWarnings("null")
 			@Override
 			@Nullable
 			public Slot get(final PrepareItemCraftEvent e) {
@@ -1034,5 +1068,49 @@ public final class BukkitEventValues {
 				}
 			}, 0);
 		}
+		//PrepareItemEnchantEvent
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Player.class, new Getter<Player, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Player get(PrepareItemEnchantEvent e) {
+				return e.getEnchanter();
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, ItemType.class, new Getter<ItemType, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(PrepareItemEnchantEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(PrepareItemEnchantEvent.class, Block.class, new Getter<Block, PrepareItemEnchantEvent>() {
+			@Override
+			@Nullable
+			public Block get(PrepareItemEnchantEvent e) {
+				return e.getEnchantBlock();
+			}
+		}, 0);
+		//EnchantItemEvent
+		EventValues.registerEventValue(EnchantItemEvent.class, Player.class, new Getter<Player, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public Player get(EnchantItemEvent e) {
+				return e.getEnchanter();
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, ItemType.class, new Getter<ItemType, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public ItemType get(EnchantItemEvent e) {
+				return new ItemType(e.getItem());
+			}
+		}, 0);
+		EventValues.registerEventValue(EnchantItemEvent.class, Block.class, new Getter<Block, EnchantItemEvent>() {
+			@Override
+			@Nullable
+			public Block get(EnchantItemEvent e) {
+				return e.getEnchantBlock();
+			}
+		}, 0);
 	}
 }

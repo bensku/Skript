@@ -30,6 +30,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader.ScriptInfo;
@@ -45,9 +46,6 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.tests.runner.SkriptTestEvent;
 import ch.njol.skript.tests.runner.TestMode;
 import ch.njol.skript.tests.runner.TestTracker;
-import ch.njol.skript.update.ReleaseStatus;
-import ch.njol.skript.update.UpdaterState;
-import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.SkriptColor;
@@ -187,17 +185,11 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						}
 						reloading(sender, "script", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScript(f);
-						Config config = ScriptLoader.loadStructure(f);
-						ScriptLoader.loadScripts(config);
+						ScriptLoader.reloadScript(f);
 						reloaded(sender, r, "script", f.getName());
 					} else {
 						reloading(sender, "scripts in folder", f.getName());
-						if (!ScriptLoader.loadAsync)
-							ScriptLoader.unloadScripts(f);
-						List<Config> configs = ScriptLoader.loadStructures(f);
-						final int enabled = ScriptLoader.loadScripts(configs).files;
+						final int enabled = ScriptLoader.reloadScripts(f).files;
 						if (enabled == 0)
 							info(sender, "reload.empty folder", f.getName());
 						else
@@ -338,6 +330,14 @@ public class SkriptCommand implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("info")) {
 				info(sender, "info.aliases");
 				info(sender, "info.documentation");
+				info(sender, "info.server", Bukkit.getVersion());
+				info(sender, "info.version", Skript.getVersion());
+				info(sender, "info.addons");
+				for (SkriptAddon addon : Skript.getAddons()) {
+					PluginDescriptionFile desc = addon.plugin.getDescription();
+					String web = desc.getWebsite();
+					Skript.info(sender, " - " + desc.getFullName() + (web != null ? " (" + web + ")" : ""));
+				}
 			} else if (args[0].equalsIgnoreCase("help")) {
 				skriptCommandHelp.showHelp(sender);
 			} else if (args[0].equalsIgnoreCase("gen-docs")) {

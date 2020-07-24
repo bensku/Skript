@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Arrows Stuck")
 @Description("The number of arrows stuck in a living entity.")
 @Examples("set arrows stuck in player to 5")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Number> {
 
     static {
