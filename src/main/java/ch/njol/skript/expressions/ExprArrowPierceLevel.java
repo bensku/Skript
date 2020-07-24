@@ -43,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, Number> {
 	
 	static {
-		register(ExprArrowPierceLevel.class, Number.class, "[the] arrow pierce level", "projectiles");
+		if(Skript.classExists("org.bukkit.entity.AbstractArrow") || Skript.methodExists(Arrow.class, "getPierceLevel")) register(ExprArrowPierceLevel.class, Number.class, "[the] arrow pierce level", "projectiles");
 	}
 	
 	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
