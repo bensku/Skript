@@ -454,4 +454,30 @@ public abstract class Math2 {
 		return d * d * (3 - 2 * d);
 	}
 	
+	/**
+	 * Guarantees a float is neither NaN nor INF.
+	 * Useful for situations when safe floats are required.
+	 * 
+	 * @param f
+	 * @return 0 if f is NaN or INF, otherwise f
+	 */
+	public static float safe(float f) {
+		if (f != f || Float.isInfinite(f)) //NaN or INF 
+			return 0;
+		return f;
+	}
+	
+	/**
+	 * Guarantees a double is neither NaN nor INF.
+	 * Useful for situations when safe doubles are required.
+	 * 
+	 * @param d
+	 * @return 0 if d is NaN or INF, otherwise d
+	 */
+	public static double safe(double d) {
+		if (d != d || Double.isInfinite(d)) //NaN or INF 
+			return 0;
+		return d;
+	}
+	
 }

@@ -38,7 +38,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.util.Version;
 

@@ -22,7 +22,6 @@ package ch.njol.skript.expressions;
 import java.util.List;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +41,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -52,114 +50,89 @@ import ch.njol.util.coll.iterator.IteratorIterable;
  * @author Peter Güttinger
  */
 @Name("Drops")
-@Description("Only works in block break and death events. Holds the drops of the dying creature. Drops can be prevented by removing them with \"remove ... from drops\", e.g. \"remove all pickaxes from the drops\", or \"clear drops\" if you don't want any drops at all. " +
-		"In break events, drops can only be cleared, and is only available in 1.12+")
+@Description("Only works in death events. Holds the drops of the dying creature. Drops can be prevented by removing them with " +
+		"\"remove ... from drops\", e.g. \"remove all pickaxes from the drops\", or \"clear drops\" if you don't want any drops at all.")
 @Examples({"clear drops",
-		"remove 4 planks from the drops", "on break of diamond ore:", "\tclear drops"})
-@Since("1.0, 2.4 (block break event drops)")
-@Events("break / mine, death")
-public class ExprDrops extends SimpleExpression<ItemStack> {
+		"remove 4 planks from the drops"})
+@Since("1.0")
+@Events("death")
+public class ExprDrops extends SimpleExpression<ItemType> {
+
 	static {
-		Skript.registerExpression(ExprDrops.class, ItemStack.class, ExpressionType.SIMPLE, "[the] drops");
+		Skript.registerExpression(ExprDrops.class, ItemType.class, ExpressionType.SIMPLE, "[the] drops");
 	}
-	
-	private final boolean BREAK_DROPS = Skript.methodExists(BlockBreakEvent.class, "setDropItems", boolean.class);
-	
-	@SuppressWarnings("null")
-	private Kleenean delayed;
-	
+
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (BREAK_DROPS) {
-			if (!ScriptLoader.isCurrentEvent(EntityDeathEvent.class, BlockBreakEvent.class)) {
-				Skript.error("The expression 'drops' can only be used in block break and death events", ErrorQuality.SEMANTIC_ERROR);
-				return false;
-			}
-		} else {
-			if (!ScriptLoader.isCurrentEvent(EntityDeathEvent.class)) {
-				Skript.error("The expression 'drops' can only be used in death events", ErrorQuality.SEMANTIC_ERROR);
-				return false;
-			}
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (!ScriptLoader.isCurrentEvent(EntityDeathEvent.class)) {
+			Skript.error("The expression 'drops' can only be used in death events", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
-		delayed = isDelayed;
 		return true;
 	}
-	
+
 	@Override
 	@Nullable
-	protected ItemStack[] get(final Event e) {
-		if (!(e instanceof EntityDeathEvent))
-			return new ItemStack[0];
-		return ((EntityDeathEvent) e).getDrops().toArray(new ItemStack[0]);
+	protected ItemType[] get(Event e) {
+		return ((EntityDeathEvent) e).getDrops()
+			.stream()
+			.map(ItemType::new)
+			.toArray(ItemType[]::new);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.RESET)
-			return null;
-		if (delayed.isTrue()) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (ScriptLoader.hasDelayBefore.isTrue()) {
 			Skript.error("Can't change the drops anymore after the event has already passed");
 			return null;
 		}
-		return CollectionUtils.array(ItemType[].class, Inventory[].class, Experience[].class);
+		switch (mode) {
+			case ADD:
+			case REMOVE:
+			case REMOVE_ALL:
+			case SET:
+				return CollectionUtils.array(ItemType[].class, Inventory[].class, Experience[].class);
+			case DELETE:
+			case RESET:
+			default:
+				assert false;
+				return null;
+		}
 	}
-	
-	@SuppressWarnings({"unchecked", "null"})
+
 	@Override
-	public void change(final Event e, final @Nullable Object[] deltas, final ChangeMode mode) {
-		assert mode != ChangeMode.RESET;
-		if (e instanceof BlockBreakEvent) {
-			if (mode == ChangeMode.DELETE) {
-				((BlockBreakEvent) e).setDropItems(false);
-				return;
-			}
-		}
-		if (!(e instanceof EntityDeathEvent)) {
-			assert false;
-			return;
-		}
-		
-		final List<ItemStack> drops = ((EntityDeathEvent) e).getDrops();
-		if (mode == ChangeMode.DELETE) {
-			drops.clear();
-			return;
-		}
-		boolean cleared = false;
-		
-		assert deltas != null;
-		for (final Object delta : deltas) {
-			if (delta instanceof Experience) {
-				if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.REMOVE && ((Experience) delta).getInternalXP() == -1) {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		List<ItemStack> drops = ((EntityDeathEvent) e).getDrops();
+		assert delta != null;
+		for (Object o : delta) {
+			if (o instanceof Experience) {
+				if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.REMOVE && ((Experience) o).getInternalXP() == -1) {
 					((EntityDeathEvent) e).setDroppedExp(0);
 				} else if (mode == ChangeMode.SET) {
-					((EntityDeathEvent) e).setDroppedExp(((Experience) delta).getXP());
+					((EntityDeathEvent) e).setDroppedExp(((Experience) o).getXP());
 				} else {
-					((EntityDeathEvent) e).setDroppedExp(Math.max(0, ((EntityDeathEvent) e).getDroppedExp() + (mode == ChangeMode.ADD ? 1 : -1) * ((Experience) delta).getXP()));
+					((EntityDeathEvent) e).setDroppedExp(Math.max(0, ((EntityDeathEvent) e).getDroppedExp() + (mode == ChangeMode.ADD ? 1 : -1) * ((Experience) o).getXP()));
 				}
 			} else {
 				switch (mode) {
 					case SET:
-						if (!cleared) {
-							drops.clear();
-							cleared = true;
-						}
+						drops.clear();
 						//$FALL-THROUGH$
 					case ADD:
-						if (delta instanceof Inventory) {
-							for (final ItemStack is : new IteratorIterable<>(((Inventory) delta).iterator())) {
+						if (o instanceof Inventory) {
+							for (ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
 								if (is != null)
 									drops.add(is);
 							}
 						} else {
-							((ItemType) delta).addTo(drops);
+							((ItemType) o).addTo(drops);
 						}
 						break;
 					case REMOVE:
 					case REMOVE_ALL:
-						if (delta instanceof Inventory) {
-							for (final ItemStack is : new IteratorIterable<>(((Inventory) delta).iterator())) {
+						if (o instanceof Inventory) {
+							for (ItemStack is : new IteratorIterable<>(((Inventory) o).iterator())) {
 								if (is == null)
 									continue;
 								if (mode == ChangeMode.REMOVE)
@@ -169,9 +142,9 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 							}
 						} else {
 							if (mode == ChangeMode.REMOVE)
-								((ItemType) delta).removeFrom(drops);
+								((ItemType) o).removeFrom(drops);
 							else
-								((ItemType) delta).removeAll(drops);
+								((ItemType) o).removeAll(drops);
 						}
 						break;
 					case DELETE:
@@ -181,22 +154,20 @@ public class ExprDrops extends SimpleExpression<ItemStack> {
 			}
 		}
 	}
-	
-	@Override
-	public Class<? extends ItemStack> getReturnType() {
-		return ItemStack.class;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		if (e == null)
-			return "the drops";
-		return Classes.getDebugMessage(getAll(e));
-	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
+	@Override
+	public Class<? extends ItemType> getReturnType() {
+		return ItemType.class;
+	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "the drops";
+	}
+
 }

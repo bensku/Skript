@@ -61,18 +61,25 @@ public class PandaData extends EntityData<Panda> {
 	public void set(Panda entity) {
 		Gene gen = mainGene;
 		if (gen == null)
-			gen = Gene.values()[ThreadLocalRandom.current().nextInt()];
+			gen = Gene.values()[ThreadLocalRandom.current().nextInt(0, 7)];
+		assert gen != null;
 		entity.setMainGene(gen);
 		entity.setHiddenGene(hiddenGene != null ? hiddenGene : gen);
 	}
 	
 	@Override
 	protected boolean match(Panda entity) {
-		if (hiddenGene != null)
-			return mainGene == entity.getMainGene() && hiddenGene == entity.getHiddenGene();
-		else
-			return mainGene == entity.getMainGene();
-		
+		if (hiddenGene != null) {
+			if(mainGene != null)
+				return mainGene == entity.getMainGene() && hiddenGene == entity.getHiddenGene();
+			else
+				return hiddenGene == entity.getHiddenGene();
+		} else {
+			if(mainGene != null)
+				return mainGene == entity.getMainGene();
+			else
+				return true;
+		}
 	}
 	
 	@Override

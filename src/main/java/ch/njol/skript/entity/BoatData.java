@@ -21,7 +21,6 @@ package ch.njol.skript.entity;
 
 import java.util.Random;
 
-import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.entity.Boat;
 import org.bukkit.inventory.ItemStack;
@@ -136,7 +135,7 @@ public class BoatData extends EntityData<Boat> {
 			ordinal = TreeSpecies.ACACIA.ordinal();
 		else if (darkOakBoat.isOfType(stack))
 			ordinal = TreeSpecies.DARK_OAK.ordinal();
-		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 2) || ordinal == 0;
+		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 0) || ordinal == 0;
 		
 	}
 }

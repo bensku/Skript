@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Player List Header and Footer")
 @Description("The message above and below the player list in the tab menu.")
-@Examples({"set all players tab list header to \"Welcome to the Server!\"",
+@Examples({"set all players' tab list header to \"Welcome to the Server!\"",
 			"send \"%the player's tab list header%\" to player",
 			"reset all players' tab list header"})
 @Since("2.4")

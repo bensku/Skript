@@ -20,7 +20,6 @@
 package ch.njol.skript.lang.util;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -69,14 +68,19 @@ public class SimpleLiteral<T> implements Literal<T>, DefaultExpression<T> {
 		this.isDefault = false;
 	}
 	
-	@SuppressWarnings({"null", "unchecked"})
-	public SimpleLiteral(final T data, final boolean isDefault) {
+	public SimpleLiteral(T data, boolean isDefault) {
+		this(data, isDefault, null);
+	}
+	
+	@SuppressWarnings({"unchecked", "null"})
+	public SimpleLiteral(T data, boolean isDefault, @Nullable UnparsedLiteral source) {
 		assert data != null;
 		this.data = (T[]) Array.newInstance(data.getClass(), 1);
 		this.data[0] = data;
 		c = (Class<T>) data.getClass();
 		and = true;
 		this.isDefault = isDefault;
+		this.source = source;
 	}
 	
 	public SimpleLiteral(final T[] data, final Class<T> to, final boolean and, final @Nullable UnparsedLiteral source) {

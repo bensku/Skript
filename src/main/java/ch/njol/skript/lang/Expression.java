@@ -21,6 +21,9 @@ package ch.njol.skript.lang;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -85,6 +88,20 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 	 * @return An array of all possible values of this expression for the given event which must neither be null nor contain nulls, and which must not be an internal array.
 	 */
 	public T[] getAll(final Event e);
+	
+	/**
+	 * Gets a non-null stream of this expression's values.
+	 *
+	 * @param e The event
+	 * @return A non-null stream of this expression's values
+	 */
+	default public Stream<? extends T> stream(final Event e) {
+		Iterator<? extends T> iter = iterator(e);
+		if (iter == null) {
+			return Stream.empty();
+		}
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iter, 0), false);
+	}
 	
 	/**
 	 * @return true if this expression will ever only return one value at most, false if it can return multiple values.
