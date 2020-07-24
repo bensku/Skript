@@ -40,10 +40,10 @@ import ch.njol.util.coll.CollectionUtils;
 	"\tevent-projectile is an arrow",
 	"\tset arrow knockback strength of event-projectile to 10"})
 @Since("INSERT VERSION")
-public class ExprProjectileKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
+public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
 	
 	static {
-		register(ExprProjectileKnockbackStrength.class, Number.class, "[the] (arrow) knockback strength", "projectiles");
+		register(ExprArrowKnockbackStrength.class, Number.class, "[the] (arrow) knockback strength", "projectiles");
 	}
 	
 	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
