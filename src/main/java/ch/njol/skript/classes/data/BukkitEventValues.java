@@ -118,6 +118,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
 import ch.njol.skript.Skript;
@@ -473,6 +474,23 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0, "Use 'projectile' and/or 'shooter' in shoot events", ProjectileLaunchEvent.class);
+		//ProjectileCollideEvent
+		if (Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) {
+			EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
+				@Nullable
+				@Override
+				public Projectile get(ProjectileCollideEvent evt) {
+					return evt.getEntity();
+				}
+			}, 0);
+			EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
+				@Nullable
+				@Override
+				public Entity get(ProjectileCollideEvent evt) {
+					return evt.getCollidedWith();
+				}
+			}, 0);
+		}
 		EventValues.registerEventValue(ProjectileLaunchEvent.class, Projectile.class, new Getter<Projectile, ProjectileLaunchEvent>() {
 			@Override
 			@Nullable
