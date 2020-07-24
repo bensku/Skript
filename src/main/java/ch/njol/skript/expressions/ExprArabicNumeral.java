@@ -37,27 +37,27 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 		register(ExprArabicNumeral.class, Number.class, "arabic num(ber|eral)", "string");
 	}
 	
-	public static int arabic(String n) {
-		if (n.startsWith("M")) return arabic(n.substring(1)) + 1000;
-		if (n.startsWith("CM")) return arabic(n.substring(2)) + 900;
-		if (n.startsWith("D")) return arabic(n.substring(1)) + 500;
-		if (n.startsWith("CD")) return arabic(n.substring(2)) + 400;
-		if (n.startsWith("C")) return arabic(n.substring(1)) + 100;
-		if (n.startsWith("XC")) return arabic(n.substring(2)) + 90;
-		if (n.startsWith("L")) return arabic(n.substring(1)) + 50;
-		if (n.startsWith("XL")) return arabic(n.substring(2)) + 40;
-		if (n.startsWith("X")) return arabic(n.substring(1)) + 10;
-		if (n.startsWith("IX")) return arabic(n.substring(2)) + 9;
-		if (n.startsWith("V")) return arabic(n.substring(1)) + 5;
-		if (n.startsWith("IV")) return arabic(n.substring(2)) + 4;
-		if (n.startsWith("I")) return arabic(n.substring(1)) + 1;
+	public static int toArabic(String n) {
+		if (n.startsWith("M")) return toArabic(n.substring(1)) + 1000;
+		if (n.startsWith("CM")) return toArabic(n.substring(2)) + 900;
+		if (n.startsWith("D")) return toArabic(n.substring(1)) + 500;
+		if (n.startsWith("CD")) return toArabic(n.substring(2)) + 400;
+		if (n.startsWith("C")) return toArabic(n.substring(1)) + 100;
+		if (n.startsWith("XC")) return toArabic(n.substring(2)) + 90;
+		if (n.startsWith("L")) return toArabic(n.substring(1)) + 50;
+		if (n.startsWith("XL")) return toArabic(n.substring(2)) + 40;
+		if (n.startsWith("X")) return toArabic(n.substring(1)) + 10;
+		if (n.startsWith("IX")) return toArabic(n.substring(2)) + 9;
+		if (n.startsWith("V")) return toArabic(n.substring(1)) + 5;
+		if (n.startsWith("IV")) return toArabic(n.substring(2)) + 4;
+		if (n.startsWith("I")) return toArabic(n.substring(1)) + 1;
 		return 0;
 	}
 	
 	@Nullable
 	@Override
 	public Number convert(String s) {
-		return arabic(s);
+		return toArabic(s);
 	}
 	
 	@Override
