@@ -19,11 +19,13 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,35 +34,43 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Arrow Knockback Strength")
-@Description("An arrow's knockback strength.")
+@Name("Projectile Knockback Strength")
+@Description("A projectile's knockback strength. The only currently accepted projectiles are arrows and tridents.")
 @Examples({"on shoot:",
-	"\tset arrow knockback strength of event-projectile to 10"})
+	"\tevent-projectile is an arrow",
+	"\tset projectile knockback strength of event-projectile to 10"})
 @Since("INSERT VERSION")
-public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
+public class ExprProjectileKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
 	
 	static {
-		register(ExprArrowKnockbackStrength.class, Number.class, "[the] arrow knockback (strength|force)", "projectiles");
+		register(ExprProjectileKnockbackStrength.class, Number.class, "[the] (projectile|arrow) knockback strength", "projectiles");
 	}
+	
+	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
 	
 	@Nullable
 	@Override
 	public Number convert(Projectile arrow) {
+		
+		if (abstractArrowExists)
+			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).getKnockbackStrength() : null;
 		return arrow instanceof Arrow ? ((Arrow) arrow).getKnockbackStrength() : null;
 	}
 	
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Number.class) : null;
+		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Boolean.class) : null;
 	}
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		int state = delta != null ? ((Long) delta[0]).intValue() : 1;
+		int strength = delta != null ? ((Long) delta[0]).intValue() : 1;
 		for (Projectile entity : getExpr().getAll(e)) {
-			if (entity instanceof Arrow)
-				((Arrow) entity).setKnockbackStrength(state);
+			if (abstractArrowExists) {
+				if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setKnockbackStrength(strength);
+			} else if (entity instanceof Arrow)
+				((Arrow) entity).setKnockbackStrength(strength);
 		}
 	}
 	
@@ -71,7 +81,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 	
 	@Override
 	protected String getPropertyName() {
-		return "arrow knockback strength";
+		return "projectile knockback strength";
 	}
 	
 }
