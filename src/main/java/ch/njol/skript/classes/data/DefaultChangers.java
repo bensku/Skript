@@ -289,7 +289,7 @@ public class DefaultChangers {
 			if (mode == ChangeMode.RESET)
 				return null; // REMIND regenerate?
 			if (mode == ChangeMode.SET)
-				if (Skript.isRunningMinecraft(1, 13))
+				if (Skript.classExists("org.bukkit.block.data.BlockData"))
 					return CollectionUtils.array(ItemType.class, BlockData.class);
 				else
 					return CollectionUtils.array(ItemType.class);
