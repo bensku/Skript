@@ -27,7 +27,7 @@ Documentation is available [here](https://skriptlang.github.io/Skript) for the
 latest version of Skript.
 
 ## Reporting Issues
-Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md)
+Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md)
 before reporting issues.
 
 ## A Note About Add-ons
@@ -98,9 +98,9 @@ Available flavors are github and spigot. Please do not abuse flavors by
 compiling your own test builds as releases.
 
 ## Contributing
-Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md).
+Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md).
 In addition to that, if you are contributing Java code, check our
-[coding conventions](https://github.com/SkriptLang/Skript/blob/master/CODING_CONVENTIONS.md).
+[coding conventions](https://github.com/SkriptLang/Skript/blob/master/code-conventions.md).
 
 ## Maven Repository
 If you use Skript as (soft) dependency for your plugin, and use maven or Gradle,
