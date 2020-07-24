@@ -34,16 +34,16 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Projectile Knockback Strength")
-@Description("A projectile's knockback strength. The only currently accepted projectiles are arrows and tridents.")
+@Name("Arrow Knockback Strength")
+@Description("An arrow's knockback strength.")
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
-	"\tset projectile knockback strength of event-projectile to 10"})
+	"\tset arrow knockback strength of event-projectile to 10"})
 @Since("INSERT VERSION")
 public class ExprProjectileKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
 	
 	static {
-		register(ExprProjectileKnockbackStrength.class, Number.class, "[the] (projectile|arrow) knockback strength", "projectiles");
+		register(ExprProjectileKnockbackStrength.class, Number.class, "[the] (arrow) knockback strength", "projectiles");
 	}
 	
 	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
@@ -51,7 +51,6 @@ public class ExprProjectileKnockbackStrength extends SimplePropertyExpression<Pr
 	@Nullable
 	@Override
 	public Number convert(Projectile arrow) {
-		
 		if (abstractArrowExists)
 			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).getKnockbackStrength() : null;
 		return arrow instanceof Arrow ? ((Arrow) arrow).getKnockbackStrength() : null;
@@ -60,14 +59,15 @@ public class ExprProjectileKnockbackStrength extends SimplePropertyExpression<Pr
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Boolean.class) : null;
+		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Number.class) : null;
 	}
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		int strength = delta != null ? ((Long) delta[0]).intValue() : 1;
+		int strength = delta != null ? Math.max(((Number) delta[0]).intValue(), 0) : 1;
 		for (Projectile entity : getExpr().getAll(e)) {
 			if (abstractArrowExists) {
+				System.out.println(entity.getType().name());
 				if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setKnockbackStrength(strength);
 			} else if (entity instanceof Arrow)
 				((Arrow) entity).setKnockbackStrength(strength);
