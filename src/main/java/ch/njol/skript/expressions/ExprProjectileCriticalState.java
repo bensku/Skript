@@ -34,16 +34,16 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Arrow Critical State")
+@Name("Projectile Critical State")
 @Description("A projectile's critical state. The only currently accepted projectiles are arrows and tridents.")
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
-	"\tset critical mode of event-projectile to true"})
+	"\tset projectile critical mode of event-projectile to true"})
 @Since("INSERT VERSION")
-public class ExprArrowCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
+public class ExprProjectileCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
 	
 	static {
-		register(ExprArrowCriticalState.class, Boolean.class, "[the] (projectile|arrow) critical (state|ability|mode)", "projectiles");
+		register(ExprProjectileCriticalState.class, Boolean.class, "[the] (projectile|arrow) critical (state|ability|mode)", "projectiles");
 	}
 	
 	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
