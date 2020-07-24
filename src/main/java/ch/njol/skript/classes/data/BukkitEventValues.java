@@ -835,14 +835,22 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		//UnknownCommandEvent
-		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"))
+		if(Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
 			EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, new Getter<CommandSender, UnknownCommandEvent>() {
-			@Nullable
-			@Override
-			public CommandSender get(UnknownCommandEvent event) {
-				return event.getSender();
-			}
-		}, 0);
+				@Nullable
+				@Override
+				public CommandSender get(UnknownCommandEvent event) {
+					return event.getSender();
+				}
+			}, 0);
+			EventValues.registerEventValue(UnknownCommandEvent.class, String.class, new Getter<String, UnknownCommandEvent>() {
+				@Nullable
+				@Override
+				public String get(UnknownCommandEvent event) {
+					return event.getCommandLine();
+				}
+			}, 0);
+		}
 		// === InventoryEvents ===
 		// InventoryClickEvent
 		EventValues.registerEventValue(InventoryClickEvent.class, Player.class, new Getter<Player, InventoryClickEvent>() {

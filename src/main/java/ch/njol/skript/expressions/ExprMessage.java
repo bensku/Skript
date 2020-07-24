@@ -169,6 +169,7 @@ public class ExprMessage extends SimpleExpression<String> {
 		}
 		
 		static String[] patterns;
+		static MessageType[] supportedTypes;
 		static {
 			patterns = new String[values().length];
 			supportedTypes = Arrays.stream(values()).filter(messageType -> messageType.supported).toArray(MessageType[]::new);
@@ -186,14 +187,12 @@ public class ExprMessage extends SimpleExpression<String> {
 		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
 	}
 	@SuppressWarnings("null")
-	protected static MessageType[] supportedTypes;
-	@SuppressWarnings("null")
 	private MessageType type;
 	
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		type = supportedTypes[matchedPattern];
+		type = MessageType.supportedTypes[matchedPattern];
 		if (!ScriptLoader.isCurrentEvent(type.events)) {
 			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
