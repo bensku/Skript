@@ -56,6 +56,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
@@ -937,7 +938,6 @@ public class BukkitClasses {
 						return ".+";
 					}
 				}));
-		
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")
 				.name("Game Mode")
@@ -1691,6 +1691,37 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Gene.class)));
 		}
+		EnumUtils<RegainReason> regainReasons = new EnumUtils<>(RegainReason.class, "heal reasons");
+		Classes.registerClass(new ClassInfo<>(RegainReason.class, "healreason")
+			.user("(regen|heal) (reason|cause)")
+			.name("Heal Reason")
+			.description("The heal reason in a heal event.")
+			.usage(regainReasons.getAllNames())
+			.examples("")
+			.since("INSERT VERSION")
+			.parser(new Parser<RegainReason>() {
+				@Override
+				@Nullable
+				public RegainReason parse(String s, ParseContext parseContext) {
+					return regainReasons.parse(s);
+				}
+				
+				@Override
+				public String toString(RegainReason o, int flags) {
+					return regainReasons.toString(o, flags);
+				}
+				
+				@Override
+				public String toVariableNameString(RegainReason o) {
+					return "regainreason:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			})
+			.serializer(new EnumSerializer<>(RegainReason.class)));
 		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
 			EnumUtils<Cat.Type> races = new EnumUtils<>(Cat.Type.class, "cat types");
 			Classes.registerClass(new ClassInfo<>(Cat.Type.class, "cattype")
