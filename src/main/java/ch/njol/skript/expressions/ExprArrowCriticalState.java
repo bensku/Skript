@@ -28,12 +28,15 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Arrow Critical State")
 @Description("An arrow's critical state.")
-@Examples("set critical mode of event-projectile to true")
+@Examples({"on shoot:",
+	"\tset critical mode of event-projectile to true"})
+@Since("INSERT VERSION")
 public class ExprArrowCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
 	
 	static {
