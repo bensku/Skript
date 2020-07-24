@@ -20,7 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,16 +33,16 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Arrow Critical State")
 @Description("An arrow's critical state.")
-@Examples("set critical mode state of last shot arrow to true")
-public class ExprArrowCriticalState extends SimplePropertyExpression<Entity, Boolean> {
+@Examples("set critical mode of event-projectile to true")
+public class ExprArrowCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
 	
 	static {
-		register(ExprArrowCriticalState.class, Boolean.class, "[the] critical arrow (state|ability|mode)", "entities");
+		register(ExprArrowCriticalState.class, Boolean.class, "[the] critical arrow (state|ability|mode)", "projectiles");
 	}
 	
 	@Nullable
 	@Override
-	public Boolean convert(Entity arrow) {
+	public Boolean convert(Projectile arrow) {
 		return arrow instanceof Arrow ? ((Arrow) arrow).isCritical() : null;
 	}
 	
@@ -54,14 +54,10 @@ public class ExprArrowCriticalState extends SimplePropertyExpression<Entity, Boo
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null || delta.length < 1) {
-			for (Entity entity : getExpr().getAll(e)) {
-				if (entity instanceof Arrow) ((Arrow) entity).setCritical(false);
-			}
-		} else {
-			for (Entity entity : getExpr().getAll(e)) {
-				if (entity instanceof Arrow) ((Arrow) entity).setCritical((Boolean) delta[0]);
-			}
+		boolean state = delta != null ? (Boolean) delta[0] : false;
+		for (Projectile entity : getExpr().getAll(e)) {
+			if (entity instanceof Arrow)
+				((Arrow) entity).setCritical(state);
 		}
 	}
 	
