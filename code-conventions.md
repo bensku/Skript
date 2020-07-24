@@ -48,6 +48,7 @@ code. Contributors should also see the dedicated
   - In Javadoc/multiline comments, at most 80 characters per line
 * When statements consume multiple lines, all lines but first have two tabs of additional indentation
 * Each class begins with an empty line
+* No squeezing of multiple lines of code on a single line
 * Separate method declarations with empty lines
   - Empty line after last method in a class is *not* required
   - Otherwise, empty line before and after method is a good rule of thumb
