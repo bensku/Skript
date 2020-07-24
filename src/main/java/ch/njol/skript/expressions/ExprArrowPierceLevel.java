@@ -81,7 +81,7 @@ public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, N
 	
 	@Override
 	protected String getPropertyName() {
-		return "projectile pierce level";
+		return "arrow pierce level";
 	}
 	
 }
