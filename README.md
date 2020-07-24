@@ -174,19 +174,6 @@ Note that these resources are not maintained by Skript's developers. Don't
 contact us about any problems you might have with them.
 
 ## Developers
-Current team behind Skript:
-
-* [bensku](https://github.com/bensku) (Skript maintainer/developer)
-* [FranKusmiruk](https://github.com/FranKusmiruk) (Skript developer)
-* [Pikachu920](https://github.com/Pikachu920) (Skript developer)
-* [Nicofisi](https://github.com/Nicofisi) (Skript developer)
-* [TheBentoBox](https://github.com/TheBentoBox) (issue tracker manager, aliases developer)
-
-We should also thank [Njol](https://github.com/Njol) for creating
-Skript and [Mirreski](https://github.com/Mirreski) for maintaining it for a
-long time.
-
-And of course, Skript has received lots of pull requests over time.
 You can find all contributors [here](https://github.com/SkriptLang/Skript/graphs/contributors).
 
 All code is owned by its writer, licensed for others under GPLv3 (see LICENSE)
