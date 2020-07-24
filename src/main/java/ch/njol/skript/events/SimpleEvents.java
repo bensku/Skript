@@ -97,6 +97,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
@@ -337,6 +338,14 @@ public class SimpleEvents {
 						"\tevent-projectile is arrow",
 						"\tdelete event-projectile")
 				.since("1.0");
+		
+		if(Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent"))
+			Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
+			.description("Called when a projectile collides with an entity.")
+			.requiredPlugins("Paper")
+			.examples("on projectile collide:",
+				"\tteleport shooter of event-projectile to event-entity")
+			.since("INSERT VERSION");
 		Skript.registerEvent("Shoot", SimpleEvent.class, ProjectileLaunchEvent.class, "[projectile] shoot")
 				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions.html#ExprShooter'>shooter expression</a> to get who shot the projectile.")
 				.examples("on shoot:",
@@ -463,7 +472,7 @@ public class SimpleEvents {
 				.examples("on flight toggle:",
 						"	if {game::%player%::playing} exists:",
 						"		cancel event")
-				.since("2.2-dev36"); 
+				.since("2.2-dev36");
 		if (Skript.classExists("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
 			Skript.registerEvent("Language Change", SimpleEvent.class, PlayerLocaleChangeEvent.class, "[player] (language|locale) chang(e|ing)", "[player] chang(e|ing) (language|locale)")
 					.description("Called after a player changed their language in the game settings. You can use the <a href='expressions.html#ExprLanguage'>language</a> expression to get the current language of the player.",
