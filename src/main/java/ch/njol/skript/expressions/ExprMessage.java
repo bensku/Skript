@@ -73,7 +73,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"\tset the death message to \"%player% died!\"",
 		"",
 		"on unknown command: #requires Paper",
-		"\tset unknown command message to \"Unknown command!\""})
+		"\tset unknown command message to \"The command \"\"%event-string%\"\" doesn't exist.\""})
 @Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (unknown command message)")
 @Events({"chat", "join", "quit", "death", "unknown command"})
 public class ExprMessage extends SimpleExpression<String> {
