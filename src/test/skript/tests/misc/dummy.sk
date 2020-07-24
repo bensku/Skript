@@ -1,2 +1,0 @@
-test "redundant":
-	assert "true" is "true" with "logic failed"

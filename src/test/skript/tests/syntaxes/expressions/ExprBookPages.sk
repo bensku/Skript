@@ -1,3 +1,0 @@
-test "book pages":
-	set {_i} to book with text
-	assert {_i}'s book pages is not set with "non-existent book pages failed"
