@@ -7,9 +7,9 @@ and pull requests are often resolved faster than those that ignore them.
 ## Behavior
 Please treat others with respect in the issue tracker and comments of pull
 requests. We hope that you are a decent person and do this without telling.
-Failing that, inappropriate behavior (and issues where it is observed) may
-be ignored, closed or even deleted. Repeated or particularly egregious behavior
-will get you banned from issue trackers of SkriptLang organization.
+Failing that, issues where inappropriate behavior is observed may be ignored
+closed or even deleted. Repeated or particularly egregious behavior will get
+you banned from issue trackers of SkriptLang organization.
 
 Access to Skript's source code is a right that everyone with a binary release
 of it has. Access to our communications platforms is a *privilege* that will
@@ -77,7 +77,7 @@ time to [learn](https://help.github.com/categories/bootcamp/).
 
 ### When Programming
 We recommend using an IDE; you can find some set up instructions in README.
-Please also follow our code conventions.
+Please also follow our [code conventions](https://github.com/SkriptLang/Skript/blob/master/.github/code-conventions.md).
 
 ### After Programming
 Test your changes. Actually, test more than your changes: if you think that you
@@ -95,7 +95,7 @@ in next Skript release, whenever that happens.
 Good luck!
 
 ### Pull Request Review
-Pull requests require two passing reviews before they can be merged. In
+Pull requests require one passing review before they can be merged. In
 addition to that, code submitted by people outside of core team must be tested
 by core team members. In some cases, this might be as simple as running the
 automated tests.
