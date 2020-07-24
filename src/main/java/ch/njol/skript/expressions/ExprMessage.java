@@ -185,6 +185,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
 	}
+	@SuppressWarnings("null")
 	protected static MessageType[] supportedTypes;
 	@SuppressWarnings("null")
 	private MessageType type;
