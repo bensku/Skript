@@ -1,31 +1,32 @@
 ---
 name: Bug Report
-about: Create a report to help us improve
+about: Report a bug in Skript
 
 ---
-
-<!--- This is just a recommended template, but you should follow it --->
-
 ### Description
-<!--- A clear and concise description of what the problem is --->
+<!--- What happened? --->
 
 ### Steps to Reproduce
-<!--- Steps to reproduce the problem. If applicable, add a script or code snippet here --->
+<!--- What did you do to make it happen? Provide as accurate instructions as possible! --->
 
 ### Expected Behavior
-<!--- A clear and concise description of what you expected to happen --->
+<!--- What should have happened? --->
 
 ### Errors / Screenshots
-<!--- If applicable, add errors and screenshots to help explain your problem --->
+<!--- Console errors and screenshots of visual bugs in game, if you have any --->
 
 <!---
- If you get a console error, you should send the full error. Also if the error contains a stack trace; you can remove the Server Information section below.
- Also you should send long errors using a permanent and reliable paste service like Gist, not hastebin.
+If you have console errors, copy them to a paste service which won't delete them.
+DON'T use Hastebin!
+--->
+
+<!--
+Screenshots of bugs visible in-game can also be attached.
 --->
 
 ### Server Information
-* **Server version/platform:**       <!-- /version -->
-* **Skript version:**                <!-- /version Skript -->
+* **Server version/platform:** <!-- /version -->
+* **Skript version:** <!-- /version Skript ("latest" is not useful, we need the version number) -->
 
 ### Additional Context
-<!--- Add any other context about the problem here --->
+<!--- Anything you'd like to add? This can be left empty. --->
