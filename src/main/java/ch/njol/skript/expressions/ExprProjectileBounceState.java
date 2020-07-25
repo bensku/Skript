@@ -19,6 +19,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -26,49 +30,45 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Projectile Bounce State")
 @Description("A projectile's bounce state.")
 @Examples({"on projectile hit:",
-		"\tset projectile bounce state of event-projectile to true"})
+	"\tset projectile bounce mode of event-projectile to true"})
 @Since("INSERT VERSION")
 public class ExprProjectileBounceState extends SimplePropertyExpression<Projectile, Boolean> {
-
+	
 	static {
-		register(ExprProjectileBounceState.class, Boolean.class, "[the] (projectile) bounce (state|ability|mode)", "projectiles");
+		register(ExprProjectileBounceState.class, Boolean.class, "[the] projectile bounce (state|ability|mode)", "projectiles");
 	}
-
+	
 	@Nullable
 	@Override
 	public Boolean convert(Projectile projectile) {
 		return projectile.doesBounce();
 	}
-
+	
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Boolean.class) : null;
 	}
-
+	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		boolean state = delta != null ? (Boolean) delta[0] : false;
-		for (Projectile entity : getExpr().getAll(e)) {
+		for (Projectile entity : getExpr().getArray(e))
 			entity.setBounce(state);
-		}
 	}
-
+	
 	@Override
 	public Class<? extends Boolean> getReturnType() {
 		return Boolean.class;
 	}
-
+	
 	@Override
 	protected String getPropertyName() {
 		return "projectile bounce state";
 	}
-
+	
 }
