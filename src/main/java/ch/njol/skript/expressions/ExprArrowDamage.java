@@ -19,6 +19,12 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.AbstractArrow;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -27,27 +33,22 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Arrow Damage")
 @Description("An arrow's base damage. ")
 @Examples({"on shoot:",
-		"\tevent-projectile is an arrow",
-		"\tset arrow damage of event-projectile to 0"})
+	"\tevent-projectile is an arrow",
+	"\tset arrow damage of event-projectile to 0"})
 @Since("INSERT VERSION")
 public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number> {
-
+	
+	final static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
+	
 	static {
-		if (Skript.classExists("org.bukkit.entity.AbstractArrow") || Skript.methodExists(Arrow.class, "getDamage"))
+		if (abstractArrowExists || Skript.methodExists(Arrow.class, "getDamage"))
 			register(ExprArrowDamage.class, Number.class, "[the] arrow damage", "projectiles");
 	}
-
-	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
-
+	
 	@Nullable
 	@Override
 	public Number convert(Projectile arrow) {
@@ -55,32 +56,78 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).getDamage() : null;
 		return arrow instanceof Arrow ? ((Arrow) arrow).getDamage() : null;
 	}
-
+	
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Number.class) : null;
+		return (mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL) ? null : CollectionUtils.array(Number.class);
 	}
-
+	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		double strength = delta != null ? Math.max(((Number) delta[0]).doubleValue(), 0) : 0;
-		for (Projectile entity : getExpr().getAll(e)) {
-			if (abstractArrowExists) {
-				if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setDamage(strength);
-			} else if (entity instanceof Arrow)
-				((Arrow) entity).setDamage(strength);
+		switch (mode) {
+			case REMOVE:
+				if (abstractArrowExists)
+					for (Projectile entity : getExpr().getArray(e)) {
+						if (entity instanceof AbstractArrow) {
+							AbstractArrow abstractArrow = (AbstractArrow) entity;
+							double dmg = abstractArrow.getDamage() - strength;
+							if (dmg < 0) dmg = 0;
+							abstractArrow.setDamage(dmg);
+						}
+					}
+				else
+					for (Projectile entity : getExpr().getArray(e)) {
+						if (entity instanceof Arrow) {
+							Arrow arrow = (Arrow) entity;
+							double dmg = arrow.getDamage() - strength;
+							if (dmg < 0) dmg = 0;
+							arrow.setDamage(dmg);
+						}
+					}
+				break;
+			case ADD:
+				if (abstractArrowExists)
+					for (Projectile entity : getExpr().getArray(e)) {
+						if (entity instanceof AbstractArrow) {
+							AbstractArrow abstractArrow = (AbstractArrow) entity;
+							double dmg = abstractArrow.getDamage() + strength;
+							if (dmg < 0) dmg = 0;
+							abstractArrow.setDamage(dmg);
+						}
+					}
+				else
+					for (Projectile entity : getExpr().getArray(e)) {
+						if (entity instanceof Arrow) {
+							Arrow arrow = (Arrow) entity;
+							double dmg = arrow.getDamage() + strength;
+							if (dmg < 0) dmg = 0;
+							arrow.setDamage(dmg);
+						}
+					}
+				break;
+			case RESET:
+			case SET:
+				for (Projectile entity : getExpr().getArray(e)) {
+					if (abstractArrowExists) {
+						if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setDamage(strength);
+					} else if (entity instanceof Arrow) {
+						((Arrow) entity).setDamage(strength);
+					}
+				}
+				break;
 		}
 	}
-
+	
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
-
+	
 	@Override
 	protected String getPropertyName() {
 		return "arrow damage";
 	}
-
+	
 }
