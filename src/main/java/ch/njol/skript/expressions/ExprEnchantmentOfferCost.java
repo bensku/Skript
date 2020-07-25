@@ -57,7 +57,7 @@ public class ExprEnchantmentOfferCost extends SimplePropertyExpression<Enchantme
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return null;
 		return CollectionUtils.array(Number.class, Experience.class);
 	}

@@ -110,6 +110,7 @@ public class ExprTarget extends PropertyExpression<LivingEntity, Entity> {
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE)
 			return CollectionUtils.array(LivingEntity.class);
+		if (mode == ChangeMode.TOGGLE) return null;
 		return super.acceptChange(mode);
 	}
 	

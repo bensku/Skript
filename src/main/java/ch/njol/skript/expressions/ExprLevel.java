@@ -80,7 +80,7 @@ public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
 			return null;
 		if (ScriptLoader.isCurrentEvent(PlayerRespawnEvent.class) && !ScriptLoader.hasDelayBefore.isTrue()) {
 			Skript.error("Cannot change a player's level in a respawn event. Add a delay of 1 tick or change the 'new level' in a death event.");

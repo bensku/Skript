@@ -73,7 +73,7 @@ public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
 			return null;
 		if (Slot.class.isAssignableFrom(getExpr().getReturnType()) || getExpr().isSingle() && ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class, ItemType.class))
 			return CollectionUtils.array(Number.class);

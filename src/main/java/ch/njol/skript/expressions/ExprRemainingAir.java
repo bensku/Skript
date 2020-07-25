@@ -65,7 +65,7 @@ public class ExprRemainingAir extends SimplePropertyExpression<LivingEntity, Tim
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return (mode != ChangeMode.REMOVE_ALL) ? CollectionUtils.array(Timespan.class) : null;
+		return (mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.TOGGLE) ? CollectionUtils.array(Timespan.class) : null;
 	}
 	
 	@SuppressWarnings("null")

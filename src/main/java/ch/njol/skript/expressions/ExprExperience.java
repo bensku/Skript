@@ -81,6 +81,7 @@ public class ExprExperience extends SimpleExpression<Experience> {
 			case SET:
 				return new Class[] {Experience.class, Number.class};
 			case RESET:
+			case TOGGLE:
 				return null;
 		}
 		return null;

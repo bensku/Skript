@@ -103,6 +103,7 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 		if (mode == ChangeMode.SET) {
 			return new Class[] {Entity.class, EntityData.class};
 		}
+		if (mode == ChangeMode.TOGGLE) return null;
 		return super.acceptChange(mode);
 	}
 	

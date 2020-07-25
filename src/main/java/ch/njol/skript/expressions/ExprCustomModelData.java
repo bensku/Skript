@@ -65,7 +65,7 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 	
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return CollectionUtils.array(Number.class);
+		return mode == Changer.ChangeMode.TOGGLE ? null : CollectionUtils.array(Number.class);
 	}
 	
 	@Override
