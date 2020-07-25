@@ -319,7 +319,7 @@ public class EffChange extends Effect {
 			case RESET:
 				return "reset " + changed.toString(e, debug);
 			case TOGGLE:
-				return "toggle " + changer.toString(e, debug);
+				return "toggle " + changed.toString(e, debug);
 		}
 		assert false;
 		return "";
