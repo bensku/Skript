@@ -286,7 +286,7 @@ public class EffChange extends Effect {
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
 		if (delta != null && delta.length == 0)
 			return;
-		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET))
+		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET && mode != ChangeMode.TOGGLE))
 			return;
 		changed.change(e, delta, mode); // Trigger beforeChanged hook
 		// REMIND use a random element out of delta if changed only supports changing a single instance
