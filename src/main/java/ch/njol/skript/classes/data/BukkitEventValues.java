@@ -753,7 +753,7 @@ public final class BukkitEventValues {
 				return e.getEntity().getLocation();
 			}
 		}, 0);
-			
+		
 		// HangingBreakEvent
 		EventValues.registerEventValue(HangingBreakEvent.class, Entity.class, new Getter<Entity, HangingBreakEvent>() {
 			@Nullable
@@ -859,13 +859,6 @@ public final class BukkitEventValues {
 				@Override
 				public CommandSender get(UnknownCommandEvent event) {
 					return event.getSender();
-				}
-			}, 0);
-			EventValues.registerEventValue(UnknownCommandEvent.class, String.class, new Getter<String, UnknownCommandEvent>() {
-				@Nullable
-				@Override
-				public String get(UnknownCommandEvent event) {
-					return event.getCommandLine();
 				}
 			}, 0);
 		}
@@ -1005,7 +998,7 @@ public final class BukkitEventValues {
 			public ItemType get(PlayerEditBookEvent e) {
 				ItemStack book = new ItemStack(e.getPlayer().getItemInHand().getType());
 				book.setItemMeta(e.getNewBookMeta());
-				return new ItemType(book); //TODO: Find better way to derive this event value 
+				return new ItemType(book); //TODO: Find better way to derive this event value
 			}
 		}, 0);
 		//ItemDespawnEvent
