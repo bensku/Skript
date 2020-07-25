@@ -228,6 +228,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	public static boolean using64BitJava() {
+		// Property returned should either be "Java HotSpot(TM) 64-Bit Server VM" or "OpenJDK 64-Bit Server VM"
 		return System.getProperty("java.vm.name").contains("64");
 	}
 	
