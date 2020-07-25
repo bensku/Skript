@@ -51,7 +51,7 @@ public class ExprProjectileBounceState extends SimplePropertyExpression<Projecti
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.SET || mode == ChangeMode.RESET) ? CollectionUtils.array(Boolean.class) : null;
+		return (mode == ChangeMode.SET) ? CollectionUtils.array(Boolean.class) : null;
 	}
 	
 	@Override
