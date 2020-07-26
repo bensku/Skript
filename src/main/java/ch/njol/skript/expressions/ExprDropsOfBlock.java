@@ -34,17 +34,18 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Drops Of Block")
-@Description("A list of the items that will drop when a block is broken. Note that 'as %entity%' only works on 1.15.2+.")
+@Description("A list of the items that will drop when a block is broken. Note that 'as %entity%' only works on minecraft 1.15+.")
 @Examples({"on break of block:",
 	"\tgive drops of block using player's tool to player"})
 @Since("INSERT VERSION")
 public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 	
 	static {
-		Skript.registerExpression(ExprDropsOfBlock.class, ItemStack.class, ExpressionType.COMBINED, "drops of %block% [(using|with) %-itemstack% [as %-entity%]]", "%block%'s drops [(using|with) %-itemstack% [as %-entity%]]");
+		Skript.registerExpression(ExprDropsOfBlock.class, ItemStack.class, ExpressionType.COMBINED, "drops of %block% [(using|with) %-itemstack% [(1¦as %-entity%)]]", "%block%'s drops [(using|with) %-itemstack% [(1¦as %-entity%)]]");
 	}
 	
 	@SuppressWarnings("null")
@@ -58,6 +59,10 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		block = (Expression<Block>) exprs[0];
 		item = (Expression<ItemStack>) exprs[1];
+		if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class) && parseResult.mark == 1) {
+			Skript.error("'as %entity%' can only be used on minecraft 1.15+.", ErrorQuality.SEMANTIC_ERROR);
+			return false;
+		}
 		entity = (Expression<Entity>) exprs[2];
 		return true;
 	}
@@ -73,8 +78,6 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 				return block.getDrops().toArray(new ItemStack[block.getDrops().size()]);
 			} else if (entity != null) {
 				ItemStack item = this.item.getSingle(e);
-				if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class))
-					return block.getDrops(item).toArray(new ItemStack[block.getDrops().size()]);
 				Entity entity = this.entity.getSingle(e);
 				return block.getDrops(item, entity).toArray(new ItemStack[block.getDrops().size()]);
 			} else {
