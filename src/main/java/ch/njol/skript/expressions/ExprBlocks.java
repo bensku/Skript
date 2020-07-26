@@ -136,9 +136,10 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			if (pattern == 4) {
 				List<Block> blocks = new ArrayList<>();
 				for (Chunk chunk : (Chunk[]) from.getAll(e)) {
+					int maxHeight = chunk.getWorld().getMaxHeight();
 					for (int x = 0; x < 16; x++) {
 						for (int z = 0; z < 16; z++) {
-							for (int y = 0; y < chunk.getWorld().getMaxHeight(); y++) {
+							for (int y = 0; y < maxHeight; y++) {
 								blocks.add(chunk.getBlock(x, y, z));
 							}
 						}
