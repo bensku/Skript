@@ -33,14 +33,14 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("Server Is Whitelisted")
-@Description("Whether or not the server is whitelisted")
-@Examples("if server is whitelisted")
+@Name("Is Server Whitelisted")
+@Description("Whether or not the server is whitelisted.")
+@Examples("if server is whitelisted:")
 @Since("INSERT VERSION")
-public class CondServerIsWhitelisted extends Condition {
+public class IsServerWhitelisted extends Condition {
 	
 	static {
-		Skript.registerCondition(CondServerIsWhitelisted.class, "server (is|1¦is(n't| not)) white[ ]listed");
+		Skript.registerCondition(IsServerWhitelisted.class, "server (is|1¦is(n't| not)) white[ ]listed");
 	}
 	
 	@Override
