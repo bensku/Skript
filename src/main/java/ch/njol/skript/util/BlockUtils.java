@@ -106,11 +106,11 @@ public abstract class BlockUtils {
 		// Skript uses a comma to separate lists, so we use a semi colon as a delimiter
 		// Here we are just replacing it back to a comma to create a new block data
 		String data = dataString.replace(";", ",");
-		// remove white space within square brackets ([ lit = false] -> [lit=false])
+		// Remove white space within square brackets ([ lit = false] -> [lit=false])
 		data = data.replaceAll(" (?=[^\\[]*])", "");
-		// if there are spaces before the square bracket we remove that
+		// If there are spaces before the square bracket we remove that
 		data = data.replace(" [", "[");
-		// and replace white space between namespace with underscores
+		// And replace white space between namespace with underscores
 		data = data.replace(" ", "_");
 		
 		try {
