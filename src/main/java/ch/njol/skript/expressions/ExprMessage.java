@@ -19,7 +19,9 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.command.UnknownCommandEvent;
@@ -79,7 +81,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprMessage extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
+		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns.toArray(new String[]{}));
 	}
 	
 	@SuppressWarnings("null")
@@ -89,7 +91,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		type = MessageType.supportedTypes[matchedPattern];
+		type = (MessageType) MessageType.supportedTypes.toArray()[matchedPattern];
 		if (!ScriptLoader.isCurrentEvent(type.getEvents())) {
 			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
@@ -222,7 +224,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 			
 		},
-		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
+		UNKNOWN_COMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{UnknownCommandEvent.class};
@@ -231,22 +233,27 @@ public class ExprMessage extends SimpleExpression<String> {
 			@Nullable
 			@Override
 			String get(Event e) {
-				if (e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
-				return null;
+				return ((UnknownCommandEvent) e).getMessage();
 			}
 			
 			@Override
 			void set(Event e, String message) {
-				if (e instanceof UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
+				((UnknownCommandEvent) e).setMessage(message);
 			}
 		};
-		
-		static String[] patterns;
-		static MessageType[] supportedTypes;
+		@SuppressWarnings("null")
+		static ArrayList<String> patterns;
+		@SuppressWarnings("null")
+		static EnumSet<MessageType> supportedTypes;
 		
 		static {
-			supportedTypes = Arrays.stream(values()).filter(messageType -> messageType.supported).toArray(MessageType[]::new);
-			patterns = Arrays.stream(supportedTypes).map(messageType -> messageType.pattern).toArray(String[]::new);
+			MessageType[] types = values();
+			for (int i = 0; i < types.length; i++) {
+				if (types[i].supported) {
+					supportedTypes.add(types[i]);
+					patterns.add(types[i].pattern);
+				}
+			}
 		}
 		
 		final String name;
