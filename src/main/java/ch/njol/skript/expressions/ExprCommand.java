@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 	"\t\tif the command is not \"exit\":",
 	"\t\t\tmessage \"You're not allowed to use commands during the game\"",
 	"\t\t\tcancel the event"})
-@Since("2.0")
+@Since("2.0, INSERT VERSION (Support for the unknown command event)")
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {
 	private final static int FULL = 0, LABEL = 1, ARGS = 2;
@@ -58,7 +58,7 @@ public class ExprCommand extends SimpleExpression<String> {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
 			"[the] (full|complete|whole) command", "[the] command [label]", "[the] arguments");
 	}
-
+	
 	private int what;
 	
 	@Override
