@@ -62,7 +62,8 @@ public class ExprMinecartDerailedVelocity extends SimplePropertyExpression<Entit
 			switch (mode) {
 				case SET:
 					getExpr().stream(e).forEach(entity -> {
-						if (entity instanceof Minecart) ((Minecart) entity).setDerailedVelocityMod((Vector) delta[0]);
+						if (entity instanceof Minecart)
+							((Minecart) entity).setDerailedVelocityMod((Vector) delta[0]);
 					});
 					break;
 				case ADD:
