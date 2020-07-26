@@ -412,7 +412,7 @@ public final class Skript extends JavaPlugin implements Listener {
 				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
 			} else {
 				Skript.error("");
-				Skript.error("There was a StackOverflowError that occured while loading scripts.");
+				Skript.error("There was a StackOverflowError that occured while loading aliases.");
 				Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
 				Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
 				Skript.error("");
