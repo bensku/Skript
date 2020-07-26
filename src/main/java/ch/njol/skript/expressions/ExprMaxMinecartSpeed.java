@@ -59,14 +59,16 @@ public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Numbe
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null) {
 			if (mode == ChangeMode.RESET) getExpr().stream(e).forEach(m -> {
-				if (m instanceof Minecart) ((Minecart) m).setMaxSpeed(0.4);
+				if (m instanceof Minecart)
+					((Minecart) m).setMaxSpeed(0.4);
 			});
 			return;
 		}
 		switch (mode) {
 			case SET:
 				getExpr().stream(e).forEach(m -> {
-					if (m instanceof Minecart) ((Minecart) m).setMaxSpeed(((Number) delta[0]).doubleValue());
+					if (m instanceof Minecart)
+						((Minecart) m).setMaxSpeed(((Number) delta[0]).doubleValue());
 				});
 				break;
 			case ADD:
