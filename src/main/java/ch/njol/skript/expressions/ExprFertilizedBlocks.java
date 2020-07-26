@@ -30,6 +30,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -40,6 +41,7 @@ import ch.njol.util.Kleenean;
 
 @Name("Fertilized blocks")
 @Description("The blocks fertilized in block fertilize events.")
+@RequiredPlugins("Minecraft 1.13 or newer")
 @Events("block fertilize")
 @Examples("the fertilized blocks")
 @Since("2.5")

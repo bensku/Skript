@@ -918,13 +918,6 @@ public final class BukkitEventValues {
 		}, 0);
 		//BlockFertilizeEvent
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent")) {
-			EventValues.registerEventValue(BlockFertilizeEvent.class, Block.class, new Getter<Block, BlockFertilizeEvent>() {
-				@Nullable
-				@Override
-				public Block get(BlockFertilizeEvent event) {
-					return event.getBlock();
-				}
-			}, 0);
 			EventValues.registerEventValue(BlockFertilizeEvent.class, Player.class, new Getter<Player, BlockFertilizeEvent>() {
 				@Nullable
 				@Override
