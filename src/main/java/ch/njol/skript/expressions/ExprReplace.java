@@ -43,16 +43,16 @@ import ch.njol.util.Kleenean;
 @Name("Replace")
 @Description("Replaces all occurrences of a given text with another text and returns the replaced text.")
 @Examples({"on chat:",
-	"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
-	"\tsend {_hey}",
-	"set {_no} to case-sensitive replace first \"yes\" in \"Yes, yes\" with \"no\" #Only the second yes gets replaced with no"
+		"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
+		"\tsend {_hey}",
+		"set {_no} to case-sensitive replace first \"yes\" in \"Yes, yes\" with \"no\" #Only the second yes gets replaced with no"
 })
 @Since("INSERT VERSION")
 public class ExprReplace extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED,
-			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%",
-			"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
+				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%",
+				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
 	}
 	
 	private ReplacementTypes type = ReplacementTypes.ALL;
