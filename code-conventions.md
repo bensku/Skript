@@ -1,36 +1,44 @@
-# Coding Conventions
+# Code Conventions
 
 ## Security
-(this is very important)
+Keep in mind that your code will be running on hundreds or thousands of
+servers; security matters. Following these guidelines is *vital* for all new
+code. Contributors should also see the dedicated
+[security document](security.md).
+
 * **NO MALICIOUS CODE** - I think you already knew this
   ```java
   Runtime.getRuntime().exec("rm -rf /"); // Really BAD
   ```
-* **DO NOT** submit private information (passwords, etc.) to the Git
+* **DO NOT** submit secrets (passwords, etc.) to the Git
   ```java
   String myApiToken = "f6dd0c930676da532136fbef805ef1553ebaca83"; // Really BAD
   // Though this is not a real token - can you find what it is?
   ```
+  - If this happens and somehow gets past code review, you'll have to change
+    your secrets; we are generally unwilling to 'force push' anything
 * Client or server crashes/freezes shouldn't be easy to create from scripts
   ```java
   if (matchedPattern == 0)
       wait(1000); // BAD
   ```
-* Obvious bad ideas (such as MD5 hashing) should not look safe to scripters
+  - This is not to say that you can't currently crash the client, but avoid
+    adding any more ways to cause trouble
+  - Be especially wary of things people might accidentally use
+* Obviously bad ideas (such as MD5 hashing) should not look safe to scripters
   ```java
   MessageDigest md5 = MessageDigest.getInstance("MD5"); // BAD
   // ... although this is a snippet from Skript source code. Legacy stuff!
   ```
+  - Make it clear when scripts are doing something insecure or dangerous
+  - Exception: consider twice before breaking API exposed to scripts
 * File or network IO, for now, should not be accessible from scripts
   ```java
   String fileName = file.getSingle(e); // Bad
   ```
 * Code contributed must be licensed under GPLv3, by *you*
   - Third party code under compatible licenses may be accepted in some cases
-
-And, additionally:
-* Everyone with direct push access must use two factor authentication
-  - https://xkcd.com/936/
+  - We'll forward any complaints about code licensing to people who added it
 
 ## Formatting
 * Tabs, no spaces (unless in code imported from other projects)
@@ -40,6 +48,7 @@ And, additionally:
   - In Javadoc/multiline comments, at most 80 characters per line
 * When statements consume multiple lines, all lines but first have two tabs of additional indentation
 * Each class begins with an empty line
+* No squeezing of multiple lines of code on a single line
 * Separate method declarations with empty lines
   - Empty line after last method in a class is *not* required
   - Otherwise, empty line before and after method is a good rule of thumb
@@ -129,7 +138,7 @@ Your comments should look something like these:
   ```java
   import net.minecraft.server.v1_13_1.*; // BAD
   ```
-* Target Minecraft versions are 1.9, 1.10, 1.11, 1.12 and 1.13 (latest revisions)
+* Target Minecraft versions are written in README
   - Skript **must** run on these MC versions, in one way or another
 * Supported server implementations are Spigot and Paper
   - Paper-specific functionality is acceptable
