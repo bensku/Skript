@@ -54,7 +54,7 @@ public class ExprArrowsStuck extends SimplePropertyExpression<LivingEntity, Numb
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}

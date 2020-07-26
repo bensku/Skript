@@ -73,7 +73,7 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Number
 			return null;
 		}
 		
-		if (mode != ChangeMode.DELETE && mode != ChangeMode.REMOVE_ALL)
+		if (mode != ChangeMode.DELETE && mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.TOGGLE)
 			return new Class[] {Number.class};
 		return null;
 	}

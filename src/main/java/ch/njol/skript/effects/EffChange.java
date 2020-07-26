@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -56,43 +56,44 @@ import ch.njol.util.Kleenean;
 @Name("Change: Set/Add/Remove/Delete/Reset")
 @Description("A very general effect that can change many <a href='../expressions'>expressions</a>. Many expressions can only be set and/or deleted, while some can have things added to or removed from them.")
 @Examples({"# set:",
-		"Set the player's display name to \"<red>%name of player%\"",
-		"set the block above the victim to lava",
-		"# add:",
-		"add 2 to the player's health # preferably use '<a href='#heal'>heal</a>' for this",
-		"add argument to {blacklist::*}",
-		"give a diamond pickaxe of efficiency 5 to the player",
-		"increase the data value of the clicked block by 1",
-		"# remove:",
-		"remove 2 pickaxes from the victim",
-		"subtract 2.5 from {points::%uuid of player%}",
-		"# remove all:",
-		"remove every iron tool from the player",
-		"remove all minecarts from {entitylist::*}",
-		"# delete:",
-		"delete the block below the player",
-		"clear drops",
-		"delete {variable}",
-		"# reset:",
-		"reset walk speed of player",
-		"reset chunk at the targeted block"})
-@Since("1.0 (set, add, remove, delete), 2.0 (remove all)")
+	"Set the player's display name to \"<red>%name of player%\"",
+	"set the block above the victim to lava",
+	"# add:",
+	"add 2 to the player's health # preferably use '<a href='#heal'>heal</a>' for this",
+	"add argument to {blacklist::*}",
+	"give a diamond pickaxe of efficiency 5 to the player",
+	"increase the data value of the clicked block by 1",
+	"# remove:",
+	"remove 2 pickaxes from the victim",
+	"subtract 2.5 from {points::%uuid of player%}",
+	"# remove all:",
+	"remove every iron tool from the player",
+	"remove all minecarts from {entitylist::*}",
+	"# delete:",
+	"delete the block below the player",
+	"clear drops",
+	"delete {variable}",
+	"# reset:",
+	"reset walk speed of player",
+	"reset chunk at the targeted block"})
+@Since("1.0 (set, add, remove, delete), 2.0 (remove all), INSERT VERSION (toggle)")
 public class EffChange extends Effect {
-	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][] {
-			{"(add|give) %objects% to %~objects%", ChangeMode.ADD},
-			{"increase %~objects% by %objects%", ChangeMode.ADD},
-			{"give %~objects% %objects%", ChangeMode.ADD},
-			
-			{"set %~objects% to %objects%", ChangeMode.SET},
-			
-			{"remove (all|every) %objects% from %~objects%", ChangeMode.REMOVE_ALL},
-			
-			{"(remove|subtract) %objects% from %~objects%", ChangeMode.REMOVE},
-			{"reduce %~objects% by %objects%", ChangeMode.REMOVE},
-			
-			{"(delete|clear) %~objects%", ChangeMode.DELETE},
-			
-			{"reset %~objects%", ChangeMode.RESET}
+	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][]{
+		{"(add|give) %objects% to %~objects%", ChangeMode.ADD},
+		{"increase %~objects% by %objects%", ChangeMode.ADD},
+		{"give %~objects% %objects%", ChangeMode.ADD},
+		
+		{"set %~objects% to %objects%", ChangeMode.SET},
+		
+		{"remove (all|every) %objects% from %~objects%", ChangeMode.REMOVE_ALL},
+		
+		{"(remove|subtract) %objects% from %~objects%", ChangeMode.REMOVE},
+		{"reduce %~objects% by %objects%", ChangeMode.REMOVE},
+		
+		{"(delete|clear) %~objects%", ChangeMode.DELETE},
+		
+		{"reset %~objects%", ChangeMode.RESET},
+		{"toggle %~objects%", ChangeMode.TOGGLE}
 	});
 	
 	static {
@@ -108,7 +109,7 @@ public class EffChange extends Effect {
 	private ChangeMode mode;
 	
 	private boolean single;
-	
+
 //	private Changer<?, ?> c = null;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -148,6 +149,10 @@ public class EffChange extends Effect {
 				break;
 			case RESET:
 				changed = exprs[0];
+				break;
+			case TOGGLE:
+				changed = exprs[0];
+				break;
 		}
 		
 		final CountingLogHandler h = SkriptLogger.startLogHandler(new CountingLogHandler(Level.SEVERE));
@@ -189,6 +194,9 @@ public class EffChange extends Effect {
 						Skript.error(what + " can't be reset. It can however be deleted which might result in the desired effect.", ErrorQuality.SEMANTIC_ERROR);
 					else
 						Skript.error(what + " can't be reset", ErrorQuality.SEMANTIC_ERROR);
+					break;
+				case TOGGLE:
+					Skript.error(what + " can't be toggled", ErrorQuality.SEMANTIC_ERROR);
 			}
 			return false;
 		}
@@ -278,7 +286,7 @@ public class EffChange extends Effect {
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
 		if (delta != null && delta.length == 0)
 			return;
-		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET))
+		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET && mode != ChangeMode.TOGGLE))
 			return;
 		changed.change(e, delta, mode); // Trigger beforeChanged hook
 		// REMIND use a random element out of delta if changed only supports changing a single instance
@@ -310,6 +318,8 @@ public class EffChange extends Effect {
 				return "delete/clear " + changed.toString(e, debug);
 			case RESET:
 				return "reset " + changed.toString(e, debug);
+			case TOGGLE:
+				return "toggle " + changed.toString(e, debug);
 		}
 		assert false;
 		return "";

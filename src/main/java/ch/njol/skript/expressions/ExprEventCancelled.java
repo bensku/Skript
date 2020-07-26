@@ -100,6 +100,11 @@ public class ExprEventCancelled extends SimpleExpression<Boolean> {
 			case SET:
 				assert delta != null;
 				((Cancellable) e).setCancelled((Boolean) delta[0]);
+				break;
+			case TOGGLE:
+				Cancellable cancellable = (Cancellable) e;
+				cancellable.setCancelled(!cancellable.isCancelled());
+				break;
 		}
 	}
 	

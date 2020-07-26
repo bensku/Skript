@@ -76,6 +76,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		if (mode == ChangeMode.SET)
 			return new Class[] {LivingEntity.class};
+		if (mode == ChangeMode.TOGGLE) return null;
 		return super.acceptChange(mode);
 	}
 	

@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -33,7 +33,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Name("Glowing")
 @Description("Indicates if targeted entity is glowing (new 1.9 effect) or not. Glowing entities can be seen through walls.")
 @Examples({"set glowing of player to true"})
-@Since("2.2-dev18")
+@Since("2.2-dev18, INSERT VERSION (toggle support)")
 public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	
 	static {
@@ -58,14 +58,22 @@ public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
-			return new Class[] {Boolean.class};
+		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
+			return new Class[]{Boolean.class};
 		return null;
 	}
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		for (final Entity entity : getExpr().getArray(e))
-			entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
+		switch (mode) {
+			case SET:
+			case RESET:
+				for (final Entity entity : getExpr().getArray(e))
+					entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
+				break;
+			case TOGGLE:
+				for (final Entity entity : getExpr().getArray(e))
+					entity.setGlowing(!entity.isGlowing());
+		}
 	}
 }

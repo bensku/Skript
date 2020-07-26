@@ -114,6 +114,7 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 			return new Class[] {Entity[].class, EntityData[].class}; // To support more than one entity
 		if (mode == ChangeMode.SET)
 			return new Class[] {Entity.class, EntityData.class};
+		if (mode == ChangeMode.TOGGLE) return null;
 		return super.acceptChange(mode);
 	}
 

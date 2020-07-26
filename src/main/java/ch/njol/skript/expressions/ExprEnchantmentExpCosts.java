@@ -107,7 +107,7 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
+		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
 			return null;
 		return CollectionUtils.array(Number.class, Experience.class);
 	}

@@ -89,7 +89,7 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 		// Enchantment doesn't get automatically converted to EnchantmentType if you give it more than a one.
 		// Meaning you can transform an Enchantment array to an EnchantmentType array automatically,
 		// So, we gotta do it manually.
-		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+		return mode == ChangeMode.TOGGLE ? null : CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
 	}
 
 	

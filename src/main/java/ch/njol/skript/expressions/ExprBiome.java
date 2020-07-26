@@ -74,6 +74,7 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if(mode == ChangeMode.TOGGLE) return null;
 		if (mode == ChangeMode.SET)
 			return new Class[] {Biome.class};
 		return super.acceptChange(mode);
