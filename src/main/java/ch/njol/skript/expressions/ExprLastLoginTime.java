@@ -19,32 +19,47 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Date;
+import ch.njol.util.Kleenean;
 
-@Name("Last Login Time")
-@Description("When a player last logged in")
+@Name("Last/First Login Time")
+@Description("When a player last/first logged in the server")
 @Examples({"command /onlinefor:",
 	"\ttrigger:",
-	"\t\tsend \"You have been online for %difference between player's last login date and now%\""})
+	"\t\tsend \"You have been online for %difference between player's last login date and now%.\"",
+	"\t\tsend \"You joined the server %difference between player's first login date and now% ago.\""})
 @Since("INSERT VERSION")
-public class ExprLastLoginTime extends SimplePropertyExpression<Player, Date> {
+public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
+	
+	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
 	
 	static {
-		register(ExprLastLoginTime.class, Date.class, "last login (date|time)", "players");
+		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login [(date|time)]", "offlineplayers");
+	}
+
+	private boolean first;
+	
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		first = parseResult.mark == 2;
+		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 	
 	@Nullable
 	@Override
-	public Date convert(Player player) {
-		return new Date(player.getLastLogin());
+	public Date convert(OfflinePlayer player) {
+		return new Date(first ? player.getFirstPlayed() : (LAST_LOGIN ? player.getLastLogin() : player.getLastPlayed()));
 	}
 	
 	@Override
