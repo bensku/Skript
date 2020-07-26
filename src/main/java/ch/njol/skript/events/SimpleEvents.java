@@ -55,6 +55,7 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -561,11 +562,15 @@ public class SimpleEvents {
 				"\tset the cost of enchant offer 1 to 10 levels")
 			.since("2.5");
 		Skript.registerEvent("Enchant", SimpleEvent.class, EnchantItemEvent.class, "[item] enchant")
-		.description("Called when a player successfully enchants an item.",
-			" To get the enchanted item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
-		.examples("on enchant:",
-			"\tif the clicked button is enchantment option 1:",
-			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
-		.since("2.5");
+			.description("Called when a player successfully enchants an item.",
+				" To get the enchanted item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
+			.examples("on enchant:",
+				"\tif the clicked button is enchantment option 1:",
+				"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
+			.since("2.5");
+		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
+			.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
+			.examples("on inventory pickup:")
+			.since("INSERT VERSION");
 	}
 }
