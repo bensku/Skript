@@ -78,7 +78,7 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "fertilized blocks";
+		return "the fertilized blocks";
 	}
 	
 }
