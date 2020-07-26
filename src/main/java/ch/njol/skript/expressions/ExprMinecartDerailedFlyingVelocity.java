@@ -136,7 +136,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	
 	@Override
 	protected String getPropertyName() {
-		return "derailed velocity";
+		return (flying ? "flying" : "derailed") + " velocity";
 	}
 	
 	
