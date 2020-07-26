@@ -1204,6 +1204,18 @@ entities:
 		name: strider¦s
 		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
 
+# -- Heal Reasons --
+heal reasons:
+    custom: unknown, custom, plugin, a plugin
+    eating: eating, consuming, ingesting
+    ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
+    magic: magic, potion, a potion
+    magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
+    regen: peaceful regeneration, peaceful regen, peaceful
+    satiated: satiated, satisfied, fed, sated
+    wither: withering, withered, wither potion, a wither effect, wither effect, wither
+    wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
+
 # -- Cat Types --
 cat types:
 	tabby: tabby
