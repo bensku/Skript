@@ -222,7 +222,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 			
 		},
-		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
+		UNKNOWN_COMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{UnknownCommandEvent.class};
@@ -231,13 +231,12 @@ public class ExprMessage extends SimpleExpression<String> {
 			@Nullable
 			@Override
 			String get(Event e) {
-				if (e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
-				return null;
+				return ((UnknownCommandEvent) e).getMessage();
 			}
 			
 			@Override
 			void set(Event e, String message) {
-				if (e instanceof UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
+				((UnknownCommandEvent) e).setMessage(message);
 			}
 		};
 		
