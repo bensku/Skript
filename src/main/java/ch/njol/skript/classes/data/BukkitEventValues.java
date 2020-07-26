@@ -79,7 +79,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
@@ -973,28 +972,6 @@ public final class BukkitEventValues {
 			@Nullable
 			public Inventory get(final InventoryCloseEvent e) {
 				return e.getInventory();
-			}
-		}, 0);
-		//InventoryPickupItemEvent
-		EventValues.registerEventValue(InventoryPickupItemEvent.class, Inventory.class, new Getter<Inventory, InventoryPickupItemEvent>() {
-			@Nullable
-			@Override
-			public Inventory get(InventoryPickupItemEvent event) {
-				return event.getInventory();
-			}
-		}, 0);
-		EventValues.registerEventValue(InventoryPickupItemEvent.class, Item.class, new Getter<Item, InventoryPickupItemEvent>() {
-			@Nullable
-			@Override
-			public Item get(InventoryPickupItemEvent event) {
-				return event.getItem();
-			}
-		}, 0);
-		EventValues.registerEventValue(InventoryPickupItemEvent.class, ItemStack.class, new Getter<ItemStack, InventoryPickupItemEvent>() {
-			@Nullable
-			@Override
-			public ItemStack get(InventoryPickupItemEvent event) {
-				return event.getItem().getItemStack();
 			}
 		}, 0);
 		//PortalCreateEvent
