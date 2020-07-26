@@ -81,7 +81,12 @@ public class ExprMessage extends SimpleExpression<String> {
 	
 	@SuppressWarnings("unchecked")
 	private static enum MessageType {
-		CHAT("chat", "[chat( |-)]message", true, PlayerChatEventHandler.usesAsyncEvent ? "org.bukkit.event.player.AsyncPlayerChatEvent" : "org.bukkit.event.player.PlayerChatEvent") {
+		CHAT("chat", "[chat( |-)]message", true) {
+			@Override
+			Class<? extends Event>[] getEvents() {
+				return new Class[]{ PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class};
+			}
+			
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -99,7 +104,13 @@ public class ExprMessage extends SimpleExpression<String> {
 					((PlayerChatEvent) e).setMessage(message);
 			}
 		},
-		JOIN("join", "(join|log[ ]in)( |-)message", true, "org.bukkit.event.player.PlayerJoinEvent") {
+		JOIN("join", "(join|log[ ]in)( |-)message", true) {
+			
+			@Override
+			Class<? extends Event>[] getEvents() {
+				return new Class[]{PlayerJoinEvent.class};
+			}
+			
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -111,7 +122,13 @@ public class ExprMessage extends SimpleExpression<String> {
 				((PlayerJoinEvent) e).setJoinMessage(message);
 			}
 		},
-		QUIT("quit", "(quit|leave|log[ ]out|kick)( |-)message", true, "org.bukkit.event.player.PlayerQuitEvent", "org.bukkit.event.player.PlayerKickEvent") {
+		QUIT("quit", "(quit|leave|log[ ]out|kick)( |-)message", true) {
+			
+			@Override
+			Class<? extends Event>[] getEvents() {
+				return new Class[]{PlayerQuitEvent.class, PlayerKickEvent.class};
+			}
+			
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -129,7 +146,12 @@ public class ExprMessage extends SimpleExpression<String> {
 					((PlayerQuitEvent) e).setQuitMessage(message);
 			}
 		},
-		DEATH("death", "death( |-)message", true, "org.bukkit.event.entity.EntityDeathEvent") {
+		DEATH("death", "death( |-)message", true) {
+			@Override
+			Class<? extends Event>[] getEvents() {
+				return new Class[]{EntityDeathEvent.class};
+			}
+			
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -144,7 +166,12 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 			
 		},
-		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent"), "org.bukkit.event.command.UnknownCommandEvent"){
+		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")){
+			@Override
+			Class<? extends Event>[] getEvents() {
+				return new Class[]{UnknownCommandEvent.class};
+			}
+			
 			@Nullable
 			@Override
 			String get(Event e) {
@@ -160,13 +187,11 @@ public class ExprMessage extends SimpleExpression<String> {
 		
 		final String name;
 		private final String pattern;
-		final String[] events;
 		private final boolean supported;
-		MessageType(final String name, final String pattern, boolean supported, final String... events) {
+		MessageType(final String name, final String pattern, boolean supported) {
 			this.name = name;
 			this.pattern = "[the] " + pattern;
 			this.supported = supported;
-			this.events = events;
 		}
 		
 		static String[] patterns;
@@ -175,6 +200,8 @@ public class ExprMessage extends SimpleExpression<String> {
 			supportedTypes = Arrays.stream(values()).filter(messageType -> messageType.supported).toArray(MessageType[]::new);
 			patterns = Arrays.stream(supportedTypes).map(messageType -> messageType.pattern).toArray(String[]::new);
 		}
+		
+		abstract Class<? extends Event>[] getEvents();
 		
 		@Nullable
 		abstract String get(Event e);
@@ -192,36 +219,19 @@ public class ExprMessage extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		System.out.println(String.join( "\n", MessageType.patterns));
-		System.out.println(Arrays.stream(MessageType.supportedTypes).map(m -> m.name).collect(Collectors.joining(", ")));
-		System.out.println(matchedPattern);
 		type = MessageType.supportedTypes[matchedPattern];
-		System.out.println(type.events.length);
-		for(int x = 0; x < type.events.length; x++){
-			try {
-				Class<? extends Event> evt = (Class<? extends Event>) Class.forName(type.events[x]);
-				System.out.println(evt.getName());
-				if(ScriptLoader.isCurrentEvent(evt))
-					return true;
-			} catch (ClassNotFoundException e){
-				e.printStackTrace();
-				continue;
-			}
+		if(!ScriptLoader.isCurrentEvent(type.getEvents())) {
+			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
-		Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
-		return false;
+		return true;
 	}
 	
 	@Override
 	protected String[] get(final Event e) {
-		for(int x = 0; x < type.events.length; x++){
-			try {
-				Class<? extends Event> evt = (Class<? extends Event>) Class.forName(type.events[x]);
-				if(ScriptLoader.isCurrentEvent(evt))
+		for(final Class<? extends Event> c : type.getEvents()){
+				if(ScriptLoader.isCurrentEvent(c))
 					return new String[]{type.get(e)};
-			} catch (ClassNotFoundException exception){
-				continue;
-			}
 		}
 		return new String[0];
 	}
@@ -238,13 +248,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.SET;
 		assert delta != null;
-		if(Arrays.stream(type.events).map(s -> {
-			try {
-				return Class.forName(s);
-			} catch (ClassNotFoundException exception){
-				return null;
-			}
-		}).anyMatch((c) -> c.isInstance(e)))
+		if(Arrays.stream(type.getEvents()).anyMatch((c) -> c.isInstance(e)))
 				type.set(e, "" + delta[0]);
 	}
 	
