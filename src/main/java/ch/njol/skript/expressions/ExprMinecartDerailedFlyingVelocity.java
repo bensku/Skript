@@ -86,7 +86,6 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 							if (entity instanceof Minecart)
 								((Minecart) entity).setFlyingVelocityMod((Vector) delta[0]);
 						}
-						;
 						break;
 					case ADD:
 						for (Entity entity : getExpr().getArray(e)) {
