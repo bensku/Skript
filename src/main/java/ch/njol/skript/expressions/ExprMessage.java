@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.command.UnknownCommandEvent;
@@ -57,34 +56,93 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Message")
 @Description("The (chat) message of a chat event, the join message of a join event, the quit message of a quit event, or the death message on a death event. This expression is mostly useful for being changed.")
 @Examples({"on chat:",
-		"\tplayer has permission \"admin\"",
-		"\tset message to \"<red>%message%\"",
-		"",
-		"on first join:",
-		"\tset join message to \"Welcome %player% to our awesome server!\"",
-		"",
-		"on join:",
-		"\tplayer has played before",
-		"\tset join message to \"Welcome back, %player%!\"",
-		"",
-		"on quit:",
-		"\tset quit message to \"%player% left this awesome server!\"",
-		"",
-		"on death:",
-		"\tset the death message to \"%player% died!\"",
-		"",
-		"on unknown command: #requires Paper",
-		"\tset unknown command message to \"The command \"\"%event-string%\"\" doesn't exist.\""})
+	"\tplayer has permission \"admin\"",
+	"\tset message to \"<red>%message%\"",
+	"",
+	"on first join:",
+	"\tset join message to \"Welcome %player% to our awesome server!\"",
+	"",
+	"on join:",
+	"\tplayer has played before",
+	"\tset join message to \"Welcome back, %player%!\"",
+	"",
+	"on quit:",
+	"\tset quit message to \"%player% left this awesome server!\"",
+	"",
+	"on death:",
+	"\tset the death message to \"%player% died!\"",
+	"",
+	"on unknown command: #requires Paper",
+	"\tset unknown command message to \"The command \"\"%event-string%\"\" doesn't exist.\""})
 @Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (unknown command message)")
 @Events({"chat", "join", "quit", "death", "unknown command"})
 public class ExprMessage extends SimpleExpression<String> {
+	
+	static {
+		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
+	}
+	
+	@SuppressWarnings("null")
+	private MessageType type;
+	
+	
+	@SuppressWarnings("null")
+	@Override
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		type = MessageType.supportedTypes[matchedPattern];
+		if (!ScriptLoader.isCurrentEvent(type.getEvents())) {
+			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	protected String[] get(final Event e) {
+		for (final Class<? extends Event> c : type.getEvents()) {
+			if (ScriptLoader.isCurrentEvent(c))
+				return new String[]{type.get(e)};
+		}
+		return new String[0];
+	}
+	
+	@Override
+	@Nullable
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.SET)
+			return CollectionUtils.array(String.class);
+		return null;
+	}
+	
+	@Override
+	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
+		assert mode == ChangeMode.SET;
+		assert delta != null;
+		if (Arrays.stream(type.getEvents()).anyMatch((c) -> c.isInstance(e)))
+			type.set(e, "" + delta[0]);
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+	
+	@Override
+	public Class<? extends String> getReturnType() {
+		return String.class;
+	}
+	
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "the " + type.name + " message";
+	}
 	
 	@SuppressWarnings("unchecked")
 	private static enum MessageType {
 		CHAT("chat", "[chat( |-)]message", true) {
 			@Override
 			Class<? extends Event>[] getEvents() {
-				return new Class[]{ PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class};
+				return new Class[]{PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class};
 			}
 			
 			@Override
@@ -105,7 +163,6 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 		},
 		JOIN("join", "(join|log[ ]in)( |-)message", true) {
-			
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{PlayerJoinEvent.class};
@@ -123,7 +180,6 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 		},
 		QUIT("quit", "(quit|leave|log[ ]out|kick)( |-)message", true) {
-			
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{PlayerQuitEvent.class, PlayerKickEvent.class};
@@ -166,7 +222,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			}
 			
 		},
-		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")){
+		UNKNOWNCOMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{UnknownCommandEvent.class};
@@ -175,30 +231,32 @@ public class ExprMessage extends SimpleExpression<String> {
 			@Nullable
 			@Override
 			String get(Event e) {
-				if(e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
+				if (e instanceof UnknownCommandEvent) return ((UnknownCommandEvent) e).getMessage();
 				return null;
 			}
 			
 			@Override
 			void set(Event e, String message) {
-				if(e instanceof  UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
+				if (e instanceof UnknownCommandEvent) ((UnknownCommandEvent) e).setMessage(message);
 			}
 		};
+		
+		static String[] patterns;
+		static MessageType[] supportedTypes;
+		
+		static {
+			supportedTypes = Arrays.stream(values()).filter(messageType -> messageType.supported).toArray(MessageType[]::new);
+			patterns = Arrays.stream(supportedTypes).map(messageType -> messageType.pattern).toArray(String[]::new);
+		}
 		
 		final String name;
 		private final String pattern;
 		private final boolean supported;
+		
 		MessageType(final String name, final String pattern, boolean supported) {
 			this.name = name;
 			this.pattern = "[the] " + pattern;
 			this.supported = supported;
-		}
-		
-		static String[] patterns;
-		static MessageType[] supportedTypes;
-		static {
-			supportedTypes = Arrays.stream(values()).filter(messageType -> messageType.supported).toArray(MessageType[]::new);
-			patterns = Arrays.stream(supportedTypes).map(messageType -> messageType.pattern).toArray(String[]::new);
 		}
 		
 		abstract Class<? extends Event>[] getEvents();
@@ -208,63 +266,6 @@ public class ExprMessage extends SimpleExpression<String> {
 		
 		abstract void set(Event e, String message);
 		
-	}
-	
-	static {
-		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns);
-	}
-	@SuppressWarnings("null")
-	private MessageType type;
-	
-	@SuppressWarnings("null")
-	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		type = MessageType.supportedTypes[matchedPattern];
-		if(!ScriptLoader.isCurrentEvent(type.getEvents())) {
-			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	protected String[] get(final Event e) {
-		for(final Class<? extends Event> c : type.getEvents()){
-				if(ScriptLoader.isCurrentEvent(c))
-					return new String[]{type.get(e)};
-		}
-		return new String[0];
-	}
-	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(String.class);
-		return null;
-	}
-	
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		assert mode == ChangeMode.SET;
-		assert delta != null;
-		if(Arrays.stream(type.getEvents()).anyMatch((c) -> c.isInstance(e)))
-				type.set(e, "" + delta[0]);
-	}
-	
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the " + type.name + " message";
 	}
 	
 }
