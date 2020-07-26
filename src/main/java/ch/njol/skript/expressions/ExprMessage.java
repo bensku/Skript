@@ -20,7 +20,6 @@
 package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 
 import org.bukkit.event.Event;
@@ -81,7 +80,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprMessage extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns.toArray(new String[]{}));
+		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns.toArray(new String[0]));
 	}
 	
 	@SuppressWarnings("null")
@@ -120,8 +119,11 @@ public class ExprMessage extends SimpleExpression<String> {
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.SET;
 		assert delta != null;
-		if (Arrays.stream(type.getEvents()).anyMatch((c) -> c.isInstance(e)))
-			type.set(e, "" + delta[0]);
+		Class<? extends Event>[] events = type.getEvents();
+		for (Class<? extends Event> evt : events) {
+			if (evt.isInstance(e))
+				type.set(e, "" + delta[0]);
+		}
 	}
 	
 	@Override
@@ -247,13 +249,12 @@ public class ExprMessage extends SimpleExpression<String> {
 		
 		static {
 			MessageType[] types = values();
-			supportedTypes = EnumSet.allOf(MessageType.class);
-			for (int i = 0; i < supportedTypes.size(); i++) {
+			supportedTypes = EnumSet.noneOf(MessageType.class);
+			for (int i = 0; i < types.length; i++) {
 				if (types[i].supported) {
 					patterns.add(types[i].pattern);
-					continue;
+					supportedTypes.add(types[i]);
 				}
-				supportedTypes.remove(types[i]);
 			}
 		}
 		
