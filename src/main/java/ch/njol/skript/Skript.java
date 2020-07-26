@@ -285,7 +285,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
 		if (!using64BitJava()) {
-			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when parsing scripts.");
+			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when loading aliases.");
 			Skript.warning("Please update to 64-bit Java to remove this warning.");
 		}
 		
