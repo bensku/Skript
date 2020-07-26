@@ -452,7 +452,7 @@ public class SkriptCommand implements TabExecutor {
 			List<String> backup = new ArrayList<>(Collections.singletonList("@all"));
 			List<String> update = new ArrayList<>(Arrays.asList("check", "changes", "download"));
 			List<String> list = new ArrayList<>();
-			if (!sender.isOp()) {
+			if (!sender.hasPermission("skript.admin")) {
 				return Collections.emptyList();
 			} else {
 				if (args.length == 1) {
