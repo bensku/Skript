@@ -26,12 +26,21 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
+@Name("Drops Of Block")
+@Description("A list of the items that will drop when a block is broken. Note that 'as %entity%' only works on 1.15.2+.")
+@Examples({"on break of block:",
+	"\tgive drops of block using player's tool to player"})
+@Since("INSERT VERSION")
 public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 	
 	static {
@@ -64,6 +73,8 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 				return block.getDrops().toArray(new ItemStack[block.getDrops().size()]);
 			} else if (entity != null) {
 				ItemStack item = this.item.getSingle(e);
+				if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class))
+					return block.getDrops(item).toArray(new ItemStack[block.getDrops().size()]);
 				Entity entity = this.entity.getSingle(e);
 				return block.getDrops(item, entity).toArray(new ItemStack[block.getDrops().size()]);
 			} else {
