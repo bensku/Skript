@@ -21,6 +21,7 @@ package ch.njol.skript.events;
 
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -567,5 +568,11 @@ public class SimpleEvents {
 			"\tif the clicked button is enchantment option 1:",
 			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
 		.since("2.5");
+		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
+			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
+			.description("Called when a player fertilizes blocks")
+			.examples("on block fertilize:",
+				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
+			.since("INSERT VERSION");
 	}
 }
