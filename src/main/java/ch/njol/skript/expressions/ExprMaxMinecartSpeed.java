@@ -25,11 +25,18 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Max Minecart Speed")
+@Description("The maximum speed of a minecart.")
+@Examples({"on right click on minecart:",
+	"\tset max minecart speed of event-entity to 1"})
+@Since("INSERT VERSION")
 public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Number> {
 	
 	static {
