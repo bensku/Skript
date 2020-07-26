@@ -93,6 +93,7 @@ public class EffChange extends Effect {
 		{"(delete|clear) %~objects%", ChangeMode.DELETE},
 		
 		{"reset %~objects%", ChangeMode.RESET},
+		
 		{"toggle %~objects%", ChangeMode.TOGGLE}
 	});
 	
