@@ -241,18 +241,19 @@ public class ExprMessage extends SimpleExpression<String> {
 				((UnknownCommandEvent) e).setMessage(message);
 			}
 		};
-		@SuppressWarnings("null")
-		static ArrayList<String> patterns;
-		@SuppressWarnings("null")
+		
+		static ArrayList<String> patterns = new ArrayList<>();
 		static EnumSet<MessageType> supportedTypes;
 		
 		static {
 			MessageType[] types = values();
-			for (int i = 0; i < types.length; i++) {
+			supportedTypes = EnumSet.allOf(MessageType.class);
+			for (int i = 0; i < supportedTypes.size(); i++) {
 				if (types[i].supported) {
-					supportedTypes.add(types[i]);
 					patterns.add(types[i].pattern);
+					continue;
 				}
+				supportedTypes.remove(types[i]);
 			}
 		}
 		
