@@ -53,6 +53,7 @@ import ch.njol.util.Kleenean;
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {
 	private final static int FULL = 0, LABEL = 1, ARGS = 2;
+	private final static boolean UNKNOWN_COMMAND_SUPPORTED = Skript.classExists("org.bukkit.event.command.UnknownCommandEvent");
 	
 	static {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
@@ -64,7 +65,8 @@ public class ExprCommand extends SimpleExpression<String> {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		what = matchedPattern;
-		if (!ScriptLoader.isCurrentEvent(PlayerCommandPreprocessEvent.class, ServerCommandEvent.class) && (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent") && !ScriptLoader.isCurrentEvent(UnknownCommandEvent.class))) {
+		if (!ScriptLoader.isCurrentEvent(PlayerCommandPreprocessEvent.class, ServerCommandEvent.class) && (UNKNOWN_COMMAND_SUPPORTED && !ScriptLoader.isCurrentEvent(UnknownCommandEvent.class)))
+		{
 			if (what != ARGS) // ExprArgument has the same syntax
 				Skript.error("The 'command' expression can only be used in a command event");
 			return false;
@@ -80,7 +82,7 @@ public class ExprCommand extends SimpleExpression<String> {
 			s = ((PlayerCommandPreprocessEvent) e).getMessage().substring(1).trim();
 		} else if (e instanceof ServerCommandEvent) {
 			s = ((ServerCommandEvent) e).getCommand().trim();
-		} else if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent") && e instanceof UnknownCommandEvent) {
+		} else if (UNKNOWN_COMMAND_SUPPORTED && e instanceof UnknownCommandEvent) {
 			s = ((UnknownCommandEvent) e).getCommandLine().trim();
 		} else {
 			return new String[0];
