@@ -64,12 +64,13 @@ public class ExprSneakingState extends SimplePropertyExpression<Player, Boolean>
 	}
 	
 	@Override
+	public Class<Boolean> getReturnType() {
+		return Boolean.class;
+	}
+	
+	@Override
 	protected String getPropertyName() {
 		return "sneaking state";
 	}
 	
-	@Override
-	public Class<Boolean> getReturnType() {
-		return Boolean.class;
-	}
 }
