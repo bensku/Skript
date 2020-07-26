@@ -24,25 +24,52 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
+enum ShutdownTypes {
+	STOP,
+	RESTART,
+	RELOAD;
+}
+
+@Name("Stop Server")
+@Description("Stop/Restart the server. If restarting isn't configured, the server will stop.")
+@Examples({"stop the server", "restart server"})
+@Since("INSERT VERSION")
 public class EffStopServer extends Effect {
 	
 	static {
-		Skript.registerEffect(EffStopServer.class, "(stop|shutdown) [the] server");
+		Skript.registerEffect(EffStopServer.class, "(stop|shut[ ]down) [the] server", "restart [the] server");
 	}
+	
+	ShutdownTypes type;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		type = ShutdownTypes.values()[matchedPattern];
 		return true;
 	}
 	
 	@Override
 	protected void execute(Event e) {
-		Bukkit.getServer().shutdown();
+		switch (type) {
+			case STOP:
+				Bukkit.shutdown();
+				break;
+			case RESTART:
+				Bukkit.spigot().restart();
+				break;
+			case RELOAD:
+				Bukkit.reload();
+				break;
+		}
 	}
 	
 	@Override
