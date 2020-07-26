@@ -35,16 +35,16 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set flight mode of player to true", "send \"%flying state of all players%\""})
 @Since("2.2-dev34, INSERT VERSION (toggle support)")
 public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
-	
+
 	static {
 		register(ExprFlightMode.class, Boolean.class, "fl(y[ing]|ight) (mode|state)", "players");
 	}
-	
+
 	@Override
 	public Boolean convert(final Player player) {
 		return player.getAllowFlight();
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
@@ -53,7 +53,7 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if(mode == Changer.ChangeMode.TOGGLE){
@@ -65,12 +65,12 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 				player.setAllowFlight(state);
 		}
 	}
-	
+
 	@Override
 	protected String getPropertyName() {
 		return "flight mode";
 	}
-	
+
 	@Override
 	public Class<Boolean> getReturnType() {
 		return Boolean.class;

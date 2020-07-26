@@ -46,27 +46,27 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples("chat recipients")
 @Since("2.2-Fixes-v7, 2.2-dev35 (clearing recipients)")
 public class ExprChatRecipients extends SimpleExpression<Player> {
-	
+
 	static {
 		Skript.registerExpression(ExprChatRecipients.class, Player.class, ExpressionType.SIMPLE, "[chat][( |-)]recipients");
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
 	public Class<Player> getReturnType() {
 		return Player.class;
 	}
-	
+
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(final ChangeMode mode) {
 		return mode != ChangeMode.TOGGLE ? CollectionUtils.array(Player[].class) : null;
 	}
-	
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!(ScriptLoader.isCurrentEvent(AsyncPlayerChatEvent.class))) {
@@ -75,12 +75,12 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return "chat recipients";
 	}
-	
+
 	@Override
 	@Nullable
 	protected Player[] get(Event event) {
@@ -88,7 +88,7 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 		Set<Player> playerSet = ae.getRecipients();
 		return playerSet.toArray(new Player[playerSet.size()]);
 	}
-	
+
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		final Player[] recipients = (Player[]) delta;
