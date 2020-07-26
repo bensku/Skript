@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -38,14 +39,17 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Coordinate")
-@Description("Represents a given coordinate of a location. ")
+@Description("Represents a given coordinate of a location or a chunk. The X/Z coordinates of a chunk will differ from a location in the sense they " +
+	"are basically a floored version of (x coord of location / 16). The Y coordinate is non existent for a chunk so this will always return 0. " +
+	"Coordinates of a location can be changed, but can not be changed for a chunk.")
 @Examples({"player's y-coordinate is smaller than 40:",
-		"	message \"Watch out for lava!\""})
-@Since("1.4.3")
-public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
+		"	message \"Watch out for lava!\"",
+		"set {_x} to x coord of chunk at player"})
+@Since("1.4.3, INSERT VERSION (coords of chunk)")
+public class ExprCoordinate extends SimplePropertyExpression<Object, Number> {
 	
 	static {
-		register(ExprCoordinate.class, Number.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
+		register(ExprCoordinate.class, Number.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations/chunks");
 	}
 	
 	private final static char[] axes = {'x', 'y', 'z'};
@@ -60,8 +64,14 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 	}
 	
 	@Override
-	public Number convert(final Location l) {
-		return axis == 0 ? l.getX() : axis == 1 ? l.getY() : l.getZ();
+	public Number convert(final Object o) {
+		if (o instanceof Location) {
+			Location loc = (Location) o;
+			return axis == 0 ? loc.getX() : axis == 1 ? loc.getY() : loc.getZ();
+		} else {
+			Chunk chunk = (Chunk) o;
+			return axis == 0 ? chunk.getX() : axis == 2 ? chunk.getZ() : 0;
+		}
 	}
 	
 	@Override
@@ -85,7 +95,11 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
 		assert delta != null;
-		final Location l = getExpr().getSingle(e);
+		Object o = getExpr().getSingle(e);
+		if (o instanceof Chunk) {
+			return;
+		}
+		final Location l = (Location) o;
 		if (l == null)
 			return;
 		double n = ((Number) delta[0]).doubleValue();
