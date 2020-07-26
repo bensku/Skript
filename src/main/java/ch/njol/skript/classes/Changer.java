@@ -30,7 +30,7 @@ import ch.njol.skript.lang.Expression;
  * isn't overridden.
  * <p>
  * Some useful Changers can be found in {@link DefaultChangers}
- * 
+ *
  * @author Peter Güttinger
  * @see DefaultChangers
  * @see Expression
@@ -45,7 +45,7 @@ public interface Changer<T> {
 	 * Tests whether this changer supports the given mode, and if yes what type(s) it expects the elements of <code>delta</code> to be.
 	 * <p>
 	 * Unlike {@link Expression#acceptChange(ChangeMode)} this method must not print errors.
-	 * 
+	 *
 	 * @param mode
 	 * @return An array of types that {@link #change(Object[], Object[], ChangeMode)} accepts as its <code>delta</code> parameter (which can be arrays to denote that multiple of
 	 *         that type are accepted), or null if the given mode is not supported. For {@link ChangeMode#DELETE} and {@link ChangeMode#RESET} this can return any non-null array to
@@ -72,7 +72,7 @@ public interface Changer<T> {
 		
 		/**
 		 * Tests whether an expression accepts changes of a certain type. If multiple types are given it test for whether any of the types is accepted.
-		 * 
+		 *
 		 * @param e The expression to test
 		 * @param mode The ChangeMode to use in the test
 		 * @param types The types to test for
