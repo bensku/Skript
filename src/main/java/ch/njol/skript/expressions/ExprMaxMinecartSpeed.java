@@ -1,0 +1,94 @@
+/**
+ * This file is part of Skript.
+ *
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Copyright 2011-2017 Peter Güttinger and contributors
+ */
+package ch.njol.skript.expressions;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.util.coll.CollectionUtils;
+
+@Name("Max Minecart Speed")
+public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Number> {
+	
+	static {
+		register(ExprMaxMinecartSpeed.class, Number.class, "max[imum] minecart (speed|velocity)", "entities");
+	}
+	
+	@Nullable
+	@Override
+	public Number convert(Entity entity) {
+		return entity instanceof Minecart ? ((Minecart) entity).getMaxSpeed() : null;
+	}
+	
+	@Nullable
+	@Override
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		return (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET || mode == ChangeMode.SET) ? CollectionUtils.array(Number.class) : null;
+	}
+	
+	@Override
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null) {
+			if (mode == ChangeMode.RESET) getExpr().stream(e).forEach(m -> {
+				if (m instanceof Minecart) ((Minecart) m).setMaxSpeed(0.4);
+			});
+			return;
+		}
+		switch (mode) {
+			case SET:
+				getExpr().stream(e).forEach(m -> {
+					if (m instanceof Minecart) ((Minecart) m).setMaxSpeed(((Number) delta[0]).doubleValue());
+				});
+				break;
+			case ADD:
+				getExpr().stream(e).forEach(m -> {
+					if (m instanceof Minecart) {
+						Minecart minecart = (Minecart) m;
+						minecart.setMaxSpeed(minecart.getMaxSpeed() + ((Number) delta[0]).doubleValue());
+					}
+				});
+				break;
+			case REMOVE:
+				getExpr().stream(e).forEach(m -> {
+					if (m instanceof Minecart) {
+						Minecart minecart = (Minecart) m;
+						minecart.setMaxSpeed(minecart.getMaxSpeed() - ((Number) delta[0]).doubleValue());
+					}
+				});
+				break;
+		}
+	}
+	
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
+	}
+	
+	@Override
+	protected String getPropertyName() {
+		return "max minecart speed";
+	}
+	
+}
