@@ -21,7 +21,9 @@ package ch.njol.skript.expressions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -47,18 +49,22 @@ import ch.njol.util.coll.iterator.IteratorIterable;
  * @author Peter Güttinger
  */
 @Name("Blocks")
-@Description("Blocks relative to other blocks or between other blocks. Can be used to get blocks relative to other blocks or for looping.")
+@Description("Blocks relative to other blocks or between other blocks. Can be used to get blocks relative to other blocks or for looping. " +
+	"Can also be used to get all the blocks in a chunk.")
 @Examples({"loop blocks above the player:",
 		"loop blocks between the block below the player and the targeted block:",
-		"set the blocks below the player, the victim and the targeted block to air"})
-@Since("1.0")
+		"set the blocks below the player, the victim and the targeted block to air",
+		"set {_blocks::*} to all blocks in chunk at player",
+		"set all blocks in chunk at player to air"})
+@Since("1.0, INSERT VERSION (blocks in chunk)")
 public class ExprBlocks extends SimpleExpression<Block> {
 	static {
 		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,
 				"[(all [[of] the]|the)] blocks %direction% [%locations%]", // TODO doesn't loop all blocks?
 				"[(all [[of] the]|the)] blocks from %location% [on] %direction%",
 				"[(all [[of] the]|the)] blocks from %block% to %block%",
-				"[(all [[of] the]|the)] blocks (within|between) %block% and %block%");
+				"[(all [[of] the]|the)] blocks (within|between) %block% and %block%",
+				"[(all [[of] the]|the)] blocks (in|of) %chunks%");
 	}
 	
 	@SuppressWarnings("null")
@@ -67,10 +73,12 @@ public class ExprBlocks extends SimpleExpression<Block> {
 	private Expression<Block> end;
 	@Nullable
 	private Expression<Direction> direction;
+	private int pattern;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		pattern = matchedPattern;
 		switch (matchedPattern) {
 			case 0:
 				direction = (Expression<Direction>) exprs[0];
@@ -84,6 +92,9 @@ public class ExprBlocks extends SimpleExpression<Block> {
 			case 3:
 				from = exprs[0];
 				end = (Expression<Block>) exprs[1];
+				break;
+			case 4:
+				from = exprs[0];
 				break;
 			default:
 				assert false : matchedPattern;
@@ -122,7 +133,19 @@ public class ExprBlocks extends SimpleExpression<Block> {
 	public Iterator<Block> iterator(final Event e) {
 		try {
 			final Expression<Direction> direction = this.direction;
-			if (direction != null) {
+			if (pattern == 4) {
+				List<Block> blocks = new ArrayList<>();
+				for (Chunk chunk : (Chunk[]) from.getAll(e)) {
+					for (int x = 0; x < 16; x++) {
+						for (int z = 0; z < 16; z++) {
+							for (int y = 0; y < chunk.getWorld().getMaxHeight(); y++) {
+								blocks.add(chunk.getBlock(x, y, z));
+							}
+						}
+					}
+				}
+				return blocks.listIterator();
+			} else if (direction != null) {
 				if (!from.isSingle()) {
 					return new ArrayIterator<>(get(e));
 				}
@@ -166,7 +189,9 @@ public class ExprBlocks extends SimpleExpression<Block> {
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<Block> end = this.end;
-		if (end != null) {
+		if (pattern == 4) {
+			return "blocks in chunk(s) " + from.toString(e, debug);
+		} else if (end != null) {
 			return "blocks from " + from.toString(e, debug) + " to " + end.toString(e, debug);
 		} else {
 			final Expression<Direction> direction = this.direction;

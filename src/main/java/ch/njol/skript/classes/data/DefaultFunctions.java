@@ -22,6 +22,7 @@ package ch.njol.skript.classes.data;
 import java.util.Calendar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -303,6 +304,25 @@ public class DefaultFunctions {
 		}).description("Gets a world from its name.")
 				.examples("set {_nether} to world(\"%{_world}%_nether\")")
 				.since("2.2");
+		
+		Functions.registerFunction(new JavaFunction<Chunk>("chunk", new Parameter[] {
+			new Parameter<>("x", numberClass, true, null),
+			new Parameter<>("z", numberClass, true, null),
+			new Parameter<>("world", Classes.getExactClassInfo(World.class), true, null)
+		}, Classes.getExactClassInfo(Chunk.class), true) {
+			@Nullable
+			@Override
+			public Chunk[] execute(FunctionEvent e, Object[][] params) {
+				World world = (World) params[2][0];
+				return new Chunk[] {world.getChunkAt(((Number) params[0][0]).intValue(), ((Number) params[1][0]).intValue())};
+			}
+		}.description("Grabs a chunk from a chunks X and Y coordinates. Do note these coordinates are not the same as a location, " +
+			"a chunk's coordinates are are a locations coordinates divided by 16, therefore a chunk with the coords 1 and 1, would have a corner " +
+			"location of 16x and 16z, or a chunk with coords 10 and 10 would have a corner location at 160x and 160z. You can easily get a " +
+			"chunks x and z coords by dividing by 16 and using the floor() function (see examples).")
+			.examples("set {_chunk} to chunk(1, 1, world \"world\")",
+				"set {_c} to chunk(floor(143 / 16), floor(25 / 16), world \"world\")")
+			.since("INSERT VERSION"));
 		
 		// the location expression doesn't work, so why not make a function for the same purpose
 		// FIXME document on ExprLocation as well
