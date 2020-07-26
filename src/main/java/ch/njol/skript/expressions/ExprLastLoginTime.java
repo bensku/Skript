@@ -34,11 +34,11 @@ import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
 
 @Name("Last/First Login Time")
-@Description("When a player last/first logged in the server")
+@Description("When a player last/first logged in the server.")
 @Examples({"command /onlinefor:",
 	"\ttrigger:",
 	"\t\tsend \"You have been online for %difference between player's last login date and now%.\"",
-	"\t\tsend \"You joined the server %difference between player's first login date and now% ago.\""})
+	"\t\tsend \"You first joined the server %difference between player's first login date and now% ago.\""})
 @Since("INSERT VERSION")
 public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
 	
