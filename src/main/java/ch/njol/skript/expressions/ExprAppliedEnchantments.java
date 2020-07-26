@@ -75,7 +75,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET ||mode == ChangeMode.TOGGLE)
 			return null;
 		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
 	}

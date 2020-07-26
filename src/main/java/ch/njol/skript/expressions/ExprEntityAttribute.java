@@ -83,7 +83,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS))
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS))
 			return null;
 		return CollectionUtils.array(Number.class);
 	}

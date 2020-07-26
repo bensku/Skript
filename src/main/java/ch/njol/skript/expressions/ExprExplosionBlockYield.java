@@ -74,7 +74,7 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}

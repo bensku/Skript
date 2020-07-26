@@ -61,7 +61,7 @@ public class ExprItem extends EventValueExpression<ItemStack> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.RESET)
+		if (mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return null;
 		item = new EventValueExpression<>(Item.class);
 		if (item.init())

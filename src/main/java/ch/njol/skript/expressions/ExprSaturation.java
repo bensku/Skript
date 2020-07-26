@@ -73,7 +73,7 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return (mode != ChangeMode.REMOVE_ALL) ? CollectionUtils.array(Number.class) : null;
+		return (mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.TOGGLE) ? CollectionUtils.array(Number.class) : null;
 	}
 	
 	@SuppressWarnings("null")
