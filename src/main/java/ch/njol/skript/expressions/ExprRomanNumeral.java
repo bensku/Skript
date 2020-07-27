@@ -19,8 +19,9 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.doc.Description;
@@ -30,37 +31,48 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Roman Numeral")
-@Description("The Roman Numeral of an Arabic Numeral")
+@Description("The Roman Numeral of an Arabic Numeral. Even though the usual maximum roman number is 3999 we added 'H' and 'G' respectively for the 10000 and 5000 numbers, to make the maximum be 49,999.")
 @Examples("set {_r} to roman numeral of 49")
 @Since("INSERT VERSION")
 public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
+	
+	private final static HashMap<Integer, String> map = new HashMap<Integer, String>() {{
+		put(10000, "H");
+		put(5000, "G");
+		put(1000, "M");
+		put(500, "D");
+		put(100, "C");
+		put(50, "L");
+		put(10, "X");
+		put(5, "V");
+		put(1, "I");
+	}};
 	
 	static {
 		register(ExprRomanNumeral.class, String.class, "roman num(ber|eral)", "number");
 	}
 	
-	private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>() {{
-		put(1000, "M");
-		put(900, "CM");
-		put(500, "D");
-		put(400, "CD");
-		put(100, "C");
-		put(90, "XC");
-		put(50, "L");
-		put(40, "XL");
-		put(10, "X");
-		put(9, "IX");
-		put(5, "V");
-		put(4, "IV");
-		put(1, "I");
-	}};
-	
 	public static String toRoman(int number) {
-		int l = map.floorKey(number);
-		if (number == l) {
-			return map.get(number);
+		if (number >= 50000 || number < 1) return null;
+		int significantDigit = 1;
+		while (number >= significantDigit) significantDigit *= 10;
+		significantDigit /= 10;
+		
+		String result = "";
+		while (number > 0) {
+			int lastNum = Math.floorDiv(number, significantDigit);
+			if (lastNum <= 3)
+				result += StringUtils.repeat(map.get(significantDigit), lastNum);
+			else if (lastNum == 4)
+				result += (map.get(significantDigit) + map.get(significantDigit * 5));
+			else if (lastNum <= 8)
+				result += (map.get(significantDigit * 5) + StringUtils.repeat(map.get(significantDigit), lastNum - 5));
+			else if (lastNum == 9)
+				result += (map.get(significantDigit) + map.get(significantDigit * 10));
+			number = (int) Math.floor(number % significantDigit);
+			significantDigit /= 10;
 		}
-		return map.get(l) + toRoman(number - l);
+		return result;
 	}
 	
 	@Nullable

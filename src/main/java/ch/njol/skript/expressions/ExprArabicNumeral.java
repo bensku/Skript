@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.HashMap;
+
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.doc.Description;
@@ -33,25 +35,34 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Since("INSERT VERSION")
 public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> {
 	
+	private final static HashMap<Character, Integer> map = new HashMap<Character, Integer>() {{
+		put('H', 10000);
+		put('G', 5000);
+		put('M', 1000);
+		put('D', 500);
+		put('C', 100);
+		put('L', 50);
+		put('X', 10);
+		put('V', 5);
+		put('I', 1);
+	}};
+	
 	static {
 		register(ExprArabicNumeral.class, Number.class, "arabic num(ber|eral)", "string");
 	}
 	
 	public static int toArabic(String n) {
-		if (n.startsWith("M")) return toArabic(n.substring(1)) + 1000;
-		if (n.startsWith("CM")) return toArabic(n.substring(2)) + 900;
-		if (n.startsWith("D")) return toArabic(n.substring(1)) + 500;
-		if (n.startsWith("CD")) return toArabic(n.substring(2)) + 400;
-		if (n.startsWith("C")) return toArabic(n.substring(1)) + 100;
-		if (n.startsWith("XC")) return toArabic(n.substring(2)) + 90;
-		if (n.startsWith("L")) return toArabic(n.substring(1)) + 50;
-		if (n.startsWith("XL")) return toArabic(n.substring(2)) + 40;
-		if (n.startsWith("X")) return toArabic(n.substring(1)) + 10;
-		if (n.startsWith("IX")) return toArabic(n.substring(2)) + 9;
-		if (n.startsWith("V")) return toArabic(n.substring(1)) + 5;
-		if (n.startsWith("IV")) return toArabic(n.substring(2)) + 4;
-		if (n.startsWith("I")) return toArabic(n.substring(1)) + 1;
-		return 0;
+		if (!n.matches("[HGMDCLXVI]+")) return 0;
+		int previous = 0;
+		int result = 0;
+		int length = n.length();
+		for (int i = 0; i < length; i++) {
+			Integer num = map.get(n.charAt(i));
+			if (num > previous) result += num - previous * 2;
+			else result += num;
+			previous = num;
+		}
+		return result;
 	}
 	
 	@Nullable
