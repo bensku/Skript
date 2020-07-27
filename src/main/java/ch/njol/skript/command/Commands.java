@@ -102,7 +102,13 @@ public abstract class Commands {
 	static {
 		init(); // separate method for the annotation
 	}
-	
+	public static Set<String> getScriptCommands(){
+		return commands.keySet();
+	}
+	@Nullable
+	public static SimpleCommandMap getCommandMap(){
+		return commandMap;
+	}
 	@SuppressWarnings("unchecked")
 	private static void init() {
 		try {
