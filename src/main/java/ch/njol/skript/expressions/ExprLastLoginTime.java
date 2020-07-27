@@ -37,8 +37,8 @@ import ch.njol.util.Kleenean;
 @Description("When a player last/first logged in the server.")
 @Examples({"command /onlinefor:",
 	"\ttrigger:",
-	"\t\tsend \"You have been online for %difference between player's last login date and now%.\"",
-	"\t\tsend \"You first joined the server %difference between player's first login date and now% ago.\""})
+	"\t\tsend \"You have been online for %difference between player's last login and now%.\"",
+	"\t\tsend \"You first joined the server %difference between player's first login and now% ago.\""})
 @Since("INSERT VERSION")
 public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
 	
@@ -47,7 +47,7 @@ public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, D
 	static {
 		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login", "offlineplayers");
 	}
-
+	
 	private boolean first;
 	
 	@Override
