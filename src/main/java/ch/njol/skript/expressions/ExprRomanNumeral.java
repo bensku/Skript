@@ -52,6 +52,7 @@ public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
 		register(ExprRomanNumeral.class, String.class, "roman num(ber|eral)", "number");
 	}
 	
+	@Nullable
 	public static String toRoman(int number) {
 		if (number >= 50000 || number < 1) return null;
 		int significantDigit = 1;
