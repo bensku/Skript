@@ -20,6 +20,8 @@
 package ch.njol.skript.expressions;
 
 
+import java.util.Iterator;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -65,7 +67,17 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	@Override
 	protected BlockStateBlock[] get(Event e) {
 		return
-			((BlockFertilizeEvent) e).getBlocks().stream().map(BlockStateBlock::new).toArray(BlockStateBlock[]::new);
+			((BlockFertilizeEvent) e).getBlocks().stream()
+				.map(BlockStateBlock::new)
+				.toArray(BlockStateBlock[]::new);
+	}
+	
+	@Nullable
+	@Override
+	public Iterator<? extends BlockStateBlock> iterator(Event e) {
+		return ((BlockFertilizeEvent) e).getBlocks().stream()
+			.map(BlockStateBlock::new)
+			.iterator();
 	}
 	
 	@Override
