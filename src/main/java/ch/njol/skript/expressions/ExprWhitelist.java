@@ -57,7 +57,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	@Nullable
 	@Override
 	protected OfflinePlayer[] get(Event e) {
-		return Bukkit.getServer().getWhitelistedPlayers().toArray(new OfflinePlayer[]{});
+		return Bukkit.getServer().getWhitelistedPlayers().toArray(new OfflinePlayer[0]);
 	}
 	
 	@Nullable
