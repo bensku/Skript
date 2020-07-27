@@ -34,7 +34,7 @@ import ch.njol.skript.util.Date;
 import ch.njol.util.Kleenean;
 
 @Name("Last/First Login Time")
-@Description("When a player last/first logged in the server.")
+@Description("When a player last/first logged in the server. 'last login' requires paper to get the last login, otherwise it will get the last time they were seen on the server.")
 @Examples({"command /onlinefor:",
 	"\ttrigger:",
 	"\t\tsend \"You have been online for %difference between player's last login and now%.\"",
@@ -42,12 +42,11 @@ import ch.njol.util.Kleenean;
 @Since("INSERT VERSION")
 public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
 	
+	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
+	
 	static {
 		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login", "offlineplayers");
 	}
-	
-	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
-	
 	
 	private boolean first;
 	
