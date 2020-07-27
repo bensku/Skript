@@ -42,11 +42,12 @@ import ch.njol.util.Kleenean;
 @Since("INSERT VERSION")
 public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
 	
-	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
-	
 	static {
 		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login", "offlineplayers");
 	}
+	
+	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
+	
 	
 	private boolean first;
 	
