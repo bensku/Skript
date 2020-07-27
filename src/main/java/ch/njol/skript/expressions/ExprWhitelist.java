@@ -38,7 +38,10 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Whitelist")
-@Description("A server's whitelist. This expression can be used to add/remove players to/from the whitelist, to enable it and disable it (set whitelist to true / set whitelist to false), and to empty it (reset whitelist)")
+@Description("A server's whitelist." +
+	"This expression can be used to add/remove players to/from the whitelist," +
+	" to enable it and disable it (set whitelist to true / set whitelist to false)," +
+	" and to empty it (reset whitelist)")
 @Examples({"set whitelist to false",
 	"add all players to whitelist",
 	"reset the whitelist"})

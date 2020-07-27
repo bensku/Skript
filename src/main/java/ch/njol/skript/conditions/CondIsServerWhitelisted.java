@@ -37,10 +37,10 @@ import ch.njol.util.Kleenean;
 @Description("Whether or not the server is whitelisted.")
 @Examples("if server is whitelisted:")
 @Since("INSERT VERSION")
-public class IsServerWhitelisted extends Condition {
+public class CondIsServerWhitelisted extends Condition {
 	
 	static {
-		Skript.registerCondition(IsServerWhitelisted.class, "server (is|1¦is(n't| not)) white[ ]listed");
+		Skript.registerCondition(CondIsServerWhitelisted.class, "[the] server (is|1¦is(n't| not)) white[ ]listed");
 	}
 	
 	@Override
@@ -56,7 +56,8 @@ public class IsServerWhitelisted extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "server is whitelisted";
+		
+		return "server is " + (isNegated() ? "not" : "") + "  whitelisted";
 	}
 	
 }
