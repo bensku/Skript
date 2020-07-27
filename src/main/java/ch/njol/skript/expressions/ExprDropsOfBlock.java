@@ -19,6 +19,8 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -26,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -42,23 +45,23 @@ import ch.njol.util.Kleenean;
 @Examples({"on break of block:",
 	"\tgive drops of block using player's tool to player"})
 @Since("INSERT VERSION")
-public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
+public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	
 	static {
-		Skript.registerExpression(ExprDropsOfBlock.class, ItemStack.class, ExpressionType.COMBINED, "drops of %block% [(using|with) %-itemstack% [(1¦as %-entity%)]]", "%block%'s drops [(using|with) %-itemstack% [(1¦as %-entity%)]]");
+		Skript.registerExpression(ExprDropsOfBlock.class, ItemType.class, ExpressionType.COMBINED, "drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]", "%blocks%'s drops [(using|with) %-itemtype% [(1¦as %-entity%)]]");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<Block> block;
 	@SuppressWarnings("null")
-	private Expression<ItemStack> item;
+	private Expression<ItemType> item;
 	@SuppressWarnings("null")
 	private Expression<Entity> entity;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		block = (Expression<Block>) exprs[0];
-		item = (Expression<ItemStack>) exprs[1];
+		item = (Expression<ItemType>) exprs[1];
 		if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class) && parseResult.mark == 1) {
 			Skript.error("'as %entity%' can only be used on minecraft 1.15+.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
@@ -70,19 +73,40 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
-	protected ItemStack[] get(Event e) {
-		Block block = this.block.getSingle(e);
-		
+	protected ItemType[] get(Event e) {
+		@Nullable
+		Block[] blocks = this.block.getArray(e);
 		if (block != null) {
 			if (this.item == null) {
-				return block.getDrops().toArray(new ItemStack[block.getDrops().size()]);
-			} else if (entity != null) {
-				ItemStack item = this.item.getSingle(e);
+				ArrayList<ItemType> list = new ArrayList<>();
+				for (Block block : blocks) {
+					ItemStack[] drops = block.getDrops().toArray(new ItemStack[0]);
+					for (ItemStack drop : drops) {
+						list.add(new ItemType(drop));
+					}
+				}
+				return list.toArray(new ItemType[0]);
+			} else if (this.entity != null) {
+				ItemType item = this.item.getSingle(e);
 				Entity entity = this.entity.getSingle(e);
-				return block.getDrops(item, entity).toArray(new ItemStack[block.getDrops().size()]);
+				ArrayList<ItemType> list = new ArrayList<>();
+				for (Block block : blocks) {
+					ItemStack[] drops = block.getDrops(item.getRandom(), entity).toArray(new ItemStack[0]);
+					for (ItemStack drop : drops) {
+						list.add(new ItemType(drop));
+					}
+				}
+				return list.toArray(new ItemType[0]);
 			} else {
-				ItemStack item = this.item.getSingle(e);
-				return block.getDrops(item).toArray(new ItemStack[block.getDrops().size()]);
+				ItemType item = this.item.getSingle(e);
+				ArrayList<ItemType> list = new ArrayList<>();
+				for (Block block : blocks) {
+					ItemStack[] drops = block.getDrops(item.getRandom()).toArray(new ItemStack[0]);
+					for (ItemStack drop : drops) {
+						list.add(new ItemType(drop));
+					}
+				}
+				return list.toArray(new ItemType[0]);
 			}
 		}
 		return null;
@@ -94,8 +118,8 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemStack> {
 	}
 	
 	@Override
-	public Class<? extends ItemStack> getReturnType() {
-		return ItemStack.class;
+	public Class<? extends ItemType> getReturnType() {
+		return ItemType.class;
 	}
 	
 	@Override
