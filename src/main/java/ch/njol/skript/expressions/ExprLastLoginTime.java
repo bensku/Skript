@@ -45,7 +45,7 @@ public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, D
 	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");
 	
 	static {
-		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login [(date|time)]", "offlineplayers");
+		register(ExprLastLoginTime.class, Date.class, "(1¦last|2¦first) login", "offlineplayers");
 	}
 
 	private boolean first;
