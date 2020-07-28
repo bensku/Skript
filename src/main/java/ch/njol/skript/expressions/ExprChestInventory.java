@@ -43,9 +43,9 @@ import org.eclipse.jdt.annotation.Nullable;
 	"Some inventories, such as a creative inventory, can not be created/opened to a player.")
 @Examples({"open chest inventory with 1 row named \"test\" to player",
 		"set {_inventory} to chest inventory with 1 row",
-		"open a hopper inventory named \"Senor Hopper\" to player",
-		"set {_inv} to an anvil inventory named \"&aSir Fix-a-Lot\" to player",
-		"open a loom inventory named \"&aMr Loomy\" to player"})
+		"open a custom hopper inventory named \"Senor Hopper\" to player",
+		"set {_inv} to a custom anvil inventory named \"&aSir Fix-a-Lot\" to player",
+		"open a custom loom inventory named \"&aMr Loomy\" to player"})
 @Since("2.2-dev34, INSERT VERSION (Inventory Types)")
 public class ExprChestInventory extends SimpleExpression<Inventory> {
 	
@@ -53,9 +53,9 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
 
     static {
         Skript.registerExpression(ExprChestInventory.class, Inventory.class, ExpressionType.COMBINED,
-        		"[a [new]] chest inventory (named|with name) %string% [with %-number% row[s]]",
-        		"[a [new]] chest inventory with %number% row[s] [(named|with name) %-string%]",
-				"[a[n] [new]] %inventorytype% [(named|with name) %-string%]");
+			"[a [new]] chest inventory (named|with name) %string% [with %-number% row[s]]",
+				"[a [new]] chest inventory with %number% row[s] [(named|with name) %-string%]",
+				"[a [new]] custom %inventorytype% [(named|with name) %-string%]");
     }
 
     @Nullable
