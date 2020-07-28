@@ -1,0 +1,23 @@
+test "villager type" when minecraft version is "1.16.1":
+	spawn a villager at spawn of world "world"
+	set {_v} to last spawned villager
+
+	set villager type of {_v} to jungle
+	assert villager type of {_v} = jungle with "The villager should have been a jungle villager but was %villager type of {_v}%"
+
+	set villager type of {_v} to snow
+	assert villager type of {_v} = snow with "The villager should have been a snow villager but was %villager type of {_v}%"
+
+	set villager type of {_v} to plains
+	assert villager type of {_v} = plains with "The villager should have been a plains villager but was %villager type of {_v}%"
+
+	# Test to make sure 'taiga' in {_t} is being parsed as a villager type
+	set {_t} to taiga
+	set villager type of {_v} to {_t}
+	assert villager type of {_v} = taiga with "The villager should have been a taiga villager but was %villager type of {_v}%"
+
+	# Also test to make sure 'taiga' in {_t} is being parsed as a biome
+	set biome of block at spawn of world "world" to {_t}
+	assert biome of block at spawn of world "world" is taiga with "The biome of block at spawn should be taiga but was %biome of block at spawn of world ""world""%"
+	set biome of block at spawn of world "world" to plains
+	assert biome of block at spawn of world "world" is plains with "The biome of block at spawn should be plains but was %biome of block at spawn of world ""world""%"
