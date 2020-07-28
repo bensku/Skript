@@ -1636,6 +1636,7 @@ inventory types:
 	cartography: cartography table inventory
 	grindstone: grindstone inventory
 	stonecutter: stonecutter inventory
+	smithing: smithing inventory
 
 # -- Spawn Reasons --
 spawn reasons:
