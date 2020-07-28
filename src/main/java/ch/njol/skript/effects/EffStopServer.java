@@ -44,29 +44,26 @@ public class EffStopServer extends Effect {
 		Skript.registerEffect(EffStopServer.class, "(stop|shut[ ]down) [the] server", "restart [the] server");
 	}
 	
-	int pattern;
+	private boolean restart;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		pattern = matchedPattern;
+		restart = matchedPattern == 1;
 		return true;
 	}
 	
 	@Override
 	protected void execute(Event e) {
-		switch (pattern) {
-			case 0:
-				Bukkit.shutdown();
-				break;
-			case 1:
-				Bukkit.spigot().restart();
-				break;
-		}
+		if (restart)
+			Bukkit.spigot().restart();
+		else
+			Bukkit.shutdown();
 	}
+	
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (pattern == 0 ? "stop" : "restart") + " the server";
+		return (restart ? "restart" : "stop" + "restart") + " the server";
 	}
 	
 }
