@@ -19,9 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EntityEquipment;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.doc.Description;
@@ -29,12 +27,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.CursorSlot;
-import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.Slot;
-import ch.njol.util.Kleenean;
 
 /**
  * Cursor item slot is not actually an inventory slot, but an item which the player

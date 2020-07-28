@@ -21,6 +21,7 @@ package ch.njol.skript.events;
 
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -30,6 +31,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -60,15 +64,16 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -92,8 +97,10 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
@@ -102,7 +109,6 @@ import ch.njol.skript.lang.util.SimpleEvent;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
@@ -223,7 +229,7 @@ public class SimpleEvents {
 				.since("1.0");
 		Skript.registerEvent("Lightning Strike", SimpleEvent.class, LightningStrikeEvent.class, "lightning [strike]")
 				.description("Called when lightning strikes.")
-				.examples("on lightning:")
+				.examples("on lightning:", "\tspawn a zombie at location of event-entity")
 				.since("1.0");
 		Skript.registerEvent("Pig Zap", SimpleEvent.class, PigZapEvent.class, "pig[ ]zap")
 				.description("Called when a pig is stroke by lightning and transformed into a zombie pigman. Cancel the event to prevent the transformation.")
@@ -258,13 +264,18 @@ public class SimpleEvents {
 				.since("1.0");
 		if (Skript.classExists("org.bukkit.event.player.PlayerItemBreakEvent")) {
 			Skript.registerEvent("Item Break", SimpleEvent.class, PlayerItemBreakEvent.class, "[player] tool break[ing]", "[player] break[ing] (a|the|) tool")
-					.description("Called when a player breaks his tool because its damage reached the maximum value.",
+					.description("Called when a player breaks their tool because its damage reached the maximum value.",
 							"This event cannot be cancelled.")
 					.examples("on tool break:")
 					.since("2.1.1");
 		}
+		Skript.registerEvent("Item Damage", SimpleEvent.class, PlayerItemDamageEvent.class, "item damag(e|ing)")
+				.description("Called when an item is damaged. Most tools are damaged by using them; armor is damaged when the wearer takes damage.")
+				.examples("on item damage:",
+						"\tcancel event")
+				.since("2.5");
 		Skript.registerEvent("Tool Change", SimpleEvent.class, PlayerItemHeldEvent.class, "[player['s]] (tool|item held|held item) chang(e|ing)")
-				.description("Called whenever a player changes his held item by selecting a different slot (e.g. the keys 1-9 or the mouse wheel), <i>not</i> by dropping or replacing the item in the current slot.")
+				.description("Called whenever a player changes their held item by selecting a different slot (e.g. the keys 1-9 or the mouse wheel), <i>not</i> by dropping or replacing the item in the current slot.")
 				.examples("on player's held item change:")
 				.since("1.0");
 		Skript.registerEvent("Join", SimpleEvent.class, PlayerJoinEvent.class, "[player] (login|logging in|join[ing])")
@@ -284,20 +295,15 @@ public class SimpleEvents {
 				.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects.html#EffCancelEvent'>cancel the event</a> entirely.")
 				.examples("on kick:")
 				.since("1.0");
-		// TODO level up/down
-		Skript.registerEvent("Level Change", SimpleEvent.class, PlayerLevelChangeEvent.class, "[player] level [change]")
-				.description("Called when a player's <a href='expressions.html#ExprLevel'>level</a> changes, e.g. by gathering experience or by enchanting something.")
-				.examples("on level change:")
-				.since("1.0");
 		Skript.registerEvent("Portal", SimpleEvent.class, PlayerPortalEvent.class, "[player] portal")
 				.description("Called when a player uses a nether or end portal. <a href='effects.html#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
 				.examples("on player portal:")
 				.since("1.0");
-		Skript.registerEvent("Quit", SimpleEvent.class, new Class[] {PlayerQuitEvent.class, PlayerKickEvent.class}, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
+		Skript.registerEvent("Quit", SimpleEvent.class, PlayerQuitEvent.class, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
 				.description("Called when a player leaves the server.")
 				.examples("on quit:",
 						"on disconnect:")
-				.since("1.0 (simple disconnection), 2.0 (kicked players)");
+				.since("1.0 (simple disconnection)");
 		Skript.registerEvent("Respawn", SimpleEvent.class, PlayerRespawnEvent.class, "[player] respawn[ing]")
 				.description("Called when a player respawns. You should prefer this event over the <a href='#death'>death event</a> as the player is technically alive when this event is called.")
 				.examples("on respawn:")
@@ -333,6 +339,14 @@ public class SimpleEvents {
 						"\tevent-projectile is arrow",
 						"\tdelete event-projectile")
 				.since("1.0");
+		
+		if(Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent"))
+			Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
+			.description("Called when a projectile collides with an entity.")
+			.requiredPlugins("Paper")
+			.examples("on projectile collide:",
+				"\tteleport shooter of event-projectile to event-entity")
+			.since("INSERT VERSION");
 		Skript.registerEvent("Shoot", SimpleEvent.class, ProjectileLaunchEvent.class, "[projectile] shoot")
 				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions.html#ExprShooter'>shooter expression</a> to get who shot the projectile.")
 				.examples("on shoot:",
@@ -459,7 +473,7 @@ public class SimpleEvents {
 				.examples("on flight toggle:",
 						"	if {game::%player%::playing} exists:",
 						"		cancel event")
-				.since("2.2-dev36"); 
+				.since("2.2-dev36");
 		if (Skript.classExists("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
 			Skript.registerEvent("Language Change", SimpleEvent.class, PlayerLocaleChangeEvent.class, "[player] (language|locale) chang(e|ing)", "[player] chang(e|ing) (language|locale)")
 					.description("Called after a player changed their language in the game settings. You can use the <a href='expressions.html#ExprLanguage'>language</a> expression to get the current language of the player.",
@@ -505,7 +519,6 @@ public class SimpleEvents {
 						"	set the fake max players count to (online players count + 1)",
 						"	set the shown icon to a random server icon out of {server-icons::*}")
 				.since("2.3");
-		
 		if (Skript.classExists("org.bukkit.event.entity.EntityToggleSwimEvent")) {
 			Skript.registerEvent("Swim Toggle", SimpleEvent.class, EntityToggleSwimEvent.class, "[entity] toggl(e|ing) swim",
 					"[entity] swim toggl(e|ing)")
@@ -516,5 +529,51 @@ public class SimpleEvents {
 							"	cancel event")
 					.since("2.3");
 		}
+		if (Skript.classExists("org.bukkit.event.player.PlayerRiptideEvent")) {
+			Skript.registerEvent("Riptide", SimpleEvent.class, PlayerRiptideEvent.class, "[use of] riptide [enchant[ment]]")
+				.description("Called when the player activates the riptide enchantment, using their trident to propel them through the air.",
+					"Note: the riptide action is performed client side, so manipulating the player in this event may have undesired effects.")
+				.examples("on riptide:",
+					"	send \"You are riptiding!\"")
+				.since("2.5");
+		}
+		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
+			Skript.registerEvent("Armor Change", SimpleEvent.class, PlayerArmorChangeEvent.class, "[player] armor change[d]")
+				.description("Called when armor pieces of a player are changed.")
+				.requiredPlugins("Paper")
+				.examples("on armor change:",
+					"	send \"You equipped %event-item%!\"")
+				.since("2.5");
+		}
+		if (Skript.classExists("org.bukkit.event.block.SpongeAbsorbEvent")) {
+			Skript.registerEvent("Sponge Absorb", SimpleEvent.class, SpongeAbsorbEvent.class, "sponge absorb")
+					.description("Called when a sponge absorbs blocks.")
+					.requiredPlugins("Minecraft 1.13 or newer")
+					.examples("on sponge absorb:",
+							"\tloop absorbed blocks:",
+							"\t\tbroadcast \"%loop-block% was absorbed by a sponge\"!")
+					.since("2.5");
+		}
+		Skript.registerEvent("Enchant Prepare", SimpleEvent.class, PrepareItemEnchantEvent.class, "[item] enchant prepare")
+			.description("Called when a player puts an item into enchantment table. This event may be called multiple times.",
+				" To get the enchant item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
+			.examples("on enchant prepare:",
+				"\tset enchant offer 1 to sharpness 1",
+				"\tset the cost of enchant offer 1 to 10 levels")
+			.since("2.5");
+		Skript.registerEvent("Enchant", SimpleEvent.class, EnchantItemEvent.class, "[item] enchant")
+		.description("Called when a player successfully enchants an item.",
+			" To get the enchanted item, see the <a href='expressions.html#ExprEnchantEventsEnchantItem'>enchant item expression</a>")
+		.examples("on enchant:",
+			"\tif the clicked button is enchantment option 1:",
+			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
+		.since("2.5");
+		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
+			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
+			.description("Called when a player fertilizes blocks.")
+			.requiredPlugins("Minecraft 1.13 or newer")
+			.examples("on block fertilize:",
+				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
+			.since("INSERT VERSION");
 	}
 }

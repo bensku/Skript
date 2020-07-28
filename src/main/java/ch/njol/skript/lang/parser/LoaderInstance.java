@@ -19,20 +19,6 @@
  */
 package ch.njol.skript.lang.parser;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import ch.njol.skript.Skript;
-import ch.njol.skript.config.Config;
-import ch.njol.skript.config.Node;
-import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.function.FunctionEvent;
-import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Signature;
-
 /**
  * Loads script from disk to memory and registers function signatures.
  */

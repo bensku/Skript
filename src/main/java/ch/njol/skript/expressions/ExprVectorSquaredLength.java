@@ -40,7 +40,7 @@ public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Nu
 		register(ExprVectorSquaredLength.class, Number.class, "squared length[s]", "vectors");
 	}
 
-	@SuppressWarnings({"null", "unused"})
+	@SuppressWarnings("unused")
 	@Override
 	public Number convert(Vector vector) {
 		return vector.lengthSquared();

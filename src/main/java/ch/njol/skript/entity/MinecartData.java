@@ -31,13 +31,12 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation")
 public class MinecartData extends EntityData<Minecart> {
 	
 	@SuppressWarnings("null")

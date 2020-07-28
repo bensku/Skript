@@ -1,32 +1,23 @@
-#
-# This script is a template for commands which have a cooldown.
-# I will add a more intuitive way of handling cooldowns/countdowns in the future,
-# But for now please use something like this.
-# Make sure that you do not use delays for cooldowns as they stop when the server stops.
-#
+#This command has a cooldown of 1 minute,
+#meaning a player can only use it each minute.
+#If a player tries to use it more than once in a minute,
+#the cooldown message is shown
 
-# This command allows each player to get infinite cakes
-# but the command has a cooldown of one minute (per player)
 command /cake:
-	description: Recieve a cake, but you can only do this once per minute!
-	permission: cake.is_a_lie
-	executable by: players
+	description: Give the command sender some cake!
+	cooldown: 1 minute
+	cooldown message: You need to wait &l%remaining time% &rto use this command again!
+	cooldown bypass: cake.nocooldown
+	
+	#See https://skriptlang.github.io/Skript/expressions.html#ExprCmdCooldownInfo for more info
+	#on the expressions you can use in a cooldown message.
+	
 	trigger:
-		# stores how long it's been since the player last used this command
-		set {_waited} to difference between {cake.%player%.lastused} and now
-		# checks whether the player has used the command within the last minute
-		if {_waited} is less than a minute:
-			message "You have to wait %difference between a minute and {_waited}% before you can use this command again!"
-			stop
-		
-		# some condition which sould not start the cooldown
-		# (if the player doesn't get the cake he should be able to use the command again immediately)
-		player doesn't have space for a cake:
-			message "You do not have enough space in your inventory to hold the cake!"
-			stop
-			
-		# do the action of the command
-		give a cake to the player
-		
-		# and finally start the cooldown
-		set {cake.%player%.lastused} to now
+		if the player's inventory doesn't have space for cake:
+			send "&cYou don't have space for cake in your inventory! :("
+			cancel command cooldown 
+	  		#This is used so the player doesn't have to wait 1 minute before
+			#using the command again if they didn't have space for cake.
+		else:
+			give cake to the player
+			send "Here you go!"

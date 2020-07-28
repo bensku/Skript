@@ -19,7 +19,9 @@
  */
 package ch.njol.yggdrasil.xml;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.getPrimitiveFromWrapper;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
@@ -180,7 +182,6 @@ public final class YggXMLOutputStream extends YggdrasilOutputStream {
 	
 	@Override
 	protected void writePrimitive_(final Object o) throws IOException {
-		@SuppressWarnings("null")
 		final Tag type = getPrimitiveFromWrapper(o.getClass());
 		final int size;
 		final long value;

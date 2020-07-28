@@ -20,8 +20,9 @@
 package ch.njol.skript.bukkitutil;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -30,6 +31,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ch.njol.skript.effects.EffCancelEvent;
 
 /**
  * Tracks click events to remove extraneous events for one player click.
@@ -61,10 +64,19 @@ public class ClickEventTracker {
 	 */
 	final Map<UUID, TrackedEvent> firstEvents;
 	
+	/**
+	 * Events that have been cancelled with {@link EffCancelEvent}.
+	 */
+	private final Set<Cancellable> modifiedEvents;
+	
 	public ClickEventTracker(JavaPlugin plugin) {
 		this.firstEvents = new HashMap<>();
+		this.modifiedEvents = new HashSet<>();
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,
-				() -> firstEvents.clear(), 1, 1);
+				() -> {
+					firstEvents.clear();
+					modifiedEvents.clear();
+				}, 1, 1);
 	}
 	
 	/**
@@ -78,6 +90,12 @@ public class ClickEventTracker {
 		UUID uuid = player.getUniqueId();
 		TrackedEvent first = firstEvents.get(uuid);
 		if (first != null && first.event != event) { // We've checked an event before, and it is not this one
+			if (!modifiedEvents.contains(first.event)) {
+				// Do not modify cancellation status of event, Skript did not touch it
+				// This avoids issues like #2389
+				return false;
+			}
+			
 			// Ignore this, but set its cancelled status based on one set to first event
 			if (event instanceof PlayerInteractEvent) { // Handle use item/block separately
 				// Failing to do so caused issue SkriptLang/Skript#2303
@@ -93,5 +111,13 @@ public class ClickEventTracker {
 			firstEvents.put(uuid, new TrackedEvent(event, hand));
 			return true;
 		}
+	}
+	
+	/**
+	 * Records that given event was cancelled or uncancelled.
+	 * @param event The event.
+	 */
+	public void eventModified(Cancellable event) {
+		modifiedEvents.add(event);
 	}
 }

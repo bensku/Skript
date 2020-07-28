@@ -23,5 +23,3 @@
 @NonNullByDefault
 package ch.njol.skript.module.worldguard7fawe;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
-

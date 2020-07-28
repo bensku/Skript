@@ -1,5 +1,5 @@
 # Skript [![Build Status](https://travis-ci.org/SkriptLang/Skript.svg?branch=master)](https://travis-ci.org/SkriptLang/Skript)
-Skript is a plugin for Bukkit/Spigot, which allows server owners and other people
+Skript is a plugin for Paper/Spigot, which allows server owners and other people
 to modify their servers without learning Java. It can also be useful if you
 *do* know Java; some tasks are quicker to do with Skript, and so it can be used
 for prototyping etc.
@@ -12,7 +12,7 @@ Skript requires **Spigot** to work. You heard it right, Bukkit does *not* work.
 **Paper**, which is a fork of Spigot, is recommended; it is required for some
 parts of Skript to be available.
 
-Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12 and 1.13.
+Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12, 1.13, 1.14 and 1.15.
 For example, this means that 1.12.2 is supported, but 1.12.1 is *not*.
 Testing with all old patch versions is not feasible for us.
 
@@ -27,7 +27,7 @@ Documentation is available [here](https://skriptlang.github.io/Skript) for the
 latest version of Skript.
 
 ## Reporting Issues
-Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md)
+Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md)
 before reporting issues.
 
 ## A Note About Add-ons
@@ -59,6 +59,21 @@ embedded in Skript jar, you must re-package it after compiling once. For example
 Note that modules are not necessary for Skript to work. Currently, they are
 only used to provide compatibility with old WorldGuard versions.
 
+### Testing
+Skript has some tests written in Skript. Running them requires a Minecraft
+server, but our build script can fetch it for you. Running tests is easy:
+
+```
+./gradlew (quickTest|skriptTest|skriptTestFull)
+```
+
+<code>quickTest</code> runs the test suite on newest supported server.
+<code>skriptTest</code> additionally runs the tests on oldest supported
+server, and on 1.12 (pre-flattening). <code>skriptTestFull</code> runs
+tests on **ALL** supported versions, some of which do not work on Java 9+.
+
+By running tests, you agree to Mojang's End User License Agreement.
+
 ### Importing to Eclipse
 With new Eclipse versions, there is integrated Gradle support, and it actually works now.
 So, first get latest Eclipse, then import Skript as any Gradle project. Just
@@ -83,9 +98,9 @@ Available flavors are github and spigot. Please do not abuse flavors by
 compiling your own test builds as releases.
 
 ## Contributing
-Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md).
+Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md).
 In addition to that, if you are contributing Java code, check our
-[coding conventions](https://github.com/SkriptLang/Skript/blob/master/CODING_CONVENTIONS.md).
+[coding conventions](https://github.com/SkriptLang/Skript/blob/master/code-conventions.md).
 
 ## Maven Repository
 If you use Skript as (soft) dependency for your plugin, and use maven or Gradle,
@@ -159,19 +174,6 @@ Note that these resources are not maintained by Skript's developers. Don't
 contact us about any problems you might have with them.
 
 ## Developers
-Current team behind Skript:
-
-* [bensku](https://github.com/bensku) (Skript maintainer/developer)
-* [FranKusmiruk](https://github.com/FranKusmiruk) (Skript developer)
-* [Pikachu920](https://github.com/Pikachu920) (Skript developer)
-* [Nicofisi](https://github.com/Nicofisi) (Skript developer)
-* [TheBentoBox](https://github.com/TheBentoBox) (issue tracker manager, aliases developer)
-
-We should also thank [Njol](https://github.com/Njol) for creating
-Skript and [Mirreski](https://github.com/Mirreski) for maintaining it for a
-long time.
-
-And of course, Skript has received lots of pull requests over time.
 You can find all contributors [here](https://github.com/SkriptLang/Skript/graphs/contributors).
 
 All code is owned by its writer, licensed for others under GPLv3 (see LICENSE)

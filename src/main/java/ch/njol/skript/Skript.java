@@ -26,19 +26,13 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,9 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Filter;
@@ -62,7 +54,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -109,6 +100,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEventInfo;
 import ch.njol.skript.lang.Statement;
 import ch.njol.skript.lang.SyntaxElementInfo;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.function.Functions;
@@ -127,11 +119,13 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.tests.runner.SkriptTestEvent;
+import ch.njol.skript.tests.runner.TestMode;
+import ch.njol.skript.tests.runner.TestTracker;
 import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseManifest;
 import ch.njol.skript.update.ReleaseStatus;
 import ch.njol.skript.update.UpdateManifest;
-import ch.njol.skript.update.UpdaterState;
 import ch.njol.skript.util.EmptyStacktraceException;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
@@ -145,7 +139,6 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NullableChecker;
-import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -234,6 +227,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public static boolean using64BitJava() {
+		// Property returned should either be "Java HotSpot(TM) 64-Bit Server VM" or "OpenJDK 64-Bit Server VM"
+		return System.getProperty("java.vm.name").contains("64");
+	}
+	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -284,6 +282,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			Skript.warning("It will still probably work, but if it does not, you are on your own.");
 			Skript.warning("Skript officially supports Paper and Spigot.");
 		}
+		
+		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
+		if (!using64BitJava()) {
+			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when loading aliases.");
+			Skript.warning("Please update to 64-bit Java to remove this warning.");
+		}
+		
 		// If nothing got triggered, everything is probably ok
 		return true;
 	}
@@ -399,7 +404,20 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 		
 		BukkitUnsafe.initialize(); // Needed for aliases
-		Aliases.load(); // Loaded before anything that might use them
+		
+		try {
+			Aliases.load(); // Loaded before anything that might use them
+		} catch (StackOverflowError e) {
+			if (using64BitJava()) {
+				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
+			} else {
+				Skript.error("");
+				Skript.error("There was a StackOverflowError that occured while loading aliases.");
+				Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
+				Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
+				Skript.error("");
+			}
+		}
 		
 		// If loading can continue (platform ok), check for potentially thrown error
 		if (classLoadError != null) {
@@ -472,6 +490,17 @@ public final class Skript extends JavaPlugin implements Listener {
 				
 				Language.setUseLocal(false);
 				
+				if (TestMode.ENABLED) {
+					info("Preparing Skript for testing...");
+					tainted = true;
+					try {
+						getAddonInstance().loadClasses("ch.njol.skript", "tests");
+					} catch (IOException e) {
+						Skript.exception("Failed to load testing environment.");
+						Bukkit.getServer().shutdown();
+					}
+				}
+				
 				stopAcceptingRegistrations();
 				
 				
@@ -525,6 +554,50 @@ public final class Skript extends JavaPlugin implements Listener {
 				} finally {
 					c.stop();
 					h.stop();
+				}
+				
+				// Skript initialization done
+				debug("Early init done");
+				if (TestMode.ENABLED) { // Ignore late init (scripts, etc.) in test mode
+					if (TestMode.DEV_MODE) { // Run tests NOW!
+						info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
+					} else {
+						info("Running all tests from " + TestMode.TEST_DIR);
+						
+						// Treat parse errors as fatal testing failure
+						@SuppressWarnings("null")
+						CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
+						try {
+							SkriptLogger.startLogHandler(errorCounter);
+							File testDir = TestMode.TEST_DIR.toFile();
+							assert testDir != null;
+							ScriptLoader.loadScripts(ScriptLoader.loadStructures(testDir));
+						} finally {
+							errorCounter.stop();
+						}
+						
+						Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
+						
+						info("Collecting results to " + TestMode.RESULTS_FILE);
+						if (errorCounter.getCount() > 0) {
+							TestTracker.testStarted("parse scripts");
+							TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
+						}
+						if (errored) { // Check for exceptions thrown while script was executing
+							TestTracker.testStarted("run scripts");
+							TestTracker.testFailed("exception was thrown during execution");
+						}
+						String results = new Gson().toJson(TestTracker.collectResults());
+						try {
+							Files.write(TestMode.RESULTS_FILE, results.getBytes(StandardCharsets.UTF_8));
+						} catch (IOException e) {
+							Skript.exception(e, "Failed to write test results.");
+						}
+						info("Testing done, shutting down the server.");
+						Bukkit.getServer().shutdown();
+					}
+					
+					return;
 				}
 				
 				final long vld = System.currentTimeMillis() - vls;
@@ -726,6 +799,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		 */
 		String burgerEnabled = System.getProperty("skript.burger.enable");
 		if (burgerEnabled != null) {
+			tainted = true;
 			String version = System.getProperty("skript.burger.version");
 			String burgerInput;
 			if (version == null) { // User should have provided JSON file path
@@ -1430,6 +1504,16 @@ public final class Skript extends JavaPlugin implements Listener {
 	private static boolean checkedPlugins = false;
 	
 	/**
+	 * Set by Skript when doing something that users shouldn't do.
+	 */
+	private static boolean tainted = false;
+	
+	/**
+	 * Set to true when an exception is thrown.
+	 */
+	private static boolean errored = false;
+	
+	/**
 	 * Used if something happens that shouldn't happen
 	 * 
 	 * @param cause exception that shouldn't occur
@@ -1437,6 +1521,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @return an EmptyStacktraceException to throw if code execution should terminate.
 	 */
 	public static EmptyStacktraceException exception(@Nullable Throwable cause, final @Nullable Thread thread, final @Nullable TriggerItem item, final String... info) {
+		errored = true;
 		// First error: gather plugin package information
 		if (!checkedPlugins) { 
 			for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
@@ -1468,8 +1553,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("[Skript] Severe Error:");
 		logEx(info);
 		logEx();
-		logEx("Something went horribly wrong with Skript.");
-		logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
 		
 		// Parse something useful out of the stack trace
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -1484,7 +1567,17 @@ public final class Skript extends JavaPlugin implements Listener {
 		SkriptUpdater updater = Skript.getInstance().getUpdater();
 		
 		// Check if server platform is supported
-		if (!isRunningMinecraft(1, 9)) {
+		if (tainted) {
+			logEx("Skript is running with developer command-line options.");
+			logEx("If you are not a developer, consider disabling them.");
+		} else if (getInstance().getDescription().getVersion().contains("nightly")) {
+			logEx("You're running a (buggy) nightly version of Skript.");
+			logEx("If this is not a test server, switch to a more stable release NOW!");
+			logEx("Your players are unlikely to appreciate crashes and/or data loss due to Skript bugs.");
+			logEx("");
+			logEx("Just testing things? Good. Please report this bug, so that we can fix it before a stable release.");
+			logEx("Issue tracker: " + issuesUrl);
+		} else if (!isRunningMinecraft(1, 9)) {
 			logEx("You are running an outdated Minecraft version not supported by Skript.");
 			logEx("Please update to Minecraft 1.9.4 or later or fix this yourself and send us a pull request.");
 			logEx("Alternatively, use an older Skript version; do note that those are also unsupported by us.");
@@ -1493,12 +1586,14 @@ public final class Skript extends JavaPlugin implements Listener {
 		} else if (!serverPlatform.supported){
 			logEx("Your server platform appears to be unsupported by Skript. It might not work reliably.");
 			logEx("You can report this at " + issuesUrl + ". However, we may be unable to fix the issue.");
-			logEx("It is recommended that you switch to Paper or Spigot, should you encounter problems.");
+			logEx("It is recommended that you switch to Paper or Spigot, should you encounter more problems.");
 		} else if (updater != null && updater.getReleaseStatus() == ReleaseStatus.OUTDATED) {
 			logEx("You're running outdated version of Skript! Please try updating it NOW; it might fix this.");
 			logEx("Run /sk update check to get a download link to latest Skript!");
 			logEx("You will be given instructions how to report this error if it persists after update.");
 		} else {
+			logEx("Something went horribly wrong with Skript.");
+			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
 			if (pluginPackages.isEmpty()) {
 				logEx("You should report it at " + issuesUrl + ". Please copy paste this report there (or use paste service).");
 				logEx("This ensures that your issue is noticed and will be fixed as soon as possible.");
@@ -1508,7 +1603,7 @@ public final class Skript extends JavaPlugin implements Listener {
 					logEx("Here is full list of them:");
 					StringBuilder pluginsMessage = new StringBuilder();
 					for (PluginDescriptionFile desc : pluginPackages.values()) {
-						pluginsMessage.append(desc.getName());
+						pluginsMessage.append(desc.getFullName());
 						String website = desc.getWebsite();
 						if (website != null && !website.isEmpty()) // Add website if found
 							pluginsMessage.append(" (").append(desc.getWebsite()).append(")");

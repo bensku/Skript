@@ -19,9 +19,9 @@
  */
 package ch.njol.skript.lang.function;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -39,30 +39,66 @@ import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
- * @author Peter Güttinger
+ * Reference to a Skript function.
  */
 public class FunctionReference<T> {
 	
+	/**
+	 * Name of function that is called, for logging purposes.
+	 */
 	final String functionName;
 	
-	@Nullable
-	private Function<? extends T> function;
+	/**
+	 * Signature of referenced function. If {@link #validateFunction(boolean)}
+	 * succeeds, this is not null.
+	 */
 	@Nullable
 	private Signature<? extends T> signature;
 	
-	private boolean singleUberParam;
+	/**
+	 * Actual function reference. Null before the function is called for first
+	 * time.
+	 */
+	@Nullable
+	private Function<? extends T> function;
+	
+	/**
+	 * If all function parameters can be condensed to a single list.
+	 */
+	private boolean singleListParam;
+	
+	/**
+	 * Definitions of function parameters.
+	 */
 	private final Expression<?>[] parameters;
 	
+	/**
+	 * Indicates if the caller expects this function to return a single value.
+	 * Used for verifying correctness of the function signature.
+	 */
 	private boolean single;
+	
+	/**
+	 * Return types expected from this function. Used for verifying correctness
+	 * of the function signature.
+	 */
 	@Nullable
 	private final Class<? extends T>[] returnTypes;
 	
+	/**
+	 * Node for {@link #validateFunction(boolean)} to use for logging.
+	 */
 	@Nullable
 	private final Node node;
-	@Nullable
-	public final File script;
 	
-	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
+	/**
+	 * Script in which this reference is found. Used for function unload
+	 * safety checks.
+	 */
+	@Nullable
+	public final String script;
+	
+	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final String script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
 		this.functionName = functionName;
 		this.node = node;
 		this.script = script;
@@ -70,12 +106,19 @@ public class FunctionReference<T> {
 		parameters = params;
 	}
 	
+	/**
+	 * Validates this function reference. Prints errors if needed.
+	 * @param first True if this is called while loading a script. False when
+	 * this is called when the function signature changes.
+	 * @return True if validation succeeded.
+	 */
 	@SuppressWarnings("unchecked")
-	public boolean validateFunction(final boolean first) {
+	public boolean validateFunction(boolean first) {
+		SkriptLogger.setNode(node);
 		Skript.debug("Validating function " + functionName);
 		final Signature<?> sign = Functions.getSignature(functionName);
-		final Function<?> newFunc = Functions.getFunction(functionName);
-		SkriptLogger.setNode(node);
+		
+		// Check if the requested function exists
 		if (sign == null) {
 			if (first)
 				Skript.error("The function '" + functionName + "' does not exist.");
@@ -85,6 +128,7 @@ public class FunctionReference<T> {
 			return false;
 		}
 		
+		// Validate that return types are what caller expects they are
 		final Class<? extends T>[] returnTypes = this.returnTypes;
 		if (returnTypes != null) {
 			final ClassInfo<?> rt = sign.returnType;
@@ -113,9 +157,10 @@ public class FunctionReference<T> {
 			}
 		}
 		
-		// check number of parameters only if the function does not have a single parameter that accepts multiple values
-		singleUberParam = sign.getMaxParameters() == 1 && !sign.getParameter(0).single;
-		if (!singleUberParam) {
+		// Validate parameter count
+		singleListParam = sign.getMaxParameters() == 1 && !sign.getParameter(0).single;
+		if (!singleListParam) { // Check that parameter count is within allowed range
+			// Too many parameters
 			if (parameters.length > sign.getMaxParameters()) {
 				if (first) {
 					if (sign.getMaxParameters() == 0)
@@ -132,6 +177,7 @@ public class FunctionReference<T> {
 				return false;
 			}
 		}
+		// Not enough parameters
 		if (parameters.length < sign.getMinParameters()) {
 			if (first)
 				Skript.error("The function '" + functionName + "' requires at least " + sign.getMinParameters() + " argument" + (sign.getMinParameters() == 1 ? "" : "s") + ","
@@ -142,8 +188,9 @@ public class FunctionReference<T> {
 			return false;
 		}
 		
+		// Check parameter types
 		for (int i = 0; i < parameters.length; i++) {
-			final Parameter<?> p = sign.parameters[singleUberParam ? 0 : i];
+			final Parameter<?> p = sign.parameters[singleListParam ? 0 : i];
 			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 			try {
 				final Expression<?> e = parameters[i].getConvertedExpression(p.type.getC());
@@ -164,8 +211,7 @@ public class FunctionReference<T> {
 		}
 		
 		signature = (Signature<? extends T>) sign;
-		function = (Function<? extends T>) newFunc; // Try this, in case it exists
-		Functions.registerCaller(this);
+		sign.calls.add(this);
 		
 		return true;
 	}
@@ -184,27 +230,29 @@ public class FunctionReference<T> {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected T[] execute(final Event e) {
+		// If needed, acquire the function reference
 		if (function == null)
 			function = (Function<? extends T>) Functions.getFunction(functionName);
 		if (function == null) { // It might be impossible to resolve functions in some cases!
-			Skript.error("Invalid function call to function that does not exist yet. Be careful when using functions in 'script load' events!");
+			Skript.error("Invalid function call to a function that does not exist yet. Be careful when using functions in 'script load' events!");
 			return null; // Return nothing and hope it works
 		}
 		
-		final Object[][] params = new Object[singleUberParam ? 1 : parameters.length][];
-		if (singleUberParam && parameters.length > 1) {
-			final ArrayList<Object> l = new ArrayList<>();
+		// Prepare parameter values for calling
+		final Object[][] params = new Object[singleListParam ? 1 : parameters.length][];
+		if (singleListParam && parameters.length > 1) { // All parameters to one list
+			List<Object> l = new ArrayList<>();
 			for (int i = 0; i < parameters.length; i++)
-				l.addAll(Arrays.asList(parameters[i].getArray(e))); // TODO what if an argument is not available? pass null or abort?
+				l.addAll(Arrays.asList(parameters[i].getArray(e)));
 			params[0] = l.toArray();
 			// Don't allow mutating across function boundary; same hack is applied to variables
 			for (int i = 0; i < params[0].length; i++) {
 				if (params[0][i] instanceof Location)
 					params[0][i] = ((Location) params[0][i]).clone();
 			}
-		} else {
+		} else { // Use parameters in normal way
 			for (int i = 0; i < params.length; i++) {
-				params[i] = parameters[i].getArray(e); // TODO what if an argument is not available? pass null or abort?
+				params[i] = parameters[i].getArray(e);
 				// Don't allow mutating across function boundary; same hack is applied to variables
 				for (int j = 0; j < params[i].length; j++) {
 					if (params[i][j] instanceof Location)
@@ -213,6 +261,7 @@ public class FunctionReference<T> {
 			}
 		}
 		
+		// Execute the function
 		assert function != null;
 		return function.execute(params);
 	}
@@ -221,15 +270,15 @@ public class FunctionReference<T> {
 		return single;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Nullable
 	public Class<? extends T> getReturnType() {
 		if (signature == null) {
 			throw new SkriptAPIException("Signature of function is null when return type is asked!");
 		}
 		assert signature != null;
-		@SuppressWarnings("null") // Wait what, Eclipse? Already asserted this...
+		@SuppressWarnings("null")
 		ClassInfo<? extends T> ret = signature.returnType;
-		return (Class<? extends T>) (ret == null ? Unknown.class : ret.getC());
+		return ret == null ? null : ret.getC();
 	}
 	
 	public String toString(@Nullable final Event e, final boolean debug) {

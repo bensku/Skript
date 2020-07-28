@@ -32,7 +32,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**

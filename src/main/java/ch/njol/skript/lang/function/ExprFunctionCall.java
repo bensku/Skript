@@ -53,7 +53,9 @@ public class ExprFunctionCall<T> extends SimpleExpression<T> {
 	
 	@Override
 	public Class<? extends T> getReturnType() {
-		return function.getReturnType();
+		Class<? extends T> type = function.getReturnType();
+		assert type != null : "validateFunction() let invalid reference pass";
+		return type;
 	}
 	
 	@Override
