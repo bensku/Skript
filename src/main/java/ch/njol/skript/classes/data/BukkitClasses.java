@@ -1695,7 +1695,7 @@ public class BukkitClasses {
 		
 		if (Skript.classExists("org.bukkit.entity.Villager$Type")) {
 			EnumUtils<Villager.Type> villagerTypes = new EnumUtils<>(Villager.Type.class, "villager types");
-			Classes.registerClass((new ClassInfo<>(Villager.Type.class, "villagertype")
+			Classes.registerClass(new ClassInfo<>(Villager.Type.class, "villagertype")
 				.user("villager types?")
 				.name("Villager Type")
 				.description("Represents a villager's type. " +
@@ -1727,7 +1727,8 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "\\S+";
 					}
-				})));
+				})
+				.serializer(new EnumSerializer<>(Villager.Type.class)));
 		}
 		
 		EnumUtils<RegainReason> regainReasons = new EnumUtils<>(RegainReason.class, "heal reasons");
