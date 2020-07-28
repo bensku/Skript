@@ -75,8 +75,8 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	@Override
 	public Iterator<? extends BlockStateBlock> iterator(Event e) {
 		return ((BlockFertilizeEvent) e).getBlocks().stream()
-			.map(BlockStateBlock::new)
-			.iterator();
+				.map(BlockStateBlock::new)
+				.iterator();
 	}
 	
 	@Override
