@@ -50,9 +50,8 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Number> {
 	
 	static {
-		if (Skript.methodExists(Villager.class, "getVillagerLevel")) {
+		if (Skript.methodExists(Villager.class, "getVillagerLevel"))
 			register(ExprVillagerLevel.class, Number.class, "villager level", "livingentities");
-		}
 	}
 	
 	@Nullable
