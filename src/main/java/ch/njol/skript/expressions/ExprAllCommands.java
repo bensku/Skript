@@ -61,8 +61,13 @@ public class ExprAllCommands extends SimpleExpression<String> {
 		if (scriptCommandsOnly) {
 			return Commands.getScriptCommands().toArray(new String[0]);
 		} else {
-			if (Commands.getCommandMap() == null) return null;
-			return Commands.getCommandMap().getCommands().parallelStream().map(command -> command.getLabel()).toArray(String[]::new);
+			if (Commands.getCommandMap() == null)
+				return null;
+			return Commands.getCommandMap()
+				.getCommands()
+				.parallelStream()
+				.map(command -> command.getLabel())
+				.toArray(String[]::new);
 		}
 	}
 	
@@ -78,7 +83,7 @@ public class ExprAllCommands extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "all commands";
+		return "all "+(scriptCommandsOnly ? "script " : " ")+ "commands";
 	}
 	
 }

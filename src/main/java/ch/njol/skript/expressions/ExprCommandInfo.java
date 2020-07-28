@@ -33,20 +33,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-enum InfoType {
-	NAME,
-	DESCRIPTION,
-	LABEL,
-	USAGE,
-	ALIASES,
-	PERMISSION,
-	PERMISSION_MESSAGE,
-	PLUGIN,
-}
 
 @Name("Command Info")
 @Description("Get information about a command.")
@@ -77,9 +67,9 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	InfoType type;
 	@SuppressWarnings("null")
 	Expression<String> commandName;
-	
+
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		commandName = (Expression<String>) exprs[0];
 		type = InfoType.values()[Math.floorDiv(matchedPattern, 2)];
 		return true;
@@ -90,11 +80,14 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	protected String[] get(Event e) {
 		String commandName = this.commandName.getSingle(e);
-		if (commandName == null) return null;
+		if (commandName == null)
+			return null;
 		commandName = commandName.toLowerCase().split(" ")[0];
-		if (commandName.startsWith("/")) commandName = commandName.substring(1);
+		if (commandName.startsWith("/"))
+			commandName = commandName.substring(1);
 		Command command = Commands.getCommandMap().getCommand(commandName);
-		if (command == null) return null;
+		if (command == null)
+			return null;
 		switch (type) {
 			case NAME:
 				return new String[]{command.getName()};
@@ -137,6 +130,17 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return commandName + " command";
+	}
+	
+	private enum InfoType {
+		NAME,
+		DESCRIPTION,
+		LABEL,
+		USAGE,
+		ALIASES,
+		PERMISSION,
+		PERMISSION_MESSAGE,
+		PLUGIN,
 	}
 	
 }
