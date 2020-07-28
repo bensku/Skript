@@ -22,6 +22,7 @@ package ch.njol.skript.classes.data;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.BlockCommandSender;
@@ -31,6 +32,7 @@ import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -40,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.BiomeMappings;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
@@ -351,6 +354,17 @@ public class DefaultConverters {
 				@Override
 				public EnchantmentType convert(EnchantmentOffer eo) {
 					return new EnchantmentType(eo.getEnchantment(), eo.getEnchantmentLevel());
+				}
+			});
+		}
+		
+		// Villager Type -> Biome
+		if (Skript.classExists("org.bukkit.entity.Villager$Type")) {
+			Converters.registerConverter(Villager.Type.class, Biome.class, new Converter<Villager.Type, Biome>() {
+				@Nullable
+				@Override
+				public Biome convert(Villager.Type type) {
+					return BiomeMappings.parse(type.name());
 				}
 			});
 		}
