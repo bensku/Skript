@@ -60,9 +60,8 @@ public class ExprVillagerType extends SimplePropertyExpression<LivingEntity, Typ
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET) {
+		if (mode == ChangeMode.SET)
 			return CollectionUtils.array(Type.class);
-		}
 		return null;
 	}
 	
