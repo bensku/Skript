@@ -65,14 +65,9 @@ public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Nu
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		switch (mode) {
-			case SET:
-			case ADD:
-			case REMOVE:
-			case RESET:
-				return CollectionUtils.array(Number.class);
-		}
-		return null;
+		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.DELETE)
+			return null;
+		return CollectionUtils.array(Number.class);
 	}
 	
 	@Override
