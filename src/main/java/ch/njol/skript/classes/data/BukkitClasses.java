@@ -1701,8 +1701,8 @@ public class BukkitClasses {
 				.description("Represents a villager's type. " +
 					"See <a href='https://minecraft.gamepedia.com/Villager#Villager_type'>villager type</a> for more info.")
 				.usage(villagerTypes.getAllNames())
-				.examples("spawn a jungle librarian at player",
-					"spawn a taiga leather worker at player")
+				.examples("set villager type of last spawned villager to taiga",
+					"set villager type of target entity to plains")
 				.since("INSERT VERSION")
 				.requiredPlugins("Minecraft 1.14+")
 				.parser(new Parser<Villager.Type>() {
