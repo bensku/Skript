@@ -570,7 +570,7 @@ public class SimpleEvents {
 		.since("2.5");
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
-			.description("Called when a player fertilizes blocks")
+			.description("Called when a player fertilizes blocks.")
 			.requiredPlugins("Minecraft 1.13 or newer")
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
