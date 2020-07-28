@@ -63,7 +63,7 @@ public class EffStopServer extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (restart ? "restart" : "stop" + "restart") + " the server";
+		return (restart ? "restart" : "stop") + " the server";
 	}
 	
 }
