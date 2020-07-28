@@ -46,7 +46,7 @@ import ch.njol.util.Kleenean;
 @RequiredPlugins("Minecraft 1.13 or newer")
 @Events("block fertilize")
 @Examples("the fertilized blocks")
-@Since("2.5")
+@Since("INSERT VERSION")
 public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	static {
@@ -66,8 +66,7 @@ public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	@Nullable
 	@Override
 	protected BlockStateBlock[] get(Event e) {
-		return
-			((BlockFertilizeEvent) e).getBlocks().stream()
+		return ((BlockFertilizeEvent) e).getBlocks().stream()
 				.map(BlockStateBlock::new)
 				.toArray(BlockStateBlock[]::new);
 	}
