@@ -28,6 +28,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.EnchantmentOffer;
@@ -41,6 +42,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -530,6 +532,20 @@ public class DefaultComparators {
 				}
 				
 				@Override public boolean supportsOrdering() {
+					return false;
+				}
+			});
+		}
+		
+		if (Skript.classExists("org.bukkit.entity.Villager$Type")) {
+			Comparators.registerComparator(Biome.class, Villager.Type.class, new Comparator<Biome, Villager.Type>() {
+				@Override
+				public Relation compare(Biome o1, Villager.Type o2) {
+					return Relation.get(o1.getKey().getKey().equalsIgnoreCase(o2.getKey().getKey()));
+				}
+				
+				@Override
+				public boolean supportsOrdering() {
 					return false;
 				}
 			});
