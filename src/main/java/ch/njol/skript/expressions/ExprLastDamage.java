@@ -70,7 +70,7 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 						entity.setLastDamage((Double) delta[0]);
 					break;
 				case REMOVE:
-					mod = 1;
+					mod = -1;
 				case ADD:
 					for (LivingEntity entity : getExpr().getArray(e))
 						entity.setLastDamage((Double) delta[0] + mod * entity.getLastDamage());

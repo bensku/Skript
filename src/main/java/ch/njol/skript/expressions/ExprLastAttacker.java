@@ -76,18 +76,3 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
