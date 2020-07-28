@@ -33,11 +33,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-enum ShutdownTypes {
-	STOP,
-	RESTART,
-	RELOAD;
-}
 
 @Name("Stop Server")
 @Description("Stop/Restart the server. If restarting isn't configured, the server will stop.")
@@ -49,32 +44,29 @@ public class EffStopServer extends Effect {
 		Skript.registerEffect(EffStopServer.class, "(stop|shut[ ]down) [the] server", "restart [the] server");
 	}
 	
-	ShutdownTypes type;
+	int pattern;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		type = ShutdownTypes.values()[matchedPattern];
+		pattern = matchedPattern;
 		return true;
 	}
 	
 	@Override
 	protected void execute(Event e) {
-		switch (type) {
-			case STOP:
+		switch (pattern) {
+			case 0:
 				Bukkit.shutdown();
 				break;
-			case RESTART:
+			case 1:
 				Bukkit.spigot().restart();
-				break;
-			case RELOAD:
-				Bukkit.reload();
 				break;
 		}
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "stop the server";
+		return (pattern == 0 ? "stop" : "restart") + " the server";
 	}
 	
 }
