@@ -1718,6 +1718,16 @@ genes:
 	weak: weak
 	aggressive: aggressive, savage, wild
 
+# -- Villager Types --
+villager types:
+	desert: desert
+	jungle: jungle
+	plains: plains
+	savanna: savanna
+	snow: snow, snowy
+	swamp: swamp
+	taiga: taiga
+
 # -- Attribute Types --
 attribute types:
 	generic_armor: generic armor, armor

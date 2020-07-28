@@ -54,6 +54,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda.Gene;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -1691,6 +1692,44 @@ public class BukkitClasses {
 					})
 					.serializer(new EnumSerializer<>(Gene.class)));
 		}
+		
+		if (Skript.classExists("org.bukkit.entity.Villager$Type")) {
+			EnumUtils<Villager.Type> villagerTypes = new EnumUtils<>(Villager.Type.class, "villager types");
+			Classes.registerClass((new ClassInfo<>(Villager.Type.class, "villagertype")
+				.user("villager types?")
+				.name("Villager Type")
+				.description("Represents a villager's type. " +
+					"See <a href='https://minecraft.gamepedia.com/Villager#Villager_type'>villager type</a> for more info.")
+				.usage(villagerTypes.getAllNames())
+				.examples("spawn a jungle librarian at player",
+					"spawn a taiga leather worker at player")
+				.since("INSERT VERSION")
+				.requiredPlugins("Minecraft 1.14+")
+				.parser(new Parser<Villager.Type>() {
+					
+					@Nullable
+					@Override
+					public Villager.Type parse(String s, ParseContext context) {
+						return villagerTypes.parse(s);
+					}
+					
+					@Override
+					public String toString(Villager.Type type, int flags) {
+						return villagerTypes.toString(type, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Villager.Type type) {
+						return type.name();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})));
+		}
+		
 		EnumUtils<RegainReason> regainReasons = new EnumUtils<>(RegainReason.class, "heal reasons");
 		Classes.registerClass(new ClassInfo<>(RegainReason.class, "healreason")
 			.user("(regen|heal) (reason|cause)")
@@ -1795,7 +1834,7 @@ public class BukkitClasses {
 					.user("persistent data ?holders?")
 					.name("Persistent Data Holder")
 					.description(
-							"Represents something that can have persistent data. " 
+							"Represents something that can have persistent data. "
 							+ "The following can all hold persistent data: "
 							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
 							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
