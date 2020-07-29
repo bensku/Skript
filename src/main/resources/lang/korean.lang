@@ -47,7 +47,7 @@ skript:
 	invalid reload: Skript은 Bukkit의 '/reload'또는 Skript의 '/skript reload'명령어로 만 다시로드 할 수 있습니다.
 	no scripts: 스크립트를 찾지 못했습니다. 아마도 일부를 작성해야합니다 ;)
 	no errors: 모든 스크립트가 오류없이 로드되었습니다.
-	scripts loaded: %s에 총 %s개의 트리거와 %s개의 명령어가있는 %s개의 스크립트를 로드했습니다.
+	scripts loaded: %s개의 스크립트중 %s개의 트리거, %s개의 명령어를 %s만에 로드했습니다.
 	finished loading: 로딩이 완료되었습니다.
 
 # -- Skript command --
