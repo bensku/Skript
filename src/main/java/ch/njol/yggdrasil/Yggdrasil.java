@@ -330,10 +330,8 @@ public final class Yggdrasil {
 			if (!s.canBeInstantiated(c)) { // only used by isSerializable - return null if OK, throw an YggdrasilException if not
 				try {
 					s.deserialize(c, new Fields(this));
-					return null;
-				} catch (final StreamCorruptedException e) {
-					return null;
-				}
+				} catch (final StreamCorruptedException e) {}
+				return null;
 			}
 			final Object o = s.newInstance(c);
 			if (o == null)

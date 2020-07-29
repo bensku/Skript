@@ -46,24 +46,20 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
                 "%timespan% (later|(from|after) [the] [date] %-date%)");
     }
 
-    @Nullable
+    @SuppressWarnings("null")
     private Expression<Timespan> timespan;
-    @Nullable
+    @SuppressWarnings("null")
     private Expression<Date> date;
 
     private boolean ago;
 
-	@SuppressWarnings("null")
 	@Nullable
     @Override
     protected Date[] get(Event e) {
-		if (this.timespan == null || this.date == null) {
-			return null;
-		}
         Timespan timespan = this.timespan.getSingle(e);
         Date date = this.date.getSingle(e);
         if (timespan == null || date == null) {
-        	return null;
+            return null;
         }
         if (ago) {
             date.subtract(timespan);
@@ -83,13 +79,12 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
         return Date.class;
     }
 
-    @SuppressWarnings("null")
 	@Override
     public String toString(@Nullable Event e, boolean debug) {
-        return (timespan == null ? (timespan.toString(e, debug) + " ") : "") + (ago ? "ago" : "later");
+        return timespan.toString(e, debug) + " " + (ago ? "ago" : "later");
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         timespan = (Expression<Timespan>) exprs[0];
