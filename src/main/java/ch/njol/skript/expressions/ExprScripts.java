@@ -35,6 +35,7 @@ import ch.njol.util.Kleenean;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.event.Event;
 
@@ -84,7 +85,7 @@ public class ExprScripts extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	private String[] formatFiles(List<File> files) {
 		return files.stream()
-			.map(f -> noPaths ? f.getName() : f.getPath().replaceFirst(SCRIPTS_PATH, ""))
+			.map(f -> noPaths ? f.getName() : f.getPath().replaceFirst(Pattern.quote(SCRIPTS_PATH), ""))
 			.toArray(String[]::new);
 	}
 
