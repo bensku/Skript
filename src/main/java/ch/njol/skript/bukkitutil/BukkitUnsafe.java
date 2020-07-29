@@ -52,7 +52,7 @@ public class BukkitUnsafe {
 	 * require NMS. It has existed for a long time, too, so 1.9 support is
 	 * not particularly hard to achieve.
 	 * 
-	 * UnsafeValues' existence and behavior is not guaranteed across future versions
+	 * UnsafeValues' existence and behavior is not guaranteed across future versions.
 	 */
 	@Nullable
 	private static final UnsafeValues unsafe = Bukkit.getUnsafe();
@@ -66,7 +66,6 @@ public class BukkitUnsafe {
 		if (unsafe == null)
 			throw new Error("UnsafeValues not available");
 	}
-	
 	
 	/**
 	 * Before 1.13, Vanilla material names were translated using
