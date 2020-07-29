@@ -62,7 +62,7 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
     private Expression<Number> rows;
     @Nullable
     private Expression<String> name;
-    private boolean chest;
+	private boolean chest;
 	@Nullable
 	private Expression<InventoryType> type;
 
