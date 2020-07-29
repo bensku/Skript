@@ -74,9 +74,15 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case SET:
+			case ADD:
+			case REMOVE:
+			case DELETE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
@@ -104,8 +110,7 @@ public class ExprExplosionYield extends SimpleExpression<Number> {
 			case DELETE:
 				e.setRadius(0);
 				break;
-			case REMOVE_ALL:
-			case RESET:
+			default:
 				assert false;
 		}
 	}
