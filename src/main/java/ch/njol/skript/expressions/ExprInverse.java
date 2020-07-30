@@ -36,8 +36,7 @@ import ch.njol.util.Kleenean;
 
 @Name("Boolean Inverse")
 @Description("Invert a boolean expression")
-@Examples({"!(false) # true",
-	"!(ai of target entity)"})
+@Examples({"!(ai of target entity)"})
 @Since("INSERT VERSION")
 public class ExprInverse extends SimpleExpression<Boolean> {
 	
