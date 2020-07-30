@@ -79,7 +79,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta != null) {
-			if (flying)
+			if (flying) {
 				switch (mode) {
 					case SET:
 						for (Entity entity : getExpr().getArray(e)) {
@@ -104,7 +104,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 						}
 						break;
 				}
-			else
+			} else {
 				switch (mode) {
 					case SET:
 						for (Entity entity : getExpr().getArray(e)) {
@@ -129,6 +129,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 						}
 						break;
 				}
+			}
 		}
 	}
 	
