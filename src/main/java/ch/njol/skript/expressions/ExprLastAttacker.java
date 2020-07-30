@@ -34,7 +34,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Last Attacker")
-@Description("The last block / entity that attacked an entity.")
+@Description("The last block or entity that attacked an entity.")
 @Examples({"send \"%last attacker of event-entity%\""})
 @Since("INSERT VERSION")
 public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
@@ -54,7 +54,6 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 			if (event instanceof EntityDamageByEntityEvent) {
 				EntityDamageByEntityEvent evt = (EntityDamageByEntityEvent) event;
 				if (evt.getDamager() instanceof Projectile) {
-					@Nullable
 					Object shooter = ProjectileUtils.getShooter((Projectile) evt.getDamager());
 					if (shooter instanceof Entity)
 						return shooter;
