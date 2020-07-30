@@ -41,7 +41,9 @@ import ch.njol.util.Kleenean;
 public class EffStopServer extends Effect {
 	
 	static {
-		Skript.registerEffect(EffStopServer.class, "(stop|shut[ ]down) [the] server", "restart [the] server");
+		Skript.registerEffect(EffStopServer.class,
+			"(stop|shut[ ]down) [the] server",
+			"restart [the] server");
 	}
 	
 	private boolean restart;
