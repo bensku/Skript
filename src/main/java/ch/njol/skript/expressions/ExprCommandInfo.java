@@ -129,7 +129,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return commandName + " command";
+		return "the " + type.name().toLowerCase().replace("_", "") + " of command " + commandName.toString(e, debug)
 	}
 	
 	private enum InfoType {
