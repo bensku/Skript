@@ -54,7 +54,7 @@ skript:
 skript command:
 	help:
 		description: Skript의 주요 명령어
-		help: 이 도움말 메시지를 표시합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/backup/update'를 사용하십시오.
+		help: 이 도움말 메시지를 표시합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/update/info'를 사용하십시오.
 		reload:
 			description: 구성, 모든 스크립트, 모든 것 또는 특정 스크립트를 다시로드합니다.
 			@all: 모든 구성 및 모든 스크립트를 다시 로드합니다.
