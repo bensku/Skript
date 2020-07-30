@@ -64,7 +64,7 @@ public class BukkitUnsafe {
 	
 	static {
 		if (unsafe == null)
-			throw new Error("UnsafeValues not available");
+			throw new Error("UnsafeValues are not available.");
 	}
 	
 	/**
@@ -179,15 +179,20 @@ public class BukkitUnsafe {
 	}
 	
 	public static void modifyItemStack(ItemStack stack, String arguments) {
-		try {
-			unsafe.modifyItemStack(stack, arguments);
-		} catch (NullPointerException e) {
-			if (knownNullPtr) { // Probably known Spigot bug
-				// So we continue doing whatever we were doing and hope it works
-				Skript.warning("Item " + stack.getType() + arguments + " failed modifyItemStack. This is a bug on old Spigot versions.");
-			} else { // Not known null pointer, don't just swallow
-				throw e;
+		if (unsafe != null) {
+			try {
+				unsafe.modifyItemStack(stack, arguments);
+			} catch (NullPointerException e) {
+				if (knownNullPtr) {
+					// Probably known Spigot bug
+					// So we continue doing whatever we were doing and hope it works
+					Skript.warning("Item " + stack.getType() + arguments + " failed modifyItemStack. This is a bug on old Spigot versions.");
+				} else { // Not known null pointer, don't just swallow
+					throw e;
+				}
 			}
+		} else {
+			Skript.error("modifyItemStack could not be performed as UnsafeValues are not available.");
 		}
 	}
 	
