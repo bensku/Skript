@@ -108,8 +108,8 @@ public abstract class BlockUtils {
 		String data = dataString.replace(";", ",");
 		// Remove white space within square brackets ([ lit = false] -> [lit=false])
 		data = data.replaceAll(" (?=[^\\[]*])", "");
-		// If there are spaces before the square bracket we remove that
-		data = data.replace(" [", "[");
+		// Remove white space between last word and square bracket
+		data = data.replaceAll("\\s+\\[", "[");
 		// And replace white space between namespace with underscores
 		data = data.replace(" ", "_");
 		
