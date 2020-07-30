@@ -54,7 +54,7 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
     private boolean ago;
 
     @SuppressWarnings("null")
-	@Nullable
+    @Nullable
     @Override
     protected Date[] get(Event e) {
         Timespan timespan = this.timespan.getSingle(e);
