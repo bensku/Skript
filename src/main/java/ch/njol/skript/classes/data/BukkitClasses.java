@@ -313,7 +313,6 @@ public class BukkitClasses {
 				.requiredPlugins("Minecraft 1.13+")
 				.since("INSERT VERSION")
 				.parser(new Parser<BlockData>() {
-					
 					@Nullable
 					@Override
 					public BlockData parse(String s, ParseContext context) {
@@ -336,7 +335,6 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new Serializer<BlockData>() {
-					
 					@Override
 					public Fields serialize(BlockData o) {
 						Fields f = new Fields();
