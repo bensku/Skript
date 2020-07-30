@@ -61,8 +61,8 @@ public class EvtResourcePackResponse extends SkriptEvent {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
+	@SuppressWarnings("null")
 	public boolean check(final Event e) {
 		if (states != null) {
 			Status state = ((PlayerResourcePackStatusEvent) e).getStatus();

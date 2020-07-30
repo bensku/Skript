@@ -78,8 +78,8 @@ public class EffPlayerVisibility extends Effect {
 		return true;
 	}
 
-    @SuppressWarnings("null")
     @Override
+    @SuppressWarnings("null")
     protected void execute(Event e) {
         Player[] targets = targetPlayers == null ? Bukkit.getOnlinePlayers().toArray(new Player[0]) : targetPlayers.getArray(e);
         for (Player targetPlayer : targets) {

@@ -135,9 +135,9 @@ public class ExprEntities extends SimpleExpression<Entity> {
 		return false;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	@Nullable
+	@SuppressWarnings("null")
 	protected Entity[] get(Event e) {
 		if (isUsingRadius) {
 			Iterator<? extends Entity> iter = iterator(e);
