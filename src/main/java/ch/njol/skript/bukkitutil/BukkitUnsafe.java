@@ -192,7 +192,7 @@ public class BukkitUnsafe {
 				}
 			}
 		} else {
-			Skript.error("modifyItemStack could not be performed as UnsafeValues are not available.");
+			throw new IllegalStateException("modifyItemStack could not be performed as UnsafeValues are not available.");
 		}
 	}
 	
