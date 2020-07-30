@@ -32,6 +32,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -41,14 +42,17 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Drops Of Block")
-@Description("A list of the items that will drop when a block is broken. Note that 'as %entity%' only works on minecraft 1.15+.")
+@Description("A list of the items that will drop when a block is broken.")
+@RequiredPlugins("Minecraft 1.15+ ('as %entity%')")
 @Examples({"on break of block:",
 	"\tgive drops of block using player's tool to player"})
 @Since("INSERT VERSION")
 public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	
 	static {
-		Skript.registerExpression(ExprDropsOfBlock.class, ItemType.class, ExpressionType.COMBINED, "drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]", "%blocks%'s drops [(using|with) %-itemtype% [(1¦as %-entity%)]]");
+		Skript.registerExpression(ExprDropsOfBlock.class, ItemType.class, ExpressionType.COMBINED,
+			"drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]",
+			"%blocks%'s drops [(using|with) %-itemtype% [(1¦as %-entity%)]]");
 	}
 	
 	@SuppressWarnings("null")
@@ -63,7 +67,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 		block = (Expression<Block>) exprs[0];
 		item = (Expression<ItemType>) exprs[1];
 		if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class) && parseResult.mark == 1) {
-			Skript.error("'as %entity%' can only be used on minecraft 1.15+.", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("Getting the drops of a block as an entity is only possible on Minecraft 1.15+", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		entity = (Expression<Entity>) exprs[2];
@@ -124,7 +128,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "drops of " + block.toString(e, debug);
+		return "drops of " + block.toString(e, debug) + (item != null ? (" using " + item.toString(e, debug) + (entity != null ? " as " + entity.toString(e, debug) : null)) : "");
 	}
 	
 }
