@@ -53,7 +53,6 @@ public class ExprAllCommands extends SimpleExpression<String> {
 		return true;
 	}
 	
-	
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
@@ -83,7 +82,7 @@ public class ExprAllCommands extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "all "+(scriptCommandsOnly ? "script " : " ")+ "commands";
+		return "all " + (scriptCommandsOnly ? "script " : " ") + "commands";
 	}
 	
 }

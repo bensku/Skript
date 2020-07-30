@@ -67,7 +67,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	InfoType type;
 	@SuppressWarnings("null")
 	Expression<String> commandName;
-
+	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		commandName = (Expression<String>) exprs[0];
@@ -129,7 +129,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the " + type.name().toLowerCase().replace("_", "") + " of command " + commandName.toString(e, debug)
+		return "the " + type.name().toLowerCase().replace("_", " ") + " of command " + commandName.toString(e, debug);
 	}
 	
 	private enum InfoType {
