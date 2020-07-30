@@ -40,9 +40,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 public class ExprBlockData extends SimplePropertyExpression<Block, BlockData> {
 	
 	static {
-		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
+		if (Skript.classExists("org.bukkit.block.data.BlockData"))
 			register(ExprBlockData.class, BlockData.class, "block[ ]data", "blocks");
-		}
 	}
 	
 	@Nullable
