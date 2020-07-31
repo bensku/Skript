@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -35,14 +35,14 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Arrow Damage")
-@Description("An arrow's base damage. ")
+@Description("An arrow's base damage.")
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
 	"\tset arrow damage of event-projectile to 0"})
 @Since("INSERT VERSION")
 public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number> {
 	
-	static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
+	private final static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
 	
 	static {
 		if (abstractArrowExists || Skript.methodExists(Arrow.class, "getDamage"))
@@ -60,52 +60,46 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL) ? null : CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case REMOVE:
+			case RESET:
+			case SET:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		double strength = delta != null ? Math.max(((Number) delta[0]).doubleValue(), 0) : 0;
+		int mod = 1;
 		switch (mode) {
 			case REMOVE:
-				if (abstractArrowExists)
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof AbstractArrow) {
-							AbstractArrow abstractArrow = (AbstractArrow) entity;
-							double dmg = abstractArrow.getDamage() - strength;
-							if (dmg < 0) dmg = 0;
-							abstractArrow.setDamage(dmg);
-						}
-					}
-				else
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof Arrow) {
-							Arrow arrow = (Arrow) entity;
-							double dmg = arrow.getDamage() - strength;
-							if (dmg < 0) dmg = 0;
-							arrow.setDamage(dmg);
-						}
-					}
-				break;
+				mod = -1;
 			case ADD:
-				if (abstractArrowExists)
+				if (abstractArrowExists) {
 					for (Projectile entity : getExpr().getArray(e)) {
 						if (entity instanceof AbstractArrow) {
 							AbstractArrow abstractArrow = (AbstractArrow) entity;
-							double dmg = abstractArrow.getDamage() + strength;
-							if (dmg < 0) dmg = 0;
+							double dmg = abstractArrow.getDamage() + strength * mod;
+							if (dmg < 0)
+								dmg = 0;
 							abstractArrow.setDamage(dmg);
 						}
 					}
-				else
+				} else {
 					for (Projectile entity : getExpr().getArray(e)) {
 						if (entity instanceof Arrow) {
 							Arrow arrow = (Arrow) entity;
-							double dmg = arrow.getDamage() + strength;
-							if (dmg < 0) dmg = 0;
+							double dmg = arrow.getDamage() + strength * mod;
+							if (dmg < 0)
+								dmg = 0;
 							arrow.setDamage(dmg);
 						}
 					}
+				}
 				break;
 			case RESET:
 			case SET:
