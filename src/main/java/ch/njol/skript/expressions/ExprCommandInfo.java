@@ -19,7 +19,11 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Event;
@@ -53,14 +57,14 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprCommandInfo.class, String.class, ExpressionType.SIMPLE,
-			"[the] main [command] [name] of command %string%", "command %string%'s main [command] [name]",
-			"[the] description of command %string%", "command %string%'s description",
-			"[the] label of command %string%", "command %string%'s label",
-			"[the] usage of command %string%", "command %string%'s usage",
-			"[the] aliases of command %string%", "command %string%'s aliases",
-			"[the] permission of command %string%", "command %string%'s permission",
-			"[the] permission message of command %string%", "command %string%'s permission message",
-			"[the] plugin [owner] of command %string%", "command %string%'s plugin [owner]");
+			"[the] main [command] [name] of command %strings%", "command %strings%'s main [command] [name]",
+			"[the] description of command %strings%", "command %strings%'s description",
+			"[the] label of command %strings%", "command %strings%'s label",
+			"[the] usage of command %strings%", "command %strings%'s usage",
+			"[the] aliases of command %strings%", "command %strings%'s aliases",
+			"[the] permission of command %strings%", "command %strings%'s permission",
+			"[the] permission message of command %strings%", "command %strings%'s permission message",
+			"[the] plugin [owner] of command %strings%", "command %strings%'s plugin [owner]");
 	}
 	
 	@SuppressWarnings("null")
@@ -79,47 +83,58 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("null")
 	protected String[] get(Event e) {
-		String commandName = this.commandName.getSingle(e);
-		if (commandName == null)
-			return null;
-		commandName = commandName.toLowerCase().split(" ")[0];
-		if (commandName.startsWith("/"))
-			commandName = commandName.substring(1);
-		Command command = Commands.getCommandMap().getCommand(commandName);
-		if (command == null)
-			return null;
+		CommandMap map = Commands.getCommandMap();
+		Command[] commands = this.commandName.stream(e).map(map::getCommand).filter(Objects::nonNull).toArray(Command[]::new);
+		ArrayList<String> result = new ArrayList<>();
 		switch (type) {
 			case NAME:
-				return new String[]{command.getName()};
+				for (Command command : commands)
+					result.add(command.getName());
+				break;
 			case DESCRIPTION:
-				return new String[]{command.getDescription()};
+				for (Command command : commands)
+					result.add(command.getDescription());
+				break;
 			case LABEL:
-				return new String[]{command.getLabel()};
+				for (Command command : commands)
+					result.add(command.getLabel());
+				break;
 			case USAGE:
-				return new String[]{command.getUsage()};
+				for (Command command : commands)
+					result.add(command.getUsage());
+				break;
 			case ALIASES:
-				return command.getAliases().toArray(new String[0]);
+				for (Command command : commands)
+					result.addAll(command.getAliases());
+				break;
 			case PERMISSION:
-				return new String[]{command.getPermission()};
+				for (Command command : commands)
+					result.add(command.getPermission());
+				break;
 			case PERMISSION_MESSAGE:
-				return new String[]{command.getPermissionMessage()};
+				for (Command command : commands)
+					result.add(command.getPermissionMessage());
+				break;
 			case PLUGIN:
-				if (command instanceof PluginCommand) {
-					return new String[]{((PluginCommand) command).getPlugin().getName()};
-				} else if (command instanceof BukkitCommand) {
-					return new String[]{"Bukkit"};
-				} else if (command.getClass().getPackage().getName().startsWith("org.spigot")) {
-					return new String[]{"Spigot"};
-				} else if (command.getClass().getPackage().getName().startsWith("com.destroystokyo.paper")) {
-					return new String[]{"Paper"};
+				for (Command command : commands) {
+					if (command instanceof PluginCommand) {
+						result.add(((PluginCommand) command).getPlugin().getName());
+					} else if (command instanceof BukkitCommand) {
+						result.add("Bukkit");
+					} else if (command.getClass().getPackage().getName().startsWith("org.spigot")) {
+						result.add("Spigot");
+					} else if (command.getClass().getPackage().getName().startsWith("com.destroystokyo.paper")) {
+						result.add("Paper");
+					}
 				}
+				break;
 		}
-		return new String[0];
+		return result.toArray(new String[0]);
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return true;
+		return false;
 	}
 	
 	@Override

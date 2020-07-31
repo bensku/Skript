@@ -63,10 +63,10 @@ public class ExprAllCommands extends SimpleExpression<String> {
 			if (Commands.getCommandMap() == null)
 				return null;
 			return Commands.getCommandMap()
-				.getCommands()
-				.parallelStream()
-				.map(command -> command.getLabel())
-				.toArray(String[]::new);
+					.getCommands()
+					.parallelStream()
+					.map(command -> command.getLabel())
+					.toArray(String[]::new);
 		}
 	}
 	

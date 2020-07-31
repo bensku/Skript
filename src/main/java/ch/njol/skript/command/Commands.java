@@ -105,6 +105,7 @@ public abstract class Commands {
 	public static Set<String> getScriptCommands(){
 		return commands.keySet();
 	}
+	
 	@Nullable
 	public static SimpleCommandMap getCommandMap(){
 		return commandMap;
