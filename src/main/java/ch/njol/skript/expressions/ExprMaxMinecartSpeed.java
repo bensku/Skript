@@ -52,18 +52,28 @@ public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Numbe
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET || mode == ChangeMode.SET) ? CollectionUtils.array(Number.class) : null;
+		switch (mode) {
+			case ADD:
+			case REMOVE:
+			case RESET:
+			case SET:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null) {
-			if (mode == ChangeMode.RESET) getExpr().stream(e).forEach(m -> {
-				if (m instanceof Minecart)
-					((Minecart) m).setMaxSpeed(0.4);
-			});
+			if (mode == ChangeMode.RESET)
+				getExpr().stream(e).forEach(m -> {
+					if (m instanceof Minecart)
+						((Minecart) m).setMaxSpeed(0.4);
+				});
 			return;
 		}
+		int mod = 1;
 		switch (mode) {
 			case SET:
 				getExpr().stream(e).forEach(m -> {
@@ -71,21 +81,15 @@ public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Numbe
 						((Minecart) m).setMaxSpeed(((Number) delta[0]).doubleValue());
 				});
 				break;
-			case ADD:
-				getExpr().stream(e).forEach(m -> {
-					if (m instanceof Minecart) {
-						Minecart minecart = (Minecart) m;
-						minecart.setMaxSpeed(minecart.getMaxSpeed() + ((Number) delta[0]).doubleValue());
-					}
-				});
-				break;
 			case REMOVE:
-				getExpr().stream(e).forEach(m -> {
-					if (m instanceof Minecart) {
-						Minecart minecart = (Minecart) m;
-						minecart.setMaxSpeed(minecart.getMaxSpeed() - ((Number) delta[0]).doubleValue());
+				mod = -1;
+			case ADD:
+				for (Entity entity : getExpr().getArray(e)) {
+					if (entity instanceof Minecart) {
+						Minecart minecart = (Minecart) entity;
+						minecart.setMaxSpeed(minecart.getMaxSpeed() + ((Number) delta[0]).doubleValue() * mod);
 					}
-				});
+				}
 				break;
 		}
 	}
