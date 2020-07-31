@@ -42,16 +42,15 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("INSERT VERSION")
 public class ExprProjectileCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
 	
+	private static final boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
+	
 	static {
 		register(ExprProjectileCriticalState.class, Boolean.class, "[the] (projectile|arrow) critical (state|ability|mode)", "projectiles");
 	}
 	
-	boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
-	
 	@Nullable
 	@Override
 	public Boolean convert(Projectile arrow) {
-		
 		if (abstractArrowExists)
 			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).isCritical() : null;
 		return arrow instanceof Arrow ? ((Arrow) arrow).isCritical() : null;
