@@ -227,6 +227,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public static boolean using64BitJava() {
+		// Property returned should either be "Java HotSpot(TM) 64-Bit Server VM" or "OpenJDK 64-Bit Server VM"
+		return System.getProperty("java.vm.name").contains("64");
+	}
+	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -277,6 +282,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			Skript.warning("It will still probably work, but if it does not, you are on your own.");
 			Skript.warning("Skript officially supports Paper and Spigot.");
 		}
+		
+		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
+		if (!using64BitJava()) {
+			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when loading aliases.");
+			Skript.warning("Please update to 64-bit Java to remove this warning.");
+		}
+		
 		// If nothing got triggered, everything is probably ok
 		return true;
 	}
@@ -392,7 +404,20 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 		
 		BukkitUnsafe.initialize(); // Needed for aliases
-		Aliases.load(); // Loaded before anything that might use them
+		
+		try {
+			Aliases.load(); // Loaded before anything that might use them
+		} catch (StackOverflowError e) {
+			if (using64BitJava()) {
+				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
+			} else {
+				Skript.error("");
+				Skript.error("There was a StackOverflowError that occured while loading aliases.");
+				Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
+				Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
+				Skript.error("");
+			}
+		}
 		
 		// If loading can continue (platform ok), check for potentially thrown error
 		if (classLoadError != null) {
