@@ -40,13 +40,16 @@ public class CondIsAdult extends PropertyCondition<Entity> {
 	
 	@Override
 	public boolean check(Entity entity) {
-		if (entity instanceof Ageable) return ((Ageable) entity).isAdult();
-		else if (entity instanceof Zombie) return !((Zombie) entity).isBaby();
-		else return false;
+		if (entity instanceof Ageable)
+			return ((Ageable) entity).isAdult();
+		else if (entity instanceof Zombie)
+			return !((Zombie) entity).isBaby();
+		else
+			return false;
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "is adult";
+		return "adult";
 	}
 }
