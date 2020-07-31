@@ -1735,7 +1735,6 @@ villager types:
 	swamp: swamp
 	taiga: taiga
 
-
 # -- Attribute Types --
 attribute types:
 	generic_armor: generic armor, armor
