@@ -80,7 +80,6 @@ public class CondMatches extends Condition {
 			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
 		} else {
 			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
-			
 		}
 		return result == isNegated();
 	}
