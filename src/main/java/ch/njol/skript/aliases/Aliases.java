@@ -33,7 +33,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -407,6 +409,22 @@ public abstract class Aliases {
 		}
 	}
 	
+	/**
+	 * Temporarily create an alias for a material which may not have an alias yet.
+	 */
+	private static void loadMissingAliases() {
+		if (!Skript.classExists("org.bukkit.NamespacedKey"))
+			return;
+		for (Material material : Material.values()) {
+			if (!provider.hasAliasForMaterial(material)) {
+				NamespacedKey key = material.getKey();
+				String name = key.getKey().replace("_", " ");
+				parser.loadAlias(name + "¦s", key.toString());
+				Skript.debug(ChatColor.YELLOW + "Creating temporary alias for: " + key.toString());
+			}
+		}
+	}
+	
 	private static void loadInternal() throws IOException {
 		Path dataFolder = Skript.getInstance().getDataFolder().toPath();
 		
@@ -429,6 +447,7 @@ public abstract class Aliases {
 					Path aliasesPath = zipFs.getPath("/", "aliases-english");
 					assert aliasesPath != null;
 					loadDirectory(aliasesPath);
+					loadMissingAliases();
 				}
 			} catch (URISyntaxException e) {
 				assert false;
