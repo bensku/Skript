@@ -57,9 +57,9 @@ public class EntityUtils {
 	public static int getAge(Entity entity) {
 		if (entity instanceof Ageable)
 			return ((Ageable) entity).getAge();
-		else if (entity instanceof Zombie) {
+		else if (entity instanceof Zombie)
 			return ((Zombie) entity).isBaby() ? -1 : 0;
-		} else if (HAS_PIGLINS) {
+		else if (HAS_PIGLINS) {
 			if (entity instanceof Piglin)
 				return ((Piglin) entity).isBaby() ? -1 : 0;
 			else if (entity instanceof Zoglin)
@@ -78,9 +78,9 @@ public class EntityUtils {
 	public static void setAge(Entity entity, int age) {
 		if (entity instanceof Ageable)
 			((Ageable) entity).setAge(age);
-		else if (entity instanceof Zombie) {
+		else if (entity instanceof Zombie)
 			((Zombie) entity).setBaby(age < 0);
-		} else if (HAS_PIGLINS) {
+		else if (HAS_PIGLINS) {
 			if (entity instanceof Piglin)
 				((Piglin) entity).setBaby(age < 0);
 			else if (entity instanceof Zoglin)
