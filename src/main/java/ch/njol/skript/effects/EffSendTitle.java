@@ -109,7 +109,7 @@ public class EffSendTitle extends Effect {
 		in = fadeIn != null ? fadeIn.toString(e, debug) : "",
 		stay = this.stay != null ? this.stay.toString(e, debug) : "",
 		out = fadeOut != null ? this.fadeOut.toString(e, debug) : "";
-		return (title == null ? "send subtitle " + sub : "send title " + title +
+		return ("send title " + title +
 				sub == "" ? "" : " with subtitle " + sub) + " to " +
 				recipients.toString(e, debug) + (TIME_SUPPORTED ?
 				" for " + stay + " with fade in " + in + " and fade out" + out : "");
