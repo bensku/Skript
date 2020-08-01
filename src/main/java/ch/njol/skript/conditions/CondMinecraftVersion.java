@@ -17,7 +17,7 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.tests.runner;
+package ch.njol.skript.conditions;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
