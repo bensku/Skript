@@ -35,12 +35,13 @@ import ch.njol.util.Kleenean;
 
 @Name("Running Minecraft")
 @Description("Checks if current Minecraft version is given version or newer.")
-@Examples("running minecraft \"1.14\"")
+@Examples({"running minecraft \"1.14\"", "if not running minecraft \"1.16.1\":"})
 @Since("2.5")
 public class CondMinecraftVersion extends Condition {
 	
 	static {
-		Skript.registerCondition(CondMinecraftVersion.class, "running minecraft %string%");
+		Skript.registerCondition(CondMinecraftVersion.class,
+			"[the] [server] [(is|1¦([is] not|isn't))] running [minecraft] [version] %string%");
 	}
 
 	@SuppressWarnings("null")
@@ -50,18 +51,19 @@ public class CondMinecraftVersion extends Condition {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		version = (Expression<String>) exprs[0];
+		setNegated(parseResult.mark == 1);
 		return true;
 	}
 	
 	@Override
 	public boolean check(Event e) {
 		String ver = version.getSingle(e);
-		return ver != null ? Skript.isRunningMinecraft(new Version(ver)) : false;
+		return ver != null ? Skript.isRunningMinecraft(new Version(ver)) ^ isNegated() : false;
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "is running minecraft " + version.toString(e, debug);
+		return "is" + (isNegated() ? " not" : "")  + " running minecraft " + version.toString(e, debug);
 	}
 	
 }
