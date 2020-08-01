@@ -55,6 +55,9 @@ public class ExprBed extends SimplePropertyExpression<Player, Location> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
+		switch (mode) {
+		
+		}
 		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE ||mode == ChangeMode.TOGGLE)
 			return new Class[] {Location.class};
 		return null;

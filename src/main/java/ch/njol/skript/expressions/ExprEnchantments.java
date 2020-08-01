@@ -39,6 +39,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.EnchantmentType;
+import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -89,7 +90,17 @@ public class ExprEnchantments extends SimpleExpression<EnchantmentType> {
 		// Enchantment doesn't get automatically converted to EnchantmentType if you give it more than a one.
 		// Meaning you can transform an Enchantment array to an EnchantmentType array automatically,
 		// So, we gotta do it manually.
-		return mode == ChangeMode.TOGGLE ? null : CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+		switch (mode) {
+			case ADD:
+			case RESET:
+			case DELETE:
+			case REMOVE:
+			case SET:
+			case REMOVE_ALL:
+				return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+			default:
+				return null;
+		}
 	}
 
 	

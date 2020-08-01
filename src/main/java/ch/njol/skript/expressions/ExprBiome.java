@@ -37,6 +37,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -74,10 +75,12 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if(mode == ChangeMode.TOGGLE) return null;
-		if (mode == ChangeMode.SET)
-			return new Class[] {Biome.class};
-		return super.acceptChange(mode);
+		switch (mode) {
+			case SET:
+				return CollectionUtils.array(Biome.class);
+			default:
+				return super.acceptChange(mode);
+		}
 	}
 	
 	@Override

@@ -66,7 +66,17 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return mode != Changer.ChangeMode.TOGGLE ? CollectionUtils.array(Number.class) : null;
+		switch (mode) {
+			case ADD:
+			case RESET:
+			case SET:
+			case REMOVE:
+			case DELETE:
+			case REMOVE_ALL:
+				return new Class[]{Number.class};
+			default:
+				return null;
+		}
 	}
 	
 	@Override
@@ -77,7 +87,8 @@ public class ExprCustomModelData extends SimplePropertyExpression<ItemType, Long
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		long data = delta == null ? 0 : ((Number) delta[0]).intValue();
-		if (data > 99999999 || data < 0) data = 0;
+		if (data > 99999999 || data < 0)
+			data = 0;
 		for (ItemType item : getExpr().getArray(e)) {
 			long oldData = 0;
 			ItemMeta meta = item.getItemMeta();

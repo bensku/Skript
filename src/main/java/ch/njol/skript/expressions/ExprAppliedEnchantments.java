@@ -75,7 +75,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		switch (mode){
+		switch (mode) {
 			case SET:
 			case REMOVE:
 			case DELETE:

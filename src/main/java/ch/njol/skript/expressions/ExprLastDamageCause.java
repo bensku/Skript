@@ -80,9 +80,16 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(DamageCause.class);
+		switch (mode) {
+			case RESET:
+			case ADD:
+			case SET:
+			case DELETE:
+			case REMOVE:
+				return CollectionUtils.array(DamageCause.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override

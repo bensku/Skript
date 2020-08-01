@@ -37,6 +37,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -80,8 +81,6 @@ public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
-			return null;
 		if (ScriptLoader.isCurrentEvent(PlayerRespawnEvent.class) && !ScriptLoader.hasDelayBefore.isTrue()) {
 			Skript.error("Cannot change a player's level in a respawn event. Add a delay of 1 tick or change the 'new level' in a death event.");
 			return null;
@@ -92,7 +91,16 @@ public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 		}
 		if (getTime() == -1 && !ScriptLoader.isCurrentEvent(PlayerDeathEvent.class))
 			return null;
-		return new Class[] {Number.class};
+		switch (mode) {
+			case RESET:
+			case ADD:
+			case SET:
+			case DELETE:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override

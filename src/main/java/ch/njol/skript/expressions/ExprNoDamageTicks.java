@@ -50,9 +50,16 @@ public class ExprNoDamageTicks extends SimplePropertyExpression<LivingEntity, Nu
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case RESET:
+			case ADD:
+			case SET:
+			case DELETE:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override

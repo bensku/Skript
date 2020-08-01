@@ -67,8 +67,9 @@ public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boo
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		if(mode == ChangeMode.TOGGLE)
-			for (final LivingEntity entity : getExpr().getArray(e)) entity.setGliding(!entity.isGliding());
+		if (mode == ChangeMode.TOGGLE)
+			for (final LivingEntity entity : getExpr().getArray(e))
+				entity.setGliding(!entity.isGliding());
 		else for (final LivingEntity entity : getExpr().getArray(e))
 			entity.setGliding(delta == null ? false : (Boolean) delta[0]);
 	}

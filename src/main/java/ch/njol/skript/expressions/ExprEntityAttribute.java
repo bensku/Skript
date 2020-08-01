@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -39,6 +40,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -83,9 +85,18 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS))
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case SET:
+				return CollectionUtils.array(Number.class);
+			case RESET:
+				if(DEFAULTVALUE_EXISTS)
+					return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@SuppressWarnings("null")

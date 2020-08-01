@@ -62,9 +62,15 @@ public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number>
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case SET:
+			case DELETE:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override

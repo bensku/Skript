@@ -60,7 +60,17 @@ public class ExprExhaustion extends SimplePropertyExpression<Player, Number>{
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return mode == Changer.ChangeMode.TOGGLE ? null : CollectionUtils.array(Number.class);
+		switch (mode) {
+			case REMOVE_ALL:
+			case SET:
+			case REMOVE:
+			case DELETE:
+			case RESET:
+			case ADD:
+				return new Class[]{Number.class};
+			default:
+				return null;
+		}
 	}
 	
 	@SuppressWarnings("null")

@@ -64,7 +64,17 @@ public class ExprChatRecipients extends SimpleExpression<Player> {
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		return mode != ChangeMode.TOGGLE ? CollectionUtils.array(Player[].class) : null;
+		switch (mode) {
+			case RESET:
+			case SET:
+			case REMOVE:
+			case DELETE:
+			case ADD:
+			case REMOVE_ALL:
+				return new Class[]{Player[].class};
+			default:
+				return null;
+		}
 	}
 
 	@Override

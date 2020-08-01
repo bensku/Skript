@@ -56,8 +56,9 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		if(mode == Changer.ChangeMode.TOGGLE){
-			for (Player player : getExpr().getArray(event)) player.setAllowFlight(!player.getAllowFlight());
+		if (mode == Changer.ChangeMode.TOGGLE) {
+			for (Player player : getExpr().getArray(event))
+				player.setAllowFlight(!player.getAllowFlight());
 		} else {
 			boolean state = mode != Changer.ChangeMode.RESET && delta != null && (boolean) delta[0];
 			

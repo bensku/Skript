@@ -44,6 +44,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -114,7 +115,6 @@ public class ExprPassenger extends SimpleExpression<Entity> { // REMIND create '
 			return new Class[] {Entity[].class, EntityData[].class}; // To support more than one entity
 		if (mode == ChangeMode.SET)
 			return new Class[] {Entity.class, EntityData.class};
-		if (mode == ChangeMode.TOGGLE) return null;
 		return super.acceptChange(mode);
 	}
 

@@ -52,9 +52,16 @@ public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEnti
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL ||mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case SET:
+			case RESET:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
@@ -83,6 +90,7 @@ public class ExprCreeperMaxFuseTicks extends SimplePropertyExpression<LivingEnti
 						if (r2 < 0) r2 = 0;
 						c.setMaxFuseTicks(r2);
 						break;
+					case TOGGLE:
 					case REMOVE_ALL:
 						assert false;		
 				}

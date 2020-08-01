@@ -86,9 +86,16 @@ public class ExprDamage extends SimpleExpression<Number> {
 			Skript.error("Can't change the damage anymore after the event has already passed");
 			return null;
 		}
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case SET:
+			case REMOVE:
+			case DELETE:
+			case RESET:
+			case ADD:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override

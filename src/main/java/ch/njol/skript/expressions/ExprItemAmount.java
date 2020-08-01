@@ -63,7 +63,16 @@ public class ExprItemAmount extends SimplePropertyExpression<ItemType, Number>{
 	
 	@Override
     public @Nullable Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        return (mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.TOGGLE) ? CollectionUtils.array(Number.class) : null;
+		switch (mode) {
+			case RESET:
+			case ADD:
+			case SET:
+			case DELETE:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
     }
 
     @Override

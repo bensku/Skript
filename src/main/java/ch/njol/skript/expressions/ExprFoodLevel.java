@@ -86,9 +86,16 @@ public class ExprFoodLevel extends PropertyExpression<Player, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case REMOVE:
+			case DELETE:
+			case SET:
+			case ADD:
+			case RESET:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override

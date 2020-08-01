@@ -32,6 +32,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -72,10 +73,15 @@ public class ExprMaxHealth extends SimplePropertyExpression<LivingEntity, Number
 			Skript.error("The max health of an entity can only be changed in Minecraft 1.6 and later");
 			return null;
 		}
-		
-		if (mode != ChangeMode.DELETE && mode != ChangeMode.REMOVE_ALL && mode != ChangeMode.TOGGLE)
-			return new Class[] {Number.class};
-		return null;
+		switch (mode) {
+			case RESET:
+			case ADD:
+			case SET:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
