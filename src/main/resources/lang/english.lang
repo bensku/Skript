@@ -1226,7 +1226,11 @@ bossbar colors:
 	red: red
 	white: white
 	yellow: yellow
-
+# -- BossBar Flag --
+bossbar flags:
+	CREATE_FOG: create fog, createfog, create_fog
+	DARKEN_SKY: darken sky, darken the sky, darkensky, darken_sky
+	PLAY_BOSS_MUSIC: play boss music, play the boss music, playbossmusic, play_boss_music
 # -- Cat Types --
 cat types:
 	tabby: tabby

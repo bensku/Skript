@@ -1978,9 +1978,9 @@ public class BukkitClasses {
 		EnumUtils<BarColor> bossbarColours = new EnumUtils<>(BarColor.class, "bossbar colors");
 		Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
 				.user("(0|boss) ?bar colou?r")
-			.name("Heal Reason")
-			.description("A bossbar's colour")
-			.usage(regainReasons.getAllNames())
+			.name("BossBar Colour")
+			.description("A bossbar color")
+			.usage(bossbarColours.getAllNames())
 			.examples("")
 			.since("INSERT VERSION")
 			.parser(new Parser<BarColor>() {
@@ -2006,5 +2006,36 @@ public class BukkitClasses {
 				}
 			})
 			.serializer(new EnumSerializer<>(BarColor.class)));
+		EnumUtils<BarFlag> bossbarFlags = new EnumUtils<>(BarFlag.class, "bossbar flags");
+		Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
+			.user("(0|boss) ?bar flags?")
+			.name("BossBar Flag")
+			.description("A bossbar flag")
+			.usage(bossbarFlags.getAllNames())
+			.examples("")
+			.since("INSERT VERSION")
+			.parser(new Parser<BarFlag>() {
+				@Override
+				@Nullable
+				public BarFlag parse(String s, ParseContext parseContext) {
+					return bossbarFlags.parse(s);
+				}
+				
+				@Override
+				public String toString(BarFlag o, int flags) {
+					return bossbarFlags.toString(o, flags);
+				}
+				
+				@Override
+				public String toVariableNameString(BarFlag o) {
+					return "barflag:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			})
+			.serializer(new EnumSerializer<>(BarFlag.class)));
 	}
 }
