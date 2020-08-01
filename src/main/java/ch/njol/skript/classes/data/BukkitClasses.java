@@ -19,7 +19,9 @@
  */
 package ch.njol.skript.classes.data;
 
+import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +39,7 @@ import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
@@ -44,6 +47,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
@@ -1871,5 +1879,132 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(Attribute.class)));
+		Classes.registerClass(new ClassInfo<>(BossBar.class, "bossbar")
+			.user("boss ?bars?")
+			.name("Boss Bar")
+			.description("Represents a bossbar.")
+			.since("INSERT VERSION")
+			.parser(new Parser<BossBar>() {
+				
+				@Nullable
+				@Override
+				public BossBar parse(String s, ParseContext context) {
+					return null;
+				}
+				
+				@Override
+				public boolean canParse(ParseContext context) {
+					return false;
+				}
+				
+				
+				@Override
+				public String toVariableNameString(BossBar o) {
+					return String.format("bossbar:%s,%s,%s,%s", o.getTitle(), o.getColor(), o.getProgress(), o.getStyle());
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+				
+				@Override
+				public String toString(BossBar o, int flags) {
+					if(Skript.classExists("org.bukkit.boss.KeyedBossBar") && o instanceof KeyedBossBar){
+						return String.format("Bossbar with id %s", ((KeyedBossBar) o).getKey().getKey());
+					} else {
+						return String.format("Bossbar with title %s, style %s, color %s", o.getTitle(), o.getStyle(), o.getColor());
+					}
+				}
+			})
+			.serializer(new Serializer<BossBar>() {
+				@Override
+				public Fields serialize(BossBar bar) throws NotSerializableException {
+					Fields fields = new Fields();
+					if(Skript.classExists("org.bukkit.boss.KeyedBossBar") && bar instanceof KeyedBossBar) {
+						System.out.println(((KeyedBossBar) bar).getKey().toString());
+						fields.putObject("id", ((KeyedBossBar) bar).getKey().getKey());
+					} else {
+						fields.putPrimitive("title", bar.getTitle());
+						fields.putPrimitive("progress", bar.getProgress());
+						fields.putPrimitive("color", bar.getColor());
+						fields.putPrimitive("style", bar.getStyle());
+						fields.putPrimitive("visible", bar.isVisible());
+						fields.putObject("players", bar.getPlayers());
+						List<BarFlag> flags = new ArrayList<>();
+						if(bar.hasFlag(BarFlag.CREATE_FOG)) flags.add(BarFlag.CREATE_FOG);
+						if(bar.hasFlag(BarFlag.DARKEN_SKY)) flags.add(BarFlag.DARKEN_SKY);
+						if(bar.hasFlag(BarFlag.PLAY_BOSS_MUSIC)) flags.add(BarFlag.PLAY_BOSS_MUSIC);
+						fields.putObject("flags", flags);
+					}
+					return fields;
+				}
+				
+				@Override
+				@SuppressWarnings("null")
+				protected BossBar deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
+					assert fields != null;
+					if(fields.hasField("id")) {
+						return Bukkit.getBossBar(NamespacedKey.minecraft(fields.getAndRemoveObject("id", String.class)));
+					}
+					BossBar bar = Bukkit.createBossBar(fields.getAndRemovePrimitive("title", String.class), fields.getAndRemovePrimitive("color", BarColor.class), fields.getAndRemovePrimitive("style", BarStyle.class));
+					bar.setProgress(fields.getPrimitive("progress", double.class));
+					bar.setVisible(fields.getPrimitive("visible", boolean.class));
+					fields.getAndRemoveObject("flags", List.class).forEach(consumer -> {
+						bar.addFlag((BarFlag) consumer);
+					});
+					for (Player player : fields.getAndRemoveObject("players", Player[].class)) {
+						if(player.isOnline())
+							bar.addPlayer(player);
+					}
+					return bar;
+				}
+				
+				@Override
+				public void deserialize(BossBar o, Fields f) throws StreamCorruptedException, NotSerializableException {
+					assert false;
+				}
+				
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+				
+				@Override
+				protected boolean canBeInstantiated() {
+					return false;
+				}})
+		);
+		EnumUtils<BarColor> bossbarColours = new EnumUtils<>(BarColor.class, "bossbar colors");
+		Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
+				.user("(0|boss) ?bar colou?r")
+			.name("Heal Reason")
+			.description("A bossbar's colour")
+			.usage(regainReasons.getAllNames())
+			.examples("")
+			.since("INSERT VERSION")
+			.parser(new Parser<BarColor>() {
+				@Override
+				@Nullable
+				public BarColor parse(String s, ParseContext parseContext) {
+					return bossbarColours.parse(s);
+				}
+				
+				@Override
+				public String toString(BarColor o, int flags) {
+					return bossbarColours.toString(o, flags);
+				}
+				
+				@Override
+				public String toVariableNameString(BarColor o) {
+					return "barcolour:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			})
+			.serializer(new EnumSerializer<>(BarColor.class)));
 	}
 }

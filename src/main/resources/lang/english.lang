@@ -1216,6 +1216,17 @@ heal reasons:
     wither: withering, withered, wither potion, a wither effect, wither effect, wither
     wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
 
+# -- BossBar --
+# -- BossBar Colour --
+bossbar colors:
+	blue: blue
+	green: green
+	pink: pink
+	purple: purple
+	red: red
+	white: white
+	yellow: yellow
+
 # -- Cat Types --
 cat types:
 	tabby: tabby
