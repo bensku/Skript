@@ -44,7 +44,7 @@ public class EntityUtils {
 	public static boolean isAgeable(Entity entity) {
 		if (entity instanceof Ageable || entity instanceof Zombie)
 			return true;
-		else return HAS_PIGLINS && (entity instanceof Piglin || entity instanceof Zoglin);
+		return HAS_PIGLINS && (entity instanceof Piglin || entity instanceof Zoglin);
 	}
 	
 	/**
