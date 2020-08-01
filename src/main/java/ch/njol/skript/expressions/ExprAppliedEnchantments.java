@@ -75,9 +75,15 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET ||mode == ChangeMode.TOGGLE)
-			return null;
-		return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+		switch (mode){
+			case SET:
+			case REMOVE:
+			case DELETE:
+			case ADD:
+				return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+			default:
+				return null;
+		}
 	}
 
 	@SuppressWarnings("null")
@@ -95,6 +101,7 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 		EnchantItemEvent e = (EnchantItemEvent) event;
 		switch (mode) {
 			case SET:
+			case DELETE:
 				e.getEnchantsToAdd().clear();
 			case ADD:
 				for (EnchantmentType enchant : enchants)
@@ -104,8 +111,6 @@ public class ExprAppliedEnchantments extends SimpleExpression<EnchantmentType> {
 				for (EnchantmentType enchant : enchants)
 					e.getEnchantsToAdd().remove(enchant.getType(), enchant.getLevel());
 				break;
-			case DELETE:
-				e.getEnchantsToAdd().clear();
 			case REMOVE_ALL:
 			case RESET:
 				assert false;
