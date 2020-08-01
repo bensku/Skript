@@ -185,8 +185,7 @@ public class BukkitUnsafe {
 		try {
 			unsafe.modifyItemStack(stack, arguments);
 		} catch (NullPointerException e) {
-			if (knownNullPtr) {
-				// Probably known Spigot bug
+			if (knownNullPtr) { // Probably known Spigot bug
 				// So we continue doing whatever we were doing and hope it works
 				Skript.warning("Item " + stack.getType() + arguments + " failed modifyItemStack. This is a bug on old Spigot versions.");
 			} else { // Not known null pointer, don't just swallow
