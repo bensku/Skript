@@ -763,7 +763,7 @@ public final class Skript extends JavaPlugin implements Listener {
 						public void run() {
 							Player p = e.getPlayer();
 							SkriptUpdater updater = getUpdater();
-							if (p == null || updater == null)
+							if (updater == null)
 								return;
 							
 							// Don't actually check for updates to avoid breaking Github rate limit
@@ -1388,13 +1388,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			if (sender instanceof Player) {
 				final PlayerCommandPreprocessEvent e = new PlayerCommandPreprocessEvent((Player) sender, "/" + command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.isCancelled() || e.getMessage() == null || !e.getMessage().startsWith("/"))
+				if (e.isCancelled() || !e.getMessage().startsWith("/"))
 					return false;
 				return Bukkit.dispatchCommand(e.getPlayer(), e.getMessage().substring(1));
 			} else {
 				final ServerCommandEvent e = new ServerCommandEvent(sender, command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.getCommand() == null || e.getCommand().isEmpty())
+				if (e.getCommand().isEmpty())
 					return false;
 				return Bukkit.dispatchCommand(e.getSender(), e.getCommand());
 			}
