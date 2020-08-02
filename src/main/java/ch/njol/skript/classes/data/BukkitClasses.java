@@ -49,6 +49,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda.Gene;
@@ -1871,5 +1872,67 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(Attribute.class)));
+		EnumUtils<Horse.Color> horseColorUtils = new EnumUtils<>(Horse.Color.class, "horse colors");
+		Classes.registerClass(new ClassInfo<>(Horse.Color.class, "horsecolor")
+				.user("horse ?colou?rs?")
+				.name("Horse Color")
+				.description("Represents a horse's color.")
+				.usage(horseColorUtils.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Horse.Color>() {
+					
+					@Nullable
+					@Override
+					public Horse.Color parse(String s, ParseContext context) {
+						return horseColorUtils.parse(s);
+					}
+					
+					@Override
+					public String toString(Horse.Color o, int flags) {
+						return horseColorUtils.toString(o, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Horse.Color o) {
+						return toString(o, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Horse.Color.class)));
+		EnumUtils<Horse.Style> horseStyleUtils = new EnumUtils<>(Horse.Style.class, "horse styles");
+		Classes.registerClass(new ClassInfo<>(Horse.Style.class, "horsestyle")
+				.user("horse styles?")
+				.name("Horse Style")
+				.description("Represents a horse's style.")
+				.usage(horseStyleUtils.getAllNames())
+				.since("INSERT VERSION")
+				.parser(new Parser<Horse.Style>() {
+					
+					@Nullable
+					@Override
+					public Horse.Style parse(String s, ParseContext context) {
+						return horseStyleUtils.parse(s);
+					}
+					
+					@Override
+					public String toString(Horse.Style o, int flags) {
+						return horseStyleUtils.toString(o, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Horse.Style o) {
+						return toString(o, 0);
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "\\S+";
+					}
+				})
+				.serializer(new EnumSerializer<>(Horse.Style.class)));
 	}
 }

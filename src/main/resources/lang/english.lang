@@ -1216,6 +1216,24 @@ heal reasons:
     wither: withering, withered, wither potion, a wither effect, wither effect, wither
     wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
 
+# -- Horse Color --
+horse colors:
+	black: black, pitch black
+	brown: brown, light brown
+	chestnut: chestnut
+	creamy: creamy, very light brown
+	dark_brown: dark brown
+	gray: gray, grey
+	white: white, snow white
+
+# -- Horse Style --
+horse styles:
+	black_dots: small black dots, black dots
+	none: none, nothing
+	white: white socks, white stripes, white
+	white_dots: white dots
+	whitefield: milky splotches, white field
+
 # -- Cat Types --
 cat types:
 	tabby: tabby
