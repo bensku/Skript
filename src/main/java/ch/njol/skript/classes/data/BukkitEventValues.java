@@ -32,6 +32,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
@@ -88,6 +89,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -1136,6 +1138,29 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(EnchantItemEvent e) {
 				return e.getEnchantBlock();
+			}
+		}, 0);
+		//PlayerFishEvent
+		EventValues.registerEventValue(PlayerFishEvent.class, Entity.class, new Getter<Entity, PlayerFishEvent>() {
+			@Override
+			@Nullable
+			public Entity get(PlayerFishEvent e) {
+				Entity entity = e.getCaught();
+				return entity != null ? entity : null;
+			}
+		}, 0);
+		EventValues.registerEventValue(PlayerFishEvent.class, PlayerFishEvent.State.class, new Getter<PlayerFishEvent.State, PlayerFishEvent>() {
+			@Override
+			@Nullable
+			public PlayerFishEvent.State get(PlayerFishEvent e) {
+				return e.getState();
+			}
+		}, 0);
+		EventValues.registerEventValue(PlayerFishEvent.class, FishHook.class, new Getter<FishHook, PlayerFishEvent>() {
+			@Override
+			@Nullable
+			public FishHook get(PlayerFishEvent e) {
+				return e.getHook();
 			}
 		}, 0);
 	}
