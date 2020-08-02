@@ -50,7 +50,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 				.since("2.4");
 	}
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Literal<Status> states;
 
 	@SuppressWarnings("unchecked")
@@ -62,6 +62,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 	}
 
 	@Override
+	@SuppressWarnings("null")
 	public boolean check(final Event e) {
 		if (states != null) {
 			Status state = ((PlayerResourcePackStatusEvent) e).getStatus();
