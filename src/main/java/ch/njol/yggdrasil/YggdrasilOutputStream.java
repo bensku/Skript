@@ -177,16 +177,12 @@ public abstract class YggdrasilOutputStream implements Flushable, Closeable {
 		final YggdrasilSerializer s = yggdrasil.getSerializer(c);
 		if (s != null) {
 			fields = s.serialize(o);
-			if (fields == null)
-				throw new YggdrasilException("The serializer of " + c + " returned null");
 			if (!s.canBeInstantiated(c)) {
 				ref = ~ref; // ~ instead of - to also get a negative value if ref is 0
 				writtenObjects.put(o, ref);
 			}
 		} else if (o instanceof YggdrasilExtendedSerializable) {
 			fields = ((YggdrasilExtendedSerializable) o).serialize();
-			if (fields == null)
-				throw new YggdrasilException("The serialize() method of " + c + " returned null");
 		} else {
 			fields = new Fields(o, yggdrasil);
 		}
