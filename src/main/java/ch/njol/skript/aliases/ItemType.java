@@ -416,7 +416,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	void remove(int index) {
-		ItemData type = types.remove(index);
+		types.remove(index);
 		//numItems -= type.numItems();
 		modified();
 	}
