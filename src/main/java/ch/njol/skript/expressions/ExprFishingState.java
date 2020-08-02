@@ -38,7 +38,7 @@ import ch.njol.skript.lang.ExpressionType;
 public class ExprFishingState extends EventValueExpression<PlayerFishEvent.State> {
 	
 	static {
-		Skript.registerExpression(ExprFishingState.class, PlayerFishEvent.State.class, ExpressionType.SIMPLE, "[the] fish[ing] state");
+		Skript.registerExpression(ExprFishingState.class, PlayerFishEvent.State.class, ExpressionType.SIMPLE, "[the] [event-]fish[ing]( |-)state");
 	}
 	
 	public ExprFishingState() {
