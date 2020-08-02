@@ -998,11 +998,11 @@ public final class BukkitEventValues {
 				return event.getItem();
 			}
 		}, 0);
-		EventValues.registerEventValue(InventoryPickupItemEvent.class, ItemStack.class, new Getter<ItemStack, InventoryPickupItemEvent>() {
+		EventValues.registerEventValue(InventoryPickupItemEvent.class, ItemType.class, new Getter<ItemType, InventoryPickupItemEvent>() {
 			@Nullable
 			@Override
-			public ItemStack get(InventoryPickupItemEvent event) {
-				return event.getItem().getItemStack();
+			public ItemType get(InventoryPickupItemEvent event) {
+				return new ItemType(event.getItem().getItemStack());
 			}
 		}, 0);
 		//PortalCreateEvent

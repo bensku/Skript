@@ -570,9 +570,9 @@ public class SimpleEvents {
 			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
 		.since("2.5");
 		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
-			.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
-			.examples("on inventory pickup:")
-      .since("INSERT VERSION");
+				.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
+				.examples("on inventory pickup:")
+				.since("INSERT VERSION");
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
