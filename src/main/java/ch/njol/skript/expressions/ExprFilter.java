@@ -187,9 +187,6 @@ public class ExprFilter extends SimpleExpression<Object> {
 		@Override
 		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 			parent = ExprFilter.getParsing();
-			if (parent == null) {
-				return false;
-			}
 			parent.addChild(this);
 			inputType = matchedPattern == 0 ? null : ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 			return true;
