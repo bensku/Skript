@@ -102,8 +102,6 @@ public class DefaultChangers {
 								}
 							} else if (d instanceof ItemType) {
 								final PlayerInventory invi = p.getInventory();
-								if (invi == null)
-									continue;
 								if (mode == ChangeMode.ADD)
 									((ItemType) d).addTo(invi);
 								else if (mode == ChangeMode.REMOVE)

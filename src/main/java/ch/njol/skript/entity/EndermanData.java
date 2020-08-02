@@ -75,12 +75,10 @@ public class EndermanData extends EntityData<Enderman> {
 				}
 			} else {
 				MaterialData m = e.getCarriedMaterial();
-				if (m != null) {
-					final ItemStack i = m.toItemStack(1);
-					if (i == null)
-						return false;
-					hand = new ItemType[] {new ItemType(i)};
-				}
+				final ItemStack i = m.toItemStack(1);
+				if (i == null)
+					return false;
+				hand = new ItemType[] {new ItemType(i)};
 			}
 		}
 		return true;
