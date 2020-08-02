@@ -36,7 +36,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Examples({"set {data} to block data of target block",
 	"set block at player to {data}"})
 @RequiredPlugins("Minecraft 1.13+")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprBlockData extends SimplePropertyExpression<Block, BlockData> {
 	
 	static {

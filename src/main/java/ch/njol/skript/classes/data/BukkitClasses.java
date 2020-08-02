@@ -310,7 +310,7 @@ public class BukkitClasses {
 					"set target block of player to minecraft:oak_leaves[distance=2;persistent=false]")
 				.after("itemtype")
 				.requiredPlugins("Minecraft 1.13+")
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<BlockData>() {
 					@Nullable
 					@Override
@@ -1772,7 +1772,7 @@ public class BukkitClasses {
 			.description("The heal reason in a heal event.")
 			.usage(regainReasons.getAllNames())
 			.examples("")
-			.since("INSERT VERSION")
+			.since("2.5")
 			.parser(new Parser<RegainReason>() {
 				@Override
 				@Nullable
