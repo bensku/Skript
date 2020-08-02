@@ -21,10 +21,12 @@ package ch.njol.skript.util;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemData;
@@ -38,15 +40,6 @@ import ch.njol.skript.bukkitutil.block.BlockValues;
  * @author Peter Güttinger
  */
 public abstract class BlockUtils {
-	
-	private final static BlockFace[] bed = new BlockFace[] {
-			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
-	};
-	
-	// not the actual facing, but a direction where fence posts should exist
-	private final static BlockFace[] gate = new BlockFace[] {
-			BlockFace.WEST, BlockFace.NORTH
-	};
 	
 	/**
 	 * Sets the given block.
@@ -97,6 +90,25 @@ public abstract class BlockUtils {
 //		}
 		// TODO figure out what this code means
 		return l;
+	}
+	
+	@Nullable
+	public static BlockData createBlockData(String dataString) {
+		// Skript uses a comma to separate lists, so we use a semi colon as a delimiter
+		// Here we are just replacing it back to a comma to create a new block data
+		String data = dataString.replace(";", ",");
+		// Remove white space within square brackets ([ lit = false] -> [lit=false])
+		data = data.replaceAll(" (?=[^\\[]*])", "");
+		// Remove white space between last word and square bracket
+		data = data.replaceAll("\\s+\\[", "[");
+		// And replace white space between namespace with underscores
+		data = data.replace(" ", "_");
+		
+		try {
+			return Bukkit.createBlockData(data.startsWith("minecraft:") ? data : "minecraft:" + data);
+		} catch (IllegalArgumentException ignore) {
+			return null;
+		}
 	}
 	
 }

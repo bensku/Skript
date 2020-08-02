@@ -1,0 +1,12 @@
+test "block data" when minecraft version is "1.15.2":
+	set {_b} to block at spawn of world "world"
+	set block at {_b} to campfire[lit=false;waterlogged=true]
+	assert block at {_b} is an unlit campfire with "block at spawn should be an unlit campfire"
+
+	assert block at {_b} = campfire[lit=false;waterlogged=true] with "block should have been an unlit, waterlogged campfire"
+	assert block at {_b} = campfire[waterlogged=true] with "block should have been a waterlogged campfire"
+	assert block at {_b} = campfire[] with "block should have been a campfire"
+	assert block at {_b} != campfire[lit=true;waterlogged=false] with "block should not have been an unlit, waterlogged campfire"
+
+	set {_data} to block data of block at {_b}
+	assert "%{_data}%" contains "campfire", "lit=false" and "waterlogged=true" with "block data for campfire did not match"
