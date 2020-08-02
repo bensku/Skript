@@ -58,8 +58,6 @@ public class DroppedItemData extends EntityData<Item> {
 	protected boolean init(final @Nullable Class<? extends Item> c, final @Nullable Item e) {
 		if (e != null) {
 			final ItemStack i = e.getItemStack();
-			if (i == null)
-				return false;
 			types = new ItemType[] {new ItemType(i)};
 		}
 		return true;

@@ -420,8 +420,6 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		assert loc != null;
 		try {
 			final E e = loc.getWorld().spawn(loc, getType());
-			if (e == null)
-				throw new IllegalArgumentException();
 			if (baby.isTrue()) {
 				if (e instanceof Ageable)
 					((Ageable) e).setBaby();
