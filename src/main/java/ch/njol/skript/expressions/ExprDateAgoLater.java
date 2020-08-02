@@ -48,11 +48,12 @@ public class ExprDateAgoLater extends SimpleExpression<Date> {
 
     @SuppressWarnings("null")
     private Expression<Timespan> timespan;
-    @SuppressWarnings("null")
+    @Nullable
     private Expression<Date> date;
 
     private boolean ago;
 
+    @SuppressWarnings("null")
     @Nullable
     @Override
     protected Date[] get(Event e) {
