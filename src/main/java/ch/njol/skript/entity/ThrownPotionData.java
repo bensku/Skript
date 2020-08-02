@@ -82,8 +82,6 @@ public class ThrownPotionData extends EntityData<ThrownPotion> {
 	protected boolean init(final @Nullable Class<? extends ThrownPotion> c, final @Nullable ThrownPotion e) {
 		if (e != null) {
 			final ItemStack i = e.getItem();
-			if (i == null)
-				return false;
 			types = new ItemType[] {new ItemType(i)};
 		}
 		return true;

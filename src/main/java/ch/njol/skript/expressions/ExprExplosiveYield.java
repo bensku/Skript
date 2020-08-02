@@ -62,9 +62,15 @@ public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number>
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case SET:
+			case ADD:
+			case REMOVE:
+			case DELETE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
@@ -95,8 +101,7 @@ public class ExprExplosiveYield extends SimplePropertyExpression<Entity, Number>
 					case DELETE:
 						e.setYield(0);
 						break;
-					case REMOVE_ALL:
-					case RESET:
+					default:
 						assert false;
 				}
 			} else if (CREEPER_USABLE && entity instanceof Creeper) {
