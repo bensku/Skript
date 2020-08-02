@@ -45,6 +45,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -401,8 +402,7 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public World get(final EntityEvent e) {
-				Entity entity = e.getEntity();
-				return entity == null ? null : entity.getWorld(); // no idea why it could be null, but it can happen
+				return e.getEntity().getWorld();
 			}
 		}, 0);
 		// EntityDamageEvent
@@ -701,9 +701,7 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public Direction get(final PlayerInteractEvent e) {
-				if (e.getBlockFace() != null)
-					return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
-				return Direction.ZERO; // Same as 'BlockFace.SELF' or literal 'at'
+				return new Direction(new double[] {e.getBlockFace().getModX(), e.getBlockFace().getModY(), e.getBlockFace().getModZ()});
 			}
 		}, 0);
 		// PlayerShearEntityEvent
@@ -916,6 +914,16 @@ public final class BukkitEventValues {
 				return e.getClickedInventory();
 			}
 		}, 0);
+		//BlockFertilizeEvent
+		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent")) {
+			EventValues.registerEventValue(BlockFertilizeEvent.class, Player.class, new Getter<Player, BlockFertilizeEvent>() {
+				@Nullable
+				@Override
+				public Player get(BlockFertilizeEvent event) {
+					return event.getPlayer();
+				}
+			}, 0);
+		}
 		// CraftItemEvent REMIND maybe re-add this when Skript parser is reworked?
 //		EventValues.registerEventValue(CraftItemEvent.class, ItemStack.class, new Getter<ItemStack, CraftItemEvent>() {
 //			@Override
@@ -1083,7 +1091,7 @@ public final class BukkitEventValues {
 				@Nullable
 				public FireworkEffect get(FireworkExplodeEvent e) {
 					List<FireworkEffect> effects = e.getEntity().getFireworkMeta().getEffects();
-					if (effects == null || effects.size() == 0)
+					if (effects.size() == 0)
 						return null;
 					return effects.get(0);
 				}

@@ -21,6 +21,7 @@ package ch.njol.skript.events;
 
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -571,6 +572,13 @@ public class SimpleEvents {
 		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
 			.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
 			.examples("on inventory pickup:")
+      .since("INSERT VERSION");
+		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
+			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
+			.description("Called when a player fertilizes blocks.")
+			.requiredPlugins("Minecraft 1.13 or newer")
+			.examples("on block fertilize:",
+				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("INSERT VERSION");
 	}
 }
