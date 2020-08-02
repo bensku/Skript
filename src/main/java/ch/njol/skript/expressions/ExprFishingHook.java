@@ -52,6 +52,7 @@ public class ExprFishingHook extends EventValueExpression<FishHook> {
 	}
 	
 	@Override
+	@SuppressWarnings("null")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(PlayerFishEvent.class)) {
 			Skript.error("There's no fishing hook in " + Utils.a(ScriptLoader.getCurrentEventName()) + " event.", ErrorQuality.SEMANTIC_ERROR);
