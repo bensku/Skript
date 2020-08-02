@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -1803,7 +1804,7 @@ public class BukkitClasses {
 					.user("persistent data ?holders?")
 					.name("Persistent Data Holder")
 					.description(
-							"Represents something that can have persistent data. " 
+							"Represents something that can have persistent data. "
 							+ "The following can all hold persistent data: "
 							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
 							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
@@ -1883,6 +1884,8 @@ public class BukkitClasses {
 			.user("boss ?bars?")
 			.name("Boss Bar")
 			.description("Represents a bossbar.")
+			.requiredPlugins("1.13+ (Bossbar by id)")
+			.examples("set {_b} to a new bossbar","set {_a} to bossbar with id \"example\"")
 			.since("INSERT VERSION")
 			.parser(new Parser<BossBar>() {
 				
@@ -1920,42 +1923,53 @@ public class BukkitClasses {
 			.serializer(new Serializer<BossBar>() {
 				@Override
 				public Fields serialize(BossBar bar) throws NotSerializableException {
-					Fields fields = new Fields();
 					if(Skript.classExists("org.bukkit.boss.KeyedBossBar") && bar instanceof KeyedBossBar) {
-						System.out.println(((KeyedBossBar) bar).getKey().toString());
+						Fields fields = new Fields();
 						fields.putObject("id", ((KeyedBossBar) bar).getKey().getKey());
+						return fields;
 					} else {
-						fields.putPrimitive("title", bar.getTitle());
+						Fields fields = new Fields();
+						fields.putObject("title", bar.getTitle());
 						fields.putPrimitive("progress", bar.getProgress());
-						fields.putPrimitive("color", bar.getColor());
-						fields.putPrimitive("style", bar.getStyle());
+						fields.putObject("color", bar.getColor());
+						fields.putObject("style", bar.getStyle());
 						fields.putPrimitive("visible", bar.isVisible());
-						fields.putObject("players", bar.getPlayers());
-						List<BarFlag> flags = new ArrayList<>();
-						if(bar.hasFlag(BarFlag.CREATE_FOG)) flags.add(BarFlag.CREATE_FOG);
-						if(bar.hasFlag(BarFlag.DARKEN_SKY)) flags.add(BarFlag.DARKEN_SKY);
-						if(bar.hasFlag(BarFlag.PLAY_BOSS_MUSIC)) flags.add(BarFlag.PLAY_BOSS_MUSIC);
-						fields.putObject("flags", flags);
+						if(bar.getPlayers().size() > 0)
+							fields.putObject("players", bar.getPlayers().toArray(new Player[0]));
+						ArrayList<BarFlag> barFlags = new ArrayList<>();
+						for (BarFlag barFlag : BarFlag.values()) {
+							if(bar.hasFlag(barFlag))
+								barFlags.add(barFlag);
+						}
+						if(barFlags.size() > 0) {
+							fields.putObject("flags", barFlags);
+						}
+						return fields;
 					}
-					return fields;
 				}
 				
 				@Override
 				@SuppressWarnings("null")
 				protected BossBar deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
-					assert fields != null;
 					if(fields.hasField("id")) {
-						return Bukkit.getBossBar(NamespacedKey.minecraft(fields.getAndRemoveObject("id", String.class)));
+						BossBar bar = Bukkit.getBossBar(NamespacedKey.minecraft(fields.getAndRemoveObject("id", String.class)));
+						return bar;
 					}
-					BossBar bar = Bukkit.createBossBar(fields.getAndRemovePrimitive("title", String.class), fields.getAndRemovePrimitive("color", BarColor.class), fields.getAndRemovePrimitive("style", BarStyle.class));
-					bar.setProgress(fields.getPrimitive("progress", double.class));
-					bar.setVisible(fields.getPrimitive("visible", boolean.class));
-					fields.getAndRemoveObject("flags", List.class).forEach(consumer -> {
-						bar.addFlag((BarFlag) consumer);
-					});
-					for (Player player : fields.getAndRemoveObject("players", Player[].class)) {
-						if(player.isOnline())
-							bar.addPlayer(player);
+					String title = fields.getAndRemoveObject("title", String.class);
+					BarColor color = fields.getAndRemoveObject("color", BarColor.class);
+					BarStyle style = fields.getAndRemoveObject("style", BarStyle.class);
+					BossBar bar = Bukkit.createBossBar(title, color, style);
+					bar.setProgress(fields.getAndRemovePrimitive("progress", double.class));
+					bar.setVisible(fields.getAndRemovePrimitive("visible", boolean.class));
+					if(fields.hasField("flags")) {
+						for (Object flag : fields.getAndRemoveObject("flags", List.class))
+							bar.addFlag((BarFlag) flag);
+					}
+					if (fields.hasField("players")) {
+						for (OfflinePlayer player : fields.getAndRemoveObject("players", OfflinePlayer[].class)) {
+							if(player.isOnline())
+								bar.addPlayer((Player) player);
+						}
 					}
 					return bar;
 				}
@@ -1967,13 +1981,14 @@ public class BukkitClasses {
 				
 				@Override
 				public boolean mustSyncDeserialization() {
-					return false;
+					return true;
 				}
 				
 				@Override
 				protected boolean canBeInstantiated() {
 					return false;
 				}})
+			.changer(DefaultChangers.bossbarChanger)
 		);
 		EnumUtils<BarColor> bossbarColours = new EnumUtils<>(BarColor.class, "bossbar colors");
 		Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
@@ -1981,7 +1996,7 @@ public class BukkitClasses {
 			.name("BossBar Colour")
 			.description("A bossbar color")
 			.usage(bossbarColours.getAllNames())
-			.examples("")
+			.examples("set (bossbar with id \"example\")'s colour to red")
 			.since("INSERT VERSION")
 			.parser(new Parser<BarColor>() {
 				@Override
@@ -2012,7 +2027,7 @@ public class BukkitClasses {
 			.name("BossBar Flag")
 			.description("A bossbar flag")
 			.usage(bossbarFlags.getAllNames())
-			.examples("")
+			.examples("add create fog to (bossbar with id \"example\")'s flags")
 			.since("INSERT VERSION")
 			.parser(new Parser<BarFlag>() {
 				@Override
@@ -2037,5 +2052,36 @@ public class BukkitClasses {
 				}
 			})
 			.serializer(new EnumSerializer<>(BarFlag.class)));
+		EnumUtils<BarStyle> bossbarStyles = new EnumUtils<>(BarStyle.class, "bossbar styles");
+		Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
+			.user("(0|boss) ?bar styles?")
+			.name("BossBar Style")
+			.description("A bossbar style")
+			.usage(bossbarStyles.getAllNames())
+			.examples("set (bossbar with id \"example\")'s style to solid")
+			.since("INSERT VERSION")
+			.parser(new Parser<BarStyle>() {
+				@Override
+				@Nullable
+				public BarStyle parse(String s, ParseContext parseContext) {
+					return bossbarStyles.parse(s);
+				}
+				
+				@Override
+				public String toString(BarStyle o, int flags) {
+					return bossbarStyles.toString(o, flags);
+				}
+				
+				@Override
+				public String toVariableNameString(BarStyle o) {
+					return "barstyle:" + o.name();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "\\S+";
+				}
+			})
+			.serializer(new EnumSerializer<>(BarStyle.class)));
 	}
 }

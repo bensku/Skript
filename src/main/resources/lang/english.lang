@@ -1228,9 +1228,16 @@ bossbar colors:
 	yellow: yellow
 # -- BossBar Flag --
 bossbar flags:
-	CREATE_FOG: create fog, createfog, create_fog
-	DARKEN_SKY: darken sky, darken the sky, darkensky, darken_sky
-	PLAY_BOSS_MUSIC: play boss music, play the boss music, playbossmusic, play_boss_music
+	create_fog: create fog, createfog, create_fog
+	darken_sky: darken sky, darken the sky, darkensky, darken_sky
+	play_boss_music: play boss music, play the boss music, playbossmusic, play_boss_music
+# -- BossBar Style --
+bossbar styles:
+	segmented_10: segmented_10, segmented 10, divided in 10, split in 10
+	segmented_12: segmented_12, segmented 12, divided in 12, split in 12
+	segmented_20: segmented_20, segmented 20, divided in 20, split in 20
+	segmented_6: segmented_6, segmented 6, divided in 6, split in 6
+	solid: solid, rigid
 # -- Cat Types --
 cat types:
 	tabby: tabby
