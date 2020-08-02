@@ -46,7 +46,7 @@ public abstract class Workarounds {
 				@SuppressWarnings("deprecation")
 				@EventHandler(priority = EventPriority.HIGHEST)
 				public void onInteract(final PlayerInteractEvent e) {
-					if (e.hasItem() && (e.getPlayer().getInventory().getItemInHand() == null || e.getPlayer().getInventory().getItemInHand().getType() == Material.AIR || e.getPlayer().getInventory().getItemInHand().getAmount() == 0))
+					if (e.hasItem() && (e.getPlayer().getInventory().getItemInHand().getType() == Material.AIR || e.getPlayer().getInventory().getItemInHand().getAmount() == 0))
 						e.setUseItemInHand(Result.DENY);
 				}
 			}, Skript.getInstance());

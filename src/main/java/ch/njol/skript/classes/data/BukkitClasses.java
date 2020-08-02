@@ -53,6 +53,7 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
@@ -101,6 +102,7 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.BiomeUtils;
+import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.DamageCauseUtils;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.EnumUtils;
@@ -264,10 +266,9 @@ public class BukkitClasses {
 					protected Block deserialize(final Fields fields) throws StreamCorruptedException {
 						final World w = fields.getObject("world", World.class);
 						final int x = fields.getPrimitive("x", int.class), y = fields.getPrimitive("y", int.class), z = fields.getPrimitive("z", int.class);
-						Block b;
-						if (w == null || (b = w.getBlockAt(x, y, z)) == null)
+						if (w == null)
 							throw new StreamCorruptedException();
-						return b;
+						return w.getBlockAt(x, y, z);
 					}
 					
 					@Override
@@ -300,6 +301,82 @@ public class BukkitClasses {
 						}
 					}
 				}));
+		
+		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
+			Classes.registerClass(new ClassInfo<>(BlockData.class, "blockdata")
+				.user("block ?datas?")
+				.name("Block Data")
+				.description("Block data is the detailed information about a block, referred to in Minecraft as BlockStates, " +
+					"allowing for the manipulation of different aspects of the block, including shape, waterlogging, direction the block is facing, " +
+					"and so much more. Information regarding each block's optional data can be found on Minecraft's Wiki. Find the block you're " +
+					"looking for and scroll down to 'Block States'. Different states must be separated by a semicolon (see examples). " +
+					"The 'minecraft:' namespace is optional, as well as are underscores.")
+				.examples("set block at player to campfire[lit=false]",
+					"set target block of player to oak stairs[facing=north;waterlogged=true]",
+					"set block at player to grass_block[snowy=true]",
+					"set loop-block to minecraft:chest[facing=north]",
+					"set block above player to oak_log[axis=y]",
+					"set target block of player to minecraft:oak_leaves[distance=2;persistent=false]")
+				.after("itemtype")
+				.requiredPlugins("Minecraft 1.13+")
+				.since("INSERT VERSION")
+				.parser(new Parser<BlockData>() {
+					@Nullable
+					@Override
+					public BlockData parse(String s, ParseContext context) {
+						return BlockUtils.createBlockData(s);
+					}
+					
+					@Override
+					public String toString(BlockData o, int flags) {
+						return o.getAsString().replace(",", ";");
+					}
+					
+					@Override
+					public String toVariableNameString(BlockData o) {
+						return "blockdata:" + o.getAsString();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "blockdata:.+";
+					}
+				})
+				.serializer(new Serializer<BlockData>() {
+					@Override
+					public Fields serialize(BlockData o) {
+						Fields f = new Fields();
+						f.putObject("blockdata", o.getAsString());
+						return f;
+					}
+					
+					@Override
+					public void deserialize(BlockData o, Fields f) {
+						assert false;
+					}
+					
+					@Override
+					protected BlockData deserialize(Fields f) throws StreamCorruptedException {
+						String data = f.getObject("blockdata", String.class);
+						assert data != null;
+						try {
+							return Bukkit.createBlockData(data);
+						} catch (IllegalArgumentException ex) {
+							throw new StreamCorruptedException("Invalid block data: " + data);
+						}
+					}
+					
+					@Override
+					public boolean mustSyncDeserialization() {
+						return true;
+					}
+					
+					@Override
+					protected boolean canBeInstantiated() {
+						return false;
+					}
+				}));
+		}
 		
 		Classes.registerClass(new ClassInfo<>(Location.class, "location")
 				.user("locations?")
@@ -853,16 +930,14 @@ public class BukkitClasses {
 					protected OfflinePlayer deserialize(final Fields fields) throws StreamCorruptedException {
 						if (fields.contains("uuid") && uuidSupported) {
 							final UUID uuid = fields.getObject("uuid", UUID.class);
-							OfflinePlayer p;
-							if (uuid == null || (p = Bukkit.getOfflinePlayer(uuid)) == null)
+							if (uuid == null)
 								throw new StreamCorruptedException();
-							return p;
+							return Bukkit.getOfflinePlayer(uuid);
 						} else {
 							final String name = fields.getObject("name", String.class);
-							OfflinePlayer p;
-							if (name == null || (p = Bukkit.getOfflinePlayer(name)) == null)
+							if (name == null)
 								throw new StreamCorruptedException();
-							return p;
+							return Bukkit.getOfflinePlayer(name);
 						}
 					}
 					
@@ -1254,10 +1329,9 @@ public class BukkitClasses {
 					protected Chunk deserialize(final Fields fields) throws StreamCorruptedException {
 						final World w = fields.getObject("world", World.class);
 						final int x = fields.getPrimitive("x", int.class), z = fields.getPrimitive("z", int.class);
-						Chunk c;
-						if (w == null || (c = w.getChunkAt(x, z)) == null)
+						if (w == null)
 							throw new StreamCorruptedException();
-						return c;
+						return w.getChunkAt(x, z);
 					}
 					
 					// return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
