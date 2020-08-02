@@ -41,15 +41,6 @@ import ch.njol.skript.bukkitutil.block.BlockValues;
  */
 public abstract class BlockUtils {
 	
-	private final static BlockFace[] bed = new BlockFace[] {
-			BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST
-	};
-	
-	// not the actual facing, but a direction where fence posts should exist
-	private final static BlockFace[] gate = new BlockFace[] {
-			BlockFace.WEST, BlockFace.NORTH
-	};
-	
 	/**
 	 * Sets the given block.
 	 * @param block Block to set.
