@@ -124,8 +124,6 @@ public class SkriptCommand implements CommandExecutor {
 	private final static ArgsMessage m_reloaded = new ArgsMessage(NODE + ".reload.reloaded");
 	private final static ArgsMessage m_reload_error = new ArgsMessage(NODE + ".reload.error");
 	
-	private final static ArgsMessage m_changes_title = new ArgsMessage(NODE + ".update.changes.title");
-	
 	private static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
