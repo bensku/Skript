@@ -30,7 +30,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -43,10 +42,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("Creates a new bossbar")
 @Examples("set {_b} to a new bossbar")
 @Since("INSERT VERSION")
-public class ExprBossBarNew extends SimpleExpression<BossBar> {
+public class ExprCreateBossBar extends SimpleExpression<BossBar> {
 	
 	static {
-		Skript.registerExpression(ExprBossBarNew.class, BossBar.class, ExpressionType.COMBINED, "[create] [a] new [boss[ ]]bar");
+		Skript.registerExpression(ExprCreateBossBar.class, BossBar.class, ExpressionType.COMBINED, "[create] [a] new [boss[ ]]bar");
 	}
 	
 	@Override

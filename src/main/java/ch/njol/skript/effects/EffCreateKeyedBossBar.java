@@ -43,11 +43,11 @@ import ch.njol.util.Kleenean;
 @Examples({"create bar with id \"example\" and title \"title\"",
 	"set (bossbar with id \"example\"'s colour to red"})
 @Since("INSERT VERSION")
-public class EffBossBarNew extends Effect {
+public class EffCreateKeyedBossBar extends Effect {
 	
 	static {
 		if (Skript.classExists("org.bukkit.boss.KeyedBossBar"))
-			Skript.registerEffect(EffBossBarNew.class, "create [id based] [boss[ ]]bar with id %string% [(and|with)] title[d] %string%");
+			Skript.registerEffect(EffCreateKeyedBossBar.class, "create [id based] [boss[ ]]bar with id %string% [(and|with)] title[d] %string%");
 	}
 	
 	@SuppressWarnings("null")
