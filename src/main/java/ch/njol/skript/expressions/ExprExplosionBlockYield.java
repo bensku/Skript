@@ -74,9 +74,15 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || mode == ChangeMode.RESET)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case SET:
+			case ADD:
+			case REMOVE:
+			case DELETE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
@@ -84,9 +90,8 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 		float n = delta == null ? 0 : ((Number) delta[0]).floatValue();
 		if (n < 0) // Yield can't be negative
 			return;
-		if (n > 1) // Treat 'set the explosion's block yield to 500' as setting it to the maximum value (i.e. 1)
-			n = 1;
 		EntityExplodeEvent e = (EntityExplodeEvent) event;
+		// Yield can be a value from 0 to 1
 		switch (mode) {
 			case SET:
 				e.setYield(n);
@@ -95,23 +100,18 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 				float add = e.getYield() + n;
 				if (add < 0)
 					return;
-				if (add > 1)
-					add = 1;
 				e.setYield(add);
 				break;
 			case REMOVE:
 				float subtract = e.getYield() - n;
 				if (subtract < 0)
 					return;
-				if (subtract > 1)
-					subtract = 1;
 				e.setYield(subtract);
 				break;
 			case DELETE:
 				e.setYield(0);
 				break;
-			case REMOVE_ALL:
-			case RESET:
+			default:
 				assert false;
 		}
 	}
