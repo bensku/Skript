@@ -759,6 +759,7 @@ public class SkriptClasses {
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(Experience.class, "experience")
+				.user("experience ?(points?)?")
 				.name("Experience")
 				.description("Experience points. Please note that Bukkit only allows to give XP, but not remove XP from players. " +
 						"You can however change a player's <a href='../expressions.html#ExprLevel'>level</a> and <a href='../expressions/#ExprLevelProgress'>level progress</a> freely.")
