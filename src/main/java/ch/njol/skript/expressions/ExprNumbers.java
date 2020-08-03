@@ -129,7 +129,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		final Number starting = s, finish = f;
 		if (mode < 2) {
 			return new Iterator<Number>() {
-				double i = mode == 1 ? Math.ceil(starting.doubleValue()) : starting.doubleValue()
+				double i = mode == 1 ? Math.ceil(starting.doubleValue()) : starting.doubleValue();
 				double max = mode == 1 ? Math.floor(finish.doubleValue()) : finish.doubleValue();
 				
 				
