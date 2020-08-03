@@ -120,8 +120,7 @@ public class BlockDataUtils {
 			BlockData newData = Bukkit.createBlockData(key + "[" + stateType.type + "=" + value.toString().toLowerCase() + "]");
 			blockData = blockData.merge(newData);
 			block.setBlockData(blockData);
-		} catch (IllegalArgumentException ignore) {
-		}
+		} catch (IllegalArgumentException ignore) {}
 	}
 	
 	/**
