@@ -1,0 +1,22 @@
+test "block data state" when minecraft version is "1.16":
+	set {_b} to block at spawn of world "world"
+
+	set block at {_b} to a campfire
+	#By default it is already true, but lets test just in case Minecraft decides to shake things up
+	set lit state of block at {_b} to true
+	assert lit state of block at {_b} = true with "block state 'lit' of block should have been true but was %lit state of block at {_b}%"
+	set lit state of block at {_b} to false
+	assert lit state of block at {_b} = false with "block state 'lit' of block should have been false but was %lit state of block at {_b}%"
+
+	set block at {_b} to grass
+	assert snowy state of block at {_b} = false with "block state 'snowy' of block should have been false"
+	set snowy state of block at {_b} to true
+	assert snowy state of block at {_b} = true with "block state 'snowy' of block should have been true"
+
+	set block at {_b} to north facing oak stairs
+	assert facing state of block at {_b} = north with "block state 'facing' of block should have been north"
+	assert waterlogged state of block at {_b} = false with "block state 'waterlogged' of block should have been false"
+	set facing state of block at {_b} to west
+	assert facing state of block at {_b} = west with "block state 'facing' of block should have been west"
+	set waterlogged state of block at {_b} to true
+	assert waterlogged state of block at {_b} = true with "block state 'waterlogged' of block should have been true"
