@@ -48,7 +48,7 @@ public class BlockDataUtils {
 	
 	static {
 		// Load all variations of block state types
-		if (Skript.isRunningMinecraft(1, 13)) {
+		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
 			for (Material material : Material.values()) {
 				// If this material is not a block, let's continue.
 				if (!material.isBlock())

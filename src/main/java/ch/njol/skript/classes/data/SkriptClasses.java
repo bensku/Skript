@@ -857,7 +857,7 @@ public class SkriptClasses {
 				.serializer(new YggdrasilSerializer<GameruleValue>())
 		);
 		
-		if (Skript.isRunningMinecraft(1, 13)) {
+		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
 			Classes.registerClass(new ClassInfo<>(StateType.class, "blockstatetype")
 					.user("block ?state ?types?")
 					.name("Block State Type")
@@ -920,7 +920,7 @@ public class SkriptClasses {
 						
 						@Override
 						public String getVariableNamePattern() {
-							return ".*";
+							return "\\S+";
 						}
 					}));
 		}
