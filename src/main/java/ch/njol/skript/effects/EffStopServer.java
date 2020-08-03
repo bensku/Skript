@@ -17,67 +17,55 @@
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
  */
-package ch.njol.skript.expressions;
+package ch.njol.skript.effects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 
-@Name("Heal Reason")
-@Description("The <a href='../classes.html#healreason'>heal reason</a> of a heal event. Please click on the link for more information.")
-@Examples({"on heal:",
-	"\tif heal reason = satiated:",
-	"\t\tsend \"You ate enough food and gained health back!\" to player"})
+@Name("Stop Server")
+@Description("Stops or restarts the server. If restart is used when the restart-script spigot.yml option isn't defined, the server will stop instead.")
+@Examples({"stop the server", "restart server"})
 @Since("2.5")
-public class ExprHealReason extends SimpleExpression<RegainReason> {
+public class EffStopServer extends Effect {
 	
 	static {
-		Skript.registerExpression(ExprHealReason.class, RegainReason.class, ExpressionType.SIMPLE, "(regen|health regain|heal) (reason|cause)");
+		Skript.registerEffect(EffStopServer.class,
+			"(stop|shut[ ]down) [the] server",
+			"restart [the] server");
 	}
+	
+	private boolean restart;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EntityRegainHealthEvent.class)) {
-			Skript.error("Heal reason can only be used in an on heal event", ErrorQuality.SEMANTIC_ERROR);
-			return false;
-		}
-		return true;
-	}
-	
-	@Nullable
-	@Override
-	protected RegainReason[] get(Event e) {
-		return new RegainReason[]{((EntityRegainHealthEvent) e).getRegainReason()};
-	}
-	
-	@Override
-	public boolean isSingle() {
+		restart = matchedPattern == 1;
 		return true;
 	}
 	
 	@Override
-	public Class<? extends RegainReason> getReturnType() {
-		return RegainReason.class;
+	protected void execute(Event e) {
+		if (restart)
+			Bukkit.spigot().restart();
+		else
+			Bukkit.shutdown();
 	}
+	
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "heal reason";
+		return (restart ? "restart" : "stop") + " the server";
 	}
 	
 }
