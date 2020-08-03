@@ -1826,8 +1826,6 @@ types:
 	resourcepackstate: resource pack state¦s @a
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
-	blockstatetype: block state type¦s @a
-	blockstatevalue: block state value¦s @a
 
 	# Hooks
 	money: money

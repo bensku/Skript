@@ -47,9 +47,6 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.BlockDataUtils;
-import ch.njol.skript.util.BlockDataUtils.StateType;
-import ch.njol.skript.util.BlockDataUtils.StateValues;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
@@ -856,74 +853,6 @@ public class SkriptClasses {
 				.since("2.5")
 				.serializer(new YggdrasilSerializer<GameruleValue>())
 		);
-		
-		if (Skript.isRunningMinecraft(1, 13)) {
-			Classes.registerClass(new ClassInfo<>(StateType.class, "blockstatetype")
-					.user("block ?state ?types?")
-					.name("Block State Type")
-					.description("Represents the different states of a block's BlockData.")
-					.usage(BlockDataUtils.getStateTypeNames())
-					.examples("set lit state of target block to false",
-							"set waterlogged state of target block to true")
-					.since("INSERT VERSION")
-					.requiredPlugins("Minecraft 1.13+")
-					.parser(new Parser<StateType>() {
-						@Nullable
-						@Override
-						public StateType parse(String s, ParseContext context) {
-							return BlockDataUtils.getByName(s.replace("_", " "));
-						}
-						
-						@Override
-						public String toString(StateType o, int flags) {
-							return o.getName();
-						}
-						
-						@Override
-						public String toVariableNameString(StateType o) {
-							return "blockstatetype: " +  o.toString();
-						}
-						
-						@Override
-						public String getVariableNamePattern() {
-							return "blockstatetype:+.";
-						}
-					})
-					.serializer(new YggdrasilSerializer<>()));
-			
-			Classes.registerClass(new ClassInfo<>(StateValues.class, "blockstatevalue")
-					.user("block ?state ?values?")
-					.name("Block State Value")
-					.description("Represents different block state values which currently do not match a Skript type.")
-					.usage(StateValues.getNames())
-					.examples("set axis state of target block to x",
-							"set half state of target block to upper",
-							"set orientation state of block at player to up north")
-					.since("INSERT VERSION")
-					.requiredPlugins("Minecraft 1.13+")
-					.parser(new Parser<StateValues>() {
-						@Nullable
-						@Override
-						public StateValues parse(String s, ParseContext context) {
-							return StateValues.getByName(s.replace("_", " "));
-						}
-						
-						@Override
-						public String toString(StateValues o, int flags) {
-							return o.toString();
-						}
-						
-						@Override
-						public String toVariableNameString(StateValues o) {
-							return o.toString();
-						}
-						
-						@Override
-						public String getVariableNamePattern() {
-							return ".*";
-						}
-					}));
-		}
 	}
 	
 }
