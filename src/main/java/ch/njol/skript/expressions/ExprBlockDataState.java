@@ -106,7 +106,7 @@ public class ExprBlockDataState extends SimpleExpression<Object> {
 
 	@Override
 	public boolean isSingle() {
-		return true;
+		return blocks.isSingle();
 	}
 
 	@Override
