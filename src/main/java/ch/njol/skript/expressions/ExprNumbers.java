@@ -29,6 +29,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -88,7 +89,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			final double amount = Math.floor(f.doubleValue() - s.doubleValue() + 1);
 			
 			for (int i = 0; i < amount; i++) {
-				list.add(s + i);
+				list.add(s.doubleValue() + i);
 			}
 		} else if (mode == 1) {
 			final double amount = Math.floor(f.doubleValue()) - Math.ceil(s.doubleValue()) + 1;
@@ -100,11 +101,12 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			final double amount = f.doubleValue() - s.doubleValue() + 1;
 			
 			final String[] split = s.toString().split("\\.");
-			final int precision = split.length > 0 ? split[1].length : 0;
+			final int numberAccuracy = SkriptConfig.numberAccuracy.value();
+			int precision = Math.min(split.length > 1 ? split[1].length() : numberAccuracy, numberAccuracy);
 			
 			final double multiplier = Math.pow(10, precision);
-			for (int i = 0; i < f.doubleValue() * multiplier; i++) {
-				list.add((s + (i / multiplier)));
+			for (int i = (int) (s.doubleValue() * multiplier); i <= f.doubleValue() * multiplier; i++) {
+				list.add((i / multiplier));
 			}
 		}
 
@@ -147,17 +149,17 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			};
 		} else {
 			return new Iterator<Number>() {
-				double start = starting.doubleValue();
-				double max = finish.doubleValue();
+				final double start = starting.doubleValue();
+				final double max = finish.doubleValue();
 				final String[] split = starting.toString().split("\\.");
-				final int precision = split.length > 0 ? split[1].length : 0;
+				final int precision = split.length > 0 ? split[1].length() : 0;
 			
 				final double multiplier = Math.pow(10, precision);
-				int current = reverse ? max * multiplier - 1 : 0;
+				int current = reverse ? (int) (max * multiplier - 1) : (int) (start * multiplier);
 				
 				@Override
 				public boolean hasNext() {
-					
+					return reverse ? current > start : current < max * multiplier;
 				}
 				
 				@Override
@@ -168,13 +170,13 @@ public class ExprNumbers extends SimpleExpression<Number> {
 					current = reverse ? current - 1 : current + 1;
 					return value;
 				}
-			}
+			};
 		}
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals")
+		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals");
 		return modeString + " from " + start.toString(e, debug) + " to " + end.toString(e, debug);
 	}
 	
