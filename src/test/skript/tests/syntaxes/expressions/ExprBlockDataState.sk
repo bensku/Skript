@@ -1,4 +1,4 @@
-test "block data state" when minecraft version is "1.16":
+test "block data state" when minecraft version is "1.16.1":
 	set {_b} to block at spawn of world "world"
 
 	set block at {_b} to a campfire
