@@ -1907,7 +1907,7 @@ public class BukkitClasses {
 				})
 			);
 		}
-
+		
 // 		Temporarily disabled until bugs are fixed
 //		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 //			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
