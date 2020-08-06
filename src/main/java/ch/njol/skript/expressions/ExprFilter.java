@@ -39,7 +39,7 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.LiteralUtils;
@@ -74,7 +74,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		try {
 			parsing = this;
 			objects = LiteralUtils.defendExpression(exprs[0]);
@@ -98,7 +98,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			current = null;
 		}
 	}
-	
+
 	@Override
 	protected Object[] get(Event e) {
 		try {
@@ -140,10 +140,10 @@ public class ExprFilter extends SimpleExpression<Object> {
 		for (ExprInput<?> child : children) { // if they used player input, let's assume loop-player is valid
 			if (child.getClassInfo() == null || child.getClassInfo().getUserInputPatterns() == null)
 				continue;
+
 			for (Pattern pattern : child.getClassInfo().getUserInputPatterns()) {
-				if (pattern.matcher(s).matches()) {
+				if (pattern.matcher(s).matches())
 					return true;
-				}
 			}
 		}
 		return objects.isLoopOf(s); // nothing matched, so we'll rely on the object expression's logic
@@ -181,12 +181,17 @@ public class ExprFilter extends SimpleExpression<Object> {
 				parent.removeChild(source);
 				parent.addChild(this);
 			}
+
 			this.superType = (Class<T>) Utils.getSuperType(types);
 		}
 
 		@Override
-		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 			parent = ExprFilter.getParsing();
+
+			if (parent == null)
+				return false;
+
 			parent.addChild(this);
 			inputType = matchedPattern == 0 ? null : ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 			return true;
@@ -198,6 +203,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			if (inputType != null && !inputType.getC().isInstance(current)) {
 				return null;
 			}
+
 			try {
 				return Converters.convertStrictly(new Object[]{current}, superType);
 			} catch (ClassCastException e1) {
