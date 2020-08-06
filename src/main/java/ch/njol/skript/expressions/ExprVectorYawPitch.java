@@ -66,15 +66,10 @@ public class ExprVectorYawPitch extends SimplePropertyExpression<Vector, Number>
 	}
 
 	@Override
-	@SuppressWarnings("null")
 	public Number convert(Vector vector) {
-		if (vector != null) {
-			if (usesYaw)
-				return VectorMath.skriptYaw(VectorMath.getYaw(vector));
-			else
-				return VectorMath.skriptPitch(VectorMath.getPitch(vector));
-		}
-		return null;
+		if (usesYaw)
+			return VectorMath.skriptYaw(VectorMath.getYaw(vector));
+		return VectorMath.skriptPitch(VectorMath.getPitch(vector));
 	}
 
 	@Override

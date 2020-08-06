@@ -137,7 +137,7 @@ public abstract class SkriptEventHandler {
 		
 		if (e instanceof Cancellable && ((Cancellable) e).isCancelled() && !listenCancelled.contains(e.getClass()) &&
 				!(e instanceof PlayerInteractEvent && (((PlayerInteractEvent) e).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) e).getAction() == Action.RIGHT_CLICK_AIR) && ((PlayerInteractEvent) e).useItemInHand() != Result.DENY)
-				|| e instanceof ServerCommandEvent && (((ServerCommandEvent) e).getCommand() == null || ((ServerCommandEvent) e).getCommand().isEmpty())) {
+				|| e instanceof ServerCommandEvent && ((ServerCommandEvent) e).getCommand().isEmpty()) {
 			if (Skript.logVeryHigh())
 				Skript.info(" -x- was cancelled");
 			return;

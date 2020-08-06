@@ -346,7 +346,7 @@ public class SimpleEvents {
 			.requiredPlugins("Paper")
 			.examples("on projectile collide:",
 				"\tteleport shooter of event-projectile to event-entity")
-			.since("INSERT VERSION");
+			.since("2.5");
 		Skript.registerEvent("Shoot", SimpleEvent.class, ProjectileLaunchEvent.class, "[projectile] shoot")
 				.description("Called whenever a <a href='classes.html#projectile'>projectile</a> is shot. Use the <a href='expressions.html#ExprShooter'>shooter expression</a> to get who shot the projectile.")
 				.examples("on shoot:",
@@ -574,6 +574,6 @@ public class SimpleEvents {
 			.requiredPlugins("Minecraft 1.13 or newer")
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
-			.since("INSERT VERSION");
+			.since("2.5");
 	}
 }

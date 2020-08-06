@@ -258,10 +258,9 @@ public class BukkitClasses {
 					protected Block deserialize(final Fields fields) throws StreamCorruptedException {
 						final World w = fields.getObject("world", World.class);
 						final int x = fields.getPrimitive("x", int.class), y = fields.getPrimitive("y", int.class), z = fields.getPrimitive("z", int.class);
-						Block b;
-						if (w == null || (b = w.getBlockAt(x, y, z)) == null)
+						if (w == null)
 							throw new StreamCorruptedException();
-						return b;
+						return w.getBlockAt(x, y, z);
 					}
 					
 					@Override
@@ -312,7 +311,7 @@ public class BukkitClasses {
 					"set target block of player to minecraft:oak_leaves[distance=2;persistent=false]")
 				.after("itemtype")
 				.requiredPlugins("Minecraft 1.13+")
-				.since("INSERT VERSION")
+				.since("2.5")
 				.parser(new Parser<BlockData>() {
 					@Nullable
 					@Override
@@ -923,16 +922,14 @@ public class BukkitClasses {
 					protected OfflinePlayer deserialize(final Fields fields) throws StreamCorruptedException {
 						if (fields.contains("uuid") && uuidSupported) {
 							final UUID uuid = fields.getObject("uuid", UUID.class);
-							OfflinePlayer p;
-							if (uuid == null || (p = Bukkit.getOfflinePlayer(uuid)) == null)
+							if (uuid == null)
 								throw new StreamCorruptedException();
-							return p;
+							return Bukkit.getOfflinePlayer(uuid);
 						} else {
 							final String name = fields.getObject("name", String.class);
-							OfflinePlayer p;
-							if (name == null || (p = Bukkit.getOfflinePlayer(name)) == null)
+							if (name == null)
 								throw new StreamCorruptedException();
-							return p;
+							return Bukkit.getOfflinePlayer(name);
 						}
 					}
 					
@@ -1324,10 +1321,9 @@ public class BukkitClasses {
 					protected Chunk deserialize(final Fields fields) throws StreamCorruptedException {
 						final World w = fields.getObject("world", World.class);
 						final int x = fields.getPrimitive("x", int.class), z = fields.getPrimitive("z", int.class);
-						Chunk c;
-						if (w == null || (c = w.getChunkAt(x, z)) == null)
+						if (w == null)
 							throw new StreamCorruptedException();
-						return c;
+						return w.getChunkAt(x, z);
 					}
 					
 					// return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
@@ -1816,7 +1812,7 @@ public class BukkitClasses {
 			.description("The heal reason in a heal event.")
 			.usage(regainReasons.getAllNames())
 			.examples("")
-			.since("INSERT VERSION")
+			.since("2.5")
 			.parser(new Parser<RegainReason>() {
 				@Override
 				@Nullable
