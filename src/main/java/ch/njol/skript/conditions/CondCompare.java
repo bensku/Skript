@@ -302,20 +302,31 @@ public class CondCompare extends Condition {
 	 * neither a nor b # x and y === a !# x and y && b !# x and y		// nor = and
 	 * neither a nor b # x or y === a !# x or y && b !# x or y			// nor = and
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean check(final Event e) {
 		final Expression<?> third = this.third;
-		return first.check(e,
-				(Checker<Object>) o1 -> second.check(e,
-						(Checker<Object>) o2 -> {
-							if (third == null)
-								return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
-							return third.check(e,
-									(Checker<Object>) o3 -> relation == Relation.NOT_EQUAL ^
-											(Relation.GREATER_OR_EQUAL.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2))
-													&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3))));
-						}), isNegated());
+		return first.check(e, (Checker<Object>) o1 ->
+			second.check(e, (Checker<Object>) o2 -> {
+				if (third == null)
+					return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
+				return third.check(e, (Checker<Object>) o3 -> {
+					boolean isBetween;
+					if (comp != null) {
+						isBetween =
+							(Relation.GREATER_OR_EQUAL.is(comp.compare(o1, o2)) && Relation.SMALLER_OR_EQUAL.is(comp.compare(o1, o3)))
+							// Check OPPOSITE (switching o2 / o3)
+							|| (Relation.GREATER_OR_EQUAL.is(comp.compare(o1, o3)) && Relation.SMALLER_OR_EQUAL.is(comp.compare(o1, o2)));
+					} else {
+						isBetween =
+							(Relation.GREATER_OR_EQUAL.is(Comparators.compare(o1, o2)) && Relation.SMALLER_OR_EQUAL.is(Comparators.compare(o1, o3)))
+							// Check OPPOSITE (switching o2 / o3)
+							|| (Relation.GREATER_OR_EQUAL.is(Comparators.compare(o1, o3)) && Relation.SMALLER_OR_EQUAL.is(Comparators.compare(o1, o2)));
+					}
+					return relation == Relation.NOT_EQUAL ^ isBetween;
+				});
+			}
+		), isNegated());
 	}
 	
 	@Override
