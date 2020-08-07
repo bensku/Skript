@@ -375,7 +375,7 @@ public class DelayedChangeBlock implements Block {
 		if (newState != null) {
 			newState.setBlockData(data);
 		} else {
-			b.setBlockData(data, applyPhysics);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> b.setBlockData(data, applyPhysics));
 		}
 	}
 	
