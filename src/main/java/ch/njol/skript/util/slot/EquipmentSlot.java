@@ -21,6 +21,7 @@ package ch.njol.skript.util.slot;
 
 import java.util.Locale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -180,9 +181,18 @@ public class EquipmentSlot extends SlotWithIndex {
 	
 	@Override
 	public void setItem(final @Nullable ItemStack item) {
-		slot.set(e, item);
-		if (e.getHolder() instanceof Player)
-			PlayerUtils.updateInventory((Player) e.getHolder());
+		// Small bandaid for Spigot's AssertionError "TRAP" (crashing the server) when setting a player's tool to air/null during some events
+		// We add a small delay, to set the item to air/null after Minecraft has handled changing the item amount
+		if (e.getHolder() instanceof Player && (slot == EquipSlot.TOOL || slot == EquipSlot.OFF_HAND) && (item == null || item.getType() == Material.AIR)) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {
+				slot.set(e, null);
+				PlayerUtils.updateInventory((Player) e.getHolder());
+			});
+		} else {
+			slot.set(e, item);
+			if (e.getHolder() instanceof Player)
+				PlayerUtils.updateInventory((Player) e.getHolder());
+		}
 	}
 	
 	/**
