@@ -196,6 +196,7 @@ public class EquipmentSlot extends SlotWithIndex {
 		ItemStack item = slot.get(e);
 		if (item != null)
 			item.setAmount(amount);
+		slot.set(e, item);
 	}
 	
 	/**
