@@ -159,17 +159,16 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		ITEM_CRACK(Particle.ITEM_CRACK) {
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
-				if (raw == null)
-					return Material.IRON_SWORD;
-				else if (raw instanceof ItemType) {
+				ItemStack itemStack = new ItemStack( Material.IRON_SWORD);
+				if (raw instanceof ItemType) {
 					ItemStack rand = ((ItemType) raw).getRandom();
-					if (rand == null) return Material.IRON_SWORD;
-					Material type = rand.getType();
-					assert type != null;
-					return type;
-				} else {
+					if (rand != null)
+						itemStack = rand;
+				} else if (raw != null)
 					return raw;
-				}
+				if (Particle.ITEM_CRACK.getDataType() == Material.class)
+					return itemStack.getType();
+				return itemStack;
 			}
 		},
 		BLOCK_BREAK(Particle.BLOCK_CRACK) {
