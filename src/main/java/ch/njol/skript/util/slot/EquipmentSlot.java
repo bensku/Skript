@@ -196,8 +196,6 @@ public class EquipmentSlot extends SlotWithIndex {
 		ItemStack item = slot.get(e);
 		if (item != null)
 			item.setAmount(amount);
-		if (e.getHolder() instanceof Player)
-			PlayerUtils.updateInventory((Player) e.getHolder());
 	}
 	
 	/**
