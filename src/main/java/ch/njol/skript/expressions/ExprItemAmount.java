@@ -30,8 +30,6 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
 
-import java.util.List;
-
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -57,10 +55,7 @@ public class ExprItemAmount extends SimplePropertyExpression<Object, Number>{
 	
 	@Override
 	public Number convert(final Object item) {
-    	if (item instanceof ItemType)
-    		return ((ItemType) item).getAmount();
-    	else
-    		return ((Slot) item).getAmount();
+    	return item instanceof ItemType ? ((ItemType) item).getAmount() : ((Slot) item).getAmount();
 	}
 	
 	@Override
