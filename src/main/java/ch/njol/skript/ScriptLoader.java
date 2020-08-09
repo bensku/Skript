@@ -1107,7 +1107,7 @@ final public class ScriptLoader {
 					((Conditional) items.get(items.size() - 1)).loadElseIf(cond, (SectionNode) n);
 					hasDelayBefore = hadDelayBeforeLastIf.or(hadDelayAfterLastIf.and(hasDelayBefore.and(Kleenean.UNKNOWN)));
 				} else if (StringUtils.startsWithIgnoreCase(name, "parse if ")) {
-					name = "" + name.substring("parse if ".length());
+					name = name.substring("parse if ".length());
 					final Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
 					if (cond == null)
 						continue;
@@ -1118,11 +1118,10 @@ final public class ScriptLoader {
 					
 					// Create an instance of the script load event to parse the condition
 					// But we won't actually call the event
-					if (!cond.check(new ScriptEvent())) {
+					if (!cond.check(new ScriptEvent()))
 						items.add(new Conditional(cond));
-					} else {
+					else
 						items.add(new Conditional(cond, (SectionNode) n));
-					}
 					hasDelayBefore = hadDelayBefore.or(hasDelayBefore.and(Kleenean.UNKNOWN));
 				} else {
 					if (StringUtils.startsWithIgnoreCase(name, "if "))
