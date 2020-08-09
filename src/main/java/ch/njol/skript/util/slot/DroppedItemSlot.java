@@ -48,7 +48,17 @@ public class DroppedItemSlot extends Slot {
 		assert item != null;
 		entity.setItemStack(item);
 	}
-
+	
+	@Override
+	public int getAmount() {
+		return entity.getItemStack().getAmount();
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		entity.getItemStack().setAmount(amount);
+	}
+	
 	@Override
 	public boolean isSameSlot(Slot o) {
 		return o instanceof DroppedItemSlot && ((DroppedItemSlot) o).entity.equals(entity);
