@@ -1112,7 +1112,7 @@ final public class ScriptLoader {
 					if (cond == null)
 						continue;
 					if (Skript.debug() || n.debug())
-						Skript.debug(indentation + cond.toString(null, true) + ":");
+						Skript.debug(indentation + "parse if " + cond.toString(null, true) + ":");
 					final Kleenean hadDelayBefore = hasDelayBefore;
 					hadDelayBeforeLastIf = hadDelayBefore;
 					
