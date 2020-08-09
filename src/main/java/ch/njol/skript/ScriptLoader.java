@@ -61,6 +61,7 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
+import ch.njol.skript.events.bukkit.ScriptEvent;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Conditional;
 import ch.njol.skript.lang.Expression;
@@ -1105,6 +1106,24 @@ final public class ScriptLoader {
 					hasDelayBefore = hadDelayBeforeLastIf;
 					((Conditional) items.get(items.size() - 1)).loadElseIf(cond, (SectionNode) n);
 					hasDelayBefore = hadDelayBeforeLastIf.or(hadDelayAfterLastIf.and(hasDelayBefore.and(Kleenean.UNKNOWN)));
+				} else if (StringUtils.startsWithIgnoreCase(name, "parse if ")) {
+					name = "" + name.substring("parse if ".length());
+					final Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
+					if (cond == null)
+						continue;
+					if (Skript.debug() || n.debug())
+						Skript.debug(indentation + cond.toString(null, true) + ":");
+					final Kleenean hadDelayBefore = hasDelayBefore;
+					hadDelayBeforeLastIf = hadDelayBefore;
+					
+					// Create an instance of the script load event to parse the condition
+					// But we won't actually call the event
+					if (!cond.check(new ScriptEvent())) {
+						items.add(new Conditional(cond));
+					} else {
+						items.add(new Conditional(cond, (SectionNode) n));
+					}
+					hasDelayBefore = hadDelayBefore.or(hasDelayBefore.and(Kleenean.UNKNOWN));
 				} else {
 					if (StringUtils.startsWithIgnoreCase(name, "if "))
 						name = "" + name.substring(3);
