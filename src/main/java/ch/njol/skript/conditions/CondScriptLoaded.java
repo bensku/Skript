@@ -27,6 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptCommand;
+import ch.njol.skript.conditions.base.SkippableCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -40,7 +41,7 @@ import ch.njol.util.Kleenean;
 @Description("Check if the current script, or another script, is currently loaded.")
 @Examples({"script is loaded", "script \"example.sk\" is loaded"})
 @Since("2.2-dev31")
-public class CondScriptLoaded extends Condition {
+public class CondScriptLoaded extends Condition implements SkippableCondition {
 	
 	static {
 		Skript.registerCondition(CondScriptLoaded.class,

@@ -54,6 +54,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.command.CommandEvent;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.command.ScriptCommand;
+import ch.njol.skript.conditions.base.SkippableCondition;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
@@ -83,6 +84,7 @@ import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.PluralizingArgsMessage;
 import ch.njol.skript.log.CountingLogHandler;
 import ch.njol.skript.log.ErrorDescLogHandler;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -1110,10 +1112,10 @@ final public class ScriptLoader {
 					final Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
 					if (cond == null)
 						continue;
-					if (Skript.debug() || n.debug())
-						Skript.debug(indentation + "parse if " + cond.toString(null, true) + ":");
-					final Kleenean hadDelayBefore = hasDelayBefore;
-					hadDelayBeforeLastIf = hadDelayBefore;
+					if (!(cond instanceof SkippableCondition)) {
+						Skript.error("Condition can not be used with 'parse if': " + name);
+						continue;
+					}
 					try {
 						@SuppressWarnings("null")
 						boolean check = cond.check(null);
@@ -1124,6 +1126,10 @@ final public class ScriptLoader {
 					} catch (NullPointerException ex) {
 						Skript.error("Could not parse: " + cond);
 					}
+					if (Skript.debug() || n.debug())
+						Skript.debug(indentation + "parse if " + cond.toString(null, true) + ":");
+					final Kleenean hadDelayBefore = hasDelayBefore;
+					hadDelayBeforeLastIf = hadDelayBefore;
 					hasDelayBefore = hadDelayBefore.or(hasDelayBefore.and(Kleenean.UNKNOWN));
 				} else {
 					if (StringUtils.startsWithIgnoreCase(name, "if "))

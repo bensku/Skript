@@ -25,6 +25,7 @@ import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.SkippableCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -44,7 +45,7 @@ import ch.njol.util.Kleenean;
 		"if plugins \"Essentials\" and \"Vault\" are enabled:",
 		"if plugin \"MyBrokenPlugin\" is disabled:"})
 @Since("INSERT VERSION")
-public class CondIsPluginEnabled extends Condition {
+public class CondIsPluginEnabled extends Condition implements SkippableCondition {
 	
 	static {
 		Skript.registerCondition(CondIsPluginEnabled.class,
