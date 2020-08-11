@@ -1112,17 +1112,14 @@ final public class ScriptLoader {
 					final Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
 					if (cond == null)
 						continue;
-					if (!(cond instanceof SkippableCondition)) {
-						Skript.error("Condition can not be used with 'parse if': " + name);
-						continue;
-					}
 					try {
 						@SuppressWarnings("null")
 						boolean check = cond.check(null);
-						if (!check)
-							items.add(new Conditional(cond));
-						else
-							items.add(new Conditional(cond, (SectionNode) n));
+						@SuppressWarnings("null")
+						Conditional conditional = new Conditional(cond, null);
+						if (check)
+							conditional = new Conditional(cond, (SectionNode) n);
+						items.add(conditional);
 					} catch (NullPointerException ex) {
 						Skript.error("Could not parse: " + cond);
 					}
