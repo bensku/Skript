@@ -45,6 +45,10 @@ public class Conditional extends TriggerSection {
 		this.cond = cond;
 	}
 	
+	public Conditional(Condition cond) {
+		this.cond = cond;
+	}
+	
 	@Override
 	@Nullable
 	protected TriggerItem walk(final Event e) {

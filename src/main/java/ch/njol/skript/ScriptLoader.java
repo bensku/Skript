@@ -1115,13 +1115,12 @@ final public class ScriptLoader {
 					try {
 						@SuppressWarnings("null")
 						boolean check = cond.check(null);
-						@SuppressWarnings("null")
-						Conditional conditional = new Conditional(cond, null);
+						Conditional conditional = new Conditional(cond);
 						if (check)
 							conditional = new Conditional(cond, (SectionNode) n);
 						items.add(conditional);
 					} catch (NullPointerException ex) {
-						Skript.error("Could not parse: " + cond);
+						Skript.error("'" + name + "' can't be used with 'parse if': " + cond);
 					}
 					if (Skript.debug() || n.debug())
 						Skript.debug(indentation + "parse if " + cond.toString(null, true) + ":");
