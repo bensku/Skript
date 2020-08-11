@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.conditions.base.SkippableCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -59,7 +60,7 @@ import ch.njol.util.Kleenean;
 		"time in the player's world is greater than 8:00",
 		"the creature is not an enderman or an ender dragon"})
 @Since("1.0")
-public class CondCompare extends Condition {
+public class CondCompare extends Condition implements SkippableCondition {
 	
 	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][]{
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above)|\\>) %objects%", Relation.GREATER},
