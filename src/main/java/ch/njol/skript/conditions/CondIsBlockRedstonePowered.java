@@ -25,25 +25,40 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.util.Kleenean;
 
 @Name("Is Block Redstone Powered")
-@Description("Checks if a block is powered by redstone")
+@Description("Checks if a block is (indirectly) powered by redstone")
 @Examples({"if clicked block is redstone powered:",
-	"\tsend \"This block is well-powered by redstone!\""})
+	"\tsend \"This block is well-powered by redstone!\"",
+	"if clicked block is indirectly redstone powered:",
+	"\tsend \"This block is indirectly redstone powered.\""})
 @Since("2.5")
 public class CondIsBlockRedstonePowered extends PropertyCondition<Block> {
 	
 	static {
-		register(CondIsBlockRedstonePowered.class, "redstone powered", "blocks");
+		register(CondIsBlockRedstonePowered.class, "(0¦|1¦indirectly) redstone powered", "blocks");
+	}
+	
+	private boolean isIndirectlyPowered;
+	
+	@SuppressWarnings({"unchecked", "null"})
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		setExpr((Expression<Block>) exprs[0]);
+		isIndirectlyPowered = parseResult.mark == 1;
+		return true;
 	}
 	
 	@Override
 	public boolean check(Block b) {
-		return b.isBlockPowered();
+		return isIndirectlyPowered ? b.isBlockIndirectlyPowered() : b.isBlockPowered();
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "redstone powered";
+		return isIndirectlyPowered ? "indirectly" : "" + "redstone powered";
 	}
 }
