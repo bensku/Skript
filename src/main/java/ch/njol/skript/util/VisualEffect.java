@@ -38,6 +38,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -159,17 +160,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		ITEM_CRACK(Particle.ITEM_CRACK) {
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
-				if (raw == null)
-					return Material.IRON_SWORD;
-				else if (raw instanceof ItemType) {
+				ItemStack itemStack = Aliases.javaItemType("iron sword").getRandom();
+				if (raw instanceof ItemType) {
 					ItemStack rand = ((ItemType) raw).getRandom();
-					if (rand == null) return Material.IRON_SWORD;
-					Material type = rand.getType();
-					assert type != null;
-					return type;
-				} else {
+					if (rand != null)
+						itemStack = rand;
+				} else if (raw != null)
 					return raw;
-				}
+				assert itemStack != null;
+				if (Particle.ITEM_CRACK.getDataType() == Material.class)
+					return itemStack.getType();
+				return itemStack;
 			}
 		},
 		BLOCK_BREAK(Particle.BLOCK_CRACK) {
