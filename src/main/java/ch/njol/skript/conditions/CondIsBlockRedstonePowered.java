@@ -45,9 +45,9 @@ public class CondIsBlockRedstonePowered extends Condition {
 	
 	static {
 		Skript.registerCondition(CondIsBlockRedstonePowered.class,
-			"%blocks% (is|are) redstone powered",
+			"%blocks% (is|are) [directly] redstone powered",
 			"%blocks% (is|are) indirectly redstone powered",
-			"%blocks% (is|are)(n't| not) redstone powered",
+			"%blocks% (is|are)(n't| not) [directly] redstone powered",
 			"%blocks% (is|are)(n't| not) indirectly redstone powered");
 	}
 	
@@ -73,7 +73,7 @@ public class CondIsBlockRedstonePowered extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return PropertyCondition.toString(this, PropertyCondition.PropertyType.BE, e, debug, blocks, (isIndirectlyPowered ? "indirectly " : "") + "powered");
+		return "redstone " + (isIndirectlyPowered ? "indirectly " : "") + "powered";
 	}
 	
 }
