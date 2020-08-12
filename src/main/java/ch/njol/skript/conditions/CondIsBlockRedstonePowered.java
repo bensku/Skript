@@ -53,8 +53,7 @@ public class CondIsBlockRedstonePowered extends Condition {
 	
 	@SuppressWarnings("null")
 	private Expression<Block> blocks;
-	@SuppressWarnings("null")
-	private Boolean isIndirectlyPowered;
+	private boolean isIndirectlyPowered;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
