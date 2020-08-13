@@ -101,9 +101,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
-		if (getExpr() instanceof Inventory)
-			return Inventory.class;
-		return ItemType.class;
+		return getExpr().getReturnType() == ItemType.class ? ItemType.class : Inventory.class;
 	}
 	
 	@Override
