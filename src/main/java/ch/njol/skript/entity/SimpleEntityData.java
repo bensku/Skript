@@ -81,6 +81,7 @@ import org.bukkit.entity.Painting;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Piglin;
+import org.bukkit.entity.PiglinBrute;
 import org.bukkit.entity.Pillager;
 import org.bukkit.entity.PolarBear;
 import org.bukkit.entity.Projectile;
@@ -288,8 +289,12 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("hoglin", Hoglin.class));
 			types.add(new SimpleEntityDataInfo("zoglin", Zoglin.class));
 			types.add(new SimpleEntityDataInfo("strider", Strider.class));
-			
 		}
+		
+		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) {
+			types.add(new SimpleEntityDataInfo("piglin brute", PiglinBrute.class));
+		}
+		
 		if (Skript.classExists("org.bukkit.entity.Illusioner")) {
 			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
 		}
