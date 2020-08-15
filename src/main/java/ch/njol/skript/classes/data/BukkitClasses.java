@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
@@ -1261,94 +1260,6 @@ public class BukkitClasses {
 					}
 				})
 				.serializer(new EnumSerializer<>(DamageCause.class)));
-		
-		Classes.registerClass(new ClassInfo<>(Chunk.class, "chunk")
-				.user("chunks?")
-				.name("Chunk")
-				.description("A chunk is a cuboid of 16×16×128 (x×z×y) blocks. Chunks are spread on a fixed rectangular grid in their world.")
-				.usage("")
-				.examples("")
-				.since("2.0")
-				.parser(new Parser<Chunk>() {
-					@Override
-					@Nullable
-					public Chunk parse(final String s, final ParseContext context) {
-						return null;
-					}
-					
-					@Override
-					public boolean canParse(final ParseContext context) {
-						return false;
-					}
-					
-					@Override
-					public String toString(final Chunk c, final int flags) {
-						return "chunk (" + c.getX() + "," + c.getZ() + ") of " + c.getWorld().getName();
-					}
-					
-					@Override
-					public String toVariableNameString(final Chunk c) {
-						return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
-					}
-					
-					@Override
-					public String getVariableNamePattern() {
-						return ".+:-?[0-9]+,-?[0-9]+";
-					}
-				})
-				.serializer(new Serializer<Chunk>() {
-					@Override
-					public Fields serialize(final Chunk c) {
-						final Fields f = new Fields();
-						f.putObject("world", c.getWorld());
-						f.putPrimitive("x", c.getX());
-						f.putPrimitive("z", c.getZ());
-						return f;
-					}
-					
-					@Override
-					public void deserialize(final Chunk o, final Fields f) {
-						assert false;
-					}
-					
-					@Override
-					public boolean canBeInstantiated() {
-						return false;
-					}
-					
-					@Override
-					protected Chunk deserialize(final Fields fields) throws StreamCorruptedException {
-						final World w = fields.getObject("world", World.class);
-						final int x = fields.getPrimitive("x", int.class), z = fields.getPrimitive("z", int.class);
-						if (w == null)
-							throw new StreamCorruptedException();
-						return w.getChunkAt(x, z);
-					}
-					
-					// return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
-					@Override
-					@Nullable
-					public Chunk deserialize(final String s) {
-						final String[] split = s.split("[:,]");
-						if (split.length != 3)
-							return null;
-						final World w = Bukkit.getWorld(split[0]);
-						if (w == null)
-							return null;
-						try {
-							final int x = Integer.parseInt(split[1]);
-							final int z = Integer.parseInt(split[1]);
-							return w.getChunkAt(x, z);
-						} catch (final NumberFormatException e) {
-							return null;
-						}
-					}
-					
-					@Override
-					public boolean mustSyncDeserialization() {
-						return true;
-					}
-				}));
 		
 		Classes.registerClass(new ClassInfo<>(Enchantment.class, "enchantment")
 				.user("enchantments?")

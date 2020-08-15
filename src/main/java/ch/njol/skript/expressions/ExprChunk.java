@@ -19,8 +19,8 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -36,6 +36,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
+import ch.njol.skript.util.SkriptChunk;
 import ch.njol.util.Kleenean;
 
 /**
@@ -45,10 +46,10 @@ import ch.njol.util.Kleenean;
 @Description("The <a href='../classes.html#chunk'>chunk</a> a block, location or entity is in.")
 @Examples("add the chunk at the player to {protected chunks::*}")
 @Since("2.0")
-public class ExprChunk extends PropertyExpression<Location, Chunk> {
+public class ExprChunk extends PropertyExpression<Location, SkriptChunk> {
 	
 	static {
-		Skript.registerExpression(ExprChunk.class, Chunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
+		Skript.registerExpression(ExprChunk.class, SkriptChunk.class, ExpressionType.PROPERTY, "[the] chunk[s] (of|%-directions%) %locations%", "%locations%'[s] chunk[s]");
 	}
 	
 	@SuppressWarnings("null")
@@ -69,18 +70,18 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 	}
 	
 	@Override
-	protected Chunk[] get(final Event e, final Location[] source) {
-		return get(source, new Converter<Location, Chunk>() {
+	protected SkriptChunk[] get(final Event e, final Location[] source) {
+		return get(source, new Converter<Location, SkriptChunk>() {
 			@Override
-			public Chunk convert(final Location l) {
-				return l.getChunk();
+			public SkriptChunk convert(final Location l) {
+				return new SkriptChunk(l);
 			}
 		});
 	}
 	
 	@Override
-	public Class<? extends Chunk> getReturnType() {
-		return Chunk.class;
+	public Class<? extends SkriptChunk> getReturnType() {
+		return SkriptChunk.class;
 	}
 	
 	@Override
@@ -100,9 +101,12 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		assert mode == ChangeMode.RESET;
 		
-		final Chunk[] cs = getArray(e);
-		for (final Chunk c : cs)
-			c.getWorld().regenerateChunk(c.getX(), c.getZ());
+		final SkriptChunk[] cs = getArray(e);
+		for (final SkriptChunk c : cs) {
+			World world = c.getWorld();
+			if (world != null)
+				world.regenerateChunk(c.getX(), c.getZ());
+		}
 	}
 	
 }

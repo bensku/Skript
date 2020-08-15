@@ -1767,7 +1767,6 @@ types:
 	float: number¦s @a
 	boolean: boolean¦ (yes/no)¦s (yes/no) @a
 	string: text¦s @a
-	chunk: chunk¦s @a
 
 	# Bukkit
 	entity: entit¦y¦ies @an
@@ -1830,6 +1829,7 @@ types:
 	resourcepackstate: resource pack state¦s @a
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
+	chunk: chunk¦s @a
 
 	# Hooks
 	money: money

@@ -1,0 +1,9 @@
+test "skript chunks":
+	set {_l} to location of spawn of world "world"
+	assert chunk at {_l} is loaded with "chunk at spawn should be loaded"
+
+	set {_l} to location(1000, 100, 1000, world "world")
+	assert chunk at {_l} is not loaded with "chunk at (1000, 100, 1000) should not be loaded"
+
+	set block at {_l} to stone
+	assert chunk at {_l} is loaded with "chunk at (1000, 100, 1000) should be loaded"

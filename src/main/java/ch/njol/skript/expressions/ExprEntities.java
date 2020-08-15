@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -48,6 +47,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.util.SkriptChunk;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -78,7 +78,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 	@Nullable
 	private Expression<World> worlds;
 	@Nullable
-	private Expression<Chunk> chunks;
+	private Expression<SkriptChunk> chunks;
 	@Nullable
 	private Expression<Number> radius;
 	@Nullable
@@ -103,7 +103,7 @@ public class ExprEntities extends SimpleExpression<Entity> {
 			center = (Expression<Location>) exprs[exprs.length - 1];
 		} else {
 			if (parseResult.mark == 1) {
-				chunks = (Expression<Chunk>) exprs[2];
+				chunks = (Expression<SkriptChunk>) exprs[2];
 			} else {
 				worlds = (Expression<World>) exprs[1];
 			}

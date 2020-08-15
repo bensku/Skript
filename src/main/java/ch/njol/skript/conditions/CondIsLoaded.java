@@ -24,9 +24,9 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.util.SkriptChunk;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 
 @Name("Is Loaded")
@@ -41,8 +41,8 @@ public class CondIsLoaded extends PropertyCondition<Object> {
 	
 	@Override
 	public boolean check(Object o) {
-		if (o instanceof Chunk)
-			return ((Chunk) o).isLoaded();
+		if (o instanceof SkriptChunk)
+			return ((SkriptChunk) o).isLoaded();
 		else if (o instanceof World)
 			return Bukkit.getWorld(((World) o).getName()) != null;
 		return false;

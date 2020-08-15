@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Ageable;
@@ -62,6 +61,7 @@ import ch.njol.skript.localization.LanguageChangeListener;
 import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.SkriptChunk;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
@@ -488,10 +488,10 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <E extends Entity> E[] getAll(final EntityData<?>[] types, final Class<E> type, Chunk[] chunks) {
+	public static <E extends Entity> E[] getAll(final EntityData<?>[] types, final Class<E> type, SkriptChunk[] chunks) {
 		assert types.length > 0;
 		final List<E> list = new ArrayList<>();
-		for (Chunk chunk : chunks) {
+		for (SkriptChunk chunk : chunks) {
 			for (Entity entity : chunk.getEntities()) {
 				for (EntityData<?> t : types) {
 					if (t.isInstance(entity)) {

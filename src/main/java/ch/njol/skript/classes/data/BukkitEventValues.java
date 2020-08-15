@@ -21,7 +21,6 @@ package ch.njol.skript.classes.data;
 
 import java.util.List;
 
-import org.bukkit.Chunk;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -133,6 +132,7 @@ import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.DelayedChangeBlock;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.SkriptChunk;
 import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 
@@ -184,11 +184,11 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		// ChunkEvents
-		EventValues.registerEventValue(ChunkEvent.class, Chunk.class, new Getter<Chunk, ChunkEvent>() {
+		EventValues.registerEventValue(ChunkEvent.class, SkriptChunk.class, new Getter<SkriptChunk, ChunkEvent>() {
 			@Override
 			@Nullable
-			public Chunk get(final ChunkEvent e) {
-				return e.getChunk();
+			public SkriptChunk get(final ChunkEvent e) {
+				return new SkriptChunk(e.getChunk());
 			}
 		}, 0);
 		

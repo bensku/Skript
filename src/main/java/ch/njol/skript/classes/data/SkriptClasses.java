@@ -53,6 +53,7 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.GameruleValue;
+import ch.njol.skript.util.SkriptChunk;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
@@ -854,6 +855,42 @@ public class SkriptClasses {
 				.since("2.5")
 				.serializer(new YggdrasilSerializer<GameruleValue>())
 		);
+		
+		Classes.registerClass(new ClassInfo<>(SkriptChunk.class, "chunk")
+			.user("chunks?")
+			.name("Chunk")
+			.description("A chunk is a cuboid of 16×16×128 (x×z×y) blocks. Chunks are spread on a fixed rectangular grid in their world.")
+			.usage("")
+			.examples("")
+			.since("2.0")
+			.parser(new Parser<SkriptChunk>() {
+				@Override
+				@Nullable
+				public SkriptChunk parse(final String s, final ParseContext context) {
+					return null;
+				}
+				
+				@Override
+				public boolean canParse(final ParseContext context) {
+					return false;
+				}
+				
+				@Override
+				public String toString(final SkriptChunk c, final int flags) {
+					return c.toString();
+				}
+				
+				@Override
+				public String toVariableNameString(final SkriptChunk c) {
+					return c.getWorldName() + ":" + c.getX() + "," + c.getZ();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return ".+:-?[0-9]+,-?[0-9]+";
+				}
+			})
+			.serializer(new YggdrasilSerializer<>()));
 	}
 	
 }
