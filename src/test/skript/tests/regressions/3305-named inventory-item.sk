@@ -1,0 +1,6 @@
+test "named inventory/itemtype":
+	set {_a} to a diamond sword named "BOB"
+	assert name of {_a} = "BOB" with "Name of item should have been 'BOB'"
+
+	set {_h} to hopper inventory named "SENOR HOPPY"
+	assert type of {_h} = hopper inventory with "Inventory type should have been 'hopper inventory'"
