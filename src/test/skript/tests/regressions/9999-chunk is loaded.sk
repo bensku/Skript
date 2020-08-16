@@ -1,0 +1,6 @@
+test "chunk/world is loaded":
+	assert chunk at spawn of world "world" is loaded with "chunk at spawn should have been loaded"
+	assert chunk at 1, 1 in world "world" is loaded with "chunk at 1, 1 in world should have been loaded"
+	assert chunk at 1000, 1000 in world "world" is not loaded with "chunk at 1000, 1000 in world should not have been loaded"
+	assert world("world") is loaded with "world ""world"" should have been loaded"
+	assert world("fake-world") is not loaded with "world ""fake-world"" should not have been loaded"
