@@ -1087,6 +1087,12 @@ entities:
 	vindicator:
 		name: vindicator¦s
 		pattern: vindicator(|1¦s)
+	illager:
+		name: illager¦s
+		pattern: illager(|1¦s)
+	spellcaster:
+		name: spellcaster¦s
+		pattern: spellcaster(|1¦s)
 	parrot:
 		name: parrot¦s
 		pattern: parrot(|1¦s)
