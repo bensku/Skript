@@ -266,6 +266,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("vindicator", Vindicator.class));
 		}
 		
+		if (Skript.classExists("org.bukkit.entity.Illusioner")) // Added in 1.12
+			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
+		
 		if (Skript.isRunningMinecraft(1, 13)) { // More subtypes, more supertypes - changes needed
 			types.add(new SimpleEntityDataInfo("dolphin", Dolphin.class));
 			types.add(new SimpleEntityDataInfo("phantom", Phantom.class));
@@ -281,7 +284,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			types.add(new SimpleEntityDataInfo("pillager", Pillager.class));
 			types.add(new SimpleEntityDataInfo("ravager", Ravager.class));
-			
 			types.add(new SimpleEntityDataInfo("wandering trader", WanderingTrader.class));
 		}
 		
@@ -292,13 +294,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("strider", Strider.class));
 		}
 		
-		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) {
+		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) // Added in 1.16.2
 			types.add(new SimpleEntityDataInfo("piglin brute", PiglinBrute.class));
-		}
 		
-		if (Skript.classExists("org.bukkit.entity.Illusioner")) {
-			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
-		}
 		// Register zombie after Husk and Drowned to make sure both work
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
 		
