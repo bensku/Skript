@@ -57,17 +57,14 @@ public class CondIsLoaded extends Condition {
 	private Expression<Number> x,z;
 	@Nullable
 	private Expression<World> world;
-	@Nullable
-	private Expression<World> worlds;
 	private int pattern;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int pattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		locations = pattern == 0 ? Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]) : null;
 		x = pattern == 1 ? (Expression<Number>) exprs[0] : null;
 		z = pattern == 1 ? (Expression<Number>) exprs[1] : null;
-		world = pattern == 1 ? (Expression<World>) exprs[2] : null;
-		worlds = pattern == 2 ? (Expression<World>) exprs[0] : null;
+		world = pattern == 1 ? (Expression<World>) exprs[2] : pattern == 2 ? (Expression<World>) exprs[0] : null;
 		setNegated(parseResult.mark == 1);
 		this.pattern = pattern;
 		return true;
@@ -86,14 +83,14 @@ public class CondIsLoaded extends Condition {
 				}, isNegated());
 			case 1:
 				return world.check(e, world -> {
+					Number x = this.x.getSingle(e);
+					Number z = this.z.getSingle(e);
 					if (x == null || z == null)
 						return false;
-					int x = this.x.getSingle(e).intValue();
-					int z = this.z.getSingle(e).intValue();
-					return world.isChunkLoaded(x, z);
+					return world.isChunkLoaded(x.intValue(), z.intValue());
 				}, isNegated());
 			case 2:
-				return worlds.check(e, world -> Bukkit.getWorld(world.getName()) != null, isNegated());
+				return world.check(e, world -> Bukkit.getWorld(world.getName()) != null, isNegated());
 		}
 		return false;
 	}
@@ -104,7 +101,7 @@ public class CondIsLoaded extends Condition {
 		String neg = isNegated() ? " not " : " ";
 		String chunk = pattern == 0 ? "chunk[s] at " + locations.toString(e, d) + (locations.isSingle() ? " is" : " are") + neg + "loaded" : "";
 		String chunkC = pattern == 1 ? "chunk (x:" + x.toString(e, d) + ",z:" + z.toString(e, d) + ",w:" + world.toString(e,d) + ") is" + neg + "loaded" : "";
-		String world = pattern == 2 ? "world[s] " + worlds.toString(e, d) + (worlds.isSingle() ? " is" : " are") + neg + "loaded" : "";
+		String world = pattern == 2 ? "world[s] " + this.world.toString(e, d) + (this.world.isSingle() ? " is" : " are") + neg + "loaded" : "";
 		return chunk + chunkC + world;
 	}
 	
