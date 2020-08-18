@@ -70,7 +70,7 @@ allprojects {
 }
 
 dependencies {
-	implementation 'com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT'
+	implementation 'com.destroystokyo.paper:paper-api:1.16.2-R0.1-SNAPSHOT'
 	implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:1.1.0'
 	implementation 'com.google.code.findbugs:findbugs:3.0.1'
 	implementation 'com.sk89q.worldguard:worldguard-legacy:7.0.0-SNAPSHOT'

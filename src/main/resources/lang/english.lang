@@ -1207,6 +1207,10 @@ entities:
 	strider:
 		name: strider¦s
 		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
+	#1.16.2 entity
+	piglin brute:
+		name: piglin brute¦s
+		pattern: <age> piglin brute(|1¦s)|(4¦)piglin brute (kid(|1¦s)|child(|1¦ren))
 
 # -- Heal Reasons --
 heal reasons:
