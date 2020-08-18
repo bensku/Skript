@@ -61,12 +61,12 @@ public class CondIsLoaded extends Condition {
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		pattern = matchedPattern;
 		locations = pattern == 0 ? Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]) : null;
 		x = pattern == 1 ? (Expression<Number>) exprs[0] : null;
 		z = pattern == 1 ? (Expression<Number>) exprs[1] : null;
 		world = pattern == 1 ? (Expression<World>) exprs[2] : pattern == 2 ? (Expression<World>) exprs[0] : null;
 		setNegated(parseResult.mark == 1);
-		this.pattern = pattern;
 		return true;
 	}
 	
