@@ -64,6 +64,7 @@ import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Husk;
+import org.bukkit.entity.Illager;
 import org.bukkit.entity.Illusioner;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.ItemFrame;
@@ -99,6 +100,7 @@ import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Snowman;
 import org.bukkit.entity.SpectralArrow;
+import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.Spider;
 import org.bukkit.entity.Squid;
 import org.bukkit.entity.Stray;
@@ -264,6 +266,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("vindicator", Vindicator.class));
 		}
 		
+		if (Skript.classExists("org.bukkit.entity.Illusioner")) // Added in 1.12
+			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
+		
 		if (Skript.isRunningMinecraft(1, 13)) { // More subtypes, more supertypes - changes needed
 			types.add(new SimpleEntityDataInfo("dolphin", Dolphin.class));
 			types.add(new SimpleEntityDataInfo("phantom", Phantom.class));
@@ -279,9 +284,7 @@ public class SimpleEntityData extends EntityData<Entity> {
 		if (Skript.isRunningMinecraft(1, 14)) {
 			types.add(new SimpleEntityDataInfo("pillager", Pillager.class));
 			types.add(new SimpleEntityDataInfo("ravager", Ravager.class));
-			
 			types.add(new SimpleEntityDataInfo("wandering trader", WanderingTrader.class));
-			types.add(new SimpleEntityDataInfo("raider", Raider.class, true));
 		}
 		
 		if (Skript.isRunningMinecraft(1, 16)) {
@@ -291,13 +294,9 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("strider", Strider.class));
 		}
 		
-		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) {
+		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) // Added in 1.16.2
 			types.add(new SimpleEntityDataInfo("piglin brute", PiglinBrute.class));
-		}
 		
-		if (Skript.classExists("org.bukkit.entity.Illusioner")) {
-			types.add(new SimpleEntityDataInfo("illusioner", Illusioner.class));
-		}
 		// Register zombie after Husk and Drowned to make sure both work
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
 		
@@ -320,6 +319,13 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("fish" , Fish.class, true));
 		
 		types.add(new SimpleEntityDataInfo("any fireball", Fireball.class, true));
+		
+		if (Skript.classExists("org.bukkit.entity.Illager")) { // Introduced in Spigot 1.12
+			types.add(new SimpleEntityDataInfo("illager", Illager.class, true));
+			types.add(new SimpleEntityDataInfo("spellcaster", Spellcaster.class, true));
+		}
+		if (Skript.classExists("org.bukkit.entity.Raider")) // Introduced in Spigot 1.14
+			types.add(new SimpleEntityDataInfo("raider", Raider.class, true));
 	}
 	
 	static {
