@@ -657,10 +657,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		
 		@Override
 		public String toString() {
-			return "ParticleOption{" +
-				"color=" + color +
-				", size=" + size +
-				'}';
+			return "ParticleOption{" + "color=" + color + ", size=" + size + '}';
 		}
 	}
 	
