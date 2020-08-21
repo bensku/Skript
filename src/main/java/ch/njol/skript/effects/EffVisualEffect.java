@@ -110,7 +110,7 @@ public class EffVisualEffect extends Effect {
 		final Object[] os = where.getArray(e);
 		final Player[] ps = players != null ? players.getArray(e) : null;
 		final Number rad = radius != null ? radius.getSingle(e) : 32; // 32=default particle radius
-		final Number cnt = count != null ? count.getSingle(e) : 0;
+		final Number cnt = count != null ? count.getSingle(e) : 1;
 		assert rad != null;
 		assert cnt != null;
 		for (final Direction d : dirs) {
