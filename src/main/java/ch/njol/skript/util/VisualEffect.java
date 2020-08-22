@@ -552,7 +552,8 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				if (ps == null) {
 					// Colored particles must be played one at time; otherwise, colors are broken
 					if (type.isColorable()) {
-						for (int i = 0; i < count; i++) {
+						int c = count == 0 ? 1 : count;
+						for (int i = 0; i < c; i++) {
 							l.getWorld().spawnParticle(particle, l, 1, dX, dY, dZ, speed, pData);
 						}
 					} else {
@@ -561,7 +562,8 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				} else {
 					for (final Player p : ps) {
 						if (type.isColorable()) {
-							for (int i = 0; i < count; i++) {
+							int c = count == 0 ? 1 : count;
+							for (int i = 0; i < c; i++) {
 								p.spawnParticle(particle, l, 1, dX, dY, dZ, speed, pData);
 							}
 						} else {
