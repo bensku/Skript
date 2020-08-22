@@ -62,7 +62,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 
 	private final static String LANGUAGE_NODE = "visual effects";
 	static final boolean newEffectData = Skript.classExists("org.bukkit.block.data.BlockData");
-	private static final boolean HAS_REDSTONE_DATA = Skript.isRunningMinecraft(1, 13);
+	private static final boolean HAS_REDSTONE_DATA = Skript.classExists("org.bukkit.Particle$DustOptions");
 	
 	public static enum Type implements YggdrasilSerializable {
 		ENDER_SIGNAL(Effect.ENDER_SIGNAL),
