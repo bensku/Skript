@@ -68,7 +68,7 @@ public class ExprInventoryInfo extends SimpleExpression<Object> {
 
 	@Override
 	protected Object[] get(Event e) {
-		Inventory[] inventories = this.inventories.getAll(e);
+		Inventory[] inventories = this.inventories.getArray(e);
 		List<Object> objects = new ArrayList<>();
 		switch (type) {
 			case HOLDER:
