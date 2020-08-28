@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 @Examples({"event-inventory's amount of rows",
 		   "holder of player's top inventory",
 		   "{_inventory}'s viewers"})
-@Since("2.2-dev34, INSERT VERSION (slots)")
+@Since("2.2-dev34, 2.5 (slots)")
 public class ExprInventoryInfo extends SimpleExpression<Object> {
 	
 	private final static int HOLDER = 1, VIEWERS = 2, ROWS = 3, SLOTS = 4;

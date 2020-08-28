@@ -1491,6 +1491,9 @@ visual effects:
 	block_dust:
 		name: block dust @-
 		pattern: [sprinting] dust of [%itemtype%]
+	falling_dust:
+		name: falling dust @-
+		pattern: falling dust of [%itemtype%]
 	totem:
 		name: totem @-
 		pattern: totem
