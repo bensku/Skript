@@ -22,80 +22,101 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.block.BlockState;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.BlockInventoryHolder;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-@Name("Inventory Holder/Viewers/Rows")
-@Description("Gets the rows/size/viewers/holder of an inventory.")
+@Name("Inventory Holder/Viewers/Rows/Slots")
+@Description("Gets the amount of rows/slots, viewers and holder of an inventory.")
 @Examples({"event-inventory's amount of rows",
 		   "holder of player's top inventory",
 		   "{_inventory}'s viewers"})
-@Since("2.2-dev34")
-public class ExprInventoryInfo extends PropertyExpression<Inventory, Object> {
-
-	private final static int HOLDER = 1, VIEWERS = 2, ROWS = 3;
-	private int type;
+@Since("2.2-dev34, INSERT VERSION (slots)")
+public class ExprInventoryInfo extends SimpleExpression<Object> {
+	
+	private final static int HOLDER = 1, VIEWERS = 2, ROWS = 3, SLOTS = 4;
 	
 	static {
-		PropertyExpression.register(ExprInventoryInfo.class, Object.class, "(" + HOLDER + "¦holder[s]|" + VIEWERS + "¦viewers|" + ROWS + "¦[amount of] rows)", "inventories");
+		Skript.registerExpression(ExprInventoryInfo.class, Object.class, ExpressionType.PROPERTY,
+				"(" + HOLDER + "¦(holder|owner)[s]|" + VIEWERS + "¦viewers|" + ROWS + "¦[amount of] rows|" + SLOTS + "¦[amount of] slots)" + " of %inventories%",
+				"%inventories%'[s] (" + HOLDER + "¦(holder|owner)[s]|" + VIEWERS + "¦viewers|" + ROWS + "¦[amount of] rows|" + SLOTS + "¦[amount of] slots)");
 	}
+	
+	@SuppressWarnings("null")
+	private Expression<Inventory> inventories;
+	private int type;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		setExpr((Expression<? extends Inventory>) exprs[0]);
+		inventories = (Expression<Inventory>) exprs[0];
 		type = parseResult.mark;
 		return true;
 	}
 
 	@Override
-	protected Object[] get(Event e, Inventory[] source) {
-
+	protected Object[] get(Event e) {
+		Inventory[] inventories = this.inventories.getArray(e);
+		List<Object> objects = new ArrayList<>();
 		switch (type) {
 			case HOLDER:
-				return get(source, inv -> {
-					InventoryHolder holder = inv.getHolder();
-					if (holder instanceof BlockState) {
-						return new BlockInventoryHolder((BlockState) holder);
-					}
-					return holder;
-				});
-			case ROWS:
-				return get(source, inv -> inv.getSize() / 9);
-			case VIEWERS:
-				List<HumanEntity> viewers = new ArrayList<>();
-				for (Inventory inventory : source) {
-					viewers.addAll(inventory.getViewers());
+				for (Inventory inventory : inventories) {
+					InventoryHolder holder = inventory.getHolder();
+					if (holder != null)
+						objects.add(holder);
 				}
-				return viewers.toArray(new HumanEntity[0]);
+				break;
+			case ROWS:
+				for (Inventory inventory : inventories) {
+					int size = inventory.getSize();
+					if (size < 9) // Hoppers have a size of 5, we don't want to return 0
+						objects.add(1);
+					else
+						objects.add(size / 9);
+				}
+				break;
+			case SLOTS:
+				for (Inventory inventory : inventories) {
+					objects.add(inventory.getSize());
+				}
+				break;
+			case VIEWERS:
+				for (Inventory inventory : inventories) {
+					objects.addAll(inventory.getViewers());
+				}
+				break;
 			default:
 				return new Object[0];
 		}
+		return objects.toArray(new Object[0]);
 
+	}
+	
+	@Override
+	public boolean isSingle() {
+		return inventories.isSingle() && type != VIEWERS;
 	}
 
 	@Override
-	public Class getReturnType() {
-		return type == HOLDER ? InventoryHolder.class : type == ROWS ? Number.class : Player.class;
+	public Class<?> getReturnType() {
+		return type == HOLDER ? InventoryHolder.class : (type == ROWS || type == SLOTS) ? Number.class : Player.class;
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (type == HOLDER ? "holder of " : type == ROWS ? "rows of " : "viewers of ") + getExpr().toString(e, debug);
+		return (type == HOLDER ? "holder of " : type == ROWS ? "rows of " : type == SLOTS ? "slots of " : "viewers of ") + inventories.toString(e, debug);
 	}
 
 }
