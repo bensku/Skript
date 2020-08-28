@@ -528,6 +528,18 @@
   "examples" : "projectile is a snowball\\nshoot an arrow at speed 5 from the player"
 },
 {
+  "id" : "region",
+  "name" : "Region",
+  "patterns" : [
+    "&quot;region name&quot;",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "A region of a regions plugin. Skript currently supports WorldGuard, Factions, GriefPrevention and PreciousStones.\\nPlease note that some regions plugins do not have named regions, some use numerical ids to identify regions, and some may have regions with the same name in different worlds, thus using regions like \"region name\" in scripts may or may not work.",
+  "examples" : ""
+},
+{
   "id" : "resourcepackstate",
   "name" : "Resource Pack State",
   "patterns" : [
@@ -730,6 +742,20 @@
   "since" : "2.4",
   "description" : "Checks if the given string is alphanumeric.",
   "examples" : "if the argument is not alphanumeric:\\n    send \"Invalid name!\""
+},
+{
+  "id" : "CondCanBuild",
+  "name" : "Can Build",
+  "patterns" : [
+    "%<a href='classes.html#player'>players</a>% (can|(is|are) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
+"%<a href='classes.html#player'>players</a>% (can('t|not)|(is|are)(n't| not) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.0",
+  "description" : "Tests whether a player is allowed to build at a certain location.
+This condition requires a supported <a href='../classes.html#region'>regions</a> plugin to be installed.",
+  "examples" : "command /setblock <material>:\\n    description: set the block at your crosshair to a different type\\n    trigger:\\n        player cannot build at the targeted block:\\n            message \"You do not have permission to change blocks there!\"\\n            stop\\n        set the targeted block to argument"
 },
 {
   "id" : "CondCanFly",
@@ -1229,6 +1255,20 @@ Note: This is the only element where not all patterns are shown. It has actually
   "examples" : "if chunk at {home::%player's uuid%} is loaded:\\nif chunk 1, 10 in world \"world\" is loaded:\\nif world(\"lobby\") is loaded:"
 },
 {
+  "id" : "CondIsMember",
+  "name" : "Is Member/Owner of Region",
+  "patterns" : [
+    "%<a href='classes.html#offlineplayer'>offline players</a>% (is|are) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
+"%<a href='classes.html#offlineplayer'>offline players</a>% (is|are)(n't| not) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "Checks whether a player is a member or owner of a particular region.
+This condition requires a supported regions plugin to be installed.",
+  "examples" : "on region enter:\\n    player is the owner of the region\\n    message \"Welcome back to %region%!\"\\n    send \"%player% just entered %region%!\" to all members of the region"
+},
+{
   "id" : "CondIsOnline",
   "name" : "Is Online",
   "patterns" : [
@@ -1476,6 +1516,22 @@ For more info, see <a href='https://minecraft.gamepedia.com/Slime#.22Slime_chunk
   "since" : "1.3.4",
   "description" : "Checks the PvP state of a world.",
   "examples" : "PvP is enabled\\nPvP is disabled in \"world\""
+},
+{
+  "id" : "CondRegionContains",
+  "name" : "Region Contains",
+  "patterns" : [
+    "[[the] region] %<a href='classes.html#region'>regions</a>% contain[s] %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
+"%<a href='classes.html#location'>locations</a>% (is|are) ([contained] in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
+"[[the] region] %<a href='classes.html#region'>regions</a>% (do|does)(n't| not) contain %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
+"%<a href='classes.html#location'>locations</a>% (is|are)(n't| not) (contained in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "Checks whether a location is contained in a particular <a href='../classes.html#region'>region</a>.
+This condition requires a supported regions plugin to be installed.",
+  "examples" : "player is in the region {regions::3}\\non region enter:\\n    region contains {flags.%world%.red}\\n    message \"The red flag is near!\""
 },
 {
   "id" : "CondResourcePack",
@@ -3554,6 +3610,19 @@ This may require that there is enough space above the given location and that th
   "examples" : "on redstone change:\\n    send \"someone is using redstone\" to console"
 },
 {
+  "id" : "region_enterleave",
+  "name" : "On Region Enter/Leave",
+  "patterns" : [
+    "(enter[ing]|leav(e|ing)|exit[ing]) [of] ([a] region|[[the] region] %<a href='classes.html#region'>regions</a>%)",
+"region (enter[ing]|leav(e|ing)|exit[ing])",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "Called when a player enters or leaves a <a href='../classes.html#region'>region</a>.\\nThis event requires a supported regions plugin to be installed.",
+  "examples" : "on region exit:\\n    message \"Leaving %region%.\""
+},
+{
   "id" : "resource_pack_request_response",
   "name" : "On Resource Pack Request Response",
   "patterns" : [
@@ -4331,6 +4400,19 @@ Can optionally include a direction as well, e.g. 'block above' or 'block in fron
   "since" : "1.0",
   "description" : "Blocks relative to other blocks or between other blocks. Can be used to get blocks relative to other blocks or for looping.",
   "examples" : "loop blocks above the player:\\nloop blocks between the block below the player and the targeted block:\\nset the blocks below the player, the victim and the targeted block to air"
+},
+{
+  "id" : "ExprBlocksInRegion",
+  "name" : "Blocks in Region",
+  "patterns" : [
+    "[(all|the)] blocks (in|of) [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "All blocks in a <a href='../classes.html#region'>region</a>.
+This expression requires a supported regions plugin to be installed.",
+  "examples" : "loop all blocks in the region {arena.%{faction.%player%}%}:\\n    clear the loop-block"
 },
 {
   "id" : "ExprBookAuthor",
@@ -6346,6 +6428,46 @@ Please note that the order of the numbers doesn't matter, i.e. <code>random numb
   "since" : "2.5",
   "description" : "Power of a redstone block",
   "examples" : "if redstone power of targeted block is 15:\\n    send \"This block is very powerful!\""
+},
+{
+  "id" : "ExprRegion",
+  "name" : "Region",
+  "patterns" : [
+    "[the] [event-]region",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "The <a href='classes.html#region'>region</a> involved in an event.
+This expression requires a supported regions plugin to be installed.",
+  "examples" : "on region enter:\\n    region is {forbidden region}\\n    cancel the event"
+},
+{
+  "id" : "ExprMembersOfRegion",
+  "name" : "Region Members & Owners",
+  "patterns" : [
+    "[(all|the)] (members|owner[s]) of [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
+"[[the] region[s]] %<a href='classes.html#region'>regions</a>%'[s] (members|owner[s])",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "A list of members or owners of a <a href='../classes.html#region'>region</a>.
+This expression requires a supported regions plugin to be installed.",
+  "examples" : "on entering of a region:\\n    message \"You're entering %region% whose owners are %owners of region%\"."
+},
+{
+  "id" : "ExprRegionsAt",
+  "name" : "Regions At",
+  "patterns" : [
+    "[the] region[s] %<a href='classes.html#direction'>direction</a>% %<a href='classes.html#location'>locations</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.1",
+  "description" : "All <a href='../classes.html#region'>regions</a> at a particular <a href='../classes/#location'>location</a>.
+This expression requires a supported regions plugin to be installed.",
+  "examples" : "On click on a sign:\\n    line 1 of the clicked block is \"[region info]\"\\n    set {_regions::*} to regions at the clicked block\\n    if {_regions::*} is empty:\\n        message \"No regions exist at this sign.\"\\n    else:\\n        message \"Regions containing this sign: <gold>%{_regions::*}%<r>.\""
 },
 {
   "id" : "ExprRemainingAir",
