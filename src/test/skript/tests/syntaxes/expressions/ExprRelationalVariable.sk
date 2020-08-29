@@ -1,4 +1,4 @@
-test "relational variables expression/condition" when minecraft version is "1.99": #temporarily disabling this test
+test "relational variables expression/condition" when minecraft version is "1.16.1":
 
 	# Test entities holding relational variables
 
@@ -145,5 +145,15 @@ test "relational variables expression/condition" when minecraft version is "1.99
 
 	set relational variable {myTag::1} of {_pig} to {_pig}
 	assert {_pig} doesn't have relational variable {myTag} with "A holder shouldn't have {myTag} if they only have {myTag::1} (Non-serializable Single vs. List Test)"
+
+	delete {_pig}
+
+	# Item Serialization Test
+
+	spawn a pig at spawn of world "world"
+	set {_pig} to the last spawned pig
+
+	set relational variable {item} of {_pig} to stone named "TEST"
+	assert relational variable {item} of {_pig} = stone named "TEST" with "Item Serialization Test Failure - Please check the console for errors."
 
 	delete {_pig}

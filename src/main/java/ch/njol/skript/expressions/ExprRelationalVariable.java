@@ -66,8 +66,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
 	static {
-		// Temporarily disabled until bugs are fixed
-		if (false && Skript.isRunningMinecraft(1, 14)) {
+		if (PersistentDataUtils.PERSISTENT_DATA_ENABLED) {
 			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.PROPERTY,
 					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
