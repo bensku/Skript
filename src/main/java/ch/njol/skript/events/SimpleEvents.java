@@ -173,8 +173,7 @@ public class SimpleEvents {
 				.examples("on chunk generate:")
 				.since("1.0");
 		Skript.registerEvent("Chunk Unload", SimpleEvent.class, ChunkUnloadEvent.class, "chunk unload[ing]")
-				.description("Called when a chunk is unloaded due to not being near any player. Cancel the event to force the server to keep the chunk loaded " +
-						"and thus keep simulating the chunk (e.g. physics, plant growth, minecarts, etc. will keep working and won't freeze).")
+				.description("Called when a chunk is unloaded due to not being near any player.")
 				.examples("on chunk unload:")
 				.since("1.0");
 		Skript.registerEvent("Creeper Power", SimpleEvent.class, CreeperPowerEvent.class, "creeper power")
