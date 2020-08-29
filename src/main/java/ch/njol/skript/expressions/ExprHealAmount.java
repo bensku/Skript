@@ -38,9 +38,10 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 
 @Name("Heal Amount")
-@Description("The amount of a healing event, which can be changed.")
+@Description("The amount of health healed in a healing event.")
 @Examples({"increase heal amount by 2",
 	"remove 0.5 from heal amount"})
 @Since("INSERT VERSION")
@@ -58,7 +59,7 @@ public class ExprHealAmount extends SimpleExpression<Number> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(EntityRegainHealthEvent.class)) {
-			Skript.error("The expression 'heal amount' may only be used in heal event", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The expression 'heal amount' may only be used in a healing event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		delay = isDelayed;
@@ -80,7 +81,7 @@ public class ExprHealAmount extends SimpleExpression<Number> {
 		}
 		if (mode == Changer.ChangeMode.REMOVE_ALL || mode == Changer.ChangeMode.RESET)
 			return null;
-		return new Class[]{Number.class};
+		return CollectionUtils.array(Number.class);
 	}
 	
 	@Override
