@@ -22,6 +22,7 @@ package ch.njol.skript.expressions;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
@@ -100,7 +101,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
-		return ItemType.class; // For some reason, inventories still work too... Weird
+		return getExpr().getReturnType() == ItemType.class ? ItemType.class : Inventory.class;
 	}
 	
 	@Override

@@ -19,13 +19,16 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -37,27 +40,36 @@ import ch.njol.util.coll.CollectionUtils;
 /**
  * @author Peter Güttinger
  */
-@Name("Data Value")
-@Description({"The data value of an item.",
-		"You usually don't need this expression as you can check and set items with aliases easily, " +
-				"but this expression can e.g. be used to \"add 1 to data of &lt;item&gt;\", e.g. for cycling through all wool colours."})
-@Examples({"add 1 to the data value of the clicked block"})
+@Name("Data/Damage Value")
+@Description({"The data/damage value of an item/block. Data values of blocks are only supported on 1.12.2 and below.",
+		"You usually don't need this expression as you can check and set items with aliases easily, ",
+		"but this expression can e.g. be used to \"add 1 to data of &lt;item&gt;\", e.g. for cycling through all wool colours."})
+@Examples({"set damage value of player's tool to 10",
+		"set data value of target block of player to 3",
+		"add 1 to the data value of the clicked block",
+		"reset data value of block at player"})
 @Since("1.2")
-public class ExprDurability extends SimplePropertyExpression<Object, Short> {
+public class ExprDurability extends SimplePropertyExpression<Object, Number> {
+	
+	private static final boolean LEGACY_BLOCK = !Skript.isRunningMinecraft(1, 13);
 	
 	static {
-		register(ExprDurability.class, Short.class, "((data|damage)[s] [value[s]]|durabilit(y|ies))", "itemstacks/slots");
+		register(ExprDurability.class, Number.class, "((data|damage)[s] [value[s]]|durabilit(y|ies))", "itemtypes/blocks/slots");
 	}
 	
 	@Override
 	@Nullable
-	public Short convert(final Object o) {
+	public Number convert(final Object o) {
 		if (o instanceof Slot) {
 			final ItemStack i = ((Slot) o).getItem();
-			return i == null ? null : i.getDurability();
-		} else {
-			return ((ItemStack) o).getDurability();
+			return i == null ? null : ItemUtils.getDamage(i);
+		} else if (o instanceof ItemType) {
+			ItemStack item = ((ItemType) o).getRandom();
+			return item != null ? ItemUtils.getDamage(item) : null;
+		} else if (LEGACY_BLOCK && o instanceof Block) {
+			return ((Block) o).getData();
 		}
+		return null;
 	}
 	
 	@Override
@@ -66,52 +78,74 @@ public class ExprDurability extends SimplePropertyExpression<Object, Short> {
 	}
 	
 	@Override
-	public Class<Short> getReturnType() {
-		return Short.class;
+	public Class<Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
-			return null;
-		if (Slot.class.isAssignableFrom(getExpr().getReturnType()) || getExpr().isSingle() && ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class, ItemType.class))
-			return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case SET:
+			case RESET:
+			case REMOVE:
+			case DELETE:
+				return CollectionUtils.array(Number.class);
+		}
 		return null;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		int a = delta == null ? 0 : ((Number) delta[0]).intValue();
 		final Object[] os = getExpr().getArray(e);
 		for (final Object o : os) {
-			final ItemStack i = o instanceof Slot ? ((Slot) o).getItem() : (ItemStack) o;
-			if (i == null)
-				continue;
+			ItemStack itemStack = null;
+			Block block = null;
+			
+			if (o instanceof ItemType)
+				itemStack = ((ItemType) o).getRandom();
+			else if (o instanceof Slot)
+				itemStack = ((Slot) o).getItem();
+			else if (LEGACY_BLOCK)
+				block = (Block) o;
+			else
+				return;
+			
+			int changeValue = itemStack != null ? ItemUtils.getDamage(itemStack) : block != null ? block.getData() : 0;
+			
 			switch (mode) {
 				case REMOVE:
 					a = -a;
 					//$FALL-THROUGH$
 				case ADD:
-					i.setDurability((short) (i.getDurability() + a));
+					changeValue += a;
 					break;
 				case SET:
-					i.setDurability((short) a);
+					changeValue = a;
 					break;
 				case DELETE:
 				case RESET:
-					a = 0;
-					i.setDurability((short) 0);
+					changeValue = 0;
 					break;
 				case REMOVE_ALL:
 					assert false;
 			}
-			if (o instanceof Slot)
-				((Slot) o).setItem(i);
-			else if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, ItemStack.class))
-				getExpr().change(e, new ItemStack[] {i}, ChangeMode.SET);
-			else
-				getExpr().change(e, new ItemType[] {new ItemType(i)}, ChangeMode.SET);
+			if (o instanceof ItemType && itemStack != null) {
+				ItemUtils.setDamage(itemStack,changeValue);
+				((ItemType) o).setTo(new ItemType(itemStack));
+			} else if (o instanceof Slot) {
+				ItemUtils.setDamage(itemStack,changeValue);
+				((Slot) o).setItem(itemStack);
+			} else {
+				BlockState blockState = ((Block) o).getState();
+				try {
+					blockState.setRawData((byte) Math.max(0, changeValue));
+					blockState.update();
+				} catch (IllegalArgumentException | NullPointerException ignore) {} // Catch when a user sets the amount too high
+			}
 		}
 	}
 	
