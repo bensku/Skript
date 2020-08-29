@@ -62,8 +62,6 @@ public class PersistentDataUtils {
 	private static final PersistentDataType<byte[], Value> SINGLE_VARIABLE_TYPE = new SingleVariablePersistentDataType();
 	private static final PersistentDataType<byte[], Map<String, Value>> LIST_VARIABLE_TYPE = new ListVariablePersistentDataType();
 
-	public static final boolean PERSISTENT_DATA_ENABLED = Skript.classExists("org.bukkit.persistence.PersistentDataHolder");
-
 	/*
 	 * General Utility Methods
 	 */

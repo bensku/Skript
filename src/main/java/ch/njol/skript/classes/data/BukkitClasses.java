@@ -1865,7 +1865,7 @@ public class BukkitClasses {
 			);
 		}
 
-		if (PersistentDataUtils.PERSISTENT_DATA_ENABLED) {
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
 					.user("persistent data ?holders?")
 					.name("Persistent Data Holder")

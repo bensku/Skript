@@ -66,7 +66,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
 	static {
-		if (PersistentDataUtils.PERSISTENT_DATA_ENABLED) {
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.PROPERTY,
 					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
