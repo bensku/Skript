@@ -46,7 +46,6 @@ import ch.njol.util.coll.CollectionUtils;
 	"remove 0.5 from heal amount"})
 @Since("INSERT VERSION")
 @Events("heal")
-
 public class ExprHealAmount extends SimpleExpression<Number> {
 	
 	static {
