@@ -314,30 +314,6 @@ public abstract class Classes {
 	}
 	
 	/**
-	 * Gets the class info of the given class or its closest registered superclass. This method will never return null.
-	 * The Object ClassInfo will be returned if all other possible ClassInfos have no serializer.
-	 *
-	 * @param c
-	 * @return The closest superclass's info that has a serializer
-	 */
-	@SuppressWarnings({"unchecked", "null"})
-	public static <T> ClassInfo<? super T> getSuperClassInfoWithSerializer(final Class<T> c) {
-		assert c != null;
-		checkAllowClassInfoInteraction();
-		final ClassInfo<?> i = superClassInfos.get(c);
-		if (i != null && i.getSerializer() != null)
-			return (ClassInfo<? super T>) i;
-		for (final ClassInfo<?> ci : getClassInfos()) {
-			if (ci.getC().isAssignableFrom(c) && ci.getSerializer() != null) {
-				if (!Skript.isAcceptRegistrations())
-					superClassInfos.put(c, ci);
-				return (ClassInfo<? super T>) ci;
-			}
-		}
-		return (ClassInfo<? super T>) superClassInfos.get(Object.class);
-	}
-	
-	/**
 	 * Gets a class by its code name
 	 * 
 	 * @param codeName

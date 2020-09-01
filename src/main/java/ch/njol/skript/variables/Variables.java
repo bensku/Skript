@@ -88,11 +88,14 @@ public abstract class Variables {
 				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
 			}
 			
-			@SuppressWarnings({"unchecked"})
 			@Override
 			@Nullable
+			@SuppressWarnings("unchecked")
 			public String getID(final @NonNull Class<?> c) {
-				if (ConfigurationSerializable.class.isAssignableFrom(c) && Classes.getSuperClassInfoWithSerializer(c) == Classes.getExactClassInfo(Object.class))
+				ClassInfo<?> objectCi = Classes.getExactClassInfo(Object.class);
+				ClassInfo<?> superCi = Classes.getSuperClassInfo(c);
+				Class<?> serializeAs = superCi.getSerializeAs();
+				if (ConfigurationSerializable.class.isAssignableFrom(c) && (serializeAs == null ? superCi : Classes.getExactClassInfo(serializeAs)) == objectCi)
 					return configurationSerializablePrefix + ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) c);
 				return null;
 			}
