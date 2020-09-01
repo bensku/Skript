@@ -113,7 +113,7 @@ public abstract class Classes {
 				final ClassInfo<?> sa = getExactClassInfo(ci.getSerializeAs());
 				if (sa == null) {
 					Skript.error(ci.getCodeName() + "'s 'serializeAs' class is not registered");
-				} else if (sa.getSerializer() == null) {
+				} else if (sa.getSerializer() == null && ci.getSerializeAs() != Object.class) {
 					Skript.error(ci.getCodeName() + "'s 'serializeAs' class is not serializable");
 				}
 			}

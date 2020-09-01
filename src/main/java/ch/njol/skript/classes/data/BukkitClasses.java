@@ -1865,6 +1865,8 @@ public class BukkitClasses {
 			);
 		}
 
+		// The serializer of this ClassInfo points to Object due to issue #3185
+		// DO NOT DO THIS UNDER NORMAL CIRCUMSTANCES
 		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
 					.user("persistent data ?holders?")
