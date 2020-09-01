@@ -4,3 +4,9 @@ test "named inventory/itemtype":
 
 	set {_h} to hopper inventory named "SENOR HOPPY"
 	assert type of {_h} = hopper inventory with "Inventory type should have been 'hopper inventory'"
+
+	set {a::1} to a diamond sword
+	set {b::1} to {a::1} named "BOB" with lore "LORE1" and "LORE2"
+	assert name of {b::1} = "BOB" with "Name of item should have been 'BOB'"
+	assert 1st line of lore of {b::1} = "LORE1" with "1st line of lore of item should have been 'LORE1'"
+	assert 2nd line of lore of {b::1} = "LORE2" with "2nd line of lore of item should have been 'LORE2'"
