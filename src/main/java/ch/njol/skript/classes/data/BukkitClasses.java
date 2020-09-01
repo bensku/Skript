@@ -1880,7 +1880,8 @@ public class BukkitClasses {
 					)
 					.examples("set persistent data value \"epic\" of player to true")
 					.requiredPlugins("1.14 or newer")
-					.since("2.5"));
+					.since("2.5")
+					.serializeAs(Object.class));
 		}
 
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {
