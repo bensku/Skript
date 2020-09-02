@@ -318,6 +318,11 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
+	public boolean applyBoneMeal(BlockFace blockFace) {
+		return b.applyBoneMeal(blockFace);
+	}
+	
+	@Override
 	public Collection<ItemStack> getDrops() {
 		return b.getDrops();
 	}
@@ -398,5 +403,10 @@ public class DelayedChangeBlock implements Block {
 	@Override
 	public BlockSoundGroup getSoundGroup() {
 		return b.getSoundGroup();
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		return b.getTranslationKey();
 	}
 }
