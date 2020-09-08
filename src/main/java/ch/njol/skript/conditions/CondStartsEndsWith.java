@@ -34,9 +34,9 @@ import ch.njol.util.Kleenean;
 
 @Name("Starts/Ends With")
 @Description("Checks if a text starts or ends with another.")
-@Examples({"if the argument starts with \"test\":",
+@Examples({"if the argument starts with \"test\" or \"debug\":",
 	"	send \"Stop!\""})
-@Since("2.2-dev36")
+@Since("2.2-dev36, INSERT VERSION (multiple strings support)")
 public class CondStartsEndsWith extends Condition {
 	
 	static {
@@ -73,6 +73,7 @@ public class CondStartsEndsWith extends Condition {
 							if (!string.endsWith(str))
 								return false;
 						}
+						return true;
 					} else {
 						for (String str : affixes) {
 							if (string.endsWith((str)))
@@ -84,13 +85,14 @@ public class CondStartsEndsWith extends Condition {
 						if (!string.startsWith(str))
 							return false;
 					}
+					return true;
 				} else {
 					for (String str : affixes) {
 						if (string.startsWith((str)))
 							return true;
 					}
 				}
-				return true;
+				return false;
 			},
 			isNegated());
 	}
