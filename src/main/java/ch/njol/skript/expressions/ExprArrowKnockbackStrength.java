@@ -64,7 +64,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		int strength = delta != null ? Math.max(((Number) delta[0]).intValue(), 0) : 0;
+		int strength = delta != null ? ((Number) delta[0]).intValue() : 0;
 		switch (mode) {
 			case REMOVE:
 				if (abstractArrowExists)
@@ -81,7 +81,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 						if (entity instanceof Arrow) {
 							Arrow arrow = (Arrow) entity;
 							int dmg = arrow.getKnockbackStrength() - strength;
-							if (dmg < 0) dmg = 0;
+							if (dmg < 0) return;
 							arrow.setKnockbackStrength(dmg);
 						}
 					}
@@ -92,7 +92,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 						if (entity instanceof AbstractArrow) {
 							AbstractArrow abstractArrow = (AbstractArrow) entity;
 							int dmg = abstractArrow.getKnockbackStrength() + strength;
-							if (dmg < 0) dmg = 0;
+							if (dmg < 0) return;
 							abstractArrow.setKnockbackStrength(dmg);
 						}
 					}
@@ -101,7 +101,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 						if (entity instanceof Arrow) {
 							Arrow arrow = (Arrow) entity;
 							int dmg = arrow.getKnockbackStrength() + strength;
-							if (dmg < 0) dmg = 0;
+							if (dmg < 0) return;
 							arrow.setKnockbackStrength(dmg);
 						}
 					}
