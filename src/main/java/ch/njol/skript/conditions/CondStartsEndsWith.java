@@ -1,18 +1,18 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Copyright 2011-2017 Peter Güttinger and contributors
@@ -35,14 +35,14 @@ import ch.njol.util.Kleenean;
 @Name("Starts/Ends With")
 @Description("Checks if a text starts or ends with another.")
 @Examples({"if the argument starts with \"test\":",
-		"	send \"Stop!\""})
+	"	send \"Stop!\""})
 @Since("2.2-dev36")
 public class CondStartsEndsWith extends Condition {
 	
 	static {
 		Skript.registerCondition(CondStartsEndsWith.class,
-				"%strings% (start|1¦end)[s] with %string%",
-				"%strings% (doesn't|does not|do not|don't) (start|1¦end) with %string%");
+			"%strings% (start|1¦end)[s] with %strings%",
+			"%strings% (doesn't|does not|do not|don't) (start|1¦end) with %strings%");
 	}
 	
 	@SuppressWarnings("null")
@@ -63,15 +63,36 @@ public class CondStartsEndsWith extends Condition {
 	
 	@Override
 	public boolean check(Event e) {
-		String affix = this.affix.getSingle(e);
-		
-		if (affix == null) {
-			return false;
-		}
-		
+		String[] affixes = this.affix.getAll(e);
+		if (affixes.length < 1) return false;
 		return strings.check(e,
-				string -> usingEnds ? string.endsWith(affix) : string.startsWith(affix),
-				isNegated());
+			string -> {
+				if (usingEnds) {
+					if (this.affix.getAnd()) {
+						for (String str : affixes) {
+							if (!string.endsWith(str))
+								return false;
+						}
+					} else {
+						for (String str : affixes) {
+							if (string.endsWith((str)))
+								return true;
+						}
+					}
+				} else if (this.affix.getAnd()) {
+					for (String str : affixes) {
+						if (!string.startsWith(str))
+							return false;
+					}
+				} else {
+					for (String str : affixes) {
+						if (string.startsWith((str)))
+							return true;
+					}
+				}
+				return false;
+			},
+			isNegated());
 	}
 	
 	@Override
