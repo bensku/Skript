@@ -57,14 +57,14 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprCommandInfo.class, String.class, ExpressionType.SIMPLE,
-			"[the] main [command] [name] of command %strings%", "command %strings%'s main [command] [name]",
-			"[the] description of command %strings%", "command %strings%'s description",
-			"[the] label of command %strings%", "command %strings%'s label",
-			"[the] usage of command %strings%", "command %strings%'s usage",
-			"[the] aliases of command %strings%", "command %strings%'s aliases",
-			"[the] permission of command %strings%", "command %strings%'s permission",
-			"[the] permission message of command %strings%", "command %strings%'s permission message",
-			"[the] plugin [owner] of command %strings%", "command %strings%'s plugin [owner]");
+			"[the] main command [label] of command %strings%", "command %strings%'[s] main command [name]",
+			"[the] description of command %strings%", "command %strings%'[s] description",
+			"[the] label of command %strings%", "command %strings%'[s] label",
+			"[the] usage of command %strings%", "command %strings%'[s] usage",
+			"[the] aliases of command %strings%", "command %strings%'[s] aliases",
+			"[the] permission of command %strings%", "command %strings%'[s] permission",
+			"[the] permission message of command %strings%", "command %strings%'[s] permission message",
+			"[the] plugin [owner] of command %strings%", "command %strings%'[s] plugin [owner]");
 	}
 	
 	@SuppressWarnings("null")
