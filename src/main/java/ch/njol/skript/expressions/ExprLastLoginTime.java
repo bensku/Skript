@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 	"\ttrigger:",
 	"\t\tsend \"You have been online for %difference between player's last login and now%.\"",
 	"\t\tsend \"You first joined the server %difference between player's first login and now% ago.\""})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprLastLoginTime extends SimplePropertyExpression<OfflinePlayer, Date> {
 	
 	private static boolean LAST_LOGIN = Skript.methodExists(OfflinePlayer.class, "getLastLogin");

@@ -318,6 +318,11 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
+	public boolean applyBoneMeal(BlockFace blockFace) {
+		return state.getBlock().applyBoneMeal(blockFace);
+	}
+	
+	@Override
 	public Collection<ItemStack> getDrops() {
 		assert false;
 		return Collections.emptySet();
@@ -434,5 +439,10 @@ public class BlockStateBlock implements Block {
 	@Override
 	public BlockSoundGroup getSoundGroup() {
 		return state.getBlock().getSoundGroup();
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		return state.getBlock().getTranslationKey();
 	}
 }
