@@ -46,7 +46,7 @@ import ch.njol.util.Kleenean;
 @RequiredPlugins("Minecraft 1.13 or newer")
 @Events("block fertilize")
 @Examples("the fertilized blocks")
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprFertilizedBlocks extends SimpleExpression<BlockStateBlock> {
 	
 	static {
