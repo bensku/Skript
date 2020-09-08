@@ -143,4 +143,5 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	public Class<? extends Vector> getReturnType() {
 		return Vector.class;
 	}
+	
 }
