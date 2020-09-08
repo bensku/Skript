@@ -57,7 +57,7 @@ commands:
         permission: skript.admin
         usage: /skript help
 
-soft-depend: [SQLibrary, Vault, WorldGuard, Residence, PreciousStones]
+softdepend: [SQLibrary, Vault, WorldGuard, Residence, PreciousStones]
 
 permissions:
     skript.*:
