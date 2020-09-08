@@ -90,7 +90,7 @@ public class CondStartsEndsWith extends Condition {
 							return true;
 					}
 				}
-				return false;
+				return true;
 			},
 			isNegated());
 	}
