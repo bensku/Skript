@@ -75,6 +75,21 @@ public class InventorySlot extends SlotWithIndex {
 	}
 	
 	@Override
+	public int getAmount() {
+		ItemStack item = invi.getItem(index);
+		return item != null ? item.getAmount() : 0;
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		ItemStack item = invi.getItem(index);
+		if (item != null)
+			item.setAmount(amount);
+		if (invi instanceof PlayerInventory)
+			PlayerUtils.updateInventory((Player) invi.getHolder());
+	}
+	
+	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		InventoryHolder holder = invi.getHolder();
 		
