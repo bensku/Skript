@@ -1087,6 +1087,12 @@ entities:
 	vindicator:
 		name: vindicator¦s
 		pattern: vindicator(|1¦s)
+	illager:
+		name: illager¦s
+		pattern: illager(|1¦s)
+	spellcaster:
+		name: spellcaster¦s
+		pattern: spellcaster(|1¦s)
 	parrot:
 		name: parrot¦s
 		pattern: parrot(|1¦s)
@@ -1207,6 +1213,10 @@ entities:
 	strider:
 		name: strider¦s
 		pattern: <age> strider(|1¦s)|(4¦)strider (kid(|1¦s)|child(|1¦ren))
+	#1.16.2 entity
+	piglin brute:
+		name: piglin brute¦s
+		pattern: <age> piglin brute(|1¦s)|(4¦)piglin brute (kid(|1¦s)|child(|1¦ren))
 
 # -- Heal Reasons --
 heal reasons:
@@ -1481,6 +1491,9 @@ visual effects:
 	block_dust:
 		name: block dust @-
 		pattern: [sprinting] dust of [%itemtype%]
+	falling_dust:
+		name: falling dust @-
+		pattern: falling dust of [%itemtype%]
 	totem:
 		name: totem @-
 		pattern: totem

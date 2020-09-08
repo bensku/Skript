@@ -185,6 +185,20 @@ public class EquipmentSlot extends SlotWithIndex {
 			PlayerUtils.updateInventory((Player) e.getHolder());
 	}
 	
+	@Override
+	public int getAmount() {
+		ItemStack item = slot.get(e);
+		return item != null ? item.getAmount() : 0;
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		ItemStack item = slot.get(e);
+		if (item != null)
+			item.setAmount(amount);
+		slot.set(e, item);
+	}
+	
 	/**
 	 * Gets underlying armor slot enum.
 	 * @return Armor slot.
