@@ -37,6 +37,10 @@ public abstract class Slot implements Debuggable {
 	
 	public abstract void setItem(final @Nullable ItemStack item);
 	
+	public abstract int getAmount();
+	
+	public abstract void setAmount(int amount);
+	
 	@Override
 	public final String toString() {
 		return toString(null, false);
