@@ -318,6 +318,11 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
+	public boolean applyBoneMeal(BlockFace blockFace) {
+		return b.applyBoneMeal(blockFace);
+	}
+	
+	@Override
 	public Collection<ItemStack> getDrops() {
 		return b.getDrops();
 	}
@@ -375,7 +380,7 @@ public class DelayedChangeBlock implements Block {
 		if (newState != null) {
 			newState.setBlockData(data);
 		} else {
-			b.setBlockData(data, applyPhysics);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> b.setBlockData(data, applyPhysics));
 		}
 	}
 	
@@ -398,5 +403,10 @@ public class DelayedChangeBlock implements Block {
 	@Override
 	public BlockSoundGroup getSoundGroup() {
 		return b.getSoundGroup();
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		return b.getTranslationKey();
 	}
 }
