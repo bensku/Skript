@@ -49,6 +49,14 @@ public class ItemFrameSlot extends Slot {
 	}
 	
 	@Override
+	public int getAmount() {
+		return 1;
+	}
+	
+	@Override
+	public void setAmount(int amount) {}
+	
+	@Override
 	public boolean isSameSlot(Slot o) {
 		if (o instanceof ItemFrameSlot) // Same item frame
 			return ((ItemFrameSlot) o).frame.equals(frame);

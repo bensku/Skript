@@ -37,7 +37,7 @@ import ch.njol.util.Kleenean;
 @Name("Stop Server")
 @Description("Stops or restarts the server. If restart is used when the restart-script spigot.yml option isn't defined, the server will stop instead.")
 @Examples({"stop the server", "restart server"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class EffStopServer extends Effect {
 	
 	static {
