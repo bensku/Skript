@@ -31,7 +31,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Roman Numeral")
-@Description("The Roman Numeral of an Arabic Numeral. Even though the usual maximum roman number is 3999 we added 'H' and 'G' respectively for the 10000 and 5000 numbers, to make the maximum be 49,999.")
+@Description("The Roman Numeral of an Arabic Numeral. Even though the usual maximum roman number is 3999 we added 'H' and 'G' respectively for the 10000 and 5000 numbers, to increase the maximum number.")
 @Examples("set {_r} to roman numeral of 49")
 @Since("INSERT VERSION")
 public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
@@ -54,7 +54,7 @@ public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
 	
 	@Nullable
 	public static String toRoman(int number) {
-		if (number >= 50000 || number < 1) return null;
+		if (number >= 40000 || number < 1) return null;
 		int significantDigit = 1;
 		while (number >= significantDigit) significantDigit *= 10;
 		significantDigit /= 10;

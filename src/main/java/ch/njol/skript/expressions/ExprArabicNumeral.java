@@ -30,7 +30,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Arabic Numeral")
-@Description("The Arabic Numeral of a Roman Numeral")
+@Description("The Arabic Numeral of a Roman Numeral. Even though the usual maximum roman number is 3999 we added 'H' and 'G' respectively for the 10000 and 5000 numbers, to increase the maximum number.")
 @Examples("set {_r} to arabic numeral of \"XVI\"")
 @Since("INSERT VERSION")
 public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> {
@@ -51,15 +51,16 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 		register(ExprArabicNumeral.class, Number.class, "arabic num(ber|eral)", "string");
 	}
 	
-	public static int toArabic(String n) {
-		if (!n.matches("[HGMDCLXVI]+")) return 0;
+	public static Number toArabic(String n) {
+		if (!n.matches("[HGMDCLXVI]+")) return null;
 		int previous = 0;
 		int result = 0;
-		int length = n.length();
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < n.length(); i++) {
 			Integer num = map.get(n.charAt(i));
-			if (num > previous) result += num - previous * 2;
-			else result += num;
+			if (num > previous)
+				result += num - previous * 2;
+			else
+				result += num;
 			previous = num;
 		}
 		return result;
