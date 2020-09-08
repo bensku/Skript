@@ -53,7 +53,17 @@ public class CursorSlot extends Slot {
 		player.setItemOnCursor(item);
 		PlayerUtils.updateInventory(player);
 	}
-
+	
+	@Override
+	public int getAmount() {
+		return player.getItemOnCursor().getAmount();
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		player.getItemOnCursor().setAmount(amount);
+	}
+	
 	@Override
 	public boolean isSameSlot(Slot o) {
 		if (!(o instanceof CursorSlot))
