@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-
+    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')" 
     runs-on: ubuntu-latest
 
     steps:

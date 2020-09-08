@@ -42,6 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -420,33 +421,10 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 		assert loc != null;
 		try {
 			final E e = loc.getWorld().spawn(loc, getType());
-			if (baby.isTrue()) {
-				if (e instanceof Ageable)
-					((Ageable) e).setBaby();
-				else if (e instanceof Zombie)
-					((Zombie) e).setBaby(true);
-				else if (e instanceof PigZombie)
-					((PigZombie) e).setBaby(true);
-				else if (Skript.isRunningMinecraft(1, 16)) {
-					if (e instanceof Piglin)
-						((Piglin) e).setBaby(true);
-					else if (e instanceof Zoglin)
-						((Zoglin) e).setBaby(true);
-				}
-			} else if (baby.isFalse()) {
-				if (e instanceof Ageable)
-					((Ageable) e).setAdult();
-				else if (e instanceof Zombie)
-					((Zombie) e).setBaby(false);
-				else if (e instanceof PigZombie)
-					((PigZombie) e).setBaby(false);
-				else if (Skript.isRunningMinecraft(1, 16)) {
-					if (e instanceof Piglin)
-						((Piglin) e).setBaby(false);
-					else if (e instanceof Zoglin)
-						((Zoglin) e).setBaby(false);
-				}
-			}
+			if (baby.isTrue())
+				EntityUtils.setBaby(e);
+			else if (baby.isFalse())
+				EntityUtils.setAdult(e);
 			set(e);
 			return e;
 		} catch (final IllegalArgumentException e) {
@@ -577,7 +555,7 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 	public final boolean isInstance(final @Nullable Entity e) {
 		if (e == null)
 			return false;
-		if (!baby.isUnknown() && e instanceof Ageable && ((Ageable) e).isAdult() != baby.isFalse())
+		if (!baby.isUnknown() && EntityUtils.isAgeable(e) && EntityUtils.isAdult(e) != baby.isFalse())
 			return false;
 		return getType().isInstance(e) && match((E) e);
 	}
