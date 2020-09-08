@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 @Examples({"on heal:",
 	"\tif heal reason = satiated:",
 	"\t\tsend \"You ate enough food and gained health back!\" to player"})
-@Since("INSERT VERSION")
+@Since("2.5")
 public class ExprHealReason extends SimpleExpression<RegainReason> {
 	
 	static {
