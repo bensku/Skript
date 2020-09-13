@@ -22,6 +22,8 @@ package ch.njol.skript.bukkitutil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.bukkit.entity.AbstractArrow;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
@@ -35,6 +37,25 @@ import ch.njol.skript.Skript;
 @SuppressWarnings("null")
 public abstract class ProjectileUtils {
 	private ProjectileUtils() {}
+	
+	private final static boolean ABSTRACT_ARROW_EXISTS = Skript.classExists("org.bukkit.entity.AbstractArrow");
+	
+	public static void setDamage(Projectile arrow, double damage) {
+		if (ABSTRACT_ARROW_EXISTS && arrow instanceof AbstractArrow) {
+			((AbstractArrow) arrow).setDamage(damage);
+		} else if (arrow instanceof Arrow) {
+			((Arrow) arrow).setDamage(damage);
+		}
+	}
+	
+	public static Double getDamage(Projectile arrow){
+		if (ABSTRACT_ARROW_EXISTS && arrow instanceof AbstractArrow) {
+			return ((AbstractArrow) arrow).getDamage();
+		} else if (arrow instanceof Arrow) {
+			return ((Arrow) arrow).getDamage();
+		}
+		return null;
+	}
 	
 	private static Method getShooter, setShooter;
 	static {

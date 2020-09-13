@@ -19,13 +19,11 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.ProjectileUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -42,19 +40,15 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("INSERT VERSION")
 public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number> {
 	
-	private final static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
 	
 	static {
-		if (abstractArrowExists || Skript.methodExists(Arrow.class, "getDamage"))
 			register(ExprArrowDamage.class, Number.class, "[the] arrow damage", "projectiles");
 	}
 	
 	@Nullable
 	@Override
 	public Number convert(Projectile arrow) {
-		if (abstractArrowExists)
-			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).getDamage() : null;
-		return arrow instanceof Arrow ? ((Arrow) arrow).getDamage() : null;
+		return ProjectileUtils.getDamage(arrow);
 	}
 	
 	@Nullable
@@ -79,36 +73,17 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 			case REMOVE:
 				mod = -1;
 			case ADD:
-				if (abstractArrowExists) {
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof AbstractArrow) {
-							AbstractArrow abstractArrow = (AbstractArrow) entity;
-							double dmg = abstractArrow.getDamage() + strength * mod;
-							if (dmg < 0)
-								dmg = 0;
-							abstractArrow.setDamage(dmg);
-						}
-					}
-				} else {
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof Arrow) {
-							Arrow arrow = (Arrow) entity;
-							double dmg = arrow.getDamage() + strength * mod;
-							if (dmg < 0)
-								dmg = 0;
-							arrow.setDamage(dmg);
-						}
-					}
+				for(Projectile entity: getExpr().getArray(e)){
+					double dmg = ProjectileUtils.getDamage(entity) + strength * mod;
+					if(dmg < 0)
+						dmg = 0;
+					ProjectileUtils.setDamage(entity, dmg);
 				}
 				break;
 			case RESET:
 			case SET:
-				for (Projectile entity : getExpr().getArray(e)) {
-					if (abstractArrowExists) {
-						if (entity instanceof AbstractArrow) ((AbstractArrow) entity).setDamage(strength);
-					} else if (entity instanceof Arrow) {
-						((Arrow) entity).setDamage(strength);
-					}
+				for(Projectile entity: getExpr().getArray(e)){
+					ProjectileUtils.setDamage(entity, strength);
 				}
 				break;
 		}
