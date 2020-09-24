@@ -576,7 +576,7 @@ public class SimpleEvents {
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
 		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
-			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "[player] item mend[ing]")
+			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "item mend[ing]")
 				.description("Called when a player has an item repaired via the Mending enchantment.")
 				.requiredPlugins("Minecraft 1.13 or newer")
 				.examples("on item mend:",

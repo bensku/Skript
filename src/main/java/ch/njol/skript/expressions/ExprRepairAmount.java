@@ -39,7 +39,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Repair Amount")
-@Description("The number of durability points an item is to be repaired in a mending event.")
+@Description({"The number of durability points an item is to be repaired in a mending event.",
+			" Modifying the repair amount will affect how much experience is given to the player after mending."})
 @Examples({"on item mend:",
 		"\tset the repair amount to 100"})
 @Since("2.0")
