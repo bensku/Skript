@@ -43,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 			" Modifying the repair amount will affect how much experience is given to the player after mending."})
 @Examples({"on item mend:",
 		"\tset the mending repair amount to 100"})
-@Since("2.0")
+@Since("INSERT VERSION")
 public class ExprMendingRepairAmount extends SimpleExpression<Number> {
 
 	static {
