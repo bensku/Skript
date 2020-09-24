@@ -38,22 +38,22 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Repair Amount")
+@Name("Mending Repair Amount")
 @Description({"The number of durability points an item is to be repaired in a mending event.",
 			" Modifying the repair amount will affect how much experience is given to the player after mending."})
 @Examples({"on item mend:",
-		"\tset the repair amount to 100"})
+		"\tset the mending repair amount to 100"})
 @Since("2.0")
-public class ExprRepairAmount extends SimpleExpression<Number> {
+public class ExprMendingRepairAmount extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprRepairAmount.class, Number.class, ExpressionType.SIMPLE, "[the] repair amount");
+		Skript.registerExpression(ExprMendingRepairAmount.class, Number.class, ExpressionType.SIMPLE, "[the] [mending] repair amount");
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PlayerItemMendEvent.class)) {
-			Skript.error("The 'repair amount' is only usable in item mend events", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The 'mending repair amount' is only usable in item mend events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -86,10 +86,13 @@ public class ExprRepairAmount extends SimpleExpression<Number> {
 		switch (mode) {
 			case SET:
 				e.setRepairAmount(newLevel);
+				break;
 			case ADD:
 				e.setRepairAmount(e.getRepairAmount() + newLevel);
+				break;
 			case REMOVE:
 				e.setRepairAmount(e.getRepairAmount() - newLevel);
+				break;
 			default:
 				assert false;
 		}
@@ -107,7 +110,7 @@ public class ExprRepairAmount extends SimpleExpression<Number> {
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "the repair amount";
+		return "the mending repair amount";
 	}
 
 }
