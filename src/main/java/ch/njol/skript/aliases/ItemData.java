@@ -79,6 +79,8 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static final MaterialRegistry materialRegistry;
 	
+	private static final boolean SPAWN_EGG_META_EXISTS = Skript.classExists("org.bukkit.inventory.meta.SpawnEggMeta");
+	
 	// Load or create material registry
 	static {
 		Gson gson = new GsonBuilder().serializeNulls().create();
@@ -439,7 +441,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		}
 		
 		// Only check spawn egg data on 1.12 and below. See issue #3167
-		if (!MaterialRegistry.newMaterials && second instanceof SpawnEggMeta) {
+		if (!MaterialRegistry.newMaterials && SPAWN_EGG_META_EXISTS && second instanceof SpawnEggMeta) {
 			if (!(first instanceof SpawnEggMeta)) {
 				return MatchQuality.DIFFERENT; // Second is a spawn egg, first is clearly not
 			}
