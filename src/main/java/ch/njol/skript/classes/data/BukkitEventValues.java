@@ -93,6 +93,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
@@ -1138,5 +1139,29 @@ public final class BukkitEventValues {
 				return e.getEnchantBlock();
 			}
 		}, 0);
+		//PlayerItemMendEvent
+		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
+			EventValues.registerEventValue(PlayerItemMendEvent.class, Player.class, new Getter<Player, PlayerItemMendEvent>() {
+				@Override
+				@Nullable
+				public Player get(PlayerItemMendEvent e) {
+					return e.getPlayer();
+				}
+			}, 0);
+			EventValues.registerEventValue(PlayerItemMendEvent.class, ItemType.class, new Getter<ItemType, PlayerItemMendEvent>() {
+				@Override
+				@Nullable
+				public ItemType get(PlayerItemMendEvent e) {
+					return new ItemType(e.getItem());
+				}
+			}, 0);
+			EventValues.registerEventValue(PlayerItemMendEvent.class, Entity.class, new Getter<Entity, PlayerItemMendEvent>() {
+				@Override
+				@Nullable
+				public Entity get(PlayerItemMendEvent e) {
+					return e.getExperienceOrb();
+				}
+			}, 0);
+		}
 	}
 }
