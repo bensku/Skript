@@ -36,11 +36,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -76,6 +78,8 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
 	static final MaterialRegistry materialRegistry;
+	
+	private static final boolean SPAWN_EGG_META_EXISTS = Skript.classExists("org.bukkit.inventory.meta.SpawnEggMeta");
 	
 	// Load or create material registry
 	static {
@@ -335,7 +339,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			}
 		}
 		
-		/**
+		/*
 		 * Initially, expect exact match. Lower expectations as new differences
 		 * between items are discovered.
 		 */
@@ -434,6 +438,17 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			PotionData ourPotion = ((PotionMeta) first).getBasePotionData();
 			PotionData theirPotion = ((PotionMeta) second).getBasePotionData();
 			return !Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Only check spawn egg data on 1.12 and below. See issue #3167
+		if (!MaterialRegistry.newMaterials && SPAWN_EGG_META_EXISTS && second instanceof SpawnEggMeta) {
+			if (!(first instanceof SpawnEggMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a spawn egg, first is clearly not
+			}
+			// Compare spawn egg spawned type
+			EntityType ourSpawnedType = ((SpawnEggMeta) first).getSpawnedType();
+			EntityType theirSpawnedType = ((SpawnEggMeta) second).getSpawnedType();
+			return !Objects.equals(ourSpawnedType, theirSpawnedType) ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		return quality;
