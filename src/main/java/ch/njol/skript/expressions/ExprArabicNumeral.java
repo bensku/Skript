@@ -58,7 +58,7 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 		int result = 0;
 		for (int i = 0; i < n.length(); i++) {
 			Integer num = map.get(n.charAt(i));
-			result += num - (num > previous ? previous * 2 : 0);
+			result += num - (num >= previous ? previous * 2 : 0);
 			previous = num;
 		}
 		return result;
