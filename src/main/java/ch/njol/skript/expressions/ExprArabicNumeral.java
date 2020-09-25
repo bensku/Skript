@@ -51,16 +51,14 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 		register(ExprArabicNumeral.class, Number.class, "arabic num(ber|eral)", "string");
 	}
 	
+	@Nullable
 	public static Number toArabic(String n) {
 		if (!n.matches("[HGMDCLXVI]+")) return null;
 		int previous = 0;
 		int result = 0;
 		for (int i = 0; i < n.length(); i++) {
 			Integer num = map.get(n.charAt(i));
-			if (num > previous)
-				result += num - previous * 2;
-			else
-				result += num;
+			result += num - (num > previous ? previous * 2 : 0);
 			previous = num;
 		}
 		return result;
