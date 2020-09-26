@@ -52,12 +52,14 @@ import ch.njol.util.Kleenean;
 @Since("2.0, INSERT VERSION (Support for the unknown command event)")
 @Events("command")
 public class ExprCommand extends SimpleExpression<String> {
+	
 	private final static int FULL = 0, LABEL = 1, ARGS = 2;
 	private final static boolean UNKNOWN_COMMAND_SUPPORTED = Skript.classExists("org.bukkit.event.command.UnknownCommandEvent");
 	
 	static {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
-			"[the] (full|complete|whole) command", "[the] command [label]", "[the] arguments");
+			"[the] (full|complete|whole) command",
+			"[the] command [label]", "[the] arguments");
 	}
 	
 	private int what;

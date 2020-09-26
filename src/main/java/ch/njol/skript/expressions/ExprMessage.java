@@ -116,7 +116,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		if(delta == null)
+		if (delta == null)
 			return;
 		Class<? extends Event>[] events = type.getEvents();
 		for (Class<? extends Event> evt : events) {
