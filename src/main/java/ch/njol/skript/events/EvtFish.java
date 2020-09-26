@@ -69,13 +69,7 @@ public class EvtFish extends SkriptEvent {
 	@Override
 	public boolean check(Event e) {
 		if (e instanceof PlayerFishEvent) {
-			if (states != null) {
-				PlayerFishEvent evt = (PlayerFishEvent) e;
-				if (Arrays.asList(states.getArray()).contains(evt.getState()))
-					return true;
-			} else {
-				return true;
-			}
+			return states == null || (states != null && Arrays.asList(states.getArray()).contains(((PlayerFishEvent) e).getState()));
 		}
 		return false;
 	}
