@@ -51,7 +51,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	
 	static {
 		Skript.registerExpression(ExprDropsOfBlock.class, ItemType.class, ExpressionType.COMBINED,
-			"drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]",
+			"[(all|all [of] the)] drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]",
 			"%blocks%'s drops [(using|with) %-itemtype% [(1¦as %-entity%)]]");
 	}
 	
