@@ -186,14 +186,14 @@ public class ExprBlocks extends SimpleExpression<Block> {
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final Expression<Location> end = this.end;
-		if (chunk != null)
+		if (chunk != null) {
 			return "blocks within chunk " + chunk.toString(e, debug);
-		else if (pattern == 4) {
+		} else if (pattern == 4) {
 			assert end != null;
 			return "blocks within " + from.toString(e, debug) + " and " + end.toString(e, debug);
-		} else if (end != null)
+		} else if (end != null) {
 			return "blocks from " + from.toString(e, debug) + " to " + end.toString(e, debug);
-		else {
+		} else {
 			final Expression<Direction> direction = this.direction;
 			assert direction != null;
 			return "block" + (isSingle() ? "" : "s") + " " + direction.toString(e, debug) + " " + from.toString(e, debug);
