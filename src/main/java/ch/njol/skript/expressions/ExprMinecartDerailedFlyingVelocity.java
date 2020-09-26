@@ -103,6 +103,8 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 							}
 						}
 						break;
+					default:
+						assert false;
 				}
 			} else {
 				switch (mode) {
@@ -128,6 +130,8 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 							}
 						}
 						break;
+					default:
+						assert false;
 				}
 			}
 		}
