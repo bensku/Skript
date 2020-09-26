@@ -86,7 +86,6 @@ public class ExprMessage extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	private MessageType type;
 	
-	
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
