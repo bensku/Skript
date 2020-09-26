@@ -91,12 +91,12 @@ public class InventorySlot extends SlotWithIndex {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		InventoryHolder holder = invi.getHolder();
+		InventoryHolder holder = invi != null ? invi.getHolder() : null;
 		
 		if (holder instanceof BlockState)
 			holder = new BlockInventoryHolder((BlockState) holder);
 		
-		if (invi.getHolder() != null) {
+		if (holder != null) {
 			if (invi instanceof CraftingInventory) // 4x4 crafting grid is contained in player too!
 				return "crafting slot " + index + " of " + Classes.toString(holder);
 			
