@@ -45,7 +45,9 @@ import ch.njol.util.Kleenean;
 public class CondMatches extends Condition {
 	
 	static {
-		Skript.registerCondition(CondMatches.class, "%strings% (1¦match[es]|2¦do[es](n't| not) match) %strings%");
+		Skript.registerCondition(CondMatches.class,
+			"%strings% (1¦match[es]|2¦do[es](n't| not) match) %strings%",
+			"%strings% (1¦partially match[es]|2¦do[es](n't| not) partially match) %strings%");
 	}
 	
 	@SuppressWarnings("null")
@@ -53,11 +55,14 @@ public class CondMatches extends Condition {
 	@SuppressWarnings("null")
 	Expression<String> regex;
 	
+	boolean partial;
+	
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		strings = (Expression<String>) exprs[0];
 		regex = (Expression<String>) exprs[1];
+		partial = matchedPattern == 1;
 		setNegated(parseResult.mark == 1);
 		return true;
 	}
@@ -72,16 +77,20 @@ public class CondMatches extends Condition {
 		boolean regexAnd = regex.getAnd();
 		if (stringAnd) {
 			if (regexAnd) {
-				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> matches(str, pattern))));
 			} else {
-				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+				result = Arrays.stream(txt).allMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> matches(str, pattern))));
 			}
 		} else if (regexAnd) {
-			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> pattern.matcher(str).find())));
+			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).allMatch((pattern -> matches(str, pattern))));
 		} else {
-			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> pattern.matcher(str).find())));
+			result = Arrays.stream(txt).anyMatch((str) -> Arrays.stream(regexes).parallel().map(Pattern::compile).anyMatch((pattern -> matches(str, pattern))));
 		}
 		return result == isNegated();
+	}
+	
+	public boolean matches(String str, Pattern pattern) {
+		return partial ? pattern.matcher(str).find() : str.matches(pattern.pattern());
 	}
 	
 	@Override
