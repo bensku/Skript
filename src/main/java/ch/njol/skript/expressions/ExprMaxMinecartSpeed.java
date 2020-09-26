@@ -91,6 +91,8 @@ public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Numbe
 					}
 				}
 				break;
+			default:
+				assert false;
 		}
 	}
 	
