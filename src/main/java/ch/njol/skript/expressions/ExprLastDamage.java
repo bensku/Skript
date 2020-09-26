@@ -75,6 +75,8 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 					for (LivingEntity entity : getExpr().getArray(e))
 						entity.setLastDamage((Long) delta[0] * mod + entity.getLastDamage());
 					break;
+				default:
+					assert false;
 			}
 		}
 	}
