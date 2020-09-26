@@ -56,6 +56,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	}
 	
 	private boolean regex;
+	
 	private boolean join;
 	
 	@SuppressWarnings("null")
