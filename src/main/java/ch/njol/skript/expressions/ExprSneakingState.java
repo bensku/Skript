@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -50,15 +50,15 @@ public class ExprSneakingState extends SimplePropertyExpression<Player, Boolean>
 	
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET)
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
 			return CollectionUtils.array(Boolean.class);
 		return null;
 	}
 	
 	@Override
-	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		boolean state = mode != Changer.ChangeMode.RESET && delta != null && (boolean) delta[0];
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		boolean state = mode != ChangeMode.RESET && delta != null && (boolean) delta[0];
 		for (Player player : getExpr().getArray(event))
 			player.setSneaking(state);
 	}
