@@ -71,8 +71,9 @@ public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Nu
 			case REMOVE:
 			case RESET:
 				return CollectionUtils.array(Number.class);
+			default:
+				return null;
 		}
-		return null;
 	}
 	
 	@Override
