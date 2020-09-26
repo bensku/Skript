@@ -32,7 +32,7 @@ import ch.njol.skript.Skript;
  */
 public class MaterialRegistry {
 	
-	private static final boolean newMaterials = Skript.isRunningMinecraft(1, 13);
+	static final boolean newMaterials = Skript.isRunningMinecraft(1, 13);
 	
 	/**
 	 * Loads a material registry from an array of strings. New materials will
