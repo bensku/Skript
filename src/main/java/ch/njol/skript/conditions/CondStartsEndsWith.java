@@ -68,7 +68,7 @@ public class CondStartsEndsWith extends Condition {
 			return false;
 		return strings.check(e,
 			string -> {
-				if (usingEnds) {
+				if (usingEnds) { // Using 'ends with'
 					if (this.affix.getAnd()) {
 						for (String str : affixes) {
 							if (!string.endsWith(str))
@@ -81,16 +81,18 @@ public class CondStartsEndsWith extends Condition {
 								return true;
 						}
 					}
-				} else if (this.affix.getAnd()) {
-					for (String str : affixes) {
-						if (!string.startsWith(str))
-							return false;
-					}
-					return true;
-				} else {
-					for (String str : affixes) {
-						if (string.startsWith((str)))
-							return true;
+				} else { // Using 'starts with'
+					if (this.affix.getAnd()) {
+						for (String str : affixes) {
+							if (!string.startsWith(str))
+								return false;
+						}
+						return true;
+					} else {
+						for (String str : affixes) {
+							if (string.startsWith((str)))
+								return true;
+						}
 					}
 				}
 				return false;
