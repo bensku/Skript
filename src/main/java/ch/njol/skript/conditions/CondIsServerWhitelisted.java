@@ -56,7 +56,6 @@ public class CondIsServerWhitelisted extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		
 		return "server is " + (isNegated() ? "not" : "") + "  whitelisted";
 	}
 	
