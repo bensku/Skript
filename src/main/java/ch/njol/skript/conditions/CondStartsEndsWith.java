@@ -35,7 +35,7 @@ import ch.njol.util.Kleenean;
 @Name("Starts/Ends With")
 @Description("Checks if a text starts or ends with another.")
 @Examples({"if the argument starts with \"test\" or \"debug\":",
-	"	send \"Stop!\""})
+	"\tsend \"Stop!\""})
 @Since("2.2-dev36, INSERT VERSION (multiple strings support)")
 public class CondStartsEndsWith extends Condition {
 	
@@ -64,7 +64,8 @@ public class CondStartsEndsWith extends Condition {
 	@Override
 	public boolean check(Event e) {
 		String[] affixes = this.affix.getAll(e);
-		if (affixes.length < 1) return false;
+		if (affixes.length < 1)
+			return false;
 		return strings.check(e,
 			string -> {
 				if (usingEnds) {
