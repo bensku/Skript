@@ -50,6 +50,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
+
 /**
  * @author Peter Güttinger
  */
