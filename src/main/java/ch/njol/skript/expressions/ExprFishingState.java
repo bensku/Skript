@@ -49,4 +49,5 @@ public class ExprFishingState extends EventValueExpression<PlayerFishEvent.State
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the fishing state";
 	}
+	
 }

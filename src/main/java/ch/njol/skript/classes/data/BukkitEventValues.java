@@ -1146,7 +1146,7 @@ public final class BukkitEventValues {
 			@Nullable
 			public Entity get(PlayerFishEvent e) {
 				Entity entity = e.getCaught();
-				return entity != null ? entity : null;
+				return entity;
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerFishEvent.class, PlayerFishEvent.State.class, new Getter<PlayerFishEvent.State, PlayerFishEvent>() {

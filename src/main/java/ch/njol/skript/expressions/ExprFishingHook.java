@@ -65,4 +65,5 @@ public class ExprFishingHook extends EventValueExpression<FishHook> {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the fishing hook";
 	}
+	
 }

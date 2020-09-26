@@ -86,4 +86,5 @@ public class EvtFish extends SkriptEvent {
 			return "fishing";
 		return "fishing states of " + states.toString(e, debug);
 	}
+	
 }
