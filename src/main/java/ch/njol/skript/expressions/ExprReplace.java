@@ -51,7 +51,7 @@ import ch.njol.util.Kleenean;
 public class ExprReplace extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED,
-				"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%",
+				"replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string% [(4¦with case sensitivity)]",
 				"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string%");
 	}
 	

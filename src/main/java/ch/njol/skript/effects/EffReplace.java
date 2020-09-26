@@ -57,8 +57,8 @@ import ch.njol.util.Kleenean;
 public class EffReplace extends Effect {
 	static {
 		Skript.registerEffect(EffReplace.class,
-			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
-			"[(4¦case-sensitive)] replace (1¦first|2¦last|0¦all|every|) %strings% in %strings% with %string%",
+			"replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings% [(4¦with case sensitivity)]",
+			"replace (1¦first|2¦last|0¦all|every|) %strings% in %strings% with %string% [(4¦with case sensitivity)]",
 			"regex replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %strings%",
 			"replace (all|every|) %itemtypes% in %inventories% with %itemtype%",
 			"replace (all|every|) %itemtypes% with %itemtype% in %inventories%"
