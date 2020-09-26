@@ -1780,7 +1780,6 @@ public class BukkitClasses {
 				.since("INSERT VERSION")
 				.requiredPlugins("Minecraft 1.14+")
 				.parser(new Parser<Villager.Type>() {
-					
 					@Nullable
 					@Override
 					public Villager.Type parse(String s, ParseContext context) {
