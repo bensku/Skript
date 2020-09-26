@@ -41,7 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"if chunk at {home::%player's uuid%} is loaded:",
 		"if chunk 1, 10 in world \"world\" is loaded:",
 		"if world(\"lobby\") is loaded:"})
-@Since("2.3, INSERT VERSION (revamp with chunk at location/coords)")
+@Since("2.3, 2.5 (revamp with chunk at location/coords)")
 public class CondIsLoaded extends Condition {
 	
 	static {
