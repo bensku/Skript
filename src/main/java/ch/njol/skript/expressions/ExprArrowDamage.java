@@ -86,6 +86,8 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 					ProjectileUtils.setDamage(entity, strength);
 				}
 				break;
+			default:
+				assert false;
 		}
 	}
 	
