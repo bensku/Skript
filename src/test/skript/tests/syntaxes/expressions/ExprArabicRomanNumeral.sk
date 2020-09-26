@@ -2,7 +2,7 @@ test "arabic numeral":
 	assert arabic numeral of "XVI" is 16 with "XVI isn't the roman numeral of 16"
 	assert arabic numeral of "IXV" is not set with "IXV is a valid roman numeral"
 	assert arabic numeral of "IM" is not set with "IM is a valid roman numeral"
-	assert arabic numeal of "105MX" is not set with "105MX is a valid roman numeral"
+	assert arabic numeral of "105MX" is not set with "105MX is a valid roman numeral"
 
 test "roman numeral":
 	assert roman numeral of 16 is "XVI" with "16 isn't the arabic numeral of XVI"
