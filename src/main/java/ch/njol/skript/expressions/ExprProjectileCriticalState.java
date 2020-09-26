@@ -69,8 +69,9 @@ public class ExprProjectileCriticalState extends SimplePropertyExpression<Projec
 			if (abstractArrowExists) {
 				if (entity instanceof AbstractArrow)
 					((AbstractArrow) entity).setCritical(state);
-			} else if (entity instanceof Arrow)
+			} else if (entity instanceof Arrow) {
 				((Arrow) entity).setCritical(state);
+			}
 		}
 	}
 	
