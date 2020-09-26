@@ -1955,7 +1955,6 @@ public class BukkitClasses {
 				.usage(horseColorUtils.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<Horse.Color>() {
-					
 					@Nullable
 					@Override
 					public Horse.Color parse(String s, ParseContext context) {
@@ -1986,7 +1985,6 @@ public class BukkitClasses {
 				.usage(horseStyleUtils.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<Horse.Style>() {
-					
 					@Nullable
 					@Override
 					public Horse.Style parse(String s, ParseContext context) {

@@ -19,6 +19,7 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
@@ -36,15 +37,15 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The <a href='classes.html#horsecolor'>color</a> of a horse.")
 @Examples("set all horses' color to brown")
 @Since("INSERT VERSION")
-public class ExprHorseColor extends SimplePropertyExpression<LivingEntity, Horse.Color> {
+public class ExprHorseColor extends SimplePropertyExpression<LivingEntity, Color> {
 	
 	static {
-		register(ExprHorseColor.class, Horse.Color.class, "colo[u]r", "livingentities");
+		register(ExprHorseColor.class, Color.class, "colo[u]r", "livingentities");
 	}
 	
 	@Nullable
 	@Override
-	public Horse.Color convert(LivingEntity horse) {
+	public Color convert(LivingEntity horse) {
 		return horse instanceof Horse ? ((Horse) horse).getColor() : null;
 	}
 	
@@ -52,7 +53,7 @@ public class ExprHorseColor extends SimplePropertyExpression<LivingEntity, Horse
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(Horse.Color.class);
+			return CollectionUtils.array(Color.class);
 		return null;
 	}
 	
@@ -61,14 +62,14 @@ public class ExprHorseColor extends SimplePropertyExpression<LivingEntity, Horse
 		if (delta != null) {
 			for (LivingEntity horse : getExpr().getArray(e)) {
 				if (horse instanceof Horse)
-					((Horse) horse).setColor((Horse.Color) delta[0]);
+					((Horse) horse).setColor((Color) delta[0]);
 			}
 		}
 	}
 	
 	@Override
-	public Class<? extends Horse.Color> getReturnType() {
-		return Horse.Color.class;
+	public Class<? extends Color> getReturnType() {
+		return Color.class;
 	}
 	
 	@Override

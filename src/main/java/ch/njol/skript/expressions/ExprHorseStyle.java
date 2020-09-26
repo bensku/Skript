@@ -20,6 +20,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -36,15 +37,15 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The <a href='classes.html#horsestyle'>style</a> of a horse.")
 @Examples("set all horses' style to white dots")
 @Since("INSERT VERSION")
-public class ExprHorseStyle extends SimplePropertyExpression<LivingEntity, Horse.Style> {
+public class ExprHorseStyle extends SimplePropertyExpression<LivingEntity, Style> {
 	
 	static {
-		register(ExprHorseStyle.class, Horse.Style.class, "style", "livingentities");
+		register(ExprHorseStyle.class, Style.class, "style", "livingentities");
 	}
 	
 	@Nullable
 	@Override
-	public Horse.Style convert(LivingEntity horse) {
+	public Style convert(LivingEntity horse) {
 		return horse instanceof Horse ? ((Horse) horse).getStyle() : null;
 	}
 	
@@ -52,7 +53,7 @@ public class ExprHorseStyle extends SimplePropertyExpression<LivingEntity, Horse
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(Horse.Style.class);
+			return CollectionUtils.array(Style.class);
 		return null;
 	}
 	
@@ -61,14 +62,14 @@ public class ExprHorseStyle extends SimplePropertyExpression<LivingEntity, Horse
 		if (delta != null) {
 			for (LivingEntity horse : getExpr().getArray(e)) {
 				if (horse instanceof Horse)
-					((Horse) horse).setStyle((Horse.Style) delta[0]);
+					((Horse) horse).setStyle((Style) delta[0]);
 			}
 		}
 	}
 	
 	@Override
-	public Class<? extends Horse.Style> getReturnType() {
-		return Horse.Style.class;
+	public Class<? extends Style> getReturnType() {
+		return Style.class;
 	}
 	
 	@Override
