@@ -53,7 +53,7 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 	
 	@Nullable
 	public static Number toArabic(String n) {
-		if (!n.matches("[HGMDCLXVI]+")) return null;
+		if (!n.matches("^H{0,3}(MH|MG|G?M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$")) return null;
 		int previous = 0;
 		int result = 0;
 		for (int i = 0; i < n.length(); i++) {
