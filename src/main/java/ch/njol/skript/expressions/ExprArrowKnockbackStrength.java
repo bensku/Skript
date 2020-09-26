@@ -59,7 +59,15 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return (mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL) ? null : CollectionUtils.array(Number.class);
+		switch (mode) {
+			case SET:
+			case ADD:
+			case RESET:
+			case REMOVE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
@@ -116,6 +124,8 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 					}
 				}
 				break;
+			default:
+				assert false;
 		}
 	}
 	
