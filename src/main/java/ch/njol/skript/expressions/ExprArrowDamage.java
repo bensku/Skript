@@ -40,7 +40,6 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("INSERT VERSION")
 public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number> {
 	
-	
 	static {
 		register(ExprArrowDamage.class, Number.class, "[the] arrow damage", "projectiles");
 	}
