@@ -97,6 +97,8 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 				for (OfflinePlayer p : Bukkit.getWhitelistedPlayers())
 					p.setWhitelisted(false);
 				break;
+			default:
+				assert false;
 		}
 	}
 	
