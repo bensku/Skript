@@ -32,7 +32,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Last Damage")
-@Description("The last damage that was done to an entity.")
+@Description("The last damage that was done to an entity. Note that changing it doesn't deal more/less damage.")
 @Examples({"set last damage of event-entity to 2"})
 @Since("INSERT VERSION")
 public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Number> {
@@ -67,13 +67,13 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 			switch (mode) {
 				case SET:
 					for (LivingEntity entity : getExpr().getArray(e))
-						entity.setLastDamage((Double) delta[0]);
+						entity.setLastDamage((Long) delta[0]);
 					break;
 				case REMOVE:
 					mod = -1;
 				case ADD:
 					for (LivingEntity entity : getExpr().getArray(e))
-						entity.setLastDamage((Double) delta[0] * mod + entity.getLastDamage());
+						entity.setLastDamage((Long) delta[0] * mod + entity.getLastDamage());
 					break;
 			}
 		}
