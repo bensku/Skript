@@ -110,6 +110,8 @@ public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, N
 					}
 				}
 				break;
+			default:
+				assert false;
 		}
 	}
 	
