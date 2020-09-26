@@ -34,8 +34,8 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Sneaking State")
 @Description("Whether the player(s) are sneaking. Note that it doesn't force them to sneak, it just changes how other players see the players.")
-@Examples({"set sneak mode of player to true",
-	"send \"%sneaking state of all players%\""})
+@Examples({"set sneak mode of all players to true",
+	"send \"%sneaking state of player%\""})
 @Since("INSERT VERSION")
 public class ExprSneakingState extends SimplePropertyExpression<Player, Boolean> {
 	
