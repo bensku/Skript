@@ -110,6 +110,7 @@ public abstract class Commands {
 	public static SimpleCommandMap getCommandMap(){
 		return commandMap;
 	}
+	
 	@SuppressWarnings("unchecked")
 	private static void init() {
 		try {
