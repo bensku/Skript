@@ -75,7 +75,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 		int strength = delta != null ? ((Number) delta[0]).intValue() : 0;
 		switch (mode) {
 			case REMOVE:
-				if (abstractArrowExists)
+				if (abstractArrowExists) {
 					for (Projectile entity : getExpr().getArray(e)) {
 						if (entity instanceof AbstractArrow) {
 							AbstractArrow abstractArrow = (AbstractArrow) entity;
@@ -84,7 +84,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 							abstractArrow.setKnockbackStrength(dmg);
 						}
 					}
-				else
+				} else {
 					for (Projectile entity : getExpr().getArray(e)) {
 						if (entity instanceof Arrow) {
 							Arrow arrow = (Arrow) entity;
@@ -93,6 +93,7 @@ public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Project
 							arrow.setKnockbackStrength(dmg);
 						}
 					}
+				}
 				break;
 			case ADD:
 				if (abstractArrowExists)
