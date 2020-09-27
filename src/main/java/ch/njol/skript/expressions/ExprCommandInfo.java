@@ -61,7 +61,7 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 			"[the] description of command %strings%", "command %strings%'[s] description",
 			"[the] label of command %strings%", "command %strings%'[s] label",
 			"[the] usage of command %strings%", "command %strings%'[s] usage",
-			"[the] aliases of command %strings%", "command %strings%'[s] aliases",
+			"[(all|the|all [of] the)] aliases of command %strings%", "command %strings%'[s] aliases",
 			"[the] permission of command %strings%", "command %strings%'[s] permission",
 			"[the] permission message of command %strings%", "command %strings%'[s] permission message",
 			"[the] plugin [owner] of command %strings%", "command %strings%'[s] plugin [owner]");
