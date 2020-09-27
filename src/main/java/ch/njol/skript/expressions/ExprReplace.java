@@ -45,7 +45,7 @@ import ch.njol.util.Kleenean;
 @Examples({"on chat:",
 		"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
 		"\tsend {_hey}",
-		"set {_no} to case-sensitive replace first \"yes\" in \"Yes, yes\" with \"no\" #Only the second yes gets replaced with no"
+		"set {_no} to  replace first \"yes\" in \"Yes, yes\" with \"no\" with case sensitivity #Only the second yes gets replaced with no"
 })
 @Since("INSERT VERSION")
 public class ExprReplace extends SimpleExpression<String> {
