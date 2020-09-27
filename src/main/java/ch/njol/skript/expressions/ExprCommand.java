@@ -59,7 +59,8 @@ public class ExprCommand extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprCommand.class, String.class, ExpressionType.SIMPLE,
 			"[the] (full|complete|whole) command",
-			"[the] command [label]", "[the] arguments");
+			"[the] command [label]",
+			"[the] arguments");
 	}
 	
 	private int what;
