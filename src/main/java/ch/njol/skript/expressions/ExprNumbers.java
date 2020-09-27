@@ -60,7 +60,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	
 	@SuppressWarnings("null")
 	private Expression<Number> start, end;
-	int mode = -1;
+	private int mode;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -132,7 +132,6 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				double i = mode == 1 ? Math.ceil(starting.doubleValue()) : starting.doubleValue();
 				double max = mode == 1 ? Math.floor(finish.doubleValue()) : finish.doubleValue();
 				
-				
 				@Override
 				public boolean hasNext() {
 					return i <= max;
@@ -189,6 +188,7 @@ public class ExprNumbers extends SimpleExpression<Number> {
 	public Class<? extends Number> getReturnType() {
 		return mode == 1 ? Long.class : Double.class;
 	}
+
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
