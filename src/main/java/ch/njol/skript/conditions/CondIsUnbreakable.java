@@ -34,7 +34,9 @@ import ch.njol.skript.doc.Since;
 public class CondIsUnbreakable extends PropertyCondition<ItemType> {
 	
 	static {
-		register(CondIsUnbreakable.class, "unbreakable", "itemtypes");
+		if (Skript.methodExists(ItemMeta.class, "isUnbreakable")) {
+			register(CondIsUnbreakable.class, "unbreakable", "itemtypes");
+		}
 	}
 	
 	@Override
