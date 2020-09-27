@@ -189,10 +189,10 @@ public class ExprNumbers extends SimpleExpression<Number> {
 		return mode == 1 ? Long.class : Double.class;
 	}
 
-	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		final String modeString = mode == 0 ? "numbers" : (mode == 1 ? "integers" : "decimals");
 		return modeString + " from " + start.toString(e, debug) + " to " + end.toString(e, debug);
 	}
+	
 }
