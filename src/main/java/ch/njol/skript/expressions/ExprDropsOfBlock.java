@@ -48,7 +48,9 @@ import ch.njol.util.Kleenean;
 	"\tgive drops of block using player's tool to player"})
 @Since("INSERT VERSION")
 public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
-	
+
+	private final static boolean DROPS_OF_ENTITY_EXISTS = Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class);
+
 	static {
 		Skript.registerExpression(ExprDropsOfBlock.class, ItemType.class, ExpressionType.COMBINED,
 			"[(all|the|all [of] the)] drops of %blocks% [(using|with) %-itemtype% [(1¦as %-entity%)]]",
@@ -66,7 +68,7 @@ public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		block = (Expression<Block>) exprs[0];
 		item = (Expression<ItemType>) exprs[1];
-		if (!Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class) && parseResult.mark == 1) {
+		if (!DROPS_OF_ENTITY_EXISTS && parseResult.mark == 1) {
 			Skript.error("Getting the drops of a block as an entity is only possible on Minecraft 1.15+", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
