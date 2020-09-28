@@ -31,13 +31,13 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 @Name("Random UUID")
 @Description("Returns a random UUID.")
-@Examples({"set {_uuid} to random uuid"})
+@Examples("set {_uuid} to random uuid")
 @Since("INSERT VERSION")
 public class ExprRandomUUID extends SimpleExpression<String> {
 	
@@ -46,7 +46,7 @@ public class ExprRandomUUID extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		return true;
 	}
 	
