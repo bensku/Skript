@@ -67,9 +67,8 @@ public class ExprProjectileCriticalState extends SimplePropertyExpression<Projec
 		if (delta == null) return;
 		boolean state = (Boolean) delta[0];
 		for (Projectile entity : getExpr().getAll(e)) {
-			if (abstractArrowExists) {
-				if (entity instanceof AbstractArrow)
-					((AbstractArrow) entity).setCritical(state);
+			if (abstractArrowExists && entity instanceof AbstractArrow) {
+				((AbstractArrow) entity).setCritical(state);
 			} else if (entity instanceof Arrow) {
 				((Arrow) entity).setCritical(state);
 			}
