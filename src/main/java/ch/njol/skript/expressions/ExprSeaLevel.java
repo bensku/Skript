@@ -43,8 +43,8 @@ public class ExprSeaLevel extends SimplePropertyExpression<World, Number> {
 	}
 	
 	@Override
-	public Class<? extends Long> getReturnType() {
-		return Long.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override
