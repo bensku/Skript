@@ -47,18 +47,18 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 	@Override
 	@SuppressWarnings("null")
 	public Object convert(Entity entity) {
-		if (entity.getLastDamageCause() != null) {
-			if (entity.getLastDamageCause() instanceof EntityDamageByBlockEvent)
-				return ((EntityDamageByBlockEvent) entity.getLastDamageCause()).getDamager();
-			EntityDamageEvent event = entity.getLastDamageCause();
-			if (event instanceof EntityDamageByEntityEvent) {
-				EntityDamageByEntityEvent evt = (EntityDamageByEntityEvent) event;
-				if (evt.getDamager() instanceof Projectile) {
-					Object shooter = ProjectileUtils.getShooter((Projectile) evt.getDamager());
+		EntityDamageEvent damageEvent = entity.getLastDamageCause();
+		if (damageEvent != null) {
+			if (damageEvent instanceof EntityDamageByBlockEvent)
+				return ((EntityDamageByBlockEvent) damageEvent ).getDamager();
+			if (damageEvent instanceof EntityDamageByEntityEvent) {
+				EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) damageEvent;
+				if (damageByEntityEvent.getDamager() instanceof Projectile) {
+					Object shooter = ProjectileUtils.getShooter((Projectile) damageByEntityEvent.getDamager());
 					if (shooter instanceof Entity)
 						return shooter;
 				}
-				return evt.getDamager();
+				return damageByEntityEvent.getDamager();
 			}
 		}
 		return null;
