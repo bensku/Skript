@@ -404,28 +404,28 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
 		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
 		if (!Objects.equals(ourName, theirName)) {
-			quality = ourName != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourName != null ? MatchQuality.SAME_MATERIAL : theirName != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Lore
 		List<String> ourLore = first.hasLore() ? first.getLore() : null;
 		List<String> theirLore = second.hasLore() ? second.getLore() : null;
 		if (!Objects.equals(ourLore, theirLore)) {
-			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : theirLore != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Enchantments
 		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
 		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
 		if (!Objects.equals(ourEnchants, theirEnchants)) {
-			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Item flags
 		Set<ItemFlag> ourFlags = first.getItemFlags();
 		Set<ItemFlag> theirFlags = second.getItemFlags();
 		if (!Objects.equals(ourFlags, theirFlags)) {
-			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Potion data
