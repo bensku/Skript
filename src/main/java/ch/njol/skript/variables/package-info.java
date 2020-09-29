@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 /**
  * Code related to loading, handling, and saving variables. Some code is found in <tt>lang</tt> as well (e.g. in {@link ch.njol.skript.lang.Variable}).
