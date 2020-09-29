@@ -44,7 +44,8 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression<Entity, Vector> {
 	
 	static {
-		register(ExprMinecartDerailedFlyingVelocity.class, Vector.class, "[minecart] (1¦derailed|2¦flying) velocity", "entities");
+		register(ExprMinecartDerailedFlyingVelocity.class, Vector.class,
+			"[minecart] (1¦derailed|2¦flying) velocity", "entities");
 	}
 	
 	private boolean flying;
@@ -58,9 +59,11 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	@Nullable
 	@Override
 	public Vector convert(Entity entity) {
-		return entity instanceof Minecart
-			? (flying ? ((Minecart) entity).getDerailedVelocityMod() : ((Minecart) entity).getFlyingVelocityMod())
-			: null;
+		if(entity instanceof Minecart){
+			Minecart mc = (Minecart) entity;
+			return flying ? mc.getFlyingVelocityMod() : mc.getDerailedVelocityMod();
+		}
+		return null;
 	}
 	
 	@Nullable
