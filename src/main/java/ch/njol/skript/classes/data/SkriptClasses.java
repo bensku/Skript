@@ -47,6 +47,7 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
@@ -657,6 +658,9 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
+						if (ColorRGB.isRGBColor(input)) {
+							return ColorRGB.fromString(input);
+						}
 						return SkriptColor.fromName(input);
 					}
 					
