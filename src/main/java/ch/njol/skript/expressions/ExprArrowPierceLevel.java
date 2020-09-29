@@ -19,7 +19,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
@@ -30,6 +29,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
@@ -39,22 +39,21 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
 	"\tset arrow pierce level of event-projectile to 5"})
+@RequiredPlugins("Minecraft 1.14+")
 @Since("INSERT VERSION")
 public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, Number> {
 	
-	private final static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");
+	private final static boolean CAN_USE_PIERCE = Skript.methodExists(Arrow.class, "getPierceLevel");
 	
 	static {
-		if (abstractArrowExists || Skript.methodExists(Arrow.class, "getPierceLevel"))
+		if (CAN_USE_PIERCE)
 			register(ExprArrowPierceLevel.class, Number.class, "[the] arrow pierce level", "projectiles");
 	}
 	
 	@Nullable
 	@Override
 	public Number convert(Projectile arrow) {
-		if (abstractArrowExists)
-			return arrow instanceof AbstractArrow ? ((AbstractArrow) arrow).getPierceLevel() : null;
-		return arrow instanceof Arrow ? ((Arrow) arrow).getPierceLevel() : null;
+		return ((Arrow) arrow).getPierceLevel();
 	}
 	
 	@Nullable
@@ -79,35 +78,19 @@ public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, N
 			case REMOVE:
 				mod = -1;
 			case ADD:
-				if (abstractArrowExists) {
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof AbstractArrow) {
-							AbstractArrow abstractArrow = (AbstractArrow) entity;
-							int dmg = Math.round(abstractArrow.getPierceLevel() + strength * mod);
-							if (dmg < 0) dmg = 0;
-							abstractArrow.setPierceLevel(dmg);
-						}
-					}
-				} else {
-					for (Projectile entity : getExpr().getArray(e)) {
-						if (entity instanceof Arrow) {
-							Arrow arrow = (Arrow) entity;
-							int dmg = Math.round(arrow.getPierceLevel() + strength * mod);
-							if (dmg < 0) dmg = 0;
-							arrow.setPierceLevel(dmg);
-						}
+				for (Projectile entity : getExpr().getArray(e)) {
+					if (entity instanceof Arrow) {
+						Arrow arrow = (Arrow) entity;
+						int dmg = Math.round(arrow.getPierceLevel() + strength * mod);
+						if (dmg < 0) dmg = 0;
+						arrow.setPierceLevel(dmg);
 					}
 				}
 				break;
 			case RESET:
 			case SET:
 				for (Projectile entity : getExpr().getArray(e)) {
-					if (abstractArrowExists) {
-						if (entity instanceof AbstractArrow)
-							((AbstractArrow) entity).setPierceLevel(strength);
-					} else if (entity instanceof Arrow) {
-						((Arrow) entity).setPierceLevel(strength);
-					}
+					((Arrow) entity).setPierceLevel(strength);
 				}
 				break;
 			default:
