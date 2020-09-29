@@ -24,20 +24,22 @@ import org.bukkit.World;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
 @Name("Sea Level")
 @Description("Gets the sea level of a world.")
 @Examples("send \"The sea level in your world is %sea level in player's world%\"")
-public class ExprSeaLevel extends SimplePropertyExpression<World, Long> {
+@Since("INSERT VERSION")
+public class ExprSeaLevel extends SimplePropertyExpression<World, Number> {
 	
 	static {
-		register(ExprSeaLevel.class, Long.class, "sea level", "worlds");
+		register(ExprSeaLevel.class, Number.class, "sea level", "worlds");
 	}
 	
 	@Override
-	public Long convert(World world) {
-		return (long) world.getSeaLevel();
+	public Number convert(World world) {
+		return world.getSeaLevel();
 	}
 	
 	@Override
