@@ -659,7 +659,7 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
-						if (input.contains("RED:")) {
+						if (ColorRGB.isRGBColor(input)) {
 							return ColorRGB.fromString(input);
 						}
 						return SkriptColor.fromName(input);

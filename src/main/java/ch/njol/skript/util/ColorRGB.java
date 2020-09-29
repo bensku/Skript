@@ -68,6 +68,9 @@ public class ColorRGB implements Color {
 		return new ColorRGB(red, green, blue);
 	}
 	
+	public static boolean isRGBColor(String string) {
+		return string.startsWith("RED:");
+	}
 	
 	@Override
 	public Fields serialize() throws NotSerializableException {
