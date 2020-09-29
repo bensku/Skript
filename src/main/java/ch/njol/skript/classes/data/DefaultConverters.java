@@ -44,6 +44,7 @@ import ch.njol.skript.classes.Converter;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.entity.XpOrbData;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.BlockInventoryHolder;
 import ch.njol.skript.util.BlockUtils;
@@ -347,12 +348,21 @@ public class DefaultConverters {
 		if (Skript.isRunningMinecraft(1, 11)) {
 			// EnchantmentOffer - EnchantmentType
 			Converters.registerConverter(EnchantmentOffer.class, EnchantmentType.class, new Converter<EnchantmentOffer, EnchantmentType>() {
-				@Nullable
 				@Override
+				@Nullable
 				public EnchantmentType convert(EnchantmentOffer eo) {
 					return new EnchantmentType(eo.getEnchantment(), eo.getEnchantmentLevel());
 				}
 			});
 		}
+		
+		// Object - String
+		Converters.registerConverter(Object.class, String.class, new Converter<Object, String>() {
+			@Override
+			public String convert(Object object) {
+				return Classes.toString(object);
+			}
+		});
+		
 	}
 }
