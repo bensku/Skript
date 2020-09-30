@@ -36,7 +36,7 @@ import ch.njol.skript.doc.Since;
 })
 @Examples("if player's targeted block is passable")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.13+")
+@RequiredPlugins("1.13.2+")
 public class CondIsPassable extends PropertyCondition<Block> {
 	
 	static {
