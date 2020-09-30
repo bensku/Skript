@@ -37,10 +37,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Matches")
-@Description("Test whether strings match defined regular expressions.")
+@Description("Checks whether the defined strings match the input regular expressions.")
 @Examples({"on chat:",
-	"\tif message matches \"\\d\":",
-	"\t\tsend \"Message contains a digit!\""})
+	"\tif message partially matches \"\\d\":",
+	"\t\tsend \"Message contains a digit!\"",
+	"\tif message doesn't match \"[A-Za-z]+\":",
+	"\t\tsend \"Message doesn't only contain letters!\""})
 @Since("INSERT VERSION")
 public class CondMatches extends Condition {
 	
