@@ -20,6 +20,7 @@ package ch.njol.skript.classes.data;
 
 import java.util.Objects;
 
+import ch.njol.skript.aliases.MatchQuality;
 import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
@@ -193,7 +194,19 @@ public class DefaultComparators {
 		Comparators.registerComparator(ItemType.class, ItemType.class, new Comparator<ItemType, ItemType>() {
 			@Override
 			public Relation compare(final ItemType i1, final ItemType i2) {
-				return Relation.get(i2.isSupertypeOf(i1));
+				if (i1.isAll() != i2.isAll())
+					return Relation.NOT_EQUAL;
+				if (i1.getAmount() != i2.getAmount())
+					return Relation.NOT_EQUAL;
+				for (ItemData myType : i1.getTypes()) {
+					for (ItemData otherType : i2.getTypes()) {
+						// Don't require an EXACT match if the other ItemData is an alias. They only need to share a material.
+						if (myType.matchAlias(otherType).isAtLeast((otherType.isDefault() && !myType.isDefault()) ? MatchQuality.SAME_MATERIAL : MatchQuality.EXACT)) {
+							return Relation.EQUAL;
+						}
+					}
+				}
+				return Relation.NOT_EQUAL;
 			}
 			
 			@Override

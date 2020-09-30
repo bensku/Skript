@@ -742,7 +742,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 					 * it to return true for two "same items", even if their
 					 * item meta is completely different.
 					 */
-					if (is != null && d.matchAlias(new ItemData(is)).isAtLeast(MatchQuality.EXACT)) {
+					if (is != null && d.matchAlias(new ItemData(is)).isAtLeast(d.isDefault() ? MatchQuality.SAME_MATERIAL : MatchQuality.EXACT)) {
 						if (all && amount == -1) {
 							list.set(i, null);
 							removed = 1;
