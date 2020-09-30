@@ -32,6 +32,9 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
 
 @Name("Last Attacker")
 @Description("The last block or entity that attacked an entity.")
@@ -42,26 +45,21 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 	static {
 		register(ExprLastAttacker.class, Object.class, "last attacker", "entity");
 	}
+	@Nullable
+	ExprAttacker attackerExpr;
+	
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		this.attackerExpr = new ExprAttacker();
+		return true;
+	}
+	
 	
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
 	public Object convert(Entity entity) {
-		EntityDamageEvent damageEvent = entity.getLastDamageCause();
-		if (damageEvent != null) {
-			if (damageEvent instanceof EntityDamageByBlockEvent)
-				return ((EntityDamageByBlockEvent) damageEvent ).getDamager();
-			if (damageEvent instanceof EntityDamageByEntityEvent) {
-				EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) damageEvent;
-				if (damageByEntityEvent.getDamager() instanceof Projectile) {
-					Object shooter = ProjectileUtils.getShooter((Projectile) damageByEntityEvent.getDamager());
-					if (shooter instanceof Entity)
-						return shooter;
-				}
-				return damageByEntityEvent.getDamager();
-			}
-		}
-		return null;
+		return attackerExpr.get(entity.getLastDamageCause())[0];
 	}
 	
 	@Override

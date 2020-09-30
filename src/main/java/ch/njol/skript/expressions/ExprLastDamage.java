@@ -29,6 +29,9 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Last Damage")
@@ -42,9 +45,19 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 	}
 	
 	@Nullable
+	ExprDamage damageExpr;
+	
 	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		damageExpr = new ExprDamage();
+		return true;
+	}
+	
+	@Nullable
+	@Override
+	@SuppressWarnings("null")
 	public Number convert(LivingEntity livingEntity) {
-		return livingEntity.getLastDamage();
+		return damageExpr.get(livingEntity.getLastDamageCause())[0];
 	}
 	
 	@Nullable
@@ -62,7 +75,6 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		int mod = 1;
 		if (delta != null) {
 			switch (mode) {
 				case SET:
@@ -70,10 +82,10 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 						entity.setLastDamage((Long) delta[0]);
 					break;
 				case REMOVE:
-					mod = -1;
+					delta[0] = (Long) delta[0] *-1;
 				case ADD:
 					for (LivingEntity entity : getExpr().getArray(e))
-						entity.setLastDamage((Long) delta[0] * mod + entity.getLastDamage());
+						entity.setLastDamage((Long) delta[0] + entity.getLastDamage());
 					break;
 				default:
 					assert false;
