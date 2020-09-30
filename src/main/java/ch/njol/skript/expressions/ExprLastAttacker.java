@@ -20,13 +20,8 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.bukkitutil.ProjectileUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -45,6 +40,7 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 	static {
 		register(ExprLastAttacker.class, Object.class, "last attacker", "entity");
 	}
+	
 	@Nullable
 	private ExprAttacker attackerExpr;
 	
