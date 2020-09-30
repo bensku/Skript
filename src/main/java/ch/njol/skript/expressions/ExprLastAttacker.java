@@ -46,11 +46,11 @@ public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 		register(ExprLastAttacker.class, Object.class, "last attacker", "entity");
 	}
 	@Nullable
-	ExprAttacker attackerExpr;
+	private ExprAttacker attackerExpr;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		this.attackerExpr = new ExprAttacker();
+		attackerExpr = new ExprAttacker();
 		return true;
 	}
 	

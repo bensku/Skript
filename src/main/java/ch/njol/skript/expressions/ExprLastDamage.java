@@ -45,7 +45,7 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 	}
 	
 	@Nullable
-	ExprDamage damageExpr;
+	private ExprDamage damageExpr;
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -82,7 +82,7 @@ public class ExprLastDamage extends SimplePropertyExpression<LivingEntity, Numbe
 						entity.setLastDamage((Long) delta[0]);
 					break;
 				case REMOVE:
-					delta[0] = (Long) delta[0] *-1;
+					delta[0] = (Long) delta[0] * -1;
 				case ADD:
 					for (LivingEntity entity : getExpr().getArray(e))
 						entity.setLastDamage((Long) delta[0] + entity.getLastDamage());
