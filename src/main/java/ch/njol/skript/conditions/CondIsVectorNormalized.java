@@ -20,6 +20,8 @@
 package ch.njol.skript.conditions;
 	
 	import org.bukkit.util.Vector;
+	
+	import ch.njol.skript.Skript;
 	import ch.njol.skript.conditions.base.PropertyCondition;
 	import ch.njol.skript.doc.Description;
 	import ch.njol.skript.doc.Examples;
@@ -31,11 +33,11 @@ package ch.njol.skript.conditions;
 @Description("Checks whether a vector is normalized i.e. length of 1")
 @Examples("vector of player's location is normalized")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.13 or newer")
+@RequiredPlugins("1.13.2 or newer")
 public class CondIsVectorNormalized extends PropertyCondition<Vector> {
 	
 	static {
-		register(CondIsVectorNormalized.class, "normalized", "vectors");
+		if (Skript.methodExists(Vector.class, "isNormalized")) {register(CondIsVectorNormalized.class, "normalized", "vectors");}
 	}
 	
 	@Override
