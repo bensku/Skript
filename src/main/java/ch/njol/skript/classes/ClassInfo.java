@@ -93,13 +93,21 @@ public class ClassInfo<T> implements Debuggable {
 	 */
 	public ClassInfo(final Class<T> c, final String codeName) {
 		this.c = c;
-		if (!isVaildCodeName(codeName))
+		if (!isValidCodeName(codeName))
 			throw new IllegalArgumentException("Code names for classes must be lowercase and only consist of latin letters and arabic numbers");
 		this.codeName = codeName;
 		name = new Noun("types." + codeName);
 	}
 	
+	/**
+	 * Incorrect spelling in method name. This will be removed in the future.
+	 */
+	@Deprecated
 	public static boolean isVaildCodeName(final String name) {
+		return isValidCodeName(name);
+	}
+	
+	public static boolean isValidCodeName(final String name) {
 		return name.matches("[a-z0-9]+");
 	}
 	
