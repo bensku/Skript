@@ -104,10 +104,8 @@ test "item comparisons":
 
 	# Remove / Remove All Tests
 
+	set block at spawn of world "world" to air
 	set block at spawn of world "world" to a chest
-
-	# Clear the inventory just in case
-	clear {_inventory}
 
 	set {_inventory} to inventory of block at spawn of world "world"
 	add 64 diamonds and 64 diamonds named "Fake Diamond" to {_inventory}
