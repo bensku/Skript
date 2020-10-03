@@ -25,6 +25,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -71,6 +72,7 @@ public class ExprMendingRepairAmount extends SimpleExpression<Number> {
 			case SET:
 			case ADD:
 			case REMOVE:
+			case RESET:
 				return CollectionUtils.array(Number.class);
 			default:
 				return null;
@@ -79,23 +81,26 @@ public class ExprMendingRepairAmount extends SimpleExpression<Number> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null)
-			return;
 		PlayerItemMendEvent e = (PlayerItemMendEvent) event;
-		int newLevel = ((Number) delta[0]).intValue();
+		int newLevel = delta != null ? ((Number) delta[0]).intValue() : 0;
 		switch (mode) {
 			case SET:
-				e.setRepairAmount(newLevel);
 				break;
 			case ADD:
-				e.setRepairAmount(e.getRepairAmount() + newLevel);
+				newLevel += e.getRepairAmount();
 				break;
 			case REMOVE:
-				e.setRepairAmount(e.getRepairAmount() - newLevel);
+				newLevel = e.getRepairAmount() - newLevel;
+				break;
+			case RESET:
+				int repairAmount = e.getExperienceOrb().getExperience() * 2;
+				int itemDamage = ItemUtils.getDamage(e.getItem());
+				newLevel = Math.min(itemDamage, repairAmount);
 				break;
 			default:
 				assert false;
 		}
+		e.setRepairAmount(newLevel);
 	}
 
 	@Override
