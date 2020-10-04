@@ -23,6 +23,7 @@ import java.util.Objects;
 import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -103,6 +104,8 @@ public class DefaultComparators {
 
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
+				if ((o1 instanceof EquipmentSlot && !(o2 instanceof EquipmentSlot)) || !(o1 instanceof EquipmentSlot) && o2 instanceof EquipmentSlot)
+					return Relation.NOT_EQUAL;
 				if (o1.isSameSlot(o2))
 					return Relation.EQUAL;
 				return Relation.NOT_EQUAL;
