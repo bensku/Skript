@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -36,7 +35,8 @@ import ch.njol.skript.lang.ExpressionType;
  * @author Peter Güttinger
  */
 @Name("Command Sender")
-@Description("The player or the console who sent a command. Mostly useful in <a href='../commands/'>commands</a> and <a href='../events.html#command'>command events</a>.")
+@Description({"The player or the console who sent a command. Mostly useful in <a href='commands'>commands</a> and <a href='events.html#command'>command events</a>.",
+			 "If the command sender is a command block, its location can be retrieved by using %block's location%"})
 @Examples({"make the command sender execute \"/say hi!\"",
 		"on command:",
 		"	log \"%executor% used command /%command% %arguments%\" to \"commands.log\""})

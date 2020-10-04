@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -62,7 +61,6 @@ public class ExprPlayerViewDistance extends PropertyExpression<Player, Number> {
 	@Override
 	protected Number[] get(Event e, Player[] source) {
 		return get(source, new Getter<Integer, Player>() {
-			@SuppressWarnings("null")
 			@Override
 			public Integer get(Player arg) {
 				return arg.getViewDistance();

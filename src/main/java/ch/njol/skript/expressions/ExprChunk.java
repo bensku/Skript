@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -71,7 +70,6 @@ public class ExprChunk extends PropertyExpression<Location, Chunk> {
 	@Override
 	protected Chunk[] get(final Event e, final Location[] source) {
 		return get(source, new Converter<Location, Chunk>() {
-			@SuppressWarnings("null")
 			@Override
 			public Chunk convert(final Location l) {
 				return l.getChunk();

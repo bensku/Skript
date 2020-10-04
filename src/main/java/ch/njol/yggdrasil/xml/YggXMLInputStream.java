@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil.xml;
 
@@ -77,7 +76,6 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	
 	// private
 	
-	@SuppressWarnings("null")
 	private Class<?> getType(String s) throws StreamCorruptedException {
 		int dim = 0;
 		while (s.endsWith("[]")) {
@@ -134,7 +132,6 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	
 	// Primitives
 	
-	@SuppressWarnings("null")
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		try {
@@ -173,7 +170,6 @@ public final class YggXMLInputStream extends YggdrasilInputStream {
 	String primitiveData = null;
 	int primitiveDataIndex = 0;
 	
-	@SuppressWarnings("null")
 	@Override
 	protected Object readPrimitive_(final Tag type) throws IOException {
 		try {

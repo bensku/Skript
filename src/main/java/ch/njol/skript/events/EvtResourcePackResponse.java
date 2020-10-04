@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
@@ -50,7 +49,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 				.since("2.4");
 	}
 
-	@SuppressWarnings("null")
+	@Nullable
 	private Literal<Status> states;
 
 	@SuppressWarnings("unchecked")
@@ -62,6 +61,7 @@ public class EvtResourcePackResponse extends SkriptEvent {
 	}
 
 	@Override
+	@SuppressWarnings("null")
 	public boolean check(final Event e) {
 		if (states != null) {
 			Status state = ((PlayerResourcePackStatusEvent) e).getStatus();

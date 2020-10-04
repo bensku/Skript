@@ -14,13 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions.base;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +27,6 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -38,7 +35,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.DefaultExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -202,6 +198,10 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 			assert e != null;
 			if (EventValues.doesEventValueHaveTimeStates(e, c)) {
 				super.setTime(time);
+				// Since the time was changed, we now need to re-initalize the getters we already got. START
+				getters.clear();
+				init();
+				// END
 				return true;
 			}
 		}

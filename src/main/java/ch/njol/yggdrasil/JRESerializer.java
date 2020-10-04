@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -132,7 +131,7 @@ public class JRESerializer extends YggdrasilSerializer<Object> {
 	@Override
 	public <E> E deserialize(Class<E> c, Fields fields) throws StreamCorruptedException, NotSerializableException {
 		if (c == UUID.class) {
-			return (E) new UUID(((Long)fields.getPrimitive("mostSigBits", Long.TYPE)).longValue(), ((Long)fields.getPrimitive("leastSigBits", Long.TYPE)).longValue());
+			return (E) new UUID(fields.getPrimitive("mostSigBits", Long.TYPE).longValue(), fields.getPrimitive("leastSigBits", Long.TYPE).longValue());
 		}
 		throw new StreamCorruptedException();
 	}

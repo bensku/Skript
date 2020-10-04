@@ -14,12 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_ARRAY;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -175,7 +175,6 @@ public final class DefaultYggdrasilInputStream extends YggdrasilInputStream {
 		throw new StreamCorruptedException("Invalid boolean value " + r);
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	protected Object readPrimitive(final Tag type) throws IOException {
 		switch (type) {

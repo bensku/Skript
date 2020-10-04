@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.util;
 
@@ -25,8 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
 
 /**
  * @author Peter Güttinger
@@ -408,6 +405,12 @@ public abstract class StringUtils {
 		return "" + haystack.replaceAll("(?ui)" + Pattern.quote(needle), replacement);
 	}
 	
+	public static String replaceFirst(final String haystack, final String needle, final String replacement, final boolean caseSensitive) {
+		if (caseSensitive)
+			return "" + haystack.replaceFirst(needle, replacement);
+		return "" + haystack.replaceFirst("(?ui)" + Pattern.quote(needle), replacement);
+	}
+
 	public static byte[] hexStringToByteArray(String s) {
 		int len = s.length();
 		byte[] data = new byte[len / 2];

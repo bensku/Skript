@@ -15,7 +15,7 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -28,18 +28,18 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -62,6 +62,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 
 	private final static String LANGUAGE_NODE = "visual effects";
 	static final boolean newEffectData = Skript.classExists("org.bukkit.block.data.BlockData");
+	private static final boolean HAS_REDSTONE_DATA = Skript.classExists("org.bukkit.Particle$DustOptions");
 	
 	public static enum Type implements YggdrasilSerializable {
 		ENDER_SIGNAL(Effect.ENDER_SIGNAL),
@@ -108,7 +109,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		IRON_GOLEM_SHEATH("IRON_GOLEM_SHEATH", true),
 		TOTEM_RESURRECT("TOTEM_RESURRECT", true),
 		HURT_DROWN("HURT_DROWN", true),
-		HURT_EXPLOSIION("HURT_EXPLOSION", true),
+		HURT_EXPLOSION("HURT_EXPLOSION", true),
 		
 		// Particles
 		FIREWORKS_SPARK(Particle.FIREWORKS_SPARK),
@@ -119,11 +120,23 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			public boolean isColorable() {
 				return true;
 			}
+			
+			@Nullable
+			@Override
+			public Object getData(@Nullable Object raw, Location l) {
+				return raw;
+			}
 		},
 		POTION_SWIRL_TRANSPARENT(Particle.SPELL_MOB_AMBIENT) {
 			@Override
 			public boolean isColorable() {
 				return true;
+			}
+			
+			@Nullable
+			@Override
+			public Object getData(@Nullable Object raw, Location l) {
+				return raw;
 			}
 		},
 		SPELL(Particle.SPELL),
@@ -148,6 +161,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			public boolean isColorable() {
 				return true;
 			}
+			
+			@Nullable
+			@Override
+			public Object getData(@Nullable Object raw, Location l) {
+				if (HAS_REDSTONE_DATA && Particle.REDSTONE.getDataType() == DustOptions.class && raw instanceof ParticleOption) {
+					ParticleOption option = (ParticleOption) raw;
+					return new DustOptions(option.getBukkitColor(), option.size);
+				} else {
+					return raw;
+				}
+			}
 		},
 		SNOWBALL_BREAK(Particle.SNOWBALL),
 		WATER_DRIP(Particle.DRIP_WATER),
@@ -161,17 +185,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		ITEM_CRACK(Particle.ITEM_CRACK) {
 			@Override
 			public Object getData(final @Nullable Object raw, final Location l) {
-				if (raw == null)
-					return Material.IRON_SWORD;
-				else if (raw instanceof ItemType) {
+				ItemStack itemStack = Aliases.javaItemType("iron sword").getRandom();
+				if (raw instanceof ItemType) {
 					ItemStack rand = ((ItemType) raw).getRandom();
-					if (rand == null) return Material.IRON_SWORD;
-					Material type = rand.getType();
-					assert type != null;
-					return type;
-				} else {
+					if (rand != null)
+						itemStack = rand;
+				} else if (raw != null)
 					return raw;
-				}
+				assert itemStack != null;
+				if (Particle.ITEM_CRACK.getDataType() == Material.class)
+					return itemStack.getType();
+				return itemStack;
 			}
 		},
 		BLOCK_BREAK(Particle.BLOCK_CRACK) {
@@ -225,6 +249,33 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		
+		// 1.10 particles
+		FALLING_DUST("FALLING_DUST") {
+			@Override
+			public Object getData(final @Nullable Object raw, final Location l) {
+				if (raw == null)
+					return Material.STONE.getData();
+				else if (raw instanceof ItemType) {
+					if (newEffectData) {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Bukkit.createBlockData(Material.STONE);
+						return Bukkit.createBlockData(rand.getType());
+					} else {
+						ItemStack rand = ((ItemType) raw).getRandom();
+						if (rand == null)
+							return Material.STONE.getData();
+						@SuppressWarnings("deprecation")
+						MaterialData type = rand.getData();
+						assert type != null;
+						return type;
+					}
+				} else {
+					return raw;
+				}
+			}
+		},
+		
 		// 1.11 particles
 		TOTEM("TOTEM"),
 		SPIT("SPIT"),
@@ -245,7 +296,25 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		FLASH("FLASH"),
 		FALLING_LAVA("FALLING_LAVA"),
 		LANDING_LAVA("LANDING_LAVA"),
-		FALLING_WATER("FALLING_WATER");
+		FALLING_WATER("FALLING_WATER"),
+		
+		// 1.15 particles
+		DRIPPING_HONEY("DRIPPING_HONEY"),
+		FALLING_HONEY("FALLING_HONEY"),
+		LANDING_HONEY("LANDING_HONEY"),
+		FALLING_NECTAR("FALLING_NECTAR"),
+		
+		// 1.16 particles
+		ASH("ASH"),
+		CRIMSON_SPORE("CRIMSON_SPORE"),
+		SOUL_FIRE_FLAME("SOUL_FIRE_FLAME"),
+		WARPED_SPORE("WARPED_SPORE"),
+		DRIPPING_OBSIDIAN_TEAR("DRIPPING_OBSIDIAN_TEAR"),
+		FALLING_OBSIDIAN_TEAR("FALLING_OBSIDIAN_TEAR"),
+		LANDING_OBSIDIAN_TEAR("LANDING_OBSIDIAN_TEAR"),
+		SOUL("SOUL"),
+		REVERSE_PORTAL("REVERSE_PORTAL"),
+		WHITE_ASH("WHITE_ASH");
 		
 		
 		@Nullable
@@ -345,13 +414,9 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 							Skript.warning("Missing pattern at '" + (node + ".pattern") + "' in the " + Language.getName() + " language file");
 					} else {
 						types.add(ts[i]);
-						if (ts[i].isColorable())
-							patterns.add(pattern);
-						else {
-							String dVarExpr = Language.get_(LANGUAGE_NODE + ".area_expression");
-							if (dVarExpr == null) dVarExpr = "";
-							patterns.add(pattern + " " + dVarExpr);
-						}
+						String dVarExpr = Language.get_(LANGUAGE_NODE + ".area_expression");
+						if (dVarExpr == null) dVarExpr = "";
+						patterns.add(pattern + " " + dVarExpr);
 					}
 					if (names[i] == null)
 						names[i] = new Noun(node + ".name");
@@ -394,52 +459,41 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			return false;
 		}
 		
+		int dPos = 0; // Data index
 		if (type.isColorable()) {
-			for (Expression<?> expr : exprs) {
-				if (expr == null) continue;
-				else if (expr.getReturnType().isAssignableFrom(Color.class)) {
-					org.bukkit.Color color = ((Color) expr.getSingle(null)).asBukkitColor();
-					
-					/*
-					 * Colored particles use dX, dY and dZ as RGB values which
-					 * have range from 0 to 1.
-					 * 
-					 * For now, only speed exactly 1 is allowed.
-					 */
-					dX = color.getRed() / 255.0f + 0.00001f;
-					dY = color.getGreen() / 255.0f;
-					dZ = color.getBlue() / 255.0f;
-					speed = 1;
-				} else {
-					Skript.exception("Color not specified for colored particle");
-				}
+			Color color = SkriptColor.LIGHT_RED;
+			if (exprs[0] != null && exprs[0].getSingle(null) instanceof Color) {
+				color = (Color) exprs[0].getSingle(null);
+				dPos++;
 			}
+			data = new ParticleOption(color, 1);
 		} else {
-			int numberParams = 0;
-			for (Expression<?> expr : exprs) {
-				if (expr.getReturnType() == Long.class || expr.getReturnType() == Integer.class || expr.getReturnType() == Number.class)
-					numberParams++;
-			}
-			
-			int dPos = 0; // Data index
 			Expression<?> expr = exprs[0];
 			if (expr.getReturnType() != Long.class && expr.getReturnType() != Integer.class && expr.getReturnType() != Number.class) {
 				dPos = 1;
 				data = exprs[0].getSingle(null);
 			}
-			
-			if (numberParams == 1) // Only speed
-				speed = ((Number) exprs[dPos].getSingle(null)).floatValue();
-			else if (numberParams == 3) { // Only dX, dY, dZ
-				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
-				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
-				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
-			} else if (numberParams == 4){ // Both present
-				dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
-				dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
-				dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
-				speed = ((Number) exprs[dPos + 3].getSingle(null)).floatValue();
+		}
+		
+		int numberParams = 0;
+		if (exprs.length > dPos) {
+			for (int i = dPos; i < exprs.length; i++) {
+				if (exprs[i].getReturnType() == Long.class || exprs[i].getReturnType() == Integer.class || exprs[i].getReturnType() == Number.class)
+					numberParams++;
 			}
+		}
+		
+		if (numberParams == 1) // Only speed
+			speed = ((Number) exprs[dPos].getSingle(null)).floatValue();
+		else if (numberParams == 3) { // Only dX, dY, dZ
+			dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
+			dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
+			dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
+		} else if (numberParams == 4){ // Both present
+			dX = ((Number) exprs[dPos].getSingle(null)).floatValue();
+			dY = ((Number) exprs[dPos + 1].getSingle(null)).floatValue();
+			dZ = ((Number) exprs[dPos + 2].getSingle(null)).floatValue();
+			speed = ((Number) exprs[dPos + 3].getSingle(null)).floatValue();
 		}
 		
 		return true;
@@ -490,7 +544,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				
 				assert type.effect != null;
 				// Check that data has correct type (otherwise bad things will happen)
-				if (pData != null && !((Particle) type.effect).getDataType().isAssignableFrom(pData.getClass())) {
+				if (pData != null && !particle.getDataType().isAssignableFrom(pData.getClass()) && !(pData instanceof ParticleOption)) {
 					pData = null;
 					if (Skript.debug())
 						Skript.warning("Incompatible particle data, resetting it!");
@@ -499,7 +553,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				if (ps == null) {
 					// Colored particles must be played one at time; otherwise, colors are broken
 					if (type.isColorable()) {
-						for (int i = 0; i < count; i++) {
+						int c = count == 0 ? 1 : count;
+						// Some particles use offset as RGB color codes
+						if ((!HAS_REDSTONE_DATA || particle != Particle.REDSTONE) && pData instanceof ParticleOption) {
+							ParticleOption option = ((ParticleOption) pData);
+							dX = option.getRed();
+							dY = option.getGreen();
+							dZ = option.getBlue();
+							speed = 1;
+							pData = null;
+						}
+						for (int i = 0; i < c; i++) {
 							l.getWorld().spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 						}
 					} else {
@@ -508,7 +572,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				} else {
 					for (final Player p : ps) {
 						if (type.isColorable()) {
-							for (int i = 0; i < count; i++) {
+							int c = count == 0 ? 1 : count;
+							// Some particles use offset as RGB color codes
+							if ((!HAS_REDSTONE_DATA || particle != Particle.REDSTONE) && pData instanceof ParticleOption) {
+								ParticleOption option = ((ParticleOption) pData);
+								dX = option.getRed();
+								dY = option.getGreen();
+								dZ = option.getBlue();
+								speed = 1;
+								pData = null;
+							}
+							for (int i = 0; i < c; i++) {
 								p.spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 							}
 						} else {
@@ -590,6 +664,38 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			return false;
 		}
 		return true;
+	}
+	
+	static class ParticleOption {
+		
+		org.bukkit.Color color;
+		float size;
+		
+		public ParticleOption(Color color, float size) {
+			this.color = color.asBukkitColor();
+			this.size = size;
+		}
+		
+		public org.bukkit.Color getBukkitColor() {
+			return color;
+		}
+		
+		public float getRed() {
+			return (float) color.getRed() / 255.0f + 0.00001f;
+		}
+		
+		public float getGreen() {
+			return (float) color.getGreen() / 255.0f;
+		}
+		
+		public float getBlue() {
+			return (float) color.getBlue() / 255.0f;
+		}
+		
+		@Override
+		public String toString() {
+			return "ParticleOption{color=" + color + ", size=" + size + '}';
+		}
 	}
 	
 }

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -53,7 +52,17 @@ public class CursorSlot extends Slot {
 		player.setItemOnCursor(item);
 		PlayerUtils.updateInventory(player);
 	}
-
+	
+	@Override
+	public int getAmount() {
+		return player.getItemOnCursor().getAmount();
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		player.getItemOnCursor().setAmount(amount);
+	}
+	
 	@Override
 	public boolean isSameSlot(Slot o) {
 		if (!(o instanceof CursorSlot))

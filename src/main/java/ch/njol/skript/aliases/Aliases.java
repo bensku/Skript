@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -29,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,11 +142,8 @@ public abstract class Aliases {
 		everything.add(all);
 	}
 	
-	private final static Message m_missing_aliases = new Message("aliases.missing aliases");
 	private final static Message m_empty_string = new Message("aliases.empty string");
 	private final static ArgsMessage m_invalid_item_type = new ArgsMessage("aliases.invalid item type");
-	private final static ArgsMessage m_loaded_x_aliases_from = new ArgsMessage("aliases.loaded x aliases from");
-	private final static ArgsMessage m_loaded_x_aliases = new ArgsMessage("aliases.loaded x aliases");
 	private final static Message m_outside_section = new Message("aliases.outside section");
 	
 	/**
@@ -176,9 +171,6 @@ public abstract class Aliases {
 		}
 		return "" + b.toString().replace("  ", " ").trim();
 	}
-	
-	@SuppressWarnings("null")
-	private final static Pattern numberWordPattern = Pattern.compile("\\d+\\s+.+");
 	
 	@Nullable
 	private static MaterialName getMaterialNameData(ItemData type) {
@@ -237,7 +229,6 @@ public abstract class Aliases {
 	}
 	
 	private final static RegexMessage p_any = new RegexMessage("aliases.any", "", " (.+)", Pattern.CASE_INSENSITIVE);
-	private final static Message m_any = new Message("aliases.any-skp");
 	private final static RegexMessage p_every = new RegexMessage("aliases.every", "", " (.+)", Pattern.CASE_INSENSITIVE);
 	private final static RegexMessage p_of_every = new RegexMessage("aliases.of every", "(\\d+) ", " (.+)", Pattern.CASE_INSENSITIVE);
 	private final static RegexMessage p_of = new RegexMessage("aliases.of", "(\\d+) (?:", " )?(.+)", Pattern.CASE_INSENSITIVE);

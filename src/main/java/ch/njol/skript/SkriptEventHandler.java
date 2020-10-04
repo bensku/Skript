@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript;
 
@@ -32,8 +31,8 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
@@ -48,9 +47,7 @@ import ch.njol.skript.ScriptLoader.ScriptInfo;
 import ch.njol.skript.command.Commands;
 import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.Trigger;
-import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.timings.SkriptTimings;
-import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger
@@ -139,7 +136,7 @@ public abstract class SkriptEventHandler {
 		
 		if (e instanceof Cancellable && ((Cancellable) e).isCancelled() && !listenCancelled.contains(e.getClass()) &&
 				!(e instanceof PlayerInteractEvent && (((PlayerInteractEvent) e).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) e).getAction() == Action.RIGHT_CLICK_AIR) && ((PlayerInteractEvent) e).useItemInHand() != Result.DENY)
-				|| e instanceof ServerCommandEvent && (((ServerCommandEvent) e).getCommand() == null || ((ServerCommandEvent) e).getCommand().isEmpty())) {
+				|| e instanceof ServerCommandEvent && ((ServerCommandEvent) e).getCommand().isEmpty()) {
 			if (Skript.logVeryHigh())
 				Skript.info(" -x- was cancelled");
 			return;
@@ -241,9 +238,7 @@ public abstract class SkriptEventHandler {
 		}
 		
 		info.commands = Commands.unregisterCommands(script);
-		
-		info.functions = Functions.clearFunctions(script);
-		
+				
 		return info;
 	}
 	

@@ -1,0 +1,3 @@
+test "transparent condition": #Spigot is highly inconsistent with transparency. See https://hub.spigotmc.org/jira/browse/SPIGOT-3518
+	assert air is transparent with "air isn't transparent"
+	assert dirt isn't transparent with "dirt is transparent"

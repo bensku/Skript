@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript;
 
@@ -24,6 +23,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -96,7 +97,6 @@ import ch.njol.util.Callback;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
-import ch.njol.util.Validate;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -111,51 +111,6 @@ final public class ScriptLoader {
 	
 	@Nullable
 	public static Config currentScript = null;
-
-	/**
-	 * If true, a {@link PreScriptLoadEvent} will be called
-	 * right before a script starts parsing, but after
-	 * {@link ScriptLoader#currentScript} has been set
-	 * to a non-null {@link Config}.
-	 */
-	private static boolean callPreLoadEvent;
-
-	/**
-	 * A set of all the SkriptAddons that have called
-	 * {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	private static Set<SkriptAddon> preloadListeners = new HashSet<>();
-
-	/**
-	 * Sets {@link ScriptLoader#callPreLoadEvent} to the provided boolean,
-	 * and adds/removes the provided SkriptAddon from {@link ScriptLoader#preloadListeners}
-	 * depending on the provided boolean (true adds, false removes).
-	 * @param state The new value for {@link ScriptLoader#callPreLoadEvent}
-	 * @param addon A non-null SkriptAddon
-	 */
-	public static void setCallPreloadEvent(boolean state, SkriptAddon addon) {
-		Validate.notNull(addon);
-		callPreLoadEvent = state;
-		if (state)
-			preloadListeners.add(addon);
-		else
-			preloadListeners.remove(addon);
-	}
-
-	public static boolean getCallPreloadEvent() {
-		return callPreLoadEvent;
-	}
-
-	/**
-	 * Returns an unmodifiable list of all the addons
-	 * that have called {@link ScriptLoader#setCallPreloadEvent(boolean, SkriptAddon)}
-	 * with true.
-	 */
-	@SuppressWarnings("null")
-	public static Set<SkriptAddon> getPreloadListeners() {
-		return Collections.unmodifiableSet(preloadListeners);
-	}
 
 	/**
 	 * use {@link #setCurrentEvent(String, Class...)}
@@ -305,6 +260,39 @@ final public class ScriptLoader {
 		return Collections.unmodifiableCollection(loadedFiles);
 	}
 	
+	/**
+	 * All disabled script files.
+	 */
+	@SuppressWarnings("null")
+	static final Set<File> disabledFiles = Collections.synchronizedSet(new HashSet<>());
+	
+	@SuppressWarnings("null")
+	public static Collection<File> getDisabledFiles() {
+		return Collections.unmodifiableCollection(disabledFiles);
+	}
+
+	/**
+	 * Filter for disabled scripts & folders.
+	 */
+	private final static FileFilter disabledFilter = new FileFilter() {
+		@Override
+		public boolean accept(final @Nullable File f) {
+			return f != null && (f.isDirectory() || StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
+		}
+	};
+
+	private static void updateDisabledScripts(Path path) {
+		disabledFiles.clear();
+		try {
+			Files.walk(path)
+				.map(Path::toFile)
+				.filter(disabledFilter::accept)
+				.forEach(disabledFiles::add);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// Initialize and start load thread
 	static {
 		loaderThread = new AsyncLoaderThread();
@@ -333,6 +321,8 @@ final public class ScriptLoader {
 			scriptsFolder.mkdirs();
 		
 		final Date start = new Date();
+
+		updateDisabledScripts(scriptsFolder.toPath());
 		
 		Runnable task = () -> {
 			final Set<File> oldLoadedFiles = new HashSet<>(loadedFiles);
@@ -359,7 +349,10 @@ final public class ScriptLoader {
 					
 					// Use internal unload method which does not call validateFunctions()
 					unloadScript_(script);
-					Functions.clearFunctions(script);
+					String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+							.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath()).toString();
+					assert name != null;
+					Functions.clearFunctions(name);
 				}
 				Functions.validateFunctions(); // Manually validate functions
 			}
@@ -401,6 +394,8 @@ final public class ScriptLoader {
 			// Do NOT sort here, list must be loaded in order it came in (see issue #667)
 			final boolean wasLocal = Language.setUseLocal(false);
 			try {
+				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
+				
 				for (final Config cfg : configs) {
 					assert cfg != null : configs.toString();
 					ScriptInfo info = loadScript(cfg);
@@ -506,6 +501,7 @@ final public class ScriptLoader {
 	 * @param config Config for script to be loaded.
 	 * @return Info about script that is loaded
 	 */
+	// Whenever you call this method, make sure to also call PreScriptLoadEvent
 	private static ScriptInfo loadScript(final @Nullable Config config) {
 		if (config == null) { // Something bad happened, hopefully got logged to console
 			return new ScriptInfo();
@@ -526,14 +522,6 @@ final public class ScriptLoader {
 			
 			currentOptions.clear();
 			currentScript = config;
-
-			/*
-			 * If editing this class, please remember to call this event
-			 * after currentScript has already been set to the provided Config,
-			 * but before the script actually starts parsing
-			 */
-			if (callPreLoadEvent)
-				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(config));
 
 //			final SerializedScript script = new SerializedScript();
 			
@@ -679,7 +667,7 @@ final public class ScriptLoader {
 					event = replaceOptions(event);
 					
 					final NonNullPair<SkriptEventInfo<?>, SkriptEvent> parsedEvent = SkriptParser.parseEvent(event, "can't understand this event: '" + node.getKey() + "'");
-					if (parsedEvent == null)
+					if (parsedEvent == null || !parsedEvent.getSecond().shouldLoadEvent())
 						continue;
 					
 					if (Skript.debug() || node.debug())
@@ -716,7 +704,7 @@ final public class ScriptLoader {
 		// In always sync task, enable stuff
 		Callable<Void> callable = new Callable<Void>() {
 
-			@SuppressWarnings("synthetic-access")
+			@SuppressWarnings({"synthetic-access", "null"})
 			@Override
 			public @Nullable Void call() throws Exception {				
 				// Unload script IF we're doing async stuff
@@ -754,6 +742,10 @@ final public class ScriptLoader {
 					
 					deleteCurrentEvent();
 				}
+				
+				// Remove the script from the disabled scripts list
+				File disabledFile = new File(file.getParentFile(), "-" + file.getName());
+				disabledFiles.remove(disabledFile);
 				
 				// Add to loaded files to use for future reloads
 				loadedFiles.add(file);
@@ -796,7 +788,7 @@ final public class ScriptLoader {
 	 *
 	 * @param directory a directory or a single file
 	 */
-	public static List<Config> loadStructures(final File directory) {
+	public static List<Config> loadStructures(File directory) {
 		if (!directory.isDirectory())
 			return loadStructures(new File[]{directory});
 		
@@ -808,7 +800,9 @@ final public class ScriptLoader {
 			if (f.isDirectory()) {
 				loadedFiles.addAll(loadStructures(f));
 			} else {
-				loadedFiles.add(loadStructure(f));
+				Config cfg = loadStructure(f);
+				if (cfg != null)
+					loadedFiles.add(cfg);
 			}
 		}
 		return loadedFiles;
@@ -826,10 +820,9 @@ final public class ScriptLoader {
 			return null;
 		}
 		
-		Functions.clearFunctions(f); // Functions are still callable from other scripts
-		// We're just making it impossible to look them up
 		try {
-			String name = Skript.getInstance().getDataFolder().toPath().resolve(Skript.SCRIPTSFOLDER).relativize(f.toPath()).toString();
+			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+					.resolve(Skript.SCRIPTSFOLDER).relativize(f.toPath().toAbsolutePath()).toString();
 			assert name != null;
 			return loadStructure(new FileInputStream(f), name);
 		} catch (final IOException e) {
@@ -941,7 +934,6 @@ final public class ScriptLoader {
 	 */
 	public static ScriptInfo unloadScript(final File script) {
 		final ScriptInfo r = unloadScript_(script);
-		Functions.clearFunctions(script);
 		Functions.validateFunctions();
 		return r;
 	}
@@ -954,10 +946,48 @@ final public class ScriptLoader {
 			}
 			
 			loadedFiles.remove(script); // We just unloaded it, so...
+			disabledFiles.add(new File(script.getParentFile(), "-" + script.getName()));
+			
+			// Clear functions, DO NOT validate them yet
+			// If unloading, our caller will do this immediately after we return
+			// However, if reloading, new version of this script is first loaded
+			String name = Skript.getInstance().getDataFolder().toPath().toAbsolutePath()
+					.resolve(Skript.SCRIPTSFOLDER).relativize(script.toPath().toAbsolutePath()).toString();
+			assert name != null;
+			Functions.clearFunctions(name);
+			
 			return info; // Return how much we unloaded
 		}
 		
 		return new ScriptInfo(); // Return that we unloaded literally nothing
+	}
+	
+	/**
+	 * Reloads a single script.
+	 * @param script Script file.
+	 * @return Statistics of the newly loaded script.
+	 */
+	public static ScriptInfo reloadScript(File script) {
+		if (!isAsync()) {
+			unloadScript_(script);
+		}
+		Config configs = loadStructure(script);
+		Functions.validateFunctions();
+		return loadScripts(configs);
+	}
+	
+	/**
+	 * Reloads all scripts in the given folder and its subfolders.
+	 * @param folder A folder.
+	 * @return Statistics of newly loaded scripts.
+	 */
+	public static ScriptInfo reloadScripts(File folder) {
+		if (!isAsync()) {
+			unloadScripts_(folder);
+		}
+		List<Config> configs = loadStructures(folder);
+		Functions.validateFunctions();
+		return loadScripts(configs);
 	}
 
 	/**

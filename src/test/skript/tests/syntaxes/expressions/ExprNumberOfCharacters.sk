@@ -1,0 +1,4 @@
+test "number of characters":
+	assert number of uppercase chars in "TESTing123" = 4 with "number of uppercase chars failed"
+	assert number of lowercase characters in "TESTing123" = 3 with "number of lowercase characters failed"
+	assert number of digit characters in "TESTing123" = 3 with "number of digit characters failed"

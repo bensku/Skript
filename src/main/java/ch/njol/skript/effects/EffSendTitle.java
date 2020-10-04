@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -109,7 +108,7 @@ public class EffSendTitle extends Effect {
 		in = fadeIn != null ? fadeIn.toString(e, debug) : "",
 		stay = this.stay != null ? this.stay.toString(e, debug) : "",
 		out = fadeOut != null ? this.fadeOut.toString(e, debug) : "";
-		return (title == null ? "send subtitle " + sub : "send title " + title +
+		return ("send title " + title +
 				sub == "" ? "" : " with subtitle " + sub) + " to " +
 				recipients.toString(e, debug) + (TIME_SUPPORTED ?
 				" for " + stay + " with fade in " + in + " and fade out" + out : "");

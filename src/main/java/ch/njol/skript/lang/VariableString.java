@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -591,6 +590,13 @@ public class VariableString implements Expression<String> {
 				MessageComponent plain = ChatMessages.plainText(text);
 				if (!message.isEmpty()) { // Copy styles from previous component
 					ChatMessages.copyStyles(message.get(message.size() - 1), plain);
+				} else if (Utils.HEX_SUPPORTED && text.contains("§x")) { // Try to parse hex colors
+					int start = text.lastIndexOf("§x");
+					if (start + 14 < text.length()) {
+						String replace = text.substring(start + 2, start + 14);
+						plain.color = Utils.parseHexColor(replace.replace("&", "").replace("§", ""));
+						plain.text = text.replace("§x" + replace, "");
+					}
 				}
 				message.add(plain);
 			} else {

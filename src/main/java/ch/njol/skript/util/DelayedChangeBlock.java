@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -34,14 +33,16 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
+
+import com.destroystokyo.paper.block.BlockSoundGroup;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
@@ -286,7 +287,7 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
-	public boolean breakNaturally(final ItemStack tool) {
+	public boolean breakNaturally(@Nullable ItemStack tool) {
 		if (newState != null) {
 			return false;
 		} else {
@@ -301,13 +302,38 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
+	public boolean breakNaturally(ItemStack tool, boolean triggerEffect) {
+		if (newState != null) {
+			return false;
+		} else {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					b.breakNaturally(tool, triggerEffect);
+				}
+			});
+			return true;
+		}
+	}
+	
+	@Override
+	public boolean applyBoneMeal(BlockFace blockFace) {
+		return b.applyBoneMeal(blockFace);
+	}
+	
+	@Override
 	public Collection<ItemStack> getDrops() {
 		return b.getDrops();
 	}
 	
 	@Override
-	public Collection<ItemStack> getDrops(final ItemStack tool) {
+	public Collection<ItemStack> getDrops(@Nullable ItemStack tool) {
 		return b.getDrops(tool);
+	}
+	
+	@Override
+	public Collection<ItemStack> getDrops(ItemStack tool, @Nullable Entity entity) {
+		return b.getDrops(tool, entity);
 	}
 	
 	@Nullable
@@ -353,7 +379,7 @@ public class DelayedChangeBlock implements Block {
 		if (newState != null) {
 			newState.setBlockData(data);
 		} else {
-			b.setBlockData(data, applyPhysics);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> b.setBlockData(data, applyPhysics));
 		}
 	}
 	
@@ -371,5 +397,15 @@ public class DelayedChangeBlock implements Block {
 	@Override
 	public BoundingBox getBoundingBox() {
 		return b.getBoundingBox();
+	}
+
+	@Override
+	public BlockSoundGroup getSoundGroup() {
+		return b.getSoundGroup();
+	}
+	
+	@Override
+	public String getTranslationKey() {
+		return b.getTranslationKey();
 	}
 }

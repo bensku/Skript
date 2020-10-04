@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -27,7 +26,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -77,7 +75,6 @@ public class EffDrop extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		final Object[] os = drops.getArray(e);

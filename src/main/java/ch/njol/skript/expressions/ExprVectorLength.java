@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -48,8 +47,8 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 	}
 
 	@Override
-	@SuppressWarnings({"unused", "null"})
-	public Double convert(Vector vector) {
+	@SuppressWarnings("unused")
+	public Number convert(Vector vector) {
 		return vector.length();
 	}
 
@@ -97,8 +96,8 @@ public class ExprVectorLength extends SimplePropertyExpression<Vector, Number> {
 	}
 
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 }

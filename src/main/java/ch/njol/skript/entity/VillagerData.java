@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -55,10 +54,10 @@ public class VillagerData extends EntityData<Villager> {
 		
 		if (Skript.isRunningMinecraft(1, 14)) {
 			EntityData.register(VillagerData.class, "villager", Villager.class, 0,
-					"villager", "armorer", "butcher", "cartographer",
+					"villager", "normal", "armorer", "butcher", "cartographer",
 					"cleric", "farmer", "fisherman", "fletcher",
 					"leatherworker", "librarian", "mason", "nitwit",
-					"normal", "shepherd", "toolsmith", "weaponsmith");
+					"shepherd", "toolsmith", "weaponsmith");
 			professions = Arrays.asList(Profession.values());
 		} else if (Skript.isRunningMinecraft(1, 10)) { // Post 1.10: Not all professions go for villagers
 			EntityData.register(VillagerData.class, "villager", Villager.class, 0,
@@ -69,7 +68,7 @@ public class VillagerData extends EntityData<Villager> {
 			professions = new ArrayList<>();
 			for (Profession prof : Profession.values()) {
 				// We're better off doing stringfying the constants since these don't exist in 1.14
-				if (!prof.toString().equals("NORMAL") || !prof.toString().equals("HUSK"))
+				if (!prof.toString().equals("NORMAL") && !prof.toString().equals("HUSK"))
 					professions.add(prof);
 			}
 		} else { // Pre 1.10: method Profession#isZombie() doesn't exist

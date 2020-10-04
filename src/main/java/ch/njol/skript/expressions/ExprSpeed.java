@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -40,13 +39,14 @@ import ch.njol.util.Math2;
  */
 @Name("Speed")
 @Description({"A player's walking or flying speed. Both can be changed, but values must be between -1 and 1 (excessive values will be changed to -1 or 1 respectively). Negative values reverse directions.",
-		"Please note that changing a player's speed will change his FOV just like potions do."})
+		"Please note that changing a player's speed will change their FOV just like potions do."})
 @Examples({"set the player's walk speed to 1",
 		"increase the argument's fly speed by 0.1"})
 @Since("<i>unknown</i> (before 2.1)")
-public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
+public class ExprSpeed extends SimplePropertyExpression<Player, Number> {
+	
 	static {
-		register(ExprSpeed.class, Float.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
+		register(ExprSpeed.class, Number.class, "(0¦walk[ing]|1¦fl(y[ing]|ight))[( |-])speed", "players");
 	}
 	
 	private boolean walk;
@@ -62,9 +62,8 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
-	public Float convert(final Player p) {
+	public Number convert(final Player p) {
 		return walk ? p.getWalkSpeed() : p.getFlySpeed();
 	}
 	
@@ -110,8 +109,8 @@ public class ExprSpeed extends SimplePropertyExpression<Player, Float> {
 	}
 	
 	@Override
-	public Class<Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

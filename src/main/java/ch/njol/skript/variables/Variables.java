@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.variables;
 
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -86,7 +84,7 @@ public abstract class Variables {
 			@SuppressWarnings("unchecked")
 			private final void init() {
 				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo) Classes.getExactClassInfo(Object.class);
+				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
 			}
 			
 			@SuppressWarnings({"unchecked"})

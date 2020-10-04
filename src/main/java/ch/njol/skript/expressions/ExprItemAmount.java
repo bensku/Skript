@@ -14,12 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -27,22 +26,20 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
 
-import java.util.List;
-
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Item Amount")
 @Description("The amount of an <a href='classes.html#itemstack'>item stack</a>.")
 @Examples("send \"You have got %item amount of player's tool% %player's tool% in your hand!\" to player")
 @Since("2.2-dev24")
-public class ExprItemAmount extends SimplePropertyExpression<ItemStack, Number>{
+public class ExprItemAmount extends SimplePropertyExpression<Object, Number>{
 	
     static {
-        register(ExprItemAmount.class, Number.class, "item[[ ]stack] (amount|size|number)", "itemstacks");
+        register(ExprItemAmount.class, Number.class, "item[[ ]stack] (amount|size|number)", "slots/itemtypes");
     }
     
     @Override
@@ -56,8 +53,8 @@ public class ExprItemAmount extends SimplePropertyExpression<ItemStack, Number>{
 	}
 	
 	@Override
-	public Number convert(final ItemStack itemstack) {
-		return itemstack.getAmount();
+	public Number convert(final Object item) {
+    	return item instanceof ItemType ? ((ItemType) item).getAmount() : ((Slot) item).getAmount();
 	}
 	
 	@Override
@@ -70,22 +67,40 @@ public class ExprItemAmount extends SimplePropertyExpression<ItemStack, Number>{
     	int amount = delta != null ? ((Number) delta[0]).intValue() : 0;
         switch (mode) {
             case ADD:
-            	for (ItemStack itemstack : getExpr().getArray(event))
-            		itemstack.setAmount(itemstack.getAmount() + amount);
+            	for (Object obj : getExpr().getArray(event))
+					if (obj instanceof ItemType) {
+						ItemType item = ((ItemType) obj);
+						item.setAmount(item.getAmount() + amount);
+					} else {
+						Slot slot = ((Slot) obj);
+						slot.setAmount(slot.getAmount() + amount);
+					}
                 break;
             case SET:
-            	for (ItemStack itemstack : getExpr().getArray(event))
-            		itemstack.setAmount(amount);
+				for (Object obj : getExpr().getArray(event))
+					if (obj instanceof ItemType)
+						((ItemType) obj).setAmount(amount);
+					else
+						((Slot) obj).setAmount(amount);
                 break;
             case REMOVE:
-            	for (ItemStack itemstack : getExpr().getArray(event))
-            		itemstack.setAmount(itemstack.getAmount() - amount);
+				for (Object obj : getExpr().getArray(event))
+					if (obj instanceof ItemType) {
+						ItemType item = ((ItemType) obj);
+						item.setAmount(item.getAmount() - amount);
+					} else {
+						Slot slot = ((Slot) obj);
+						slot.setAmount(slot.getAmount() - amount);
+					}
                 break;
             case REMOVE_ALL:
             case RESET:
 			case DELETE:
-				for (ItemStack itemstack : getExpr().getArray(event))
-            		itemstack.setAmount(1);
+				for (Object obj : getExpr().getArray(event))
+					if (obj instanceof ItemType)
+						((ItemType) obj).setAmount(1);
+					else
+						((Slot) obj).setAmount(1);
 				break;
         }
     }

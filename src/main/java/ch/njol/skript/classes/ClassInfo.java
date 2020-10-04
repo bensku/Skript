@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes;
 
@@ -83,18 +82,32 @@ public class ClassInfo<T> implements Debuggable {
 	private String[] requiredPlugins = null;
 	
 	/**
+	 * Overrides documentation id assigned from class name.
+	 */
+	@Nullable
+	private String documentationId = null;
+	
+	/**
 	 * @param c The class
 	 * @param codeName The name used in patterns
 	 */
 	public ClassInfo(final Class<T> c, final String codeName) {
 		this.c = c;
-		if (!isVaildCodeName(codeName))
+		if (!isValidCodeName(codeName))
 			throw new IllegalArgumentException("Code names for classes must be lowercase and only consist of latin letters and arabic numbers");
 		this.codeName = codeName;
 		name = new Noun("types." + codeName);
 	}
 	
+	/**
+	 * Incorrect spelling in method name. This will be removed in the future.
+	 */
+	@Deprecated
 	public static boolean isVaildCodeName(final String name) {
+		return isValidCodeName(name);
+	}
+	
+	public static boolean isValidCodeName(final String name) {
 		return name.matches("[a-z0-9]+");
 	}
 	
@@ -251,6 +264,19 @@ public class ClassInfo<T> implements Debuggable {
 		return this;
 	}
 	
+	/**
+	 * Overrides default documentation id, which is assigned from class name.
+	 * This is especially useful for inner classes whose names are useless without
+	 * parent class name as a context.
+	 * @param id Documentation id override.
+	 * @return This ClassInfo object.
+	 */
+	public ClassInfo<T> documentationId(String id) {
+		assert this.documentationId == null;
+		this.documentationId = id;
+		return this;
+	}
+	
 	// === GETTERS ===
 	
 	public Class<T> getC() {
@@ -333,6 +359,17 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public String getDocName() {
 		return docName;
+	}
+	
+	/**
+	 * Gets overridden documentation id of this this type. If no override has
+	 * been set, null is returned and the caller may try to derive this from
+	 * name of {@code #getC()}.
+	 * @return Documentation id override, or null.
+	 */
+	@Nullable
+	public String getDocumentationId() {
+		return documentationId;
 	}
 	
 	// === ORDERING ===

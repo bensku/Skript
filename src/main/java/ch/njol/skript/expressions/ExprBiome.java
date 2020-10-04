@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -64,7 +63,6 @@ public class ExprBiome extends PropertyExpression<Location, Biome> {
 	@Override
 	protected Biome[] get(final Event e, final Location[] source) {
 		return get(source, new Converter<Location, Biome>() {
-			@SuppressWarnings("null")
 			@Override
 			public Biome convert(final Location l) {
 				return l.getWorld().getBiome(l.getBlockX(), l.getBlockZ());

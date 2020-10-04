@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -54,10 +53,10 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @param name The unique name of this constant.
 	 * @throws IllegalArgumentException If the given name is already in use.
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	protected PseudoEnum(final String name) throws IllegalArgumentException {
 		this.name = name;
-		info = (Info<T>) getInfo(getClass());
+		info = getInfo(getClass());
 		info.writeLock.lock();
 		try {
 			if (info.map.containsKey(name))
@@ -136,7 +135,7 @@ public abstract class PseudoEnum<T extends PseudoEnum<T>> {
 	 * @return This constant's pseudo-enum class.
 	 * @see Enum#getDeclaringClass()
 	 */
-	@SuppressWarnings({"unchecked", "null"})
+	@SuppressWarnings("unchecked")
 	public final Class<T> getDeclaringClass() {
 		return getDeclaringClass(getClass());
 	}

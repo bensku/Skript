@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -53,7 +52,6 @@ public class AABB implements Iterable<Block> {
 		upperBound = new Vector(Math.max(l1.getX(), l2.getX()), Math.max(l1.getY(), l2.getY()), Math.max(l1.getZ(), l2.getZ()));
 	}
 	
-	@SuppressWarnings("null")
 	public AABB(final Block b1, final Block b2) {
 		if (b1.getWorld() != b2.getWorld())
 			throw new IllegalArgumentException("Blocks must be in the same world");
@@ -76,7 +74,6 @@ public class AABB implements Iterable<Block> {
 		upperBound = new Vector(Math.max(v1.getX(), v2.getX()) + 1, Math.max(v1.getY(), v2.getY()) + 1, Math.max(v1.getZ(), v2.getZ()) + 1);
 	}
 	
-	@SuppressWarnings("null")
 	public AABB(final Chunk c) {
 		world = c.getWorld();
 		lowerBound = c.getBlock(0, 0, 0).getLocation().toVector();
@@ -91,12 +88,10 @@ public class AABB implements Iterable<Block> {
 				&& lowerBound.getZ() - Skript.EPSILON < l.getZ() && l.getZ() < upperBound.getZ() + Skript.EPSILON;
 	}
 	
-	@SuppressWarnings("null")
 	public boolean contains(final Block b) {
 		return contains(b.getLocation()) && contains(b.getLocation().add(1, 1, 1));
 	}
 	
-	@SuppressWarnings("null")
 	public Vector getDimensions() {
 		return upperBound.clone().subtract(lowerBound);
 	}
@@ -127,7 +122,6 @@ public class AABB implements Iterable<Block> {
 				return y <= maxY && (x != maxX || y != maxY || z != maxZ);
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Block next() {
 				if (!hasNext())

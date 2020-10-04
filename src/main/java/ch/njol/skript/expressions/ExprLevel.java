@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -55,7 +54,6 @@ public class ExprLevel extends SimplePropertyExpression<Player, Integer> {
 	@Override
 	protected Integer[] get(final Event e, final Player[] source) {
 		return super.get(source, new Converter<Player, Integer>() {
-			@SuppressWarnings("null")
 			@Override
 			public Integer convert(final Player p) {
 				if (e instanceof PlayerLevelChangeEvent && ((PlayerLevelChangeEvent) e).getPlayer() == p && !Delay.isDelayed(e)) {

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -51,7 +50,7 @@ public class ExprFireworkEffect extends SimpleExpression<FireworkEffect> {
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		flicker = parseResult.mark == 2 && parseResult.mark > 3;
+		flicker = parseResult.mark == 2 || parseResult.mark > 3;
 		trail = parseResult.mark >= 3;
 		hasFade = matchedPattern == 1;
 		type = (Expression<FireworkEffect.Type>) exprs[0];

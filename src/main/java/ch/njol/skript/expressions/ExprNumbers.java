@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -37,7 +36,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 
 /**
@@ -115,7 +113,6 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				return i <= max;
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Number next() {
 				if (!hasNext())

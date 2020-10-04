@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -26,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,40 +33,32 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemData.OldItemData;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
-import ch.njol.skript.bukkitutil.block.BlockValues;
-import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.Unit;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.GeneralWords;
 import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Message;
 import ch.njol.skript.localization.Noun;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.BlockUtils;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.coll.iterator.EmptyIterable;
 import ch.njol.util.coll.iterator.SingleItemIterable;
 import ch.njol.yggdrasil.FieldHandler;
@@ -276,25 +265,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	public boolean isOfType(@Nullable ItemStack item) {
-		// Duplicate code to avoid creating ItemData
-		for (ItemData myType : types) {
-			if (item == null) { // Given item null
-				if (myType.type == Material.AIR)
-					return true; // Both items AIR/null
-			} else if (myType.isAlias) {
-				if (!myType.isOfType(item))
-					continue;
-				return true;
-			} else {
-				return item.isSimilar(myType.stack);
-			}
-		}
-		return false;
-		
-		// Alternative, simpler implementation
-//		if (item == null)
-//			return isOfType(Material.AIR, null);
-//		return isOfType(new ItemData(item));
+		if (item == null)
+			return isOfType(Material.AIR, null);
+		return isOfType(new ItemData(item));
 	}
 	
 	public boolean isOfType(@Nullable BlockState block) {
@@ -312,8 +285,9 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	public boolean isOfType(ItemData type) {
 		for (final ItemData myType : types) {
-			if (myType.equals(type))
+			if (myType.equals(type)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -389,6 +363,23 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	/**
+	 * Send a block change to a player
+	 * <p>This will send a fake block change to the player, and will not change the block on the server.</p>
+	 *
+	 * @param player Player to send change to
+	 * @param location Location of block to change
+	 */
+	public void sendBlockChange(Player player, Location location) {
+		for (int i = random.nextInt(types.size()); i < types.size(); i++) {
+			ItemData d = types.get(i);
+			Material blockType = ItemUtils.asBlock(d.type);
+			if (blockType == null) // Ignore items which cannot be placed
+				continue;
+			BlockUtils.sendBlockChange(player, location, blockType, d.getBlockValues());
+		}
+	}
+	
+	/**
 	 * Intersects all ItemDatas with all ItemDatas of the given ItemType, returning an ItemType with at most n*m ItemDatas, where n = #ItemDatas of this ItemType, and m =
 	 * #ItemDatas of the argument.
 	 * 
@@ -443,7 +434,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	}
 	
 	void remove(int index) {
-		ItemData type = types.remove(index);
+		types.remove(index);
 		//numItems -= type.numItems();
 		modified();
 	}

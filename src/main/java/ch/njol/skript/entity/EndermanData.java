@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -75,12 +74,10 @@ public class EndermanData extends EntityData<Enderman> {
 				}
 			} else {
 				MaterialData m = e.getCarriedMaterial();
-				if (m != null) {
-					final ItemStack i = m.toItemStack(1);
-					if (i == null)
-						return false;
-					hand = new ItemType[] {new ItemType(i)};
-				}
+				final ItemStack i = m.toItemStack(1);
+				if (i == null)
+					return false;
+				hand = new ItemType[] {new ItemType(i)};
 			}
 		}
 		return true;

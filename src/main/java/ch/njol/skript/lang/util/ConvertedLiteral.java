@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.util;
 
@@ -101,7 +100,7 @@ public class ConvertedLiteral<F, T> extends ConvertedExpression<F, T> implements
 	@Override
 	@Nullable
 	public Iterator<T> iterator(final Event e) {
-		return new ArrayIterator<T>(data);
+		return new ArrayIterator<>(data);
 	}
 	
 	@Override

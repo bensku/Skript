@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -40,14 +39,14 @@ import org.eclipse.jdt.annotation.Nullable;
 			"This expression is only supported on some server software (PaperSpigot).")
 @Examples("broadcast \"%tps%\"")
 @Since("2.2-dev36")
-public class ExprTPS extends SimpleExpression<Double> {
+public class ExprTPS extends SimpleExpression<Number> {
 
 	private static final boolean SUPPORTED = Skript.methodExists(Server.class, "getTPS");
 	private int index;
 	private String expr = "tps";
 
 	static {
-		Skript.registerExpression(ExprTPS.class, Double.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(ExprTPS.class, Number.class, ExpressionType.SIMPLE,
 				"tps from [the] last ([1] minute|1[ ]m[inute])",
 				"tps from [the] last 5[ ]m[inutes]",
 				"tps from [the] last 15[ ]m[inutes]",
@@ -66,18 +65,17 @@ public class ExprTPS extends SimpleExpression<Double> {
 	}
 
 	@Override
-	protected Double[] get(Event e) {
+	protected Number[] get(Event e) {
 		double[] tps = Bukkit.getServer().getTPS();
 		if (index != 3) {
-			return new Double[] { tps[index] };
-		} else {
-			return CollectionUtils.wrap(tps);
+			return new Number[] { tps[index] };
 		}
+		return CollectionUtils.wrap(tps);
 	}
 
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override

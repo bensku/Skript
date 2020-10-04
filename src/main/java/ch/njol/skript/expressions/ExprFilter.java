@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -39,7 +38,7 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.LiteralUtils;
@@ -49,7 +48,7 @@ import ch.njol.util.coll.iterator.ArrayIterator;
 
 @Name("Filter")
 @Description("Filters a list based on a condition. " +
-		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
+		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]', " +
 		"only \"something\" would be broadcast as it is the only string that matched the condition.")
 @Examples("send \"congrats on being staff!\" to all players where [player input has permission \"staff\"]")
 @Since("2.2-dev36")
@@ -74,7 +73,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		try {
 			parsing = this;
 			objects = LiteralUtils.defendExpression(exprs[0]);
@@ -98,7 +97,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			current = null;
 		}
 	}
-	
+
 	@Override
 	protected Object[] get(Event e) {
 		try {
@@ -140,10 +139,10 @@ public class ExprFilter extends SimpleExpression<Object> {
 		for (ExprInput<?> child : children) { // if they used player input, let's assume loop-player is valid
 			if (child.getClassInfo() == null || child.getClassInfo().getUserInputPatterns() == null)
 				continue;
+
 			for (Pattern pattern : child.getClassInfo().getUserInputPatterns()) {
-				if (pattern.matcher(s).matches()) {
+				if (pattern.matcher(s).matches())
 					return true;
-				}
 			}
 		}
 		return objects.isLoopOf(s); // nothing matched, so we'll rely on the object expression's logic
@@ -155,7 +154,6 @@ public class ExprFilter extends SimpleExpression<Object> {
 			"the condition would be checked twice, using \"something\" and \"something else\" as the inputs.")
 	@Examples("send \"congrats on being staff!\" to all players where [input has permission \"staff\"]")
 	@Since("2.2-dev36")
-	@SuppressWarnings({"null", "unchecked"})
 	public static class ExprInput<T> extends SimpleExpression<T> {
 
 		static {
@@ -182,15 +180,17 @@ public class ExprFilter extends SimpleExpression<Object> {
 				parent.removeChild(source);
 				parent.addChild(this);
 			}
+
 			this.superType = (Class<T>) Utils.getSuperType(types);
 		}
 
 		@Override
-		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 			parent = ExprFilter.getParsing();
-			if (parent == null) {
+
+			if (parent == null)
 				return false;
-			}
+
 			parent.addChild(this);
 			inputType = matchedPattern == 0 ? null : ((Literal<ClassInfo<?>>) exprs[0]).getSingle();
 			return true;
@@ -202,6 +202,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			if (inputType != null && !inputType.getC().isInstance(current)) {
 				return null;
 			}
+
 			try {
 				return Converters.convertStrictly(new Object[]{current}, superType);
 			} catch (ClassCastException e1) {

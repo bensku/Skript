@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.log;
 
@@ -35,7 +34,7 @@ public class ParseLogHandler extends LogHandler {
 	@Nullable
 	private LogEntry error = null;
 	
-	private final List<LogEntry> log = new ArrayList<LogEntry>();
+	private final List<LogEntry> log = new ArrayList<>();
 	
 	@Override
 	public LogResult log(final LogEntry entry) {

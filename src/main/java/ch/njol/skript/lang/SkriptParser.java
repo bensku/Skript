@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -447,7 +446,7 @@ public class SkriptParser {
 						return null;
 					}
 				} else { // Mixed plurals/singulars
-					@SuppressWarnings("unchecked") final Variable<?> var = parseVariable(expr, types);
+					final Variable<?> var = parseVariable(expr, types);
 					if (var != null) { // Parsing succeeded, we have a variable
 						// If variables cannot be used here, it is now allowed
 						if ((flags & PARSE_EXPRESSIONS) == 0) {
@@ -574,7 +573,7 @@ public class SkriptParser {
 				final Object t = Classes.parse(expr, ci.getC(), context);
 				if (t != null) {
 					log.printLog();
-					return new SimpleLiteral<>(t, false);
+					return new SimpleLiteral<>(t, false, new UnparsedLiteral(expr));
 				}
 			}
 			log.printError();
@@ -1185,7 +1184,8 @@ public class SkriptParser {
 //			}
 //			@SuppressWarnings("null")
 			
-			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(), ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFile() : null, types, params);//.toArray(new Expression[params.size()]));
+			final FunctionReference<T> e = new FunctionReference<>(functionName, SkriptLogger.getNode(),
+					ScriptLoader.currentScript != null ? ScriptLoader.currentScript.getFileName() : null, types, params);//.toArray(new Expression[params.size()]));
 			if (!e.validateFunction(true)) {
 				log.printError();
 				return null;

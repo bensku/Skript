@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -27,8 +26,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
-import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -122,7 +121,6 @@ public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
 				((Entity) o).setPassenger(p);
 			} else if (o instanceof EntityData) {
 				for (final Entity p : ps) {
-					@SuppressWarnings("null")
 					final Entity v = ((EntityData<?>) o).spawn(p.getLocation());
 					if (v == null)
 						continue;

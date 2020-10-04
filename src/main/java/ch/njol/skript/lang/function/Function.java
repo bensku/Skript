@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.function;
 
@@ -87,6 +86,9 @@ public abstract class Function<T> {
 	@SuppressWarnings("null")
 	@Nullable
 	public final T[] execute(final Object[][] params) {
+		if (params.length > 0 && params[0].length == 0) // Parameters exist, but parameters are not of the correct type 
+			return null;
+		
 		final FunctionEvent<? extends T> e = new FunctionEvent<>(this);
 		
 		// Call function event only if requested by addon

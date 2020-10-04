@@ -14,14 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
 import java.util.Random;
 
-import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.entity.Boat;
 import org.bukkit.inventory.ItemStack;
@@ -136,7 +134,7 @@ public class BoatData extends EntityData<Boat> {
 			ordinal = TreeSpecies.ACACIA.ordinal();
 		else if (darkOakBoat.isOfType(stack))
 			ordinal = TreeSpecies.DARK_OAK.ordinal();
-		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 2) || ordinal == 0;
+		return hashCode_i() == ordinal + 2 || (matchedPattern + ordinal == 0) || ordinal == 0;
 		
 	}
 }

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -59,7 +58,11 @@ public class EffPlayerVisibility extends Effect {
 	}
 
 	@SuppressWarnings("null")
-	private Expression<Player> players, targetPlayers;
+	private Expression<Player> players;
+	
+	@Nullable
+	private Expression<Player> targetPlayers;
+	
 	private boolean reveal;
 
 	@SuppressWarnings({"unchecked", "null"})
@@ -75,6 +78,7 @@ public class EffPlayerVisibility extends Effect {
 	}
 
     @Override
+    @SuppressWarnings("null")
     protected void execute(Event e) {
         Player[] targets = targetPlayers == null ? Bukkit.getOnlinePlayers().toArray(new Player[0]) : targetPlayers.getArray(e);
         for (Player targetPlayer : targets) {
@@ -96,7 +100,7 @@ public class EffPlayerVisibility extends Effect {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (reveal ? "show " : "hide ") + players.toString(e, debug) + (reveal ? " to " : " from ") + targetPlayers.toString(e, debug);
+		return (reveal ? "show " : "hide ") + players.toString(e, debug) + (reveal ? " to " : " from ") + (targetPlayers != null ? targetPlayers.toString(e, debug) : "");
 	}
 
 }

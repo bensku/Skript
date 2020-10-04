@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -27,10 +26,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
 import ch.njol.util.coll.CollectionUtils;
 
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -41,10 +38,10 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on book sign:",
 			"\tmessage \"Book Title: %author of event-item%\""})
 @Since("2.2-dev31")
-public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> {
+public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	
 	static {
-		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemstack");
+		register(ExprBookAuthor.class, String.class, "[book] (author|writer|publisher)", "itemtypes");
 	}
 	
 	private static final ItemType book = Aliases.javaItemType("book with text");
@@ -56,10 +53,10 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> 
 	
 	@Nullable
 	@Override
-	public String convert(ItemStack itemStack) {
-		if (!book.isOfType(itemStack))
+	public String convert(ItemType item) {
+		if (!book.isOfType(item.getMaterial()))
 			return null;
-		return ((BookMeta) itemStack.getItemMeta()).getAuthor();
+		return ((BookMeta) item.getItemMeta()).getAuthor();
 	}
 	
 	@Override
@@ -75,9 +72,10 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> 
 		return null;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		ItemStack itemStack = getExpr().getSingle(e);
+		ItemStack itemStack = getExpr().getSingle(e).getRandom();
 		if (itemStack == null || !book.isOfType(itemStack))
 			return;
 		BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
@@ -96,3 +94,4 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemStack, String> 
 		itemStack.setItemMeta(bookMeta);
 	}
 }
+

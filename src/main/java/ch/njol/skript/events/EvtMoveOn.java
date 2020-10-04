@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
@@ -123,7 +122,6 @@ public class EvtMoveOn extends SelfRegisteringSkriptEvent { // TODO on jump
 		return (int) Math.ceil(y) - 1;
 	}
 	
-	@SuppressWarnings("null")
 	public static Block getBlock(final PlayerMoveEvent e) {
 		return e.getTo().clone().subtract(0, 0.5, 0).getBlock();
 	}

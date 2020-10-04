@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.util;
 
@@ -452,6 +451,32 @@ public abstract class Math2 {
 	public static double smoothStep(final double x, final double x1, final double x2) {
 		final double d = fit(0, (x - x1) / (x2 - x1), 1);
 		return d * d * (3 - 2 * d);
+	}
+	
+	/**
+	 * Guarantees a float is neither NaN nor INF.
+	 * Useful for situations when safe floats are required.
+	 * 
+	 * @param f
+	 * @return 0 if f is NaN or INF, otherwise f
+	 */
+	public static float safe(float f) {
+		if (f != f || Float.isInfinite(f)) //NaN or INF 
+			return 0;
+		return f;
+	}
+	
+	/**
+	 * Guarantees a double is neither NaN nor INF.
+	 * Useful for situations when safe doubles are required.
+	 * 
+	 * @param d
+	 * @return 0 if d is NaN or INF, otherwise d
+	 */
+	public static double safe(double d) {
+		if (d != d || Double.isInfinite(d)) //NaN or INF 
+			return 0;
+		return d;
 	}
 	
 }

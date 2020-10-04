@@ -14,21 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes.data;
-
-import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -51,7 +48,6 @@ public class DefaultChangers {
 	public DefaultChangers() {}
 	
 	public final static Changer<Entity> entityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<? extends Object>[] acceptChange(final ChangeMode mode) {
@@ -105,8 +101,6 @@ public class DefaultChangers {
 								}
 							} else if (d instanceof ItemType) {
 								final PlayerInventory invi = p.getInventory();
-								if (invi == null)
-									continue;
 								if (mode == ChangeMode.ADD)
 									((ItemType) d).addTo(invi);
 								else if (mode == ChangeMode.REMOVE)
@@ -139,7 +133,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Entity> nonLivingEntityChanger = new Changer<Entity>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<Object>[] acceptChange(final ChangeMode mode) {
@@ -160,7 +153,6 @@ public class DefaultChangers {
 	};
 	
 	public final static Changer<Item> itemChanger = new Changer<Item>() {
-		@SuppressWarnings("unchecked")
 		@Override
 		@Nullable
 		public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -294,7 +286,10 @@ public class DefaultChangers {
 			if (mode == ChangeMode.RESET)
 				return null; // REMIND regenerate?
 			if (mode == ChangeMode.SET)
-				return CollectionUtils.array(ItemType.class);
+				if (Skript.classExists("org.bukkit.block.data.BlockData"))
+					return CollectionUtils.array(ItemType.class, BlockData.class);
+				else
+					return CollectionUtils.array(ItemType.class);
 			return CollectionUtils.array(ItemType[].class, Inventory[].class);
 		}
 		
@@ -305,7 +300,12 @@ public class DefaultChangers {
 				switch (mode) {
 					case SET:
 						assert delta != null;
-						((ItemType) delta[0]).getBlock().setBlock(block, true);
+						Object o = delta[0];
+						if (o instanceof ItemType) {
+							((ItemType) delta[0]).getBlock().setBlock(block, true);
+						} else if (o instanceof BlockData) {
+							block.setBlockData(((BlockData) o));
+						}
 						break;
 					case DELETE:
 						block.setType(Material.AIR, true);

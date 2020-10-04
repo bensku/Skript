@@ -14,21 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes.data;
 
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.Objects;
 
+import ch.njol.skript.util.GameruleValue;
+import ch.njol.skript.util.EnchantmentType;
+import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Boat;
@@ -37,22 +39,9 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
-import org.bukkit.entity.minecart.HopperMinecart;
-import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,7 +56,6 @@ import ch.njol.skript.entity.BoatData;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.util.Date;
-import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
@@ -186,6 +174,21 @@ public class DefaultComparators {
 			}
 		});
 		
+		// Block - BlockData
+		if (Skript.classExists("org.bukkit.block.data.BlockData")) {
+			Comparators.registerComparator(Block.class, BlockData.class, new Comparator<Block, BlockData>() {
+				@Override
+				public Relation compare(Block block, BlockData data) {
+					return Relation.get(block.getBlockData().matches(data));
+				}
+				
+				@Override
+				public boolean supportsOrdering() {
+					return false;
+				}
+			});
+		}
+		
 		// ItemType - ItemType
 		Comparators.registerComparator(ItemType.class, ItemType.class, new Comparator<ItemType, ItemType>() {
 			@Override
@@ -268,6 +271,24 @@ public class DefaultComparators {
 	};
 	static {
 		Comparators.registerComparator(EntityData.class, ItemType.class, entityItemComparator);
+		
+		// Entity - ItemType
+		// This skips (entity -> entitydata) == itemtype
+		// It was not working reliably, because there is a converter chain
+		// entity -> player -> inventoryholder -> block that sometimes takes a priority
+		Comparators.registerComparator(Entity.class, ItemType.class, new Comparator<Entity, ItemType>() {
+
+			@Override
+			public Relation compare(Entity entity, ItemType item) {
+				return entityItemComparator.compare(EntityData.fromEntity(entity), item);
+			}
+
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+			
+		});
 	}
 	
 	static {
@@ -462,6 +483,72 @@ public class DefaultComparators {
 				return false;
 			}
 		});
+		
+		Comparators.registerComparator(GameruleValue.class, GameruleValue.class, new Comparator<GameruleValue, GameruleValue>() {
+			@Override
+			public Relation compare(GameruleValue o1, GameruleValue o2) {
+				return Relation.get(o1.equals(o2));
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+		});
+		
+		Comparators.registerComparator(GameruleValue.class, Number.class, new Comparator<GameruleValue, Number>() {
+			@Override
+			public Relation compare(GameruleValue o1, Number o2) {
+				if (!(o1.getGameruleValue() instanceof Number)) return Relation.NOT_EQUAL;
+				Number gameruleValue = (Number) o1.getGameruleValue();
+				return Comparators.compare(gameruleValue, o2);
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return true;
+			}
+		});
+		
+		Comparators.registerComparator(GameruleValue.class, Boolean.class, new Comparator<GameruleValue, Boolean>() {
+			@Override
+			public Relation compare(GameruleValue o1, Boolean o2) {
+				if (!(o1.getGameruleValue() instanceof Boolean)) return Relation.NOT_EQUAL;
+				return Relation.get(o2.equals(o1.getGameruleValue()));
+			}
+			
+			@Override
+			public boolean supportsOrdering() {
+				return false;
+			}
+		});
+
+		// EnchantmentOffer Comparators
+		if (Skript.isRunningMinecraft(1, 11)) {
+			// EnchantmentOffer - EnchantmentType
+			Comparators.registerComparator(EnchantmentOffer.class, EnchantmentType.class, new Comparator<EnchantmentOffer, EnchantmentType>() {
+				@Override
+				public Relation compare(EnchantmentOffer eo, EnchantmentType et) {
+					return Relation.get(eo.getEnchantment() == et.getType() && eo.getEnchantmentLevel() == et.getLevel());
+				}
+				
+				@Override
+				public boolean supportsOrdering() {
+					return false;
+				}
+			});
+			// EnchantmentOffer - Experience
+			Comparators.registerComparator(EnchantmentOffer.class, Experience.class, new Comparator<EnchantmentOffer, Experience>() {
+				@Override
+				public Relation compare(EnchantmentOffer eo, Experience exp) {
+					return Relation.get(eo.getCost() == exp.getXP());
+				}
+				
+				@Override public boolean supportsOrdering() {
+					return false;
+				}
+			});
+		}
 	}
 	
 }

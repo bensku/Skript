@@ -14,12 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.command;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RESET;
 
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -30,7 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.Color;
+import ch.njol.skript.util.SkriptColor;
 
 /**
  * @author Peter Güttinger
@@ -50,19 +50,19 @@ public class CommandHelp {
 	@Nullable
 	private String langNode = null;
 	
-	private final LinkedHashMap<String, Object> arguments = new LinkedHashMap<String, Object>();
+	private final LinkedHashMap<String, Object> arguments = new LinkedHashMap<>();
 	
 	@Nullable
 	private Message wildcardArg = null;
 	
-	public CommandHelp(final String command, final Color argsColor, final String langNode) {
+	public CommandHelp(final String command, final SkriptColor argsColor, final String langNode) {
 		this.command = command;
 		this.argsColor = "" + argsColor.getFormattedChat();
 		this.langNode = langNode;
 		description = new Message(langNode + "." + DEFAULTENTRY);
 	}
 	
-	public CommandHelp(final String command, final Color argsColor) {
+	public CommandHelp(final String command, final SkriptColor argsColor) {
 		this.command = command;
 		this.argsColor = "" + argsColor.getFormattedChat();
 	}

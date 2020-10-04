@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -32,7 +31,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemData;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
-import ch.njol.skript.bukkitutil.block.BlockValues;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -88,7 +86,6 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean init(final @Nullable Class<? extends FallingBlock> c, final @Nullable FallingBlock e) {
 		if (e != null) // TODO material data support
@@ -96,7 +93,6 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected boolean match(final FallingBlock entity) {
 		if (types != null) {

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.config;
 
@@ -281,7 +280,6 @@ public class Config implements Comparable<Config> {
 				try {
 					if (OptionSection.class.isAssignableFrom(f.getType())) {
 						final Object p = f.get(o);
-						@SuppressWarnings("null")
 						@NonNull
 						final Class<?> pc = p.getClass();
 						load(pc, p, path + ((OptionSection) p).key + ".");
@@ -300,7 +298,6 @@ public class Config implements Comparable<Config> {
 	/**
 	 * Sets all {@link Option} fields of the given object to the values from this config
 	 */
-	@SuppressWarnings("null")
 	public void load(final Object o) {
 		load(o.getClass(), o, "");
 	}

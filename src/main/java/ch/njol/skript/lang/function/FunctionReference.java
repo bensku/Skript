@@ -14,12 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.function;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,9 +95,9 @@ public class FunctionReference<T> {
 	 * safety checks.
 	 */
 	@Nullable
-	public final File script;
+	public final String script;
 	
-	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final File script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
+	public FunctionReference(final String functionName, final @Nullable Node node, @Nullable final String script, @Nullable final Class<? extends T>[] returnTypes, final Expression<?>[] params) {
 		this.functionName = functionName;
 		this.node = node;
 		this.script = script;

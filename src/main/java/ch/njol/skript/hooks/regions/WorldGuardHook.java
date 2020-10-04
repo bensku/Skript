@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.hooks.regions;
 
@@ -61,17 +60,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 	
 	@Override
 	protected boolean init() {
-		if (Skript.classExists("com.boydti.fawe.FaweAPI") && Skript.isRunningMinecraft(1, 13)) { // Assume FAWE on MC 1.13+
-			try {
-				Class<?> faweHook = Class.forName("ch.njol.skript.module.worldguard7fawe.WorldGuard7FAWEHook", true, getClass().getClassLoader());
-				faweHook.getDeclaredConstructor().newInstance();
-				return true;
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				Skript.error("An error occurred while trying to enable support for FAWE WorldGuard 7. WorldGuard region support has been disabled!");
-			}
-			return false;
-		} else if (!Skript.classExists("com.sk89q.worldguard.WorldGuard")) { // Assume WorldGuard 6
+		if (!Skript.classExists("com.sk89q.worldguard.WorldGuard")) { // Assume WorldGuard 6
 			try {
 				Class<?> oldHook = Class.forName("ch.njol.skript.module.worldguard6.WorldGuard6Hook", true, getClass().getClassLoader());
 				oldHook.getDeclaredConstructor().newInstance();
@@ -159,7 +148,7 @@ public class WorldGuardHook extends RegionsPlugin<WorldGuardPlugin> {
 		public Iterator<Block> getBlocks() {
 			final BlockVector3 min = region.getMinimumPoint(), max = region.getMaximumPoint();
 			return new AABB(world, new Vector(min.getBlockX(), min.getBlockY(), min.getBlockZ()),
-					new Vector(max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1)).iterator();
+					new Vector(max.getBlockX(), max.getBlockY(), max.getBlockZ())).iterator();
 		}
 		
 		@Override

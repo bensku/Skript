@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -75,9 +74,13 @@ public class ExprPlayerWeather extends SimplePropertyExpression<Player, WeatherT
 	@SuppressWarnings("null")
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		final WeatherType type = delta == null ? WeatherType.CLEAR : (WeatherType) delta[0];
-		for (final Player p : getExpr().getArray(e)) {
-			type.setWeather(p);
+		if (delta == null) {
+			for (Player p : getExpr().getArray(e))
+				p.resetPlayerWeather();
+		} else {
+			WeatherType type = (WeatherType) delta[0];
+			for (Player p : getExpr().getArray(e))
+				type.setWeather(p);
 		}
 	}
 

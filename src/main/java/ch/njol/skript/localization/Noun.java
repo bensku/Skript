@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.localization;
 
@@ -28,7 +27,6 @@ import java.util.Objects;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.localization.Language.LanguageListenerPriority;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;

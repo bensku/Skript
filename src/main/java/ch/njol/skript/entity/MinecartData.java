@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -31,13 +30,12 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.variables.Variables;
 import ch.njol.skript.util.Utils;
+import ch.njol.skript.variables.Variables;
 
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("deprecation")
 public class MinecartData extends EntityData<Minecart> {
 	
 	@SuppressWarnings("null")

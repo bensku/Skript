@@ -14,15 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
-import ch.njol.skript.registrations.Converters;
-import ch.njol.skript.util.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -40,6 +36,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 
 /**
@@ -103,7 +100,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	
 	@Override
 	public Class<? extends Object> getReturnType() {
-		return ItemType.class; // For some reason, inventories still work too... Weird
+		return getExpr().getReturnType() == InventoryType.class ? Inventory.class : ItemType.class;
 	}
 	
 	@Override

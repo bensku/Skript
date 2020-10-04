@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -25,7 +24,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -105,7 +107,6 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	@Nullable
 	public Player getPlayer() {
 		return bukkitOfflinePlayer != null ? bukkitOfflinePlayer.getPlayer() : Bukkit.getPlayerExact(name);
@@ -175,6 +176,96 @@ public class UnresolvedOfflinePlayer implements OfflinePlayer {
 	@Override
 	public long getLastSeen() {
 		return bukkitOfflinePlayer.getLastSeen();
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic) throws IllegalArgumentException {
+		bukkitOfflinePlayer.incrementStatistic(statistic);
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic) throws IllegalArgumentException {
+		bukkitOfflinePlayer.decrementStatistic(statistic);
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException {
+		bukkitOfflinePlayer.incrementStatistic(statistic, amount);
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException {
+		bukkitOfflinePlayer.decrementStatistic(statistic, amount);
+	}
+	
+	@Override
+	public void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException {
+		bukkitOfflinePlayer.setStatistic(statistic, newValue);
+	}
+	
+	@Override
+	public int getStatistic(Statistic statistic) throws IllegalArgumentException {
+		return bukkitOfflinePlayer.getStatistic(statistic);
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException {
+		bukkitOfflinePlayer.incrementStatistic(statistic, material);
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException {
+		bukkitOfflinePlayer.decrementStatistic(statistic, material);
+	}
+	
+	@Override
+	public int getStatistic(Statistic statistic, Material material) throws IllegalArgumentException {
+		return bukkitOfflinePlayer.getStatistic(statistic, material);
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException {
+		bukkitOfflinePlayer.incrementStatistic(statistic, material, amount);
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException {
+		bukkitOfflinePlayer.decrementStatistic(statistic, material, amount);
+	}
+	
+	@Override
+	public void setStatistic(Statistic statistic, Material material, int newValue) throws IllegalArgumentException {
+		bukkitOfflinePlayer.setStatistic(statistic, material, newValue);
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+	
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+		bukkitOfflinePlayer.decrementStatistic(statistic, entityType);
+	}
+	
+	@Override
+	public int getStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+		return bukkitOfflinePlayer.getStatistic(statistic, entityType);
+	}
+	
+	@Override
+	public void incrementStatistic(Statistic statistic, EntityType entityType, int amount) throws IllegalArgumentException {
+		bukkitOfflinePlayer.incrementStatistic(statistic, entityType, amount);
+	}
+	
+	@Override
+	public void decrementStatistic(Statistic statistic, EntityType entityType, int amount) {
+		bukkitOfflinePlayer.decrementStatistic(statistic, entityType, amount);
+	}
+	
+	@Override
+	public void setStatistic(Statistic statistic, EntityType entityType, int newValue) {
+		bukkitOfflinePlayer.setStatistic(statistic, entityType, newValue);
 	}
 	
 }

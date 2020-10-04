@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -38,16 +37,16 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 @Name("Final Damage")
 @Description("How much damage is done in a damage event, considering all types of damage reduction. Can NOT be changed.")
 @Examples({"send \"%final damage%\" to victim"})
 @Since("2.2-dev19")
 @Events("damage")
-public class ExprFinalDamage extends SimpleExpression<Double> {
+public class ExprFinalDamage extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprFinalDamage.class, Double.class, ExpressionType.SIMPLE, "[the] final damage");
+		Skript.registerExpression(ExprFinalDamage.class, Number.class, ExpressionType.SIMPLE, "[the] final damage");
 	}
 	
 	@Override
@@ -61,10 +60,10 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent))
-			return new Double[0];
-		return new Double[] {HealthUtils.getDamage((EntityDamageEvent) e)};
+			return new Number[0];
+		return new Number[] {HealthUtils.getFinalDamage((EntityDamageEvent) e)};
 	}
 	
 	@Override
@@ -80,8 +79,8 @@ public class ExprFinalDamage extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

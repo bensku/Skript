@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
@@ -92,6 +91,7 @@ public class EvtExperienceSpawn extends SelfRegisteringSkriptEvent {
 			return;
 		for (final Class<? extends Event> c : new Class[] {BlockExpEvent.class, EntityDeathEvent.class, ExpBottleEvent.class, PlayerFishEvent.class})
 			Bukkit.getPluginManager().registerEvent(c, new Listener() {}, SkriptConfig.defaultEventPriority.value(), executor, Skript.getInstance(), true);
+		registeredExecutor = true;
 	}
 	
 	private final static EventExecutor executor = new EventExecutor() {

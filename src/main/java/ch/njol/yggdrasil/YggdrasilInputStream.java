@@ -14,12 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil;
 
-import static ch.njol.yggdrasil.Tag.*;
+import static ch.njol.yggdrasil.Tag.T_NULL;
+import static ch.njol.yggdrasil.Tag.T_REFERENCE;
+import static ch.njol.yggdrasil.Tag.getType;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.yggdrasil;
 
@@ -329,13 +328,9 @@ public final class Yggdrasil {
 		if (s != null) {
 			if (!s.canBeInstantiated(c)) { // only used by isSerializable - return null if OK, throw an YggdrasilException if not
 				try {
-					final Object o = s.deserialize(c, new Fields(this));
-					if (o != null)
-						return null;
-					throw new YggdrasilException("YggdrasilSerializer " + s + " returned null from deserialize(" + c + ", new Fields())");
-				} catch (final StreamCorruptedException e) {
-					return null;
-				}
+					s.deserialize(c, new Fields(this));
+				} catch (final StreamCorruptedException e) {}
+				return null;
 			}
 			final Object o = s.newInstance(c);
 			if (o == null)

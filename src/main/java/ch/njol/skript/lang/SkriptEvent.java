@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -58,6 +57,15 @@ public abstract class SkriptEvent implements SyntaxElement, Debuggable {
 	 * @return true if this is SkriptEvent is represented by the Bukkit Event or false if not
 	 */
 	public abstract boolean check(Event e);
+	
+	/**
+	 * Script loader checks this before loading items in event. If false is
+	 * returned, they are not parsed and the event is not registered.
+	 * @return If this event should be loaded.
+	 */
+	public boolean shouldLoadEvent() {
+		return true;
+	}
 	
 	@Override
 	public String toString() {
