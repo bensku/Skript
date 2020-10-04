@@ -611,10 +611,6 @@ public class SkriptClasses {
 						final Object delta = deltas == null ? null : deltas[0];
 						for (final Slot slot : slots) {
 							switch (mode) {
-								case SET:
-									assert delta != null;
-									slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
-									break;
 								case ADD:
 									assert delta != null;
 									if (delta instanceof ItemStack) {
