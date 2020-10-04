@@ -318,6 +318,7 @@ task nightlyResources(type: ProcessResources) {
 task nightlyRelease(type: Jar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources
+	dependsOn licenseMain
 	archiveName = 'Skript-nightly.jar'
 	
 	manifest {
