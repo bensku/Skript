@@ -21,6 +21,7 @@ package ch.njol.skript.bukkitutil.block;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -31,6 +32,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -282,6 +284,12 @@ public class NewBlockCompat implements BlockCompat {
 			}
 			
 			return null; // Can't place torch here legally
+		}
+		
+		@Override
+		public void sendBlockChange(Player player, Location location, Material type, @Nullable BlockValues values) {
+			BlockData blockData = values != null ? ((NewBlockValues) values).data : type.createBlockData();
+			player.sendBlockChange(location, blockData);
 		}
 		
 	}

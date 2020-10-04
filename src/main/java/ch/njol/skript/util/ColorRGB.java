@@ -21,6 +21,7 @@ package ch.njol.skript.util;
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.DyeColor;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -55,9 +56,20 @@ public class ColorRGB implements Color {
 	
 	@Override
 	public String getName() {
-		return "RED:" + bukkit.getRed() + ", GREEN:" + bukkit.getGreen() + ", BLUE" + bukkit.getBlue();
+		return "RED:" + bukkit.getRed() + ", GREEN:" + bukkit.getGreen() + ", BLUE:" + bukkit.getBlue();
 	}
 	
+	public static ColorRGB fromString(String string) {
+		String[] split = string.split(", ");
+		int red = NumberUtils.toInt(split[0].replace("RED:", ""));
+		int green = NumberUtils.toInt(split[1].replace("GREEN:", ""));
+		int blue = NumberUtils.toInt(split[2].replace("BLUE:", ""));
+		return new ColorRGB(red, green, blue);
+	}
+	
+	public static boolean isRGBColor(String string) {
+		return string.startsWith("RED:");
+	}
 	
 	@Override
 	public Fields serialize() throws NotSerializableException {
