@@ -31,7 +31,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Force Attack")
@@ -54,7 +54,7 @@ public class EffForceAttack extends Effect {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (methodExists) {
 			entities = (Expression<LivingEntity>) exprs[0];
 			target = (Expression<Entity>) exprs[1];
@@ -78,4 +78,5 @@ public class EffForceAttack extends Effect {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "make " + entities.toString(e, debug) + " attack " + target.toString(e, debug);
 	}
+	
 }
