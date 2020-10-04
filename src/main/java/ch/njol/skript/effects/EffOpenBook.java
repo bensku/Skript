@@ -32,7 +32,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Open Book")
@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
 public class EffOpenBook extends Effect {
 	
 	static {
-		Skript.registerEffect(EffOpenBook.class, "(open|show) book %itemtype% to %players%");
+		Skript.registerEffect(EffOpenBook.class, "(open|show) book %itemtype% (to|for) %players%");
 	}
 	
 	@SuppressWarnings("null")
@@ -52,7 +52,7 @@ public class EffOpenBook extends Effect {
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final SkriptParser.ParseResult parseResult) {
+	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		book = (Expression<ItemType>) exprs[0];
 		players = (Expression<Player>) exprs[1];
 		return true;
@@ -76,4 +76,5 @@ public class EffOpenBook extends Effect {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "open book " + book.toString(e, debug) + " to " + players.toString(e, debug);
 	}
+	
 }
