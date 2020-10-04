@@ -38,7 +38,7 @@ import ch.njol.util.Kleenean;
 @Description("Makes a living entity attack an entity with a melee attack")
 @Examples("spawn a wolf at player's location\nmake last spawned wolf attack player")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.15 or newer")
+@RequiredPlugins("1.15.2 or newer")
 public class EffForceAttack extends Effect {
 	
 	static {
