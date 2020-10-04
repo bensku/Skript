@@ -35,8 +35,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("Force Attack")
-@Description("Makes a living entity attack an entity with a melee attack")
-@Examples("spawn a wolf at player's location\nmake last spawned wolf attack player")
+@Description("Makes a living entity attack an entity with a melee attack.")
+@Examples({"spawn a wolf at player's location",
+	"make last spawned wolf attack player"})
 @Since("INSERT VERSION")
 @RequiredPlugins("1.15.2 or newer")
 public class EffForceAttack extends Effect {
