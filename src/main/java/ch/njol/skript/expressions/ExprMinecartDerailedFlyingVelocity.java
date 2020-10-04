@@ -59,7 +59,7 @@ public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression
 	@Nullable
 	@Override
 	public Vector convert(Entity entity) {
-		if(entity instanceof Minecart){
+		if (entity instanceof Minecart) {
 			Minecart mc = (Minecart) entity;
 			return flying ? mc.getFlyingVelocityMod() : mc.getDerailedVelocityMod();
 		}
