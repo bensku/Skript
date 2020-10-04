@@ -65,6 +65,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
@@ -573,5 +574,15 @@ public class SimpleEvents {
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
+		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
+			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "item mend[ing]")
+				.description("Called when a player has an item repaired via the Mending enchantment.")
+				.requiredPlugins("Minecraft 1.13 or newer")
+				.examples("on item mend:",
+					"\tchance of 50%:",
+					"\t\tcancel the event",
+					"\t\tsend \"Oops! Mending failed!\" to player")
+				.since("INSERT VERSION");
+		}
 	}
 }
