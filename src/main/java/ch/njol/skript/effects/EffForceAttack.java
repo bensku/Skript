@@ -60,7 +60,7 @@ public class EffForceAttack extends Effect {
 			target = (Expression<Entity>) exprs[1];
 			return true;
 		}
-		Skript.error("The force attack effect requires server version 1.15 or newer");
+		Skript.error("The force attack effect requires server version 1.15.2 or newer");
 		return false;
 	}
 	
