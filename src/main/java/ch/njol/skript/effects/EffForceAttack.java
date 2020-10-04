@@ -46,7 +46,7 @@ public class EffForceAttack extends Effect {
 		Skript.registerEffect(EffForceAttack.class, "make %livingentitys% attack %entity%", "force %livingentitys% to attack %entity%");
 	}
 	
-	private static final boolean methodExists = Skript.methodExists(LivingEntity.class, "attack", Entity.class);
+	private static final boolean ATTACK_IS_SUPPORTED = Skript.methodExists(LivingEntity.class, "attack", Entity.class);
 	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
@@ -56,13 +56,13 @@ public class EffForceAttack extends Effect {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (methodExists) {
-			entities = (Expression<LivingEntity>) exprs[0];
-			target = (Expression<Entity>) exprs[1];
-			return true;
+		if (!ATTACK_IS_SUPPORTED) {
+			Skript.error("The force attack effect requires server version 1.15.2 or newer");
+			return false;
 		}
-		Skript.error("The force attack effect requires server version 1.15.2 or newer");
-		return false;
+		entities = (Expression<LivingEntity>) exprs[0];
+		target = (Expression<Entity>) exprs[1];
+		return true;
 	}
 	
 	@Override
