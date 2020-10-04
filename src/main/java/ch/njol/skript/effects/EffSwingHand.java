@@ -44,7 +44,7 @@ public class EffSwingHand extends Effect {
 		Skript.registerEffect(EffSwingHand.class, "make %livingentitys% swing [their] [main] hand", "make %livingentitys% swing [their] off hand");
 	}
 	
-	private static final boolean methodExists = Skript.methodExists(LivingEntity.class, "swingMainHand");
+	private static final boolean SWINGING_IS_SUPPORTED = Skript.methodExists(LivingEntity.class, "swingMainHand");
 	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entities;
@@ -53,13 +53,13 @@ public class EffSwingHand extends Effect {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (methodExists) {
-			entities = (Expression<LivingEntity>) exprs[0];
-			isMainHand = matchedPattern == 0;
-			return true;
+		if (!SWINGING_IS_SUPPORTED) {
+			Skript.error("The swing hand effect requires server version 1.15.2 or newer");
+			return false;
 		}
-		Skript.error("The swing hand effect requires server version 1.15.2 or newer");
-		return false;
+		entities = (Expression<LivingEntity>) exprs[0];
+		isMainHand = matchedPattern == 0;
+		return true;
 	}
 	
 	@Override
