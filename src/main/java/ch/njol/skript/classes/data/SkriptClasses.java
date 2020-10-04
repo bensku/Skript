@@ -585,11 +585,29 @@ public class SkriptClasses {
 					public Class<Object>[] acceptChange(final ChangeMode mode) {
 						if (mode == ChangeMode.RESET)
 							return null;
+						if (mode == ChangeMode.SET)
+							return new Class[] {ItemType[].class, ItemStack[].class};
 						return new Class[] {ItemType.class, ItemStack.class};
 					}
 					
 					@Override
 					public void change(final Slot[] slots, final @Nullable Object[] deltas, final ChangeMode mode) {
+						if (mode == ChangeMode.SET) {
+							if (deltas != null) {
+								if (deltas.length == 1) {
+									final Object delta = deltas[0];
+									for (final Slot slot : slots) {
+										slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								} else if (deltas.length == slots.length) {
+									for (int i = 0; i < slots.length; i++) {
+										final Object delta = deltas[i];
+										slots[i].setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								}
+							}
+							return;
+						}
 						final Object delta = deltas == null ? null : deltas[0];
 						for (final Slot slot : slots) {
 							switch (mode) {
