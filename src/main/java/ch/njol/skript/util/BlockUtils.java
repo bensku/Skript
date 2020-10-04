@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.aliases.ItemData;
@@ -60,6 +61,10 @@ public abstract class BlockUtils {
 	
 	public static boolean set(Block block, ItemData type, boolean applyPhysics) {
 		return set(block, type.getType(), type.getBlockValues(), applyPhysics);
+	}
+	
+	public static void sendBlockChange(Player player, Location location, Material type, @Nullable BlockValues blockValues) {
+		BlockCompat.SETTER.sendBlockChange(player, location, type, blockValues);
 	}
 	
 	@SuppressWarnings("null")
