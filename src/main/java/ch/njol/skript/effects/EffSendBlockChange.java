@@ -21,9 +21,9 @@ package ch.njol.skript.effects;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -38,11 +38,13 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 
 @Name("Send Block Change")
-@Description("Makes a player see a block as something it really isn't")
-@Examples("make player see block at player as dirt")
-@Since("2.2-dev37c")
+@Description("Makes a player see a block as something it really isn't. BlockData support is only for MC 1.13+")
+@Examples({"make player see block at player as dirt",
+		"make player see target block as campfire[facing=south]"})
+@Since("2.2-dev37c, INSERT VERSION (block data support)")
 public class EffSendBlockChange extends Effect {
 
+	private static final boolean BLOCK_DATA_SUPPORT = Skript.classExists("org.bukkit.block.data.BlockData");
 	private static final boolean SUPPORTED =
 			Skript.methodExists(
 					Player.class,
@@ -54,7 +56,7 @@ public class EffSendBlockChange extends Effect {
 
 	static {
 		Skript.registerEffect(EffSendBlockChange.class,
-				"make %players% see %blocks% as %itemtype%"
+				BLOCK_DATA_SUPPORT ? "make %players% see %blocks% as %itemtype/blockdata%" : "make %players% see %blocks% as %itemtype%"
 		);
 	}
 
@@ -65,22 +67,40 @@ public class EffSendBlockChange extends Effect {
 	private Expression<Block> blocks;
 
 	@SuppressWarnings("null")
-	private Expression<ItemType> as;
+	private Expression<Object> as;
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		if (!SUPPORTED) {
+			Skript.error("The send block change effect is not supported on this version. " +
+				"If Spigot has added a replacement method without magic values " +
+				"please open an issue at https://github.com/SkriptLang/Skript/issues " +
+				"and support will be added for it.");
+			return false;
+		}
+		players = (Expression<Player>) exprs[0];
+		blocks = (Expression<Block>) exprs[1];
+		as = (Expression<Object>) exprs[2];
+		return true;
+	}
 
 	@Override
 	protected void execute(Event e) {
-		ItemType as = this.as.getSingle(e);
-		if (as == null)
-			return;
-		for (Player player : players.getArray(e)) {
-			for (Block block : blocks.getArray(e)) {
-				Material m = as.getMaterial();
-				ItemStack stack = as.getRandom();
-				assert stack != null;
-				if (Skript.isRunningMinecraft(1, 13))
-					player.sendBlockChange(block.getLocation(), m.createBlockData());
-				else
-					player.sendBlockChange(block.getLocation(), m, (byte) stack.getDurability());
+		Object object = this.as.getSingle(e);
+		if (object instanceof ItemType) {
+			ItemType itemType = (ItemType) object;
+			for (Player player : players.getArray(e)) {
+				for (Block block : blocks.getArray(e)) {
+					itemType.sendBlockChange(player, block.getLocation());
+				}
+			}
+		} else if (BLOCK_DATA_SUPPORT && object instanceof BlockData) {
+			BlockData blockData = (BlockData) object;
+			for (Player player : players.getArray(e)) {
+				for (Block block : blocks.getArray(e)) {
+					player.sendBlockChange(block.getLocation(), blockData);
+				}
 			}
 		}
 	}
@@ -95,19 +115,4 @@ public class EffSendBlockChange extends Effect {
 		);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		if (!SUPPORTED) {
-			Skript.error("The send block change effect is not supported on this version. " +
-					"If Spigot has added a replacement method without magic values " +
-					"please open an issue at https://github.com/SkriptLang/Skript/issues " +
-					"and support will be added for it.");
-			return false;
-		}
-		players = (Expression<Player>) exprs[0];
-		blocks = (Expression<Block>) exprs[1];
-		as = (Expression<ItemType>) exprs[2];
-		return true;
-	}
 }
