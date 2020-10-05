@@ -43,7 +43,9 @@ import ch.njol.util.Kleenean;
 public class EffForceAttack extends Effect {
 	
 	static {
-		Skript.registerEffect(EffForceAttack.class, "make %livingentitys% attack %entity%", "force %livingentitys% to attack %entity%");
+		Skript.registerEffect(EffForceAttack.class,
+			"make %livingentities% attack %entity%",
+			"force %livingentities% to attack %entity%");
 	}
 	
 	private static final boolean ATTACK_IS_SUPPORTED = Skript.methodExists(LivingEntity.class, "attack", Entity.class);
