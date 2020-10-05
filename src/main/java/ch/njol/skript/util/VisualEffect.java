@@ -15,7 +15,7 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -120,11 +120,23 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			public boolean isColorable() {
 				return true;
 			}
+			
+			@Nullable
+			@Override
+			public Object getData(@Nullable Object raw, Location l) {
+				return raw;
+			}
 		},
 		POTION_SWIRL_TRANSPARENT(Particle.SPELL_MOB_AMBIENT) {
 			@Override
 			public boolean isColorable() {
 				return true;
+			}
+			
+			@Nullable
+			@Override
+			public Object getData(@Nullable Object raw, Location l) {
+				return raw;
 			}
 		},
 		SPELL(Particle.SPELL),
@@ -153,11 +165,12 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			@Nullable
 			@Override
 			public Object getData(@Nullable Object raw, Location l) {
-				if (Particle.REDSTONE.getDataType() == DustOptions.class && raw instanceof ParticleOption) {
+				if (HAS_REDSTONE_DATA && Particle.REDSTONE.getDataType() == DustOptions.class && raw instanceof ParticleOption) {
 					ParticleOption option = (ParticleOption) raw;
-					return new DustOptions(option.color.asBukkitColor(), option.size);
+					return new DustOptions(option.getBukkitColor(), option.size);
+				} else {
+					return raw;
 				}
-				return null;
 			}
 		},
 		SNOWBALL_BREAK(Particle.SNOWBALL),
@@ -448,24 +461,12 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 		
 		int dPos = 0; // Data index
 		if (type.isColorable()) {
-			if (HAS_REDSTONE_DATA) {
-				Color color = SkriptColor.LIGHT_RED;
-				if (exprs[0] != null) {
-					color = (Color) exprs[0].getSingle(null);
-					dPos++;
-				}
-				data = new ParticleOption(color, 1);
-			} else {
-				for (Expression<?> expr : exprs) {
-					if (expr == null) continue;
-					else if (expr.getReturnType().isAssignableFrom(SkriptColor.class)) {
-						data = expr.getSingle(null);
-					} else {
-						Skript.exception("Color not specified for colored particle");
-						
-					}
-				}
+			Color color = SkriptColor.LIGHT_RED;
+			if (exprs[0] != null && exprs[0].getSingle(null) instanceof Color) {
+				color = (Color) exprs[0].getSingle(null);
+				dPos++;
 			}
+			data = new ParticleOption(color, 1);
 		} else {
 			Expression<?> expr = exprs[0];
 			if (expr.getReturnType() != Long.class && expr.getReturnType() != Integer.class && expr.getReturnType() != Number.class) {
@@ -543,7 +544,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				
 				assert type.effect != null;
 				// Check that data has correct type (otherwise bad things will happen)
-				if (pData != null && !((Particle) type.effect).getDataType().isAssignableFrom(pData.getClass())) {
+				if (pData != null && !particle.getDataType().isAssignableFrom(pData.getClass()) && !(pData instanceof ParticleOption)) {
 					pData = null;
 					if (Skript.debug())
 						Skript.warning("Incompatible particle data, resetting it!");
@@ -553,8 +554,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 					// Colored particles must be played one at time; otherwise, colors are broken
 					if (type.isColorable()) {
 						int c = count == 0 ? 1 : count;
+						// Some particles use offset as RGB color codes
+						if ((!HAS_REDSTONE_DATA || particle != Particle.REDSTONE) && pData instanceof ParticleOption) {
+							ParticleOption option = ((ParticleOption) pData);
+							dX = option.getRed();
+							dY = option.getGreen();
+							dZ = option.getBlue();
+							speed = 1;
+							pData = null;
+						}
 						for (int i = 0; i < c; i++) {
-							l.getWorld().spawnParticle(particle, l, 1, dX, dY, dZ, speed, pData);
+							l.getWorld().spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 						}
 					} else {
 						l.getWorld().spawnParticle(particle, l, count, dX, dY, dZ, speed, pData);
@@ -563,8 +573,17 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 					for (final Player p : ps) {
 						if (type.isColorable()) {
 							int c = count == 0 ? 1 : count;
+							// Some particles use offset as RGB color codes
+							if ((!HAS_REDSTONE_DATA || particle != Particle.REDSTONE) && pData instanceof ParticleOption) {
+								ParticleOption option = ((ParticleOption) pData);
+								dX = option.getRed();
+								dY = option.getGreen();
+								dZ = option.getBlue();
+								speed = 1;
+								pData = null;
+							}
 							for (int i = 0; i < c; i++) {
-								p.spawnParticle(particle, l, 1, dX, dY, dZ, speed, pData);
+								p.spawnParticle(particle, l, 0, dX, dY, dZ, speed, pData);
 							}
 						} else {
 							p.spawnParticle(particle, l, count, dX, dY, dZ, speed, pData);
@@ -649,17 +668,33 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 	
 	static class ParticleOption {
 		
-		Color color;
+		org.bukkit.Color color;
 		float size;
 		
 		public ParticleOption(Color color, float size) {
-			this.color = color;
+			this.color = color.asBukkitColor();
 			this.size = size;
+		}
+		
+		public org.bukkit.Color getBukkitColor() {
+			return color;
+		}
+		
+		public float getRed() {
+			return (float) color.getRed() / 255.0f + 0.00001f;
+		}
+		
+		public float getGreen() {
+			return (float) color.getGreen() / 255.0f;
+		}
+		
+		public float getBlue() {
+			return (float) color.getBlue() / 255.0f;
 		}
 		
 		@Override
 		public String toString() {
-			return "ParticleOption{" + "color=" + color + ", size=" + size + '}';
+			return "ParticleOption{color=" + color + ", size=" + size + '}';
 		}
 	}
 	
