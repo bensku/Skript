@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
@@ -44,6 +45,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -59,7 +61,7 @@ import net.md_5.bungee.api.ChatColor;
 		"<ul>",
 		"\t<li><strong>Players</strong>",
 		"\t\t<ul>",
-		"\t\t\t<li><strong>Name:</strong> The Minecraft account name of the player. Can't be changed, but 'display name' can be changed.</li>",
+		"\t\t\t<li><strong>Name:</strong> The Minecraft account name of the player. Can only be changed on Paper, but 'display name' can always be changed.</li>",
 		"\t\t\t<li><strong>Display Name:</strong> The name of the player that is displayed in messages. " +
 			"This name can be changed freely and can include colour codes, and is shared among all plugins (e.g. chat plugins will use the display name).</li>",
 		"\t\t</ul>",
@@ -89,19 +91,23 @@ import net.md_5.bungee.api.ChatColor;
 		"\t\t</ul>",
 		"\t</li>",
 		"</ul>"})
+@RequiredPlugins("Paper")
 @Examples({"on join:",
-		"	player has permission \"name.red\"",
-		"	set the player's display name to \"<red>[admin] <gold>%name of player%\"",
-		"	set the player's tab list name to \"<green>%player's name%\"",
+		"\tplayer has permission \"name.red\"",
+		"\tset the player's display name to \"<red>[admin] <gold>%name of player%\"",
+		"\tset the player's tab list name to \"<green>%player's name%\"",
+		"set player's name to \"Skript\" # Requires Paper",
 		"set the name of the player's tool to \"Legendary Sword of Awesomeness\""})
-@Since("before 2.1, 2.2-dev20 (inventory name), 2.4 (non-living entity support, changeable inventory name)")
+@Since("before 2.1, 2.2-dev20 (inventory name), 2.4 (non-living entity support, changeable inventory name), INSERT VERSION (changeable player name)")
 public class ExprName extends SimplePropertyExpression<Object, String> {
 
 	@Nullable
 	static final MethodHandle TITLE_METHOD;
 	static final boolean HAS_GAMERULES;
+	static final boolean PLAYER_NAME_CHANGEABLE;
 
 	static {
+		PLAYER_NAME_CHANGEABLE = Skript.classExists("com.destroystokyo.paper.profile.PlayerProfile");
 		HAS_GAMERULES = Skript.classExists("org.bukkit.GameRule");
 		register(ExprName.class, String.class, "(1¦name[s]|2¦(display|nick|chat|custom)[ ]name[s])", "players/entities/itemtypes/inventories/slots" 
                 + (HAS_GAMERULES ? "/gamerules" : ""));
@@ -174,7 +180,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
-			if (mark == 1 && Player.class.isAssignableFrom(getExpr().getReturnType())) {
+			if (mark == 1 && Player.class.isAssignableFrom(getExpr().getReturnType()) && !PLAYER_NAME_CHANGEABLE) {
 				Skript.error("Can't change the Minecraft name of a player. Change the 'display name' or 'tab list name' instead.");
 				return null;
 			}
@@ -189,6 +195,11 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 		for (Object o : getExpr().getArray(e)) {
 			if (o instanceof Player) {
 				switch (mark) {
+					case 1:
+						Player p = (Player) o;
+						PlayerProfile profile = p.getPlayerProfile();
+						profile.setName(name);
+						p.setPlayerProfile(profile);
 					case 2: 
 						((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
 						break;
