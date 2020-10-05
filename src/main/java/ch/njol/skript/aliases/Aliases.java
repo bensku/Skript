@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -364,6 +363,7 @@ public abstract class Aliases {
 			}
 		} else if ((b = lc.endsWith(" " + itemSingular)) || lc.endsWith(" " + itemPlural)) {
 			if ((i = getAlias_i("" + s.substring(0, s.length() - (b ? itemSingular.length() : itemPlural.length()) - 1))) != null) {
+				i = i.clone();
 				for (int j = 0; j < i.numTypes(); j++) {
 					final ItemData d = i.getTypes().get(j);
 					if (!d.isAnything && d.getType().isBlock()) {
