@@ -91,7 +91,7 @@ import net.md_5.bungee.api.ChatColor;
 		"\t\t</ul>",
 		"\t</li>",
 		"</ul>"})
-@RequiredPlugins("Paper")
+@RequiredPlugins("Paper to change player names")
 @Examples({"on join:",
 		"\tplayer has permission \"name.red\"",
 		"\tset the player's display name to \"<red>[admin] <gold>%name of player%\"",
@@ -181,7 +181,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
 			if (mark == 1 && Player.class.isAssignableFrom(getExpr().getReturnType())) {
-				if(!PLAYER_NAME_CHANGEABLE) {
+				if (!PLAYER_NAME_CHANGEABLE) {
 					Skript.error("Can't change the Minecraft name of a player. Change the 'display name' or 'tab list name' instead.");
 					return null;
 				}
@@ -192,7 +192,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 			}
 			return CollectionUtils.array(String.class);
 		}
-		return null;	
+		return null;
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 						profile.setName(name);
 						p.setPlayerProfile(profile);
 						break;
-					case 2: 
+					case 2:
 						((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
 						break;
 					case 3: // Null check not necessary. This method will use the player's name if 'name' is null.
