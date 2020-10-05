@@ -18,8 +18,10 @@
  */
 package ch.njol.skript.bukkitutil.block;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -65,4 +67,16 @@ public interface BlockSetter {
 	 * @param flags Flags for block setter.
 	 */
 	void setBlock(Block block, Material type, @Nullable BlockValues values, int flags);
+	
+	/**
+	 * Send a block change to a player.
+	 * <p>This will send a fake block change to the player, and will not change the block on the server.</p>
+	 *
+	 * @param player Player to send change to
+	 * @param location Location of block to change
+	 * @param type Material of change
+	 * @param values Additional block data, such as block states.
+	 */
+	void sendBlockChange(Player player, Location location, Material type, @Nullable BlockValues values);
+	
 }
