@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -150,7 +149,7 @@ public class AliasesProvider {
 	}
 	
 	/**
-	 * Contains all variations. {@link #loadVariedAlias} uses this.
+	 * Contains all variations.
 	 */
 	private final Map<String, VariationGroup> variations;
 	
@@ -210,7 +209,7 @@ public class AliasesProvider {
 	}
 	
 	/**
-	 * Name of an alias used by {@link #addAlias(String, String, Map, Map)}
+	 * Name of an alias used by {@link #addAlias(AliasName, String, Map, Map)}
 	 * for registration.
 	 */
 	public static class AliasName {

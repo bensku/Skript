@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -32,7 +31,7 @@ import ch.njol.skript.Skript;
  */
 public class MaterialRegistry {
 	
-	private static final boolean newMaterials = Skript.isRunningMinecraft(1, 13);
+	static final boolean newMaterials = Skript.isRunningMinecraft(1, 13);
 	
 	/**
 	 * Loads a material registry from an array of strings. New materials will

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -41,7 +40,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"if chunk at {home::%player's uuid%} is loaded:",
 		"if chunk 1, 10 in world \"world\" is loaded:",
 		"if world(\"lobby\") is loaded:"})
-@Since("2.3, INSERT VERSION (revamp with chunk at location/coords)")
+@Since("2.3, 2.5 (revamp with chunk at location/coords)")
 public class CondIsLoaded extends Condition {
 	
 	static {

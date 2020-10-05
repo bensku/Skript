@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -91,12 +90,12 @@ public class InventorySlot extends SlotWithIndex {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		InventoryHolder holder = invi.getHolder();
+		InventoryHolder holder = invi != null ? invi.getHolder() : null;
 		
 		if (holder instanceof BlockState)
 			holder = new BlockInventoryHolder((BlockState) holder);
 		
-		if (invi.getHolder() != null) {
+		if (holder != null) {
 			if (invi instanceof CraftingInventory) // 4x4 crafting grid is contained in player too!
 				return "crafting slot " + index + " of " + Classes.toString(holder);
 			
