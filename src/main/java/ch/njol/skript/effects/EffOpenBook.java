@@ -60,9 +60,9 @@ public class EffOpenBook extends Effect {
 	
 	@Override
 	protected void execute(final Event e) {
-		@Nullable ItemType itemType = book.getSingle(e);
+		ItemType itemType = book.getSingle(e);
 		if (itemType != null && itemType.getMaterial() == Material.WRITTEN_BOOK) {
-			@Nullable ItemStack itemStack = itemType.getRandom();
+			ItemStack itemStack = itemType.getRandom();
 			if (itemStack != null) {
 				for (Player player : players.getArray(e)) {
 					player.openBook(itemStack);
@@ -71,7 +71,6 @@ public class EffOpenBook extends Effect {
 		}
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "open book " + book.toString(e, debug) + " to " + players.toString(e, debug);
