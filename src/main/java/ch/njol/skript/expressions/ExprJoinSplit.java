@@ -42,7 +42,8 @@ import ch.njol.util.StringUtils;
 @Name("Join & Split")
 @Description("Joins several texts with a common delimiter (e.g. \", \"), or splits a text into multiple texts at a given delimiter.")
 @Examples({"message \"Online players: %join all players with \"\" | \"\"%\" # %all players% would use the default \"x, y, and z\"",
-	"set {_s::*} to the string argument split at \",\""})
+		"set {_s::*} to the string argument split at \",\""})
+
 @Since("2.1, INSERT VERSION (regex support)")
 
 public class ExprJoinSplit extends SimpleExpression<String> {
