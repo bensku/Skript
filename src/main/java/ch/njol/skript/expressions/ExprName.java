@@ -91,7 +91,7 @@ import net.md_5.bungee.api.ChatColor;
 		"\t\t</ul>",
 		"\t</li>",
 		"</ul>"})
-@RequiredPlugins("Paper to change player names")
+@RequiredPlugins("Paper 1.12+ to change player names")
 @Examples({"on join:",
 		"\tplayer has permission \"name.red\"",
 		"\tset the player's display name to \"<red>[admin] <gold>%name of player%\"",
