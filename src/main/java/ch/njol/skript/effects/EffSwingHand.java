@@ -37,7 +37,7 @@ import ch.njol.util.Kleenean;
 @Description("Makes an entity swing their hand. This does nothing if the entity does not have an animation for swinging their hand.")
 @Examples("make player swing their main hand")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.15.2 or newer")
+@RequiredPlugins("Minecraft 1.15.2+")
 public class EffSwingHand extends Effect {
 	
 	static {
@@ -56,7 +56,7 @@ public class EffSwingHand extends Effect {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!SWINGING_IS_SUPPORTED) {
-			Skript.error("The swing hand effect requires server version 1.15.2 or newer");
+			Skript.error("The swing hand effect requires Minecraft 1.15.2 or newer");
 			return false;
 		}
 		entities = (Expression<LivingEntity>) exprs[0];
