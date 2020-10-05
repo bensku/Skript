@@ -180,9 +180,15 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
-			if (mark == 1 && Player.class.isAssignableFrom(getExpr().getReturnType()) && !PLAYER_NAME_CHANGEABLE) {
-				Skript.error("Can't change the Minecraft name of a player. Change the 'display name' or 'tab list name' instead.");
-				return null;
+			if (mark == 1 && Player.class.isAssignableFrom(getExpr().getReturnType())) {
+				if(!PLAYER_NAME_CHANGEABLE) {
+					Skript.error("Can't change the Minecraft name of a player. Change the 'display name' or 'tab list name' instead.");
+					return null;
+				}
+				if(mode == ChangeMode.RESET) {
+					Skript.error("Can't reset the Minecraft name of a player.");
+					return null;
+				}
 			}
 			return CollectionUtils.array(String.class);
 		}
@@ -200,6 +206,7 @@ public class ExprName extends SimplePropertyExpression<Object, String> {
 						PlayerProfile profile = p.getPlayerProfile();
 						profile.setName(name);
 						p.setPlayerProfile(profile);
+						break;
 					case 2: 
 						((Player) o).setDisplayName(name != null ? name + ChatColor.RESET : ((Player) o).getName());
 						break;
