@@ -104,9 +104,7 @@ public class DefaultComparators {
 
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
-				boolean equipment1 = o1 instanceof EquipmentSlot;
-				boolean equipment2 = o2 instanceof EquipmentSlot;
-				if (equipment != equipment2)
+				if (o1 instanceof EquipmentSlot != o2 instanceof EquipmentSlot)
 					return Relation.NOT_EQUAL;
 				if (o1.isSameSlot(o2))
 					return Relation.EQUAL;
