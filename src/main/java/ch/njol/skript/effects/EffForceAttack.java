@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 @Examples({"spawn a wolf at player's location",
 	"make last spawned wolf attack player"})
 @Since("INSERT VERSION")
-@RequiredPlugins("1.15.2 or newer")
+@RequiredPlugins("Minecraft 1.15.2+")
 public class EffForceAttack extends Effect {
 	
 	static {
@@ -59,7 +59,7 @@ public class EffForceAttack extends Effect {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ATTACK_IS_SUPPORTED) {
-			Skript.error("The force attack effect requires server version 1.15.2 or newer");
+			Skript.error("The force attack effect requires Minecraft 1.15.2 or newer");
 			return false;
 		}
 		entities = (Expression<LivingEntity>) exprs[0];
