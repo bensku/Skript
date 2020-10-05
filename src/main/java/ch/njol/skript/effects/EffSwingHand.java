@@ -41,7 +41,9 @@ import ch.njol.util.Kleenean;
 public class EffSwingHand extends Effect {
 	
 	static {
-		Skript.registerEffect(EffSwingHand.class, "make %livingentitys% swing [their] [main] hand", "make %livingentitys% swing [their] off hand");
+		Skript.registerEffect(EffSwingHand.class,
+			"make %livingentities% swing [their] [main] hand",
+			"make %livingentities% swing [their] off[ ]hand");
 	}
 	
 	private static final boolean SWINGING_IS_SUPPORTED = Skript.methodExists(LivingEntity.class, "swingMainHand");
@@ -77,7 +79,7 @@ public class EffSwingHand extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "make " + entities.toString(e, debug) + " swing hand";
+		return "make " + entities.toString(e, debug) + " swing their " + (isMainHand ? "hand" : "off hand");
 	}
 	
 }
