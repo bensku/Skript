@@ -22,8 +22,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -40,6 +40,7 @@ import ch.njol.util.StringUtils;
  */
 @SuppressWarnings("unchecked")
 public final class EvtEntity extends SkriptEvent {
+	
 	static {
 		Skript.registerEvent("Death", EvtEntity.class, EntityDeathEvent.class, "death [of %entitydatas%]")
 				.description("Called when a living entity (including players) dies.")
@@ -48,26 +49,29 @@ public final class EvtEntity extends SkriptEvent {
 						"on death of a wither or ender dragon:",
 						"	broadcast \"A %entity% has been slain in %world%!\"")
 				.since("1.0");
-		Skript.registerEvent("Spawn", EvtEntity.class, CreatureSpawnEvent.class, "spawn[ing] [of %entitydatas%]")
-				.description("Called when an creature spawns.")
+		Skript.registerEvent("Spawn", EvtEntity.class, EntitySpawnEvent.class, "spawn[ing] [of %entitydatas%]")
+				.description("Called when an entity spawns (excluding players).")
 				.examples("on spawn of a zombie:",
 						"on spawn of an ender dragon:",
 						"	broadcast \"A dragon has been sighted in %world%!\"")
-				.since("1.0");
+				.since("1.0, INSERT VERSION (non-living entities)");
 	}
 	
 	@Nullable
 	private EntityData<?>[] types;
 	
+	private boolean spawn;
+	
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		types = args[0] == null ? null : ((Literal<EntityData<?>>) args[0]).getAll();
+		spawn = StringUtils.startsWithIgnoreCase(parser.expr, "spawn");
 		if (types != null) {
-			if (StringUtils.startsWithIgnoreCase(parser.expr, "spawn")) {
+			if (spawn) {
 				for (final EntityData<?> d : types) {
-					if (!LivingEntity.class.isAssignableFrom(d.getType()) || HumanEntity.class.isAssignableFrom(d.getType())) {
-						Skript.error("The spawn event only works for living entities (excluding humans)", ErrorQuality.SEMANTIC_ERROR);
+					if (HumanEntity.class.isAssignableFrom(d.getType())) {
+						Skript.error("The spawn event does not work for human entities", ErrorQuality.SEMANTIC_ERROR);
 						return false;
 					}
 				}
@@ -88,7 +92,7 @@ public final class EvtEntity extends SkriptEvent {
 	public boolean check(final Event e) {
 		if (types == null)
 			return true;
-		final Entity en = e instanceof EntityDeathEvent ? ((EntityDeathEvent) e).getEntity() : ((CreatureSpawnEvent) e).getEntity();
+		final Entity en = e instanceof EntityDeathEvent ? ((EntityDeathEvent) e).getEntity() : ((EntitySpawnEvent) e).getEntity();
 		for (final EntityData<?> d : types) {
 			if (d.isInstance(en))
 				return true;
@@ -98,7 +102,7 @@ public final class EvtEntity extends SkriptEvent {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "death/spawn" + (types != null ? " of " + Classes.toString(types, false) : "");
+		return (spawn ? "spawn" : "death") + (types != null ? " of " + Classes.toString(types, false) : "");
 	}
 	
 }
