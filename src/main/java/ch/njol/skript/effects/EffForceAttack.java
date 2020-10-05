@@ -69,7 +69,7 @@ public class EffForceAttack extends Effect {
 	
 	@Override
 	protected void execute(Event e) {
-		@Nullable Entity target = this.target.getSingle(e);
+		Entity target = this.target.getSingle(e);
 		if (target != null) {
 			for (LivingEntity entity : entities.getArray(e)) {
 				entity.attack(target);
