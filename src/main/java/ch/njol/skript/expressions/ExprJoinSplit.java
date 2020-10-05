@@ -57,9 +57,9 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 			"regex %string% split (at|using|by) [[the] delimiter] %string%");
 	}
 	
-	private boolean regex;
-	
 	private boolean join;
+	private boolean regex;
+
 	
 	@SuppressWarnings("null")
 	private Expression<String> strings;
