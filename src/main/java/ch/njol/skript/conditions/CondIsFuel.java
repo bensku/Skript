@@ -38,7 +38,7 @@ import ch.njol.skript.doc.Since;
 	"\t\tcancel event"
 })
 @Since("INSERT VERSION")
-@RequiredPlugins("1.11.2+")
+@RequiredPlugins("Minecraft 1.11.2+")
 public class CondIsFuel extends PropertyCondition<ItemType> {
 	
 	static {
