@@ -46,6 +46,7 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.HorseJumpEvent;
 import org.bukkit.event.entity.PigZapEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -55,6 +56,8 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -561,6 +564,14 @@ public class SimpleEvents {
 			"\tif the clicked button is enchantment option 1:",
 			"\t\tset the applied enchantments to sharpness 10 and unbreaking 10")
 		.since("2.5");
+		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
+				.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
+				.examples("on inventory pickup:")
+				.since("INSERT VERSION");
+		Skript.registerEvent("Horse Jump", SimpleEvent.class, HorseJumpEvent.class, "horse jump")
+			.description("Called when a horse jumps.")
+			.examples("on horse jump:", "\tpush event-entity upwards at speed 2")
+			.since("INSERT VERSION");
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
@@ -568,6 +579,11 @@ public class SimpleEvents {
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
+		Skript.registerEvent("Arm Swing", SimpleEvent.class, PlayerAnimationEvent.class, "[player] arm swing")
+			.description("Called when a player swings his arm.")
+			.examples("on arm swing:",
+				"\tsend \"You swung your arm!\"")
+			.since("INSERT VERSION");
 		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
 			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "item mend[ing]")
 				.description("Called when a player has an item repaired via the Mending enchantment.")
