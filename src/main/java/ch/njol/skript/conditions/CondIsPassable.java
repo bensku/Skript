@@ -15,7 +15,7 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -36,7 +36,7 @@ import ch.njol.skript.doc.Since;
 })
 @Examples("if player's targeted block is passable")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.13.2+")
+@RequiredPlugins("Minecraft 1.13.2+")
 public class CondIsPassable extends PropertyCondition<Block> {
 	
 	static {
