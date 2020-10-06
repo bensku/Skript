@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
