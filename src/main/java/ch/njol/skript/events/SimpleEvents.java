@@ -572,14 +572,14 @@ public class SimpleEvents {
 			.description("Called when a horse jumps.")
 			.examples("on horse jump:", "\tpush event-entity upwards at speed 2")
 			.since("INSERT VERSION");
-		if (Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
+		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
 			.requiredPlugins("Minecraft 1.13 or newer")
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
-		Skript.registerEvent("Arm Swing", SimpleEvent.class, PlayerAnimationEvent.class, "[player] [arm] swing")
+		Skript.registerEvent("Arm Swing", SimpleEvent.class, PlayerAnimationEvent.class, "[player] arm swing")
 			.description("Called when a player swings his arm.")
 			.examples("on arm swing:",
 				"\tsend \"You swung your arm!\"")
