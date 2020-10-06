@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -45,6 +46,8 @@ public class EffOpenBook extends Effect {
 		Skript.registerEffect(EffOpenBook.class, "(open|show) book %itemtype% (to|for) %players%");
 	}
 	
+	private static final ItemType bookItemType = Aliases.javaItemType("written book");
+	
 	@SuppressWarnings("null")
 	private Expression<ItemType> book;
 	@SuppressWarnings("null")
@@ -61,7 +64,7 @@ public class EffOpenBook extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		ItemType itemType = book.getSingle(e);
-		if (itemType != null && itemType.getMaterial() == Material.WRITTEN_BOOK) {
+		if (bookItemType.equals(itemType)) {
 			ItemStack itemStack = itemType.getRandom();
 			if (itemStack != null) {
 				for (Player player : players.getArray(e)) {
