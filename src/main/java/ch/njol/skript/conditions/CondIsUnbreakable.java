@@ -15,7 +15,7 @@
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -34,7 +34,7 @@ import ch.njol.skript.doc.Since;
 @Description("Checks whether an item is unbreakable.")
 @Examples("if event-item is unbreakable")
 @Since("INSERT VERSION")
-@RequiredPlugins("1.11+")
+@RequiredPlugins("Minecraft 1.11+")
 public class CondIsUnbreakable extends PropertyCondition<ItemType> {
 	
 	static {
