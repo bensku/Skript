@@ -1075,6 +1075,36 @@ entities:
 	zombie nitwit:
 		name: zombie nitwit¦s
 		pattern: zombie nitwit(|1¦s)
+	zombie armorer:
+		name: zombie armorer¦s
+		pattern: zombie armorer(|1¦s)
+	zombie cartographer:
+		name: zombie cartographer¦s
+		pattern: zombie cartographer(|1¦s)
+	zombie cleric:
+		name: zombie cleric¦s
+		pattern: zombie cleric(|1¦s)
+	zombie fisherman:
+		name: zombie fisher¦man¦men
+		pattern: zombie fisherm(an|1¦en)
+	zombie fletcher:
+		name: zombie fletcher¦s
+		pattern: zombie fletcher(|1¦s)
+	zombie leatherworker:
+		name: zombie leatherworker¦s
+		pattern: zombie leatherworker(|1¦s)
+	zombie mason:
+		name: zombie mason¦s
+		pattern: zombie mason(|1¦s)
+	zombie shepherd:
+		name: zombie shepherd¦s
+		pattern: zombie shepherd(|1¦s)
+	zombie toolsmith:
+		name: zombie toolsmith¦s
+		pattern: zombie toolsmith(|1¦s)
+	zombie weaponsmith:
+		name: zombie weaponsmith¦s
+		pattern: zombie weaponsmith(|1¦s)
 	evoker:
 		name: evoker¦s
 		pattern: evoker(|1¦s)
