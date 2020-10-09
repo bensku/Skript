@@ -1004,25 +1004,25 @@ entities:
 		name: rabbit¦s
 		pattern: <age> rabbit(|1¦s)|rabbit <age>(|1¦s)
 	brown rabbit:
-		name: rabbit¦s
+		name: brown rabbit¦s
 		pattern: brown <age> rabbit(|1¦s)|brown rabbit <age>(|1¦s)
 	black and white rabbit:
-		name: rabbit¦s
+		name: black and white rabbit¦s
 		pattern: black [and] white <age> rabbit(|1¦s)|black [and] white rabbit <age>(|1¦s)
 	white rabbit:
-		name: rabbit¦s
+		name: white rabbit¦s
 		pattern: white <age> rabbit(|1¦s)|white rabbit <age>(|1¦s)
 	black rabbit:
-		name: rabbit¦s
+		name: black rabbit¦s
 		pattern: black <age> rabbit(|1¦s)|black rabbit <age>(|1¦s)
 	gold rabbit:
-		name: rabbit¦s
+		name: gold rabbit¦s
 		pattern: gold <age> rabbit(|1¦s)|gold rabbit <age>(|1¦s)
 	salt and pepper rabbit:
-		name: rabbit¦s
+		name: salt and pepper rabbit¦s
 		pattern: salt [and] pepper <age> rabbit(|1¦s)|salt [and] pepper rabbit <age>(|1¦s)
 	killer rabbit:
-		name: rabbit¦s
+		name: killer rabbit¦s
 		pattern: killer <age> rabbit(|1¦s)|killer rabbit <age>(|1¦s)
 	fish hook:
 		name: fish hook¦s
