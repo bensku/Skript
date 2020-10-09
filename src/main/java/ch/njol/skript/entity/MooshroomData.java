@@ -38,6 +38,13 @@ public class MooshroomData extends EntityData<MushroomCow> {
 	@Nullable
 	private Variant variant = null;
 	
+	public MooshroomData() {}
+	
+	public MooshroomData(@Nullable Variant variant) {
+		this.variant = variant;
+		super.matchedPattern = variant == Variant.BROWN ? 2 : 1;
+	}
+	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern > 0)
@@ -70,7 +77,7 @@ public class MooshroomData extends EntityData<MushroomCow> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new MooshroomData();
+		return new MooshroomData(variant);
 	}
 	
 	@Override
