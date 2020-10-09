@@ -37,6 +37,13 @@ public class FoxData extends EntityData<Fox> {
 	@Nullable
 	private Type type = null;
 	
+	public FoxData() {}
+	
+	public FoxData(@Nullable Type type) {
+		this.type = type;
+		super.matchedPattern = type == Type.SNOW ? 2 : 1;
+	}
+	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern > 0)
@@ -69,7 +76,7 @@ public class FoxData extends EntityData<Fox> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new FoxData();
+		return new FoxData(type);
 	}
 	
 	@Override
