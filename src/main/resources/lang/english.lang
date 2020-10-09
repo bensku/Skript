@@ -751,6 +751,9 @@ entities:
 	spawner minecart:
 		name: spawner minecart¦s
 		pattern: (monster|mob|) spawner [mine]cart(|1¦s)|[mine]cart(|1¦s) with (monster|mob|) spawner[s]
+	command minecart:
+		name: command minecart¦s
+		pattern: command [mine]cart(|1¦s)|[mine]cart(|1¦s) with command block[s]
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
