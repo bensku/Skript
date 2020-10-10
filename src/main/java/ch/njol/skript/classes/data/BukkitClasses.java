@@ -1954,7 +1954,6 @@ public class BukkitClasses {
 				.usage(fishStateUtils.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<PlayerFishEvent.State>() {
-					
 					@Nullable
 					@Override
 					public PlayerFishEvent.State parse(String s, ParseContext context) {
