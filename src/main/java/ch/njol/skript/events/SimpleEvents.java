@@ -44,6 +44,7 @@ import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
+import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.HorseJumpEvent;
@@ -578,5 +579,10 @@ public class SimpleEvents {
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
+		Skript.registerEvent("Experience Bottle Hit", SimpleEvent.class, ExpBottleEvent.class, "[e]xp[erience] bottle hit")
+			.description("Called when an experience bottle hits and releases experience.")
+			.examples("on experience bottle hit:",
+				"add random integer between 1 and 10 to experience amount")
+			.since("INSERT VERSION");
 	}
 }
