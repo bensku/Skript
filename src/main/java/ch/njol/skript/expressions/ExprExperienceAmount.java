@@ -51,6 +51,7 @@ public class ExprExperienceAmount extends SimpleExpression<Integer> {
 		Skript.registerExpression(ExprExperienceAmount.class, Integer.class, ExpressionType.SIMPLE, "[the] [e]xp[erience] amount");
 	}
 
+	@SuppressWarnings("null")
 	private Kleenean delay;
 
 	@Override
