@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Experience Amount")
-@Description("The amount of experience released in a experience bottle hit event.")
+@Description("The amount of experience released in an experience bottle hit event.")
 @Examples({"on experience bottle hit:",
 	"\texperience amount is below 5",
 	"\tincrease experience amount by 3"})
