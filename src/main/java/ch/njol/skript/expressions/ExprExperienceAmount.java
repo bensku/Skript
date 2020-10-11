@@ -24,7 +24,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
@@ -72,18 +72,24 @@ public class ExprExperienceAmount extends SimpleExpression<Integer> {
 
 	@Nullable
 	@Override
-	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (delay != Kleenean.FALSE) {
 			Skript.error("The experience amount cannot be changed after the event has already passed");
 			return null;
 		}
-		if (mode == Changer.ChangeMode.REMOVE_ALL || mode == Changer.ChangeMode.RESET)
-			return null;
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case REMOVE:
+			case SET:
+			case DELETE:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
-	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		int value = delta == null ? 0 : ((Number) delta[0]).intValue();
 		switch (mode) {
 			case SET:
