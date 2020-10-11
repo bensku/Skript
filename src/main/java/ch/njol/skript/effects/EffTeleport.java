@@ -31,34 +31,48 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 
 @Name("Teleport")
 @Description("Teleport an entity to a specific location.")
 @Examples({"teleport the player to {homes.%player%}",
-		"teleport the attacker to the victim"})
-@Since("1.0")
+		"teleport the attacker to the victim asynchronously"})
+@RequiredPlugins("Paper 1.13+ for async teleportation")
+@Since("1.0, INSERT VERSION (async teleportation)")
 public class EffTeleport extends Effect {
 
 	static {
-		Skript.registerEffect(EffTeleport.class, "teleport %entities% (to|%direction%) %location%");
+		Skript.registerEffect(EffTeleport.class,
+			"teleport %entities% (to|%direction%) %location%",
+			"teleport %entities% (to|%direction%) %location% async[hronously]");
 	}
-
+	
+	private final boolean asyncMethodExists = Skript.methodExists(org.bukkit.entity.Entity.class, "teleportAsync", Location.class);
+	
 	@SuppressWarnings("null")
 	private Expression<Entity> entities;
 	@SuppressWarnings("null")
 	private Expression<Location> location;
+	@SuppressWarnings("null")
+	private boolean async;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+		if (matchedPattern == 1 && !asyncMethodExists) {
+			Skript.error("Teleporting an entity asynchronously is only available with Paper 1.13+.", ErrorQuality.SEMANTIC_ERROR);
+			return false;
+		}
 		entities = (Expression<Entity>) exprs[0];
 		location = Direction.combine((Expression<? extends Direction>) exprs[1], (Expression<? extends Location>) exprs[2]);
+		async = matchedPattern == 1;
 		return true;
 	}
 
@@ -80,14 +94,18 @@ public class EffTeleport extends Effect {
 			if (e instanceof PlayerRespawnEvent && entity.equals(((PlayerRespawnEvent) e).getPlayer()) && !Delay.isDelayed(e)) {
 				((PlayerRespawnEvent) e).setRespawnLocation(to);
 			} else {
-				entity.teleport(to);
+				if (async) {
+					entity.teleportAsync(to);
+				} else {
+					entity.teleport(to);
+				}
 			}
 		}
 	}
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return "teleport " + entities.toString(e, debug) + " to " + location.toString(e, debug);
+		return "teleport " + entities.toString(e, debug) + " to " + location.toString(e, debug) + (async ? " asynchronously" : "");
 	}
 
 }
