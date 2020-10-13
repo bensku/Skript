@@ -761,12 +761,14 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 					 * it to return true for two "same items", even if their
 					 * item meta is completely different.
 					 */
-					if (is != null && d.matchAlias(new ItemData(is)).isAtLeast(MatchQuality.EXACT)) {
+					ItemData other = is != null ? new ItemData(is) : null;
+					if (other != null && other.matchAlias(d).isAtLeast((d.isDefault() && !other.isDefault()) ? MatchQuality.SAME_MATERIAL : MatchQuality.EXACT)) {
 						if (all && amount == -1) {
 							list.set(i, null);
 							removed = 1;
 							continue;
 						}
+						assert is != null;
 						final int toRemove = Math.min(is.getAmount(), getAmount() - removed);
 						removed += toRemove;
 						if (toRemove == is.getAmount()) {
