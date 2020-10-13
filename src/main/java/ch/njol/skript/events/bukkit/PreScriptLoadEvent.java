@@ -20,6 +20,7 @@ package ch.njol.skript.events.bukkit;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -31,6 +32,7 @@ public class PreScriptLoadEvent extends Event {
     private final List<Config> scripts;
 
     public PreScriptLoadEvent(List<Config> scripts) {
+        super(!Bukkit.isPrimaryThread());
         Validate.notNull(scripts);
         this.scripts = scripts;
     }
