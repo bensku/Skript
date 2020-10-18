@@ -64,6 +64,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.FireworkExplodeEvent;
+import org.bukkit.event.entity.HorseJumpEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -79,6 +80,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
@@ -1006,6 +1008,28 @@ public final class BukkitEventValues {
 				return e.getInventory();
 			}
 		}, 0);
+		//InventoryPickupItemEvent
+		EventValues.registerEventValue(InventoryPickupItemEvent.class, Inventory.class, new Getter<Inventory, InventoryPickupItemEvent>() {
+			@Nullable
+			@Override
+			public Inventory get(InventoryPickupItemEvent event) {
+				return event.getInventory();
+			}
+		}, 0);
+		EventValues.registerEventValue(InventoryPickupItemEvent.class, Item.class, new Getter<Item, InventoryPickupItemEvent>() {
+			@Nullable
+			@Override
+			public Item get(InventoryPickupItemEvent event) {
+				return event.getItem();
+			}
+		}, 0);
+		EventValues.registerEventValue(InventoryPickupItemEvent.class, ItemType.class, new Getter<ItemType, InventoryPickupItemEvent>() {
+			@Nullable
+			@Override
+			public ItemType get(InventoryPickupItemEvent event) {
+				return new ItemType(event.getItem().getItemStack());
+			}
+		}, 0);
 		//PortalCreateEvent
 		EventValues.registerEventValue(PortalCreateEvent.class, World.class, new Getter<World, PortalCreateEvent>() {
 			@Override
@@ -1160,6 +1184,13 @@ public final class BukkitEventValues {
 			@Nullable
 			public Block get(EnchantItemEvent e) {
 				return e.getEnchantBlock();
+			}
+		}, 0);
+		EventValues.registerEventValue(HorseJumpEvent.class, Entity.class, new Getter<Entity, HorseJumpEvent>() {
+			@Nullable
+			@Override
+			public Entity get(HorseJumpEvent evt) {
+				return evt.getEntity();
 			}
 		}, 0);
 	}
