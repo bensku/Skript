@@ -48,7 +48,7 @@ import ch.njol.util.coll.iterator.ArrayIterator;
 
 @Name("Filter")
 @Description("Filters a list based on a condition. " +
-		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
+		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]', " +
 		"only \"something\" would be broadcast as it is the only string that matched the condition.")
 @Examples("send \"congrats on being staff!\" to all players where [player input has permission \"staff\"]")
 @Since("2.2-dev36")
