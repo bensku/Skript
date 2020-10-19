@@ -19,14 +19,14 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
@@ -35,71 +35,71 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Enchanting Experience Cost")
-@Description({"The cost of enchanting in an enchant event.", 
-				"This is number that was displayed in the enchantment table, not the actual number of levels removed."})
-@Examples({"on enchant:",
-			"\tsend \"Cost: %the displayed enchanting cost%\" to player"})
-@Events("enchant")
-@Since("2.5")
-public class ExprEnchantingExpCost extends SimpleExpression<Number> {
+@Name("Mending Repair Amount")
+@Description({"The number of durability points an item is to be repaired in a mending event.",
+			" Modifying the repair amount will affect how much experience is given to the player after mending."})
+@Examples({"on item mend:",
+		"\tset the mending repair amount to 100"})
+@Since("INSERT VERSION")
+public class ExprMendingRepairAmount extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprEnchantingExpCost.class, Number.class, ExpressionType.SIMPLE,
-				"[the] [displayed] ([e]xp[erience]|enchanting) cost");
+		Skript.registerExpression(ExprMendingRepairAmount.class, Number.class, ExpressionType.SIMPLE, "[the] [mending] repair amount");
 	}
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EnchantItemEvent.class)) {
-			Skript.error("The experience cost of enchanting is only usable in an enchant event.", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(PlayerItemMendEvent.class)) {
+			Skript.error("The 'mending repair amount' is only usable in item mend events", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	@Nullable
-	protected Number[] get(Event e) {
-		return new Number[]{((EnchantItemEvent) e).getExpLevelCost()};
+	protected Number[] get(final Event e) {
+		return new Number[]{((PlayerItemMendEvent) e).getRepairAmount()};
 	}
 
-	@Override
 	@Nullable
+	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE_ALL)
-			return null;
-		return CollectionUtils.array(Number.class, Experience.class);
+		switch (mode) {
+			case SET:
+			case ADD:
+			case REMOVE:
+			case RESET:
+				return CollectionUtils.array(Number.class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null)
-			return;
-		Object c = delta[0];
-		int cost = c instanceof Number ? ((Number) c).intValue() : ((Experience) c).getXP();
-		EnchantItemEvent e = (EnchantItemEvent) event;
+		PlayerItemMendEvent e = (PlayerItemMendEvent) event;
+		int newLevel = delta != null ? ((Number) delta[0]).intValue() : 0;
 		switch (mode) {
 			case SET:
-				e.setExpLevelCost(cost);
 				break;
 			case ADD:
-				int add = e.getExpLevelCost() + cost;
-				e.setExpLevelCost(add);
+				newLevel += e.getRepairAmount();
 				break;
 			case REMOVE:
-				int subtract = e.getExpLevelCost() - cost;
-				e.setExpLevelCost(subtract);
+				newLevel = e.getRepairAmount() - newLevel;
 				break;
 			case RESET:
-			case DELETE:
-			case REMOVE_ALL:
+				int repairAmount = e.getExperienceOrb().getExperience() * 2;
+				int itemDamage = ItemUtils.getDamage(e.getItem());
+				newLevel = Math.min(itemDamage, repairAmount);
+				break;
+			default:
 				assert false;
 		}
+		e.setRepairAmount(newLevel);
 	}
 
 	@Override
@@ -113,8 +113,8 @@ public class ExprEnchantingExpCost extends SimpleExpression<Number> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "the displayed cost of enchanting";
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "the mending repair amount";
 	}
 
 }
