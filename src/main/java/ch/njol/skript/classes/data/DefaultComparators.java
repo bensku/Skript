@@ -459,7 +459,7 @@ public class DefaultComparators {
 			public Relation compare(final DamageCause dc, final ItemType t) {
 				switch (dc) {
 					case FIRE:
-						return Relation.get(t.isOfType(Material.LAVA));
+						return Relation.get(t.isOfType(Material.FIRE));
 					case LAVA:
 						return Relation.get(t.equals(lava));
 					case MAGIC:

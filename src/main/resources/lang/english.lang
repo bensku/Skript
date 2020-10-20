@@ -1424,7 +1424,7 @@ visual effects:
 		pattern: flame|fire
 	lava_pop:
 		name: lava pop @a
-		pattern: lava [pop]
+		pattern: lava pop
 	footstep:
 		name: footstep @x
 		pattern: footsteps
