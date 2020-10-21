@@ -63,9 +63,9 @@ public class EffOpenBook extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		ItemType itemType = book.getSingle(e);
-		if (itemType != null && bookItemType.equals(itemType)) {
+		if (itemType != null) {
 			ItemStack itemStack = itemType.getRandom();
-			if (itemStack != null) {
+			if (itemStack != null && bookItemType.isOfType(itemStack)) {
 				for (Player player : players.getArray(e)) {
 					player.openBook(itemStack);
 				}
