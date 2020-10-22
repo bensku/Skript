@@ -657,7 +657,32 @@ public class SkriptClasses {
 							}
 						}
 					}
-				}).serializeAs(ItemStack.class));
+				})
+				.parser(new Parser<Slot>() {
+					@Override
+					public boolean canParse(final ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(Slot o, int flags) {
+						ItemStack i = o.getItem();
+						if (i == null)
+							return new ItemType(Material.AIR).toString(flags);
+						return ItemType.toString(i, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Slot o) {
+						return "slot:" + o.toString();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "slot:.+";
+					}
+				})
+				.serializeAs(ItemStack.class));
 		
 		Classes.registerClass(new ClassInfo<>(Color.class, "color")
 				.user("colou?rs?")

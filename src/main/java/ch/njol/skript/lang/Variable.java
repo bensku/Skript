@@ -592,7 +592,7 @@ public class Variable<T> implements Expression<T> {
 								assert c != null;
 								ci = Classes.getSuperClassInfo(c);
 								
-								if (ci.getMath() != null)
+								if ((a = ci.getMath()) != null)
 									o = d;
 								if (d instanceof Number) { // Nonexistent variable: add/subtract
 									if (mode == ChangeMode.REMOVE) // Variable is delta negated
