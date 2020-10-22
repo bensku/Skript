@@ -40,7 +40,7 @@ import ch.njol.util.Kleenean;
 @Description("Opens a written book to a player.")
 @Examples("open book player's tool to player")
 @RequiredPlugins("Minecraft 1.14.2+")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class EffOpenBook extends Effect {
 	
 	static {
