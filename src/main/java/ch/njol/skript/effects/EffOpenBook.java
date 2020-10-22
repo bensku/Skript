@@ -29,6 +29,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -38,11 +39,14 @@ import ch.njol.util.Kleenean;
 @Name("Open Book")
 @Description("Opens a written book to a player.")
 @Examples("open book player's tool to player")
+@RequiredPlugins("Minecraft 1.14.2+")
 @Since("INSERT VERSION")
 public class EffOpenBook extends Effect {
 	
 	static {
-		Skript.registerEffect(EffOpenBook.class, "(open|show) book %itemtype% (to|for) %players%");
+		if (Skript.methodExists(Player.class, "openBook", ItemStack.class)) {
+			Skript.registerEffect(EffOpenBook.class, "(open|show) book %itemtype% (to|for) %players%");
+		}
 	}
 	
 	private static final ItemType bookItemType = Aliases.javaItemType("written book");
@@ -63,9 +67,9 @@ public class EffOpenBook extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		ItemType itemType = book.getSingle(e);
-		if (itemType != null && bookItemType.equals(itemType)) {
+		if (itemType != null) {
 			ItemStack itemStack = itemType.getRandom();
-			if (itemStack != null) {
+			if (itemStack != null && bookItemType.isOfType(itemStack)) {
 				for (Player player : players.getArray(e)) {
 					player.openBook(itemStack);
 				}
