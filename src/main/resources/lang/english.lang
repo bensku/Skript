@@ -1310,7 +1310,7 @@ visual effects:
 		pattern: smoke [%direction%]
 	hurt:
 		name: hurt @-
-		pattern: hurt|damage
+		pattern: (hurt|damage)
 	sheep_eat:
 		name: sheep eating @a
 		pattern: sheep eat[ing] [a] [grass] [block]
@@ -1409,7 +1409,7 @@ visual effects:
 		pattern: instant (spell|thrown potion)
 	witch_spell:
 		name: witch spell @-
-		pattern: witch (magic|spell)|purple spark
+		pattern: (witch (magic|spell)|purple spark)
 	note:
 		name: note @a
 		pattern: note
@@ -1421,7 +1421,7 @@ visual effects:
 		pattern: (flying (glyph|letter)|enchantment table)
 	flame:
 		name: flame @-
-		pattern: flame|fire
+		pattern: (flame|fire)
 	lava_pop:
 		name: lava pop @a
 		pattern: lava pop
@@ -1491,6 +1491,9 @@ visual effects:
 	block_dust:
 		name: block dust @-
 		pattern: [sprinting] dust of [%itemtype%]
+	end_rod:
+		name: end rod @-
+		pattern: end rod
 	falling_dust:
 		name: falling dust @-
 		pattern: falling dust of [%itemtype%]
