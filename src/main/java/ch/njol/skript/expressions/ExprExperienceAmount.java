@@ -45,14 +45,13 @@ import ch.njol.util.coll.CollectionUtils;
 	"\tincrease experience amount by 3"})
 @Since("INSERT VERSION")
 @Events("Experience Bottle Hit")
-public class ExprExperienceAmount extends SimpleExpression<Integer> {
+public class ExprExperienceAmount extends SimpleExpression<Number> {
 
 	static {
-		Skript.registerExpression(ExprExperienceAmount.class, Integer.class, ExpressionType.SIMPLE, "[the] [e]xp[erience] amount");
+		Skript.registerExpression(ExprExperienceAmount.class, Number.class, ExpressionType.SIMPLE, "[the] [e]xp[erience] amount");
 	}
 
-	@SuppressWarnings("null")
-	private Kleenean delay;
+	private boolean isDelayed;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -60,20 +59,20 @@ public class ExprExperienceAmount extends SimpleExpression<Integer> {
 			Skript.error("The expression 'experience amount' may only be used in a experience bottle hit event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		delay = isDelayed;
+		this.isDelayed = isDelayed.isTrue();
 		return true;
 	}
 
 	@Nullable
 	@Override
-	protected Integer[] get(Event e) {
-		return new Integer[]{((ExpBottleEvent) e).getExperience()};
+	protected Number[] get(Event e) {
+		return new Number[]{((ExpBottleEvent) e).getExperience()};
 	}
 
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (delay != Kleenean.FALSE) {
+		if (isDelayed) {
 			Skript.error("The experience amount cannot be changed after the event has already passed");
 			return null;
 		}
@@ -108,8 +107,8 @@ public class ExprExperienceAmount extends SimpleExpression<Integer> {
 	}
 
 	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 
 	@Override
