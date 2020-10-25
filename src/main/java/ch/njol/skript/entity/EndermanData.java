@@ -54,6 +54,12 @@ public class EndermanData extends EntityData<Enderman> {
 	@Nullable
 	private ItemType[] hand = null;
 	
+	public EndermanData() {}
+	
+	public EndermanData(@Nullable ItemType[] hand) {
+		this.hand = hand;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -194,7 +200,7 @@ public class EndermanData extends EntityData<Enderman> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new EndermanData();
+		return new EndermanData(hand);
 	}
 	
 }

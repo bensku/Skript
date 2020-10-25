@@ -21,13 +21,15 @@ package ch.njol.skript.entity;
 import java.util.ArrayList;
 
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
+import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.SpawnerMinecart;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Utils;
@@ -41,15 +43,13 @@ public class MinecartData extends EntityData<Minecart> {
 	@SuppressWarnings("null")
 	private static enum MinecartType {
 		ANY(Minecart.class, "minecart"),
-		NORMAL(Skript.classExists("org.bukkit.entity.minecart.RideableMinecart") ? RideableMinecart.class : Minecart.class, "regular minecart"),
-		@SuppressWarnings("unchecked")
-		STORAGE(Skript.classExists("org.bukkit.entity.minecart.StorageMinecart") ? org.bukkit.entity.minecart.StorageMinecart.class : (Class<org.bukkit.entity.minecart.StorageMinecart>) Utils.classForName("org.bukkit.entity.StorageMinecart"), "storage minecart"),
-		@SuppressWarnings("unchecked")
-		POWERED(Skript.classExists("org.bukkit.entity.minecart.PoweredMinecart") ? org.bukkit.entity.minecart.PoweredMinecart.class : (Class<org.bukkit.entity.minecart.StorageMinecart>) Utils.classForName("org.bukkit.entity.PoweredMinecart"), "powered minecart"),
-		// 1.5
-		HOPPER(Skript.classExists("org.bukkit.entity.minecart.HopperMinecart") ? HopperMinecart.class : null, "hopper minecart"),
-		EXPLOSIVE(Skript.classExists("org.bukkit.entity.minecart.ExplosiveMinecart") ? ExplosiveMinecart.class : null, "explosive minecart"),
-		SPAWNER(Skript.classExists("org.bukkit.entity.minecart.SpawnerMinecart") ? SpawnerMinecart.class : null, "spawner minecart");
+		NORMAL(RideableMinecart.class, "regular minecart"),
+		STORAGE(StorageMinecart.class, "storage minecart"),
+		POWERED(PoweredMinecart.class, "powered minecart"),
+		HOPPER(HopperMinecart.class, "hopper minecart"),
+		EXPLOSIVE(ExplosiveMinecart.class, "explosive minecart"),
+		SPAWNER(SpawnerMinecart.class, "spawner minecart"),
+		COMMAND(CommandMinecart.class, "command minecart");
 		
 		@Nullable
 		final Class<? extends Minecart> c;
@@ -88,6 +88,7 @@ public class MinecartData extends EntityData<Minecart> {
 	
 	public MinecartData(final MinecartType type) {
 		this.type = type;
+		this.matchedPattern = type.ordinal();
 	}
 	
 	@SuppressWarnings("null")
