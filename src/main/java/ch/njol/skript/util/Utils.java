@@ -515,7 +515,7 @@ public abstract class Utils {
 	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll("" + message.replace("<<none>>", ""), stylePattern, new Callback<String, Matcher>() {
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement("" + message.replace("<<none>>", "")), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
@@ -534,6 +534,11 @@ public abstract class Utils {
 			}
 		});
 		assert m != null;
+		// Restore user input post-sanitization
+		// Sometimes, the message has already been restored
+		if (!message.equals(m)) {
+			m = m.replace("\\$", "$").replace("\\\\", "\\");
+		}
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
 	}
@@ -548,7 +553,7 @@ public abstract class Utils {
 	public static String replaceEnglishChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll(message, stylePattern, new Callback<String, Matcher>() {
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement(message), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
@@ -567,6 +572,11 @@ public abstract class Utils {
 			}
 		});
 		assert m != null;
+		// Restore user input post-sanitization
+		// Sometimes, the message has already been restored
+		if (!message.equals(m)) {
+			m = m.replace("\\$", "$").replace("\\\\", "\\");
+		}
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
 	}

@@ -31,7 +31,7 @@ import ch.njol.skript.doc.Since;
 @Description("Whether or not a projectile can bounce.")
 @Examples({"on shoot:",
 	"\tsend \"Boing!\" to all players if projectile can bounce"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class CondProjectileCanBounce extends PropertyCondition<Projectile> {
 	
 	static {

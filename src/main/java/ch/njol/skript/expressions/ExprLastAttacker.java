@@ -34,7 +34,7 @@ import ch.njol.util.Kleenean;
 @Name("Last Attacker")
 @Description("The last block or entity that attacked an entity.")
 @Examples({"send \"%last attacker of event-entity%\""})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprLastAttacker extends SimplePropertyExpression<Entity, Object> {
 	
 	static {

@@ -40,7 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The velocity of a minecart as soon as it has been derailed or as soon as it starts flying.")
 @Examples({"on right click on minecart:",
 	"\tset derailed velocity of event-entity to vector 2, 10, 2"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprMinecartDerailedFlyingVelocity extends SimplePropertyExpression<Entity, Vector> {
 	
 	static {

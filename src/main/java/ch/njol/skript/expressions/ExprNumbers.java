@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 @Examples({"loop numbers from 2.5 to 5.5: # loops 2.5, 3.5, 4.5, 5.5",
 		"loop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5",
 		"loop decimals from 3.94 to 4: # loops 3.94, 3.95, 3.96, 3.97, 3.98, 3.99, 4"})
-@Since("1.4.6 (integers & numbers), INSERT VERSION (decimals)")
+@Since("1.4.6 (integers & numbers), 2.5.1 (decimals)")
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
