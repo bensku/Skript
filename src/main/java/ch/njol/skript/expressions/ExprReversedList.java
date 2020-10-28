@@ -41,41 +41,42 @@ import ch.njol.util.Kleenean;
 @Examples({"set {_list::*} to reversed {_list::*}"})
 @Since("2.4")
 public class ExprReversedList extends SimpleExpression<Object> {
-	
+
 	static {
 		Skript.registerExpression(ExprReversedList.class, Object.class, ExpressionType.COMBINED, "reversed %objects%");
 	}
-	
+
 	@SuppressWarnings("null")
-	private Expression<Object> list;
-	
-	@SuppressWarnings("unchecked")
+	private Expression<?> list;
+
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		list = (Expression<Object>) exprs[0];
-		return true;
+		list = exprs[0].getConvertedExpression(Object.class);
+		return list != null;
 	}
-	
-	@Nullable
+
 	@Override
+	@Nullable
 	protected Object[] get(Event e) {
 		List<Object> reversed = Arrays.asList(list.getAll(e).clone());
 		Collections.reverse(reversed);
 		return reversed.toArray();
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
-	
+
 	@Override
 	public Class<?> getReturnType() {
 		return Object.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "reversed list";
+		return "reversed " + list.toString(e, debug);
 	}
+
 }

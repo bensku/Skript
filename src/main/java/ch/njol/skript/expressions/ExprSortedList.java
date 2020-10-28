@@ -41,21 +41,21 @@ import ch.njol.util.Kleenean;
 @Examples({"set {_sorted::*} to sorted {_players::*}"})
 @Since("2.2-dev19")
 public class ExprSortedList extends SimpleExpression<Object> {
-	
+
 	static{
 		Skript.registerExpression(ExprSortedList.class, Object.class, ExpressionType.COMBINED, "sorted %objects%");
 	}
-	
+
 	@SuppressWarnings("null")
-	private Expression<Object> list;
-	
-	@SuppressWarnings({"null", "unchecked"})
+	private Expression<?> list;
+
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		list = (Expression<Object>) exprs[0];
-		return true;
+		list = exprs[0].getConvertedExpression(Object.class);
+		return list != null;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
@@ -75,25 +75,25 @@ public class ExprSortedList extends SimpleExpression<Object> {
 		
 		try {
 			Arrays.sort(sorted); // Now sorted
-		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			return null; // We don't have a sorted array available
+		} catch (IllegalArgumentException | ClassCastException ex) { // In case elements are not comparable
+			return new Object[]{}; // We don't have a sorted array available
 		}
 		return sorted;
 	}
-	
-	@Override
-	public Class<? extends Object> getReturnType() {
-		return Object.class;
-	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "sorted list";
+	public Class<? extends Object> getReturnType() {
+		return Object.class;
 	}
-	
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "sorted " + list.toString(e, debug);
+	}
+
 }
