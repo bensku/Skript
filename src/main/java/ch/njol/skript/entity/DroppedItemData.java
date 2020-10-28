@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -46,6 +45,12 @@ public class DroppedItemData extends EntityData<Item> {
 	
 	@Nullable
 	private ItemType[] types;
+	
+	public DroppedItemData() {}
+	
+	public DroppedItemData(@Nullable ItemType[] types) {
+		this.types = types;
+	}
 	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -102,7 +107,7 @@ public class DroppedItemData extends EntityData<Item> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new DroppedItemData();
+		return new DroppedItemData(types);
 	}
 	
 	@Override

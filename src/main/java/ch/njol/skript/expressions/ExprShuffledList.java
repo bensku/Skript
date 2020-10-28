@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,9 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ *
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-
 package ch.njol.skript.expressions;
 
 import java.util.Arrays;
@@ -44,21 +41,21 @@ import ch.njol.util.Kleenean;
 @Examples({"set {_list::*} to shuffled {_list::*}"})
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
-	
+
 	static{
 		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
-	
+
 	@SuppressWarnings("null")
-	private Expression<Object> list;
-	
-	@SuppressWarnings({"null", "unchecked"})
+	private Expression<?> list;
+
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		list = (Expression<Object>) exprs[0];
-		return true;
+		list = exprs[0].getConvertedExpression(Object.class);
+		return list != null;
 	}
-	
+
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
@@ -72,12 +69,12 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 		}
 		return shuffled.toArray();
 	}
-	
+
 	@Override
 	public Class<? extends Object> getReturnType() {
 		return Object.class;
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
@@ -85,6 +82,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "shuffled list";
+		return "shuffled " + list.toString(e, debug);
 	}
+
 }

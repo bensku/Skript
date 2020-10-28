@@ -1,0 +1,9 @@
+test "starts with condition":
+	assert "hey" starts with "he" or "hello" with "hey doesn't start with he or hello"
+	assert "hey" starts with "hey" and "h" with "hey doesn't start with hey and h"
+	assert "hey" doesn't start with "hey" and "e" with "hey starts with hey and e"
+
+test "ends with condition":
+	assert "hey" ends with "hey" or "hello" with "hey doesn't end with hey or hello"
+	assert "hey" ends with "hey" and "y" with "hey doesn't end with hey and y"
+	assert "hey" doesn't end with "hey" and "e" with "hey ends with hey and e"

@@ -751,6 +751,9 @@ entities:
 	spawner minecart:
 		name: spawner minecart¦s
 		pattern: (monster|mob|) spawner [mine]cart(|1¦s)|[mine]cart(|1¦s) with (monster|mob|) spawner[s]
+	command minecart:
+		name: command minecart¦s
+		pattern: command [mine]cart(|1¦s)|[mine]cart(|1¦s) with command block[s]
 	mooshroom:
 		name: mooshroom¦s
 		pattern: <age> mooshroom(|1¦s)
@@ -791,7 +794,7 @@ entities:
 		name: non-op¦s
 		pattern: non(-| |)op(|1¦s)
 	zombie pigman:
-		name: (zombie pig¦man¦men|zombified piglin)
+		name: zombie pig¦man¦men|zombified piglin
 		pattern: <age> (zombie pigm(an|1¦en)|zombified piglin(|1¦s))|(4¦)(zombie pigletboy(|1¦s)|zombified piglin (kid(|1¦s)|child(|1¦ren)))
 	sheep:
 		name: sheep
@@ -1001,25 +1004,25 @@ entities:
 		name: rabbit¦s
 		pattern: <age> rabbit(|1¦s)|rabbit <age>(|1¦s)
 	brown rabbit:
-		name: rabbit¦s
+		name: brown rabbit¦s
 		pattern: brown <age> rabbit(|1¦s)|brown rabbit <age>(|1¦s)
 	black and white rabbit:
-		name: rabbit¦s
+		name: black and white rabbit¦s
 		pattern: black [and] white <age> rabbit(|1¦s)|black [and] white rabbit <age>(|1¦s)
 	white rabbit:
-		name: rabbit¦s
+		name: white rabbit¦s
 		pattern: white <age> rabbit(|1¦s)|white rabbit <age>(|1¦s)
 	black rabbit:
-		name: rabbit¦s
+		name: black rabbit¦s
 		pattern: black <age> rabbit(|1¦s)|black rabbit <age>(|1¦s)
 	gold rabbit:
-		name: rabbit¦s
+		name: gold rabbit¦s
 		pattern: gold <age> rabbit(|1¦s)|gold rabbit <age>(|1¦s)
 	salt and pepper rabbit:
-		name: rabbit¦s
+		name: salt and pepper rabbit¦s
 		pattern: salt [and] pepper <age> rabbit(|1¦s)|salt [and] pepper rabbit <age>(|1¦s)
 	killer rabbit:
-		name: rabbit¦s
+		name: killer rabbit¦s
 		pattern: killer <age> rabbit(|1¦s)|killer rabbit <age>(|1¦s)
 	fish hook:
 		name: fish hook¦s
@@ -1072,6 +1075,36 @@ entities:
 	zombie nitwit:
 		name: zombie nitwit¦s
 		pattern: zombie nitwit(|1¦s)
+	zombie armorer:
+		name: zombie armorer¦s
+		pattern: zombie armorer(|1¦s)
+	zombie cartographer:
+		name: zombie cartographer¦s
+		pattern: zombie cartographer(|1¦s)
+	zombie cleric:
+		name: zombie cleric¦s
+		pattern: zombie cleric(|1¦s)
+	zombie fisherman:
+		name: zombie fisher¦man¦men
+		pattern: zombie fisherm(an|1¦en)
+	zombie fletcher:
+		name: zombie fletcher¦s
+		pattern: zombie fletcher(|1¦s)
+	zombie leatherworker:
+		name: zombie leatherworker¦s
+		pattern: zombie leatherworker(|1¦s)
+	zombie mason:
+		name: zombie mason¦s
+		pattern: zombie mason(|1¦s)
+	zombie shepherd:
+		name: zombie shepherd¦s
+		pattern: zombie shepherd(|1¦s)
+	zombie toolsmith:
+		name: zombie toolsmith¦s
+		pattern: zombie toolsmith(|1¦s)
+	zombie weaponsmith:
+		name: zombie weaponsmith¦s
+		pattern: zombie weaponsmith(|1¦s)
 	evoker:
 		name: evoker¦s
 		pattern: evoker(|1¦s)
@@ -1310,7 +1343,7 @@ visual effects:
 		pattern: smoke [%direction%]
 	hurt:
 		name: hurt @-
-		pattern: hurt|damage
+		pattern: (hurt|damage)
 	sheep_eat:
 		name: sheep eating @a
 		pattern: sheep eat[ing] [a] [grass] [block]
@@ -1409,7 +1442,7 @@ visual effects:
 		pattern: instant (spell|thrown potion)
 	witch_spell:
 		name: witch spell @-
-		pattern: witch (magic|spell)|purple spark
+		pattern: (witch (magic|spell)|purple spark)
 	note:
 		name: note @a
 		pattern: note
@@ -1421,10 +1454,10 @@ visual effects:
 		pattern: (flying (glyph|letter)|enchantment table)
 	flame:
 		name: flame @-
-		pattern: flame|fire
+		pattern: (flame|fire)
 	lava_pop:
 		name: lava pop @a
-		pattern: lava [pop]
+		pattern: lava pop
 	footstep:
 		name: footstep @x
 		pattern: footsteps
@@ -1491,6 +1524,9 @@ visual effects:
 	block_dust:
 		name: block dust @-
 		pattern: [sprinting] dust of [%itemtype%]
+	end_rod:
+		name: end rod @-
+		pattern: end rod
 	falling_dust:
 		name: falling dust @-
 		pattern: falling dust of [%itemtype%]
