@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Arrays;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -78,14 +80,15 @@ public class ExprPlayerlistHeaderFooter extends SimplePropertyExpression<Player,
 			case SET:
 			case DELETE:
 			case RESET:
-				return CollectionUtils.array(String.class);
+				return CollectionUtils.array(String[].class);
 		}
 		return null;
 	}
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		final String text = delta == null ? "" : (String) delta[0];
+		String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
+		final String text = stringDelta == null ? "" : String.join("\n", stringDelta);
 		for (Player player : getExpr().getArray(e)) {
 			if (mark == HEADER) {
 				player.setPlayerListHeader(text);
