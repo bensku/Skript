@@ -1155,7 +1155,7 @@ public class BukkitClasses {
 				.serializer(new EnumSerializer<>(Biome.class)));
 		
 		Classes.registerClass(new ClassInfo<>(PotionEffect.class, "potioneffect")
-			.usage("potion ?effects?")
+			.user("potion ?effects?")
 			.name("Potion Effect")
 			.description("A potion effect, including the potion effect type, tier and duration.")
 			.usage("speed of tier 1 for 10 seconds")
