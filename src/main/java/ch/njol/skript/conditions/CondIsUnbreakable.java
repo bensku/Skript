@@ -33,7 +33,7 @@ import ch.njol.skript.doc.Since;
 @Name("Is Unbreakable")
 @Description("Checks whether an item is unbreakable.")
 @Examples("if event-item is unbreakable")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 @RequiredPlugins("Minecraft 1.11+")
 public class CondIsUnbreakable extends PropertyCondition<ItemType> {
 	

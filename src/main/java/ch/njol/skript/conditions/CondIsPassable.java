@@ -35,7 +35,7 @@ import ch.njol.skript.doc.Since;
 			"Blocks like tall grass, flowers, signs, etc. are passable, but open doors, fence gates, trap doors, etc. are not because they still have parts that can be collided with."
 })
 @Examples("if player's targeted block is passable")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 @RequiredPlugins("Minecraft 1.13.2+")
 public class CondIsPassable extends PropertyCondition<Block> {
 	

@@ -248,6 +248,7 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 				}
 			}
 		},
+		END_ROD(Particle.END_ROD),
 		
 		// 1.10 particles
 		FALLING_DUST("FALLING_DUST") {

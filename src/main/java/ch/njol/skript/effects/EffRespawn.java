@@ -21,6 +21,7 @@ package ch.njol.skript.effects;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,12 +34,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
 @Name("Force Respawn")
 @Description("Forces player(s) to respawn if they are dead. If this is called without delay from death event, one tick is waited before respawn attempt.")
 @Examples({"on death of player:",
-		"	force event-player to respawn",})
+		"\tforce event-player to respawn",})
 @Since("2.2-dev21")
 public class EffRespawn extends Effect {
 
@@ -48,27 +50,27 @@ public class EffRespawn extends Effect {
 
 	@SuppressWarnings("null")
 	private Expression<Player> players;
-	private boolean hasDelay;
 
-	@SuppressWarnings({"unchecked", "null"})
+	private boolean forceDelay;
+
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+		if (ScriptLoader.isCurrentEvent(PlayerRespawnEvent.class)) { // Just in case someone tries to do this
+			Skript.error("Respawning the player in a respawn event is not possible", ErrorQuality.SEMANTIC_ERROR);
+			return false;
+		}
 		players = (Expression<Player>) exprs[0];
-		if (ScriptLoader.isCurrentEvent(PlayerDeathEvent.class) && ScriptLoader.hasDelayBefore.isTrue()) // Then we will internally force you to wait
-			hasDelay = true;
-
+		// Force a delay before respawning the player if we're in the death event and there isn't already a delay
+		// Unexpected behavior may occur if we don't do this
+		forceDelay = ScriptLoader.isCurrentEvent(PlayerDeathEvent.class) && isDelayed.isFalse();
 		return true;
-	}
-
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "respawn " + players.toString(e, debug);
 	}
 
 	@Override
 	protected void execute(final Event e) {
 		for (final Player p : players.getArray(e)) {
-			if (hasDelay) { // Use Bukkit runnable
+			if (forceDelay) { // Use Bukkit runnable
 				new BukkitRunnable() {
 
 					@Override
@@ -82,4 +84,10 @@ public class EffRespawn extends Effect {
 			}
 		}
 	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return "force " + players.toString(e, debug) + " to respawn";
+	}
+
 }

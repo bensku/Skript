@@ -43,6 +43,13 @@ public class FishData extends EntityData<Fish> {
 	private boolean wildcard = false;
 	private int pattern = -1;
 	
+	public FishData() {}
+	
+	public FishData(int pattern) {
+		this.pattern = pattern;
+		super.matchedPattern = pattern;
+	}
+	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern == 0)
@@ -90,7 +97,7 @@ public class FishData extends EntityData<Fish> {
 
 	@Override
 	public EntityData getSuperType() {
-		return new FishData();
+		return new FishData(pattern);
 	}
 
 	@Override
