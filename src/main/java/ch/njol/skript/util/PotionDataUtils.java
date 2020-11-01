@@ -101,6 +101,12 @@ public enum PotionDataUtils {
 		this.amplifier = amplifier;
 	}
 	
+	/**
+	 * Convert {@link PotionData} to a {@link PotionEffect}
+	 *
+	 * @param potionData PotionData to convert
+	 * @return List of PotionEffects from the data
+	 */
 	@SuppressWarnings("null")
 	public static List<PotionEffect> getPotionEffects(PotionData potionData) {
 		List<PotionEffect> potionEffects = new ArrayList<>();
@@ -121,7 +127,7 @@ public enum PotionDataUtils {
 	
 	// Bukkit does not account for the fact that Turtle Master has 2 potion effects
 	@SuppressWarnings("null")
-	public static List<PotionEffect> getSpecialTurtle(PotionDataUtils data) {
+	private static List<PotionEffect> getSpecialTurtle(PotionDataUtils data) {
 		List<PotionEffect> potionEffects = new ArrayList<>();
 		int duration = data.extended ? 800 : 400;
 		int slowAmp = data.upgraded ? 5 : 3;

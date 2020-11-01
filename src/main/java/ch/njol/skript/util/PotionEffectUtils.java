@@ -227,18 +227,40 @@ public abstract class PotionEffectUtils {
 		return s;
 	}
 	
+	/**
+	 * Clear all the active {@link PotionEffect PotionEffects} from an Entity
+	 *
+	 * @param entity Entity to clear effects for
+	 */
 	public static void clearAllEffects(LivingEntity entity) {
 		entity.getActivePotionEffects().forEach(potionEffect -> entity.removePotionEffect(potionEffect.getType()));
 	}
 	
+	/**
+	 * Add PotionEffects to an entity
+	 *
+	 * @param entity Entity to add effects
+	 * @param effects Effects to add
+	 */
 	public static void addEffects(LivingEntity entity, PotionEffect[] effects) {
 		entity.addPotionEffects(Arrays.asList(effects));
 	}
 	
+	/**
+	 * Remove a PotionEffect from an entity
+	 *
+	 * @param entity Entity to remove effects for
+	 * @param effectType Types of effects to remove
+	 */
 	public static void removeEffect(LivingEntity entity, PotionEffectType effectType) {
 		entity.removePotionEffect(effectType);
 	}
 	
+	/**
+	 * Clear all {@link PotionEffect PotionEffects} from an ItemType
+	 *
+	 * @param itemType Item to remove effects from
+	 */
 	public static void clearAllEffects(ItemType itemType) {
 		ItemMeta meta = itemType.getItemMeta();
 		if (meta instanceof PotionMeta)
@@ -248,6 +270,12 @@ public abstract class PotionEffectUtils {
 		itemType.setItemMeta(meta);
 	}
 	
+	/**
+	 * Add PotionEffects to an ItemTye
+	 *
+	 * @param itemType Item to add effects to
+	 * @param effects Effects to add
+	 */
 	public static void addEffects(ItemType itemType, PotionEffect[] effects) {
 		ItemMeta meta = itemType.getItemMeta();
 		for (PotionEffect effect : effects) {
@@ -259,6 +287,12 @@ public abstract class PotionEffectUtils {
 		itemType.setItemMeta(meta);
 	}
 	
+	/**
+	 * Remove a PotionEffect from an ItemType
+	 *
+	 * @param itemType Item to remove effects from
+	 * @param effectType Types of effects to remove
+	 */
 	public static void removeEffect(ItemType itemType, PotionEffectType effectType) {
 		ItemMeta meta = itemType.getItemMeta();
 		if (meta instanceof PotionMeta)
@@ -268,6 +302,14 @@ public abstract class PotionEffectUtils {
 		itemType.setItemMeta(meta);
 	}
 	
+	/**
+	 * Get all the PotionEffects of an ItemType
+	 *
+	 * This will also include the base potion as well
+	 *
+	 * @param itemType Item to get potions from
+	 * @return List of PotionEffects on the item
+	 */
 	public static List<PotionEffect> getEffects(ItemType itemType) {
 		List<PotionEffect> effects = new ArrayList<>();
 		ItemMeta meta = itemType.getItemMeta();

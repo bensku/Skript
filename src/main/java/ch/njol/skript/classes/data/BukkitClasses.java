@@ -1224,7 +1224,6 @@ public class BukkitClasses {
 				}
 			}));
 		
-		// PotionEffect is not used; ItemType is used instead
 		Classes.registerClass(new ClassInfo<>(PotionEffectType.class, "potioneffecttype")
 				.user("potion( ?effect)? ?types?") // "type" had to be made non-optional to prevent clashing with potion effects
 				.name("Potion Effect Type")
