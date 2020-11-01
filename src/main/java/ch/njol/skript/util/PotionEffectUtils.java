@@ -87,6 +87,17 @@ public abstract class PotionEffectUtils {
 		return types.get(s.toLowerCase());
 	}
 	
+	// This is a stupid bandaid to fix comparison issues when converting potion datas
+	@Nullable
+	public static PotionEffectType parseByEffectType(PotionEffectType t) {
+		for (PotionEffectType value : types.values()) {
+			if (t.equals(value)) {
+				return value;
+			}
+		}
+		return null;
+	}
+	
 	@SuppressWarnings("null")
 	public static String toString(final PotionEffectType t) {
 		return names[t.getId()];
