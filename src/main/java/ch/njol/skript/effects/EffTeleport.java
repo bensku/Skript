@@ -72,64 +72,62 @@ public class EffTeleport extends Effect {
 	protected TriggerItem walk(Event e) {
 		debug(e, true);
 		TriggerItem next = getNext();
-		
+		boolean delayed = Delay.isDelayed(e);
 		Delay.addDelayedEvent(e);
 		
 		final Location loc = location.getSingle(e);
-		if (loc == null) {
-			Object timing = null;
-			if (next != null) {
-				if (SkriptTimings.enabled()) {
-					Trigger trigger = getTrigger();
-					if (trigger != null) {
-						timing = SkriptTimings.start(trigger.getDebugLabel());
-					}
-				}
-				
-				TriggerItem.walk(next, e);
-			}
-			Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-			SkriptTimings.stop(timing);
+		final Entity[] entityArray = entities.getArray(e); // We have to fetch this before possible async execution to avoid async local variable access.
+		final boolean respawnEvent = !delayed && e instanceof PlayerRespawnEvent && entityArray.length == 1 && entityArray[0].equals(((PlayerRespawnEvent) e).getPlayer());
+		
+		if (respawnEvent && loc != null) {
+			((PlayerRespawnEvent) e).setRespawnLocation(getSafeLocation(loc));
+		}
+		
+		if (respawnEvent || loc == null) {
+			continueWalk(next, e);
 			return null;
 		}
-		final Entity[] entityArray = entities.getArray(e); // We have to fetch this before possible async execution to avoid async local variable access.
 		
 		//This will either fetch the chunk instantly if on spigot or already loaded or fetch it async if on paper.
 		PaperLib.getChunkAtAsync(loc).thenAccept(chunk -> {
 			// The following is now on the main thread
-			Location toLoc = loc;
-			if (Math.abs(toLoc.getX() - toLoc.getBlockX() - 0.5) < Skript.EPSILON && Math.abs(toLoc.getZ() - toLoc.getBlockZ() - 0.5) < Skript.EPSILON) {
-				final Block on = toLoc.getBlock().getRelative(BlockFace.DOWN);
-				if (on.getType() != Material.AIR) {
-					toLoc = toLoc.clone();
-					// TODO 1.13 block height stuff
-					//to.setY(on.getY() + Utils.getBlockHeight(on.getTypeId(), on.getData()));
-				}
-			}
 			for (final Entity entity : entityArray) {
-				if (e instanceof PlayerRespawnEvent && entity.equals(((PlayerRespawnEvent) e).getPlayer()) && !Delay.isDelayed(e)) {
-					((PlayerRespawnEvent) e).setRespawnLocation(toLoc);
-				} else {
-					entity.teleport(toLoc);
-				}
+				entity.teleport(getSafeLocation(loc));
 			}
 			
 			// Continue the rest of the trigger if there is one
-			Object timing = null;
-			if (next != null) {
-				if (SkriptTimings.enabled()) {
-					Trigger trigger = getTrigger();
-					if (trigger != null) {
-						timing = SkriptTimings.start(trigger.getDebugLabel());
-					}
-				}
-				
-				TriggerItem.walk(next, e);
-			}
-			Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-			SkriptTimings.stop(timing);
+			continueWalk(next, e);
 		});
 		return null;
+	}
+	
+	private void continueWalk(@Nullable TriggerItem next, Event e) {
+		Object timing = null;
+		if (next != null) {
+			if (SkriptTimings.enabled()) {
+				Trigger trigger = getTrigger();
+				if (trigger != null) {
+					timing = SkriptTimings.start(trigger.getDebugLabel());
+				}
+			}
+			
+			TriggerItem.walk(next, e);
+		}
+		Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+		SkriptTimings.stop(timing);
+	}
+	
+	private Location getSafeLocation(Location loc) {
+		Location toLoc = loc;
+		if (Math.abs(toLoc.getX() - toLoc.getBlockX() - 0.5) < Skript.EPSILON && Math.abs(toLoc.getZ() - toLoc.getBlockZ() - 0.5) < Skript.EPSILON) {
+			final Block on = toLoc.getBlock().getRelative(BlockFace.DOWN);
+			if (on.getType() != Material.AIR) {
+				toLoc = toLoc.clone();
+				// TODO 1.13 block height stuff
+				//to.setY(on.getY() + Utils.getBlockHeight(on.getTypeId(), on.getData()));
+			}
+		}
+		return toLoc;
 	}
 	
 	@Override
