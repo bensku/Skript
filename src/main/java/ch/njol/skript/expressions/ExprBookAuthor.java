@@ -75,10 +75,10 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		ItemStack itemStack = getExpr().getSingle(e).getRandom();
-		if (itemStack == null || !book.isOfType(itemStack))
+		ItemType itemType = getExpr().getSingle(e);
+		if (itemType == null || !book.isOfType(itemType.getMaterial()))
 			return;
-		BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+		BookMeta bookMeta = (BookMeta) itemType.getItemMeta();
 		switch (mode){
 			case SET:
 				bookMeta.setAuthor(delta == null ? "" : (String) delta[0]);
@@ -91,7 +91,7 @@ public class ExprBookAuthor extends SimplePropertyExpression<ItemType, String> {
 			default:
 				assert false;
 		}
-		itemStack.setItemMeta(bookMeta);
+		itemType.setItemMeta(bookMeta);
 	}
 }
 
