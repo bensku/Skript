@@ -239,7 +239,7 @@ public abstract class PotionEffectUtils {
 	/**
 	 * Add PotionEffects to an entity
 	 *
-	 * @param entity Entity to add effects
+	 * @param entity Entity to add effects to
 	 * @param effects Effects to add
 	 */
 	public static void addEffects(LivingEntity entity, PotionEffect[] effects) {
