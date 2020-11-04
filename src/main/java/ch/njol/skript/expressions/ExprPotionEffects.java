@@ -35,7 +35,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.util.Kleenean;
@@ -65,7 +65,7 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		objects = (Expression<Object>) exprs[0];
 		return true;
 	}
