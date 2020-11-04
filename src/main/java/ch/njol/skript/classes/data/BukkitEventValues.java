@@ -1074,7 +1074,6 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		//ItemMergeEvent
-		//TODO there is also e.getTarget() two entities involved in this event, currently can be worked around currently with `on item merge of (insert target itemtype)`
 		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
 			@Override
 			@Nullable
@@ -1082,6 +1081,13 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0);
+		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemMergeEvent e) {
+				return e.getTarget();
+			}
+		}, 1);
 		EventValues.registerEventValue(ItemMergeEvent.class, ItemType.class, new Getter<ItemType, ItemMergeEvent>() {
 			@Override
 			@Nullable
