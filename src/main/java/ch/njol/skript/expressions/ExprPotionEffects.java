@@ -43,13 +43,14 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Potion Effects")
 @Description({"Represents the active potion effects of entities and itemtypes.",
-	"You can clear all potion effects of an entity/itemtype, add a potion effect to an entity/itemtype, and remove a",
-	"potion effect or potion effect type from an entity/itemtype. Do note you will not be able to clear the base potion effects ",
-	"of a potion item. In that case, just switch the item to a water bottle."})
+	"You can clear all potion effects of an entity/itemtype and add/remove a potion effect/type to/from an entity/itemtype.",
+	"Do note you will not be able to clear the base potion effects of a potion item. In that case, just set the item to a water bottle.",
+	"When adding a potion effect type (rather than a potion effect), it will default to 15 seconds with tier 1."})
 @Examples({"set {_p::*} to active potion effects of player",
 	"clear all the potion effects of player",
 	"clear all the potion effects of player's tool",
 	"add potion effects of player to potion effects of player's tool",
+	"add speed to potion effects of target entity",
 	"remove speed and night vision from potion effects of player"})
 @Since("INSERT VERSION")
 public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
@@ -87,10 +88,9 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		switch (mode) {
 			case REMOVE:
-				return CollectionUtils.array(PotionEffect[].class, PotionEffectType[].class);
 			case ADD:
 			case DELETE:
-				return CollectionUtils.array(PotionEffect[].class);
+				return CollectionUtils.array(PotionEffect[].class, PotionEffectType[].class);
 		}
 		return null;
 	}
@@ -109,26 +109,18 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 					if (delta == null)
 						return;
 					if (object instanceof LivingEntity)
-						PotionEffectUtils.addEffects(((LivingEntity) object), (PotionEffect[]) delta);
+						PotionEffectUtils.addEffects(((LivingEntity) object), delta);
 					else if (object instanceof ItemType)
-						PotionEffectUtils.addEffects(((ItemType) object), (PotionEffect[]) delta);
+						PotionEffectUtils.addEffects(((ItemType) object), delta);
 					
 					break;
 				case REMOVE:
 					if (delta == null)
 						return;
-					for (Object o : delta) {
-						PotionEffectType type = null;
-						if (o instanceof PotionEffectType)
-							type = ((PotionEffectType) o);
-						else if (o instanceof PotionEffect)
-							type = ((PotionEffect) o).getType();
-						if (type != null)
-							if (object instanceof LivingEntity)
-								PotionEffectUtils.removeEffect((LivingEntity) object, type);
-							else if (object instanceof ItemType)
-								PotionEffectUtils.removeEffect((ItemType) object, type);
-					}
+					if (object instanceof LivingEntity)
+						PotionEffectUtils.removeEffects(((LivingEntity) object), delta);
+					else if (object instanceof ItemType)
+						PotionEffectUtils.removeEffects(((ItemType) object), delta);
 			}
 		}
 	}

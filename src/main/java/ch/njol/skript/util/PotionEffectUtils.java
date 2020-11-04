@@ -239,21 +239,41 @@ public abstract class PotionEffectUtils {
 	/**
 	 * Add PotionEffects to an entity
 	 *
-	 * @param entity Entity to add effects
-	 * @param effects Effects to add
+	 * @param entity Entity to add effects to
+	 * @param effects {@link PotionEffect} or {@link PotionEffectType} to add
 	 */
-	public static void addEffects(LivingEntity entity, PotionEffect[] effects) {
-		entity.addPotionEffects(Arrays.asList(effects));
+	public static void addEffects(LivingEntity entity, Object[] effects) {
+		for (Object object : effects) {
+			PotionEffect effect;
+			if (object instanceof PotionEffect)
+				effect = (PotionEffect) object;
+			else if (object instanceof PotionEffectType)
+				effect = new PotionEffect((PotionEffectType) object, 15 * 20, 0, false);
+			else
+				continue;
+			
+			entity.addPotionEffect(effect);
+		}
 	}
 	
 	/**
 	 * Remove a PotionEffect from an entity
 	 *
 	 * @param entity Entity to remove effects for
-	 * @param effectType Types of effects to remove
+	 * @param effects {@link PotionEffect} or {@link PotionEffectType} to remove
 	 */
-	public static void removeEffect(LivingEntity entity, PotionEffectType effectType) {
-		entity.removePotionEffect(effectType);
+	public static void removeEffects(LivingEntity entity, Object[] effects) {
+		for (Object object : effects) {
+			PotionEffectType effectType;
+			if (object instanceof PotionEffect)
+				effectType = ((PotionEffect) object).getType();
+			else if (object instanceof PotionEffectType)
+				effectType = (PotionEffectType) object;
+			else
+				continue;
+			
+			entity.removePotionEffect(effectType);
+		}
 	}
 	
 	/**
@@ -274,11 +294,19 @@ public abstract class PotionEffectUtils {
 	 * Add PotionEffects to an ItemTye
 	 *
 	 * @param itemType Item to add effects to
-	 * @param effects Effects to add
+	 * @param effects {@link PotionEffect} or {@link PotionEffectType} to add
 	 */
-	public static void addEffects(ItemType itemType, PotionEffect[] effects) {
+	public static void addEffects(ItemType itemType, Object[] effects) {
 		ItemMeta meta = itemType.getItemMeta();
-		for (PotionEffect effect : effects) {
+		for (Object object : effects) {
+			PotionEffect effect;
+			if (object instanceof PotionEffect)
+				effect = (PotionEffect) object;
+			else if (object instanceof PotionEffectType)
+				effect = new PotionEffect((PotionEffectType) object, 15 * 20, 0, false);
+			else
+				continue;
+			
 			if (meta instanceof PotionMeta)
 				((PotionMeta) meta).addCustomEffect(effect, false);
 			else if (HAS_SUSPICIOUS_META && meta instanceof SuspiciousStewMeta)
@@ -291,14 +319,25 @@ public abstract class PotionEffectUtils {
 	 * Remove a PotionEffect from an ItemType
 	 *
 	 * @param itemType Item to remove effects from
-	 * @param effectType Types of effects to remove
+	 * @param effects {@link PotionEffect} or {@link PotionEffectType} to remove
 	 */
-	public static void removeEffect(ItemType itemType, PotionEffectType effectType) {
+	public static void removeEffects(ItemType itemType, Object[] effects) {
 		ItemMeta meta = itemType.getItemMeta();
-		if (meta instanceof PotionMeta)
-			((PotionMeta) meta).removeCustomEffect(effectType);
-		else if (HAS_SUSPICIOUS_META && meta instanceof SuspiciousStewMeta)
-			((SuspiciousStewMeta) meta).removeCustomEffect(effectType);
+		
+		for (Object object : effects) {
+			PotionEffectType effectType;
+			if (object instanceof PotionEffect)
+				effectType = ((PotionEffect) object).getType();
+			else if (object instanceof PotionEffectType)
+				effectType = (PotionEffectType) object;
+			else
+				continue;
+			
+			if (meta instanceof PotionMeta)
+				((PotionMeta) meta).removeCustomEffect(effectType);
+			else if (HAS_SUSPICIOUS_META && meta instanceof SuspiciousStewMeta)
+				((SuspiciousStewMeta) meta).removeCustomEffect(effectType);
+		}
 		itemType.setItemMeta(meta);
 	}
 	
