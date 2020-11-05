@@ -41,7 +41,7 @@ import ch.njol.util.Kleenean;
 @Description("Makes a player see a block as something it really isn't. BlockData support is only for MC 1.13+")
 @Examples({"make player see block at player as dirt",
 		"make player see target block as campfire[facing=south]"})
-@Since("2.2-dev37c, INSERT VERSION (block data support)")
+@Since("2.2-dev37c, 2.5.1 (block data support)")
 public class EffSendBlockChange extends Effect {
 
 	private static final boolean BLOCK_DATA_SUPPORT = Skript.classExists("org.bukkit.block.data.BlockData");

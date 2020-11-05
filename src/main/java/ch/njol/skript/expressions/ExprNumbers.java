@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 @Examples({"loop numbers from 2.5 to 5.5: # loops 2.5, 3.5, 4.5, 5.5",
 		"loop integers from 2.9 to 5.1: # same as '3 to 5', i.e. loops 3, 4, 5",
 		"loop decimals from 3.94 to 4: # loops 3.94, 3.95, 3.96, 3.97, 3.98, 3.99, 4"})
-@Since("1.4.6 (integers & numbers), INSERT VERSION (decimals)")
+@Since("1.4.6 (integers & numbers), 2.5.1 (decimals)")
 public class ExprNumbers extends SimpleExpression<Number> {
 	static {
 		Skript.registerExpression(ExprNumbers.class, Number.class, ExpressionType.COMBINED,
@@ -97,14 +97,13 @@ public class ExprNumbers extends SimpleExpression<Number> {
 				list.add((long) low + i);
 			}
 		} else if (mode == 2) {
-			final double amount = f.doubleValue() - s.doubleValue() + 1;
 			
-			final String[] split = s.toString().split("\\.");
+			final String[] split = (reverse ? f : s).toString().split("\\.");
 			final int numberAccuracy = SkriptConfig.numberAccuracy.value();
-			int precision = Math.min(split.length > 1 ? split[1].length() : numberAccuracy, numberAccuracy);
+			int precision = Math.min(split.length > 1 ? split[1].length() : 0, numberAccuracy);
 			
 			final double multiplier = Math.pow(10, precision);
-			for (int i = (int) (s.doubleValue() * multiplier); i <= f.doubleValue() * multiplier; i++) {
+			for (int i = (int) Math.ceil(s.doubleValue() * multiplier); i <= Math.floor(f.doubleValue() * multiplier); i++) {
 				list.add((i / multiplier));
 			}
 		}
@@ -148,25 +147,29 @@ public class ExprNumbers extends SimpleExpression<Number> {
 			};
 		} else {
 			return new Iterator<Number>() {
-				final double start = starting.doubleValue();
+				final double min = starting.doubleValue();
 				final double max = finish.doubleValue();
-				final String[] split = starting.toString().split("\\.");
-				final int precision = split.length > 0 ? split[1].length() : 0;
-			
+				
+				final String[] split = (reverse ? finish : starting).toString().split("\\.");
+				final int numberAccuracy = SkriptConfig.numberAccuracy.value();
+				final int precision = Math.min(split.length > 1 ? split[1].length() : 0, numberAccuracy);
 				final double multiplier = Math.pow(10, precision);
-				int current = reverse ? (int) (max * multiplier - 1) : (int) (start * multiplier);
+				
+				final int intMax = (int) Math.floor(max * multiplier);
+				final int intMin = (int) Math.ceil (min * multiplier);
+				int current = reverse ? intMax : intMin;
 				
 				@Override
 				public boolean hasNext() {
-					return reverse ? current > start : current < max * multiplier;
+					return reverse ? (current >= intMin) : (current <= intMax);
 				}
 				
 				@Override
 				public Number next() {
 					if (!hasNext())
 						throw new NoSuchElementException();
-					double value = start + current / multiplier;
-					current = reverse ? current - 1 : current + 1;
+					double value = current / multiplier;
+					current += reverse ? -1 : 1;
 					return value;
 				}
 			};

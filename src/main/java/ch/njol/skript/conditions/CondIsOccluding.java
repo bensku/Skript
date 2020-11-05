@@ -28,7 +28,7 @@ import ch.njol.skript.doc.Since;
 @Name("Is Occluding")
 @Description("Checks whether an item is a block and completely blocks vision.")
 @Examples("player's tool is occluding")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class CondIsOccluding extends PropertyCondition<ItemType> {
 	
 	static {
