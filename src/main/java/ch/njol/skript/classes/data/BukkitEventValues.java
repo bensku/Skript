@@ -1215,6 +1215,8 @@ public final class BukkitEventValues {
 			@Nullable
 			public FishHook get(PlayerFishEvent e) {
 				return e.getHook();
+			}
+		}, 0);
     //HorseJumpEvent
 		EventValues.registerEventValue(HorseJumpEvent.class, Entity.class, new Getter<Entity, HorseJumpEvent>() {
 			@Nullable
