@@ -155,6 +155,7 @@ public final class BukkitEventValues {
 				return e.getWorld();
 			}
 		}, 0);
+		
 		// StructureGrowEvent - a WorldEvent
 		EventValues.registerEventValue(StructureGrowEvent.class, Block.class, new Getter<Block, StructureGrowEvent>() {
 			@Override
