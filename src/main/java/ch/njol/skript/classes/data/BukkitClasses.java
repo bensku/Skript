@@ -901,7 +901,8 @@ public class BukkitClasses {
 						final Fields f = new Fields();
 						if (uuidSupported)
 							f.putObject("uuid", p.getUniqueId());
-						f.putObject("name", p.getName());
+						else
+							f.putObject("name", p.getName());
 						return f;
 					}
 					
