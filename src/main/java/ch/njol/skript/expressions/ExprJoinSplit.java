@@ -98,7 +98,7 @@ public class ExprJoinSplit extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return join ? "join " + strings.toString(e, debug) +(delimiter != null ? " with " + delimiter.toString(e, debug) : "") : ((regex ? "regex " : "") +"split " + strings.toString(e, debug) + (delimiter != null ? " at " + delimiter.toString(e, debug) : ""));
+		return join ? "join " + strings.toString(e, debug) + (delimiter != null ? " with " + delimiter.toString(e, debug) : "") : ((regex ? "regex " : "") + "split " + strings.toString(e, debug) + (delimiter != null ? " at " + delimiter.toString(e, debug) : ""));
 	}
 	
 }
