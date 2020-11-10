@@ -97,7 +97,7 @@ public class CondMatches extends Condition {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return strings.toString(e, debug) + " " + (isNegated() ? "matches" : "doesn't match") + " " + regex.toString(e, debug);
+		return strings.toString(e, debug) + " " + (isNegated() ? "doesn't match" : "matches") + " " + regex.toString(e, debug);
 	}
 	
 }
