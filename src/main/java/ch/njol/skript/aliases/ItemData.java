@@ -482,6 +482,16 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	 * @return If this item can be considered the default item of its type.
 	 */
 	public boolean isDefault() {
+		return itemFlags == 0 && blockValues == null;
+	}
+	
+	/**
+	 * Checks if this item is an alias or a clone of one that has not been
+	 * modified after loading the aliases.
+	 *
+	 * @return True if is an alias or unmodified clone
+	 */
+	public boolean isAlias() {
 		return isAlias || (itemFlags == 0 && blockValues == null);
 	}
 	

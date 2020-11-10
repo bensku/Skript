@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
 	"\tset projectile critical mode of event-projectile to true"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprProjectileCriticalState extends SimplePropertyExpression<Projectile, Boolean> {
 	
 	private static final boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");

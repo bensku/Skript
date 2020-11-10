@@ -37,7 +37,7 @@ import ch.njol.util.Kleenean;
 @Name("Random UUID")
 @Description("Returns a random UUID.")
 @Examples("set {_uuid} to random uuid")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprRandomUUID extends SimpleExpression<String> {
 	
 	static {

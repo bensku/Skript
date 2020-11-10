@@ -54,7 +54,7 @@ public final class EvtEntity extends SkriptEvent {
 				.examples("on spawn of a zombie:",
 						"on spawn of an ender dragon:",
 						"	broadcast \"A dragon has been sighted in %world%!\"")
-				.since("1.0, INSERT VERSION (non-living entities)");
+				.since("1.0, 2.5.1 (non-living entities)");
 	}
 	
 	@Nullable

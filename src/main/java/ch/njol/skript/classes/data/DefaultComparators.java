@@ -204,7 +204,7 @@ public class DefaultComparators {
 				for (ItemData myType : i1.getTypes()) {
 					for (ItemData otherType : i2.getTypes()) {
 						// Don't require an EXACT match if the other ItemData is an alias. They only need to share a material.
-						if (myType.matchAlias(otherType).isAtLeast((otherType.isDefault() && !myType.isDefault()) ? MatchQuality.SAME_ITEM : MatchQuality.EXACT)) {
+						if (myType.matchAlias(otherType).isAtLeast((otherType.isAlias() && !myType.isAlias()) ? MatchQuality.SAME_ITEM : MatchQuality.EXACT)) {
 							return Relation.EQUAL;
 						}
 					}
@@ -459,7 +459,7 @@ public class DefaultComparators {
 			public Relation compare(final DamageCause dc, final ItemType t) {
 				switch (dc) {
 					case FIRE:
-						return Relation.get(t.isOfType(Material.LAVA));
+						return Relation.get(t.isOfType(Material.FIRE));
 					case LAVA:
 						return Relation.get(t.equals(lava));
 					case MAGIC:
