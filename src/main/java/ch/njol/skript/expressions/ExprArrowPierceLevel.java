@@ -40,7 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"\tevent-projectile is an arrow",
 	"\tset arrow pierce level of event-projectile to 5"})
 @RequiredPlugins("Minecraft 1.14+")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprArrowPierceLevel extends SimplePropertyExpression<Projectile, Number> {
 	
 	private final static boolean CAN_USE_PIERCE = Skript.methodExists(Arrow.class, "getPierceLevel");

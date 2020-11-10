@@ -30,7 +30,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Name("Sea Level")
 @Description("Gets the sea level of a world.")
 @Examples("send \"The sea level in your world is %sea level in player's world%\"")
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprSeaLevel extends SimplePropertyExpression<World, Number> {
 	
 	static {

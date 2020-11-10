@@ -38,7 +38,7 @@ import ch.njol.util.Kleenean;
 @Description("Makes a living entity attack an entity with a melee attack.")
 @Examples({"spawn a wolf at player's location",
 	"make last spawned wolf attack player"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 @RequiredPlugins("Minecraft 1.15.2+")
 public class EffForceAttack extends Effect {
 	

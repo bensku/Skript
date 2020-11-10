@@ -35,7 +35,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("A projectile's bounce state.")
 @Examples({"on projectile hit:",
 	"\tset projectile bounce mode of event-projectile to true"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprProjectileBounceState extends SimplePropertyExpression<Projectile, Boolean> {
 	
 	static {
