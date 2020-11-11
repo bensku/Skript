@@ -37,29 +37,32 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Subtext")
-@Description("Extracts part of a text. You can either get the first &lt;x&gt; characters, the last &lt;x&gt; characters, or the characters between indices &lt;x&gt; and &lt;y&gt;."
+@Description("Extracts part of a text. You can either get the first &lt;x&gt; characters, the last &lt;x&gt; characters, the character at index &lt;x&gt;, or the characters between indices &lt;x&gt; and &lt;y&gt;."
 		+ " The indices &lt;x&gt; and &lt;y&gt; should be between 1 and the <a href='#ExprLength'>length</a> of the text (other values will be fit into this range).")
 @Examples({"set {_s} to the first 5 characters of the text argument"
 		, "message \"%subtext of {_s} from characters 2 to (the length of {_s} - 1)%\" # removes the first and last character from {_s} and sends it to the player or console"})
-@Since("2.1")
+@Since("2.1, INSERT VERSION (character at)")
 public class ExprSubstring extends SimpleExpression<String> {
 	static {
 		Skript.registerExpression(ExprSubstring.class, String.class, ExpressionType.COMBINED,
 				"[the] (part|sub[ ](text|string)) of %strings% (between|from) (ind(ex|ices)|character[s]|) %number% (and|to) (index|character|) %number%",
-				"[the] (1¦first|2¦last) [%-number%] character[s] of %strings%", "[the] %number% (1¦first|2¦last) characters of %strings%");
+				"[the] (1¦first|2¦last) [%-number%] character[s] of %strings%", "[the] %number% (1¦first|2¦last) characters of %strings%",
+				"[the] character at [(index|position)] %number% (in|of) %strings%");
 	}
 	
 	@SuppressWarnings("null")
 	private Expression<String> string;
 	@Nullable
 	private Expression<Number> start, end;
+	private int pattern;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		string = (Expression<String>) exprs[parseResult.mark == 0 ? 0 : 1];
-		start = parseResult.mark == 1 ? null : exprs[parseResult.mark == 0 ? 1 : 0] == null ? new SimpleLiteral<>(1, false) : (Expression<Number>) exprs[parseResult.mark == 0 ? 1 : 0];
-		end = parseResult.mark == 2 ? null : exprs[parseResult.mark == 0 ? 2 : 0] == null ? new SimpleLiteral<>(1, false) : (Expression<Number>) exprs[parseResult.mark == 0 ? 2 : 0];
+		pattern = matchedPattern;
+		string = (Expression<String>) exprs[pattern != 0 ? 1 : 0];
+		start = (Expression<Number>) (pattern == 0 ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
+		end = (Expression<Number>) (pattern == 0 ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
 		assert end != null || start != null;
 		return true;
 	}
@@ -101,8 +104,10 @@ public class ExprSubstring extends SimpleExpression<String> {
 		} else if (end == null) {
 			assert start != null;
 			return "the last " + start.toString(e, debug) + " characters of " + string.toString(e, debug);
-		} else {
+		} else if (pattern == 0) {
 			return "the substring of " + string.toString(e, debug) + " from index " + start.toString(e, debug) + " to " + end.toString(e, debug);
+		} else {
+			return "the character at index " + start.toString(e, debug) + " in " + string.toString(e, debug);
 		}
 	}
 	
