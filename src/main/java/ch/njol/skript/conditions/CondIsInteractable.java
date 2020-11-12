@@ -34,7 +34,7 @@ import ch.njol.skript.doc.Since;
 @Description("Checks wether or not a block is interactable.")
 @Examples({"on block break:",
 			"\tif event-block is interactable:",
-  			"\t\tcancel event",
+			"\t\tcancel event",
 			"\t\tsend \"You cannot break interactable blocks!\""})
 @Since("INSERT VERSION")
 @RequiredPlugins("Minecraft 1.13+")
