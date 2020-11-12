@@ -29,7 +29,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 
-@Name("IsInteractable")
+@Name("Is Interactable")
 @Description("Checks wether or not a block is interactable.")
 @Examples({"on block break:",
 			"    if event-block is interactable:",
