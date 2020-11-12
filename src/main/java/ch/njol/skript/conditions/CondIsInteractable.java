@@ -35,7 +35,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 			"    if event-block is interactable:",
   			"        cancel event",
 			"        send \"You cannot break interactable blocks!\""})
-@RequiredPlugins("Paper 1.13+")
+@RequiredPlugins("Minecraft 1.13+")
 public class CondIsInteractable extends PropertyCondition<ItemType> {
 	
 	static {
