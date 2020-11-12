@@ -28,13 +28,14 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 
 @Name("Is Interactable")
 @Description("Checks wether or not a block is interactable.")
 @Examples({"on block break:",
 			"\tif event-block is interactable:",
   			"\t\tcancel event",
-			"\t\t"send \"You cannot break interactable blocks!\""})
+			"\t\tsend \"You cannot break interactable blocks!\""})
 @Since("INSERT VERSION")
 @RequiredPlugins("Minecraft 1.13+")
 public class CondIsInteractable extends PropertyCondition<ItemType> {
