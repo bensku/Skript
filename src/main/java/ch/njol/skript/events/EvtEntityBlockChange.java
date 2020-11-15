@@ -48,8 +48,11 @@ public class EvtEntityBlockChange extends SkriptEvent {
 						"a silverfish boops into/out of a block or a falling block lands and turns into a block respectively.")
 				.examples("on sheep eat:",
 						"\tkill entity",
-						"\tbroadcast \"A sheep stole some grass!\"")
-				.since("<i>unknown</i>");
+						"\tbroadcast \"A sheep stole some grass!\"",
+						"on falling block land:",
+						"\tif event-entity is a falling dirt:",
+						"\t\tcancel event")
+				.since("<i>unknown</i>, INSERT VERSION (falling block)");
 	}
 	
 	static final ItemType monsterEgg = Aliases.javaItemType("any spawn egg");
