@@ -21,7 +21,6 @@ package ch.njol.skript.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -106,7 +105,6 @@ public class ExprSubstring extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("null")
 	public boolean isSingle() {
-		Bukkit.broadcastMessage("" + string.isSingle() + start.isSingle());
 		return string.isSingle() && start.isSingle();
 	}
 	
