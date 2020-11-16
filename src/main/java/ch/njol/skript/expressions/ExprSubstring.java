@@ -59,15 +59,15 @@ public class ExprSubstring extends SimpleExpression<String> {
 	private Expression<String> string;
 	@Nullable
 	private Expression<Number> start, end;
-	private int pattern;
+	private boolean usedSubstring;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		pattern = matchedPattern;
-		string = (Expression<String>) exprs[pattern != 0 ? 1 : 0];
-		start = (Expression<Number>) (pattern == 0 ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
-		end = (Expression<Number>) (pattern == 0 ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
+		usedSubstring = matchedPattern == 0;
+		string = (Expression<String>) exprs[usedSubstring ? 0 : 1];
+		start = (Expression<Number>) (usedSubstring ? exprs[1] : parseResult.mark == 1 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
+		end = (Expression<Number>) (usedSubstring ? exprs[2] : parseResult.mark == 2 ? null : exprs[0] == null ? new SimpleLiteral<>(1, false) : exprs[0]);
 		assert end != null || start != null;
 		return true;
 	}
@@ -122,7 +122,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 		} else if (end == null) {
 			assert start != null;
 			return "the last " + start.toString(e, debug) + " characters of " + string.toString(e, debug);
-		} else if (pattern == 0) {
+		} else if (usedSubstring) {
 			return "the substring of " + string.toString(e, debug) + " from index " + start.toString(e, debug) + " to " + end.toString(e, debug);
 		} else {
 			return "the character at " + (start.isSingle() ? "index " : "indexes ") + start.toString(e, debug) + " in " + string.toString(e, debug);
