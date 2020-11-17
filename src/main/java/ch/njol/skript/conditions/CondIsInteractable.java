@@ -42,7 +42,7 @@ public class CondIsInteractable extends PropertyCondition<ItemType> {
 	
 	static {
 		if (Skript.methodExists(Material.class, "isInteractable")) {
-			register(CondIsInteractable.class, "interactable", "itemtype");
+			register(CondIsInteractable.class, "interactable", "itemtypes");
 		}
 	}
 	
