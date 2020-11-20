@@ -25,6 +25,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
@@ -106,6 +107,14 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	
 	@Override
 	public boolean setTime(final int time) {
-		return super.setTime(time, PlayerGameModeChangeEvent.class, getExpr());
+		if (ScriptLoader.hasDelayBefore == Kleenean.TRUE && time != 0) {
+			Skript.error("Can't use time states after the event has already passed");
+			return false;
+		}
+		if (!ScriptLoader.isCurrentEvent(PlayerGameModeChangeEvent.class))
+			return false;
+		super.setTime(time);
+		return true;
 	}
+	
 }
