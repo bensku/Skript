@@ -102,6 +102,7 @@ public class ExprPlayersXP extends SimpleExpression<Number> {
 					p.setTotalExperience(p.getTotalExperience() - xp < 0 ? 0 : p.getTotalExperience() - xp);
 					break;
 				case REMOVE_ALL:
+					assert false;
 					break;
 			}
 		}
