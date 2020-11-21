@@ -26,6 +26,10 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.sun.istack.internal.NotNull;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -33,6 +37,13 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
+@Name("Player's Experience")
+@Description("Returns the amount of experience a player has.")
+@Examples({"command /xp:",
+	"\ttrigger:",
+	"\t\tset {_xp} to player's xp",
+	"\t\tsend \"You have %{_xp}% xp!"})
+@Since("INSERT VERSION")
 public class ExprPlayersXP extends SimpleExpression<Number> {
 	
 	static {
