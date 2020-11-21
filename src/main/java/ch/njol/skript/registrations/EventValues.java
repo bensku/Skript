@@ -19,6 +19,7 @@
 package ch.njol.skript.registrations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.event.Event;
@@ -79,8 +80,10 @@ public class EventValues {
 		 * @return The classes of the Excludes associated with this event value
 		 */
 		@Nullable
+		@SuppressWarnings("null")
 		public Class<? extends E>[] getExcludes() {
-			return excludes;
+			if (excludes != null) return Arrays.copyOf(excludes, excludes.length);
+			return new Class[0];
 		}
 		
 		/**

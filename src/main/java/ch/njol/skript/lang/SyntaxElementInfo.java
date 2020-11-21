@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.lang;
 
+import java.util.Arrays;
+
 /**
  * @author Peter Güttinger
  * @param <E> the syntax element this info is for
@@ -57,7 +59,7 @@ public class SyntaxElementInfo<E extends SyntaxElement> {
 	 * @return Array of Skript patterns for this element
 	 */
 	public String[] getPatterns() {
-		return patterns;
+		return Arrays.copyOf(patterns, patterns.length);
 	}
 	
 	/**
