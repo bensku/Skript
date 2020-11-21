@@ -250,16 +250,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		// Check that MC version is supported
 		if (!isRunningMinecraft(1, 9)) {
-			if (isRunningMinecraft(1, 8)) { // 1.8 probably works, but let's spit a warning
-				Skript.warning("Using this version of Skript on 1.8 is highly discouraged.");
-				Skript.warning("Some features have been disabled; use older Skript to restore them.");
-				Skript.warning("Also, there are probably bugs. And since 1.8 is not supported, they will not be fixed");
-			} else { // Older versions definitely do not work
-				Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion);
-				Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
-				Skript.error("Note that those versions are, of course, completely unsupported!");
-				return false;
-			}
+			// Prevent loading when not running at least Minecraft 1.9
+			Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion + " and requires Minecraft 1.9.4+");
+			Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
+			Skript.error("Note that those versions are, of course, completely unsupported!");
+			return false;
 		}
 		
 		// Check that current server platform is somewhat supported
@@ -387,19 +382,19 @@ public final class Skript extends JavaPlugin implements Listener {
 		// ... but also before platform check, because there is a config option to ignore some errors
 		SkriptConfig.load();
 		
+		// Check server software, Minecraft version, etc.
+		if (!checkServerPlatform()) {
+			disabled = true; // Nothing was loaded, nothing needs to be unloaded
+			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
+			return;
+		}
+		
 		// Use the updater, now that it has been configured to (not) do stuff
 		if (updater != null) {
 			CommandSender console = Bukkit.getConsoleSender();
 			assert console != null;
 			assert updater != null;
 			updater.updateCheck(console);
-		}
-		
-		// Check server software, Minecraft version, etc.
-		if (!checkServerPlatform()) {
-			disabled = true; // Nothing was loaded, nothing needs to be unloaded
-			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
-			return;
 		}
 		
 		BukkitUnsafe.initialize(); // Needed for aliases
