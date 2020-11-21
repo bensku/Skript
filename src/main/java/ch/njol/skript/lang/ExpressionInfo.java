@@ -29,4 +29,19 @@ public class ExpressionInfo<E extends Expression<T>, T> extends SyntaxElementInf
 		this.expressionType = expressionType;
 	}
 	
+	/**
+	 * Get the return type of this expression.
+	 * @return The return type of this Expression
+	 */
+	public Class<T> getReturnType() {
+		return returnType;
+	}
+	
+	/**
+	 * Get the type of this expression.
+	 * @return The type of this Expression
+	 */
+	public ExpressionType getExpressionType() {
+		return expressionType;
+	}
 }

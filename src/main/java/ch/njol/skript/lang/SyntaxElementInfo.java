@@ -44,4 +44,27 @@ public class SyntaxElementInfo<E extends SyntaxElement> {
 		}
 	}
 	
+	/**
+	 * Get the class that represents this element.
+	 * @return The Class of the element
+	 */
+	public Class<E> getElementClass() {
+		return c;
+	}
+	
+	/**
+	 * Get the patterns of this syntax element.
+	 * @return Array of Skript patterns for this element
+	 */
+	public String[] getPatterns() {
+		return patterns;
+	}
+	
+	/**
+	 * Get the original classpath for this element.
+	 * @return The original ClassPath for this element
+	 */
+	public String getOriginClassPath() {
+		return originClassPath;
+	}
 }
