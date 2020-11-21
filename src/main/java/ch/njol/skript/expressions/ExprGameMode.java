@@ -107,14 +107,7 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	
 	@Override
 	public boolean setTime(final int time) {
-		if (ScriptLoader.hasDelayBefore == Kleenean.TRUE && time != 0) {
-			Skript.error("Can't use time states after the event has already passed");
-			return false;
-		}
-		if (!ScriptLoader.isCurrentEvent(PlayerGameModeChangeEvent.class))
-			return false;
-		super.setTime(time);
-		return true;
+		return super.setTime(time, PlayerGameModeChangeEvent.class);
 	}
 	
 }
