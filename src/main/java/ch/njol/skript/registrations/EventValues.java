@@ -24,6 +24,7 @@ import java.util.List;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.expressions.base.EventValueExpression;
@@ -95,6 +96,31 @@ public class EventValues {
 	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
 	private final static List<EventValueInfo<?, ?>> futureEventValues = new ArrayList<>();
 	private final static List<EventValueInfo<?, ?>> pastEventValues = new ArrayList<>();
+	
+	/**
+	 * The past time of an event value. Represented by "past" or "former".
+	 */
+	public static final int TIME_PAST = -1;
+	
+	/**
+	 * The current time of an event value.
+	 */
+	public static final int TIME_NOW = 0;
+	
+	/**
+	 * The future time of an event value.
+	 */
+	public static final int TIME_FUTURE = 1;
+	
+	/**
+	 * Get Event Values list for the specified time
+	 * @param time The time of the event values. One of
+	 * {@link EventValues#TIME_PAST}, {@link EventValues#TIME_NOW} or {@link EventValues#TIME_FUTURE}.
+	 * @return An immutable copy of the event values list for the specified time
+	 */
+	public static List<EventValueInfo<?, ?>> getEventValuesListForTime(int time) {
+		return ImmutableList.copyOf(getEventValuesList(time));
+	}
 	
 	private static List<EventValueInfo<?, ?>> getEventValuesList(int time) {
 		if (time == -1)
