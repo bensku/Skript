@@ -56,6 +56,40 @@ public class EventValues {
 			this.excludes = excludes;
 			this.excludeErrorMessage = excludeErrorMessage;
 		}
+		
+		/**
+		 * Get the class that represents the Event.
+		 * @return The class of the Event associated with this event value
+		 */
+		public Class<E> getEventClass() {
+			return event;
+		}
+		
+		/**
+		 * Get the class that represents Value.
+		 * @return The class of the Value associated with this event value
+		 */
+		public Class<T> getValueClass() {
+			return c;
+		}
+		
+		/**
+		 * Get the classes that represent the excluded for this Event value.
+		 * @return The classes of the Excludes associated with this event value
+		 */
+		@Nullable
+		public Class<? extends E>[] getExcludes() {
+			return excludes;
+		}
+		
+		/**
+		 * Get the error message used when encountering an exclude value.
+		 * @return The error message to use when encountering an exclude
+		 */
+		@Nullable
+		public String getExcludeErrorMessage() {
+			return excludeErrorMessage;
+		}
 	}
 	
 	private final static List<EventValueInfo<?, ?>> defaultEventValues = new ArrayList<>(30);
