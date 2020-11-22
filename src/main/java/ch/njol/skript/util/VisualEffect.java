@@ -249,6 +249,15 @@ public final class VisualEffect implements SyntaxElement, YggdrasilSerializable 
 			}
 		},
 		END_ROD(Particle.END_ROD),
+		BARRIER(Particle.BARRIER),
+		DAMAGE_INDICATOR(Particle.DAMAGE_INDICATOR),
+		DRAGON_BREATH(Particle.DRAGON_BREATH),
+		MOB_APPEARANCE(Particle.MOB_APPEARANCE),
+		SUSPENDED(Particle.SUSPENDED),
+		SWEEP_ATTACK(Particle.SWEEP_ATTACK),
+		WATER_BUBBLE(Particle.WATER_BUBBLE),
+		WATER_WAKE(Particle.WATER_WAKE),
+		WATER_DROP(Particle.WATER_DROP),
 		
 		// 1.10 particles
 		FALLING_DUST("FALLING_DUST") {
