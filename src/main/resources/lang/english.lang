@@ -1580,6 +1580,34 @@ visual effects:
 	falling_water:
 		name: falling water @-
 		pattern: falling water
+	barrier:
+		name: barrier @a
+		pattern: barrier
+	damage_indicator:
+		name: damage indicator @-
+		pattern: damage indicator
+	dragon_breath:
+		name: dragon breath @-
+		pattern: dragon[s] breath
+	mob_appearance:
+		name: mob appearance @-
+		pattern: (mob appearance|guardian ghost)
+	suspended:
+		name: suspended @-
+		pattern: (suspended|underwater)
+	sweep_attack:
+		name: sweep attack @-
+		pattern: sweep attack
+	water_bubble:
+		name: water bubble @-
+		pattern: water bubble
+	water_wake:
+		name: water wake @-
+		pattern: water wake
+	water_drop:
+		name: water drop @-
+		pattern: water drop
+
 	# 1.15 particles
 	dripping_honey:
 		name: dripping honey @-

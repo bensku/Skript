@@ -259,6 +259,17 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 		return false;
 	}
 	
+	protected final boolean setTime(final int time, final Class<? extends Event> applicableEvent) {
+		if (ScriptLoader.hasDelayBefore == Kleenean.TRUE && time != 0) {
+			Skript.error("Can't use time states after the event has already passed");
+			return false;
+		}
+		if (!ScriptLoader.isCurrentEvent(applicableEvent))
+			return false;
+		this.time = time;
+		return true;
+	}
+	
 	protected final boolean setTime(final int time, final Class<? extends Event> applicableEvent, final Expression<?>... mustbeDefaultVars) {
 		if (ScriptLoader.hasDelayBefore == Kleenean.TRUE && time != 0) {
 			Skript.error("Can't use time states after the event has already passed");
