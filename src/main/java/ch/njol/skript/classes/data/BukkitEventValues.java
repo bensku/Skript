@@ -467,6 +467,17 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0);
+		if (Skript.methodExists(ProjectileHitEvent.class, "getHitBlockFace")) {
+			EventValues.registerEventValue(ProjectileHitEvent.class, Direction.class, new Getter<Direction, ProjectileHitEvent>() {
+				@Override
+				@Nullable
+				public Direction get(final ProjectileHitEvent e) {
+					BlockFace theHitFace = e.getHitBlockFace();
+					if (theHitFace == null) return null;
+					return new Direction(theHitFace, 1);
+				}
+			}, 0);
+		}
 		// ProjectileLaunchEvent
 		EventValues.registerEventValue(ProjectileLaunchEvent.class, Entity.class, new Getter<Entity, ProjectileLaunchEvent>() {
 			@Override
