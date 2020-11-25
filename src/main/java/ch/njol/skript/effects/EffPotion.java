@@ -44,7 +44,7 @@ import ch.njol.util.Kleenean;
 @Examples({"apply swiftness 2 to the player",
 		"remove haste from the victim",
 		"on join:",
-		"	apply potion of strength of tier {strength.%player%} to the player for 999 days",
+		"\tapply potion of strength of tier {strength.%player%} to the player for 999 days",
 		"apply potion effects of player's tool to player"})
 @Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect), INSERT VERSION (potion effects)")
 public class EffPotion extends Effect {
