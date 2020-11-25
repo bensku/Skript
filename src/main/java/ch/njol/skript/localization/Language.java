@@ -84,7 +84,8 @@ public class Language {
 	 */
 	@Nullable
 	public static HashMap<String, String> getLocalized() {
-		if (localized != null) return new HashMap<>(localized);
+		if (localized != null)
+			return new HashMap<>(localized);
 		return localized;
 	}
 	

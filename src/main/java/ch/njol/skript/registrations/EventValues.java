@@ -82,7 +82,8 @@ public class EventValues {
 		@Nullable
 		@SuppressWarnings("null")
 		public Class<? extends E>[] getExcludes() {
-			if (excludes != null) return Arrays.copyOf(excludes, excludes.length);
+			if (excludes != null)
+				return Arrays.copyOf(excludes, excludes.length);
 			return new Class[0];
 		}
 		
