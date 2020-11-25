@@ -894,14 +894,10 @@ public class BukkitClasses {
 						return "" + p.getName();
 					}
 				}).serializer(new Serializer<OfflinePlayer>() {
-					private final boolean uuidSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
-					
 					@Override
 					public Fields serialize(final OfflinePlayer p) {
 						final Fields f = new Fields();
-						if (uuidSupported)
-							f.putObject("uuid", p.getUniqueId());
-						f.putObject("name", p.getName());
+						f.putObject("uuid", p.getUniqueId());
 						return f;
 					}
 					
@@ -918,7 +914,7 @@ public class BukkitClasses {
 					@SuppressWarnings("deprecation")
 					@Override
 					protected OfflinePlayer deserialize(final Fields fields) throws StreamCorruptedException {
-						if (fields.contains("uuid") && uuidSupported) {
+						if (fields.contains("uuid")) {
 							final UUID uuid = fields.getObject("uuid", UUID.class);
 							if (uuid == null)
 								throw new StreamCorruptedException();
