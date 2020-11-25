@@ -91,8 +91,9 @@ public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 			case ADD:
 			case DELETE:
 				return CollectionUtils.array(PotionEffect[].class, PotionEffectType[].class);
+			default:
+				return null;
 		}
-		return null;
 	}
 	
 	@Override
