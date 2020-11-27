@@ -63,7 +63,7 @@ public class EffMessage extends Effect {
 	private static final boolean SUPPORTS_SENDER;
 	
 	static {
-		SUPPORTS_SENDER = Skript.methodExists(CommandSender.Spigot.class, "sendMessage", UUID.class, BaseComponent.class);
+		SUPPORTS_SENDER = Skript.classExists("org.bukkit.command.CommandSender$Spigot") && Skript.methodExists(CommandSender.Spigot.class, "sendMessage", UUID.class, BaseComponent.class);
 		if (SUPPORTS_SENDER)
 			Skript.registerEffect(EffMessage.class, "(message|send [message[s]]) %strings% [to %commandsenders%] [from %player%]");
 		else
