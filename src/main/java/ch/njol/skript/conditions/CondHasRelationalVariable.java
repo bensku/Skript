@@ -49,8 +49,7 @@ import ch.njol.util.Kleenean;
 public class CondHasRelationalVariable extends Condition {
 
 	static {
-		// Temporarily disabled until bugs are fixed
-		if (false && Skript.isRunningMinecraft(1, 14)) {
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Skript.registerCondition(CondHasRelationalVariable.class,
 					"%persistentdataholders/itemtypes/blocks% (has|have|holds) [(relational|relation( |-)based) variable[s]] %objects%",
 					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) (have|hold) [(relational|relation( |-)based) variable[s]] %objects%"
