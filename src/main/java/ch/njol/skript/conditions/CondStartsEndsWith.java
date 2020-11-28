@@ -35,7 +35,7 @@ import ch.njol.util.Kleenean;
 @Description("Checks if a text starts or ends with another.")
 @Examples({"if the argument starts with \"test\" or \"debug\":",
 	"\tsend \"Stop!\""})
-@Since("2.2-dev36, INSERT VERSION (multiple strings support)")
+@Since("2.2-dev36, 2.5.1 (multiple strings support)")
 public class CondStartsEndsWith extends Condition {
 	
 	static {

@@ -17,39 +17,42 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.expressions;
+package ch.njol.skript.conditions;
 
-import org.bukkit.World;
+import org.bukkit.Material;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 
-@Name("Sea Level")
-@Description("Gets the sea level of a world.")
-@Examples("send \"The sea level in your world is %sea level in player's world%\"")
-@Since("2.5.1")
-public class ExprSeaLevel extends SimplePropertyExpression<World, Number> {
+@Name("Is Interactable")
+@Description("Checks wether or not a block is interactable.")
+@Examples({"on block break:",
+			"\tif event-block is interactable:",
+			"\t\tcancel event",
+			"\t\tsend \"You cannot break interactable blocks!\""})
+@Since("INSERT VERSION")
+@RequiredPlugins("Minecraft 1.13+")
+public class CondIsInteractable extends PropertyCondition<ItemType> {
 	
 	static {
-		register(ExprSeaLevel.class, Number.class, "sea level", "worlds");
+		if (Skript.methodExists(Material.class, "isInteractable")) {
+			register(CondIsInteractable.class, "interactable", "itemtypes");
+		}
 	}
 	
 	@Override
-	public Number convert(World world) {
-		return world.getSeaLevel();
-	}
-	
-	@Override
-	public Class<? extends Number> getReturnType() {
-		return Number.class;
+	public boolean check(ItemType item) {
+		return item.getMaterial().isInteractable();
 	}
 	
 	@Override
 	protected String getPropertyName() {
-		return "sea level";
+		return "interactable";
 	}
-
 }

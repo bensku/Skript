@@ -573,11 +573,11 @@ public class SimpleEvents {
 		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
 				.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
 				.examples("on inventory pickup:")
-				.since("INSERT VERSION");
+				.since("2.5.1");
 		Skript.registerEvent("Horse Jump", SimpleEvent.class, HorseJumpEvent.class, "horse jump")
 			.description("Called when a horse jumps.")
 			.examples("on horse jump:", "\tpush event-entity upwards at speed 2")
-			.since("INSERT VERSION");
+			.since("2.5.1");
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
@@ -589,7 +589,7 @@ public class SimpleEvents {
 			.description("Called when a player swings his arm.")
 			.examples("on arm swing:",
 				"\tsend \"You swung your arm!\"")
-			.since("INSERT VERSION");
+			.since("2.5.1");
 		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
 			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "item mend[ing]")
 				.description("Called when a player has an item repaired via the Mending enchantment.")
@@ -598,7 +598,7 @@ public class SimpleEvents {
 					"\tchance of 50%:",
 					"\t\tcancel the event",
 					"\t\tsend \"Oops! Mending failed!\" to player")
-				.since("INSERT VERSION");
+				.since("2.5.1");
 		}
 	}
 }

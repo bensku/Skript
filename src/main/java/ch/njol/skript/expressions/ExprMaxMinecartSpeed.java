@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The maximum speed of a minecart.")
 @Examples({"on right click on minecart:",
 	"\tset max minecart speed of event-entity to 1"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprMaxMinecartSpeed extends SimplePropertyExpression<Entity, Number> {
 	
 	static {

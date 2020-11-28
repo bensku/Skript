@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"on shoot:",
 	"\tevent-projectile is an arrow",
 	"\tset arrow knockback strength of event-projectile to 10"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprArrowKnockbackStrength extends SimplePropertyExpression<Projectile, Number> {
 	
 	final static boolean abstractArrowExists = Skript.classExists("org.bukkit.entity.AbstractArrow");

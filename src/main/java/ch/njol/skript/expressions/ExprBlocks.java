@@ -55,7 +55,7 @@ import ch.njol.util.coll.iterator.IteratorIterable;
 		"set the blocks below the player, the victim and the targeted block to air",
 		"set all blocks within {loc1} and {loc2} to stone",
 		"set all blocks within chunk at player to air"})
-@Since("1.0, INSERT VERSION (within/cuboid/chunk)")
+@Since("1.0, 2.5.1 (within/cuboid/chunk)")
 public class ExprBlocks extends SimpleExpression<Block> {
 	static {
 		Skript.registerExpression(ExprBlocks.class, Block.class, ExpressionType.COMBINED,

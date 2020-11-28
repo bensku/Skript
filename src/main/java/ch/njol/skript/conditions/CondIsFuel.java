@@ -37,7 +37,7 @@ import ch.njol.skript.doc.Since;
 	"\t\tsend \"Please hold a valid fuel item in your hand\"",
 	"\t\tcancel event"
 })
-@Since("INSERT VERSION")
+@Since("2.5.1")
 @RequiredPlugins("Minecraft 1.11.2+")
 public class CondIsFuel extends PropertyCondition<ItemType> {
 	

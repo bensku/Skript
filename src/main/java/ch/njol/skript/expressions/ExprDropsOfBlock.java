@@ -46,7 +46,7 @@ import ch.njol.util.Kleenean;
 @RequiredPlugins("Minecraft 1.15+ ('as %entity%')")
 @Examples({"on break of block:",
 	"\tgive drops of block using player's tool to player"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprDropsOfBlock extends SimpleExpression<ItemType> {
 
 	private final static boolean DROPS_OF_ENTITY_EXISTS = Skript.methodExists(Block.class, "getDrops", ItemStack.class, Entity.class);

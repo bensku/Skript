@@ -36,6 +36,12 @@ public class RabbitData extends EntityData<Rabbit> {
 
     private int type = 0;
     
+    public RabbitData() {}
+    
+    public RabbitData(int type) {
+    	this.type = type;
+    	super.matchedPattern = type;
+	}
 
     @Override
     protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
@@ -68,7 +74,7 @@ public class RabbitData extends EntityData<Rabbit> {
 
     @Override
     public EntityData getSuperType() {
-        return new RabbitData();
+        return new RabbitData(type);
     }
 
     @Override
