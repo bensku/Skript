@@ -157,3 +157,9 @@ test "relational variables expression/condition" when running minecraft "1.14.4"
 	assert relational variable {item} of {_pig} = stone named "TEST" with "Item Serialization Test Failure - Please check the console for errors."
 
 	delete {_pig}
+
+	# Variable Serialization Test
+
+	set {item} to wooden sword named "boat sword" with lore "made with the plank of a shipwreck"
+	assert {item} is wooden sword named "boat sword" with lore "made with the plank of a shipwreck" with "The variable '{item}' was not properly set."
+	delete {item}
