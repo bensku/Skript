@@ -2,15 +2,20 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
 	id "com.github.hierynomus.license" version "0.14.0"
+	id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+ext {
+	paperVersion = '1.16.4-R0.1-SNAPSHOT' // NOTICE: Edit this when updating to a new MC Version
+}
+
 // Substitute dependencies' versions of Bukkit with latest Paper API
 configurations.all {
 	resolutionStrategy.dependencySubstitution {
-		substitute module('org.bukkit:bukkit') with module('com.destroystokyo.paper:paper-api:1.14-R0.1-SNAPSHOT')
+		substitute module('org.bukkit:bukkit') with module("com.destroystokyo.paper:paper-api:${paperVersion}")
 	}
 }
 
@@ -28,7 +33,7 @@ allprojects {
 		}
 	
 		maven {
-			url 'https://repo.destroystokyo.com/repository/maven-public//'
+			url 'https://papermc.io/repo/repository/maven-public/'
 		}
 	
 		maven {
@@ -50,8 +55,10 @@ allprojects {
 	
 	configurations {
 		ecj
+		shade
+		implementation.extendsFrom(shade)
 	}
-	
+
 	dependencies {
 		ecj 'org.eclipse.jdt:ecj:3.15.0'
 	}
@@ -70,7 +77,7 @@ allprojects {
 }
 
 dependencies {
-	implementation 'com.destroystokyo.paper:paper-api:1.16.2-R0.1-SNAPSHOT'
+	implementation "com.destroystokyo.paper:paper-api:${paperVersion}"
 	implementation 'org.eclipse.jdt:org.eclipse.jdt.annotation:1.1.0'
 	implementation 'com.google.code.findbugs:findbugs:3.0.1'
 	implementation 'com.sk89q.worldguard:worldguard-legacy:7.0.0-SNAPSHOT'
@@ -78,6 +85,7 @@ dependencies {
 	implementation('net.milkbowl.vault:Vault:1.7.1') {
 		exclude group: 'org.bstats', module: 'bstats-bukkit'
 	}
+	shade 'io.papermc:paperlib:1.0.5'
 
 	testImplementation 'junit:junit:4.12'
 	testImplementation 'org.easymock:easymock:3.6'
@@ -97,22 +105,39 @@ processResources {
 	]
 }
 
-jar {
+task jar(overwrite: true, type: ShadowJar) {
 	archiveName System.getenv('SKRIPT_JAR_NAME') == null ? 'Skript.jar' : System.getenv("SKRIPT_JAR_NAME")
+	from sourceSets.main.output
+}
+
+//jar.dependsOn shadowJar
+tasks.withType(ShadowJar) {
+	configurations = [project.configurations.shade]
+	dependencies {
+		include (dependency('io.papermc:paperlib'))
+	}
+	relocate 'io.papermc.lib', 'ch.njol.skript.paperlib'
 
 	manifest {
 		attributes("Name": "ch/njol/skript",
-				"Sealed": "true")
+			"Sealed": "true")
 	}
 
 	from('skript-aliases') {
 		into('aliases-english') // Change this if we get aliases in other languages
 	}
-	
+
 	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 	from 'skript-worldguard7fawe/build/classes/java/main'
 }
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+	target = tasks.shadowJar
+}
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
 
 license {
 	header file('licenseheader.txt')
@@ -236,7 +261,7 @@ task githubResources(type: ProcessResources) {
 	into 'build/resources/main'
 }
 
-task githubRelease(type: Jar) {
+task githubRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn githubResources
 	archiveName = 'Skript-github.jar'
@@ -278,7 +303,7 @@ task spigotResources(type: ProcessResources) {
 	into 'build/resources/main'
 }
 
-task spigotRelease(type: Jar) {
+task spigotRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
 	archiveName = 'Skript-spigot.jar'
@@ -315,7 +340,7 @@ task nightlyResources(type: ProcessResources) {
 	into 'build/resources/main'
 }
 
-task nightlyRelease(type: Jar) {
+task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources
 	dependsOn licenseMain
