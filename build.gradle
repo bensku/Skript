@@ -9,7 +9,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 ext {
-	paperVersion = '1.16.3-R0.1-SNAPSHOT' // NOTICE: Edit this when updating to a new MC Version
+	paperVersion = '1.16.4-R0.1-SNAPSHOT' // NOTICE: Edit this when updating to a new MC Version
 }
 
 // Substitute dependencies' versions of Bukkit with latest Paper API
