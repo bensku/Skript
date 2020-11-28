@@ -91,7 +91,10 @@ public abstract class Variables {
 			@Override
 			@Nullable
 			public String getID(final @NonNull Class<?> c) {
-				if (ConfigurationSerializable.class.isAssignableFrom(c) && Classes.getSuperClassInfo(c) == Classes.getExactClassInfo(Object.class))
+				ClassInfo<?> objectCi = Classes.getExactClassInfo(Object.class);
+				ClassInfo<?> superCi = Classes.getSuperClassInfo(c);
+				Class<?> serializeAs = superCi.getSerializeAs();
+				if (ConfigurationSerializable.class.isAssignableFrom(c) && (serializeAs == null ? superCi : Classes.getExactClassInfo(serializeAs)) == objectCi)
 					return configurationSerializablePrefix + ConfigurationSerialization.getAlias((Class<? extends ConfigurationSerializable>) c);
 				return null;
 			}
