@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 	"\t\tsend \"Message contains a digit!\"",
 	"\tif message doesn't match \"[A-Za-z]+\":",
 	"\t\tsend \"Message doesn't only contain letters!\""})
-@Since("INSERT VERSION")
+@Since("2.5.2")
 public class CondMatches extends Condition {
 	
 	static {

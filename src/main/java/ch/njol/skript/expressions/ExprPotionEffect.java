@@ -42,7 +42,7 @@ import ch.njol.util.Kleenean;
 	"add {_p} to potion effects of player's tool",
 	"add {_p} to potion effects of target entity",
 	"add potion effect of speed 1 to potion effects of player"})
-@Since("INSERT VERSION")
+@Since("2.5.2")
 public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 	static {
 		Skript.registerExpression(ExprPotionEffect.class, PotionEffect.class, ExpressionType.COMBINED,

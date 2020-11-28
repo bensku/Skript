@@ -52,7 +52,7 @@ public class EvtEntityBlockChange extends SkriptEvent {
 						"on falling block land:",
 						"\tif event-entity is a falling dirt:",
 						"\t\tcancel event")
-				.since("<i>unknown</i>, INSERT VERSION (falling block)");
+				.since("<i>unknown</i>, 2.5.2 (falling block)");
 	}
 	
 	static final ItemType monsterEgg = Aliases.javaItemType("any spawn egg");

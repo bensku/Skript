@@ -41,7 +41,7 @@ import ch.njol.skript.util.slot.ThrowableProjectileSlot;
 		+ "For item frames, the item inside the frame is returned. For throwable projectiles (snowballs, enderpearls etc.),"
 		+ "it gets the displayed item. Other entities do not have items associated with them.")
 @Examples("")
-@Since("2.2-dev35, 2.2-dev36 (improved), INSERT VERSION (throwable projectiles)")
+@Since("2.2-dev35, 2.2-dev36 (improved), 2.5.2 (throwable projectiles)")
 @RequiredPlugins("Minecraft 1.15.2+ (throwable projectiles)")
 public class ExprItemFrameSlot extends SimplePropertyExpression<Entity, Slot> {
 	

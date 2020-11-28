@@ -36,7 +36,7 @@ import ch.njol.skript.doc.Since;
 			"\tif event-block is interactable:",
 			"\t\tcancel event",
 			"\t\tsend \"You cannot break interactable blocks!\""})
-@Since("INSERT VERSION")
+@Since("2.5.2")
 @RequiredPlugins("Minecraft 1.13+")
 public class CondIsInteractable extends PropertyCondition<ItemType> {
 	

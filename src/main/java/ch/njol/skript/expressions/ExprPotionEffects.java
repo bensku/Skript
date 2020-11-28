@@ -52,7 +52,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"add potion effects of player to potion effects of player's tool",
 	"add speed to potion effects of target entity",
 	"remove speed and night vision from potion effects of player"})
-@Since("INSERT VERSION")
+@Since("2.5.2")
 public class ExprPotionEffects extends SimpleExpression<PotionEffect> {
 	
 	static {

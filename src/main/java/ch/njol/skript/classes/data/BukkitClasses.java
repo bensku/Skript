@@ -1155,7 +1155,7 @@ public class BukkitClasses {
 			.name("Potion Effect")
 			.description("A potion effect, including the potion effect type, tier and duration.")
 			.usage("speed of tier 1 for 10 seconds")
-			.since("INSERT VERSION")
+			.since("2.5.2")
 			.parser(new Parser<PotionEffect>() {
 				
 				@Override

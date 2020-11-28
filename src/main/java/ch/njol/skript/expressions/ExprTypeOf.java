@@ -42,7 +42,7 @@ import ch.njol.skript.registrations.Converters;
 	"Types of potion effects are potion effect types."})
 @Examples({"on rightclick on an entity:",
 		"	message \"This is a %type of clicked entity%!\""})
-@Since("1.4, INSERT VERSION (potion effect)")
+@Since("1.4, 2.5.2 (potion effect)")
 public class ExprTypeOf extends SimplePropertyExpression<Object, Object> {
 	static {
 		register(ExprTypeOf.class, Object.class, "type", "entitydatas/itemtypes/inventories/potioneffects");

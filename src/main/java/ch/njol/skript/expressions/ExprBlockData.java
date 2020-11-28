@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"set block at player to {data}",
 	"set block data of target block to oak_stairs[facing=south;waterlogged=true]"})
 @RequiredPlugins("Minecraft 1.13+")
-@Since("2.5, INSERT VERSION (set)")
+@Since("2.5, 2.5.2 (set)")
 public class ExprBlockData extends SimplePropertyExpression<Block, BlockData> {
 	
 	static {

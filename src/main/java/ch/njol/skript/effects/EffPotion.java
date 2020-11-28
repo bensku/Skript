@@ -46,7 +46,7 @@ import ch.njol.util.Kleenean;
 		"on join:",
 		"\tapply potion of strength of tier {strength.%player%} to the player for 999 days",
 		"apply potion effects of player's tool to player"})
-@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect), INSERT VERSION (potion effects)")
+@Since("2.0, 2.2-dev27 (ambient and particle-less potion effects), 2.5 (replacing existing effect), 2.5.2 (potion effects)")
 public class EffPotion extends Effect {
 	static {
 		Skript.registerEffect(EffPotion.class,
