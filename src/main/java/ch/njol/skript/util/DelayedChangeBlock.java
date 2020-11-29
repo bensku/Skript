@@ -408,4 +408,10 @@ public class DelayedChangeBlock implements Block {
 	public String getTranslationKey() {
 		return b.getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return b.getDestroySpeed(itemStack);
+	}
+	
 }
