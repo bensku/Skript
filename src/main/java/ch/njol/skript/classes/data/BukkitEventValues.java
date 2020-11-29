@@ -1199,8 +1199,7 @@ public final class BukkitEventValues {
 			@Override
 			@Nullable
 			public Entity get(PlayerFishEvent e) {
-				Entity entity = e.getCaught();
-				return entity;
+				return e.getCaught();
 			}
 		}, 0);
 		EventValues.registerEventValue(PlayerFishEvent.class, PlayerFishEvent.State.class, new Getter<PlayerFishEvent.State, PlayerFishEvent>() {
