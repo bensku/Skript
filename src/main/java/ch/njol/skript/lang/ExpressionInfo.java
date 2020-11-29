@@ -21,10 +21,27 @@ package ch.njol.skript.lang;
 public class ExpressionInfo<E extends Expression<T>, T> extends SyntaxElementInfo<E> {
 	
 	public Class<T> returnType;
+	public ExpressionType expressionType;
 	
-	public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c, final String originClassPath) throws IllegalArgumentException {
+	public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c, final String originClassPath, ExpressionType expressionType) throws IllegalArgumentException {
 		super(patterns, c, originClassPath);
 		this.returnType = returnType;
+		this.expressionType = expressionType;
 	}
 	
+	/**
+	 * Get the return type of this expression.
+	 * @return The return type of this Expression
+	 */
+	public Class<T> getReturnType() {
+		return returnType;
+	}
+	
+	/**
+	 * Get the type of this expression.
+	 * @return The type of this Expression
+	 */
+	public ExpressionType getExpressionType() {
+		return expressionType;
+	}
 }
