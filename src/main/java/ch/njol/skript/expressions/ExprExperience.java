@@ -84,7 +84,6 @@ public class ExprExperience extends SimpleExpression<Experience> {
 			case ADD:
 			case DELETE:
 			case REMOVE:
-			case REMOVE_ALL:
 				return new Class[] {Experience[].class, Number[].class};
 			case SET:
 				return new Class[] {Experience.class, Number.class};
