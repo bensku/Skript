@@ -44,12 +44,12 @@ import ch.njol.util.Kleenean;
 @Name("Experience")
 @Description("How much experience was spawned in an experience spawn or block break event. Can be changed.")
 @Examples({"on experience spawn:",
-	"\tadd 5 to the spawned experience",
-	"on break of coal ore:",
-	"\tclear dropped experience",
-	"on break of diamond ore:",
-	"\tif tool of player = diamond pickaxe:",
-	"\t\tadd 100 to dropped experience"})
+		"\tadd 5 to the spawned experience",
+		"on break of coal ore:",
+		"\tclear dropped experience",
+		"on break of diamond ore:",
+		"\tif tool of player = diamond pickaxe:",
+		"\t\tadd 100 to dropped experience"})
 @Since("2.1, INSERT VERSION (block break event)")
 @Events({"experience spawn", "break / mine"})
 public class ExprExperience extends SimpleExpression<Experience> {
