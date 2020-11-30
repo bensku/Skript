@@ -115,7 +115,6 @@ public class ExprExperience extends SimpleExpression<Experience> {
 						d = v;
 						break;
 					case REMOVE:
-					case REMOVE_ALL:
 						d -= v;
 						break;
 					case RESET:
@@ -127,10 +126,11 @@ public class ExprExperience extends SimpleExpression<Experience> {
 		else
 			d = 0;
 		
+		d = Math.max(0, Math.round(d));
 		if (e instanceof ExperienceSpawnEvent)
-			((ExperienceSpawnEvent) e).setSpawnedXP((int) Math.round(d));
+			((ExperienceSpawnEvent) e).setSpawnedXP((int) d);
 		else
-			((BlockBreakEvent) e).setExpToDrop((int) Math.round(d));
+			((BlockBreakEvent) e).setExpToDrop((int) d);
 	}
 	
 	@Override
