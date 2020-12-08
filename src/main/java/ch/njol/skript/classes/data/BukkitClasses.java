@@ -1945,7 +1945,7 @@ public class BukkitClasses {
 					.description(
 							"Represents something that can have persistent data. "
 							+ "The following can all hold persistent data: "
-							+ "entities, projectiles, items, banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
+							+ "entities, projectiles, items, chunks (1.16.3), banners, barrels, beds, beehives (1.15), bells, blast furnaces, "
 							+ "brewing stands, campfires, chests, command blocks, comparators, conduits, mob spawners, "
 							+ "daylight detectors, dispensers, droppers, enchanting tables, ender chests, end gateways, furnaces, "
 							+ "hoppers, jigsaw blocks, jukeboxes, lecterns, shulker boxes, signs, skulls, smokers, and structure blocks. "
