@@ -88,12 +88,18 @@ public class EffTeleport extends Effect {
 			return null;
 		}
 		
-		//This will either fetch the chunk instantly if on spigot or already loaded or fetch it async if on paper.
+		Object localVars = Variables.removeLocals(e);
+		
+		// This will either fetch the chunk instantly if on spigot or already loaded or fetch it async if on paper.
 		PaperLib.getChunkAtAsync(loc).thenAccept(chunk -> {
 			// The following is now on the main thread
 			for (final Entity entity : entityArray) {
 				entity.teleport(getSafeLocation(loc));
 			}
+
+			// Re-set local variables
+			if (localVars != null)
+				Variables.setLocalVariables(e, localVars);
 			
 			// Continue the rest of the trigger if there is one
 			continueWalk(next, e);
