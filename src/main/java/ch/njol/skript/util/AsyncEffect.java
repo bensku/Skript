@@ -48,40 +48,39 @@ public abstract class AsyncEffect extends Effect {
 		debug(e, true);
 		TriggerItem next = getNext();
 		
-		if (next != null) {
-			Delay.addDelayedEvent(e); // Mark this event as delayed
-			Object localVars = Variables.removeLocals(e); // Back up local variables
-			
-			Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
-				@SuppressWarnings("synthetic-access")
-				@Override
-				public void run() {
-					execute(e); // Execute this effect
-					
-					Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() { // Walk to next item synchronously
-							// Re-set local variables
-							if (localVars != null)
-								Variables.setLocalVariables(e, localVars);
-							
-							Object timing = null;
+		Delay.addDelayedEvent(e); // Mark this event as delayed
+		Object localVars = Variables.removeLocals(e); // Back up local variables
+		
+		Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			@Override
+			public void run() {
+				execute(e); // Execute this effect
+				
+				Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
+					@Override
+					public void run() { // Walk to next item synchronously
+						// Re-set local variables
+						if (localVars != null)
+							Variables.setLocalVariables(e, localVars);
+						
+						Object timing = null;
+						if (next != null) {
 							if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
 								Trigger trigger = getTrigger();
 								if (trigger != null) {
 									timing = SkriptTimings.start(trigger.getDebugLabel());
 								}
 							}
-							
 							TriggerItem.walk(next, e);
-							Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-							
-							SkriptTimings.stop(timing); // Stop timing if it was even started
 						}
-					});	
-				}
-			});
-		}
+						Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+						
+						SkriptTimings.stop(timing); // Stop timing if it was even started
+					}
+				});
+			}
+		});
 		return null;
 	}
 }

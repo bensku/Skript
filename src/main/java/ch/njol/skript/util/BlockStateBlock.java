@@ -444,4 +444,10 @@ public class BlockStateBlock implements Block {
 	public String getTranslationKey() {
 		return state.getBlock().getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return state.getBlock().getDestroySpeed(itemStack);
+	}
+	
 }

@@ -47,6 +47,13 @@ public class ParrotData extends EntityData<Parrot> {
 	 * we just map enum values to int.
 	 */
 	private int variant;
+	
+	public ParrotData() {}
+	
+	public ParrotData(int variant) {
+		this.variant = variant;
+		super.matchedPattern = variant + 1;
+	}
 
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
@@ -96,7 +103,7 @@ public class ParrotData extends EntityData<Parrot> {
 
 	@Override
 	public EntityData getSuperType() {
-		return new ParrotData();
+		return new ParrotData(variant);
 	}
 
 	@Override

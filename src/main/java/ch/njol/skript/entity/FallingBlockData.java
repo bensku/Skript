@@ -56,6 +56,12 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	@Nullable
 	private ItemType[] types = null;
 	
+	public FallingBlockData() {}
+	
+	public FallingBlockData(@Nullable ItemType[] types) {
+		this.types = types;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -144,7 +150,7 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new FallingBlockData();
+		return new FallingBlockData(types);
 	}
 	
 	@Override
