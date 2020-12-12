@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -118,6 +119,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -147,6 +149,7 @@ public final class BukkitEventValues {
 	public BukkitEventValues() {}
 	
 	private static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
+	private static final boolean NAMESPACE_SUPPORT = Skript.classExists("org.bukkit.NamespacedKey");
 	
 	static {
 		
@@ -996,6 +999,29 @@ public final class BukkitEventValues {
 				return null;
 			}
 		}, 0);
+		// CraftEvents - recipe namespaced key strings
+		if (NAMESPACE_SUPPORT) {
+			EventValues.registerEventValue(CraftItemEvent.class, String.class, new Getter<String, CraftItemEvent>() {
+				@Nullable
+				@Override
+				public String get(CraftItemEvent e) {
+					Recipe recipe = e.getRecipe();
+					if (recipe instanceof Keyed)
+						return ((Keyed) recipe).getKey().toString();
+					return null;
+				}
+			}, 0);
+			EventValues.registerEventValue(PrepareItemCraftEvent.class, String.class, new Getter<String, PrepareItemCraftEvent>() {
+				@Nullable
+				@Override
+				public String get(PrepareItemCraftEvent e) {
+					Recipe recipe = e.getRecipe();
+					if (recipe instanceof Keyed)
+						return ((Keyed) recipe).getKey().toString();
+					return null;
+				}
+			}, 0);
+		}
 		//InventoryOpenEvent
 		EventValues.registerEventValue(InventoryOpenEvent.class, Player.class, new Getter<Player, InventoryOpenEvent>() {
 			@Override
