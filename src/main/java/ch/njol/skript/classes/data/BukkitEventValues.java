@@ -911,7 +911,7 @@ public final class BukkitEventValues {
 		EventValues.registerEventValue(SkriptStartEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStartEvent>() {
 			@Nullable
 			@Override
-			public CommandSender get(SkriptStartEvent arg) {
+			public CommandSender get(SkriptStartEvent e) {
 				return Bukkit.getConsoleSender();
 			}
 		}, 0);
@@ -919,7 +919,7 @@ public final class BukkitEventValues {
 		EventValues.registerEventValue(SkriptStopEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStopEvent>() {
 			@Nullable
 			@Override
-			public CommandSender get(SkriptStopEvent arg) {
+			public CommandSender get(SkriptStopEvent e) {
 				return Bukkit.getConsoleSender();
 			}
 		}, 0);
