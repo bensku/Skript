@@ -20,6 +20,7 @@ package ch.njol.skript.classes.data;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -129,6 +130,9 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.command.CommandEvent;
 import ch.njol.skript.events.EvtMoveOn;
+import ch.njol.skript.events.bukkit.ScriptEvent;
+import ch.njol.skript.events.bukkit.SkriptStartEvent;
+import ch.njol.skript.events.bukkit.SkriptStopEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.BlockUtils;
@@ -891,6 +895,32 @@ public final class BukkitEventValues {
 			@Nullable
 			public World get(final CommandEvent e) {
 				return e.getSender() instanceof Player ? ((Player) e.getSender()).getWorld() : null;
+			}
+		}, 0);
+		
+		// === ServerEvents ===
+		// Script load/unload event
+		EventValues.registerEventValue(ScriptEvent.class, CommandSender.class, new Getter<CommandSender, ScriptEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(ScriptEvent e) {
+				return Bukkit.getConsoleSender();
+			}
+		}, 0);
+		// Server load event
+		EventValues.registerEventValue(SkriptStartEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStartEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(SkriptStartEvent arg) {
+				return Bukkit.getConsoleSender();
+			}
+		}, 0);
+		// Server stop event
+		EventValues.registerEventValue(SkriptStopEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStopEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(SkriptStopEvent arg) {
+				return Bukkit.getConsoleSender();
 			}
 		}, 0);
 		
