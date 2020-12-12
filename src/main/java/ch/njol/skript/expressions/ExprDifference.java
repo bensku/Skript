@@ -105,7 +105,7 @@ public class ExprDifference extends SimpleExpression<Object> {
 			Skript.error("Can't get the difference of " + CondCompare.f(first) + " and " + CondCompare.f(second), ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		if (bothVariables) {
+		if (ci.getC().equals(Object.class)) {
 			// Initialize less stuff, basically
 			relativeType = Object.class; // Relative math type would be null which the parser doesn't like
 		} else {
