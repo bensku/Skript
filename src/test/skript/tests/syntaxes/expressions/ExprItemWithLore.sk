@@ -1,6 +1,6 @@
 test "item with lore as one string without newline":
-	set {_i1} to 1 of stone with lore "one line"
-	assert the line 1 of lore of {_i1} is "has correct first line"
+	set {_i1} to 1 of stone with lore "first line"
+	assert the line 1 of lore of {_i1} is "first line" with "has correct first line"
 
 test "item with lore as multiple string without newline":
 	set {_i2} to 1 of stone with lore "first line" and "second line"
