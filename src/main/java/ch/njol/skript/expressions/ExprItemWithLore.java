@@ -65,7 +65,7 @@ public class ExprItemWithLore extends PropertyExpression<ItemType, ItemType> {
 	@Override
 	protected ItemType[] get(Event e, ItemType[] source) {
 		List<String> lore = Arrays.stream(this.lore.getArray(e))
-			.flatMap(l -> Arrays.stream(l.split("\n").clone()))
+			.flatMap(l -> Arrays.stream(l.split("\n")))
 			.collect(Collectors.toList());
 
 		return get(source, item -> {
