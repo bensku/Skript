@@ -275,8 +275,17 @@ public class SkriptParser {
 	 */
 	@Nullable
 	private static <T> Variable<T> parseVariable(final String expr, final Class<? extends T>[] returnTypes) {
-		if (varPattern.matcher(expr).matches())
-			return Variable.newInstance("" + expr.substring(expr.indexOf('{') + 1, expr.lastIndexOf('}')), returnTypes);
+		if (varPattern.matcher(expr).matches()) {
+			String variableName = "" + expr.substring(expr.indexOf('{') + 1, expr.lastIndexOf('}'));
+			boolean inExpression = false;
+			for (char c : variableName.toCharArray()) {
+				if (c == '%')
+					inExpression = !inExpression;
+				if (!inExpression && (c == '{' || c == '}'))
+					return null;
+			}
+			return Variable.newInstance(variableName, returnTypes);
+		}
 		return null;
 	}
 	
