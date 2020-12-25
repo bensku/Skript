@@ -43,7 +43,7 @@ import ch.njol.util.Kleenean;
 public class EffLoadWorld extends Effect {
 	
 	static {
-		Skript.registerEffect(EffLoadWorld.class, "(0¦load|1¦unload) world %strings%");
+		Skript.registerEffect(EffLoadWorld.class, "(0¦load|1¦unload) world[s] %strings%");
 	}
 	
 	private boolean load;
