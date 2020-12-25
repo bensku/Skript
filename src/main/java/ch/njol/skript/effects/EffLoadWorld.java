@@ -41,14 +41,14 @@ import ch.njol.util.Kleenean;
 	"When loading a world, if this world does not exist, it will create a world with that name.",
 	"Note that it takes in the worlds name, not the world itself, and you cannot unload your main world."})
 @Examples({"on script load:",
-	"\tunload world \"world_nether\""})
+	"\tunload world \"world_nether\" and don't save chunks"})
 @Since("INSERT VERSION")
 public class EffLoadWorld extends Effect {
 	
 	static {
 		Skript.registerEffect(EffLoadWorld.class,
-			"load [([a[n]|the)] (1¦default|2¦nether|3¦end)] world[s] %worlds/strings%",
-			"unload [the] world[s] %worlds/strings% [(1¦and (don't|do not) save)]");
+			"load [([a[n]|the)] (1¦default|2¦nether|3¦end)] world[s] %strings%",
+			"unload [the] world[s] %strings% [(1¦and (don't|do not) save chunks)]");
 	}
 	
 	private boolean load;
@@ -58,8 +58,8 @@ public class EffLoadWorld extends Effect {
 	@SuppressWarnings("null")
 	private Expression<String> worldNames;
 	
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		this.load = matchedPattern == 0;
 		if (load) {
@@ -77,8 +77,8 @@ public class EffLoadWorld extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
+	@SuppressWarnings("null")
 	protected void execute(Event e) {
 		for (String world : this.worldNames.getArray(e)) {
 			if (load) {
@@ -108,6 +108,6 @@ public class EffLoadWorld extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return String.format("%s world %s", load ? "load" : "unload", this.worldNames.toString(e, debug));
+		return load ? "" : "un" + "load worlds " + worldNames.toString(e, debug);
 	}
 }
