@@ -1,25 +1,28 @@
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -36,41 +39,75 @@ import ch.njol.util.Kleenean;
 @Name("Load/Unload Worlds")
 @Description({"Loads or unloads a world.",
 	"When loading a world, if this world does not exist, it will create a world with that name.",
-	"Note that it takes in the worlds name, not the world itself."})
+	"Note that it takes in the worlds name, not the world itself, and you cannot unload your main world."})
 @Examples({"on script load:",
 	"\tunload world \"world_nether\""})
 @Since("INSERT VERSION")
 public class EffLoadWorld extends Effect {
 	
 	static {
-		Skript.registerEffect(EffLoadWorld.class, "(0¦load|1¦unload) world %strings%");
+		Skript.registerEffect(EffLoadWorld.class,
+			"load [([a[n]|the)] (1¦default|2¦nether|3¦end)] world[s] %worlds/strings%",
+			"unload [the] world[s] %worlds/strings% [(1¦and (don't|do not) save)]");
 	}
 	
 	private boolean load;
+	private boolean save;
 	@SuppressWarnings("null")
-	private Expression<String> worlds;
+	private Environment environment;
+	@SuppressWarnings("null")
+	private Expression<String> worldNames;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		this.load = parseResult.mark == 0;
-		this.worlds = (Expression<String>) exprs[0];
+		this.load = matchedPattern == 0;
+		if (load) {
+			if (parseResult.mark == 2) {
+				environment = Environment.NETHER;
+			} else if (parseResult.mark == 3) {
+				environment = Environment.THE_END;
+			} else {
+				environment = Environment.NORMAL;
+			}
+		} else {
+			this.save = parseResult.mark != 1;
+		}
+		this.worldNames = (Expression<String>) exprs[0];
 		return true;
 	}
 	
+	@SuppressWarnings("null")
 	@Override
 	protected void execute(Event e) {
-		for (String world : this.worlds.getArray(e)) {
+		for (String world : this.worldNames.getArray(e)) {
 			if (load) {
-				Bukkit.getServer().createWorld(new WorldCreator(world));
+				Bukkit.getServer().createWorld(new WorldCreator(world).environment(environment));
 			} else {
-				Bukkit.getServer().unloadWorld(world, true);
+				if (Bukkit.getWorld(world) != null) {
+					World eventWorld = Bukkit.getWorld(world);
+					World fallbackWorld = null;
+					for (World w : Bukkit.getWorlds()) {
+						if (!w.equals(eventWorld)) {
+							fallbackWorld = w;
+							break;
+						}
+					}
+					if (fallbackWorld != null) {
+						if (eventWorld.getPlayers() != null) {
+							for (Player p : eventWorld.getPlayers()) {
+								p.teleport(fallbackWorld.getSpawnLocation());
+							}
+						}
+					}
+					Bukkit.getServer().unloadWorld(eventWorld, save);
+				}
 			}
 		}
 	}
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return String.format("%s world %s", load ? "load" : "unload", this.worlds.toString(e, debug));
+		return String.format("%s world %s", load ? "load" : "unload", this.worldNames.toString(e, debug));
 	}
 }
