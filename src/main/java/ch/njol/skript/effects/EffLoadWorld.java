@@ -47,7 +47,7 @@ public class EffLoadWorld extends Effect {
 	
 	static {
 		Skript.registerEffect(EffLoadWorld.class,
-			"load [([a[n]|the)] (1¦default|2¦nether|3¦end)] world[s] %strings%",
+			"load [(a[n]|the)] (1¦(default|normal)|2¦nether|3¦end)] world[s] %strings%",
 			"unload [the] world[s] %strings% [(1¦and (don't|do not) save chunks)]");
 	}
 	
@@ -82,25 +82,21 @@ public class EffLoadWorld extends Effect {
 	protected void execute(Event e) {
 		for (String world : this.worldNames.getArray(e)) {
 			if (load) {
-				Bukkit.getServer().createWorld(new WorldCreator(world).environment(environment));
+				if (Bukkit.getWorld(world) == null) {
+					Bukkit.getServer().createWorld(new WorldCreator(world).environment(environment));
+				}
 			} else {
 				if (Bukkit.getWorld(world) != null) {
 					World eventWorld = Bukkit.getWorld(world);
-					World fallbackWorld = null;
-					for (World w : Bukkit.getWorlds()) {
-						if (!w.equals(eventWorld)) {
-							fallbackWorld = w;
-							break;
+					World fallbackWorld = Bukkit.getWorlds().get(0);
+					if (eventWorld.getPlayers() != null) {
+						for (Player p : eventWorld.getPlayers()) {
+							p.teleport(fallbackWorld.getSpawnLocation());
 						}
 					}
-					if (fallbackWorld != null) {
-						if (eventWorld.getPlayers() != null) {
-							for (Player p : eventWorld.getPlayers()) {
-								p.teleport(fallbackWorld.getSpawnLocation());
-							}
-						}
+					if (eventWorld != Bukkit.getWorlds().get(0)) {
+						Bukkit.unloadWorld(eventWorld, save);
 					}
-					Bukkit.getServer().unloadWorld(eventWorld, save);
 				}
 			}
 		}
