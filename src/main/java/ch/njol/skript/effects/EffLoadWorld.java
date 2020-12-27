@@ -83,7 +83,7 @@ public class EffLoadWorld extends Effect {
 		for (String world : this.worldNames.getArray(e)) {
 			if (load) {
 				if (Bukkit.getWorld(world) == null) {
-					Bukkit.getServer().createWorld(new WorldCreator(world).environment(environment));
+					Bukkit.createWorld(new WorldCreator(world).environment(environment));
 				}
 			} else {
 				if (Bukkit.getWorld(world) != null) {
