@@ -86,6 +86,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerEvent;
@@ -1226,5 +1227,13 @@ public final class BukkitEventValues {
 				return evt.getEntity();
 			}
 		}, 0);
+		// PlayerChangedWorldEvent
+		EventValues.registerEventValue(PlayerChangedWorldEvent.class, World.class, new Getter<World, PlayerChangedWorldEvent>() {
+			@Nullable
+			@Override
+			public World get(PlayerChangedWorldEvent e) {
+				return e.getFrom();
+			}
+		}, -1);
 	}
 }
