@@ -1120,6 +1120,13 @@ public final class BukkitEventValues {
 				return e.getCause();
 			}
 		}, 0);
+		EventValues.registerEventValue(PlayerTeleportEvent.class, Location.class, new Getter<Location, PlayerTeleportEvent>() {
+			@Override
+			@Nullable
+			public Location get(final PlayerTeleportEvent e) {
+				return e.getFrom();
+			}
+		}, -1);
 		//PlayerToggleFlightEvent
 		EventValues.registerEventValue(PlayerToggleFlightEvent.class, Player.class, new Getter<Player, PlayerToggleFlightEvent>() {
 			@Override
