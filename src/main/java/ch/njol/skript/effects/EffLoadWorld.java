@@ -48,7 +48,7 @@ public class EffLoadWorld extends Effect {
 	static {
 		Skript.registerEffect(EffLoadWorld.class,
 			"load [(a[n]|the)] (1¦(default|normal)|2¦nether|3¦end)] world[s] %strings%",
-			"unload [the] world[s] %strings% [(1¦and (don't|do not) save chunks)]");
+			"unload [the] world[s] %strings% [(1¦without saving chunks)]");		
 	}
 	
 	private boolean load;
