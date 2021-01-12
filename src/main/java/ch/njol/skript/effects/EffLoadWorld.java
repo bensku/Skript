@@ -104,6 +104,6 @@ public class EffLoadWorld extends Effect {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return load ? "" : "un" + "load worlds " + worldNames.toString(e, debug);
+		return (load ? "" : "un") + "load worlds " + worldNames.toString(e, debug);
 	}
 }
