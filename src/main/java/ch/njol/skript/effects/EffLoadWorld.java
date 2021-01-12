@@ -94,7 +94,7 @@ public class EffLoadWorld extends Effect {
 							p.teleport(fallbackWorld.getSpawnLocation());
 						}
 					}
-					if (eventWorld != Bukkit.getWorlds().get(0)) {
+					if (eventWorld != fallbackWorld) {
 						Bukkit.unloadWorld(eventWorld, save);
 					}
 				}
