@@ -29,11 +29,14 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionList;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 
 /**
@@ -57,62 +60,56 @@ import ch.njol.util.Kleenean;
 		"Please note that getting a list's recursive size can cause lag if the list is large, so only use this expression if you need to!"})
 @Examples({"message \"There are %number of all players% players online!\""})
 @Since("1.0")
-public class ExprAmount extends SimpleExpression<Integer> {
+public class ExprAmount extends SimpleExpression<Number> {
+
 	static {
-		Skript.registerExpression(ExprAmount.class, Integer.class, ExpressionType.PROPERTY, 
+		Skript.registerExpression(ExprAmount.class, Number.class, ExpressionType.PROPERTY,
 				"(amount|number|size) of %objects%",
 				"recursive (amount|number|size) of %objects%");
 	}
-	
+
+	@SuppressWarnings("null")
+	private ExpressionList<?> exprs;
+
 	private boolean recursive;
-	
-	@SuppressWarnings("null")
-	private Expression<?> expr;
-	
-	@SuppressWarnings("null")
+
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		expr = exprs[0];
-		if (expr instanceof Literal)
-			return false;
-		if (expr.isSingle()) {
-			Skript.error("'" + expr.toString(null, false) + "' can only ever have one value at most, thus the 'amount of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
-			return false;
-		}
+		this.exprs = exprs[0] instanceof ExpressionList ? (ExpressionList<?>) exprs[0] : new ExpressionList<>(new Expression<?>[]{exprs[0]}, Object.class, false);
 		this.recursive = matchedPattern == 1;
-		if (recursive && !(expr instanceof Variable<?>)) {
-			Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + expr.toString(null, false) + "' expression is useless.");
-			return false;
+		for (Expression<?> expr : this.exprs.getExpressions()) {
+			if (expr instanceof Literal<?>) {
+				return false;
+			}
+			if (expr.isSingle()) {
+				Skript.error("'" + expr.toString(null, false) + "' can only ever have one value at most, thus the 'amount of ...' expression is useless. Use '... exists' instead to find out whether the expression has a value.");
+				return false;
+			}
+			if (recursive && !(expr instanceof Variable<?>)) {
+				Skript.error("Getting the recursive size of a list only applies to variables, thus the '" + expr.toString(null, false) + "' expression is useless.");
+				return false;
+			}
 		}
 		return true;
 	}
-	
+
 	@Override
-	public boolean isSingle() {
-		return true;
-	}
-	
-	@Override
-	public Class<? extends Integer> getReturnType() {
-		return Integer.class;
-	}
-	
-	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return (recursive ? "recursize size of " : "amount of ") + expr.toString(e, debug);
-	}
-	
 	@SuppressWarnings("unchecked")
-	@Override
-	protected Integer[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		if (recursive) {
-			Object var = ((Variable<?>) expr).getRaw(e);
-			if (var != null)
-				return new Integer[] {getRecursiveSize((Map<String, ?>) var)}; // Should already be a Map 
+			int currentSize = 0;
+			for (Expression<?> expr : exprs.getExpressions()) {
+				Object var = ((Variable<?>) expr).getRaw(e);
+				if (var != null) { // Should already be a map
+					currentSize += getRecursiveSize((Map<String, ?>) var);
+				}
+			}
+			return new Number[]{currentSize};
 		}
-		return new Integer[] {expr.getArray(e).length};
+		return new Number[]{exprs.getArray(e).length};
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static int getRecursiveSize(Map<String, ?> map) {
 		int count = 0;
@@ -125,5 +122,20 @@ public class ExprAmount extends SimpleExpression<Integer> {
 		}
 		return count;
 	}
-	
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+
+	@Override
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
+	}
+
+	@Override
+	public String toString(final @Nullable Event e, final boolean debug) {
+		return (recursive ? "recursize size of " : "amount of ") + exprs.toString(e, debug);
+	}
+
 }

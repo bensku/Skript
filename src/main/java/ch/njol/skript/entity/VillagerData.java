@@ -85,6 +85,13 @@ public class VillagerData extends EntityData<Villager> {
 	@Nullable
 	private Profession profession = null;
 	
+	public VillagerData() {}
+	
+	public VillagerData(@Nullable Profession profession) {
+		this.profession = profession;
+		this.matchedPattern = profession != null ? professions.indexOf(profession) + 1 : 0;
+	}
+	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (matchedPattern > 0)
@@ -152,7 +159,7 @@ public class VillagerData extends EntityData<Villager> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new VillagerData();
+		return new VillagerData(profession);
 	}
 	
 }

@@ -55,7 +55,7 @@ import ch.njol.util.Kleenean;
 public class EffPlaySound extends Effect {
 
 	private static final boolean SOUND_CATEGORIES_EXIST = Skript.classExists("org.bukkit.SoundCategory");
-	private static final Pattern SOUND_VALID_PATTERN = Pattern.compile("[a-z0-9\\/._-]+"); // Minecraft only accepts these characters 
+	private static final Pattern SOUND_VALID_PATTERN = Pattern.compile("[a-z0-9\\/:._-]+"); // Minecraft only accepts these characters
 	
 	static {
 		if (SOUND_CATEGORIES_EXIST) {
