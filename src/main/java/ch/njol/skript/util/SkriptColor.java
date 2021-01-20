@@ -149,7 +149,7 @@ public enum SkriptColor implements Color {
 	
 	
 	/**
-	 * @param name The name of the color defined by Skript's .lang files.
+	 * @param name The String name of the color defined by Skript's .lang files.
 	 * @return Skript Color if matched up with the defined name
 	 */
 	@Nullable
@@ -183,7 +183,7 @@ public enum SkriptColor implements Color {
 	
 	/**
 	 * @deprecated Magic numbers
-	 * @param data DyeColor to match against a defined Skript Color.
+	 * @param data short to match against a defined Skript Color.
 	 * @return Skript Color if matched up with the defined short
 	 */
 	@Deprecated
@@ -203,7 +203,7 @@ public enum SkriptColor implements Color {
 	
 	/**
 	 * @deprecated Magic numbers
-	 * @param data DyeColor to match against a defined Skript Color.
+	 * @param data short to match against a defined Skript Color.
 	 * @return Skript Color if matched up with the defined short
 	 */
 	@Deprecated
