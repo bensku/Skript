@@ -21,7 +21,9 @@ package ch.njol.skript;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -441,7 +443,9 @@ public class SkriptCommand implements TabExecutor {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] args) {
-		File file = new File(Skript.getInstance().getDataFolder(), "scripts");
+		// I did this to get all the files (please correct if there is a better way)
+		File file = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER);
+		
 		File[] listFiles = file.listFiles();
 		if (listFiles != null) {
 			List<File> files = new ArrayList<>(Arrays.asList(listFiles));
