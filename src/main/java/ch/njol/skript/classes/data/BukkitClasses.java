@@ -1667,8 +1667,13 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(FireworkEffect.class, "fireworkeffect")
 				.user("firework ?effects?")
 				.name("Firework Effect")
-				.description("A configuration of effects that defines the firework when exploded.")
+				.description("A configuration of effects that defines the firework when exploded",
+					"which can be used in the <a href='effects.html#EffFireworkLaunch'>launch firework</a> effect.",
+					"See the <a href='expressions.html#ExprFireworkEffect'>firework effect</a> expression for detailed patterns.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.class))
+				.examples("launch flickering trailing burst firework colored blue and green at player",
+					"launch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity",
+					"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1")
 				.since("2.4")
 				.parser(new Parser<FireworkEffect>() {
 					@Override
