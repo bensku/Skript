@@ -197,7 +197,7 @@ public class NewBlockCompat implements BlockCompat {
 				if (Bed.class.isAssignableFrom(dataType)) {
 					Bed data;
 					if (ourValues != null)
-						data = (Bed) ourValues.data;
+						data = (Bed) ourValues.data.clone();
 					else
 						data = (Bed) Bukkit.createBlockData(type);
 					
@@ -229,7 +229,7 @@ public class NewBlockCompat implements BlockCompat {
 				if (Bisected.class.isAssignableFrom(dataType) && !Tag.STAIRS.isTagged(type) && !Tag.TRAPDOORS.isTagged(type)) {
 					Bisected data;
 					if (ourValues != null)
-						data = (Bisected) ourValues.data;
+						data = (Bisected) ourValues.data.clone();
 					else
 						data = (Bisected) Bukkit.createBlockData(type);
 					
