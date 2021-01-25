@@ -261,33 +261,7 @@ public class VariableString implements Expression<String> {
 							log.printErrors("Can't understand this expression: " + s.substring(c + 1, c2));
 							return null;
 						} else {
-							if (mode != StringMode.MESSAGE) {
-								string.add(expr);
-							} else {
-								final ExpressionInfo i = new ExpressionInfo(expr);
-								if (c2 <= s.length() - 2 && s.charAt(c2 + 1) == 's' && (c2 == s.length() - 2 || !Character.isLetter(s.charAt(c2 + 2)))) {
-									i.flags |= Language.F_PLURAL;
-									c2++; // remove the 's'
-								}
-								if (string.size() > 0 && string.get(string.size() - 1) instanceof String) {
-									final String last = (String) string.get(string.size() - 1);
-									if (c2 <= s.length() - 2 && s.charAt(c2 + 1) == '>' && last.endsWith("<")) {
-										i.toChatStyle = true;
-										string.set(string.size() - 1, last.substring(0, last.length() - 1));
-										c2++; // remove the '>'
-									} else {
-										final int l = last.lastIndexOf(' ', last.endsWith(" ") ? last.length() - 2 : last.length() - 1);
-										final String lastWord = "" + last.substring(l + 1).trim();
-										if (Noun.isLocalIndefiniteArticle(lastWord))
-											i.flags |= Language.F_INDEFINITE_ARTICLE;
-										else if (Noun.isLocalDefiniteArticle(lastWord))
-											i.flags |= Language.F_DEFINITE_ARTICLE;
-										if ((i.flags & (Language.F_INDEFINITE_ARTICLE | Language.F_DEFINITE_ARTICLE)) != 0)
-											string.set(string.size() - 1, last.substring(0, l + 1));
-									}
-								}
-								string.add(i);
-							}
+							string.add(expr);
 						}
 						log.printLog();
 					} finally {
