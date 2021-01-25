@@ -18,10 +18,6 @@
  */
 package ch.njol.skript.bukkitutil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 import org.eclipse.jdt.annotation.Nullable;
@@ -35,50 +31,15 @@ import ch.njol.skript.Skript;
 public abstract class ProjectileUtils {
 	private ProjectileUtils() {}
 	
-	private static Method getShooter, setShooter;
-	static {
-		try {
-			getShooter = Projectile.class.getMethod("getShooter");
-			try {
-				setShooter = Projectile.class.getMethod("setShooter", ProjectileSource.class);
-			} catch (final NoClassDefFoundError e) {
-				setShooter = Projectile.class.getMethod("setShooter", LivingEntity.class);
-			}
-		} catch (final NoSuchMethodException e) {
-			Skript.outdatedError(e);
-		} catch (final SecurityException e) {
-			Skript.exception(e, "security manager present");
-		}
-	}
-	
 	@Nullable
 	public static Object getShooter(final @Nullable Projectile p) {
 		if (p == null)
 			return null;
-		try {
-			return getShooter.invoke(p);
-		} catch (final IllegalAccessException e) {
-			assert false;
-			return null;
-		} catch (final IllegalArgumentException e) {
-			assert false;
-			return null;
-		} catch (final InvocationTargetException e) {
-			Skript.exception(e);
-			return null;
-		}
+		return p.getShooter();
 	}
 	
 	public static void setShooter(final Projectile p, final @Nullable Object shooter) {
-		try {
-			setShooter.invoke(p, shooter);
-		} catch (final IllegalAccessException e) {
-			assert false;
-		} catch (final IllegalArgumentException e) {
-			Skript.exception(e, "invalid parameter passed to (" + p + ").setShooter: " + shooter);
-		} catch (final InvocationTargetException e) {
-			Skript.exception(e);
-		}
+		p.setShooter((ProjectileSource) shooter);
 	}
 	
 }
