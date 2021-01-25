@@ -438,7 +438,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 	/**
 	 * @param other
 	 * @param excluded keys and sections to exclude
-	 * @return <tt>false</tt> iff this and the other SectionNode contain the exact same set of keys
+	 * @return <tt>false</tt> if this and the other SectionNode contain the exact same set of keys
 	 */
 	public boolean setValues(final SectionNode other, final String... excluded) {
 		boolean r = false;
