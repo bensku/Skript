@@ -189,6 +189,8 @@ public abstract class SkriptConfig {
 		}
 	});
 	
+	public final static Option<Boolean> disableDamageCancelChecking = new Option<Boolean>("disable damage event cancellation checking", false);
+	
 	public final static Option<Boolean> logPlayerCommands = new Option<Boolean>("log player commands", false);
 	
 	/**
