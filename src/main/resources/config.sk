@@ -120,7 +120,7 @@ plugin priority: high
 
 # Skript will call an extra EntityDamageEvent to check if the damage effect can be cancelled.
 # This setting will control if you want that added extra check
-damage event cancellation checking: true
+disable damage event cancellation checking: false
 
 log player commands: true
 # Whether Skript should log the usage of custom commands.
