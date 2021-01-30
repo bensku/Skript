@@ -24,7 +24,6 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.bukkitutil.ProjectileUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
@@ -62,7 +61,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 			@Override
 			@Nullable
 			public LivingEntity convert(final Projectile p) {
-				final Object o = ProjectileUtils.getShooter(p);
+				final Object o = p != null ? p.getShooter() : null;
 				if (o instanceof LivingEntity)
 					return (LivingEntity) o;
 				return null;
@@ -84,7 +83,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 			assert delta != null;
 			for (final Projectile p : getExpr().getArray(e)) {
 				assert p != null : getExpr();
-				ProjectileUtils.setShooter(p, delta[0]);
+				p.setShooter(delta[0]);
 			}
 		} else {
 			super.change(e, delta, mode);
