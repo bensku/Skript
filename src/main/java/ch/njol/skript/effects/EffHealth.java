@@ -114,7 +114,6 @@ public class EffHealth extends Effect {
 			for (final Object damageable : arr) {
 				LivingEntity entity = (LivingEntity) damageable;
 				assert entity != null;
-				System.out.println(entity.getName());
 				if (!heal) {
 					DamageCause cause = DamageCause.CUSTOM;
 					if (damageCause != null)
