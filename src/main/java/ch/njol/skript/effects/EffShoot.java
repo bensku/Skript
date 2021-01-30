@@ -23,6 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -96,7 +97,7 @@ public class EffShoot extends Effect {
 					final Class<? extends Entity> type = d.getType();
 					if (Fireball.class.isAssignableFrom(type)) {// fireballs explode in the shooter's face by default
 						final Fireball projectile = (Fireball) ((LivingEntity) shooter).getWorld().spawn(((LivingEntity) shooter).getEyeLocation().add(vel.clone().normalize().multiply(0.5)), type);
-						projectile.setShooter(shooter);
+						projectile.setShooter((ProjectileSource) shooter);
 						projectile.setVelocity(vel);
 						lastSpawned = projectile;
 					} else if (Projectile.class.isAssignableFrom(type)) {

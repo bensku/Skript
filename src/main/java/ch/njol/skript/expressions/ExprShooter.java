@@ -20,6 +20,7 @@ package ch.njol.skript.expressions;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -83,7 +84,7 @@ public class ExprShooter extends PropertyExpression<Projectile, LivingEntity> {
 			assert delta != null;
 			for (final Projectile p : getExpr().getArray(e)) {
 				assert p != null : getExpr();
-				p.setShooter(delta[0]);
+				p.setShooter((ProjectileSource) delta[0]);
 			}
 		} else {
 			super.change(e, delta, mode);

@@ -81,7 +81,7 @@ public class ExprAttacker extends SimpleExpression<Entity> {
 			final EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) e;
 			if (edbee.getDamager() instanceof Projectile) {
 				final Projectile p = (Projectile) edbee.getDamager();
-				final Object o = p != null ? p.getShooter() : null;
+				final Object o = p.getShooter();
 				if (o instanceof Entity)
 					return (Entity) o;
 				return null;
