@@ -122,10 +122,11 @@ public class EffHealth extends Effect {
 						cause = damageCause.getSingle(e);
 					assert cause != null;
 					HealthUtils.setDamageCause(entity, cause);
+					HealthUtils.damage(entity, damage);
 				} else if (this.damage == null) {
 					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
 				} else {
-					HealthUtils.heal(entity, (heal ? 1 : -1) * damage);
+					HealthUtils.heal(entity, damage);
 				}
 			}
 		}
