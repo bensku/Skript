@@ -20,8 +20,10 @@ package ch.njol.skript.classes.data;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -86,6 +88,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerEvent;
@@ -118,6 +121,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -129,6 +133,9 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.command.CommandEvent;
 import ch.njol.skript.events.EvtMoveOn;
+import ch.njol.skript.events.bukkit.ScriptEvent;
+import ch.njol.skript.events.bukkit.SkriptStartEvent;
+import ch.njol.skript.events.bukkit.SkriptStopEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.BlockUtils;
@@ -147,6 +154,7 @@ public final class BukkitEventValues {
 	public BukkitEventValues() {}
 	
 	private static final boolean offHandSupport = Skript.isRunningMinecraft(1, 9);
+	private static final boolean NAMESPACE_SUPPORT = Skript.classExists("org.bukkit.NamespacedKey");
 	
 	static {
 		
@@ -894,6 +902,32 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		
+		// === ServerEvents ===
+		// Script load/unload event
+		EventValues.registerEventValue(ScriptEvent.class, CommandSender.class, new Getter<CommandSender, ScriptEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(ScriptEvent e) {
+				return Bukkit.getConsoleSender();
+			}
+		}, 0);
+		// Server load event
+		EventValues.registerEventValue(SkriptStartEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStartEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(SkriptStartEvent e) {
+				return Bukkit.getConsoleSender();
+			}
+		}, 0);
+		// Server stop event
+		EventValues.registerEventValue(SkriptStopEvent.class, CommandSender.class, new Getter<CommandSender, SkriptStopEvent>() {
+			@Nullable
+			@Override
+			public CommandSender get(SkriptStopEvent e) {
+				return Bukkit.getConsoleSender();
+			}
+		}, 0);
+		
 		// === InventoryEvents ===
 		// InventoryClickEvent
 		EventValues.registerEventValue(InventoryClickEvent.class, Player.class, new Getter<Player, InventoryClickEvent>() {
@@ -996,6 +1030,29 @@ public final class BukkitEventValues {
 				return null;
 			}
 		}, 0);
+		// CraftEvents - recipe namespaced key strings
+		if (NAMESPACE_SUPPORT) {
+			EventValues.registerEventValue(CraftItemEvent.class, String.class, new Getter<String, CraftItemEvent>() {
+				@Nullable
+				@Override
+				public String get(CraftItemEvent e) {
+					Recipe recipe = e.getRecipe();
+					if (recipe instanceof Keyed)
+						return ((Keyed) recipe).getKey().toString();
+					return null;
+				}
+			}, 0);
+			EventValues.registerEventValue(PrepareItemCraftEvent.class, String.class, new Getter<String, PrepareItemCraftEvent>() {
+				@Nullable
+				@Override
+				public String get(PrepareItemCraftEvent e) {
+					Recipe recipe = e.getRecipe();
+					if (recipe instanceof Keyed)
+						return ((Keyed) recipe).getKey().toString();
+					return null;
+				}
+			}, 0);
+		}
 		//InventoryOpenEvent
 		EventValues.registerEventValue(InventoryOpenEvent.class, Player.class, new Getter<Player, InventoryOpenEvent>() {
 			@Override
@@ -1119,6 +1176,13 @@ public final class BukkitEventValues {
 				return e.getCause();
 			}
 		}, 0);
+		EventValues.registerEventValue(PlayerTeleportEvent.class, Location.class, new Getter<Location, PlayerTeleportEvent>() {
+			@Override
+			@Nullable
+			public Location get(final PlayerTeleportEvent e) {
+				return e.getFrom();
+			}
+		}, -1);
 		//PlayerToggleFlightEvent
 		EventValues.registerEventValue(PlayerToggleFlightEvent.class, Player.class, new Getter<Player, PlayerToggleFlightEvent>() {
 			@Override
@@ -1226,5 +1290,13 @@ public final class BukkitEventValues {
 				return evt.getEntity();
 			}
 		}, 0);
+		// PlayerChangedWorldEvent
+		EventValues.registerEventValue(PlayerChangedWorldEvent.class, World.class, new Getter<World, PlayerChangedWorldEvent>() {
+			@Nullable
+			@Override
+			public World get(PlayerChangedWorldEvent e) {
+				return e.getFrom();
+			}
+		}, -1);
 	}
 }
