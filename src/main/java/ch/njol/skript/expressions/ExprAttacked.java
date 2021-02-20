@@ -37,6 +37,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
@@ -58,7 +59,11 @@ import ch.njol.util.Kleenean;
 		"	damage the attacked by 1 heart"})
 @Since("1.3, INSERT VERSION (projectile hit event)")
 @Events({"damage", "death", "projectile hit"})
+@RequiredPlugins("Minecraft 1.11+")
 public class ExprAttacked extends SimpleExpression<Entity> {
+	
+	private static final boolean SUPPORT_PROJECTILE_HIT = Skript.methodExists(ProjectileHitEvent.class, "getHitEntity");
+	
 	static {
 		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
 	}
@@ -92,7 +97,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
 		Entity entity;
 		if (e instanceof EntityEvent)
-			if (e instanceof ProjectileHitEvent)
+			if (e instanceof ProjectileHitEvent && SUPPORT_PROJECTILE_HIT)
 				entity = ((ProjectileHitEvent) e).getHitEntity();
 			else
 				entity = ((EntityEvent) e).getEntity();
