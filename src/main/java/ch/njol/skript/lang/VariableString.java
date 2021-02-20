@@ -808,7 +808,7 @@ public class VariableString implements Expression<String> {
 	
 	@Override
 	public boolean getAnd() {
-		return false;
+		return true;
 	}
 	
 	@Override
