@@ -25,6 +25,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
@@ -50,12 +51,13 @@ import ch.njol.util.Kleenean;
  * @author Peter Güttinger
  */
 @Name("Attacked")
-@Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie.")
+@Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie. " +
+	"This also covers the hit entity in a projectile hit event.")
 @Examples({"on damage:",
 		"	victim is a creeper",
 		"	damage the attacked by 1 heart"})
-@Since("1.3")
-@Events({"damage", "death"})
+@Since("1.3, INSERT VERSION (projectile hit event)")
+@Events({"damage", "death", "projectile hit"})
 public class ExprAttacked extends SimpleExpression<Entity> {
 	static {
 		Skript.registerExpression(ExprAttacked.class, Entity.class, ExpressionType.SIMPLE, "[the] (attacked|damaged|victim) [<(.+)>]");
@@ -66,8 +68,8 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class)) {
-			Skript.error("The expression 'victim' can only be used in a damage or death event", ErrorQuality.SEMANTIC_ERROR);
+		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class, ProjectileHitEvent.class)) {
+			Skript.error("The expression 'victim' can only be used in a damage, death, or projectile hit event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		final String type = parser.regexes.size() == 0 ? null : parser.regexes.get(0).group();
@@ -90,7 +92,10 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
 		Entity entity;
 		if (e instanceof EntityEvent)
-			entity = ((EntityEvent) e).getEntity();
+			if (e instanceof ProjectileHitEvent)
+				entity = ((ProjectileHitEvent) e).getHitEntity();
+			else
+				entity = ((EntityEvent) e).getEntity();
 		else
 			entity = ((VehicleEvent) e).getVehicle();
 		if (type.isInstance(entity)) {
