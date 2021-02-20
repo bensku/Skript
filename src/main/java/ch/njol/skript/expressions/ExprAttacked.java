@@ -53,13 +53,12 @@ import ch.njol.util.Kleenean;
  */
 @Name("Attacked")
 @Description("The victim of a damage event, e.g. when a player attacks a zombie this expression represents the zombie. " +
-	"This also covers the hit entity in a projectile hit event.")
+	"When using Minecraft 1.11+, this also covers the hit entity in a projectile hit event.")
 @Examples({"on damage:",
 		"	victim is a creeper",
 		"	damage the attacked by 1 heart"})
 @Since("1.3, INSERT VERSION (projectile hit event)")
 @Events({"damage", "death", "projectile hit"})
-@RequiredPlugins("Minecraft 1.11+")
 public class ExprAttacked extends SimpleExpression<Entity> {
 	
 	private static final boolean SUPPORT_PROJECTILE_HIT = Skript.methodExists(ProjectileHitEvent.class, "getHitEntity");
@@ -74,7 +73,8 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		if (!ScriptLoader.isCurrentEvent(EntityDamageEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class, ProjectileHitEvent.class)) {
-			Skript.error("The expression 'victim' can only be used in a damage, death, or projectile hit event", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The expression 'victim' can only be used in a damage" + (SUPPORT_PROJECTILE_HIT ? ", death, or projectile hit" : " or death") + " event",
+				ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		final String type = parser.regexes.size() == 0 ? null : parser.regexes.get(0).group();
@@ -97,7 +97,7 @@ public class ExprAttacked extends SimpleExpression<Entity> {
 		final Entity[] one = (Entity[]) Array.newInstance(type.getType(), 1);
 		Entity entity;
 		if (e instanceof EntityEvent)
-			if (e instanceof ProjectileHitEvent && SUPPORT_PROJECTILE_HIT)
+			if (SUPPORT_PROJECTILE_HIT && e instanceof ProjectileHitEvent)
 				entity = ((ProjectileHitEvent) e).getHitEntity();
 			else
 				entity = ((EntityEvent) e).getEntity();
