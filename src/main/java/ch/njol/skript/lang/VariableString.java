@@ -167,6 +167,7 @@ public class VariableString implements Expression<String> {
 	
 	/**
 	 * Tests whether a string is correctly quoted, i.e. only has doubled double quotes in it.
+	 * Singular double quotes are only allowed between percentage signs.
 	 * 
 	 * @param s The string
 	 * @param withQuotes Whether s must be surrounded by double quotes or not
@@ -176,12 +177,22 @@ public class VariableString implements Expression<String> {
 		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
 			return false;
 		boolean quote = false;
+		boolean percentage = false;
 		for (int i = withQuotes ? 1 : 0; i < (withQuotes ? s.length() - 1 : s.length()); i++) {
-			if (s.charAt(i) != '"') {
-				if (quote)
-					return false;
-			} else {
+			if (percentage) {
+				if (s.charAt(i) == '%')
+					percentage = false;
+				
+				continue;
+			}
+			
+			if (quote && s.charAt(i) != '"')
+				return false;
+			
+			if (s.charAt(i) == '"') {
 				quote = !quote;
+			} else if (s.charAt(i) == '%') {
+				percentage = true;
 			}
 		}
 		return !quote;
@@ -211,7 +222,7 @@ public class VariableString implements Expression<String> {
 	 */
 	@Nullable
 	public static VariableString newInstance(final String orig, final StringMode mode) {
-		if (!isQuotedCorrectly(orig, false))
+		if (mode != StringMode.VARIABLE_NAME && !isQuotedCorrectly(orig, false))
 			return null;
 		final int n = StringUtils.count(orig, '%');
 		if (n % 2 != 0) {
@@ -220,7 +231,26 @@ public class VariableString implements Expression<String> {
 		}
 		
 		// We must not parse color codes yet, as JSON support would be broken :(
-		final String s = orig.replace("\"\"", "\"");
+		final String s;
+		if (mode != StringMode.VARIABLE_NAME) {
+			// Replace every double " character with a single ", except for those in expressions (between %)
+			StringBuilder stringBuilder = new StringBuilder();
+			
+			boolean expression = false;
+			for (int i = 0; i < orig.length(); i++) {
+				char c = orig.charAt(i);
+				stringBuilder.append(c);
+				
+				if (c == '%')
+					expression = !expression;
+				
+				if (!expression && c == '"')
+					i++;
+			}
+			s = stringBuilder.toString();
+		} else {
+			s = orig;
+		}
 		
 		final List<Object> string = new ArrayList<>(n / 2 + 2); // List of strings and expressions
 		
@@ -255,7 +285,6 @@ public class VariableString implements Expression<String> {
 				} else {
 					final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 					try {
-						@SuppressWarnings("unchecked")
 						final Expression<?> expr = new SkriptParser("" + s.substring(c + 1, c2), SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT).parseExpression(Object.class);
 						if (expr == null) {
 							log.printErrors("Can't understand this expression: " + s.substring(c + 1, c2));
