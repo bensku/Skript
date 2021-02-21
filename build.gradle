@@ -144,7 +144,7 @@ tasks.create('testNaming') {
 
 // Create a test task with given name, environments dir/file and is it development mode task
 void createTestTask(String name, String environments, boolean devMode) {
-	tasks.create(name, Exec) {
+	tasks.create(name) {
 		// Execute JUnit tests, compile Skript and check test naming
 		dependsOn(test, jar, testNaming)
 		doFirst {
