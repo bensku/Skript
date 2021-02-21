@@ -150,11 +150,22 @@ void createTestTask(String name, String environments, boolean devMode) {
 		if (devMode) {
 			standardInput = System.in
 		}
-		commandLine 'java', '-cp',
-			'build${File.separator}libs${File.separator}Skript.jar${File.pathSeparator}' +
+		javaexec {
+			group = 'execution'
+			classpath = files([
+				'build' + File.separator + 'libs' + File.separator + 'Skript.jar',
 				project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
-			'ch.njol.skript.tests.platform.PlatformMain',
-			'test_runners', 'src/test/skript/tests', 'src/test/resources/runner_data', environments, '' + devMode
+				sourceSets.main.runtimeClasspath
+			])
+			main = 'ch.njol.skript.tests.platform.PlatformMain'
+			args = [
+				'test_runners',
+				'src/test/skript/tests',
+				'src/test/resources/runner_data',
+				environments,
+				devMode
+			]
+		}
 	}
 }
 
