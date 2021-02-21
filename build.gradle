@@ -147,24 +147,26 @@ void createTestTask(String name, String environments, boolean devMode) {
 	tasks.create(name, Exec) {
 		// Execute JUnit tests, compile Skript and check test naming
 		dependsOn(test, jar, testNaming)
-		if (devMode) {
-			standardInput = System.in
-		}
-		javaexec {
-			group = 'execution'
-			classpath = files([
-				'build' + File.separator + 'libs' + File.separator + 'Skript.jar',
-				project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
-				sourceSets.main.runtimeClasspath
-			])
-			main = 'ch.njol.skript.tests.platform.PlatformMain'
-			args = [
-				'test_runners',
-				'src/test/skript/tests',
-				'src/test/resources/runner_data',
-				environments,
-				devMode
-			]
+		doFirst {
+			if (devMode) {
+				standardInput = System.in
+			}
+			javaexec {
+				group = 'execution'
+				classpath = files([
+					'build' + File.separator + 'libs' + File.separator + 'Skript.jar',
+					project.configurations.runtimeClasspath.find { it.name.startsWith('gson') },
+					sourceSets.main.runtimeClasspath
+				])
+				main = 'ch.njol.skript.tests.platform.PlatformMain'
+				args = [
+					'test_runners',
+					'src/test/skript/tests',
+					'src/test/resources/runner_data',
+					environments,
+					devMode
+				]
+			}
 		}
 	}
 }
