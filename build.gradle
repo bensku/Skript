@@ -72,6 +72,10 @@ task sourceJar(type: Jar) {
 
 tasks.withType(ShadowJar) {
 	dependsOn relocateShadowJar
+	configurations = [
+		project.configurations.shadow,
+		project.configurations.compile
+	]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
 	}
