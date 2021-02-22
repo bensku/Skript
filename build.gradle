@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
+
 import java.time.LocalTime
 
 plugins {
@@ -18,9 +19,6 @@ allprojects {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://papermc.io/repo/repository/maven-public/' }
 		maven { url 'https://ci.emc.gs/nexus/content/groups/aikar/' }
-	}
-	configurations {
-		shade
 	}
 }
 
@@ -68,29 +66,25 @@ task relocateShadowJar(type: ConfigureShadowRelocation) {
 	target = tasks.shadowJar
 }
 
-
 task sourceJar(type: Jar) {
 	from sourceSets.main.allJava
 }
 
 tasks.withType(ShadowJar) {
 	dependsOn relocateShadowJar
-	configurations = [project.configurations.shade]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
 	}
 	relocate 'io.papermc.lib', 'ch.njol.skript.paperlib'
-
 	manifest {
-		attributes('Name': 'ch/njol/skript',
-			'Sealed': 'true')
+		attributes(
+			'Name': 'ch/njol/skript',
+			'Sealed': 'true'
+		)
 	}
-
-	from('skript-aliases') {
-		into('aliases-english') // Change this if we get aliases in other languages
+	from 'skript-aliases', {
+		into 'aliases-english' // Change this if we get aliases in other languages
 	}
-
-	// Include all modules of Skript
 	from 'skript-worldguard6/build/classes/java/main'
 }
 
@@ -176,15 +170,14 @@ createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (project.
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
-	from('src/main/resources') {
+	from 'src/main/resources', {
 		include '**'
 		version = project.property('version')
 		def channel = 'stable'
-		if (version.contains('alpha')) {
+		if (version.contains('alpha'))
 			channel = 'alpha'
-		} else if (version.contains('beta')) {
+		else if (version.contains('beta'))
 			channel = 'beta'
-		}
 		filter ReplaceTokens, tokens: [
 			'version'         : version,
 			'today'           : '' + LocalTime.now(),
@@ -202,25 +195,24 @@ task githubRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn githubResources
 	archiveName = 'Skript-github.jar'
-
 	manifest {
-		attributes('Name': 'ch/njol/skript',
-			'Sealed': 'true')
+		attributes(
+			'Name': 'ch/njol/skript',
+			'Sealed': 'true'
+		)
 	}
-
 	from 'skript-worldguard6/build/classes/java/main'
 }
 
 task spigotResources(type: ProcessResources) {
-	from('src/main/resources') {
+	from 'src/main/resources', {
 		include '**'
 		version = project.property('version')
 		def channel = 'stable'
-		if (version.contains('alpha')) {
+		if (version.contains('alpha'))
 			channel = 'alpha'
-		} else if (version.contains('beta')) {
+		else if (version.contains('beta'))
 			channel = 'beta'
-		}
 		filter ReplaceTokens, tokens: [
 			'version'         : version,
 			'today'           : '' + LocalTime.now(),
@@ -238,17 +230,17 @@ task spigotRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
 	archiveName = 'Skript-spigot.jar'
-
 	manifest {
-		attributes('Name': 'ch/njol/skript',
-			'Sealed': 'true')
+		attributes(
+			'Name': 'ch/njol/skript',
+			'Sealed': 'true'
+		)
 	}
-
 	from 'skript-worldguard6/build/classes/java/main'
 }
 
 task nightlyResources(type: ProcessResources) {
-	from('src/main/resources') {
+	from 'src/main/resources', {
 		include '**'
 		def hash = 'git rev-parse --short HEAD'.execute().text.trim()
 		version = project.property('version') + '-nightly-' + hash
@@ -269,13 +261,11 @@ task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources, licenseMain
 	archiveName = 'Skript-nightly.jar'
-
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
 			'Sealed': 'true'
 		)
 	}
-
 	from 'skript-worldguard6/build/classes/java/main'
 }
