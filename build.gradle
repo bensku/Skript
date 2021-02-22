@@ -43,8 +43,18 @@ dependencies {
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
+task checkAliases {
+	description 'Checks for the existence of the aliases.'
+	doLast {
+		def aliasFolder = new File('skript-aliases')
+		if (!aliasFolder.exists() || aliasFolder.listFiles().length == 0) {
+			throw new InvalidUserDataException('Aliases are missing from \'skript-aliases\' folder. Consider fetching submodules with \'git submodule update --init\'.')
+		}
+	}
+}
+
 task jar(overwrite: true, type: ShadowJar) {
-	dependsOn 'checkAliases'
+	dependsOn checkAliases
 	archiveName jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
@@ -58,22 +68,13 @@ task relocateShadowJar(type: ConfigureShadowRelocation) {
 	target = tasks.shadowJar
 }
 
-task checkAliases {
-	description 'Checks for the existence of the aliases.'
-	doLast {
-		def aliasFolder = new File('skript-aliases')
-		if (!aliasFolder.exists() || aliasFolder.listFiles().length == 0) {
-			throw new InvalidUserDataException('Aliases are missing from \'skript-aliases\' folder. Consider fetching submodules with \'git submodule update --init\'.')
-		}
-	}
-}
 
 task sourceJar(type: Jar) {
 	from sourceSets.main.allJava
 }
 
 tasks.withType(ShadowJar) {
-	dependsOn 'relocateShadowJar'
+	dependsOn relocateShadowJar
 	configurations = [project.configurations.shade]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
@@ -141,7 +142,7 @@ tasks.create('testNaming') {
 void createTestTask(String name, String environments, boolean devMode) {
 	tasks.create(name) {
 		// Execute JUnit tests, compile Skript and check test naming
-		dependsOn(test, jar, testNaming)
+		dependsOn test, jar, testNaming
 		doFirst {
 			if (devMode) {
 				standardInput = System.in
@@ -207,10 +208,6 @@ task githubRelease(type: ShadowJar) {
 			'Sealed': 'true')
 	}
 
-	from('skript-aliases') {
-		into('aliases-english')
-	}
-
 	from 'skript-worldguard6/build/classes/java/main'
 }
 
@@ -247,10 +244,6 @@ task spigotRelease(type: ShadowJar) {
 			'Sealed': 'true')
 	}
 
-	from('skript-aliases') {
-		into('aliases-english')
-	}
-
 	from 'skript-worldguard6/build/classes/java/main'
 }
 
@@ -274,8 +267,7 @@ task nightlyResources(type: ProcessResources) {
 
 task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
-	dependsOn nightlyResources
-	dependsOn licenseMain
+	dependsOn nightlyResources, licenseMain
 	archiveName = 'Skript-nightly.jar'
 
 	manifest {
@@ -283,10 +275,6 @@ task nightlyRelease(type: ShadowJar) {
 			'Name': 'ch/njol/skript',
 			'Sealed': 'true'
 		)
-	}
-
-	from('skript-aliases') {
-		into('aliases-english')
 	}
 
 	from 'skript-worldguard6/build/classes/java/main'
