@@ -7,7 +7,6 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '6.1.0'
 	id 'com.github.hierynomus.license' version '0.14.0'
 	id 'java'
-	id 'maven-publish'
 }
 
 allprojects {
@@ -18,12 +17,9 @@ allprojects {
 		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://papermc.io/repo/repository/maven-public/' }
-		maven { url 'https://repo.codemc.org/repository/maven-public' }
-		maven { url 'http://ci.emc.gs/nexus/content/groups/aikar/' }
-		maven { url 'http://maven.sk89q.com/repo' }
+		maven { url 'https://ci.emc.gs/nexus/content/groups/aikar/' }
 	}
 	configurations {
-		ecj
 		shade
 	}
 }
@@ -34,20 +30,21 @@ dependencies {
 	implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
 	implementation group: 'com.google.code.findbugs', name: 'findbugs', version: '3.0.1'
 	implementation group: 'com.sk89q.worldguard', name: 'worldguard-legacy', version: '7.0.0-SNAPSHOT'
-	implementation group: 'com.github.marcelo-mason', name: 'PreciousStones', version: '24e3d4bf67b7240ae36b32be10e99d4091938c5c'
+	implementation group: 'com.github.marcelo-mason', name: 'PreciousStones', version: '24e3d4bf67'
 	implementation group: 'net.milkbowl.vault', name: 'Vault', version: '1.7.1', {
 		exclude group: 'org.bstats', module: 'bstats-bukkit'
 	}
 	implementation fileTree(dir: 'lib', include: '*.jar')
 
-	testImplementation group: 'junit', name: 'junit', version: '4.12'
-	testImplementation group: 'org.easymock', name: 'easymock', version: '3.6'
+	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+	testImplementation group: 'org.easymock', name: 'easymock', version: '4.2'
 }
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
 task jar(overwrite: true, type: ShadowJar) {
+	dependsOn 'checkAliases'
 	archiveName jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
@@ -75,10 +72,8 @@ task sourceJar(type: Jar) {
 	from sourceSets.main.allJava
 }
 
-tasks.shadowJar.dependsOn tasks.relocateShadowJar
-jar.dependsOn checkAliases
-
 tasks.withType(ShadowJar) {
+	dependsOn 'relocateShadowJar'
 	configurations = [project.configurations.shade]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
@@ -175,8 +170,8 @@ void createTestTask(String name, String environments, boolean devMode) {
 createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.16.3.json', false)
 createTestTask('skriptTest', 'src/test/skript/environments/main', false)
 createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
-createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (System.getProperty('skript.testEnv') == null
-	? 'paper-1.16.3.json' : System.getProperty('skript.testEnv') + '.json'), true)
+createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (project.property('testEnv') == null
+	? 'paper-1.16.3.json' : project.property('testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
