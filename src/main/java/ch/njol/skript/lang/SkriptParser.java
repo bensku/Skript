@@ -525,6 +525,11 @@ public class SkriptParser {
 						}
 					}
 					
+					if (onlySingular && !e.isSingle()) {
+						Skript.error("'" + expr + "' can only accept singular expressions, not plural", ErrorQuality.SEMANTIC_ERROR);
+						return null;
+					}
+					
 					// No directly same type found
 					if (types.length == 1) { // Only one type is accepted here
 						// So, we'll just create converted expression
