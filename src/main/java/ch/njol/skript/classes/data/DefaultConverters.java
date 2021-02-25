@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.classes.data;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -31,7 +30,6 @@ import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -143,15 +141,6 @@ public class DefaultConverters {
 				if (e instanceof InventoryHolder)
 					return ((InventoryHolder) e).getInventory();
 				return null;
-			}
-		}, Converter.NO_COMMAND_ARGUMENTS);
-		
-		// Inventory type - Inventory
-		Converters.registerConverter(InventoryType.class, Inventory.class, new Converter<InventoryType, Inventory>() {
-			@Nullable
-			@Override
-			public Inventory convert(InventoryType inventoryType) {
-				return Bukkit.createInventory(null, inventoryType);
 			}
 		}, Converter.NO_COMMAND_ARGUMENTS);
 		
