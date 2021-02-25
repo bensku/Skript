@@ -535,15 +535,10 @@ public class SkriptParser {
 							return r;
 						}
 					} else { // Multiple types accepted
-						if (returnType == Object.class) { // No specific return type, so probably variable etc.
+						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+						if (r != null) {
 							log.printLog();
-							return e; // Expression will have to deal with it runtime
-						} else {
-							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-							if (r != null) {
-								log.printLog();
-								return r;
-							}
+							return r;
 						}
 					}
 
