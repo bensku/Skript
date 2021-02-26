@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 		"on break of diamond ore:",
 		"\tif tool of player = diamond pickaxe:",
 		"\t\tadd 100 to dropped experience"})
-@Since("2.1, INSERT VERSION (block break event)")
+@Since("2.1, 2.5.3 (block break event)")
 @Events({"experience spawn", "break / mine"})
 public class ExprExperience extends SimpleExpression<Experience> {
 	static {
