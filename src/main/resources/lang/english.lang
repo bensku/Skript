@@ -165,6 +165,7 @@ commands:
 	cooldown message: You are using this command too often, please try again later
 	executable by players: This command can only be used by players
 	executable by console: This command can only be used by the console
+	correct usage: Correct usage:
 	invalid argument: Invalid argument <gray>'%s<gray>'<reset>. Allowed are:
 	too many arguments: This command can only accept a single %2$s.
 	internal error: An internal error occurred while attempting to perform this command.
