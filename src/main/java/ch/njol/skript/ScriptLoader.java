@@ -230,8 +230,9 @@ final public class ScriptLoader {
 	
 	// Load scripts in separate (one) thread
 	static final BlockingQueue<Runnable> loadQueue = new ArrayBlockingQueue<>(20, true);
-	static final Thread loaderThread;
-	static boolean loadAsync; // See below
+	@Nullable
+	static Thread loaderThread;
+	private static boolean loadAsync; // See below
 	
 	/**
 	 * Checks if scripts are loaded in separate thread. If true,
@@ -293,23 +294,32 @@ final public class ScriptLoader {
 		}
 	}
 
-	// Initialize and start load thread
-	static {
-		loaderThread = new AsyncLoaderThread();
-		loaderThread.start();
+	static void setLoadAsync(boolean loadAsync) {
+		ScriptLoader.loadAsync = loadAsync;
+
+		// Shutdown old thread in case of config reload
+		if (loaderThread != null) {
+			loaderThread.interrupt();
+		}
+
+		if (ScriptLoader.loadAsync) {
+			// Initialize and start load thread
+			loaderThread = new Thread(new AsyncLoaderTask(), "Skript async script loader thread");
+			loaderThread.start();
+		}
 	}
 	
-	private static class AsyncLoaderThread extends Thread {
+	private static class AsyncLoaderTask implements Runnable {
 		
-		public AsyncLoaderThread() { }
+		public AsyncLoaderTask() { }
 
 		@Override
 		public void run() {
-			while (true) {
+			while (!Thread.currentThread().isInterrupted()) {
 				try {
 					loadQueue.take().run();
 				} catch (InterruptedException e) {
-					Skript.exception(e); // Bubble it up with instructions on how to report it
+					Thread.currentThread().interrupt();
 				}
 			}
 		}

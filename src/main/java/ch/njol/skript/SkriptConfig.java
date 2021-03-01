@@ -303,7 +303,7 @@ public abstract class SkriptConfig {
 
 				@Override
 				public void set(Boolean t) {
-					ScriptLoader.loadAsync = t;
+					ScriptLoader.setLoadAsync(t);
 				}
 				
 			})

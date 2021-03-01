@@ -978,7 +978,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * Prints errors from reloading the config & scripts
 	 */
 	static void reload() {
-		if (!ScriptLoader.loadAsync)
+		if (!ScriptLoader.isAsync())
 			disableScripts();
 		reloadMainConfig();
 		reloadAliases();
@@ -989,7 +989,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * Prints errors
 	 */
 	static void reloadScripts() {
-		if (!ScriptLoader.loadAsync)
+		if (!ScriptLoader.isAsync())
 			disableScripts();
 		ScriptLoader.loadScripts();
 	}

@@ -183,6 +183,12 @@ keep command last usage dates: false
 # but when the player uses the command again after the cooldown period is over, the last usage will be deleted as it's no longer needed,
 # If you need to use the expression 'last usage date', then you'll want to enable this.
 
+asynchronous script loading: false
+# Enables asynchronous script loading, which will load scripts in the background instead of blocking the server to load scripts.
+# This will not necessarily make loading faster since it will still load the scripts on one thread and not in parallel.
+# Do note that though, this option may cause issues with addons and possibly some scripts! Do NOT enable this option unless you have really long
+# script load times AND you take the risk of lost data and full responsibility!
+
 # ==== Variables ====
 
 databases:
