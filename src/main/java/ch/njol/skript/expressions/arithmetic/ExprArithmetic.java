@@ -16,7 +16,7 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.expressions;
+package ch.njol.skript.expressions.arithmetic;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -37,7 +37,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Patterns;
-import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 
 /**
@@ -53,73 +52,6 @@ import ch.njol.util.Kleenean;
 @SuppressWarnings("null")
 public class ExprArithmetic extends SimpleExpression<Number> {
 	
-	@SuppressWarnings("UnnecessaryBoxing")
-	private enum Operator {
-		PLUS('+') {
-			@SuppressWarnings("null")
-			@Override
-			public Number calculate(final Number n1, final Number n2, final boolean integer) {
-				if (integer)
-					return Long.valueOf(n1.longValue() + n2.longValue());
-				return Double.valueOf(n1.doubleValue() + n2.doubleValue());
-			}
-		},
-		MINUS('-') {
-			@SuppressWarnings("null")
-			@Override
-			public Number calculate(final Number n1, final Number n2, final boolean integer) {
-				if (integer)
-					return Long.valueOf(n1.longValue() - n2.longValue());
-				return Double.valueOf(n1.doubleValue() - n2.doubleValue());
-			}
-		},
-		MULT('*') {
-			@SuppressWarnings("null")
-			@Override
-			public Number calculate(final Number n1, final Number n2, final boolean integer) {
-				if (integer)
-					return Long.valueOf(n1.longValue() * n2.longValue());
-				return Double.valueOf(n1.doubleValue() * n2.doubleValue());
-			}
-		},
-		DIV('/') {
-			@SuppressWarnings("null")
-			@Override
-			public Number calculate(final Number n1, final Number n2, final boolean integer) {
-				if (integer) {
-					final long div = n2.longValue();
-					if (div == 0)
-						return Long.MAX_VALUE;
-					return Long.valueOf(n1.longValue() / div);
-				}
-				return Double.valueOf(n1.doubleValue() / n2.doubleValue());
-			}
-		},
-		EXP('^') {
-			@SuppressWarnings("null")
-			@Override
-			public Number calculate(final Number n1, final Number n2, final boolean integer) {
-				if (integer)
-					return Long.valueOf((long) Math.pow(n1.longValue(), n2.longValue()));
-				return Double.valueOf(Math.pow(n1.doubleValue(), n2.doubleValue()));
-			}
-		};
-		
-		public final char sign;
-		
-		Operator(final char sign) {
-			this.sign = sign;
-		}
-		
-		public abstract Number calculate(Number n1, Number n2, boolean integer);
-		
-		@Override
-		public String toString() {
-			return "" + sign;
-		}
-		
-	}
-	
 	private static class PatternInfo {
 		public final Operator operator;
 		public final boolean leftGrouped;
@@ -129,80 +61,6 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			this.operator = operator;
 			this.leftGrouped = leftGrouped;
 			this.rightGrouped = rightGrouped;
-		}
-	}
-	
-	public interface Gettable {
-		Number get(Event event, boolean integer);
-	}
-	
-	public static class ExpressionInfo implements Gettable {
-		private final Expression<? extends Number> expression;
-		
-		public ExpressionInfo(Expression<? extends Number> expression) {
-			this.expression = expression;
-		}
-		
-		@Override
-		public Number get(Event event, boolean integer) {
-			Number number = expression.getSingle(event);
-			return number != null ? number : 0;
-		}
-	}
-	
-	public static class ArithmeticChain implements Gettable {
-		private final Gettable left;
-		private final Operator operator;
-		private final Gettable right;
-		
-		public ArithmeticChain(Gettable left, Operator operator, Gettable right) {
-			this.left = left;
-			this.operator = operator;
-			this.right = right;
-		}
-		
-		@SuppressWarnings("unchecked")
-		public static Gettable parse(List<Object> chain) {
-			Checker<Object>[] checkers = new Checker[] {
-				o -> o.equals(Operator.PLUS) || o.equals(Operator.MINUS),
-				o -> o.equals(Operator.MULT) || o.equals(Operator.DIV),
-				o -> o.equals(Operator.EXP)
-			};
-			
-			for (Checker<Object> checker : checkers) {
-				int lastIndex = findLastIndex(chain, checker);
-				
-				if (lastIndex != -1) {
-					List<Object> leftChain = chain.subList(0, lastIndex);
-					Gettable left = parse(leftChain);
-					
-					Operator operator = (Operator) chain.get(lastIndex);
-					
-					List<Object> rightChain = chain.subList(lastIndex + 1, chain.size());
-					Gettable right = parse(rightChain);
-					
-					return new ArithmeticChain(left, operator, right);
-				}
-			}
-			
-			if (chain.size() != 1)
-				throw new IllegalStateException();
-			
-			return new ExpressionInfo((Expression<? extends Number>) chain.get(0));
-		}
-		
-		private static <T> int findLastIndex(List<T> list, Checker<T> checker) {
-			int lastIndex = -1;
-			for (int i = 0; i < list.size(); i++) {
-				if (checker.check(list.get(i)))
-					lastIndex = i;
-			}
-			return lastIndex;
-		}
-		
-		@Override
-		public Number get(Event event, boolean integer) {
-			return operator.calculate(left.get(event, integer), right.get(event, integer), integer);
 		}
 	}
 	
@@ -254,7 +112,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 	private final List<Object> chain = new ArrayList<>();
 	
 	// A parsed chain, like a tree
-	private Gettable gettable;
+	private ArithmeticGettable arithmeticGettable;
 	
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
@@ -301,7 +159,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			chain.add(second);
 		}
 		
-		gettable = ArithmeticChain.parse(chain);
+		arithmeticGettable = ArithmeticChain.parse(chain);
 		
 		return true;
 	}
@@ -311,7 +169,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 	protected Number[] get(final Event e) {
 		Number[] one = (Number[]) Array.newInstance(returnType, 1);
 		
-		one[0] = gettable.get(e, integer);
+		one[0] = arithmeticGettable.get(e, integer);
 		
 		return one;
 	}
