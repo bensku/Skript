@@ -37,7 +37,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
