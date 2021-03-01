@@ -39,7 +39,7 @@ import ch.njol.util.Kleenean;
 @Name("Load/Unload Worlds")
 @Description({"Loads or unloads a world.",
 	"When loading a world, if this world does not exist, it will create a world with that name.",
-	"Note that it takes in the worlds name, not the world itself, and you cannot unload your main world."})
+	"Note that it takes in the world's name, not the world itself, and you cannot unload your main world."})
 @Examples({"on script load:",
 	"\tunload world \"world_nether\" and don't save chunks"})
 @Since("INSERT VERSION")
