@@ -155,7 +155,7 @@ public abstract class SkriptConfig {
 					return null;
 				return new SimpleDateFormat(s);
 			} catch (final IllegalArgumentException e) {
-				Skript.error("'" + s + "' is not a valid date format. Please refer to http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
+				Skript.error("'" + s + "' is not a valid date format. Please refer to https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
 			}
 			return null;
 		}
