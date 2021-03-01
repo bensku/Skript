@@ -48,7 +48,7 @@ public class EffLoadWorld extends Effect {
 	static {
 		Skript.registerEffect(EffLoadWorld.class,
 			"load [(a[n]|the)] (1¦(default|normal)|2¦nether|3¦end)] world[s] %strings%",
-			"unload [the] world[s] %strings% [(1¦without saving chunks)]");		
+			"unload [the] world[s] %strings% [(1¦without saving chunks)]");
 	}
 	
 	private boolean load;
@@ -89,14 +89,13 @@ public class EffLoadWorld extends Effect {
 				if (Bukkit.getWorld(world) != null) {
 					World eventWorld = Bukkit.getWorld(world);
 					World fallbackWorld = Bukkit.getWorlds().get(0);
+					if (eventWorld == fallbackWorld) return;
 					if (eventWorld.getPlayers() != null) {
 						for (Player p : eventWorld.getPlayers()) {
 							p.teleport(fallbackWorld.getSpawnLocation());
 						}
 					}
-					if (eventWorld != fallbackWorld) {
-						Bukkit.unloadWorld(eventWorld, save);
-					}
+					Bukkit.unloadWorld(eventWorld, save);
 				}
 			}
 		}
