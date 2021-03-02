@@ -29,7 +29,7 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://maven.sk89q.com/repo'
+			url 'https://maven.sk89q.com/repo'
 		}
 	
 		maven {
@@ -37,7 +37,7 @@ allprojects {
 		}
 	
 		maven {
-			url 'http://ci.emc.gs/nexus/content/groups/aikar/'
+			url 'https://ci.emc.gs/nexus/content/groups/aikar/'
 		}
 	
 		maven {

@@ -41,7 +41,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Protocol Version")
 @Description({"The protocol version that will be sent as the protocol version of the server in a server list ping event. " +
-		"For more information and list of protocol versions <a href='http://wiki.vg/Protocol_version_numbers'>visit wiki.vg</a>.",
+		"For more information and list of protocol versions <a href='https://wiki.vg/Protocol_version_numbers'>visit wiki.vg</a>.",
 		"If this protocol version doesn't match with the protocol version of the client, the client will see the <a href='#ExprVersionString'>version string</a>.",
 		"But please note that, this expression has no visual effect over the version string. " +
 		"For example if the server uses PaperSpigot 1.12.2, and you make the protocol version 107 (1.9),",
