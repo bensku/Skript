@@ -7,4 +7,4 @@ test "math order":
 	assert 10 - 1 - 5 = 4 with "basic chained math ##3 failed"
 
 	assert (9 - 1) - 3 = 5 with "basic chained math with parentheses ##1 failed"
-	assert 9 - (1 - 3) = 11 with "basic chained math with parentheses ##2 failed"
+	assert 9 - (1 - 3) = 11 with "basic chained math with parentheses ##2 failed"

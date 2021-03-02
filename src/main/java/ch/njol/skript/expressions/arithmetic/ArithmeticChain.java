@@ -23,9 +23,17 @@ import java.util.List;
 import org.bukkit.event.Event;
 
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
 
 public class ArithmeticChain implements ArithmeticGettable {
+	
+	@SuppressWarnings("unchecked")
+	private static final Checker<Object>[] CHECKERS = new Checker[]{
+		o -> o.equals(Operator.PLUS) || o.equals(Operator.MINUS),
+		o -> o.equals(Operator.MULT) || o.equals(Operator.DIV),
+		o -> o.equals(Operator.EXP)
+	};
 	
 	private final ArithmeticGettable left;
 	private final Operator operator;
@@ -44,14 +52,8 @@ public class ArithmeticChain implements ArithmeticGettable {
 	
 	@SuppressWarnings("unchecked")
 	public static ArithmeticGettable parse(List<Object> chain) {
-		Checker<Object>[] checkers = new Checker[]{
-			o -> o.equals(Operator.PLUS) || o.equals(Operator.MINUS),
-			o -> o.equals(Operator.MULT) || o.equals(Operator.DIV),
-			o -> o.equals(Operator.EXP)
-		};
-		
-		for (Checker<Object> checker : checkers) {
-			int lastIndex = findLastIndex(chain, checker);
+		for (Checker<Object> checker : CHECKERS) {
+			int lastIndex = Utils.findLastIndex(chain, checker);
 			
 			if (lastIndex != -1) {
 				List<Object> leftChain = chain.subList(0, lastIndex);
@@ -70,15 +72,6 @@ public class ArithmeticChain implements ArithmeticGettable {
 			throw new IllegalStateException();
 		
 		return new NumberExpressionInfo((Expression<? extends Number>) chain.get(0));
-	}
-	
-	private static <T> int findLastIndex(List<T> list, Checker<T> checker) {
-		int lastIndex = -1;
-		for (int i = 0; i < list.size(); i++) {
-			if (checker.check(list.get(i)))
-				lastIndex = i;
-		}
-		return lastIndex;
 	}
 	
 }

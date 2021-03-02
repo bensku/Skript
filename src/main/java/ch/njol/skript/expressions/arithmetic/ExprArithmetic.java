@@ -52,6 +52,8 @@ import ch.njol.util.Kleenean;
 @SuppressWarnings("null")
 public class ExprArithmetic extends SimpleExpression<Number> {
 	
+	private static final Class<?>[] INTEGER_CLASSES = {Long.class, Integer.class, Short.class, Byte.class};
+	
 	private static class PatternInfo {
 		public final Operator operator;
 		public final boolean leftGrouped;
@@ -106,7 +108,6 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 	
 	@SuppressWarnings("null")
 	private Class<? extends Number> returnType;
-	private boolean integer;
 	
 	// A chain of expressions and operators, alternating between the two. Always starts and ends with an expression.
 	private final List<Object> chain = new ArrayList<>();
@@ -129,22 +130,15 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 			Class<?> firstReturnType = first.getReturnType();
 			Class<?> secondReturnType = second.getReturnType();
 			
-			Class<?>[] integers = {Long.class, Integer.class, Short.class, Byte.class};
-			
 			boolean firstIsInt = false;
 			boolean secondIsInt = false;
-			for (final Class<?> i : integers) {
+			for (final Class<?> i : INTEGER_CLASSES) {
 				firstIsInt |= i.isAssignableFrom(firstReturnType);
 				secondIsInt |= i.isAssignableFrom(secondReturnType);
 			}
 			
-			if (firstIsInt && secondIsInt)
-				returnType = Long.class;
-			else
-				returnType = Double.class;
+			returnType = firstIsInt && secondIsInt ? Long.class : Double.class;
 		}
-		
-		integer = returnType == Long.class;
 		
 		// Chaining
 		if (first instanceof ExprArithmetic && !patternInfo.leftGrouped) {
@@ -169,7 +163,7 @@ public class ExprArithmetic extends SimpleExpression<Number> {
 	protected Number[] get(final Event e) {
 		Number[] one = (Number[]) Array.newInstance(returnType, 1);
 		
-		one[0] = arithmeticGettable.get(e, integer);
+		one[0] = arithmeticGettable.get(e, returnType == Long.class);
 		
 		return one;
 	}
