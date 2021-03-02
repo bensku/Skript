@@ -109,7 +109,7 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		Object[] objects = getExpr().getAll(e);
+		Object[] objects = getExpr().getArray(e);
 		
 		if (!(objects instanceof Location[] && delta != null))
 			return;
