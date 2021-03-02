@@ -64,7 +64,7 @@ public class ExprOffTool extends ExprTool {
 					} else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == p) {
 						final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
 						assert i != null;
-						return new InventorySlot(i, ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {
+						return new InventorySlot(i, 40) { // 40 = offhand slot
 							@Override
 							@Nullable
 							public ItemStack getItem() {
