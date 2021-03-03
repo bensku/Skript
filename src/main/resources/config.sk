@@ -93,7 +93,7 @@ use player UUIDs in variable names: false
 date format: default
 # The date format to be used when dates should be displayed.
 # This can be 'default' to use Java's default date format for the system's language.
-# The format is that of Java's SimpleDateFormat as defined here: http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html
+# The format is that of Java's SimpleDateFormat as defined here: https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
 # some examples:
 #  d/M/yyyy h:mm a => 15/7/2012 8:53 PM
 #  dd.MM.yyyy, HH:mm => 16.03.2013, 09:33
