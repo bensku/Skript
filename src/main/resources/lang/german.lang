@@ -54,6 +54,7 @@ skript:
 
 # -- Skript command --
 skript command:
+	usage: Syntax:
 	help:
 		description: Skript-Hauptbefehl
 		help: Zeigt diese Hilfe an. Benutze '/skript reload/enable/disable/update' um mehr Infos zu erhalten
@@ -159,7 +160,7 @@ commands:
 	cooldown message: Du nutzt diesen Befehl zu häufig, bitte versuche es später erneut
 	executable by players: Dieser Befehl kann nur von Spielern verwendet werden
 	executable by console: Dieser Befehl kann nur von der Konsole verwendet werden
-	usage: Syntax:
+	correct usage: Richtige Benutzung:
 	invalid argument: Unbekanntes Argument <gray>'%s<gray>'<reset>. Erlaubt sind:
 	too many arguments: Dieser Befehl akzeptiert nur %s %s.
 	internal error: Während der Ausführung des Befehls ist ein interner Fehler aufgetreten.
