@@ -71,7 +71,7 @@ public enum Operator {
 		}
 	};
 	
-	public final char sign;
+	private final char sign;
 	
 	Operator(final char sign) {
 		this.sign = sign;
