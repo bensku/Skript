@@ -312,12 +312,17 @@ public class DefaultFunctions {
 		}, Classes.getExactClassInfo(Location.class), true) {
 			@Override
 			public Location[] execute(final FunctionEvent e, final Object[][] params) {
-				return new Location[] {new Location((World) params[3][0],
+				World world = params[3].length == 1 ? (World) params[3][0] : Bukkit.getWorlds().get(0); // fallback to main world of server
+				return new Location[] {new Location(world,
 						((Number) params[0][0]).doubleValue(), ((Number) params[1][0]).doubleValue(), ((Number) params[2][0]).doubleValue(),
 						((Number) params[4][0]).floatValue(), ((Number) params[5][0]).floatValue())};
 			}
-		}.description("Creates a location from a world and 3 coordinates, with an optional yaw and pitch.")
-				.examples("location(0, 128, 0)", "location(player's x-coordinate, player's y-coordinate + 5, player's z-coordinate, player's world, 0, 90)")
+		}.description("Creates a location from a world and 3 coordinates, with an optional yaw and pitch.",
+					"If for whatever reason the world is not found, it will fallback to the server's main world.")
+				.examples("location(0, 128, 0)",
+					"location(player's x-coordinate, player's y-coordinate + 5, player's z-coordinate, player's world, 0, 90)",
+					"location(0, 64, 0, world \"world_nether\")",
+					"location(100, 110, -145, world(\"my_custom_world\"))")
 				.since("2.2"));
 		
 		Functions.registerFunction(new JavaFunction<Date>("date", new Parameter[] {
