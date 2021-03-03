@@ -406,6 +406,13 @@ public final class BukkitEventValues {
 				return e.getEntity().getWorld();
 			}
 		}, 0);
+		EventValues.registerEventValue(EntityEvent.class, Location.class, new Getter<Location, EntityEvent>() {
+			@Override
+			@Nullable
+			public Location get(final EntityEvent e) {
+				return e.getEntity().getLocation();
+			}
+		}, 0);
 		// EntityDamageEvent
 		EventValues.registerEventValue(EntityDamageEvent.class, DamageCause.class, new Getter<DamageCause, EntityDamageEvent>() {
 			@Override
@@ -1049,6 +1056,15 @@ public final class BukkitEventValues {
 				return e.getWorld();
 			}
 		}, 0);
+		if (Skript.methodExists(PortalCreateEvent.class, "getEntity")) { // Minecraft 1.14+
+			EventValues.registerEventValue(PortalCreateEvent.class, Entity.class, new Getter<Entity, PortalCreateEvent>() {
+				@Override
+				@Nullable
+				public Entity get(final PortalCreateEvent e) {
+					return e.getEntity();
+				}
+			}, 0);
+		}
 		//PlayerEditBookEvent
 		EventValues.registerEventValue(PlayerEditBookEvent.class, ItemType.class, new Getter<ItemType, PlayerEditBookEvent>() {
 			@Override
