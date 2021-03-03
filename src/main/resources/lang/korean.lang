@@ -52,6 +52,7 @@ skript:
 
 # -- Skript command --
 skript command:
+	usage: 사용법:
 	help:
 		description: Skript의 주요 명령어
 		help: 이 도움말 메시지를 표시합니다. 더 많은 정보를 얻으려면 '/skript reload/enable/disable/update/info'를 사용하십시오.
@@ -174,7 +175,7 @@ commands:
 	cooldown message: 이 명령어을 너무 자주 사용하고 있습니다. 나중에 다시 시도하십시오
 	executable by players: <red>이 명령어는 플레이어만 사용할 수 있습니다
 	executable by console: <red>이 명령어은 콘솔에서만 사용할 수 있습니다
-	usage: 사용법:
+	correct usage: 올바른 사용법:
 	invalid argument: <gray>'%s <gray>'<reset> 인수가 잘못되었습니다:
 	too many arguments: 이 명령어는 단일 %2$s만 허용합니다.
 	internal error: <red>이 명령어를 수행하는 중 내부 오류가 발생했습니다.
