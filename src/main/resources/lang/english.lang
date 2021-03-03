@@ -52,6 +52,7 @@ skript:
 
 # -- Skript command --
 skript command:
+	usage: Usage:
 	help:
 		description: Skript's main command
 		help: Prints this help message. Use '/skript reload/enable/disable/update' to get more info
@@ -164,7 +165,7 @@ commands:
 	cooldown message: You are using this command too often, please try again later
 	executable by players: This command can only be used by players
 	executable by console: This command can only be used by the console
-	usage: Usage:
+	correct usage: Correct usage:
 	invalid argument: Invalid argument <gray>'%s<gray>'<reset>. Allowed are:
 	too many arguments: This command can only accept a single %2$s.
 	internal error: An internal error occurred while attempting to perform this command.
