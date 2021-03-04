@@ -148,6 +148,22 @@ final public class ScriptLoader {
 		hasDelayBefore = Kleenean.FALSE;
 	}
 	
+	@Nullable
+	private static SkriptEvent currentSkriptEvent;
+	
+	public static void setCurrentSkriptEvent(SkriptEvent skriptEvent) {
+		currentSkriptEvent = skriptEvent;
+	}
+	
+	@Nullable
+	public static SkriptEvent getCurrentSkriptEvent() {
+		return currentSkriptEvent;
+	}
+	
+	public static void deleteCurrentSkriptEvent() {
+		currentSkriptEvent = null;
+	}
+	
 	public static List<TriggerSection> currentSections = new ArrayList<>();
 	public static List<Loop> currentLoops = new ArrayList<>();
 	final static HashMap<String, String> currentOptions = new HashMap<>();
@@ -685,9 +701,11 @@ final public class ScriptLoader {
 					
 					try {
 						setCurrentEvent("" + parsedEvent.getFirst().getName().toLowerCase(Locale.ENGLISH), parsedEvent.getFirst().events);
+						setCurrentSkriptEvent(parsedEvent.getSecond());
 						events.add(new ParsedEventData(parsedEvent, event, node, loadItems(node)));
 					} finally {
 						deleteCurrentEvent();
+						deleteCurrentSkriptEvent();
 					}
 					
 					if (parsedEvent.getSecond() instanceof SelfRegisteringSkriptEvent) {
@@ -733,6 +751,7 @@ final public class ScriptLoader {
 				
 				for (ParsedEventData event : events) {
 					setCurrentEvent("" + event.info.getFirst().getName().toLowerCase(Locale.ENGLISH), event.info.getFirst().events);
+					setCurrentSkriptEvent(event.info.getSecond());
 					
 					final Trigger trigger;
 					try {
@@ -751,6 +770,7 @@ final public class ScriptLoader {
 					}
 					
 					deleteCurrentEvent();
+					deleteCurrentSkriptEvent();
 				}
 				
 				// Remove the script from the disabled scripts list
