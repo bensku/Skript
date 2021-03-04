@@ -105,7 +105,7 @@ public class ExprSubstring extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("null")
 	public boolean isSingle() {
-		return string.isSingle() && start.isSingle();
+		return string.isSingle() && (start == null || start.isSingle());
 	}
 	
 	@Override
