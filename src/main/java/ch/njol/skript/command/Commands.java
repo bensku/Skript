@@ -88,6 +88,7 @@ public abstract class Commands {
 	
 	public final static ArgsMessage m_too_many_arguments = new ArgsMessage("commands.too many arguments");
 	public final static Message m_internal_error = new Message("commands.internal error");
+	public final static Message m_correct_usage = new Message("commands.correct usage");
 	
 	private final static Map<String, ScriptCommand> commands = new HashMap<>();
 	
@@ -406,7 +407,7 @@ public abstract class Commands {
 		if (!(node.get("trigger") instanceof SectionNode))
 			return null;
 		
-		final String usage = ScriptLoader.replaceOptions(node.get("usage", desc));
+		final String usage = ScriptLoader.replaceOptions(node.get("usage", m_correct_usage + " " + desc));
 		final String description = ScriptLoader.replaceOptions(node.get("description", ""));
 		ArrayList<String> aliases = new ArrayList<>(Arrays.asList(ScriptLoader.replaceOptions(node.get("aliases", "")).split("\\s*,\\s*/?")));
 		if (aliases.get(0).startsWith("/"))
