@@ -113,6 +113,7 @@ public class FunctionReference<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean validateFunction(boolean first) {
+		function = null;
 		SkriptLogger.setNode(node);
 		Skript.debug("Validating function " + functionName);
 		final Signature<?> sign = Functions.getSignature(functionName);
