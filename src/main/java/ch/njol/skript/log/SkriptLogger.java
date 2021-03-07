@@ -19,6 +19,8 @@
 package ch.njol.skript.log;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +55,11 @@ public abstract class SkriptLogger {
 	@SuppressWarnings("null")
 	public final static Logger LOGGER = Bukkit.getServer() != null ? Bukkit.getLogger() : Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // cannot use Bukkit in tests
 	
-	private final static HandlerList handlers = new HandlerList();
+	private final static Map<Thread, HandlerList> handlerThreadMap = new WeakHashMap<>();
+	
+	private static HandlerList getHandlers() {
+		return handlerThreadMap.computeIfAbsent(Thread.currentThread(), thread -> new HandlerList());
+	}
 	
 	/**
 	 * Shorthand for <tt>{@link #startLogHandler(LogHandler) startLogHandler}(new {@link RetainingLogHandler}());</tt>
@@ -98,23 +104,23 @@ public abstract class SkriptLogger {
 	 * @see RedirectingLogHandler
 	 */
 	public static <T extends LogHandler> T startLogHandler(final T h) {
-		handlers.add(h);
+		getHandlers().add(h);
 		return h;
 	}
 	
 	static void removeHandler(final LogHandler h) {
-		if (!handlers.contains(h))
+		if (!getHandlers().contains(h))
 			return;
-		if (!h.equals(handlers.remove())) {
+		if (!h.equals(getHandlers().remove())) {
 			int i = 1;
-			while (!h.equals(handlers.remove()))
+			while (!h.equals(getHandlers().remove()))
 				i++;
 			LOGGER.severe("[Skript] " + i + " log handler" + (i == 1 ? " was" : "s were") + " not stopped properly! (at " + getCaller() + ") [if you're a server admin and you see this message please file a bug report at https://github.com/bensku/skript/issues if there is not already one]");
 		}
 	}
 	
 	static boolean isStopped(final LogHandler h) {
-		return !handlers.contains(h);
+		return !getHandlers().contains(h);
 	}
 	
 	@Nullable
@@ -167,7 +173,7 @@ public abstract class SkriptLogger {
 			return;
 		if (Skript.testing() && node != null && node.debug())
 			System.out.print("---> " + entry.level + "/" + ErrorQuality.get(entry.quality) + ": " + entry.getMessage() + " ::" + LogEntry.findCaller());
-		for (final LogHandler h : handlers) {
+		for (final LogHandler h : getHandlers()) {
 			final LogResult r = h.log(entry);
 			switch (r) {
 				case CACHED:
