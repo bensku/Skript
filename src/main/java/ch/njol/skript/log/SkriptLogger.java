@@ -19,8 +19,6 @@
 package ch.njol.skript.log;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,10 +53,10 @@ public abstract class SkriptLogger {
 	@SuppressWarnings("null")
 	public final static Logger LOGGER = Bukkit.getServer() != null ? Bukkit.getLogger() : Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // cannot use Bukkit in tests
 	
-	private final static Map<Thread, HandlerList> handlerThreadMap = new WeakHashMap<>();
+	private final static ThreadLocal<HandlerList> handlerListThreadLocal = ThreadLocal.withInitial(HandlerList::new);
 	
 	private static HandlerList getHandlers() {
-		return handlerThreadMap.computeIfAbsent(Thread.currentThread(), thread -> new HandlerList());
+		return handlerListThreadLocal.get();
 	}
 	
 	/**
