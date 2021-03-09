@@ -20,6 +20,8 @@ package ch.njol.skript.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -266,6 +268,8 @@ public class SectionNode extends Node implements Iterable<Node> {
 		return "'" + s.replace("\t", "->").replace(' ', '_').replaceAll("\\s", "?") + "' [-> = tab, _ = space, ? = other whitespace]";
 	}
 	
+	private static final Pattern fullLinePattern = Pattern.compile("([^#]|##)*#-#(\\s.*)?");
+	
 	private final SectionNode load_i(final ConfigReader r) throws IOException {
 		boolean indentationSet = false;
 		String fullLine;
@@ -342,7 +346,7 @@ public class SectionNode extends Node implements Iterable<Node> {
 					)) {
 				boolean matches = false;
 				try {
-					matches = fullLine.matches("([^#]|##)*#-#(\\s.*)?");
+					matches = fullLine.contains("#") && fullLinePattern.matcher(fullLine).matches();
 				} catch (StackOverflowError e) { // Probably a very long line
 					Node.handleNodeStackOverflow(e, fullLine);
 				}
