@@ -66,7 +66,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
@@ -100,7 +99,6 @@ import ch.njol.skript.util.EnumUtils;
 import ch.njol.skript.util.InventoryActions;
 import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.StringMode;
-import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 
@@ -779,6 +777,7 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public Player parse(final String s, final ParseContext context) {
+						if (s.isEmpty()) return null;
 						if (context == ParseContext.COMMAND) {
 							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
 								return Bukkit.getPlayer(UUID.fromString(s));
