@@ -150,7 +150,7 @@ public abstract class Node {
 		
 		Skript.error("");
 		Skript.error("Updating your Java and/or using respective 64-bit versions for your operating system may also help and is always a good practice.");
-		Skript.error("If it is still not fixed, try changing the -Xss JVM option to a higher value (like -Xss2M) in your startup script.");
+		Skript.error("If it is still not fixed, try moderately increasing the thread stack size (-Xss flag) in your startup script.");
 		Skript.error("");
 		Skript.error("Using a different Java Virtual Machine (JVM) like OpenJ9 or GraalVM may also help; though be aware that not all plugins may support them.");
 		Skript.error("");
