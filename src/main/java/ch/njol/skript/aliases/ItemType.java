@@ -1149,6 +1149,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Checks whether this item type contains the given enchantments.
+	 * Also checks the enchantment level.
 	 * @param enchantments The enchantments to be checked.
 	 */
 	public boolean hasEnchantments(EnchantmentType... enchantments) {
