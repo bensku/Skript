@@ -1160,6 +1160,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			assert type != null; // Bukkit working different than we expect
 			if (!meta.hasEnchant(type))
 				return false;
+			if (enchantment.getInternalLevel() != -1 && meta.getEnchantLevel(type) < enchantment.getLevel())
+				return false;
 		}
 		return true;
 	}
