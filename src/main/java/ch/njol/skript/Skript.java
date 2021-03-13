@@ -225,10 +225,16 @@ public final class Skript extends JavaPlugin implements Listener {
 			return ServerPlatform.BUKKIT_UNKNOWN;
 		}
 	}
-	
+
+	/**
+	 * Returns true if the underlying installed Java/JVM is 64-bit, false otherwise.
+	 * Note that this depends on a internal system property and these can always be overridden by user using -D JVM options,
+	 * more specifically, this method will return true on non OracleJDK/OpenJDK based JVMs, that don't include bit information in java.vm.name system property.
+	 * @return Whether the installed Java/JVM is 64-bit or not.
+	 */
 	public static boolean using64BitJava() {
-		// Property returned should either be "Java HotSpot(TM) 64-Bit Server VM" or "OpenJDK 64-Bit Server VM"
-		return System.getProperty("java.vm.name").contains("64");
+		// Property returned should either be "Java HotSpot(TM) 32-Bit Server VM" or "OpenJDK 32-Bit Server VM" if 32-bit and using OracleJDK/OpenJDK
+		return !System.getProperty("java.vm.name").contains("32");
 	}
 	
 	/**
@@ -275,12 +281,6 @@ public final class Skript extends JavaPlugin implements Listener {
 			Skript.warning("This server platform (" + serverPlatform.name + ") is not supported by Skript.");
 			Skript.warning("It will still probably work, but if it does not, you are on your own.");
 			Skript.warning("Skript officially supports Paper and Spigot.");
-		}
-		
-		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
-		if (!using64BitJava()) {
-			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when loading aliases.");
-			Skript.warning("Please update to 64-bit Java to remove this warning.");
 		}
 		
 		// If nothing got triggered, everything is probably ok
