@@ -56,23 +56,25 @@ public abstract class AsyncEffect extends Effect {
 			
 			execute(e); // Execute this effect
 			
-			Bukkit.getScheduler().runTask(Skript.getInstance(), () -> { // Walk to next item synchronously
-				TriggerItem next = getNext();
-				
-				Object timing = null;
-				if (next != null) {
+			if (getNext() != null) {
+				Bukkit.getScheduler().runTask(Skript.getInstance(), () -> { // Walk to next item synchronously
+					Object timing = null;
 					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
 						Trigger trigger = getTrigger();
 						if (trigger != null) {
 							timing = SkriptTimings.start(trigger.getDebugLabel());
 						}
 					}
-					TriggerItem.walk(next, e);
-				}
-				Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-				
-				SkriptTimings.stop(timing); // Stop timing if it was even started
-			});
+					
+					TriggerItem.walk(getNext(), e);
+					
+					Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+					
+					SkriptTimings.stop(timing); // Stop timing if it was even started
+				});
+			} else {
+				Variables.removeLocals(e);
+			}
 		});
 		return null;
 	}
