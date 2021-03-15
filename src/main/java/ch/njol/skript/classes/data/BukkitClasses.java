@@ -63,7 +63,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -999,7 +998,7 @@ public class BukkitClasses {
 						if (holder instanceof BlockState) {
 							return Classes.toString(((BlockState) holder).getBlock());
 						} else if (holder instanceof DoubleChest) {
-							return Classes.toString(holder.getInventory().getLocation().getBlock().getState());
+							return Classes.toString(holder.getInventory().getLocation().getBlock());
 						} else {
 							return Classes.toString(holder);
 						}
