@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.Random;
+
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -43,6 +45,8 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("2.2-dev28")
 public class ExprVectorRandom extends SimpleExpression<Vector> {
 
+	private static final Random random = new Random();
+	
 	static {
 		Skript.registerExpression(ExprVectorRandom.class, Vector.class, ExpressionType.SIMPLE, "[a] random vector");
 	}
@@ -54,7 +58,7 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 
 	@Override
 	protected Vector[] get(Event e) {
-		return CollectionUtils.array(Vector.getRandom());
+		return CollectionUtils.array(new Vector(randomSignedDouble(), randomSignedDouble(), randomSignedDouble()));
 	}
 
 	@Override
@@ -70,6 +74,14 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "random vector";
+	}
+	
+	private static double randomSignedDouble () {
+		if (random.nextBoolean()) {
+			return random.nextDouble();
+		} else {
+			return random.nextDouble() * -1;
+		}
 	}
 
 }
