@@ -477,7 +477,13 @@ final public class ScriptLoader {
 	 * @return Info on the loaded scripts
 	 */
 	public static ScriptInfo loadScripts(final Config... configs) {
-		return loadScripts(Arrays.asList(configs));
+		List<Config> configsList = new ArrayList<>();
+		for (Config cfg : configs) {
+			if (cfg != null) {
+				configsList.add(cfg);
+			}
+		}
+		return loadScripts(configsList);
 	}
 	
 	/**
@@ -797,7 +803,11 @@ final public class ScriptLoader {
 		List<Config> loadedFiles = new ArrayList<>(files.length);
 		for (final File f : files) {
 			assert f != null : Arrays.toString(files);
-			loadedFiles.add(loadStructure(f));
+
+			Config cfg = loadStructure(f);
+			if (cfg != null) {
+				loadedFiles.add(cfg);
+			}
 		}
 		
 		return loadedFiles;
