@@ -413,15 +413,14 @@ final public class ScriptLoader {
 				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
 				
 				for (final Config cfg : configs) {
-					ScriptInfo info = loadScript(cfg); // loadScript returns empty ScriptInfo on null config
-					String fileName = cfg != null ? cfg.getFileName() : ""; // fallback to default of empty string, loadStructure will print the error
+					assert cfg != null : configs.toString();
+					ScriptInfo info = loadScript(cfg);
 					
 					// Check if commands have been changed and a re-send is needed
-					if (!info.commandNames.equals(commandNames.get(fileName))) {
+					if (!info.commandNames.equals(commandNames.get(cfg.getFileName()))) {
 						syncCommands.set(true); // Sync once after everything has been loaded
-						commandNames.put(fileName, info.commandNames); // These will soon be sent to clients
+						commandNames.put(cfg.getFileName(), info.commandNames); // These will soon be sent to clients
 					}
-					
 					i.add(info);
 				}
 			} finally {
