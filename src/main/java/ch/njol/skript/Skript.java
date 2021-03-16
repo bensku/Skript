@@ -227,14 +227,14 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 
 	/**
-	 * Returns true if the underlying installed Java/JVM is 64-bit, false otherwise.
+	 * Returns true if the underlying installed Java/JVM is 32-bit, false otherwise.
 	 * Note that this depends on a internal system property and these can always be overridden by user using -D JVM options,
-	 * more specifically, this method will return true on non OracleJDK/OpenJDK based JVMs, that don't include bit information in java.vm.name system property.
-	 * @return Whether the installed Java/JVM is 64-bit or not.
+	 * more specifically, this method will return false on non OracleJDK/OpenJDK based JVMs, that don't include bit information in java.vm.name system property.
+	 * @return Whether the installed Java/JVM is 32-bit or not.
 	 */
-	public static boolean using64BitJava() {
+	private static boolean using32BitJava() {
 		// Property returned should either be "Java HotSpot(TM) 32-Bit Server VM" or "OpenJDK 32-Bit Server VM" if 32-bit and using OracleJDK/OpenJDK
-		return !System.getProperty("java.vm.name").contains("32");
+		return System.getProperty("java.vm.name").contains("32");
 	}
 	
 	/**
@@ -402,14 +402,14 @@ public final class Skript extends JavaPlugin implements Listener {
 		try {
 			Aliases.load(); // Loaded before anything that might use them
 		} catch (StackOverflowError e) {
-			if (using64BitJava()) {
-				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
-			} else {
+			if (using32BitJava()) {
 				Skript.error("");
 				Skript.error("There was a StackOverflowError that occured while loading aliases.");
 				Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
 				Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
 				Skript.error("");
+			} else {
+				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
 			}
 		}
 		
