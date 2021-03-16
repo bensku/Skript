@@ -271,7 +271,7 @@ public abstract class Variables {
 	 * @param event Event.
 	 * @param map New local variables.
 	 */
-	public static void setLocalVariables(@NonNull Event event, @NonNull Object map) {
+	public static void setLocalVariables(Event event, Object map) {
 		localVariables.put(event, (VariablesMap) map);
 	}
 	
