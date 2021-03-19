@@ -77,11 +77,7 @@ public class ExprVectorRandom extends SimpleExpression<Vector> {
 	}
 	
 	private static double randomSignedDouble () {
-		if (random.nextBoolean()) {
-			return random.nextDouble();
-		} else {
-			return random.nextDouble() * -1;
-		}
+		return random.nextDouble() * (random.nextBoolean() ? 1 : -1);
 	}
 
 }
