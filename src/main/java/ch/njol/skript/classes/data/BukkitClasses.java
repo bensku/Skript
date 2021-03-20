@@ -850,12 +850,9 @@ public class BukkitClasses {
 						if (context == ParseContext.COMMAND) {
 							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
 								return Bukkit.getOfflinePlayer(UUID.fromString(s));
-							else if (!s.matches("\\S+") || s.length() > 16)
+							else if (!s.matches("[a-zA-Z0-9_]+") || s.length() > 16)
 								return null;
 							return Bukkit.getOfflinePlayer(s);
-							// TODO return an unresolved player and resolve it on a different thread after the command was parsed, and block the command until it is ready
-							// FIXME add note to changelog if not fixed in the next update
-							// return new UnresolvedOfflinePlayer(s);
 						}
 						// if (s.matches("\"\\S+\""))
 						// 	return Bukkit.getOfflinePlayer(s.substring(1, s.length() - 1));
