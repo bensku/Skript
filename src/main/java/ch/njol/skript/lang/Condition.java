@@ -28,6 +28,8 @@ import ch.njol.skript.classes.Changer;
 import ch.njol.skript.conditions.CondExpression;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ParseLogHandler;
+import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Checker;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
@@ -74,17 +76,26 @@ public abstract class Condition extends Statement implements Expression<Boolean>
 		return negated;
 	}
 	
-	@SuppressWarnings({"ConstantConditions", "unchecked", "rawtypes"})
+	@SuppressWarnings({"ConstantConditions", "unchecked"})
 	@Nullable
 	public static Condition parse(String s, final String defaultError) {
 		s = s.trim();
 		while (s.startsWith("(") && SkriptParser.next(s, 0, ParseContext.DEFAULT) == s.length())
 			s = s.substring(1, s.length() - 1);
 		
-		Expression<? extends Boolean> expression = new SkriptParser(s).parseExpression(Boolean.class);
-		
-		if (expression == null)
-			return null;
+		Expression<? extends Boolean> expression;
+		ParseLogHandler logHandler = SkriptLogger.startParseLogHandler();
+		try {
+			expression = new SkriptParser(s).parseExpression(Boolean.class);
+			if (expression == null) {
+				logHandler.printError(defaultError);
+				return null;
+			}
+			
+			logHandler.printLog();
+		} finally {
+			logHandler.stop();
+		}
 		
 		return expression instanceof Condition ? (Condition) expression : new CondExpression(expression);
 	}
