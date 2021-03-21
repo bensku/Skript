@@ -850,12 +850,9 @@ public class BukkitClasses {
 						if (context == ParseContext.COMMAND) {
 							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
 								return Bukkit.getOfflinePlayer(UUID.fromString(s));
-							else if (!s.matches("\\S+") || s.length() > 16)
+							else if (!s.matches("[a-zA-Z0-9_]+") || s.length() > 16)
 								return null;
 							return Bukkit.getOfflinePlayer(s);
-							// TODO return an unresolved player and resolve it on a different thread after the command was parsed, and block the command until it is ready
-							// FIXME add note to changelog if not fixed in the next update
-							// return new UnresolvedOfflinePlayer(s);
 						}
 						// if (s.matches("\"\\S+\""))
 						// 	return Bukkit.getOfflinePlayer(s.substring(1, s.length() - 1));
@@ -1667,8 +1664,13 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(FireworkEffect.class, "fireworkeffect")
 				.user("firework ?effects?")
 				.name("Firework Effect")
-				.description("A configuration of effects that defines the firework when exploded.")
+				.description("A configuration of effects that defines the firework when exploded",
+					"which can be used in the <a href='effects.html#EffFireworkLaunch'>launch firework</a> effect.",
+					"See the <a href='expressions.html#ExprFireworkEffect'>firework effect</a> expression for detailed patterns.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.class))
+				.examples("launch flickering trailing burst firework colored blue and green at player",
+					"launch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity",
+					"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1")
 				.since("2.4")
 				.parser(new Parser<FireworkEffect>() {
 					@Override

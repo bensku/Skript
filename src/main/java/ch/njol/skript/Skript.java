@@ -1388,7 +1388,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			} else {
 				final ServerCommandEvent e = new ServerCommandEvent(sender, command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.getCommand().isEmpty())
+				if (e.getCommand().isEmpty() || e.isCancelled())
 					return false;
 				return Bukkit.dispatchCommand(e.getSender(), e.getCommand());
 			}
