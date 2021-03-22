@@ -113,6 +113,8 @@ public class FunctionReference<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean validateFunction(boolean first) {
+		Function<? extends T> previousFunction = function;
+		function = null;
 		SkriptLogger.setNode(node);
 		Skript.debug("Validating function " + functionName);
 		Signature<?> sign = Functions.getSignature(functionName);
@@ -124,6 +126,7 @@ public class FunctionReference<T> {
 			} else {
 				Skript.error("The function '" + functionName + "' was deleted or renamed, but is still used in other script(s)."
 					+ " These will continue to use the old version of the function until Skript restarts.");
+				function = previousFunction;
 			}
 			return false;
 		}
@@ -138,6 +141,7 @@ public class FunctionReference<T> {
 				} else {
 					Skript.error("The function '" + functionName + "' was redefined with no return value, but is still used in other script(s)."
 						+ " These will continue to use the old version of the function until Skript restarts.");
+					function = previousFunction;
 				}
 				return false;
 			}
@@ -147,6 +151,7 @@ public class FunctionReference<T> {
 				} else {
 					Skript.error("The function '" + functionName + "' was redefined with a different, incompatible return type, but is still used in other script(s)."
 						+ " These will continue to use the old version of the function until Skript restarts.");
+					function = previousFunction;
 				}
 				return false;
 			}
@@ -155,6 +160,7 @@ public class FunctionReference<T> {
 			} else if (single && !sign.single) {
 				Skript.error("The function '" + functionName + "' was redefined with a different, incompatible return type, but is still used in other script(s)."
 						+ " These will continue to use the old version of the function until Skript restarts.");
+				function = previousFunction;
 				return false;
 			}
 		}
@@ -165,16 +171,18 @@ public class FunctionReference<T> {
 			// Too many parameters
 			if (parameters.length > sign.getMaxParameters()) {
 				if (first) {
-					if (sign.getMaxParameters() == 0)
+					if (sign.getMaxParameters() == 0) {
 						Skript.error("The function '" + functionName + "' has no arguments, but " + parameters.length + " are given."
-								+ " To call a function without parameters, just write the function name followed by '()', e.g. 'func()'.");
-					else
+							+ " To call a function without parameters, just write the function name followed by '()', e.g. 'func()'.");
+					} else {
 						Skript.error("The function '" + functionName + "' has only " + sign.getMaxParameters() + " argument" + (sign.getMaxParameters() == 1 ? "" : "s") + ","
-								+ " but " + parameters.length + " are given."
-								+ " If you want to use lists in function calls, you have to use additional parentheses, e.g. 'give(player, (iron ore and gold ore))'");
+							+ " but " + parameters.length + " are given."
+							+ " If you want to use lists in function calls, you have to use additional parentheses, e.g. 'give(player, (iron ore and gold ore))'");
+					}
 				} else {
 					Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
-							+ " These will continue to use the old version of the function until Skript restarts.");
+						+ " These will continue to use the old version of the function until Skript restarts.");
+					function = previousFunction;
 				}
 				return false;
 			}
@@ -188,6 +196,7 @@ public class FunctionReference<T> {
 			} else {
 				Skript.error("The function '" + functionName + "' was redefined with a different, incompatible amount of arguments, but is still used in other script(s)."
 					+ " These will continue to use the old version of the function until Skript restarts.");
+				function = previousFunction;
 			}
 			return false;
 		}
@@ -206,6 +215,7 @@ public class FunctionReference<T> {
 					} else {
 						Skript.error("The function '" + functionName + "' was redefined with different, incompatible arguments, but is still used in other script(s)."
 							+ " These will continue to use the old version of the function until Skript restarts.");
+						function = previousFunction;
 					}
 					return false;
 				}
