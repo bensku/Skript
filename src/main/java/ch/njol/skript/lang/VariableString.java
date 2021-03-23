@@ -177,8 +177,8 @@ public class VariableString implements Expression<String> {
 	public static String unquote(String s, boolean surroundingQuotes) {
 		assert isQuotedCorrectly(s, surroundingQuotes);
 		if (surroundingQuotes)
-			return "" + s.substring(1, s.length() - 1).replace("\"\"", "\"");
-		return "" + s.replace("\"\"", "\"");
+			return s.substring(1, s.length() - 1).replace("\"\"", "\"");
+		return s.replace("\"\"", "\"");
 	}
 	
 	/**
@@ -365,7 +365,7 @@ public class VariableString implements Expression<String> {
 		VariableString[] strings = new VariableString[args.length];
 		int j = 0;
 		for (String arg : args) {
-			VariableString vs = newInstance("" + arg);
+			VariableString vs = newInstance(arg);
 			if (vs != null)
 				strings[j++] = vs;
 		}
@@ -383,7 +383,7 @@ public class VariableString implements Expression<String> {
 		VariableString[] strings = new VariableString[args.size()];
 		for (int i = 0; i < args.size(); i++) {
 			assert args.get(i).startsWith("\"") && args.get(i).endsWith("\"");
-			VariableString vs = newInstance("" + args.get(i).substring(1, args.get(i).length() - 1));
+			VariableString vs = newInstance(args.get(i).substring(1, args.get(i).length() - 1));
 			if (vs == null)
 				return null;
 			strings[i] = vs;
@@ -418,7 +418,7 @@ public class VariableString implements Expression<String> {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	/**
@@ -442,7 +442,7 @@ public class VariableString implements Expression<String> {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	/**
@@ -571,7 +571,7 @@ public class VariableString implements Expression<String> {
 			}
 		}
 		b.append('"');
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	public String getDefaultVariableName() {
@@ -591,7 +591,7 @@ public class VariableString implements Expression<String> {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	public boolean isSimple() {
