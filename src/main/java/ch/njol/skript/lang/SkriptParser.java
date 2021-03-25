@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
+import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -1213,11 +1214,35 @@ public class SkriptParser {
 	}
 	
 	@Nullable
-	public static NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent(final String event, final String defaultError) {
-		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+	public static NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent(String event, String defaultError) {
+		RetainingLogHandler log = SkriptLogger.startRetainingLog();
 		try {
-			final NonNullPair<SkriptEventInfo<?>, SkriptEvent> e = new SkriptParser(event, PARSE_LITERALS, ParseContext.EVENT).parseEvent();
+			String[] split = event.split(" with priority ");
+			EventPriority priority;
+			if (split.length != 1) {
+				event = String.join(" with priority ", Arrays.copyOfRange(split, 0, split.length - 1));
+				
+				String priorityString = split[split.length - 1];
+				try {
+					priority = EventPriority.valueOf(priorityString.toUpperCase());
+				} catch (IllegalArgumentException e) { // Priority doesn't exist
+					log.printErrors("The priority " + priorityString + " doesn't exist");
+					return null;
+				}
+			} else {
+				priority = SkriptConfig.defaultEventPriority.value();
+			}
+			
+			NonNullPair<SkriptEventInfo<?>, SkriptEvent> e = new SkriptParser(event, PARSE_LITERALS, ParseContext.EVENT).parseEvent();
 			if (e != null) {
+				if (e.getSecond() instanceof SelfRegisteringSkriptEvent) {
+					log.printErrors("This event doesn't support event priority");
+					return null;
+				}
+				
+				//noinspection ConstantConditions
+				e.getSecond().eventPriority = priority;
+				
 				log.printLog();
 				return e;
 			}
