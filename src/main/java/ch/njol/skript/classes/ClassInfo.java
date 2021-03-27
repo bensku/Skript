@@ -130,7 +130,7 @@ public class ClassInfo<T> implements Debuggable {
 	 *                  or passing function arguments.
 	 */
 	public ClassInfo<T> cloner(Cloner<T> cloner) {
-		assert this.cloner != null;
+		assert this.cloner == null;
 		this.cloner = cloner;
 		return this;
 	}
