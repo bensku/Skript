@@ -67,7 +67,7 @@ import ch.njol.yggdrasil.Fields.FieldContext;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
 @ContainerType(ItemStack.class)
-public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>, YggdrasilExtendedSerializable {
+public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>, YggdrasilExtendedSerializable, Cloneable {
 	
 	static {
 		// This handles updating ItemType and ItemData variable records

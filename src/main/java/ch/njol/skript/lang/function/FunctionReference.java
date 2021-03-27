@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -34,6 +33,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -246,16 +246,14 @@ public class FunctionReference<T> {
 			params[0] = l.toArray();
 			// Don't allow mutating across function boundary; same hack is applied to variables
 			for (int i = 0; i < params[0].length; i++) {
-				if (params[0][i] instanceof Location)
-					params[0][i] = ((Location) params[0][i]).clone();
+				params[0][i] = Classes.clone(params[0][i]);
 			}
 		} else { // Use parameters in normal way
 			for (int i = 0; i < params.length; i++) {
 				params[i] = parameters[i].getArray(e);
 				// Don't allow mutating across function boundary; same hack is applied to variables
 				for (int j = 0; j < params[i].length; j++) {
-					if (params[i][j] instanceof Location)
-						params[i][j] = ((Location) params[i][j]).clone();
+					params[i][j] = Classes.clone(params[i][j]);
 				}
 			}
 		}

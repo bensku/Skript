@@ -493,14 +493,7 @@ public class Variable<T> implements Expression<T> {
 						i++;
 					}
 				} else {
-					//Mirre Start, Location bug quickfix.
-					if(delta[0] instanceof Location){
-						set(e, ((Location)delta[0]).clone());
-					}else
-						set(e, delta[0]);
-					//Mirre End
-					
-					//Perhaps clone all delta[0]'s that are implementing Cloneable(Location for example)? Possible problems?
+					set(e, delta[0]);
 				}
 				break;
 			case RESET:

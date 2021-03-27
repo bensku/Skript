@@ -386,6 +386,19 @@ public abstract class Classes {
 	}
 	
 	/**
+	 * Clones the given object by calling {@link ClassInfo#clone(Object)},
+	 * getting the {@link ClassInfo} from the closest registered superclass
+	 * (or the given object's class).
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static Object clone(Object obj) {
+		if (obj == null)
+			return null;
+		ClassInfo classInfo = getSuperClassInfo(obj.getClass());
+		return classInfo.clone(obj);
+	}
+	
+	/**
 	 * Gets the name a class was registered with.
 	 * 
 	 * @param c The exact class
