@@ -38,7 +38,7 @@ public class IndeterminateDelay extends Delay {
 		debug(e, true);
 		final long start = Skript.debug() ? System.nanoTime() : 0;
 		final TriggerItem next = getNext();
-		if (next != null) {
+		if (next != null && Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
 			delayed.add(e);
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
@@ -47,21 +47,19 @@ public class IndeterminateDelay extends Delay {
 			// Back up local variables
 			Object localVars = Variables.removeLocals(e);
 			
-			if (Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-					@Override
-					public void run() {
-						if (Skript.debug())
-							Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
-						
-						// Re-set local variables
-						if (localVars != null)
-							Variables.setLocalVariables(e, localVars);
-						
-						TriggerItem.walk(next, e);
-					}
-				}, d.getTicks_i());
-			}
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					if (Skript.debug())
+						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+					
+					// Re-set local variables
+					if (localVars != null)
+						Variables.setLocalVariables(e, localVars);
+					
+					TriggerItem.walk(next, e);
+				}
+			}, d.getTicks_i());
 		}
 		return null;
 	}
