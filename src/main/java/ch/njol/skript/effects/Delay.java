@@ -87,30 +87,32 @@ public class Delay extends Effect {
 			// Back up local variables
 			Object localVars = Variables.removeLocals(e);
 			
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
-				@Override
-				public void run() {
-					if (Skript.debug())
-						Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
-					
-					// Re-set local variables
-					if (localVars != null)
-						Variables.setLocalVariables(e, localVars);
-					
-					Object timing = null;
-					if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
-						Trigger trigger = getTrigger();
-						if (trigger != null) {
-							timing = SkriptTimings.start(trigger.getDebugLabel());
+			if (Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+					@Override
+					public void run() {
+						if (Skript.debug())
+							Skript.info(getIndentation() + "... continuing after " + (System.nanoTime() - start) / 1000000000. + "s");
+						
+						// Re-set local variables
+						if (localVars != null)
+							Variables.setLocalVariables(e, localVars);
+						
+						Object timing = null;
+						if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
+							Trigger trigger = getTrigger();
+							if (trigger != null) {
+								timing = SkriptTimings.start(trigger.getDebugLabel());
+							}
 						}
+						
+						TriggerItem.walk(next, e);
+						Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+						
+						SkriptTimings.stop(timing); // Stop timing if it was even started
 					}
-					
-					TriggerItem.walk(next, e);
-					Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-					
-					SkriptTimings.stop(timing); // Stop timing if it was even started
-				}
-			}, d.getTicks_i() < 1 ? 1 : d.getTicks_i()); // Minimum delay is one tick, less than it is useless!
+				}, d.getTicks_i() < 1 ? 1 : d.getTicks_i()); // Minimum delay is one tick, less than it is useless!
+			}
 		}
 		return null;
 	}
