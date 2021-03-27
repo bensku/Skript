@@ -33,7 +33,10 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 
 @Name("Update Inventory")
-@Description("Forces an inventory update of the given players")
+@Description({"Forces an inventory update of the given players. ",
+	"You probably do not need this, as Skript will handle this for you.",
+	"If you find a scenario where Skript doesn't do this for you, " +
+		"we recommend you report it to the developers before using this effect."})
 @Examples({"update inventory of player",
 	"update inventory of all players"})
 @Since("INSERT VERSION")
