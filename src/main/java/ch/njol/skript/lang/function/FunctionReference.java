@@ -250,7 +250,8 @@ public class FunctionReference<T> {
 			}
 		} else { // Use parameters in normal way
 			for (int i = 0; i < params.length; i++) {
-				params[i] = parameters[i].getArray(e);
+				Object[] array = parameters[i].getArray(e);
+				params[i] = Arrays.copyOf(array, array.length);
 				// Don't allow mutating across function boundary; same hack is applied to variables
 				for (int j = 0; j < params[i].length; j++) {
 					params[i][j] = Classes.clone(params[i][j]);

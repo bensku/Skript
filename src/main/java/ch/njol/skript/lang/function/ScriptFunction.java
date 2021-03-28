@@ -27,6 +27,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.variables.Variables;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * @author Peter Güttinger
  */
