@@ -123,7 +123,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 				i--;
 		}
 		if (n instanceof Loop) {
-			((Loop) n).getCurrentIter().remove(e);
+			((Loop) n).exit(e);
 		}
 		return n instanceof Loop ? ((Loop) n).getActualNext() : n instanceof While ? ((While) n).getActualNext() : n.getNext();
 	}

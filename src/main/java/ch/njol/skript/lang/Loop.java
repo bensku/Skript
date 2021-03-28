@@ -41,14 +41,14 @@ public class Loop extends TriggerSection {
 	
 	private final Expression<?> expr;
 	
-	private transient Map<Event, Object> current = new WeakHashMap<>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
+	private final transient Map<Event, Object> current = new WeakHashMap<>();
+	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
 	
 	@Nullable
 	private TriggerItem actualNext;
 	
 	@SuppressWarnings("unchecked")
-	public <T> Loop(final Expression<?> expr, final SectionNode node) {
+	public Loop(final Expression<?> expr, final SectionNode node) {
 		assert expr != null;
 		assert node != null;
 		if (Container.class.isAssignableFrom(expr.getReturnType())) {
@@ -84,8 +84,7 @@ public class Loop extends TriggerSection {
 			}
 		}
 		if (iter == null || !iter.hasNext()) {
-			if (iter != null)
-				currentIter.remove(e); // a loop inside another loop can be called multiple times in the same event
+			exit(e);
 			debug(e, false);
 			return actualNext;
 		} else {
@@ -119,7 +118,9 @@ public class Loop extends TriggerSection {
 		return actualNext;
 	}
 	
-	public Map<Event, Iterator<?>> getCurrentIter() {
-		return currentIter;
+	public void exit(Event event) {
+		current.remove(event);
+		currentIter.remove(event);
 	}
+	
 }
