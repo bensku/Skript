@@ -540,6 +540,7 @@ chat styles:
 	suggest_command: suggest command, sgt
 	change_page: change page
 	show_text: tooltip, show text, ttp
+	font: font, f
 	insertion: insertion, insert, ins
 
 # -- Directions --
