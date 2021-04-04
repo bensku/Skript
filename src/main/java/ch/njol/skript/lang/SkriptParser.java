@@ -317,7 +317,7 @@ public class SkriptParser {
 			log.clear();
 			if ((flags & PARSE_EXPRESSIONS) != 0) {
 				final Expression<?> e;
-				if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
+				if (expr.startsWith("\"") && expr.length() != 1 && nextQuote(expr, 1) == expr.length() - 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
 					e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
 				} else {
 					e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
@@ -495,7 +495,7 @@ public class SkriptParser {
 			log.clear();
 			if ((flags & PARSE_EXPRESSIONS) != 0) {
 				final Expression<?> e;
-				if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
+				if (expr.startsWith("\"") && expr.length() != 1 && nextQuote(expr, 1) == expr.length() - 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
 					e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
 				} else {
 					e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
@@ -526,25 +526,10 @@ public class SkriptParser {
 					}
 					
 					// No directly same type found
-					if (types.length == 1) { // Only one type is accepted here
-						// So, we'll just create converted expression
-						@SuppressWarnings("unchecked") // This is safe... probably
-						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-						if (r != null) {
-							log.printLog();
-							return r;
-						}
-					} else { // Multiple types accepted
-						if (returnType == Object.class) { // No specific return type, so probably variable etc.
-							log.printLog();
-							return e; // Expression will have to deal with it runtime
-						} else {
-							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-							if (r != null) {
-								log.printLog();
-								return r;
-							}
-						}
+					Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+					if (r != null) {
+						log.printLog();
+						return r;
 					}
 
 					// Print errors, if we couldn't get the correct type
