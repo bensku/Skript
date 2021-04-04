@@ -170,7 +170,7 @@ public abstract class Commands {
 		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.HIGHEST)
 		public void onServerCommand(final ServerCommandEvent e) {
-			if (e.getCommand() == null || e.getCommand().isEmpty())
+			if (e.getCommand() == null || e.getCommand().isEmpty() || e.isCancelled())
 				return;
 			if (SkriptConfig.enableEffectCommands.value() && e.getCommand().startsWith(SkriptConfig.effectCommandToken.value())) {
 				if (handleEffectCommand(e.getSender(), e.getCommand())) {

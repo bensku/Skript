@@ -43,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Applied Enchantments")
 @Description({"The applied enchantments in an enchant event.",
 				" Deleting or removing the applied enchantments will prevent the item's enchantment."})
-@Examples({"on enchant",
+@Examples({"on enchant:",
 			"\tset the applied enchantments to sharpness 10 and fire aspect 5"})
 @Events("enchant")
 @Since("2.5")
