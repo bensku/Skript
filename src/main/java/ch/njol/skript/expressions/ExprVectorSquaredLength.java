@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -40,7 +39,7 @@ public class ExprVectorSquaredLength extends SimplePropertyExpression<Vector, Nu
 		register(ExprVectorSquaredLength.class, Number.class, "squared length[s]", "vectors");
 	}
 
-	@SuppressWarnings({"null", "unused"})
+	@SuppressWarnings("unused")
 	@Override
 	public Number convert(Vector vector) {
 		return vector.lengthSquared();

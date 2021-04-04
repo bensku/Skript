@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -48,7 +47,7 @@ public class EffTree extends Effect {
 	static {
 		Skript.registerEffect(EffTree.class,
 				"(grow|create|generate) tree [of type %structuretype%] %directions% %locations%",
-				"(grow|create|generate) %structuretype% [tree] %directions% %locations%");
+				"(grow|create|generate) %structuretype% %directions% %locations%");
 	}
 	
 	@SuppressWarnings("null")
@@ -64,7 +63,6 @@ public class EffTree extends Effect {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public void execute(final Event e) {
 		final StructureType type = this.type.getSingle(e);

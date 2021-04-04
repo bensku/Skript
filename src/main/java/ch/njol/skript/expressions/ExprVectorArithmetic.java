@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -56,28 +55,24 @@ public class ExprVectorArithmetic extends SimpleExpression<Vector> {
 	private enum Operator {
 		PLUS("++") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().add(v2);
 			}
 		},
 		MINUS("--") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().subtract(v2);
 			}
 		},
 		MULT("**") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().multiply(v2);
 			}
 		},
 		DIV("//") {
 			@Override
-			@SuppressWarnings("null")
 			public Vector calculate(final Vector v1, final Vector v2) {
 				return v1.clone().divide(v2);
 			}

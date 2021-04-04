@@ -1,8 +1,4 @@
 ---
 name: Suggestion
-about: Suggest something to enhance Skript
-
+about: Suggest a new feature or other improvement for Skript
 ---
-
-### Description
-<!--- A clear and concise description of the suggestion --->

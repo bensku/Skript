@@ -14,14 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.bukkitutil.block;
 
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -30,11 +30,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.type.Bed;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Leaves;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -42,7 +40,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.aliases.MatchQuality;
-import ch.njol.util.Setter;
 
 /**
  * 1.13+ block compat.
@@ -119,11 +116,9 @@ public class NewBlockCompat implements BlockCompat {
 		private ItemType specialTorchFloors;
 		
 		private boolean typesLoaded = false;
-
-		/**
-		 * Cached BlockFace values.
-		 */
-		private BlockFace[] faces = BlockFace.values();
+		
+		private static final BlockFace[] CARDINAL_FACES =
+			new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 		
 		@SuppressWarnings("null") // Late initialization with loadTypes() to avoid circular dependencies
 		public NewBlockSetter() {}
@@ -200,7 +195,7 @@ public class NewBlockCompat implements BlockCompat {
 				if (Bed.class.isAssignableFrom(dataType)) {
 					Bed data;
 					if (ourValues != null)
-						data = (Bed) ourValues.data;
+						data = (Bed) ourValues.data.clone();
 					else
 						data = (Bed) Bukkit.createBlockData(type);
 					
@@ -232,7 +227,7 @@ public class NewBlockCompat implements BlockCompat {
 				if (Bisected.class.isAssignableFrom(dataType) && !Tag.STAIRS.isTagged(type) && !Tag.TRAPDOORS.isTagged(type)) {
 					Bisected data;
 					if (ourValues != null)
-						data = (Bisected) ourValues.data;
+						data = (Bisected) ourValues.data.clone();
 					else
 						data = (Bisected) Bukkit.createBlockData(type);
 					
@@ -262,7 +257,7 @@ public class NewBlockCompat implements BlockCompat {
 			// Generic block placement
 			if (!placed) {
 				block.setType(type);
-				if (ourValues != null)
+				if (ourValues != null && !ourValues.isDefault())
 					block.setBlockData(ourValues.data, applyPhysics);
 			}
 		}
@@ -279,8 +274,7 @@ public class NewBlockCompat implements BlockCompat {
 
 		@Nullable
 		private BlockFace findWallTorchSide(Block block) {
-			for (BlockFace face : faces) {
-				assert face != null;
+			for (BlockFace face : CARDINAL_FACES) {
 				Block relative = block.getRelative(face);
 				if (relative.getType().isOccluding() || specialTorchSides.isOfType(relative))
 					return face.getOppositeFace(); // Torch can be rotated towards from this face
@@ -289,11 +283,16 @@ public class NewBlockCompat implements BlockCompat {
 			return null; // Can't place torch here legally
 		}
 		
+		@Override
+		public void sendBlockChange(Player player, Location location, Material type, @Nullable BlockValues values) {
+			BlockData blockData = values != null ? ((NewBlockValues) values).data : type.createBlockData();
+			player.sendBlockChange(location, blockData);
+		}
+		
 	}
 	
 	private NewBlockSetter setter = new NewBlockSetter();
 	
-	@SuppressWarnings("null")
 	@Nullable
 	@Override
 	public BlockValues getBlockValues(BlockState block) {

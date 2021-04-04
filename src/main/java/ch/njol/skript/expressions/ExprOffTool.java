@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -29,11 +28,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.registrations.Classes;
@@ -69,7 +64,7 @@ public class ExprOffTool extends ExprTool {
 					} else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == p) {
 						final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
 						assert i != null;
-						return new InventorySlot(i, ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {
+						return new InventorySlot(i, 40) { // 40 = offhand slot
 							@Override
 							@Nullable
 							public ItemStack getItem() {

@@ -14,15 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.util.coll;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -150,7 +148,7 @@ public class BidiHashMap<T1, T2> extends HashMap<T1, T2> implements BidiMap<T1, 
 	
 	@Override
 	public BidiHashMap<T1, T2> clone() {
-		return new BidiHashMap<>(this);
+		return new BidiHashMap<T1, T2>(this);
 	}
 	
 }

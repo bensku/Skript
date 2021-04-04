@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -36,13 +35,14 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 		"	altitude of the attacker is higher than the altitude of the victim",
 		"	set damage to damage * 1.2"})
 @Since("1.4.3")
-public class ExprAltitude extends SimplePropertyExpression<Location, Double> {
+public class ExprAltitude extends SimplePropertyExpression<Location, Number> {
+	
 	static {
-		register(ExprAltitude.class, Double.class, "altitude[s]", "locations");
+		register(ExprAltitude.class, Number.class, "altitude[s]", "locations");
 	}
 
 	@Override
-	public Double convert(final Location l) {
+	public Number convert(final Location l) {
 		return l.getY();
 	}
 	
@@ -52,8 +52,8 @@ public class ExprAltitude extends SimplePropertyExpression<Location, Double> {
 	}
 	
 	@Override
-	public Class<Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 }

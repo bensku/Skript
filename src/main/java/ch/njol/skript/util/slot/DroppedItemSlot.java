@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -45,9 +44,20 @@ public class DroppedItemSlot extends Slot {
 
 	@Override
 	public void setItem(@Nullable ItemStack item) {
+		assert item != null;
 		entity.setItemStack(item);
 	}
-
+	
+	@Override
+	public int getAmount() {
+		return entity.getItemStack().getAmount();
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		entity.getItemStack().setAmount(amount);
+	}
+	
 	@Override
 	public boolean isSameSlot(Slot o) {
 		return o instanceof DroppedItemSlot && ((DroppedItemSlot) o).entity.equals(entity);

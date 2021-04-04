@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -38,7 +37,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.util.Version;
 
@@ -52,8 +50,11 @@ public class BukkitUnsafe {
 	 * Bukkit's UnsafeValues allows us to do stuff that would otherwise
 	 * require NMS. It has existed for a long time, too, so 1.9 support is
 	 * not particularly hard to achieve.
+	 * 
+	 * UnsafeValues' existence and behavior is not guaranteed across future versions.
 	 */
-	private static final UnsafeValues unsafe;
+	@Nullable
+	private static final UnsafeValues unsafe = Bukkit.getUnsafe();
 	
 	/**
 	 * 1.9 Spigot has some "fun" bugs.
@@ -61,10 +62,8 @@ public class BukkitUnsafe {
 	private static final boolean knownNullPtr = !Skript.isRunningMinecraft(1, 11);
 	
 	static {
-		UnsafeValues values = Bukkit.getUnsafe();
-		if (values == null)
-			throw new Error("UnsafeValues not available");
-		unsafe = values;
+		if (unsafe == null)
+			throw new Error("UnsafeValues are not available.");
 	}
 	
 	/**
@@ -179,6 +178,9 @@ public class BukkitUnsafe {
 	}
 	
 	public static void modifyItemStack(ItemStack stack, String arguments) {
+		if (unsafe == null)
+			throw new IllegalStateException("modifyItemStack could not be performed as UnsafeValues are not available.");
+		assert unsafe != null;
 		try {
 			unsafe.modifyItemStack(stack, arguments);
 		} catch (NullPointerException e) {

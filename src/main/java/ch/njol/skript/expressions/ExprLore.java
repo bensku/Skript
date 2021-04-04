@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -155,11 +154,27 @@ public class ExprLore extends SimpleExpression<String> {
 			switch (mode) {
 				case SET:
 					assert stringDelta != null;
-					lore = Arrays.asList(stringDelta);
+					List<String> newLore = new ArrayList<>();
+					for (String line : stringDelta) {
+						if (line.contains("\n")) {
+							Collections.addAll(newLore, line.split("\n"));
+							continue;
+						}
+						newLore.add(line);
+					}
+					lore = newLore;
 					break;
 				case ADD:
 					assert stringDelta != null;
-					lore.addAll(Arrays.asList(stringDelta));
+					List<String> addLore = new ArrayList<>();
+					for (String line : stringDelta) {
+						if (line.contains("\n")) {
+							Collections.addAll(addLore, line.split("\n"));
+							continue;
+						}
+						addLore.add(line);
+					}
+					lore.addAll(addLore);
 					break;
 				case DELETE:
 					lore = null;

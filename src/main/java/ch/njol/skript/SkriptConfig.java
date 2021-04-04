@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript;
 
@@ -156,7 +155,7 @@ public abstract class SkriptConfig {
 					return null;
 				return new SimpleDateFormat(s);
 			} catch (final IllegalArgumentException e) {
-				Skript.error("'" + s + "' is not a valid date format. Please refer to http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
+				Skript.error("'" + s + "' is not a valid date format. Please refer to https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html for instructions on the format.");
 			}
 			return null;
 		}
@@ -189,6 +188,8 @@ public abstract class SkriptConfig {
 			}
 		}
 	});
+	
+	public final static Option<Boolean> disableDamageCancelChecking = new Option<Boolean>("disable damage event cancellation checking", false);
 	
 	public final static Option<Boolean> logPlayerCommands = new Option<Boolean>("log player commands", false);
 	

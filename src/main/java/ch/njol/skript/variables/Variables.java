@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.variables;
 
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -84,9 +82,9 @@ public abstract class Variables {
 			}
 			
 			@SuppressWarnings("unchecked")
-			private final void init() {
+			private void init() {
 				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo) Classes.getExactClassInfo(Object.class);
+				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo<?>) Classes.getExactClassInfo(Object.class);
 			}
 			
 			@SuppressWarnings({"unchecked"})
@@ -293,7 +291,7 @@ public abstract class Variables {
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
 	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
 	 */
@@ -317,7 +315,7 @@ public abstract class Variables {
 						return change.value;
 				}
 			}
-				
+			
 			try {
 				variablesLock.readLock().lock();
 				return variables.getVariable(n);
@@ -329,7 +327,7 @@ public abstract class Variables {
 	
 	/**
 	 * Sets a variable.
-	 * 
+	 *
 	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
@@ -435,7 +433,7 @@ public abstract class Variables {
 	 * Must be called on Bukkit's main thread.
 	 * <p>
 	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be holding any database locks or such when calling this!
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @param source
@@ -486,7 +484,7 @@ public abstract class Variables {
 	
 	/**
 	 * Stores loaded variables into the variables map and the appropriate databases.
-	 * 
+	 *
 	 * @return How many variables were not stored anywhere
 	 */
 	@SuppressWarnings("null")

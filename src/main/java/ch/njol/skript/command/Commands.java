@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.command;
 
@@ -62,12 +61,10 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.validate.SectionValidator;
 import ch.njol.skript.lang.Effect;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -91,6 +88,7 @@ public abstract class Commands {
 	
 	public final static ArgsMessage m_too_many_arguments = new ArgsMessage("commands.too many arguments");
 	public final static Message m_internal_error = new Message("commands.internal error");
+	public final static Message m_correct_usage = new Message("commands.correct usage");
 	
 	private final static Map<String, ScriptCommand> commands = new HashMap<>();
 	
@@ -172,7 +170,7 @@ public abstract class Commands {
 		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.HIGHEST)
 		public void onServerCommand(final ServerCommandEvent e) {
-			if (e.getCommand() == null || e.getCommand().isEmpty())
+			if (e.getCommand() == null || e.getCommand().isEmpty() || e.isCancelled())
 				return;
 			if (SkriptConfig.enableEffectCommands.value() && e.getCommand().startsWith(SkriptConfig.effectCommandToken.value())) {
 				if (handleEffectCommand(e.getSender(), e.getCommand())) {
@@ -254,7 +252,6 @@ public abstract class Commands {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
 	static boolean handleEffectCommand(final CommandSender sender, String command) {
 		if (!(sender instanceof ConsoleCommandSender || sender.hasPermission("skript.effectcommands") || SkriptConfig.allowOpsToUseEffectCommands.value() && sender.isOp()))
 			return false;
@@ -410,7 +407,7 @@ public abstract class Commands {
 		if (!(node.get("trigger") instanceof SectionNode))
 			return null;
 		
-		final String usage = ScriptLoader.replaceOptions(node.get("usage", desc));
+		final String usage = ScriptLoader.replaceOptions(node.get("usage", m_correct_usage + " " + desc));
 		final String description = ScriptLoader.replaceOptions(node.get("description", ""));
 		ArrayList<String> aliases = new ArrayList<>(Arrays.asList(ScriptLoader.replaceOptions(node.get("aliases", "")).split("\\s*,\\s*/?")));
 		if (aliases.get(0).startsWith("/"))

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -38,7 +37,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 
@@ -52,22 +50,22 @@ import ch.njol.util.Math2;
 		"repair tool of player"})
 @Since("1.0")
 public class EffHealth extends Effect {
-	
+
 	static {
 		Skript.registerEffect(EffHealth.class,
 				"damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
 				"heal %livingentities% [by %-number% [heart[s]]]",
 				"repair %itemtypes% [by %-number%]");
 	}
-	
+
 	@SuppressWarnings("null")
 	private Expression<?> damageables;
 	@Nullable
 	private Expression<Number> damage;
 	private boolean heal = false;
 	@Nullable
-	private Expression<DamageCause> dmgCause;
-	
+	private Expression<DamageCause> damageCause;
+
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
@@ -81,10 +79,10 @@ public class EffHealth extends Effect {
 		damage = (Expression<Number>) vars[1];
 		heal = (matchedPattern >= 1);
 		
-		if (vars.length >= 3) dmgCause = (Expression<DamageCause>) vars[2];
+		if (vars.length >= 3) damageCause = (Expression<DamageCause>) vars[2];
 		return true;
 	}
-	
+
 	@Override
 	public void execute(final Event e) {
 		double damage = 0;
@@ -95,7 +93,7 @@ public class EffHealth extends Effect {
 			damage = n.doubleValue();
 		}
 		Object[] arr = damageables.getArray(e);
-		if(arr.length > 0 && arr[0] instanceof ItemType) {
+		if (arr.length > 0 && arr[0] instanceof ItemType) {
 			ItemType[] newarr = new ItemType[arr.length];
 			for (int i = 0; i < arr.length; i++) {
 				ItemStack is = ((ItemType) arr[i]).getRandom();
@@ -107,29 +105,34 @@ public class EffHealth extends Effect {
 				}
 				newarr[i] = new ItemType(is);
 			}
+			
+			// Set changed item back to source
+			// We KNOW this is supported, but have to check anyway to prepare SimpleExpression for change
+			damageables.acceptChange(ChangeMode.SET);
 			damageables.change(e, newarr, ChangeMode.SET);
 		} else {
 			for (final Object damageable : arr) {
 				LivingEntity entity = (LivingEntity) damageable;
 				assert entity != null;
-				if (this.damage == null) {
+				if (!heal) {
+					DamageCause cause = DamageCause.CUSTOM;
+					if (damageCause != null)
+						cause = damageCause.getSingle(e);
+					assert cause != null;
+					HealthUtils.setDamageCause(entity, cause);
+					HealthUtils.damage(entity, damage);
+				} else if (this.damage == null) {
 					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
 				} else {
-					HealthUtils.heal(entity, (heal ? 1 : -1) * damage);
-					if (!heal) {
-						DamageCause cause = DamageCause.CUSTOM;
-						if (dmgCause != null) cause = dmgCause.getSingle(e);
-						assert cause != null;
-						HealthUtils.setDamageCause(entity, cause);
-					}
+					HealthUtils.heal(entity, damage);
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return (heal ? "heal " : "damage ") + damageables.toString(e, debug) + (damage != null ? " by " + damage.toString(e, debug) : "");
 	}
-	
+
 }

@@ -14,20 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
-import java.util.Arrays;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -119,8 +113,8 @@ public class EffReplace extends Effect {
 		} else {
 			for (Inventory inv : (Inventory[]) haystack)
 				for (ItemType item : (ItemType[]) needles)
-					for (Integer slot : inv.all(item.getRandom()).keySet()){
-						inv.setItem(slot.intValue(), (ItemStack) replacement);
+					for (Integer slot : inv.all(item.getRandom()).keySet()) {
+						inv.setItem(slot.intValue(), ((ItemType) replacement).getRandom());
 					}
 		}
 	}

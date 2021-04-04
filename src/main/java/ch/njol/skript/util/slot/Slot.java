@@ -14,17 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
 
-import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.lang.Debuggable;
-import ch.njol.skript.registrations.Classes;
 
 /**
  * Represents a container for a single item. It could be an ordinary inventory
@@ -38,6 +35,10 @@ public abstract class Slot implements Debuggable {
 	public abstract ItemStack getItem();
 	
 	public abstract void setItem(final @Nullable ItemStack item);
+	
+	public abstract int getAmount();
+	
+	public abstract void setAmount(int amount);
 	
 	@Override
 	public final String toString() {

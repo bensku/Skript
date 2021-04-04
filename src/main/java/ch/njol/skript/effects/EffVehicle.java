@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -34,7 +33,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 /**
  * @author Peter Güttinger
@@ -100,7 +98,6 @@ public class EffVehicle extends Effect {
 			} else {
 				for (final Entity p : ps) {
 					assert p != null : passengers;
-					@SuppressWarnings("null")
 					final Entity en = ((EntityData<?>) v).spawn(p.getLocation());
 					if (en == null)
 						return;

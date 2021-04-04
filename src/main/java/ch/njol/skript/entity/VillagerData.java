@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -69,7 +68,7 @@ public class VillagerData extends EntityData<Villager> {
 			professions = new ArrayList<>();
 			for (Profession prof : Profession.values()) {
 				// We're better off doing stringfying the constants since these don't exist in 1.14
-				if (!prof.toString().equals("NORMAL") || !prof.toString().equals("HUSK"))
+				if (!prof.toString().equals("NORMAL") && !prof.toString().equals("HUSK"))
 					professions.add(prof);
 			}
 		} else { // Pre 1.10: method Profession#isZombie() doesn't exist
@@ -85,6 +84,13 @@ public class VillagerData extends EntityData<Villager> {
 	
 	@Nullable
 	private Profession profession = null;
+	
+	public VillagerData() {}
+	
+	public VillagerData(@Nullable Profession profession) {
+		this.profession = profession;
+		this.matchedPattern = profession != null ? professions.indexOf(profession) + 1 : 0;
+	}
 	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
@@ -153,7 +159,7 @@ public class VillagerData extends EntityData<Villager> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new VillagerData();
+		return new VillagerData(profession);
 	}
 	
 }

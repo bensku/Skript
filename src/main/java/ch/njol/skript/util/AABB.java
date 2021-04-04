@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -49,11 +48,10 @@ public class AABB implements Iterable<Block> {
 		if (l1.getWorld() != l2.getWorld())
 			throw new IllegalArgumentException("Locations must be in the same world");
 		world = l1.getWorld();
-		lowerBound = new Vector(Math.min(l1.getX(), l2.getX()), Math.min(l1.getY(), l2.getY()), Math.min(l1.getZ(), l2.getZ()));
-		upperBound = new Vector(Math.max(l1.getX(), l2.getX()), Math.max(l1.getY(), l2.getY()), Math.max(l1.getZ(), l2.getZ()));
+		lowerBound = new Vector(Math.min(l1.getBlockX(), l2.getBlockX()), Math.min(l1.getBlockY(), l2.getBlockY()), Math.min(l1.getBlockZ(), l2.getBlockZ()));
+		upperBound = new Vector(Math.max(l1.getBlockX(), l2.getBlockX()), Math.max(l1.getBlockY(), l2.getBlockY()), Math.max(l1.getBlockZ(), l2.getBlockZ()));
 	}
 	
-	@SuppressWarnings("null")
 	public AABB(final Block b1, final Block b2) {
 		if (b1.getWorld() != b2.getWorld())
 			throw new IllegalArgumentException("Blocks must be in the same world");
@@ -73,10 +71,9 @@ public class AABB implements Iterable<Block> {
 	public AABB(final World w, final Vector v1, final Vector v2) {
 		world = w;
 		lowerBound = new Vector(Math.min(v1.getX(), v2.getX()), Math.min(v1.getY(), v2.getY()), Math.min(v1.getZ(), v2.getZ()));
-		upperBound = new Vector(Math.max(v1.getX(), v2.getX()) + 1, Math.max(v1.getY(), v2.getY()) + 1, Math.max(v1.getZ(), v2.getZ()) + 1);
+		upperBound = new Vector(Math.max(v1.getX(), v2.getX()), Math.max(v1.getY(), v2.getY()), Math.max(v1.getZ(), v2.getZ()));
 	}
 	
-	@SuppressWarnings("null")
 	public AABB(final Chunk c) {
 		world = c.getWorld();
 		lowerBound = c.getBlock(0, 0, 0).getLocation().toVector();
@@ -91,12 +88,10 @@ public class AABB implements Iterable<Block> {
 				&& lowerBound.getZ() - Skript.EPSILON < l.getZ() && l.getZ() < upperBound.getZ() + Skript.EPSILON;
 	}
 	
-	@SuppressWarnings("null")
 	public boolean contains(final Block b) {
 		return contains(b.getLocation()) && contains(b.getLocation().add(1, 1, 1));
 	}
 	
-	@SuppressWarnings("null")
 	public Vector getDimensions() {
 		return upperBound.clone().subtract(lowerBound);
 	}
@@ -114,9 +109,9 @@ public class AABB implements Iterable<Block> {
 			private final int minX = Math2.ceilI(lowerBound.getX() - Skript.EPSILON),
 					minY = Math2.ceilI(lowerBound.getY() - Skript.EPSILON),
 					minZ = Math2.ceilI(lowerBound.getZ() - Skript.EPSILON);
-			private final int maxX = Math2.floorI(upperBound.getX() + Skript.EPSILON) - 1,
-					maxY = Math2.floorI(upperBound.getY() + Skript.EPSILON) - 1,
-					maxZ = Math2.floorI(upperBound.getZ() + Skript.EPSILON) - 1;
+			private final int maxX = Math2.floorI(upperBound.getX() + Skript.EPSILON),
+					maxY = Math2.floorI(upperBound.getY() + Skript.EPSILON),
+					maxZ = Math2.floorI(upperBound.getZ() + Skript.EPSILON);
 			
 			private int x = minX - 1,// next() increases x by one immediately
 					y = minY,
@@ -127,7 +122,6 @@ public class AABB implements Iterable<Block> {
 				return y <= maxY && (x != maxX || y != maxY || z != maxZ);
 			}
 			
-			@SuppressWarnings("null")
 			@Override
 			public Block next() {
 				if (!hasNext())

@@ -14,13 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import org.bukkit.entity.Sheep;
 import org.eclipse.jdt.annotation.Nullable;
@@ -33,7 +31,6 @@ import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
-import ch.njol.util.Checker;
 import ch.njol.util.coll.CollectionUtils;
 
 /**
@@ -79,7 +76,7 @@ public class SheepData extends EntityData<Sheep> {
 	@Override
 	public boolean match(final Sheep entity) {
 		return (sheared == 0 || entity.isSheared() == (sheared == 1))
-				&& (colors == null || SimpleExpression.check(colors, c -> c != null && entity.getColor() == c.asDyeColor(), false, false));
+				&& (colors == null || SimpleExpression.check(colors, c -> entity.getColor() == c.asDyeColor(), false, false));
 	}
 	
 	@Override

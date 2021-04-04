@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -25,14 +24,12 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -51,7 +48,7 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 	}
 	
 	@Override
-	public Class<Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
 	
@@ -64,9 +61,9 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 	
 	@Override
 	protected Number[] get(final Event e, final Player[] source) {
-		return get(source, new Getter<Float, Player>() {
+		return get(source, new Getter<Number, Player>() {
 			@Override
-			public Float get(final Player player) {
+			public Number get(final Player player) {
 				return player.getSaturation();
 			}
 		});

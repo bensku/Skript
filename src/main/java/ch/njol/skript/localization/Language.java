@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.localization;
 
@@ -62,6 +61,33 @@ public class Language {
 	 * Name of the localised language
 	 */
 	private static String name = "english";
+	
+	/**
+	 * Get if Skript uses the Localized language instead of English.
+	 * @return True if Skript uses the Localized language elements, false otherwise
+	 */
+	public static boolean isUsingLocalizedLanguage() {
+		return useLocal;
+	}
+	
+	/**
+	 * Get elements of the English language of Skript syntax.
+	 * @return A copy of all the elements of the English language
+	 */
+	public static HashMap<String, String> getEnglishLanguage() {
+		return new HashMap<>(english);
+	}
+	
+	/**
+	 * Get elements of the Localized language of Skript syntax.
+	 * @return A copy of all the elements of the Localized language
+	 */
+	@Nullable
+	public static HashMap<String, String> getLocalized() {
+		if (localized != null)
+			return new HashMap<>(localized);
+		return localized;
+	}
 	
 	final static HashMap<String, String> english = new HashMap<>();
 	/**

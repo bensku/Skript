@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.variables;
 
@@ -119,8 +118,7 @@ public class DatabaseStorage extends VariablesStorage {
 	@Nullable
 	private String formattedCreateQuery;
 
-	@SuppressWarnings("null")
-	final SynchronizedReference<Database> db = new SynchronizedReference<Database>(null);
+	final SynchronizedReference<Database> db = new SynchronizedReference<>(null);
 
 	private boolean monitor = false;
 	long monitor_interval;
@@ -167,7 +165,7 @@ public class DatabaseStorage extends VariablesStorage {
 		synchronized (db) {
 			final Plugin p = Bukkit.getPluginManager().getPlugin("SQLibrary");
 			if (p == null || !(p instanceof SQLibrary)) {
-				Skript.error("You need the plugin SQLibrary in order to use a database with Skript. You can download the latest version from http://dev.bukkit.org/server-mods/sqlibrary/files/");
+				Skript.error("You need the plugin SQLibrary in order to use a database with Skript. You can download the latest version from https://dev.bukkit.org/projects/sqlibrary/files/");
 				return false;
 			}
 
@@ -527,7 +525,6 @@ public class DatabaseStorage extends VariablesStorage {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public void close() {
 		synchronized (db) {

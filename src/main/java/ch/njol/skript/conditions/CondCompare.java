@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -64,8 +63,8 @@ public class CondCompare extends Condition {
 	private final static Patterns<Relation> patterns = new Patterns<>(new Object[][]{
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above)|\\>) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\>=) %objects%", Relation.GREATER_OR_EQUAL},
-			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((less|smaller) than|below)|\\<) %objects%", Relation.SMALLER},
-			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (less|smaller|below) [than] or (equal to|the same as)|\\<=) %objects%", Relation.SMALLER_OR_EQUAL},
+			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) ((less|smaller|lower) than|below)|\\<) %objects%", Relation.SMALLER},
+			{"(1¦neither|) %objects% ((is|are)(|2¦(n't| not|4¦ neither)) (less|smaller|lower|below) [than] or (equal to|the same as)|\\<=) %objects%", Relation.SMALLER_OR_EQUAL},
 			{"(1¦neither|) %objects% (2¦)((is|are) (not|4¦neither)|isn't|aren't|!=) [equal to] %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects% (is|are|=) [(equal to|the same as)] %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects% (is|are) between %objects% and %objects%", Relation.EQUAL},
@@ -73,8 +72,8 @@ public class CondCompare extends Condition {
 			
 			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) ((greater|more|higher|bigger|larger) than|above) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %objects%", Relation.GREATER_OR_EQUAL},
-			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) ((less|smaller) than|below) %objects%", Relation.SMALLER},
-			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) (less|smaller|below) [than] or (equal to|the same as) %objects%", Relation.SMALLER_OR_EQUAL},
+			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) ((less|smaller|lower) than|below) %objects%", Relation.SMALLER},
+			{"(1¦neither|) %objects@-1% (was|were)(|2¦(n't| not|4¦ neither)) (less|smaller|lower|below) [than] or (equal to|the same as) %objects%", Relation.SMALLER_OR_EQUAL},
 			{"(1¦neither|) %objects@-1% (2¦)((was|were) (not|4¦neither)|wasn't|weren't) [equal to] %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects@-1% (was|were) [(equal to|the same as)] %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects@-1% (was|were) between %objects% and %objects%", Relation.EQUAL},
@@ -82,8 +81,8 @@ public class CondCompare extends Condition {
 			
 			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) ((greater|more|higher|bigger|larger) than|above) %objects%", Relation.GREATER},
 			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %objects%", Relation.GREATER_OR_EQUAL},
-			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) ((less|smaller) than|below) %objects%", Relation.SMALLER},
-			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) (less|smaller|below) [than] or (equal to|the same as) %objects%", Relation.SMALLER_OR_EQUAL},
+			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) ((less|smaller|lower) than|below) %objects%", Relation.SMALLER},
+			{"(1¦neither|) %objects@1% (will be|2¦(will (not|4¦neither) be|won't be)) (less|smaller|lower|below) [than] or (equal to|the same as) %objects%", Relation.SMALLER_OR_EQUAL},
 			{"(1¦neither|) %objects@1% (2¦)((will (not|4¦neither) be|won't be)|(isn't|aren't|is not|are not) (turning|changing) [in]to) [equal to] %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects@1% (will be [(equal to|the same as)]|(is|are) (turning|changing) [in]to) %objects%", Relation.EQUAL},
 			{"(1¦neither|) %objects@1% will be between %objects% and %objects%", Relation.EQUAL},
@@ -302,20 +301,31 @@ public class CondCompare extends Condition {
 	 * neither a nor b # x and y === a !# x and y && b !# x and y		// nor = and
 	 * neither a nor b # x or y === a !# x or y && b !# x or y			// nor = and
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean check(final Event e) {
 		final Expression<?> third = this.third;
-		return first.check(e,
-				(Checker<Object>) o1 -> second.check(e,
-						(Checker<Object>) o2 -> {
-							if (third == null)
-								return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
-							return third.check(e,
-									(Checker<Object>) o3 -> relation == Relation.NOT_EQUAL ^
-											(Relation.GREATER_OR_EQUAL.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2))
-													&& Relation.SMALLER_OR_EQUAL.is(comp != null ? comp.compare(o1, o3) : Comparators.compare(o1, o3))));
-						}), isNegated());
+		return first.check(e, (Checker<Object>) o1 ->
+			second.check(e, (Checker<Object>) o2 -> {
+				if (third == null)
+					return relation.is(comp != null ? comp.compare(o1, o2) : Comparators.compare(o1, o2));
+				return third.check(e, (Checker<Object>) o3 -> {
+					boolean isBetween;
+					if (comp != null) {
+						isBetween =
+							(Relation.GREATER_OR_EQUAL.is(comp.compare(o1, o2)) && Relation.SMALLER_OR_EQUAL.is(comp.compare(o1, o3)))
+							// Check OPPOSITE (switching o2 / o3)
+							|| (Relation.GREATER_OR_EQUAL.is(comp.compare(o1, o3)) && Relation.SMALLER_OR_EQUAL.is(comp.compare(o1, o2)));
+					} else {
+						isBetween =
+							(Relation.GREATER_OR_EQUAL.is(Comparators.compare(o1, o2)) && Relation.SMALLER_OR_EQUAL.is(Comparators.compare(o1, o3)))
+							// Check OPPOSITE (switching o2 / o3)
+							|| (Relation.GREATER_OR_EQUAL.is(Comparators.compare(o1, o3)) && Relation.SMALLER_OR_EQUAL.is(Comparators.compare(o1, o2)));
+					}
+					return relation == Relation.NOT_EQUAL ^ isBetween;
+				});
+			}
+		), isNegated());
 	}
 	
 	@Override

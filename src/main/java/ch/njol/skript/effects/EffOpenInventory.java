@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -50,12 +49,12 @@ public class EffOpenInventory extends Effect {
 	
 	static {
 		Skript.registerEffect(EffOpenInventory.class,
-				"(0¦open|1¦show) ((2¦(crafting [table]|workbench)|3¦chest|4¦anvil|5¦hopper|6¦dropper|7¦dispenser) (view|window|inventory|)|%-inventory%) (to|for) %players%",
+				"(open|show) ((0¦(crafting [table]|workbench)|1¦chest|2¦anvil|3¦hopper|4¦dropper|5¦dispenser) (view|window|inventory|)|%-inventory/inventorytype%) (to|for) %players%",
 				"close [the] inventory [view] (to|of|for) %players%", "close %players%'[s] inventory [view]");
 	}
 	
 	@Nullable
-	private Expression<Inventory> invi;
+	private Expression<?> invi;
 	
 	boolean open;
 	private int invType;
@@ -67,30 +66,30 @@ public class EffOpenInventory extends Effect {
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		int openFlag = 0;
-		if(parseResult.mark >= 7) {
-			openFlag = parseResult.mark ^ 7;
-			invType = DISPENSER;
-		} else if(parseResult.mark >= 6) {
-			openFlag = parseResult.mark ^ 6;
-			invType = DROPPER;
-		} else if(parseResult.mark >= 5) {
+		if(parseResult.mark >= 5) {
 			openFlag = parseResult.mark ^ 5;
-			invType = HOPPER;
-		} else if (parseResult.mark >= 4) {
+			invType = DISPENSER;
+		} else if(parseResult.mark >= 4) {
 			openFlag = parseResult.mark ^ 4;
-			invType = ANVIL;
-		} else if (parseResult.mark >= 3) {
+			invType = DROPPER;
+		} else if(parseResult.mark >= 3) {
 			openFlag = parseResult.mark ^ 3;
-			invType = CHEST;
+			invType = HOPPER;
 		} else if (parseResult.mark >= 2) {
-			invType = WORKBENCH;
 			openFlag = parseResult.mark ^ 2;
+			invType = ANVIL;
+		} else if (parseResult.mark >= 1) {
+			openFlag = parseResult.mark ^ 1;
+			invType = CHEST;
+		} else if (parseResult.mark >= 0) {
+			invType = WORKBENCH;
+			openFlag = parseResult.mark ^ 0;
 		} else {
 			openFlag = parseResult.mark;
 		}
 		
 		open = matchedPattern == 0;
-		invi = open ? (Expression<Inventory>) exprs[0] : null;
+		invi = open ? exprs[0] : null;
 		players = (Expression<Player>) exprs[exprs.length - 1];
 		if (openFlag == 1 && invi != null) {
 			Skript.warning("Using 'show' inventory instead of 'open' is not recommended as it will eventually show an unmodifiable view of the inventory in the future.");
@@ -101,7 +100,18 @@ public class EffOpenInventory extends Effect {
 	@Override
 	protected void execute(final Event e) {
 		if (invi != null) {
-			final Inventory i = invi.getSingle(e);
+			Inventory i;
+			
+			assert invi != null;
+			Object o = invi.getSingle(e);
+			if (o instanceof Inventory) {
+				i = (Inventory) o;
+			} else if (o instanceof InventoryType) {
+				i = Bukkit.createInventory(null, (InventoryType) o);
+			} else {
+				return;
+			}
+			
 			if (i == null)
 				return;
 			for (final Player p : players.getArray(e)) {

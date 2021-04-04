@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.hooks.economy.expressions;
 
@@ -41,11 +40,11 @@ import ch.njol.skript.hooks.economy.classes.Money;
 @Examples({"message \"You have %player's money%\" # the currency name will be added automatically",
 		"remove 20$ from the player's balance # replace '$' by whatever currency you use",
 		"add 200 to the player's account # or omit the currency alltogether"})
-@Since("2.0")
+@Since("2.0, 2.5 (offline player support)")
 @RequiredPlugins({"Vault", "a permission plugin that supports Vault"})
 public class ExprBalance extends SimplePropertyExpression<OfflinePlayer, Money> {
 	static {
-		register(ExprBalance.class, Money.class, "(money|balance|[bank] account)", "players");
+		register(ExprBalance.class, Money.class, "(money|balance|[bank] account)", "offlineplayers");
 	}
 	
 	@SuppressWarnings("deprecation")

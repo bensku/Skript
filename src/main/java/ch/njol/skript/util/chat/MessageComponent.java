@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,9 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ *
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-
 package ch.njol.skript.util.chat;
 
 import java.lang.reflect.Type;
@@ -30,6 +27,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Component for chat messages. This can be serialized with GSON and then
@@ -73,7 +72,7 @@ public class MessageComponent {
 	/**
 	 * Color of this text. Defaults to reseting it.
 	 */
-	public @Nullable String color;
+	public @Nullable ChatColor color;
 	
 	/**
 	 * Value of this, if present, will appended on what player is currently

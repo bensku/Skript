@@ -1,0 +1,8 @@
+test "thrown potion entity data":
+	set {_l} to location(1, 1, 1, world "world")
+	spawn a thrown potion of leaping at {_l}
+	assert last spawned entity is a thrown potion of leaping with "Thrown potion of leaping should have spawned"
+	spawn a thrown potion of poison at {_l}
+	assert last spawned entity is a thrown potion of poison with "Thrown potion of poison should have spawned"
+	spawn a thrown lingering potion of healing at {_l}
+	assert last spawned entity is a thrown lingering potion of healing with "Thrown lingering potion of healing should have spawned"

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -49,40 +48,39 @@ public abstract class AsyncEffect extends Effect {
 		debug(e, true);
 		TriggerItem next = getNext();
 		
-		if (next != null) {
-			Delay.addDelayedEvent(e); // Mark this event as delayed
-			Object localVars = Variables.removeLocals(e); // Back up local variables
-			
-			Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
-				@SuppressWarnings("synthetic-access")
-				@Override
-				public void run() {
-					execute(e); // Execute this effect
-					
-					Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
-						@Override
-						public void run() { // Walk to next item synchronously
-							// Re-set local variables
-							if (localVars != null)
-								Variables.setLocalVariables(e, localVars);
-							
-							Object timing = null;
+		Delay.addDelayedEvent(e); // Mark this event as delayed
+		Object localVars = Variables.removeLocals(e); // Back up local variables
+		
+		Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
+			@SuppressWarnings("synthetic-access")
+			@Override
+			public void run() {
+				execute(e); // Execute this effect
+				
+				Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
+					@Override
+					public void run() { // Walk to next item synchronously
+						// Re-set local variables
+						if (localVars != null)
+							Variables.setLocalVariables(e, localVars);
+						
+						Object timing = null;
+						if (next != null) {
 							if (SkriptTimings.enabled()) { // getTrigger call is not free, do it only if we must
 								Trigger trigger = getTrigger();
 								if (trigger != null) {
 									timing = SkriptTimings.start(trigger.getDebugLabel());
 								}
 							}
-							
 							TriggerItem.walk(next, e);
-							Variables.removeLocals(e); // Clean up local vars, we may be exiting now
-							
-							SkriptTimings.stop(timing); // Stop timing if it was even started
 						}
-					});	
-				}
-			});
-		}
+						Variables.removeLocals(e); // Clean up local vars, we may be exiting now
+						
+						SkriptTimings.stop(timing); // Stop timing if it was even started
+					}
+				});
+			}
+		});
 		return null;
 	}
 }

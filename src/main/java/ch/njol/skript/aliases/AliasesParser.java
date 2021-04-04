@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -29,8 +28,6 @@ import java.util.function.Function;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.gson.Gson;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.AliasesProvider.Variation;

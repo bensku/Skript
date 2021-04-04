@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -42,9 +41,10 @@ import ch.njol.util.Kleenean;
 @Examples({"player's y-coordinate is smaller than 40:",
 		"	message \"Watch out for lava!\""})
 @Since("1.4.3")
-public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
+public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
+	
 	static {
-		register(ExprCoordinate.class, Double.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
+		register(ExprCoordinate.class, Number.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
 	}
 	
 	private final static char[] axes = {'x', 'y', 'z'};
@@ -58,9 +58,8 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
-	public Double convert(final Location l) {
+	public Number convert(final Location l) {
 		return axis == 0 ? l.getX() : axis == 1 ? l.getY() : l.getZ();
 	}
 	
@@ -70,8 +69,8 @@ public class ExprCoordinate extends SimplePropertyExpression<Location, Double> {
 	}
 	
 	@Override
-	public Class<Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

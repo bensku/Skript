@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript;
 
@@ -26,19 +25,13 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,9 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Filter;
@@ -62,7 +53,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import ch.njol.skript.lang.Trigger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -109,6 +99,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEventInfo;
 import ch.njol.skript.lang.Statement;
 import ch.njol.skript.lang.SyntaxElementInfo;
+import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.function.Functions;
@@ -134,7 +125,6 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseManifest;
 import ch.njol.skript.update.ReleaseStatus;
 import ch.njol.skript.update.UpdateManifest;
-import ch.njol.skript.update.UpdaterState;
 import ch.njol.skript.util.EmptyStacktraceException;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.FileUtils;
@@ -148,7 +138,6 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NullableChecker;
-import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -237,6 +226,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public static boolean using64BitJava() {
+		// Property returned should either be "Java HotSpot(TM) 64-Bit Server VM" or "OpenJDK 64-Bit Server VM"
+		return System.getProperty("java.vm.name").contains("64");
+	}
+	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -256,16 +250,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		// Check that MC version is supported
 		if (!isRunningMinecraft(1, 9)) {
-			if (isRunningMinecraft(1, 8)) { // 1.8 probably works, but let's spit a warning
-				Skript.warning("Using this version of Skript on 1.8 is highly discouraged.");
-				Skript.warning("Some features have been disabled; use older Skript to restore them.");
-				Skript.warning("Also, there are probably bugs. And since 1.8 is not supported, they will not be fixed");
-			} else { // Older versions definitely do not work
-				Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion);
-				Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
-				Skript.error("Note that those versions are, of course, completely unsupported!");
-				return false;
-			}
+			// Prevent loading when not running at least Minecraft 1.9
+			Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion + " and requires Minecraft 1.9.4+");
+			Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
+			Skript.error("Note that those versions are, of course, completely unsupported!");
+			return false;
 		}
 		
 		// Check that current server platform is somewhat supported
@@ -287,6 +276,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			Skript.warning("It will still probably work, but if it does not, you are on your own.");
 			Skript.warning("Skript officially supports Paper and Spigot.");
 		}
+		
+		// Throw a warning if the user is using 32-bit Java, since that is known to potentially cause StackOverflowErrors
+		if (!using64BitJava()) {
+			Skript.warning("You are currently using 32-bit Java. This may result in a StackOverflowError when loading aliases.");
+			Skript.warning("Please update to 64-bit Java to remove this warning.");
+		}
+		
 		// If nothing got triggered, everything is probably ok
 		return true;
 	}
@@ -386,6 +382,13 @@ public final class Skript extends JavaPlugin implements Listener {
 		// ... but also before platform check, because there is a config option to ignore some errors
 		SkriptConfig.load();
 		
+		// Check server software, Minecraft version, etc.
+		if (!checkServerPlatform()) {
+			disabled = true; // Nothing was loaded, nothing needs to be unloaded
+			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
+			return;
+		}
+		
 		// Use the updater, now that it has been configured to (not) do stuff
 		if (updater != null) {
 			CommandSender console = Bukkit.getConsoleSender();
@@ -394,15 +397,21 @@ public final class Skript extends JavaPlugin implements Listener {
 			updater.updateCheck(console);
 		}
 		
-		// Check server software, Minecraft version, etc.
-		if (!checkServerPlatform()) {
-			disabled = true; // Nothing was loaded, nothing needs to be unloaded
-			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
-			return;
-		}
-		
 		BukkitUnsafe.initialize(); // Needed for aliases
-		Aliases.load(); // Loaded before anything that might use them
+		
+		try {
+			Aliases.load(); // Loaded before anything that might use them
+		} catch (StackOverflowError e) {
+			if (using64BitJava()) {
+				throw e; // Uh oh, this shouldn't happen. Re-throw the error.
+			} else {
+				Skript.error("");
+				Skript.error("There was a StackOverflowError that occured while loading aliases.");
+				Skript.error("As you are currently using 32-bit Java, please update to 64-bit Java to resolve the error.");
+				Skript.error("Please report this issue to our GitHub only if updating to 64-bit Java does not fix the issue.");
+				Skript.error("");
+			}
+		}
 		
 		// If loading can continue (platform ok), check for potentially thrown error
 		if (classLoadError != null) {
@@ -748,7 +757,7 @@ public final class Skript extends JavaPlugin implements Listener {
 						public void run() {
 							Player p = e.getPlayer();
 							SkriptUpdater updater = getUpdater();
-							if (p == null || updater == null)
+							if (updater == null)
 								return;
 							
 							// Don't actually check for updates to avoid breaking Github rate limit
@@ -1044,8 +1053,13 @@ public final class Skript extends JavaPlugin implements Listener {
 					Thread.sleep(10000);
 				} catch (final InterruptedException e) {}
 				try {
-					final Field modifiers = Field.class.getDeclaredField("modifiers");
-					modifiers.setAccessible(true);
+					Field modifiers = null;
+					try {
+						modifiers = Field.class.getDeclaredField("modifiers");
+					} catch (final NoSuchFieldException ignored) { /* ignored */ }
+					if (modifiers != null) {
+						modifiers.setAccessible(true);
+					}
 					final JarFile jar = new JarFile(getFile());
 					try {
 						for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
@@ -1054,11 +1068,13 @@ public final class Skript extends JavaPlugin implements Listener {
 									final Class<?> c = Class.forName(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()), false, getClassLoader());
 									for (final Field f : c.getDeclaredFields()) {
 										if (Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive()) {
-											if (Modifier.isFinal(f.getModifiers())) {
+											if (Modifier.isFinal(f.getModifiers()) && modifiers != null) {
 												modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 											}
-											f.setAccessible(true);
-											f.set(null, null);
+											if (!Modifier.isFinal(f.getModifiers())) {
+												f.setAccessible(true);
+												f.set(null, null);
+											}
 										}
 									}
 								} catch (final Throwable ex) {
@@ -1286,7 +1302,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		if (returnType.isAnnotation() || returnType.isArray() || returnType.isPrimitive())
 			throw new IllegalArgumentException("returnType must be a normal type");
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
-		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath);
+		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath, type);
 		for (int i = type.ordinal() + 1; i < ExpressionType.values().length; i++) {
 			expressionTypesStartIndices[i]++;
 		}
@@ -1373,13 +1389,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			if (sender instanceof Player) {
 				final PlayerCommandPreprocessEvent e = new PlayerCommandPreprocessEvent((Player) sender, "/" + command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.isCancelled() || e.getMessage() == null || !e.getMessage().startsWith("/"))
+				if (e.isCancelled() || !e.getMessage().startsWith("/"))
 					return false;
 				return Bukkit.dispatchCommand(e.getPlayer(), e.getMessage().substring(1));
 			} else {
 				final ServerCommandEvent e = new ServerCommandEvent(sender, command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.getCommand() == null || e.getCommand().isEmpty())
+				if (e.getCommand().isEmpty() || e.isCancelled())
 					return false;
 				return Bukkit.dispatchCommand(e.getSender(), e.getCommand());
 			}
@@ -1538,10 +1554,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		logEx("[Skript] Severe Error:");
 		logEx(info);
 		logEx();
-		if (!tainted) {
-			logEx("Something went horribly wrong with Skript.");
-			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
-		}
 		
 		// Parse something useful out of the stack trace
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -1559,6 +1571,13 @@ public final class Skript extends JavaPlugin implements Listener {
 		if (tainted) {
 			logEx("Skript is running with developer command-line options.");
 			logEx("If you are not a developer, consider disabling them.");
+		} else if (getInstance().getDescription().getVersion().contains("nightly")) {
+			logEx("You're running a (buggy) nightly version of Skript.");
+			logEx("If this is not a test server, switch to a more stable release NOW!");
+			logEx("Your players are unlikely to appreciate crashes and/or data loss due to Skript bugs.");
+			logEx("");
+			logEx("Just testing things? Good. Please report this bug, so that we can fix it before a stable release.");
+			logEx("Issue tracker: " + issuesUrl);
 		} else if (!isRunningMinecraft(1, 9)) {
 			logEx("You are running an outdated Minecraft version not supported by Skript.");
 			logEx("Please update to Minecraft 1.9.4 or later or fix this yourself and send us a pull request.");
@@ -1574,6 +1593,8 @@ public final class Skript extends JavaPlugin implements Listener {
 			logEx("Run /sk update check to get a download link to latest Skript!");
 			logEx("You will be given instructions how to report this error if it persists after update.");
 		} else {
+			logEx("Something went horribly wrong with Skript.");
+			logEx("This issue is NOT your fault! You probably can't fix it yourself, either.");
 			if (pluginPackages.isEmpty()) {
 				logEx("You should report it at " + issuesUrl + ". Please copy paste this report there (or use paste service).");
 				logEx("This ensures that your issue is noticed and will be fixed as soon as possible.");

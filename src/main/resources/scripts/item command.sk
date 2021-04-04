@@ -8,6 +8,7 @@
 #
 
 aliases:
+	# Items that the user cannot give himself
 	blacklisted = TNT, bedrock, obsidian, mob spawner, lava, lava bucket
 
 # This version of the command requires that the player has the permission skript.give,
@@ -19,17 +20,17 @@ command /item <items>:
 	executable by: players
 	permission: skript.give
 	trigger:
-		player has permission "skript.give.bypassblacklist":
+		if player has permission "skript.give.bypassblacklist":
 			give arguments to player
 		else:
 			loop arguments:
-				loop-item is not blacklisted:
+				if loop-item is not blacklisted:
 					give loop-item to player
 				else:
 					message "<red>%loop-item%<reset> is blacklisted and thus cannot be spawned"
 
 # This version of the command checks whether the player has permission to spawn the desired item.
-# A player needs the "skript.give.<ID>" permission to spawn an item of the desired type
+# A player needs the "skript.give.<type of item>" permission to spawn an item of the desired type
 # and the permission "skript.give.enchanted" to spawn enchanted items.
 command /item2 <items>:
 	description: Give yourself some items
@@ -39,14 +40,14 @@ command /item2 <items>:
 	permission: skript.give
 	trigger:
 		loop arguments:
-			loop-item is enchanted:
-				player does not have the permission "skript.give.enchanted":
+			if loop-item is enchanted:
+				if player does not have the permission "skript.give.enchanted":
 					message "You don't have permission to spawn enchanted items!"
 					stop
-			player has permission "skript.give.%ID of loop-item%":
+			if player has permission "skript.give.%type of loop-item%":
 				give loop-item to player
 			else:
-				message "You don't have permission to spawn <red>%loop-item%<reset>!"
+				message "You don't have permission to spawn <red>%loop-item%<reset>! (skript.give.%type of loop-item%)"
 
 
 command /give <item types> to <player>:
@@ -56,8 +57,8 @@ command /give <item types> to <player>:
 	trigger:
 		send "Giving %argument 1% to %argument 2%" to player
 		loop argument 1:
-			player has permission "skript.give.%ID of loop-item%":
+			if player has permission "skript.give.%type of loop-item%":
 				give loop-item to argument 2
 				send "You recieved %loop-item% from %player%" to argument 2
 			else:
-				message "<red>You don't have permission to give away free <red>%loop-item%<reset>!"
+				message "<red>You don't have permission to give away free <red>%loop-item%<reset>! (skript.give.%type of loop-item%)"

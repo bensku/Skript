@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -68,7 +67,7 @@ public class ExprVectorDotProduct extends SimpleExpression<Number> {
 
 	@Override
 	@SuppressWarnings("null")
-	protected Double[] get(Event e) {
+	protected Number[] get(Event e) {
 		Vector v1 = first.getSingle(e);
 		Vector v2 = second.getSingle(e);
 		if (v1 == null || v2 == null)

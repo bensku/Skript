@@ -5,6 +5,7 @@
 
 on enderman pickup:
 	cancel event
+
 on enderman place:
 	cancel event
 	kill the enderman # kills endermen which were still carrying something when this trigger file was activated

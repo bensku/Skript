@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
@@ -114,7 +113,8 @@ public class EvtItem extends SkriptEvent {
 					 	"	cancel event")
 				.since("2.2-dev35");
 		Skript.registerEvent("Item Merge", EvtItem.class, ItemMergeEvent.class, "(item[ ][stack]|[item] %-itemtypes%) merg(e|ing)", "item[ ][stack] merg(e|ing) [[of] %-itemtypes%]")
-				.description("Called when dropped items merge into a single stack.")
+				.description("Called when dropped items merge into a single stack. event-entity will be the entity which is trying to merge, " +
+						"and future event-entity will be the entity which is being merged into.")
 				.examples("on item merge of gold blocks:",
 					 	"	cancel event")
 				.since("2.2-dev35");

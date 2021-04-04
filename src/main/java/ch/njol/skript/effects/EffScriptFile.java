@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -97,10 +96,7 @@ public class EffScriptFile extends Effect {
 					return;
 				}
 				
-				if (!ScriptLoader.isAsync())
-					ScriptLoader.unloadScript(f);
-				Config config = ScriptLoader.loadStructure(f);
-				ScriptLoader.loadScripts(config);
+				ScriptLoader.reloadScript(f);
 				break;
 			}
 			case DISABLE: {

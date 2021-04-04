@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -47,6 +46,12 @@ public class DroppedItemData extends EntityData<Item> {
 	@Nullable
 	private ItemType[] types;
 	
+	public DroppedItemData() {}
+	
+	public DroppedItemData(@Nullable ItemType[] types) {
+		this.types = types;
+	}
+	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null)
@@ -58,8 +63,6 @@ public class DroppedItemData extends EntityData<Item> {
 	protected boolean init(final @Nullable Class<? extends Item> c, final @Nullable Item e) {
 		if (e != null) {
 			final ItemStack i = e.getItemStack();
-			if (i == null)
-				return false;
 			types = new ItemType[] {new ItemType(i)};
 		}
 		return true;
@@ -82,7 +85,9 @@ public class DroppedItemData extends EntityData<Item> {
 	public void set(final Item entity) {
 		final ItemType t = CollectionUtils.getRandom(types);
 		assert t != null;
-		entity.setItemStack(t.getItem().getRandom());
+		ItemStack stack = t.getItem().getRandom();
+		if (stack != null)
+			entity.setItemStack(stack);
 	}
 	
 	@Override
@@ -102,7 +107,7 @@ public class DroppedItemData extends EntityData<Item> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new DroppedItemData();
+		return new DroppedItemData(types);
 	}
 	
 	@Override

@@ -14,12 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
-
-import java.util.Locale;
 
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.Event;
@@ -49,6 +46,14 @@ public class ItemFrameSlot extends Slot {
 	public void setItem(@Nullable ItemStack item) {
 		frame.setItem(item);
 	}
+	
+	@Override
+	public int getAmount() {
+		return 1;
+	}
+	
+	@Override
+	public void setAmount(int amount) {}
 	
 	@Override
 	public boolean isSameSlot(Slot o) {

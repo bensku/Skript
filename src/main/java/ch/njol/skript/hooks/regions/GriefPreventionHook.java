@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.hooks.regions;
 
@@ -82,7 +81,7 @@ public class GriefPreventionHook extends RegionsPlugin<GriefPrevention> {
 		} catch (final NoSuchFieldException e) {} catch (final SecurityException e) {}
 		if (getClaim == null && claimsField == null) {
 			Skript.error("Skript " + Skript.getVersion() + " is not compatible with GriefPrevention " + plugin.getDescription().getVersion() + "."
-					+ " Please report this at http://dev.bukkit.org/bukkit-plugins/skript/tickets/ if this error occurred after you updated GriefPrevention.");
+					+ " Please report this at https://github.com/SkriptLang/Skript/issues/ if this error occurred after you updated GriefPrevention.");
 			return false;
 		}
 		return super.init();

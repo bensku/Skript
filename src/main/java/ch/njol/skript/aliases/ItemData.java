@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.aliases;
 
@@ -26,49 +25,40 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.UnsafeValues;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.potion.PotionData;
 import org.eclipse.jdt.annotation.Nullable;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.BlockValues;
 import ch.njol.skript.localization.Message;
-import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.Variables;
-import ch.njol.util.coll.CollectionUtils;
-import ch.njol.util.coll.iterator.SingleItemIterator;
 import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilSerializable;
 import ch.njol.yggdrasil.YggdrasilSerializable.YggdrasilExtendedSerializable;
 
-@SuppressWarnings("deprecation")
 public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	static {
@@ -86,10 +76,12 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		public short dataMax = -1;
 	}
 
-	@SuppressWarnings("null")
 	static final ItemFactory itemFactory = Bukkit.getServer().getItemFactory();
 	
 	static final MaterialRegistry materialRegistry;
+	
+	private static final boolean SPAWN_EGG_META_EXISTS = Skript.classExists("org.bukkit.inventory.meta.SpawnEggMeta");
+	private static final boolean HAS_NEW_SKULL_META_METHODS = Skript.methodExists(SkullMeta.class, "getOwningPlayer");
 	
 	// Load or create material registry
 	static {
@@ -207,9 +199,11 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			// Play safe and mark ALL items that may have durability to have it changed
 			itemFlags |= ItemFlags.CHANGED_DURABILITY;
 		}
-		if (stack.hasItemMeta()) {
-			itemFlags |= ItemFlags.CHANGED_TAGS;
-		}
+		// All data made from stacks may have changed tags
+		// We cannot assume that lack of tags indicates that they can be
+		// ignored in comparisons; they may well have been explicitly removed
+		// See issue #2714 for examples of bad things that this causes
+		itemFlags |= ItemFlags.CHANGED_TAGS;
 	}
 	
 	public ItemData(ItemStack stack) {
@@ -347,7 +341,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			}
 		}
 		
-		/**
+		/*
 		 * Initially, expect exact match. Lower expectations as new differences
 		 * between items are discovered.
 		 */
@@ -413,28 +407,28 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 		String ourName = first.hasDisplayName() ? first.getDisplayName() : null;
 		String theirName = second.hasDisplayName() ? second.getDisplayName() : null;
 		if (!Objects.equals(ourName, theirName)) {
-			quality = theirName != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourName != null ? MatchQuality.SAME_MATERIAL : theirName != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Lore
 		List<String> ourLore = first.hasLore() ? first.getLore() : null;
 		List<String> theirLore = second.hasLore() ? second.getLore() : null;
 		if (!Objects.equals(ourLore, theirLore)) {
-			quality = theirLore != null ? MatchQuality.SAME_MATERIAL : quality;
+			quality = ourLore != null ? MatchQuality.SAME_MATERIAL : theirLore != null ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Enchantments
 		Map<Enchantment, Integer> ourEnchants = first.getEnchants();
 		Map<Enchantment, Integer> theirEnchants = second.getEnchants();
 		if (!Objects.equals(ourEnchants, theirEnchants)) {
-			quality = !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : !theirEnchants.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Item flags
 		Set<ItemFlag> ourFlags = first.getItemFlags();
 		Set<ItemFlag> theirFlags = second.getItemFlags();
 		if (!Objects.equals(ourFlags, theirFlags)) {
-			quality = !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
+			quality = !ourFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : !theirFlags.isEmpty() ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
 		// Potion data
@@ -448,6 +442,36 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 			return !Objects.equals(ourPotion, theirPotion) ? MatchQuality.SAME_MATERIAL : quality;
 		}
 		
+		// Only check spawn egg data on 1.12 and below. See issue #3167
+		if (!MaterialRegistry.newMaterials && SPAWN_EGG_META_EXISTS && second instanceof SpawnEggMeta) {
+			if (!(first instanceof SpawnEggMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a spawn egg, first is clearly not
+			}
+			// Compare spawn egg spawned type
+			EntityType ourSpawnedType = ((SpawnEggMeta) first).getSpawnedType();
+			EntityType theirSpawnedType = ((SpawnEggMeta) second).getSpawnedType();
+			return !Objects.equals(ourSpawnedType, theirSpawnedType) ? MatchQuality.SAME_MATERIAL : quality;
+		}
+		
+		// Skull owner
+		if (second instanceof SkullMeta) {
+			if (!(first instanceof SkullMeta)) {
+				return MatchQuality.DIFFERENT; // Second is a skull, first is clearly not
+			}
+			// Compare skull owners
+			if (HAS_NEW_SKULL_META_METHODS) {
+				OfflinePlayer ourOwner = ((SkullMeta) first).getOwningPlayer();
+				OfflinePlayer theirOwner = ((SkullMeta) second).getOwningPlayer();
+				return !Objects.equals(ourOwner, theirOwner) ? MatchQuality.SAME_MATERIAL : quality;
+			} else { // Use old methods
+				@SuppressWarnings("deprecation")
+				String ourOwner = ((SkullMeta) first).getOwner();
+				@SuppressWarnings("deprecation")
+				String theirOwner = ((SkullMeta) second).getOwner();
+				return !Objects.equals(ourOwner, theirOwner) ? MatchQuality.SAME_MATERIAL : quality;
+			}
+		}
+		
 		return quality;
 	}
 	
@@ -459,6 +483,16 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	 */
 	public boolean isDefault() {
 		return itemFlags == 0 && blockValues == null;
+	}
+	
+	/**
+	 * Checks if this item is an alias or a clone of one that has not been
+	 * modified after loading the aliases.
+	 *
+	 * @return True if is an alias or unmodified clone
+	 */
+	public boolean isAlias() {
+		return isAlias || (itemFlags == 0 && blockValues == null);
 	}
 	
 	/**

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.bukkitutil;
 
@@ -27,13 +26,13 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import ch.njol.skript.SkriptConfig;
 import ch.njol.util.Math2;
 
 /**
  * @author Peter Güttinger
  */
 
-@SuppressWarnings("null")
 public abstract class HealthUtils {
 	
 	private HealthUtils() {}
@@ -85,10 +84,13 @@ public abstract class HealthUtils {
 			heal(e, -d);
 			return;
 		}
-		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
-		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled()) return;
-		setHealth(e, getHealth(e) - d);
+		if (!SkriptConfig.disableDamageCancelChecking.value()) {
+			EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
+			Bukkit.getPluginManager().callEvent(event);
+			if (event.isCancelled())
+				return;
+		}
+		e.damage(d * 2);
 	}
 	/** Heal an entity
 	 * @param e Entity to heal
@@ -114,7 +116,6 @@ public abstract class HealthUtils {
 		e.setDamage(damage * 2);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void setDamageCause(final Damageable e, final DamageCause cause) {
 		e.setLastDamageCause(new EntityDamageEvent(e, cause, 0)); // Use deprecated way too keep it compatible and create cleaner code
 		// Non-deprecated way is really, really bad

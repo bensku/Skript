@@ -14,12 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
-
-import java.util.Collection;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -51,9 +48,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"increase the damage by 2"})
 @Since("1.3.5")
 @Events("damage")
-public class ExprDamage extends SimpleExpression<Double> {
+public class ExprDamage extends SimpleExpression<Number> {
+	
 	static {
-		Skript.registerExpression(ExprDamage.class, Double.class, ExpressionType.SIMPLE, "[the] damage");
+		Skript.registerExpression(ExprDamage.class, Number.class, ExpressionType.SIMPLE, "[the] damage");
 	}
 	
 	@SuppressWarnings("null")
@@ -71,16 +69,15 @@ public class ExprDamage extends SimpleExpression<Double> {
 	
 	@Override
 	@Nullable
-	protected Double[] get(final Event e) {
+	protected Number[] get(final Event e) {
 		if (!(e instanceof EntityDamageEvent || e instanceof VehicleDamageEvent))
-			return new Double[0];
+			return new Number[0];
 		
 		if (e instanceof VehicleDamageEvent)
 			return CollectionUtils.array(((VehicleDamageEvent) e).getDamage());
 		return CollectionUtils.array(HealthUtils.getDamage((EntityDamageEvent) e));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -127,8 +124,8 @@ public class ExprDamage extends SimpleExpression<Double> {
 	}
 	
 	@Override
-	public Class<? extends Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 	@Override

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.slot;
 
@@ -26,7 +25,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -184,6 +182,20 @@ public class EquipmentSlot extends SlotWithIndex {
 		slot.set(e, item);
 		if (e.getHolder() instanceof Player)
 			PlayerUtils.updateInventory((Player) e.getHolder());
+	}
+	
+	@Override
+	public int getAmount() {
+		ItemStack item = slot.get(e);
+		return item != null ? item.getAmount() : 0;
+	}
+	
+	@Override
+	public void setAmount(int amount) {
+		ItemStack item = slot.get(e);
+		if (item != null)
+			item.setAmount(amount);
+		slot.set(e, item);
 	}
 	
 	/**

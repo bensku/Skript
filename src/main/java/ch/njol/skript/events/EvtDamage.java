@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
@@ -55,7 +54,6 @@ public class EvtDamage extends SkriptEvent {
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
 	public boolean check(final Event evt) {
 		final EntityDamageEvent e = (EntityDamageEvent) evt;
@@ -84,7 +82,6 @@ public class EvtDamage extends SkriptEvent {
 	
 //	private final static WeakHashMap<LivingEntity, Integer> lastDamages = new WeakHashMap<LivingEntity, Integer>();
 	
-	@SuppressWarnings("null")
 	private static boolean checkDamage(final EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof LivingEntity))
 			return true;

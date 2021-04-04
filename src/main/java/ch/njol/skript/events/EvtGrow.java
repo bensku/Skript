@@ -14,13 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -75,7 +73,6 @@ public class EvtGrow extends SkriptEvent {
 	public boolean check(final Event e) {
 		if (evtType == STRUCTURE  && types != null && e instanceof StructureGrowEvent) {
 			return types.check(e, new Checker<StructureType>() {
-				@SuppressWarnings("null")
 				@Override
 				public boolean check(final StructureType t) {
 					return t.is(((StructureGrowEvent) e).getSpecies());

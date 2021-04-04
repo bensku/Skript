@@ -14,15 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes.data;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
@@ -50,10 +47,12 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.StructureType;
 import ch.njol.skript.util.Time;
@@ -586,18 +585,32 @@ public class SkriptClasses {
 					public Class<Object>[] acceptChange(final ChangeMode mode) {
 						if (mode == ChangeMode.RESET)
 							return null;
+						if (mode == ChangeMode.SET)
+							return new Class[] {ItemType[].class, ItemStack[].class};
 						return new Class[] {ItemType.class, ItemStack.class};
 					}
 					
 					@Override
 					public void change(final Slot[] slots, final @Nullable Object[] deltas, final ChangeMode mode) {
+						if (mode == ChangeMode.SET) {
+							if (deltas != null) {
+								if (deltas.length == 1) {
+									final Object delta = deltas[0];
+									for (final Slot slot : slots) {
+										slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								} else if (deltas.length == slots.length) {
+									for (int i = 0; i < slots.length; i++) {
+										final Object delta = deltas[i];
+										slots[i].setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								}
+							}
+							return;
+						}
 						final Object delta = deltas == null ? null : deltas[0];
 						for (final Slot slot : slots) {
 							switch (mode) {
-								case SET:
-									assert delta != null;
-									slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
-									break;
 								case ADD:
 									assert delta != null;
 									if (delta instanceof ItemStack) {
@@ -644,7 +657,32 @@ public class SkriptClasses {
 							}
 						}
 					}
-				}).serializeAs(ItemStack.class));
+				})
+				.parser(new Parser<Slot>() {
+					@Override
+					public boolean canParse(final ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(Slot o, int flags) {
+						ItemStack i = o.getItem();
+						if (i == null)
+							return new ItemType(Material.AIR).toString(flags);
+						return ItemType.toString(i, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Slot o) {
+						return "slot:" + o.toString();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "slot:.+";
+					}
+				})
+				.serializeAs(ItemStack.class));
 		
 		Classes.registerClass(new ClassInfo<>(Color.class, "color")
 				.user("colou?rs?")
@@ -659,6 +697,9 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
+						if (ColorRGB.isRGBColor(input)) {
+							return ColorRGB.fromString(input);
+						}
 						return SkriptColor.fromName(input);
 					}
 					
@@ -742,7 +783,6 @@ public class SkriptClasses {
 				})
 				.serializer(new YggdrasilSerializer<EnchantmentType>() {
 //						return o.getType().getId() + ":" + o.getLevel();
-					@SuppressWarnings("deprecation")
 					@Override
 					@Nullable
 					public EnchantmentType deserialize(final String s) {
@@ -761,6 +801,7 @@ public class SkriptClasses {
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(Experience.class, "experience")
+				.user("experience ?(points?)?")
 				.name("Experience")
 				.description("Experience points. Please note that Bukkit only allows to give XP, but not remove XP from players. " +
 						"You can however change a player's <a href='../expressions.html#ExprLevel'>level</a> and <a href='../expressions/#ExprLevelProgress'>level progress</a> freely.")
@@ -845,6 +886,16 @@ public class SkriptClasses {
 		} else {
 			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
 		}
+		
+		Classes.registerClass(new ClassInfo<>(GameruleValue.class, "gamerulevalue")
+				.user("gamerule values?")
+				.name("Gamerule Value")
+				.description("A wrapper for the value of a gamerule for a world.")
+				.usage("")
+				.examples("")
+				.since("2.5")
+				.serializer(new YggdrasilSerializer<GameruleValue>())
+		);
 	}
 	
 }

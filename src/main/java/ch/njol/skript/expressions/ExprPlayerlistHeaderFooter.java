@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -39,7 +38,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Player List Header and Footer")
 @Description("The message above and below the player list in the tab menu.")
-@Examples({"set all players tab list header to \"Welcome to the Server!\"",
+@Examples({"set all players' tab list header to \"Welcome to the Server!\"",
 			"send \"%the player's tab list header%\" to player",
 			"reset all players' tab list header"})
 @Since("2.4")

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.function;
 
@@ -67,6 +66,10 @@ public final class Parameter<T> {
 		this.single = single;
 	}
 	
+	/**
+	 * Get the Type of this parameter.
+	 * @return Type of the parameter
+	 */
 	public ClassInfo<T> getType() {
 		return type;
 	}
@@ -133,8 +136,30 @@ public final class Parameter<T> {
 		return new Parameter<>(name, type, single, d);
 	}
 	
+	/**
+	 * Get the name of this parameter.
+	 * <p>Will be used as name for the local variable that contains value of it inside function.</p>
+	 * @return Name of this parameter
+	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Get the Expression that will be used to provide the default value of this parameter when the function is called.
+	 * @return Expression that will provide default value of this parameter
+	 */
+	@Nullable
+	public Expression<? extends T> getDefaultExpression() {
+		return def;
+	}
+	
+	/**
+	 * Get whether this parameter takes one or many values.
+	 * @return True if this parameter takes one value, false otherwise
+	 */
+	public boolean isSingleValue() {
+		return single;
 	}
 	
 	@Override

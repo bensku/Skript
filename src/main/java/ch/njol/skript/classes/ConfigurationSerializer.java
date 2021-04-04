@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes;
 
@@ -54,7 +53,6 @@ public class ConfigurationSerializer<T extends ConfigurationSerializable> extend
 		return false;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	protected T deserialize(final Fields fields) throws StreamCorruptedException {
 		final String val = fields.getObject("value", String.class);

@@ -12,8 +12,8 @@ Skript requires **Spigot** to work. You heard it right, Bukkit does *not* work.
 **Paper**, which is a fork of Spigot, is recommended; it is required for some
 parts of Skript to be available.
 
-Skript supports only the **latest** patch versions of Minecraft 1.9, 1.10, 1.11, 1.12 and 1.13.
-For example, this means that 1.12.2 is supported, but 1.12.1 is *not*.
+Skript supports only the **latest** patch versions of Minecraft 1.9+.
+For example, this means that 1.16.4 is supported, but 1.16.3 is *not*.
 Testing with all old patch versions is not feasible for us.
 
 Minecraft 1.8 and earlier are not, and will not be supported. New Minecraft
@@ -27,7 +27,7 @@ Documentation is available [here](https://skriptlang.github.io/Skript) for the
 latest version of Skript.
 
 ## Reporting Issues
-Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md)
+Please see our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md)
 before reporting issues.
 
 ## A Note About Add-ons
@@ -98,9 +98,9 @@ Available flavors are github and spigot. Please do not abuse flavors by
 compiling your own test builds as releases.
 
 ## Contributing
-Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/CONTRIBUTING.md).
+Please review our [contribution guidelines](https://github.com/SkriptLang/Skript/blob/master/.github/contributing.md).
 In addition to that, if you are contributing Java code, check our
-[coding conventions](https://github.com/SkriptLang/Skript/blob/master/CODING_CONVENTIONS.md).
+[coding conventions](https://github.com/SkriptLang/Skript/blob/master/code-conventions.md).
 
 ## Maven Repository
 If you use Skript as (soft) dependency for your plugin, and use maven or Gradle,
@@ -174,19 +174,6 @@ Note that these resources are not maintained by Skript's developers. Don't
 contact us about any problems you might have with them.
 
 ## Developers
-Current team behind Skript:
-
-* [bensku](https://github.com/bensku) (Skript maintainer/developer)
-* [FranKusmiruk](https://github.com/FranKusmiruk) (Skript developer)
-* [Pikachu920](https://github.com/Pikachu920) (Skript developer)
-* [Nicofisi](https://github.com/Nicofisi) (Skript developer)
-* [TheBentoBox](https://github.com/TheBentoBox) (issue tracker manager, aliases developer)
-
-We should also thank [Njol](https://github.com/Njol) for creating
-Skript and [Mirreski](https://github.com/Mirreski) for maintaining it for a
-long time.
-
-And of course, Skript has received lots of pull requests over time.
 You can find all contributors [here](https://github.com/SkriptLang/Skript/graphs/contributors).
 
 All code is owned by its writer, licensed for others under GPLv3 (see LICENSE)

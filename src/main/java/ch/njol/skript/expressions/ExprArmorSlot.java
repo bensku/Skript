@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -33,8 +32,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.EquipmentSlot;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.util.slot.EquipmentSlot.EquipSlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 
 /**

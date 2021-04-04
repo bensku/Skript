@@ -1,0 +1,6 @@
+test "entity silence":
+	spawn a pig at spawn of "world"
+	set {_pig} to last spawned pig
+	make {_pig} silent
+	assert {_pig} is silent with "failed to make pig silent"
+	delete {_pig}

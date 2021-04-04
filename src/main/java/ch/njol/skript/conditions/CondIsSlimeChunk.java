@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -52,10 +51,10 @@ public class CondIsSlimeChunk extends PropertyCondition<Chunk> {
 	@Override
 	public boolean check(Chunk chunk) {
 		Random random = new Random(chunk.getWorld().getSeed() +
-				(long) (chunk.getX() * chunk.getX() * 0x4c1906) +
-				(long) (chunk.getX() * 0x5ac0db) +
-				(long) (chunk.getZ() * chunk.getZ()) * 0x4307a7L +
-				(long) (chunk.getZ() * 0x5f24f) ^ 0x3ad8025f);
+				(0x4c1906L * chunk.getX() * chunk.getX()) +
+				(0x5ac0dbL * chunk.getX()) +
+				(0x4307a7L * chunk.getZ() * chunk.getZ()) +
+				((0x5f24fL *chunk.getZ()) ^ 0x3ad8025fL));
 		return random.nextInt(10) == 0;
 	}
 	

@@ -14,18 +14,42 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 public class ExpressionInfo<E extends Expression<T>, T> extends SyntaxElementInfo<E> {
 	
 	public Class<T> returnType;
+	@Nullable
+	public ExpressionType expressionType;
 	
 	public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c, final String originClassPath) throws IllegalArgumentException {
-		super(patterns, c, originClassPath);
-		this.returnType = returnType;
+		this(patterns, returnType, c, originClassPath, null);
 	}
 	
+	public ExpressionInfo(final String[] patterns, final Class<T> returnType, final Class<E> c, final String originClassPath, @Nullable ExpressionType expressionType) throws IllegalArgumentException {
+		super(patterns, c, originClassPath);
+		this.returnType = returnType;
+		this.expressionType = expressionType;
+	}
+	
+	/**
+	 * Get the return type of this expression.
+	 * @return The return type of this Expression
+	 */
+	public Class<T> getReturnType() {
+		return returnType;
+	}
+	
+	/**
+	 * Get the type of this expression.
+	 * @return The type of this Expression
+	 */
+	@Nullable
+	public ExpressionType getExpressionType() {
+		return expressionType;
+	}
 }

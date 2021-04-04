@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -45,9 +44,10 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"message \"You have %health% HP left.\""})
 @Since("1.0")
 @Events("damage")
-public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
+public class ExprHealth extends PropertyExpression<LivingEntity, Number> {
+	
 	static {
-		register(ExprHealth.class, Double.class, "health", "livingentities");
+		register(ExprHealth.class, Number.class, "health", "livingentities");
 	}
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -58,20 +58,19 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
 	}
 	
 	@Override
-	protected Double[] get(final Event e, final LivingEntity[] source) {
+	protected Number[] get(final Event e, final LivingEntity[] source) {
 //		if (e instanceof EntityDamageEvent && getTime() > 0 && entities.getSource() instanceof ExprAttacked && !Delay.isDelayed(e)) {
-//			return ConverterUtils.convert(entities.getArray(e), Float.class, new Getter<Float, LivingEntity>() {
+//			return ConverterUtils.convert(entities.getArray(e), Number.class, new Getter<Number, LivingEntity>() {
 //				@Override
-//				public Float get(final LivingEntity entity) {
-//					return Float.valueOf(0.5f * (entity.getHealth() - ((EntityDamageEvent) e).getDamage()));
+//				public Number get(final LivingEntity entity) {
+//					return 0.5f * (entity.getHealth() - ((EntityDamageEvent) e).getDamage());
 //				}
 //			});
 //		}
-		return get(source, new Getter<Double, LivingEntity>() {
-			@SuppressWarnings("null")
+		return get(source, new Getter<Number, LivingEntity>() {
 			@Override
-			public Double get(final LivingEntity entity) {
-				return Double.valueOf(HealthUtils.getHealth(entity));
+			public Number get(final LivingEntity entity) {
+				return HealthUtils.getHealth(entity);
 			}
 		});
 	}
@@ -97,7 +96,6 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
 //		});
 //	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -138,8 +136,8 @@ public class ExprHealth extends PropertyExpression<LivingEntity, Double> {
 	}
 	
 	@Override
-	public Class<Double> getReturnType() {
-		return Double.class;
+	public Class<? extends Number> getReturnType() {
+		return Number.class;
 	}
 	
 //	@Override

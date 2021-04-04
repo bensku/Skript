@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -42,8 +41,8 @@ public class Loop extends TriggerSection {
 	
 	private final Expression<?> expr;
 	
-	private transient Map<Event, Object> current = new WeakHashMap<Event, Object>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<Event, Iterator<?>>();
+	private transient Map<Event, Object> current = new WeakHashMap<>();
+	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
 	
 	@Nullable
 	private TriggerItem actualNext;

@@ -7,7 +7,7 @@
 
 command /setmotd <text>:
 	permission: skript.setmotd
-	description: Sets message of the day
+	description: Sets the message of the day
 	trigger:
 		message "Set the MOTD to '%argument%<reset>'"
 		set {motd} to argument

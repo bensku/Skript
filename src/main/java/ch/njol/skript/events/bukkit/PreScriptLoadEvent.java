@@ -14,30 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events.bukkit;
 
-import ch.njol.skript.ScriptLoader;
-import ch.njol.skript.config.Config;
-import ch.njol.util.Validate;
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import ch.njol.skript.config.Config;
+import ch.njol.util.Validate;
+
 /**
- * If {@link ScriptLoader#callPreLoadEvent} is true,
- * this event is called before a script starts
- * loading via {@link ScriptLoader#loadScript(Config)}
- * or one of it's overloads.
+ * This event has no guarantee of being on the main thread.
+ * Please do not use bukkit api before checking {@link Bukkit#isPrimaryThread()}
  */
+
 public class PreScriptLoadEvent extends Event {
 
-    private Config script;
+    private final List<Config> scripts;
 
-    public PreScriptLoadEvent(Config script) {
-        Validate.notNull(script);
-        this.script = script;
+    public PreScriptLoadEvent(List<Config> scripts) {
+        super(!Bukkit.isPrimaryThread());
+        Validate.notNull(scripts);
+        this.scripts = scripts;
     }
 
     private static HandlerList handlers = new HandlerList();
@@ -50,14 +52,9 @@ public class PreScriptLoadEvent extends Event {
     public static HandlerList getHandlerList() {
         return handlers;
     }
-
-    /**
-     * This is usually, but may not be, the same
-     * as {@link ScriptLoader#currentScript}
-     * @return The {@link Config} of the loading script
-     */
-    public Config getScript() {
-        return script;
-    }
+    
+    public List<Config> getScripts() {
+    	return scripts;
+	}
 
 }

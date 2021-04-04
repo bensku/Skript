@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -312,7 +311,6 @@ public class Variable<T> implements Expression<T> {
 	 * because the player object inside the variable will be a (kinda) dead variable
 	 * as a new player object has been created by the server.
 	 */
-	@SuppressWarnings({"deprecation"})
 	@Nullable Object convertIfOldPlayer(String key, Event event, @Nullable Object t){
 		if(SkriptConfig.enablePlayerVariableFix.value() && t != null && t instanceof Player){
 			Player p = (Player) t;
@@ -594,7 +592,7 @@ public class Variable<T> implements Expression<T> {
 								assert c != null;
 								ci = Classes.getSuperClassInfo(c);
 								
-								if (ci.getMath() != null)
+								if ((a = ci.getMath()) != null)
 									o = d;
 								if (d instanceof Number) { // Nonexistent variable: add/subtract
 									if (mode == ChangeMode.REMOVE) // Variable is delta negated

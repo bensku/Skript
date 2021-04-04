@@ -14,22 +14,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.bukkitutil.block;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -75,7 +74,6 @@ public class MagicBlockCompat implements BlockCompat {
 		short data;
 		private int itemFlags;
 
-		@SuppressWarnings("null")
 		public MagicBlockValues(BlockState block) {
 			this.id = ItemUtils.asItem(block.getType());
 			this.data = block.getRawData(); // Some black magic here, please look away...
@@ -153,7 +151,11 @@ public class MagicBlockCompat implements BlockCompat {
 			}
 		}
 		
-		
+		@Override
+		public void sendBlockChange(Player player, Location location, Material type, @Nullable BlockValues values) {
+			byte data = values != null ? (byte) ((MagicBlockValues) values).data : 0;
+			player.sendBlockChange(location, type, data);
+		}
 	}
 
 	@Override
@@ -195,7 +197,6 @@ public class MagicBlockCompat implements BlockCompat {
 		return type == Material.WATER || type == Material.LAVA;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	@Nullable
 	public BlockValues getBlockValues(ItemStack stack) {

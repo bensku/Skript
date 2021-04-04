@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events.bukkit;
 
@@ -30,7 +29,6 @@ import ch.njol.skript.util.Getter;
 /**
  * @author Peter Güttinger
  */
-@SuppressWarnings("unchecked")
 public class ScheduledEvent extends Event {
 	static {
 		EventValues.registerEventValue(ScheduledEvent.class, World.class, new Getter<World, ScheduledEvent>() {

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -70,7 +69,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 				return null;
 			classes[i] = exprs[i].getReturnType();
 		}
-		return new LiteralList<R>(exprs, (Class<R>) Utils.getSuperType(classes), and, this);
+		return new LiteralList<>(exprs, (Class<R>) Utils.getSuperType(classes), and, this);
 	}
 	
 	@Override
@@ -88,7 +87,7 @@ public class LiteralList<T> extends ExpressionList<T> implements Literal<T> {
 			final T[] values = (T[]) Array.newInstance(getReturnType(), expressions.length);
 			for (int i = 0; i < values.length; i++)
 				values[i] = ((Literal<? extends T>) expressions[i]).getSingle();
-			return new SimpleLiteral<T>(values, getReturnType(), and);
+			return new SimpleLiteral<>(values, getReturnType(), and);
 		}
 		return this;
 	}

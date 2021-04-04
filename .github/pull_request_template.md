@@ -1,7 +1,7 @@
 ### Description
-<!--- Add something that describes the pull request here --->
+<!--- Describe your changes here. --->
 
 ---
-**Target Minecraft Versions:**     <!-- 'any' means 1.9+ -->
-**Requirements:**     <!-- Is Paper required? Are there plugin requirements?... -->
-**Related Issues:**     <!-- Specify the related issues if any, like #ID -->
+**Target Minecraft Versions:** <!-- 'any' means all supported versions -->
+**Requirements:** <!-- Required plugins, Minecraft versions, server software... -->
+**Related Issues:** <!-- Links to related issues -->
