@@ -231,6 +231,9 @@ public final class Skript extends JavaPlugin implements Listener {
 		return System.getProperty("java.vm.name").contains("64");
 	}
 	
+	private static Version minecraftVersion = new Version(666);
+	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
+	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -246,6 +249,9 @@ public final class Skript extends JavaPlugin implements Listener {
 		} else {
 			minecraftVersion = new Version("" + m.group());
 		}
+		
+		Utils.updateHexSupported(); // Update HEX_SUPPORTED after setting minecraftVersion
+		
 		Skript.debug("Loading for Minecraft " + minecraftVersion);
 		
 		// Check that MC version is supported
@@ -840,9 +846,6 @@ public final class Skript extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
-	private static Version minecraftVersion = new Version(666);
-	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
 	
 	public static Version getMinecraftVersion() {
 		return minecraftVersion;
