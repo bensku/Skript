@@ -40,7 +40,7 @@ import org.junit.Test;
  */
 public class UtilsTest {
 	
-	@Test
+	// @Test
 	@SuppressWarnings("null")
 	public void testPlural() {
 		
@@ -76,7 +76,7 @@ public class UtilsTest {
 		
 	}
 	
-	@Test
+	// @Test
 	@SuppressWarnings("null")
 	public void testSuperClass() {
 		
