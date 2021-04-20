@@ -46,3 +46,6 @@ out/
 
 # Skript testing
 test_runners
+
+# Test server
+testserver/*
