@@ -227,7 +227,7 @@ public class ChatMessages {
 					}
 					name = name.toLowerCase(); // Tags are case-insensitive
 					
-					boolean tryHex = Utils.getHexSupported() && name.startsWith("#");
+					boolean tryHex = Utils.HEX_SUPPORTED && name.startsWith("#");
 					ChatColor chatColor = null;
 					if (tryHex) {
 						chatColor = Utils.parseHexColor(name);
@@ -274,7 +274,7 @@ public class ChatMessages {
 				
 				char color = chars[i + 1];
 				
-				boolean tryHex = Utils.getHexSupported() && color == 'x';
+				boolean tryHex = Utils.HEX_SUPPORTED && color == 'x';
 				ChatColor chatColor = null;
 				if (tryHex && i + 14 < chars.length) { // Try to parse hex "&x&1&2&3&4&5&6"
 					chatColor = Utils.parseHexColor(msg.substring(i + 2, i + 14).replace("&", "").replace("§", ""));
@@ -507,7 +507,7 @@ public class ChatMessages {
 		String plain = sb.toString();
 		
 		// To be extra safe, strip <, >, § and &; protects against bugs in parser
-		if (Utils.getHexSupported()) // Strip '§x'
+		if (Utils.HEX_SUPPORTED) // Strip '§x'
 			plain = plain.replace("§x", "");
 		plain = plain.replace("<", "").replace(">", "").replace("§", "").replace("&", "");
 		assert plain != null;

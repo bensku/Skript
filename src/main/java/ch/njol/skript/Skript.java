@@ -198,6 +198,22 @@ public final class Skript extends JavaPlugin implements Listener {
 		instance = this;
 	}
 	
+	private static Version minecraftVersion = new Version(666);
+	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
+	
+	// Check minecraft version and assign it to minecraftVersion var
+	// This method is created to update mc version before onEnable
+	// To fix Utils.HEX_SUPPORTED being assigned before minecraftVersion is properly assigned
+	public static void updateMinecraftVersion() {
+		String bukkitV = Bukkit.getBukkitVersion();
+		Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
+		if (!m.find()) {
+			minecraftVersion = new Version(666, 0, 0);
+		} else {
+			minecraftVersion = new Version("" + m.group());
+		}
+	}
+	
 	@Nullable
 	private static Version version = null;
 	
@@ -231,9 +247,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		return System.getProperty("java.vm.name").contains("64");
 	}
 	
-	private static Version minecraftVersion = new Version(666);
-	private static ServerPlatform serverPlatform = ServerPlatform.BUKKIT_UNKNOWN; // Start with unknown... onLoad changes this
-	
 	/**
 	 * Checks if server software and Minecraft version are supported.
 	 * Prints errors or warnings to console if something is wrong.
@@ -249,9 +262,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		} else {
 			minecraftVersion = new Version("" + m.group());
 		}
-		
-		Utils.updateHexSupported(); // Update HEX_SUPPORTED after setting minecraftVersion
-		
 		Skript.debug("Loading for Minecraft " + minecraftVersion);
 		
 		// Check that MC version is supported
@@ -862,14 +872,17 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @return Whether this server is running Minecraft <tt>major.minor</tt> or higher
 	 */
 	public static boolean isRunningMinecraft(final int major, final int minor) {
+		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); } // Make sure minecraftVersion is properly assigned
 		return minecraftVersion.compareTo(major, minor) >= 0;
 	}
 	
 	public static boolean isRunningMinecraft(final int major, final int minor, final int revision) {
+		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); }
 		return minecraftVersion.compareTo(major, minor, revision) >= 0;
 	}
 	
 	public static boolean isRunningMinecraft(final Version v) {
+		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); }
 		return minecraftVersion.compareTo(v) >= 0;
 	}
 	
@@ -1056,13 +1069,8 @@ public final class Skript extends JavaPlugin implements Listener {
 					Thread.sleep(10000);
 				} catch (final InterruptedException e) {}
 				try {
-					Field modifiers = null;
-					try {
-						modifiers = Field.class.getDeclaredField("modifiers");
-					} catch (final NoSuchFieldException ignored) { /* ignored */ }
-					if (modifiers != null) {
-						modifiers.setAccessible(true);
-					}
+					final Field modifiers = Field.class.getDeclaredField("modifiers");
+					modifiers.setAccessible(true);
 					final JarFile jar = new JarFile(getFile());
 					try {
 						for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
@@ -1071,13 +1079,11 @@ public final class Skript extends JavaPlugin implements Listener {
 									final Class<?> c = Class.forName(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()), false, getClassLoader());
 									for (final Field f : c.getDeclaredFields()) {
 										if (Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive()) {
-											if (Modifier.isFinal(f.getModifiers()) && modifiers != null) {
+											if (Modifier.isFinal(f.getModifiers())) {
 												modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 											}
-											if (!Modifier.isFinal(f.getModifiers())) {
-												f.setAccessible(true);
-												f.set(null, null);
-											}
+											f.setAccessible(true);
+											f.set(null, null);
 										}
 									}
 								} catch (final Throwable ex) {
@@ -1398,7 +1404,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			} else {
 				final ServerCommandEvent e = new ServerCommandEvent(sender, command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.getCommand().isEmpty() || e.isCancelled())
+				if (e.getCommand().isEmpty())
 					return false;
 				return Bukkit.dispatchCommand(e.getSender(), e.getCommand());
 			}

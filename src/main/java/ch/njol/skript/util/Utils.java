@@ -477,19 +477,7 @@ public abstract class Utils {
 	final static ChatColor[] styles = {ChatColor.BOLD, ChatColor.ITALIC, ChatColor.STRIKETHROUGH, ChatColor.UNDERLINE, ChatColor.MAGIC, ChatColor.RESET};
 	final static Map<String, String> chat = new HashMap<>();
 	final static Map<String, String> englishChat = new HashMap<>();
-	
-	/*
-	 * When this is checked, minecraftVersion will be still not correctly set to actual minecraft version
-	 * because checkServerPlatform() gets called onEnable while HEX_SUPPORTED is called before onEnable
-	 */
-	private static boolean HEX_SUPPORTED = false; // False by default as it will be updated to correct value onEnable
-	
-	public static boolean getHexSupported() {
-		return HEX_SUPPORTED;
-	}
-	public static void updateHexSupported() {
-		HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
-	}
+	public final static boolean HEX_SUPPORTED = Skript.isRunningMinecraft(1, 16);
 	
 	static {
 		Language.addListener(new LanguageChangeListener() {
@@ -602,11 +590,10 @@ public abstract class Utils {
 	@SuppressWarnings("null")
 	@Nullable
 	public static ChatColor parseHexColor(String hex) {
-		
 		if (!HEX_SUPPORTED) { return null; } // Extra check layer
-		
+
 		if (!hex.matches("(?i)#[0-9a-z]{6}")) { return null; } // Proper hex code validation
-		
+
 		hex = hex.replace("#", "");
 		if (hex.length() < 6)
 			return null;
