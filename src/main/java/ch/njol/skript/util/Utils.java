@@ -605,7 +605,7 @@ public abstract class Utils {
 		
 		if (!HEX_SUPPORTED) { return null; } // Extra check layer
 		
-		if (!hex.matches("(?i)<#[0-9a-z]{6}>")) { return null; } // Proper hex code validation
+		if (!hex.matches("(?i)#[0-9a-z]{6}")) { return null; } // Proper hex code validation
 		
 		hex = hex.replace("#", "");
 		if (hex.length() < 6)
