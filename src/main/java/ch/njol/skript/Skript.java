@@ -872,17 +872,17 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @return Whether this server is running Minecraft <tt>major.minor</tt> or higher
 	 */
 	public static boolean isRunningMinecraft(final int major, final int minor) {
-		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); } // Make sure minecraftVersion is properly assigned
+		if (minecraftVersion.compareTo(new Version(666)) == 0) { updateMinecraftVersion(); } // Make sure minecraftVersion is properly assigned
 		return minecraftVersion.compareTo(major, minor) >= 0;
 	}
 	
 	public static boolean isRunningMinecraft(final int major, final int minor, final int revision) {
-		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); }
+		if (minecraftVersion.compareTo(new Version(666)) == 0) { updateMinecraftVersion(); }
 		return minecraftVersion.compareTo(major, minor, revision) >= 0;
 	}
 	
 	public static boolean isRunningMinecraft(final Version v) {
-		if (minecraftVersion.compareTo(666) == 0) { updateMinecraftVersion(); }
+		if (minecraftVersion.compareTo(new Version(666)) == 0) { updateMinecraftVersion(); }
 		return minecraftVersion.compareTo(v) >= 0;
 	}
 	
