@@ -592,18 +592,16 @@ public abstract class Utils {
 	@Nullable
 	public static ChatColor parseHexColor(String hex) {
 		// Extra check layer
-		if (!HEX_SUPPORTED) {
+		if (!HEX_SUPPORTED)
 			return null;
-		} 
+		
 
 		// Proper hex code validation
-		if (!hex.matches("(?i)#[0-9a-z]{6}")) { 
+		if (!hex.matches("(?i)#[0-9a-z]{6}")) 
 			return null;
-		} 
-
+		
 		hex = hex.replace("#", "");
-		if (hex.length() < 6)
-			return null;
+		
 		try {
 			return ChatColor.of('#' + hex.substring(0, 6));
 		} catch (IllegalArgumentException e) {
