@@ -90,17 +90,18 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 					.filter(f -> { // Filteration for enable, disable and reload
 						if (args[0].equalsIgnoreCase("enable"))
 							return f.getName().startsWith("-");
-						else // reload & disable both accepts only non-hyphened files and hidden folders
+						else // reload & disable both accepts only non-hyphened files and not hidden folders
 							return !f.getName().startsWith("-") && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory());
 					})
 					.filter(f -> { // Autocomplete incomplete script name arg
 						return scriptArg.length() > 0 ? f.getName().startsWith(scriptArg) : true;
 					})
 					.forEach(f -> {
-						options.add(f.toString()
-							.replace(scripts.toPath().toString() + fs, "") // Extract file short path
-							.replace(scripts.toPath().toString(), "") // Extract file short path
-							+ (f.isDirectory() && f.toString().length() > 0 ? fs : "")); // add File.separator at the end of directories
+						if (!f.toString().equals(scripts.toString()))
+							options.add(f.toString()
+								.replace(scripts.toPath().toString() + fs, "") // Extract file short path
+								.replace(scripts.toPath().toString(), "") // Extract file short path
+								+ (f.isDirectory() && f.toString().length() > 0 ? fs : "")); // add File.separator at the end of directories
 					}); 
 				
 			// TODO handle file permissions
