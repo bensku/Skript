@@ -29,27 +29,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import ch.njol.util.StringUtils;
 
-/*
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
- */
-
 /**
  * @author Peter Güttinger
  */
@@ -87,7 +66,7 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 				Files.walk(scripts.toPath())
 					.map(Path::toFile)
 					.filter(f -> (!f.isDirectory() && f.getName().toLowerCase().endsWith(".sk")) || f.isDirectory()) // filter folders and skript files only 
-					.filter(f -> { // Filteration for enable, disable and reload
+					.filter(f -> { // Filtration for enable, disable and reload
 						if (args[0].equalsIgnoreCase("enable"))
 							return f.getName().startsWith("-");
 						else // reload & disable both accepts only non-hyphened files and not hidden folders
