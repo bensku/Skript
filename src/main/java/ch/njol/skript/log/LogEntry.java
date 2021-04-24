@@ -130,7 +130,26 @@ public class LogEntry {
 		if (n == null || level.intValue() < Level.WARNING.intValue())
 			return message;
 		final Config c = n.getConfig();
-		return message + from + " (" + c.getFileName() + ", line " + n.getLine() + ": " + n.save().trim() + "')";
+		
+		String t = "    "; // Because \t shows unknown char in mc
+		boolean isError = level.intValue() == Level.SEVERE.intValue();
+		
+		String levelColor;
+		if (level.intValue() == Level.WARNING.intValue()) // Warnings
+			levelColor = "§e";
+		else if (isError) // Errors 
+			levelColor = "§c";
+		else // Anything else?
+			levelColor = "§f";
+		
+		return
+			(isError ? "§4" : "§6") + "§lLine " + n.getLine() + ":§7 (" + c.getFileName() + ")" +
+			"\n" + 
+			t + levelColor + message + 
+			from +
+			"\n" + 
+			t + "§6Line: §7" + n.save().trim() + 
+			"\n ";
 	}
 	
 }

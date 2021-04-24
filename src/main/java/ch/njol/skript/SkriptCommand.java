@@ -117,7 +117,7 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private static void reloading(final CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : Language.format(NODE + ".reload." + what, args);
-		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what)));
+		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what) + "\n "));
 	}
 	
 	private final static ArgsMessage m_reloaded = new ArgsMessage(NODE + ".reload.reloaded");
@@ -126,9 +126,9 @@ public class SkriptCommand implements CommandExecutor {
 	private static void reloaded(final CommandSender sender, final RedirectingLogHandler r, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
-			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what))));
+			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what, String.valueOf(r.getTimeTaken())))));
 		else
-			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors()))));
+			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors(), String.valueOf(r.getTimeTaken())))));
 	}
 	
 	private static void info(final CommandSender sender, String what, final Object... args) {
