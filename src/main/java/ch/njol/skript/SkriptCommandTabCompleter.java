@@ -78,8 +78,7 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 					.forEach(f -> {
 						if (!f.toString().equals(scripts.toString()))
 							options.add(f.toString()
-								.replace(scripts.toPath().toString() + fs, "") // Extract file short path
-								.replace(scripts.toPath().toString(), "") // Extract file short path
+								.replace(scripts.toPath().toString() + (!f.isDirectory() && f.getParentFile().toPath().toString().equals(scripts.toPath().toString()) ? fs : ""), "") // Extract file short path, and remove '/' from the beginning of files in root only
 								+ (f.isDirectory() && f.toString().length() > 0 ? fs : "")); // add File.separator at the end of directories
 					}); 
 				
