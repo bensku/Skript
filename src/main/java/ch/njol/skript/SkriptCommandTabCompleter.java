@@ -70,7 +70,7 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 						if (args[0].equalsIgnoreCase("enable"))
 							return f.getName().startsWith("-");
 						else // reload & disable both accepts only non-hyphened files and not hidden folders
-							return !f.getName().startsWith("-") && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory());
+							return !f.getAbsolutePath().matches(".*?(\\\\-|/-|^-).*") && (f.isDirectory() && !f.getAbsolutePath().matches(".*?(\\\\\\.|/\\.|^\\.).*") || !f.isDirectory());
 					})
 					.filter(f -> { // Autocomplete incomplete script name arg
 						return scriptArg.length() > 0 ? f.getName().startsWith(scriptArg) : true;
