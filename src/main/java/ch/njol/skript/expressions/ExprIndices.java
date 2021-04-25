@@ -34,24 +34,32 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.Kleenean;
 
-@Name("Indexes of List")
-@Description("Returns all the indexes of a list variable")
+@Name("Indices of List")
+@Description(
+	"Returns all the indices of a list variable, optionally sorted by their values.\n" +
+	"To sort the indices, all objects in the list must be comparable;\n" +
+	"if they're not, this expression will return the indices without sorting."
+)
 @Examples("set {l::*} to \"some\", \"cool\" and \"values\"\n" +
 		"broadcast \"%all indexes of {l::*}%\" # result is 1, 2 and 3")
-@Since("2.4")
+@Since("2.4 (indices), INSERT-VERSION (sorting)")
 public class ExprIndices extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprIndices.class, String.class, ExpressionType.COMBINED,
-				"[the] (indexes|indices) of %objects%",
-				"(all of the|all the|all) (indices|indexes) of %objects%"
+				"[the] (indexes|indices) of %objects% [(1¦sorted by value[ in (2¦ascending|3¦descending) order])]",
+				"(all of the|all the|all) (indices|indexes) of %objects% [(1¦sorted by value[ in (2¦ascending|3¦descending) order])]"
 		);
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings({"null", "NotNullFieldNotInitialized"})
 	private Variable<?> list;
+	
+	private boolean shouldSort = false;
+	private boolean descending = false;
 	
 	@Nullable
 	@Override
@@ -61,7 +69,22 @@ public class ExprIndices extends SimpleExpression<String> {
 		if (valueMap == null) {
 			return null;
 		}
-		return valueMap.keySet().toArray(new String[0]);
+		
+		if (shouldSort) {
+			int direction = descending ? -1 : 1;
+			
+			return valueMap.entrySet().stream()
+				.sorted((a, b) ->
+					Comparators.compare(
+						a.getValue(),
+						b.getValue()
+					).getRelation() * direction)
+				.map(Map.Entry::getKey)
+				.toArray(String[]::new);
+			
+		} else {
+			return valueMap.keySet().toArray(new String[0]);
+		}
 	}
 	
 	@Override
@@ -76,20 +99,33 @@ public class ExprIndices extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
+		StringBuilder builder = new StringBuilder("all indices of ");
+		
 		// we need to provide a null event otherwise the string value is what's held in the var
-		return "all indexes of " + list.toString(null, debug);
+		builder.append(list.toString(null, debug));
+		
+		if (shouldSort) {
+			builder.append(" sorted by value in ");
+			builder.append(descending ? "descending" : "ascending");
+			builder.append(" order");
+		}
+		
+		return builder.toString();
 	}
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		shouldSort = parseResult.mark > 0;
+		descending = parseResult.mark == 2; // Because parse marks are XORd, and 1 ⊕ 3 = 2
+		
 		if (exprs[0] instanceof Variable<?> && ((Variable<?>) exprs[0]).isList()) {
 			list = (Variable<?>) exprs[0];
 			return true;
 		}
 		
-		// things like "all indexes of fake expression" shouldn't have any output at all
+		// things like "all indices of fake expression" shouldn't have any output at all
 		if (!(exprs[0] instanceof UnparsedLiteral)) {
-			Skript.error("The indexes expression may only be used with list variables");
+			Skript.error("The indices expression may only be used with list variables");
 		}
 		
 		return false;
