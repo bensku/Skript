@@ -102,7 +102,7 @@ public class ExprIndices extends SimpleExpression<String> {
         String text = "all indices of ";
 		
 		// we need to provide a null event otherwise the string value is what's held in the var
-		text += list.toString(null, debug));
+		text += list.toString(null, debug);
 		
 		if (shouldSort) {
             text += " sorted by value in ";
