@@ -38,11 +38,11 @@ import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.Kleenean;
 
 @Name("Indices of List")
-@Description(
+@Description({
 	"Returns all the indices of a list variable, optionally sorted by their values",
 	"To sort the indices, all objects in the list must be comparable;",
 	"if they're not, this expression will return the indices without sorting."
-)
+})
 @Examples("set {l::*} to \"some\", \"cool\" and \"values\"\n" +
 		"broadcast \"%all indexes of {l::*}%\" # result is 1, 2 and 3")
 @Since("2.4 (indices), INSERT-VERSION (sorting)")
