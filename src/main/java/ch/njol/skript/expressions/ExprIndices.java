@@ -39,8 +39,8 @@ import ch.njol.util.Kleenean;
 
 @Name("Indices of List")
 @Description(
-	"Returns all the indices of a list variable, optionally sorted by their values.\n" +
-	"To sort the indices, all objects in the list must be comparable;\n" +
+	"Returns all the indices of a list variable, optionally sorted by their values",
+	"To sort the indices, all objects in the list must be comparable;",
 	"if they're not, this expression will return the indices without sorting."
 )
 @Examples("set {l::*} to \"some\", \"cool\" and \"values\"\n" +
@@ -99,18 +99,18 @@ public class ExprIndices extends SimpleExpression<String> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		StringBuilder builder = new StringBuilder("all indices of ");
+        String text = "all indices of ";
 		
 		// we need to provide a null event otherwise the string value is what's held in the var
-		builder.append(list.toString(null, debug));
+		text += list.toString(null, debug));
 		
 		if (shouldSort) {
-			builder.append(" sorted by value in ");
-			builder.append(descending ? "descending" : "ascending");
-			builder.append(" order");
+            text += " sorted by value in ";
+            text += (descending ? "descending" : "ascending");
+            text += " order";
 		}
 		
-		return builder.toString();
+		return text;
 	}
 	
 	@Override
