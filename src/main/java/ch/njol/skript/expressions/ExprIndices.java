@@ -45,13 +45,13 @@ import ch.njol.util.Kleenean;
 })
 @Examples("set {l::*} to \"some\", \"cool\" and \"values\"\n" +
 		"broadcast \"%all indexes of {l::*}%\" # result is 1, 2 and 3")
-@Since("2.4 (indices), INSERT-VERSION (sorting)")
+@Since("2.4 (indices), INSERT VERSION (sorting)")
 public class ExprIndices extends SimpleExpression<String> {
 	
 	static {
 		Skript.registerExpression(ExprIndices.class, String.class, ExpressionType.COMBINED,
-				"[the] (indexes|indices) of %objects% [(1¦sorted by value[ in (2¦ascending|3¦descending) order])]",
-				"(all of the|all the|all) (indices|indexes) of %objects% [(1¦sorted by value[ in (2¦ascending|3¦descending) order])]"
+				"[the] (indexes|indices) of %objects% [(1¦sorted by value [in (2¦ascending|3¦descending) order])]",
+				"(all of the|all the|all) (indices|indexes) of %objects% [(1¦sorted by value [in (2¦ascending|3¦descending) order])]"
 		);
 	}
 	
