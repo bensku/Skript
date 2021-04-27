@@ -1144,7 +1144,7 @@ entities:
 		pattern: cyan parrot(|1¦s)
 	gray parrot:
 		name: gray parrot¦s
-		pattern:  gray parrot(|1¦s)
+		pattern: gray parrot(|1¦s)
 	monster:
 		name: monster¦s
 		pattern: monster(|1¦s)
@@ -1254,15 +1254,15 @@ entities:
 
 # -- Heal Reasons --
 heal reasons:
-    custom: unknown, custom, plugin, a plugin
-    eating: eating, consuming, ingesting
-    ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
-    magic: magic, potion, a potion
-    magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
-    regen: peaceful regeneration, peaceful regen, peaceful
-    satiated: satiated, satisfied, fed, sated
-    wither: withering, withered, wither potion, a wither effect, wither effect, wither
-    wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
+	custom: unknown, custom, plugin, a plugin
+	eating: eating, consuming, ingesting
+	ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
+	magic: magic, potion, a potion
+	magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
+	regen: peaceful regeneration, peaceful regen, peaceful
+	satiated: satiated, satisfied, fed, sated
+	wither: withering, withered, wither potion, a wither effect, wither effect, wither
+	wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
 
 # -- Cat Types --
 cat types:
@@ -1334,7 +1334,7 @@ visual effects:
 		name: ender signal @an
 		pattern: ender [eye] signal[s]
 	mobspawner_flames:
-		name: mobspawner flames  @x
+		name: mobspawner flames @x
 		pattern: [mo(b|nster)][ ]spawner flames
 	potion_break:
 		name: potion break @a
