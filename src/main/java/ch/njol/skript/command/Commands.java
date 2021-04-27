@@ -574,6 +574,17 @@ public abstract class Commands {
 		commands.clear();
 	}
 	
+	// Skript Commands
+	public static Map<String, ScriptCommand> getCommands() {
+		return commands;
+	}
+	
+	// All Server Commands
+	@Nullable
+	public static SimpleCommandMap getCommandMap() {
+		return commandMap;
+	}
+	
 	/**
 	 * copied from CraftBukkit (org.bukkit.craftbukkit.help.CommandAliasHelpTopic)
 	 */
