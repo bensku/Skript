@@ -295,8 +295,23 @@ public abstract class SkriptConfig {
 				
 			});
 
-	public final static Option<Integer> scriptLoaderThreadSize = new Option<>("script loader thread size", 0)
-			.setter(ScriptLoader::setAsyncLoaderSize)
+	public final static Option<String> scriptLoaderThreadSize = new Option<>("script loader thread size", "0")
+			.setter(s -> {
+				int asyncLoaderSize;
+				
+				if (s.equalsIgnoreCase("processor count")) {
+					asyncLoaderSize = Runtime.getRuntime().availableProcessors();
+				} else {
+					try {
+						asyncLoaderSize = Integer.parseInt(s);
+					} catch (NumberFormatException e) {
+						Skript.error("Invalid option: " + s);
+						return;
+					}
+				}
+				
+				ScriptLoader.setAsyncLoaderSize(asyncLoaderSize);
+			})
 			.optional(true);
 	
 	public final static Option<Boolean> allowUnsafePlatforms = new Option<Boolean>("allow unsafe platforms", false)
