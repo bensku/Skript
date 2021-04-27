@@ -250,16 +250,11 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		// Check that MC version is supported
 		if (!isRunningMinecraft(1, 9)) {
-			if (isRunningMinecraft(1, 8)) { // 1.8 probably works, but let's spit a warning
-				Skript.warning("Using this version of Skript on 1.8 is highly discouraged.");
-				Skript.warning("Some features have been disabled; use older Skript to restore them.");
-				Skript.warning("Also, there are probably bugs. And since 1.8 is not supported, they will not be fixed");
-			} else { // Older versions definitely do not work
-				Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion);
-				Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
-				Skript.error("Note that those versions are, of course, completely unsupported!");
-				return false;
-			}
+			// Prevent loading when not running at least Minecraft 1.9
+			Skript.error("This version of Skript does not work with Minecraft " + minecraftVersion + " and requires Minecraft 1.9.4+");
+			Skript.error("You probably want Skript 2.2 or 2.1 (Google to find where to get them)");
+			Skript.error("Note that those versions are, of course, completely unsupported!");
+			return false;
 		}
 		
 		// Check that current server platform is somewhat supported
@@ -387,19 +382,19 @@ public final class Skript extends JavaPlugin implements Listener {
 		// ... but also before platform check, because there is a config option to ignore some errors
 		SkriptConfig.load();
 		
+		// Check server software, Minecraft version, etc.
+		if (!checkServerPlatform()) {
+			disabled = true; // Nothing was loaded, nothing needs to be unloaded
+			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
+			return;
+		}
+		
 		// Use the updater, now that it has been configured to (not) do stuff
 		if (updater != null) {
 			CommandSender console = Bukkit.getConsoleSender();
 			assert console != null;
 			assert updater != null;
 			updater.updateCheck(console);
-		}
-		
-		// Check server software, Minecraft version, etc.
-		if (!checkServerPlatform()) {
-			disabled = true; // Nothing was loaded, nothing needs to be unloaded
-			setEnabled(false); // Cannot continue; user got errors in console to tell what happened
-			return;
 		}
 		
 		BukkitUnsafe.initialize(); // Needed for aliases
@@ -1058,8 +1053,13 @@ public final class Skript extends JavaPlugin implements Listener {
 					Thread.sleep(10000);
 				} catch (final InterruptedException e) {}
 				try {
-					final Field modifiers = Field.class.getDeclaredField("modifiers");
-					modifiers.setAccessible(true);
+					Field modifiers = null;
+					try {
+						modifiers = Field.class.getDeclaredField("modifiers");
+					} catch (final NoSuchFieldException ignored) { /* ignored */ }
+					if (modifiers != null) {
+						modifiers.setAccessible(true);
+					}
 					final JarFile jar = new JarFile(getFile());
 					try {
 						for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
@@ -1068,11 +1068,13 @@ public final class Skript extends JavaPlugin implements Listener {
 									final Class<?> c = Class.forName(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()), false, getClassLoader());
 									for (final Field f : c.getDeclaredFields()) {
 										if (Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive()) {
-											if (Modifier.isFinal(f.getModifiers())) {
+											if (Modifier.isFinal(f.getModifiers()) && modifiers != null) {
 												modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 											}
-											f.setAccessible(true);
-											f.set(null, null);
+											if (!Modifier.isFinal(f.getModifiers())) {
+												f.setAccessible(true);
+												f.set(null, null);
+											}
 										}
 									}
 								} catch (final Throwable ex) {
@@ -1300,7 +1302,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		if (returnType.isAnnotation() || returnType.isArray() || returnType.isPrimitive())
 			throw new IllegalArgumentException("returnType must be a normal type");
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
-		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath);
+		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath, type);
 		for (int i = type.ordinal() + 1; i < ExpressionType.values().length; i++) {
 			expressionTypesStartIndices[i]++;
 		}
@@ -1393,7 +1395,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			} else {
 				final ServerCommandEvent e = new ServerCommandEvent(sender, command);
 				Bukkit.getPluginManager().callEvent(e);
-				if (e.getCommand().isEmpty())
+				if (e.getCommand().isEmpty() || e.isCancelled())
 					return false;
 				return Bukkit.dispatchCommand(e.getSender(), e.getCommand());
 			}

@@ -257,6 +257,26 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
+	public boolean isBuildable() {
+		return state.getBlock().isBuildable();
+	}
+	
+	@Override
+	public boolean isBurnable() {
+		return state.getBlock().isBurnable();
+	}
+	
+	@Override
+	public boolean isReplaceable() {
+		return state.getBlock().isReplaceable();
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return state.getBlock().isSolid();
+	}
+	
+	@Override
 	public double getTemperature() {
 		return state.getBlock().getTemperature();
 	}
@@ -444,4 +464,10 @@ public class BlockStateBlock implements Block {
 	public String getTranslationKey() {
 		return state.getBlock().getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return state.getBlock().getDestroySpeed(itemStack);
+	}
+	
 }

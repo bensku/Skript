@@ -48,8 +48,8 @@ public class AABB implements Iterable<Block> {
 		if (l1.getWorld() != l2.getWorld())
 			throw new IllegalArgumentException("Locations must be in the same world");
 		world = l1.getWorld();
-		lowerBound = new Vector(Math.min(l1.getX(), l2.getX()), Math.min(l1.getY(), l2.getY()), Math.min(l1.getZ(), l2.getZ()));
-		upperBound = new Vector(Math.max(l1.getX(), l2.getX()), Math.max(l1.getY(), l2.getY()), Math.max(l1.getZ(), l2.getZ()));
+		lowerBound = new Vector(Math.min(l1.getBlockX(), l2.getBlockX()), Math.min(l1.getBlockY(), l2.getBlockY()), Math.min(l1.getBlockZ(), l2.getBlockZ()));
+		upperBound = new Vector(Math.max(l1.getBlockX(), l2.getBlockX()), Math.max(l1.getBlockY(), l2.getBlockY()), Math.max(l1.getBlockZ(), l2.getBlockZ()));
 	}
 	
 	public AABB(final Block b1, final Block b2) {
@@ -71,7 +71,7 @@ public class AABB implements Iterable<Block> {
 	public AABB(final World w, final Vector v1, final Vector v2) {
 		world = w;
 		lowerBound = new Vector(Math.min(v1.getX(), v2.getX()), Math.min(v1.getY(), v2.getY()), Math.min(v1.getZ(), v2.getZ()));
-		upperBound = new Vector(Math.max(v1.getX(), v2.getX()) + 1, Math.max(v1.getY(), v2.getY()) + 1, Math.max(v1.getZ(), v2.getZ()) + 1);
+		upperBound = new Vector(Math.max(v1.getX(), v2.getX()), Math.max(v1.getY(), v2.getY()), Math.max(v1.getZ(), v2.getZ()));
 	}
 	
 	public AABB(final Chunk c) {
@@ -109,9 +109,9 @@ public class AABB implements Iterable<Block> {
 			private final int minX = Math2.ceilI(lowerBound.getX() - Skript.EPSILON),
 					minY = Math2.ceilI(lowerBound.getY() - Skript.EPSILON),
 					minZ = Math2.ceilI(lowerBound.getZ() - Skript.EPSILON);
-			private final int maxX = Math2.floorI(upperBound.getX() + Skript.EPSILON) - 1,
-					maxY = Math2.floorI(upperBound.getY() + Skript.EPSILON) - 1,
-					maxZ = Math2.floorI(upperBound.getZ() + Skript.EPSILON) - 1;
+			private final int maxX = Math2.floorI(upperBound.getX() + Skript.EPSILON),
+					maxY = Math2.floorI(upperBound.getY() + Skript.EPSILON),
+					maxZ = Math2.floorI(upperBound.getZ() + Skript.EPSILON);
 			
 			private int x = minX - 1,// next() increases x by one immediately
 					y = minY,
