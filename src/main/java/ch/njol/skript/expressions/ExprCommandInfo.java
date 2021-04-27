@@ -40,7 +40,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-
 @Name("Command Info")
 @Description("Get information about a command.")
 @Examples({"main name of command \"skript\"",
@@ -53,7 +52,18 @@ import ch.njol.util.Kleenean;
 	"command \"sk\"'s plugin owner"})
 @Since("INSERT VERSION")
 public class ExprCommandInfo extends SimpleExpression<String> {
-	
+
+	private enum InfoType {
+		NAME,
+		DESCRIPTION,
+		LABEL,
+		USAGE,
+		ALIASES,
+		PERMISSION,
+		PERMISSION_MESSAGE,
+		PLUGIN,
+	}
+
 	static {
 		Skript.registerExpression(ExprCommandInfo.class, String.class, ExpressionType.SIMPLE,
 			"[the] main command [label] of command %strings%", "command %strings%'[s] main command [name]",
@@ -65,19 +75,19 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 			"[the] permission message of command %strings%", "command %strings%'[s] permission message",
 			"[the] plugin [owner] of command %strings%", "command %strings%'[s] plugin [owner]");
 	}
-	
+
 	@SuppressWarnings("null")
 	InfoType type;
 	@SuppressWarnings("null")
 	Expression<String> commandName;
-	
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		commandName = (Expression<String>) exprs[0];
 		type = InfoType.values()[Math.floorDiv(matchedPattern, 2)];
 		return true;
 	}
-	
+
 	@Nullable
 	@Override
 	@SuppressWarnings("null")
@@ -130,31 +140,19 @@ public class ExprCommandInfo extends SimpleExpression<String> {
 		}
 		return result.toArray(new String[0]);
 	}
-	
+
 	@Override
 	public boolean isSingle() {
-		return false;
+		return type == InfoType.ALIASES || commandName.isSingle();
 	}
-	
+
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the " + type.name().toLowerCase().replace("_", " ") + " of command " + commandName.toString(e, debug);
 	}
-	
-	private enum InfoType {
-		NAME,
-		DESCRIPTION,
-		LABEL,
-		USAGE,
-		ALIASES,
-		PERMISSION,
-		PERMISSION_MESSAGE,
-		PLUGIN,
-	}
-	
 }
