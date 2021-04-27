@@ -48,7 +48,6 @@ final class VariablesMap {
 				char c1 = s1.charAt(i);
 				char c2 = s2.charAt(j);
 				
-				// TODO negative numbers? what about {blah-%number%}? // '-' < '0'
 				if ('0' <= c1 && c1 <= '9' && '0' <= c2 && c2 <= '9') {
 					// Numbers/digits are treated differently from other characters.
 					int i2 = StringUtils.findLastDigit(s1, i);
