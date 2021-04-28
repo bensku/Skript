@@ -93,9 +93,9 @@ final class VariablesMap {
 				}
 			}
 			if (i < s1.length())
-				return 1;
+				return lastNumberNegative ? -1 : 1;
 			if (j < s2.length())
-				return -1;
+				return lastNumberNegative ? 1 : -1;
 			return 0;
 		}
 	};
