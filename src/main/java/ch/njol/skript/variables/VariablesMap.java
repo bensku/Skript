@@ -31,43 +31,46 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.StringUtils;
 
 final class VariablesMap {
-	
+
 	final static Comparator<String> variableNameComparator = new Comparator<String>() {
 		@Override
 		public int compare(@Nullable String s1, @Nullable String s2) {
 			if (s1 == null)
 				return s2 == null ? 0 : -1;
-			
+
 			if (s2 == null)
 				return 1;
-			
+
 			int i = 0;
 			int j = 0;
-			
+
 			while (i < s1.length() && j < s2.length()) {
 				char c1 = s1.charAt(i);
 				char c2 = s2.charAt(j);
-				
+
 				if ('0' <= c1 && c1 <= '9' && '0' <= c2 && c2 <= '9') {
 					// Numbers/digits are treated differently from other characters.
 					int i2 = StringUtils.findLastDigit(s1, i);
 					int j2 = StringUtils.findLastDigit(s2, j);
-					
+
 					long n1 = Utils.parseLong("" + s1.substring(i, i2));
 					long n2 = Utils.parseLong("" + s2.substring(j, j2));
-					
+
+					// If the number is prefixed by a '-', it should be treated as negative, thus inverting the order.
+					int isPositive = (i > 0 && s1.charAt(i - 1) == '-') ? -1 : 1;
+
 					if (n1 > n2)
-						return 1;
-					
+						return isPositive;
+
 					if (n1 < n2)
-						return -1;
-					
+						return -1 * isPositive;
+
 					// Represent same number, but different length, indicating leading zeros
 					if (i2 - i > j2 - j)
 						return -1;
 					if (i2 - i < j2 - j)
 						return 1;
-					
+
 					i = i2;
 					j = j2;
 				} else {
