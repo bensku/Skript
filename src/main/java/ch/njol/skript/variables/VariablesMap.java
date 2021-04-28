@@ -44,6 +44,7 @@ final class VariablesMap {
 			int i = 0;
 			int j = 0;
 
+			boolean lastNumberNegative = false;
 			while (i < s1.length() && j < s2.length()) {
 				char c1 = s1.charAt(i);
 				char c2 = s2.charAt(j);
@@ -57,7 +58,12 @@ final class VariablesMap {
 					long n2 = Utils.parseLong("" + s2.substring(j, j2));
 
 					// If the number is prefixed by a '-', it should be treated as negative, thus inverting the order.
-					int isPositive = (i > 0 && s1.charAt(i - 1) == '-') ? -1 : 1;
+					// If the previous number was negative, and the only thing separating them was a '.',
+					//  then this number should also be in inverted order.
+					boolean previousNegative = lastNumberNegative;
+
+					lastNumberNegative = i > 0 && s1.charAt(i - 1) == '-';
+					int isPositive = (lastNumberNegative | previousNegative) ? -1 : 1;
 
 					if (n1 > n2)
 						return isPositive;
@@ -79,6 +85,9 @@ final class VariablesMap {
 						return 1;
 					if (c1 < c2)
 						return -1;
+					// Reset the last number flag if we're exiting a number.
+					if (c1 != '.')
+						lastNumberNegative = false;
 					i++;
 					j++;
 				}
