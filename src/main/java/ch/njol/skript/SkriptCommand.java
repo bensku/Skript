@@ -51,9 +51,6 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-/**
- * @author Peter Güttinger
- */
 public class SkriptCommand implements CommandExecutor {
 	private final static String NODE = "skript command";
 	
