@@ -55,9 +55,7 @@ public class CondContains extends Condition {
 			"%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
 			"%inventories% (doesn't|does not|do not|don't) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
 			"%inventories/strings/objects% contain[(1¦s)] %itemtypes/strings/objects%",
-			"%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%",
-			"%string% contains %strings%",
-			"%string% (doesn't|does not|do not|don't) contain %strings%"
+			"%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%"
 		);
 	}
 
@@ -82,14 +80,12 @@ public class CondContains extends Condition {
 		containers = exprs[0];
 		items = exprs[1];
 
-		explicitSingle = matchedPattern == 2 && parseResult.mark != 1;
+		explicitSingle = matchedPattern == 2 && parseResult.mark != 1 || containers.isSingle();
 
 		if (matchedPattern <= 1) {
 			checkType = CheckType.INVENTORY;
-		} else if (matchedPattern <= 3) {
-			checkType = CheckType.UNKNOWN;
 		} else {
-			checkType = CheckType.STRING;
+			checkType = CheckType.UNKNOWN;
 		}
 
 		setNegated(matchedPattern % 2 == 1);
