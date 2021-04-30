@@ -301,6 +301,15 @@ public class ScriptLoader {
 	}
 	
 	/**
+	 * Checks if scripts are loaded in multiple threads instead of one thread.
+	 * If true, {@link #isAsync()} will also be true.
+	 * @return if parallel loading is enabled.
+	 */
+	public static boolean isParallel() {
+		return asyncLoaderSize > 1;
+	}
+	
+	/**
 	 * Sets the amount of async loaders, by updating
 	 * {@link #asyncLoaderSize} and {@link #loaderThreads}.
 	 * <br>
