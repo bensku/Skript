@@ -205,8 +205,20 @@ public class HTMLGenerator {
 				File fileTo = new File(output + slashName);
 				fileTo.mkdirs();
 				for (File filesInside : new File(template + slashName).listFiles()) {
-					if (!filesInside.isDirectory()) {
+					if (filesInside.isDirectory()) 
+						continue;
+						
+					if (!filesInside.getName().toLowerCase().endsWith(".png")) {
 						writeFile(new File(fileTo + "/" + filesInside.getName()), readFile(filesInside));
+					}
+					
+					else if (!filesInside.getName().matches("(?i)(.*)\\.(html?|js|css|json)")) { // Copy images
+						try {
+							Files.copy(filesInside, new File(fileTo + "/" + filesInside.getName()));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+							
 					}
 				}
 				continue;
@@ -239,6 +251,7 @@ public class HTMLGenerator {
 			
 			for (String name : replace) {
 				String temp = readFile(new File(template + "/templates/" + name));
+				temp = temp.replace("${skript.version}", Skript.getVersion().toString());
 				page = page.replace("${include " + name + "}", temp);
 			}
 			

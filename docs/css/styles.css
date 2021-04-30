@@ -32,8 +32,9 @@ body {
   */
 
   grid-template-columns: 16vw 84vw;
-  grid-template-rows: minmax(55px, 6vh) 94vh;
+  grid-template-rows: 55px 94vh;
   overflow: hidden;
+
 }
 
 .main-page {
@@ -80,16 +81,20 @@ ul {
   bottom: 0px;
 }
 
+#global-navigation li {
+  display: inline;
+}
+
 #global-navigation a {
   text-decoration: none;
   color: #ffffff;
 
   padding: 10px;
-  padding-bottom: 18px;
+  padding-bottom: 16px;
   transition: all .1s;
 }
 
-#global-navigation  a:hover {
+#global-navigation  a:hover, .active-tab {
   color: #ffc107;
   /*border-bottom: 3px solid #ff9800;*/
 
@@ -103,7 +108,6 @@ ul {
   grid-column-end: 1;
   position: sticky;
   top: 60px;
-  margin-left: 10px;
 }
 
 #nav-title {
@@ -111,7 +115,7 @@ ul {
   grid-row-end: 1;
   grid-column-start: 1;
   grid-column-end: 1;
-  position: sticky;
+  position: fixed;
 
   border-left: solid 3px #ff9800;
 
@@ -121,12 +125,12 @@ ul {
   font-weight: bold;
   color: #ff9800;
 
-  min-height: 35px;
-  max-height: 6vh;
+  height: 35px;
   padding: 10px;
   padding-left: 25px;
   z-index: 9999;
   transition: color 0.2s;
+  width: 14vw;
 }
 
 
@@ -135,29 +139,27 @@ color: rgba(255, 152, 0, 0.9);
 }
 
 #nav-contents {
-  height: calc(100vh - 3.2em);
+  height: calc(100vh - 60px); /* Fix the TOP css of #side-nav */
   width: 100%;
   overflow: scroll;
   overflow-x: hidden;
   position: sticky;
-  padding-top: 10px;
 }
 
 #nav-contents > a {
-  display: inline-block;
-  width: 85%;
-  font-size: 110%;
+  display: block;
+  font-size: 18px;
   background-color: rgba(0,0,0,.03);
   text-decoration: none;
   color: #2f3e46;
-  margin: 3px;
+  margin: 6px 10px;
+  word-wrap: break-word;
 
-  padding: 0.3em;
-  padding-left: 15px;
+  padding: 5px 15px;
 
-  transition: background-color 0.1s,
-  font 0.1s;
+  transition: background-color 0.1s, font 0.1s;
 }
+
 #side-nav a:focus {
   font-weight: bold;
 }
@@ -172,23 +174,34 @@ color: rgba(255, 152, 0, 0.9);
   grid-row-start: 1;
   grid-row-end: 1;
   grid-column-start: 2;
-  overflow: scroll;
-  overflow-x: hidden;
   margin-left: 30px;
+  position: relative;
+  top: 55px;
+  height: calc(100vh - 55px); /* Fixed the TOP CSS 55px due to body having overflow hidden and top = 55px so the last 55px is hidden, this will fix it */
 
   padding: 0.22em;
-  position: sticky;
-  top: 50px;
-  height: calc(100vh - 3.6em);
+  padding-right: 30px;
+  overflow: scroll;
 }
 
-#content > p {
-  margin-bottom: 0.7em;
-  max-width: 55em;
+
+#content.no-left-panel {
+  grid-column-start: 1;
+  grid-column-end: none;
+  padding: 0 8vw;
+  margin-left: unset;
+}
+
+#side-nav.no-left-panel {
+  display: none;
+}
+
+div p {
+  padding: 10px;
 }
 
 table {
-  width: 80vw;
+  width: 100%;
   border-collapse: collapse;
 }
 
@@ -289,7 +302,7 @@ td ul {
 }
 
 .skript-code-block {
-  padding: 8px;
+  padding: 6px;
   font-family: 'Poppins', sans-serif;
 
 }
@@ -330,16 +343,44 @@ ul > .skript-code-block {
   font-size: .9em;
 }
 
+.box-title {
+  background-color: #ff9800;
+  width: fit-content;
+  padding: 5px;
+  padding-right: 7px;
+  margin-top: 20px;
+  color: rgba(0,0,0,.8);
+}
+
 .box {
-  border-left: 3px solid#ff9800;
+  border-left: 3px solid #ff9800;
   padding: 15px;
   background-color: rgba(0,0,0,.1);
+  margin-bottom: 10px;
 
 }
 
-@media (max-width: 600px) {
+.box-title-red {
+  background-color: #ff4e4e;
+  width: fit-content;
+  padding: 5px;
+  padding-right: 7px;
+  margin-top: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+.box-red {
+  border-left: 3px solid #ff4e4e;
+  padding: 15px;
+  background-color: rgba(0,0,0,.1);
+  margin-bottom: 10px;
+
+}
+
+@media (max-width: 768px) {
   body {
-    grid-template-columns: 0px minmax(80%, 100%);
+    grid-template-columns: 20% minmax(80%, 100%);
   }
 
   #global-navigation {
@@ -348,7 +389,7 @@ ul > .skript-code-block {
     flex-wrap: wrap;
   }
   #global-navigation > a {
-    padding: 0.2em;
+    padding: 10px;
     padding-top: 0.1em;
     padding-bottom: 0.1em;
   }
@@ -357,19 +398,64 @@ ul > .skript-code-block {
     display: none;
   }
   #side-nav {
-    display: none;
+    top: 0;
   }
 
   #content {
-    top: 5.63em;
+    margin-top: 100px;
   }
 }
 
-code {
-  white-space: pre;
+@media (max-width: 1024px) {
+  body {
+    grid-template-columns: 20% minmax(80%, 100%);
+  }
+
+  #global-navigation {
+    height: 4.1em;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #global-navigation > a {
+    padding: 10px;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+  }
+
+  #nav-title {
+    display: none;
+  }
+  #side-nav {
+    top: 0;
+  }
+
+  #content {
+  }
 }
 
-pre.prettyprint {
-  padding: unset;
-  border: unset;
+@media (max-width: 1200px) {
+  body {
+    grid-template-columns: 20% minmax(80%, 100%);
+  }
+
+  #global-navigation {
+    grid-column-start: 1;
+    grid-column-end: none;
+  }
+
+  #global-navigation > a {
+    padding: 10px;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+  }
+
+  #nav-title {
+    display: none;
+  }
+  #side-nav {
+    top: 0;
+  }
+
+  #content {
+  }
 }

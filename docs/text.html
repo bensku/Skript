@@ -1,23 +1,25 @@
 <h1 id="nav-title">Text in Scripts</h1>
-
-<div id="content" style="margin-top: 80px;">
-  Skript allows you to write pieces of text (programmers usually call them
-  strings) in the scripts. This is done by putting the text inside double
-  quotes, as follows:
+<div id="content" class="no-left-panel">
+  <p>Skript allows you to write pieces of text (programmers usually call them
+    strings) in the scripts. This is done by putting the text inside double
+    quotes, as follows:
+  </p>
   <div class="skript-code-block">
     "this is text"
   </div>
-  Simple, isn't it? If an effect, expression, condition, trigger or function
-  accepts something of type text or string, you can use this format to write it
-  right there!
+  <p>Simple, isn't it? If an effect, expression, condition, trigger or function
+    accepts something of type text or string, you can use this format to write it
+    right there!
+  </p>
   <h2>Formatting Text</h2>
-  But isn't just text a bit boring? Worry not, as Minecraft has support for
-  colors, styles and other formatting options in chat. Most of the options also
-  work with item and entity names.
-
+  <p>But isn't just text a bit boring? Worry not, as Minecraft has support for
+    colors, styles and other formatting options in chat. Most of the options also
+    work with item and entity names.
+  </p>
   <h3>Colors</h3>
-  Minecraft has 16 pre-set color codes to be used in text. Skript supports them
-  in two different ways:
+  <p>Minecraft has 16 pre-set color codes to be used in text. Skript supports them
+    in two different ways:
+  </p>
   <ul>
     <li>Color name tags, for example &lt;red&gt;</li>
     <li>(Old) Minecraft color codes, like §c; using &amp; works, too</li>
@@ -25,7 +27,6 @@
   <p>
     Here's a table of all colors, including both Skript names and color codes:
   </p>
-
   <table>
     <tr>
       <td>Code</td>
@@ -117,16 +118,15 @@
     In Minecraft 1.16, support was added for 6-digit hexadecimal colors to
     specify custom colors other than the 16 default color codes. A new tag can
     be used to format with these colors. The tag looks like this:
-    <code><#hex code></code>.
+    <code><##hex code></code>.
     <br />
     Here's what the tag would look like when used in a script:
-    <code>send "<#123456>Hey %player%!" to player</code>
+    <code>send "<##123456>Hey %player%!" to player</code>
   </p>
-
   <p>
     For information not related to Skript, see
     <a href="https://minecraft.gamepedia.com/Formatting_codes#Color_codes"
-      >Minecraft Wiki page</a
+    >Minecraft Wiki page</a
     >
     concerning colors. Note that depending on Skript configuration, color codes
     may do more than just change color of text after them. By default, for
@@ -134,7 +134,6 @@
     strikethrough, underlined, italic. Other styles are not affected, and this
     feature can be toggled of in config.sk.
   </p>
-
   <h3>Other Styles</h3>
   Minecraft also has various other styles available. The following are available
   everywhere, including item and entity names:
@@ -175,13 +174,14 @@
       <td>r</td>
     </tr>
   </table>
-  If it wasn't clear from the table, §r clears all other formatting and colors.
-  You'll probably use it quite often when sending chat messages from scripts.
+  <p>
+    If it wasn't clear from the table, §r clears all other formatting and colors.
+    You'll probably use it quite often when sending chat messages from scripts.
+  </p>
   <p>
     Skript also supports certain newer features, which are only available in
     chat. Those do not have formatting codes, so you must use tags for them.
   </p>
-
   <table>
     <tr>
       <td>Name</td>
@@ -209,16 +209,16 @@
       <td>Shows a tooltip when player hovers over text with their mouse</td>
     </tr>
   </table>
-
-  All of these styles require a parameter, in format
+  <p>All of these styles require a parameter, in format</p>
   <span class="skript-code-inline">&lt;name:parameter&gt;</span>
-  For link, parameter must be either http or https url if you want clients to
-  recognize it. For others, it can be any text you'd like (you can make player
-  run invalid commands if you wish).
-
+  <p>For link, parameter must be either http or https url if you want clients to
+    recognize it. For others, it can be any text you'd like (you can make player
+    run invalid commands if you wish).
+  </p>
   <h2>Text and Variables</h2>
-  Variable names are text, but obviously formatting that text does no good.
-  However, everything else you can do for text, you can do for variable names. A
-  guide about this is coming... some day.
-  <p>Guide written by <a href="https://github.com/bensku">bensku</a>.</p>
+  <p>Variable names are text, but obviously formatting that text does no good.
+    However, everything else you can do for text, you can do for variable names. A
+    guide about this is coming... some day.
+  </p>
+  <p style='padding-bottom: 20px;'>Guide written by <a href="https://github.com/bensku">bensku</a>.</p>
 </div>

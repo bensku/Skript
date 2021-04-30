@@ -1,3 +1,4 @@
+// ID Scroll
 const links = document.querySelectorAll("div.item-warpper");
 const contents = document.querySelectorAll("#content")[0];
 
@@ -21,3 +22,16 @@ contents.addEventListener('scroll', (e) => {
     }
   });
 });
+
+
+// Active Tab
+const pageLink = window.location.toString().replaceAll(/(.*)\/(.+?).html(.*)/gi, '$2');
+document.querySelectorAll(`#global-navigation a[href="${pageLink}.html"]`)[0].classList.add("active-tab");
+
+
+// No Left Panel
+const noLeftPanel = document.querySelectorAll('#content.no-left-panel')[0];
+if (noLeftPanel != null) {
+  document.querySelectorAll('#side-nav')[0].classList.add('no-left-panel');
+}
+
