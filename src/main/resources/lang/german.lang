@@ -904,7 +904,7 @@ visual effects:
 			pattern: (witch (magic|spell)|purple spark)
 		note:
 			name: note @a
-			pattern: note
+			pattern: note [(of|with) [colo[u]r] %number%]
 		portal:
 			name: portal @a
 			pattern: [nether] portal
@@ -946,7 +946,7 @@ visual effects:
 			pattern: cloud
 		redstone:
 			name: coloured dust @-
-			pattern: (%-color%|colo[u]red) dust
+			pattern: [%-color%] [colo[u]red] dust
 		snowball:
 			name: snowball break @a
 			pattern: snowball break
