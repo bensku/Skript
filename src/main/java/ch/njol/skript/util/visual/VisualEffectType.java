@@ -18,9 +18,10 @@
  */
 package ch.njol.skript.util.visual;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
+import ch.njol.skript.log.BlockingLogHandler;
+import ch.njol.skript.log.SkriptLogger;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -112,17 +113,19 @@ public class VisualEffectType {
 		VisualEffectType type = new VisualEffectType(effect);
 		String node = LANGUAGE_NODE + "." + type.getId();
 
-		type.name = new Noun(node + ".name");
+		String pattern;
 
-		String pattern = Language.get_(node + ".pattern");
-
-		if (pattern == null) {
-			if (Skript.testing()) {
-				Skript.warning("Missing pattern at '" + (node + ".pattern") + "' in the "
-					+ Language.getName() + " language file");
-			}
-			return null;
+		BlockingLogHandler logHandler = SkriptLogger.startLogHandler(new BlockingLogHandler());
+		try {
+			pattern = Language.get_(node + ".pattern");
+		} finally {
+			logHandler.stop();
 		}
+
+		if (pattern == null)
+			return null;
+
+		type.name = new Noun(node + ".name");
 
 		String areaPattern = Language.get_(LANGUAGE_NODE + ".area_expression");
 		type.pattern = pattern + " " + (areaPattern != null ? areaPattern : "");
