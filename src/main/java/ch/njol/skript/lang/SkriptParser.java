@@ -526,25 +526,10 @@ public class SkriptParser {
 					}
 					
 					// No directly same type found
-					if (types.length == 1) { // Only one type is accepted here
-						// So, we'll just create converted expression
-						@SuppressWarnings("unchecked") // This is safe... probably
-						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-						if (r != null) {
-							log.printLog();
-							return r;
-						}
-					} else { // Multiple types accepted
-						if (returnType == Object.class) { // No specific return type, so probably variable etc.
-							log.printLog();
-							return e; // Expression will have to deal with it runtime
-						} else {
-							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-							if (r != null) {
-								log.printLog();
-								return r;
-							}
-						}
+					Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+					if (r != null) {
+						log.printLog();
+						return r;
 					}
 
 					// Print errors, if we couldn't get the correct type
