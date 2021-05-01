@@ -1450,7 +1450,7 @@ visual effects:
 			pattern: (witch (magic|spell)|purple spark)
 		note:
 			name: note @a
-			pattern: note
+			pattern: note [(of|with) [colo[u]r] %number%]
 		portal:
 			name: portal @a
 			pattern: [nether] portal

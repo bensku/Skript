@@ -25,7 +25,10 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxElementInfo;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Noun;
+import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Direction;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
@@ -116,6 +119,7 @@ public class VisualEffects {
 			registerColorable("Particle.SPELL_MOB");
 			registerColorable("Particle.SPELL_MOB_AMBIENT");
 			registerColorable("Particle.REDSTONE");
+			registerColorable("Particle.NOTE");
 
 			// Data suppliers
 			registerDataSupplier("Effect.POTION_BREAK", (raw, location) ->
@@ -126,15 +130,29 @@ public class VisualEffects {
 				return Direction.getFacing(((Direction) raw).getDirection(location), false);
 			});
 
-			registerDataSupplier("Particle.SPELL_MOB", (raw, location) -> raw);
-			registerDataSupplier("Particle.SPELL_MOB_AMBIENT", (raw, location) -> raw);
+			Color defaultColor = SkriptColor.LIGHT_RED;
+			registerDataSupplier("Particle.SPELL_MOB", (raw, location) -> {
+				Color color = raw == null ? defaultColor : (Color) raw;
+				return new ParticleOption(color, 1);
+			});
+			registerDataSupplier("Particle.SPELL_MOB_AMBIENT", (raw, location) -> {
+				Color color = raw == null ? defaultColor : (Color) raw;
+				return new ParticleOption(color, 1);
+			});
 			registerDataSupplier("Particle.REDSTONE", (raw, location) -> {
-				if (HAS_REDSTONE_DATA && Particle.REDSTONE.getDataType() == Particle.DustOptions.class && raw instanceof ParticleOption) {
-					ParticleOption option = (ParticleOption) raw;
-					return new Particle.DustOptions(option.getBukkitColor(), option.size);
+				Color color = raw == null ? defaultColor : (Color) raw;
+				ParticleOption particleOption = new ParticleOption(color, 1);
+
+				if (HAS_REDSTONE_DATA && Particle.REDSTONE.getDataType() == Particle.DustOptions.class) {
+					return new Particle.DustOptions(particleOption.getBukkitColor(), particleOption.size);
 				} else {
-					return raw;
+					return particleOption;
 				}
+			});
+			registerDataSupplier("Particle.NOTE", (raw, location) -> {
+				int colorValue = (int) (((Number) raw).floatValue() * 255);
+				ColorRGB color = new ColorRGB(colorValue, 0, 0);
+				return new ParticleOption(color, 1);
 			});
 			registerDataSupplier("Particle.ITEM_CRACK", (raw, location) -> {
 				ItemStack itemStack = Aliases.javaItemType("iron sword").getRandom();

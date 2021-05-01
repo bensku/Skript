@@ -23,8 +23,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxElement;
-import ch.njol.skript.util.Color;
-import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.yggdrasil.YggdrasilSerializable;
 import org.bukkit.Effect;
@@ -47,7 +45,7 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 
 	@Nullable
 	private Object data;
-	private float speed = 1f;
+	private float speed = 0f;
 	private float dX, dY, dZ = 0f;
 
 	public VisualEffect() {}
@@ -57,17 +55,8 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = VisualEffects.get(matchedPattern);
 
-		if (type.isColorable()) {
-			Color color = SkriptColor.LIGHT_RED;
-			if (exprs[0] != null && exprs[0].getSingle(null) instanceof Color) {
-				color = (Color) exprs[0].getSingle(null);
-			}
-			data = new ParticleOption(color, 1);
-		} else {
-			Expression<?> expr = exprs[0];
-			if (expr != null && !Number.class.isAssignableFrom(expr.getReturnType())) {
-				data = exprs[0].getSingle(null);
-			}
+		if (exprs.length > 4 && exprs[0] != null) {
+			data = exprs[0].getSingle(null);
 		}
 
 		if ((parseResult.mark & 1) != 0) {
@@ -106,7 +95,8 @@ public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 			Object data = type.getData(this.data, l);
 
 			// Check that data has correct type (otherwise bad things will happen)
-			if (data != null && !particle.getDataType().isAssignableFrom(data.getClass()) && !(data instanceof ParticleOption)) {
+			if (data != null && !particle.getDataType().isAssignableFrom(data.getClass())
+				&& !(data instanceof ParticleOption)) {
 				data = null;
 				if (Skript.debug())
 					Skript.warning("Incompatible particle data, resetting it!");
