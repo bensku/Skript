@@ -18,14 +18,11 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.command.Commands;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -36,38 +33,45 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-@Name("Raw Name")
-@Description("The raw Minecraft material name of the given item. Note that this is not guaranteed to give same results on all servers.")
-@Examples("raw name of tool of player")
-@Since("unknown (2.2)")
-public class ExprRawName extends SimpleExpression<String> {
+@Name("All commands")
+@Description("Returns all registered commands or all script commands.")
+@Examples({"send \"Number of all commands: %size of all commands%\"",
+	"send \"Number of all script commands: %size of all script commands%\""})
+@Since("INSERT VERSION")
+public class ExprAllCommands extends SimpleExpression<String> {
 	
 	static {
-		Skript.registerExpression(ExprRawName.class, String.class, ExpressionType.SIMPLE, "(raw|minecraft|vanilla) name[s] of %itemtypes%");
+		Skript.registerExpression(ExprAllCommands.class, String.class, ExpressionType.SIMPLE, "[(all|the|all [of] the)] [registered] [(1¦script)] commands");
 	}
 	
-	@SuppressWarnings("null")
-	private Expression<ItemType> types;
+	private boolean scriptCommandsOnly;
 	
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		this.types = (Expression<ItemType>) exprs[0];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		scriptCommandsOnly = parseResult.mark == 1;
 		return true;
 	}
 	
-	@Override
 	@Nullable
-	protected String[] get(final Event e) {
-		return Arrays.stream(types.getAll(e))
-				.map(ItemType::getRawNames)
-				.flatMap(List::stream)
-				.toArray(String[]::new);
+	@Override
+	@SuppressWarnings("null")
+	protected String[] get(Event e) {
+		if (scriptCommandsOnly) {
+			return Commands.getScriptCommands().toArray(new String[0]);
+		} else {
+			if (Commands.getCommandMap() == null)
+				return null;
+			return Commands.getCommandMap()
+					.getCommands()
+					.parallelStream()
+					.map(command -> command.getLabel())
+					.toArray(String[]::new);
+		}
 	}
 	
 	@Override
 	public boolean isSingle() {
-		return types.isSingle();
+		return false;
 	}
 	
 	@Override
@@ -75,10 +79,9 @@ public class ExprRawName extends SimpleExpression<String> {
 		return String.class;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "minecraft name of " + types.toString(e, debug);
+	public String toString(@Nullable Event e, boolean debug) {
+		return "all " + (scriptCommandsOnly ? "script " : " ") + "commands";
 	}
 	
 }

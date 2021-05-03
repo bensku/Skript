@@ -41,8 +41,6 @@ import ch.njol.skript.config.Config;
 import ch.njol.skript.expressions.ExprColoured;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.localization.Language;
-import ch.njol.skript.localization.Noun;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -64,16 +62,6 @@ import ch.njol.util.coll.iterator.SingleItemIterator;
  * @author Peter Güttinger
  */
 public class VariableString implements Expression<String> {
-	
-	private final static class ExpressionInfo {
-		ExpressionInfo(final Expression<?> expr) {
-			this.expr = expr;
-		}
-		
-		final Expression<?> expr;
-		int flags = 0;
-		boolean toChatStyle = false;
-	}
 	
 	private final String orig;
 	
@@ -261,33 +249,7 @@ public class VariableString implements Expression<String> {
 							log.printErrors("Can't understand this expression: " + s.substring(c + 1, c2));
 							return null;
 						} else {
-							if (mode != StringMode.MESSAGE) {
-								string.add(expr);
-							} else {
-								final ExpressionInfo i = new ExpressionInfo(expr);
-								if (c2 <= s.length() - 2 && s.charAt(c2 + 1) == 's' && (c2 == s.length() - 2 || !Character.isLetter(s.charAt(c2 + 2)))) {
-									i.flags |= Language.F_PLURAL;
-									c2++; // remove the 's'
-								}
-								if (string.size() > 0 && string.get(string.size() - 1) instanceof String) {
-									final String last = (String) string.get(string.size() - 1);
-									if (c2 <= s.length() - 2 && s.charAt(c2 + 1) == '>' && last.endsWith("<")) {
-										i.toChatStyle = true;
-										string.set(string.size() - 1, last.substring(0, last.length() - 1));
-										c2++; // remove the '>'
-									} else {
-										final int l = last.lastIndexOf(' ', last.endsWith(" ") ? last.length() - 2 : last.length() - 1);
-										final String lastWord = "" + last.substring(l + 1).trim();
-										if (Noun.isLocalIndefiniteArticle(lastWord))
-											i.flags |= Language.F_INDEFINITE_ARTICLE;
-										else if (Noun.isLocalDefiniteArticle(lastWord))
-											i.flags |= Language.F_DEFINITE_ARTICLE;
-										if ((i.flags & (Language.F_INDEFINITE_ARTICLE | Language.F_DEFINITE_ARTICLE)) != 0)
-											string.set(string.size() - 1, last.substring(0, l + 1));
-									}
-								}
-								string.add(i);
-							}
+							string.add(expr);
 						}
 						log.printLog();
 					} finally {
@@ -320,10 +282,10 @@ public class VariableString implements Expression<String> {
 		
 		final Object[] sa = string.toArray();
 		assert sa != null;
-		if (string.size() == 1 && string.get(0) instanceof ExpressionInfo &&
-				((ExpressionInfo) string.get(0)).expr.getReturnType() == String.class &&
-				((ExpressionInfo) string.get(0)).expr.isSingle()) {
-			String expr = ((ExpressionInfo) string.get(0)).expr.toString(null, false);
+		if (string.size() == 1 && string.get(0) instanceof Expression &&
+				((Expression<?>) string.get(0)).getReturnType() == String.class &&
+				((Expression<?>) string.get(0)).isSingle()) {
+			String expr = ((Expression<?>) string.get(0)).toString(null, false);
 			Skript.warning(expr + " is already a text, so you should not put it in one (e.g. " + expr + " instead of " + "\"%" + expr.replace("\"", "\"\"") + "%\")");
 		}
 		return new VariableString(orig, sa, mode);
@@ -462,19 +424,6 @@ public class VariableString implements Expression<String> {
 			if (o instanceof Expression<?>) {
 				assert mode != StringMode.MESSAGE;
 				b.append(Classes.toString(((Expression<?>) o).getArray(e), true, mode));
-			} else if (o instanceof ExpressionInfo) {
-				assert mode == StringMode.MESSAGE;
-				final ExpressionInfo info = (ExpressionInfo) o;
-				int flags = info.flags;
-				if ((flags & Language.F_PLURAL) == 0 && b.length() > 0 && Math.abs(StringUtils.numberBefore(b, b.length() - 1)) != 1)
-					flags |= Language.F_PLURAL;
-				if (info.toChatStyle) {
-					final String s = Classes.toString(info.expr.getArray(e), flags, getLastColor(b));
-					final String style = Utils.getChatStyle(s);
-					b.append(style == null ? "<" + s + ">" : style);
-				} else {
-					b.append(Classes.toString(info.expr.getArray(e), flags, getLastColor(b)));
-				}
 			} else {
 				b.append(o);
 			}
@@ -501,19 +450,6 @@ public class VariableString implements Expression<String> {
 			if (o instanceof Expression<?>) {
 				assert mode != StringMode.MESSAGE;
 				b.append(Classes.toString(((Expression<?>) o).getArray(e), true, mode));
-			} else if (o instanceof ExpressionInfo) {
-				assert mode == StringMode.MESSAGE;
-				final ExpressionInfo info = (ExpressionInfo) o;
-				int flags = info.flags;
-				if ((flags & Language.F_PLURAL) == 0 && b.length() > 0 && Math.abs(StringUtils.numberBefore(b, b.length() - 1)) != 1)
-					flags |= Language.F_PLURAL;
-				if (info.toChatStyle) {
-					final String s = Classes.toString(info.expr.getArray(e), flags, null);
-					final String style = Utils.getChatStyle(s);
-					b.append(style == null ? "<" + s + ">" : style);
-				} else {
-					b.append(Classes.toString(info.expr.getArray(e), flags, null));
-				}
 			} else {
 				b.append(o);
 			}
@@ -560,28 +496,6 @@ public class VariableString implements Expression<String> {
 				} else if (o instanceof Expression<?>) {
 					assert mode != StringMode.MESSAGE;
 					text = Classes.toString(((Expression<?>) o).getArray(e), true, mode);
-				} else if (o instanceof ExpressionInfo) {
-					assert mode == StringMode.MESSAGE;
-					final ExpressionInfo info = (ExpressionInfo) o;
-					int flags = info.flags;
-					
-					// TODO plural handling?
-//					if ((flags & Language.F_PLURAL) == 0 && b.length() > 0 && Math.abs(StringUtils.numberBefore(b, b.length() - 1)) != 1)
-//						flags |= Language.F_PLURAL;
-					if (info.toChatStyle) {
-						final String s = Classes.toString(info.expr.getArray(e), flags, null);
-						final String style = Utils.getChatStyle(s);
-						text = style == null ? "<" + s + ">" : style;
-					} else {
-						if (info.expr instanceof ExprColoured && ((ExprColoured) info.expr).isUnsafeFormat()) { // Special case: user wants to process formatting
-							String unformatted = ((ExprColoured) info.expr).getSingle(e);
-							if (unformatted != null) {
-								message.addAll(ChatMessages.parse(unformatted));
-							}
-							continue;
-						}
-						text = Classes.toString(info.expr.getArray(e), flags, null);
-					}
 				} else {
 					assert false;
 				}
@@ -665,8 +579,6 @@ public class VariableString implements Expression<String> {
 		for (final Object o : string) {
 			if (o instanceof Expression) {
 				b.append("%").append(((Expression<?>) o).toString(e, debug)).append("%");
-			} else if (o instanceof ExpressionInfo) {
-				b.append("%").append(((ExpressionInfo) o).expr.toString(e, debug)).append("%");
 			} else {
 				b.append(o);
 			}

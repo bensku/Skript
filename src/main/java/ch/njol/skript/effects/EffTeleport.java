@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -77,13 +78,19 @@ public class EffTeleport extends Effect {
 		
 		final Location loc = location.getSingle(e);
 		final Entity[] entityArray = entities.getArray(e); // We have to fetch this before possible async execution to avoid async local variable access.
+		
 		final boolean respawnEvent = !delayed && e instanceof PlayerRespawnEvent && entityArray.length == 1 && entityArray[0].equals(((PlayerRespawnEvent) e).getPlayer());
+		final boolean moveEvent = !delayed && e instanceof PlayerMoveEvent && entityArray.length == 1 && entityArray[0].equals(((PlayerMoveEvent) e).getPlayer());
 		
 		if (respawnEvent && loc != null) {
 			((PlayerRespawnEvent) e).setRespawnLocation(getSafeLocation(loc));
 		}
 		
-		if (respawnEvent || loc == null) {
+		if (moveEvent && loc != null) {
+			((PlayerMoveEvent) e).setTo(getSafeLocation(loc));
+		}
+		
+		if ((respawnEvent || moveEvent) || loc == null) {
 			continueWalk(next, e);
 			return null;
 		}

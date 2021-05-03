@@ -71,7 +71,7 @@ public class AABB implements Iterable<Block> {
 	public AABB(final World w, final Vector v1, final Vector v2) {
 		world = w;
 		lowerBound = new Vector(Math.min(v1.getX(), v2.getX()), Math.min(v1.getY(), v2.getY()), Math.min(v1.getZ(), v2.getZ()));
-		upperBound = new Vector(Math.max(v1.getX(), v2.getX()) + 1, Math.max(v1.getY(), v2.getY()) + 1, Math.max(v1.getZ(), v2.getZ()) + 1);
+		upperBound = new Vector(Math.max(v1.getX(), v2.getX()), Math.max(v1.getY(), v2.getY()), Math.max(v1.getZ(), v2.getZ()));
 	}
 	
 	public AABB(final Chunk c) {

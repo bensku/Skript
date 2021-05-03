@@ -83,6 +83,7 @@ tasks.withType(ShadowJar) {
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
+			'Automatic-Module-Name': 'ch.njol.skript',
 			'Sealed': 'true'
 		)
 	}
@@ -202,6 +203,7 @@ task githubRelease(type: ShadowJar) {
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
+			'Automatic-Module-Name': 'ch.njol.skript',
 			'Sealed': 'true'
 		)
 	}
@@ -237,6 +239,7 @@ task spigotRelease(type: ShadowJar) {
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
+			'Automatic-Module-Name': 'ch.njol.skript',
 			'Sealed': 'true'
 		)
 	}
@@ -268,6 +271,7 @@ task nightlyRelease(type: ShadowJar) {
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
+			'Automatic-Module-Name': 'ch.njol.skript',
 			'Sealed': 'true'
 		)
 	}
