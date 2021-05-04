@@ -71,8 +71,10 @@ public class ExprIndices extends SimpleExpression<String> {
 		if (exprs[0] instanceof Variable<?>) {
 			list = (Variable<?>) LiteralUtils.defendExpression(exprs[0]);
 
-			if (!list.isList())
-				Skript.error("The indices expression cannot be used with a single variable.");
+			if (!list.isList()) {
+				Skript.error("The indices expression must only be used with list variables.");
+				return false;
+			}
 			return LiteralUtils.canInitSafely(list);
 		}
 		Skript.error("The indices expression must only be used with list variables.");
