@@ -58,9 +58,9 @@ skript command:
 		help: Prints this help message. Use '/skript reload/enable/disable/update' to get more info
 		reload:
 			description: Reloads the config, all scripts, everything, or a specific script
-			all: Reloads all configs and all scripts
+			all: Reloads the config, all aliases configs and all scripts
 			config: Reloads the main config
-			aliases: Reloads the aliases configs (aliases-*.sk)
+			aliases: Reloads the aliases configs (aliases-english.zip or plugin jar)
 			scripts: Reloads all scripts
 			<script>: Reloads a specific script or a folder of scripts
 		enable:
@@ -88,7 +88,7 @@ skript command:
 		error: Encountered %2$s error¦¦s¦ while reloading %1$s!
 		script disabled: <gold>%s<reset> is currently disabled. Use <gray>/<gold>skript <cyan>enable <red>%s<reset> to enable it.
 
-		config and scripts: the config and all scripts
+		config, aliases and scripts: the config, aliases and all scripts
 		scripts: all scripts
 		main config: the main configuration
 		aliases: the aliases
@@ -1144,7 +1144,7 @@ entities:
 		pattern: cyan parrot(|1¦s)
 	gray parrot:
 		name: gray parrot¦s
-		pattern:  gray parrot(|1¦s)
+		pattern: gray parrot(|1¦s)
 	monster:
 		name: monster¦s
 		pattern: monster(|1¦s)
@@ -1254,15 +1254,15 @@ entities:
 
 # -- Heal Reasons --
 heal reasons:
-    custom: unknown, custom, plugin, a plugin
-    eating: eating, consuming, ingesting
-    ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
-    magic: magic, potion, a potion
-    magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
-    regen: peaceful regeneration, peaceful regen, peaceful
-    satiated: satiated, satisfied, fed, sated
-    wither: withering, withered, wither potion, a wither effect, wither effect, wither
-    wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
+	custom: unknown, custom, plugin, a plugin
+	eating: eating, consuming, ingesting
+	ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
+	magic: magic, potion, a potion
+	magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
+	regen: peaceful regeneration, peaceful regen, peaceful
+	satiated: satiated, satisfied, fed, sated
+	wither: withering, withered, wither potion, a wither effect, wither effect, wither
+	wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
 
 # -- Cat Types --
 cat types:
@@ -1334,7 +1334,7 @@ visual effects:
 		name: ender signal @an
 		pattern: ender [eye] signal[s]
 	mobspawner_flames:
-		name: mobspawner flames  @x
+		name: mobspawner flames @x
 		pattern: [mo(b|nster)][ ]spawner flames
 	potion_break:
 		name: potion break @a
