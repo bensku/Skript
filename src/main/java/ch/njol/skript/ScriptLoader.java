@@ -293,7 +293,7 @@ final public class ScriptLoader {
 	private final static FileFilter disabledFilter = new FileFilter() {
 		@Override
 		public boolean accept(final @Nullable File f) {
-			return f != null && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory() && StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-");
+			return f != null && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory() && StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && f.getName().startsWith("-") && !f.isHidden();
 		}
 	};
 
@@ -393,7 +393,7 @@ final public class ScriptLoader {
 	private final static FileFilter scriptFilter = new FileFilter() {
 		@Override
 		public boolean accept(final @Nullable File f) {
-			return f != null && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory() && StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && !f.getName().startsWith("-");
+			return f != null && (f.isDirectory() && !f.getName().startsWith(".") || !f.isDirectory() && StringUtils.endsWithIgnoreCase("" + f.getName(), ".sk")) && !f.getName().startsWith("-") && !f.isHidden();
 		}
 	};
 	
