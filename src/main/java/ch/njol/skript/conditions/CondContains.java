@@ -40,6 +40,7 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @Name("Contains")
 @Description("Checks whether an inventory contains an item, a text contains another piece of text, " +
@@ -107,9 +108,12 @@ public class CondContains extends Condition {
 
 		// Change checkType according to values
 		if (checkType == CheckType.UNKNOWN) {
-			if (Arrays.stream(containerValues).allMatch(obj -> obj instanceof Inventory)) {
+			if (Arrays.stream(containerValues)
+				.allMatch(Inventory.class::isInstance)) {
 				checkType = CheckType.INVENTORY;
-			} else if (explicitSingle && Arrays.stream(containerValues).allMatch(obj -> obj instanceof String)) {
+			} else if (explicitSingle
+				&& Arrays.stream(containerValues)
+				.allMatch(String.class::isInstance)) {
 				checkType = CheckType.STRING;
 			} else {
 				checkType = CheckType.OBJECTS;
@@ -124,13 +128,14 @@ public class CondContains extends Condition {
 				Inventory inventory = (Inventory) o;
 
 				return SimpleExpression.check(itemValues, o1 -> {
-					if (o1 instanceof ItemType) {
+					if (o1 instanceof ItemType)
 						return ((ItemType) o1).isContainedIn(inventory);
-					} else if (o1 instanceof ItemStack) {
+					else if (o1 instanceof ItemStack)
 						return inventory.contains((ItemStack) o1);
-					} else {
+					else if (o1 instanceof Inventory)
+						return Objects.equals(inventory, o1);
+					else
 						return false;
-					}
 				}, false, itemsAnd);
 			};
 		} else if (checkType == CheckType.STRING) {
