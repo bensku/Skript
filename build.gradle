@@ -44,7 +44,7 @@ compileTestJava.options.encoding = 'UTF-8'
 task checkAliases {
 	description 'Checks for the existence of the aliases.'
 	doLast {
-		def aliasFolder = new File('skript-aliases')
+		def aliasFolder = project.file('skript-aliases')
 		if (!aliasFolder.exists() || aliasFolder.listFiles().length == 0) {
 			throw new InvalidUserDataException('Aliases are missing from \'skript-aliases\' folder. Consider fetching submodules with \'git submodule update --init\'.')
 		}

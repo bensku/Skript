@@ -506,10 +506,10 @@ public abstract class Commands {
 		return c;
 	}
 	
-//	public static boolean skriptCommandExists(final String command) {
-//		final ScriptCommand c = commands.get(command);
-//		return c != null && c.getName().equals(command);
-//	}
+	public static boolean skriptCommandExists(final String command) {
+		final ScriptCommand c = commands.get(command);
+		return c != null && c.getName().equals(command);
+	}
 	
 	public static void registerCommand(final ScriptCommand command) {
 		// Validate that there are no duplicates
