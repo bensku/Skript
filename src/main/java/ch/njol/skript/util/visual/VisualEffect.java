@@ -34,9 +34,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
 
-/**
- * @author Peter Güttinger
- */
 public class VisualEffect implements SyntaxElement, YggdrasilSerializable {
 
 	private static final boolean HAS_REDSTONE_DATA = Skript.classExists("org.bukkit.Particle$DustOptions");

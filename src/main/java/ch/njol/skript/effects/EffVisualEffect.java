@@ -37,9 +37,6 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.visual.VisualEffect;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Play Effect")
 @Description({"Plays a <a href='classes.html#visualeffect'>visual effect</a> at a given location or on a given entity.",
 		"Please note that some effects can only be played on entities, e.g. wolf hearts or the hurt effect, and that these are always visible to all players."})
@@ -85,7 +82,7 @@ public class EffVisualEffect extends Effect {
 
 		if (effects instanceof Literal) {
 			//noinspection ConstantConditions
-			VisualEffect[] effs = effects.getAll(null);
+			VisualEffect[] effs = effects.getArray(null);
 
 			boolean hasLocationEffect = false;
 			boolean hasEntityEffect = false;

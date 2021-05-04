@@ -43,6 +43,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class VisualEffects {
 
@@ -81,9 +82,12 @@ public class VisualEffects {
 
 	private static void generateTypes() {
 		List<VisualEffectType> types = new ArrayList<>();
-		Arrays.stream(Effect.values()).map(VisualEffectType::of).filter(Objects::nonNull).forEach(types::add);
-		Arrays.stream(EntityEffect.values()).map(VisualEffectType::of).filter(Objects::nonNull).forEach(types::add);
-		Arrays.stream(Particle.values()).map(VisualEffectType::of).filter(Objects::nonNull).forEach(types::add);
+		Stream.of(Effect.class, EntityEffect.class, Particle.class)
+			.map(Class::getEnumConstants)
+			.flatMap(Arrays::stream)
+			.map(VisualEffectType::of)
+			.filter(Objects::nonNull)
+			.forEach(types::add);
 
 		for (VisualEffectType type : types) {
 			String id = type.getId();
