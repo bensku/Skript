@@ -51,30 +51,6 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.StringUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-/*
- *   This file is part of Skript.
- *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2014 Peter Güttinger
- * 
- */
-
-/**
- * @author Peter Güttinger
- */
 public class SkriptCommand implements CommandExecutor {
 	
 	private static final String CONFIG_NODE = "skript command";
@@ -148,7 +124,7 @@ public class SkriptCommand implements CommandExecutor {
 		try (RedirectingLogHandler logHandler = new RedirectingLogHandler(sender, "").start()) {
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (args[1].equalsIgnoreCase("all")) {
-					reloading(sender, "config and scripts");
+					reloading(sender, "config, aliases and scripts");
 					SkriptConfig.load();
 					Aliases.clear();
 					Aliases.load();
@@ -158,7 +134,7 @@ public class SkriptCommand implements CommandExecutor {
 					
 					ScriptLoader.runScriptsLoad(logHandler)
 						.thenAccept(unused ->
-							reloaded(sender, logHandler, "config and scripts"));
+							reloaded(sender, logHandler, "config, aliases and scripts"));
 				} else if (args[1].equalsIgnoreCase("scripts")) {
 					reloading(sender, "scripts");
 					
