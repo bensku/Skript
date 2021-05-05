@@ -305,7 +305,8 @@ public class VariableString implements Expression<String> {
 		Object[] sa = string.toArray();
 		if (string.size() == 1 && string.get(0) instanceof Expression &&
 				((Expression<?>) string.get(0)).getReturnType() == String.class &&
-				((Expression<?>) string.get(0)).isSingle()) {
+				((Expression<?>) string.get(0)).isSingle() &&
+				mode == StringMode.MESSAGE) {
 			String expr = ((Expression<?>) string.get(0)).toString(null, false);
 			Skript.warning(expr + " is already a text, so you should not put it in one (e.g. " + expr + " instead of " + "\"%" + expr.replace("\"", "\"\"") + "%\")");
 		}
