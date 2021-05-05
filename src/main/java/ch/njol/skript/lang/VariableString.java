@@ -200,7 +200,7 @@ public class VariableString implements Expression<String> {
 	 * @return A new VariableString instance.
 	 */
 	@Nullable
-	public static VariableString newInstance(final String orig, final StringMode mode) {
+	public static VariableString newInstance(String orig, StringMode mode) {
 		if (mode != StringMode.VARIABLE_NAME && !isQuotedCorrectly(orig, false))
 			return null;
 		int n = StringUtils.count(orig, '%');
@@ -210,7 +210,7 @@ public class VariableString implements Expression<String> {
 		}
 		
 		// We must not parse color codes yet, as JSON support would be broken :(
-		final String s;
+		String s;
 		if (mode != StringMode.VARIABLE_NAME) {
 			// Replace every double " character with a single ", except for those in expressions (between %)
 			StringBuilder stringBuilder = new StringBuilder();
