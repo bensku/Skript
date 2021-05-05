@@ -257,6 +257,26 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
+	public boolean isBuildable() {
+		return b.isBuildable();
+	}
+	
+	@Override
+	public boolean isBurnable() {
+		return b.isBurnable();
+	}
+	
+	@Override
+	public boolean isReplaceable() {
+		return b.isReplaceable();
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return b.isSolid();
+	}
+	
+	@Override
 	public double getTemperature() {
 		return b.getTemperature();
 	}
@@ -408,4 +428,10 @@ public class DelayedChangeBlock implements Block {
 	public String getTranslationKey() {
 		return b.getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return b.getDestroySpeed(itemStack);
+	}
+	
 }

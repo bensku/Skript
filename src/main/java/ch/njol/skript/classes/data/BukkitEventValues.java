@@ -406,6 +406,13 @@ public final class BukkitEventValues {
 				return e.getEntity().getWorld();
 			}
 		}, 0);
+		EventValues.registerEventValue(EntityEvent.class, Location.class, new Getter<Location, EntityEvent>() {
+			@Override
+			@Nullable
+			public Location get(final EntityEvent e) {
+				return e.getEntity().getLocation();
+			}
+		}, 0);
 		// EntityDamageEvent
 		EventValues.registerEventValue(EntityDamageEvent.class, DamageCause.class, new Getter<DamageCause, EntityDamageEvent>() {
 			@Override
@@ -467,6 +474,17 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0);
+		if (Skript.methodExists(ProjectileHitEvent.class, "getHitBlockFace")) {
+			EventValues.registerEventValue(ProjectileHitEvent.class, Direction.class, new Getter<Direction, ProjectileHitEvent>() {
+				@Override
+				@Nullable
+				public Direction get(final ProjectileHitEvent e) {
+					BlockFace theHitFace = e.getHitBlockFace();
+					if (theHitFace == null) return null;
+					return new Direction(theHitFace, 1);
+				}
+			}, 0);
+		}
 		// ProjectileLaunchEvent
 		EventValues.registerEventValue(ProjectileLaunchEvent.class, Entity.class, new Getter<Entity, ProjectileLaunchEvent>() {
 			@Override
@@ -1038,6 +1056,15 @@ public final class BukkitEventValues {
 				return e.getWorld();
 			}
 		}, 0);
+		if (Skript.methodExists(PortalCreateEvent.class, "getEntity")) { // Minecraft 1.14+
+			EventValues.registerEventValue(PortalCreateEvent.class, Entity.class, new Getter<Entity, PortalCreateEvent>() {
+				@Override
+				@Nullable
+				public Entity get(final PortalCreateEvent e) {
+					return e.getEntity();
+				}
+			}, 0);
+		}
 		//PlayerEditBookEvent
 		EventValues.registerEventValue(PlayerEditBookEvent.class, ItemType.class, new Getter<ItemType, PlayerEditBookEvent>() {
 			@Override
@@ -1063,7 +1090,6 @@ public final class BukkitEventValues {
 			}
 		}, 0);
 		//ItemMergeEvent
-		//TODO there is also e.getTarget() two entities involved in this event, currently can be worked around currently with `on item merge of (insert target itemtype)`
 		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
 			@Override
 			@Nullable
@@ -1071,6 +1097,13 @@ public final class BukkitEventValues {
 				return e.getEntity();
 			}
 		}, 0);
+		EventValues.registerEventValue(ItemMergeEvent.class, Item.class, new Getter<Item, ItemMergeEvent>() {
+			@Override
+			@Nullable
+			public Item get(ItemMergeEvent e) {
+				return e.getTarget();
+			}
+		}, 1);
 		EventValues.registerEventValue(ItemMergeEvent.class, ItemType.class, new Getter<ItemType, ItemMergeEvent>() {
 			@Override
 			@Nullable

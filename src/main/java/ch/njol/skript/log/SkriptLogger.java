@@ -128,8 +128,7 @@ public abstract class SkriptLogger {
 	
 	public static void setVerbosity(final Verbosity v) {
 		verbosity = v;
-		if (v.compareTo(Verbosity.DEBUG) >= 0)
-			debug = true;
+		debug = v.compareTo(Verbosity.DEBUG) >= 0;
 	}
 	
 	public static void setNode(final @Nullable Node node) {
