@@ -1351,11 +1351,15 @@ public class SkriptParser {
 	 * @return Index of the end quote
 	 */
 	private static int nextQuote(final String s, final int from) {
+		boolean inExpression = false;
 		for (int i = from; i < s.length(); i++) {
-			if (s.charAt(i) == '"') {
+			char c = s.charAt(i);
+			if (c == '"' && !inExpression) {
 				if (i == s.length() - 1 || s.charAt(i + 1) != '"')
 					return i;
 				i++;
+			} else if (c == '%') {
+				inExpression = !inExpression;
 			}
 		}
 		return -1;
