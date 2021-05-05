@@ -16,12 +16,12 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.expressions.arithmetic;
 
-/**
- * This class is a dummy class for {@link VisualEffect} that
- * is used to register the "visualeffect" type on Bukkit builds
- * without org.bukkit.Particle
- */
-public class VisualEffectDummy {
+import org.bukkit.event.Event;
+
+public interface ArithmeticGettable {
+	
+	Number get(Event event, boolean integer);
+	
 }
