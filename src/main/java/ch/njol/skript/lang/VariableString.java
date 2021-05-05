@@ -88,18 +88,15 @@ public class VariableString implements Expression<String> {
 	 * Creates a new VariableString which does not contain variables.
 	 * @param s Content for string.
 	 */
-	private VariableString(final String s) {
+	private VariableString(String s) {
 		isSimple = true;
 		simpleUnformatted = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
-		assert simpleUnformatted != null;
 		simple = Utils.replaceChatStyles(simpleUnformatted);
 				
 		orig = simple;
 		string = null;
-		assert simple != null;
 		mode = StringMode.MESSAGE;
 		
-		assert simpleUnformatted != null;
 		components = new MessageComponent[] {ChatMessages.plainText(simpleUnformatted)};
 	}
 	
@@ -109,7 +106,7 @@ public class VariableString implements Expression<String> {
 	 * @param string Objects, some of them are variables.
 	 * @param mode String mode.
 	 */
-	private VariableString(final String orig, final Object[] string, final StringMode mode) {
+	private VariableString(String orig, Object[] string, StringMode mode) {
 		this.orig = orig;
 		this.string = new Object[string.length];
 		this.stringUnformatted = new Object[string.length];
@@ -119,22 +116,17 @@ public class VariableString implements Expression<String> {
 		for (int i = 0; i < string.length; i++) {
 			Object o = string[i];
 			if (o instanceof String) {
-				assert this.string != null;
 				this.string[i] = Utils.replaceChatStyles((String) o);
 				components.addAll(ChatMessages.parse((String) o));
 			} else {
-				assert this.string != null;
 				this.string[i] = o;
 				components.add(null); // Not known parse-time
 			}
 			
 			// For unformatted string, don't format stuff
-			assert this.stringUnformatted != null;
 			this.stringUnformatted[i] = o;
 		}
-		MessageComponent[] array = components.toArray(new MessageComponent[components.size()]);
-		assert array != null;
-		this.components = array;
+		this.components = components.toArray(new MessageComponent[0]);
 		
 		this.mode = mode;
 		
@@ -147,7 +139,7 @@ public class VariableString implements Expression<String> {
 	 * Prints errors
 	 */
 	@Nullable
-	public static VariableString newInstance(final String s) {
+	public static VariableString newInstance(String s) {
 		return newInstance(s, StringMode.MESSAGE);
 	}
 	
@@ -160,7 +152,7 @@ public class VariableString implements Expression<String> {
 	 * @param withQuotes Whether s must be surrounded by double quotes or not
 	 * @return Whether the string is quoted correctly
 	 */
-	public static boolean isQuotedCorrectly(final String s, final boolean withQuotes) {
+	public static boolean isQuotedCorrectly(String s, boolean withQuotes) {
 		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
 			return false;
 		boolean quote = false;
@@ -182,11 +174,11 @@ public class VariableString implements Expression<String> {
 	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
 	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
 	 */
-	public static String unquote(final String s, final boolean surroundingQuotes) {
+	public static String unquote(String s, boolean surroundingQuotes) {
 		assert isQuotedCorrectly(s, surroundingQuotes);
 		if (surroundingQuotes)
-			return "" + s.substring(1, s.length() - 1).replace("\"\"", "\"");
-		return "" + s.replace("\"\"", "\"");
+			return s.substring(1, s.length() - 1).replace("\"\"", "\"");
+		return s.replace("\"\"", "\"");
 	}
 	
 	/**
@@ -194,23 +186,22 @@ public class VariableString implements Expression<String> {
 	 * Prints errors and returns null if it is somehow invalid.
 	 * 
 	 * @param orig Unquoted string to parse.
-	 * @param mode
 	 * @return A new VariableString instance.
 	 */
 	@Nullable
-	public static VariableString newInstance(final String orig, final StringMode mode) {
+	public static VariableString newInstance(String orig, StringMode mode) {
 		if (!isQuotedCorrectly(orig, false))
 			return null;
-		final int n = StringUtils.count(orig, '%');
+		int n = StringUtils.count(orig, '%');
 		if (n % 2 != 0) {
 			Skript.error("The percent sign is used for expressions (e.g. %player%). To insert a '%' type it twice: %%.");
 			return null;
 		}
 		
 		// We must not parse color codes yet, as JSON support would be broken :(
-		final String s = orig.replace("\"\"", "\"");
+		String s = orig.replace("\"\"", "\"");
 		
-		final List<Object> string = new ArrayList<>(n / 2 + 2); // List of strings and expressions
+		List<Object> string = new ArrayList<>(n / 2 + 2); // List of strings and expressions
 		
 		int c = s.indexOf('%');
 		if (c != -1) {
@@ -241,10 +232,11 @@ public class VariableString implements Expression<String> {
 						string.add("%");
 					}
 				} else {
-					final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+					RetainingLogHandler log = SkriptLogger.startRetainingLog();
 					try {
-						@SuppressWarnings("unchecked")
-						final Expression<?> expr = new SkriptParser("" + s.substring(c + 1, c2), SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT).parseExpression(Object.class);
+						Expression<?> expr =
+							new SkriptParser(s.substring(c + 1, c2), SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT)
+								.parseExpression(Object.class);
 						if (expr == null) {
 							log.printErrors("Can't understand this expression: " + s.substring(c + 1, c2));
 							return null;
@@ -259,7 +251,7 @@ public class VariableString implements Expression<String> {
 				c = s.indexOf('%', c2 + 1);
 				if (c == -1)
 					c = s.length();
-				final String l = s.substring(c2 + 1, c); // Try to get string (non-variable) part
+				String l = s.substring(c2 + 1, c); // Try to get string (non-variable) part
 				if (!l.isEmpty()) { // This is string part (no variables)
 					if (string.size() > 0 && string.get(string.size() - 1) instanceof String) {
 						// We can append last string part in the list, so let's do so
@@ -280,8 +272,7 @@ public class VariableString implements Expression<String> {
 		if (string.size() == 1 && string.get(0) instanceof String)
 			return new VariableString(s);
 		
-		final Object[] sa = string.toArray();
-		assert sa != null;
+		Object[] sa = string.toArray();
 		if (string.size() == 1 && string.get(0) instanceof Expression &&
 				((Expression<?>) string.get(0)).getReturnType() == String.class &&
 				((Expression<?>) string.get(0)).isSingle()) {
@@ -305,15 +296,17 @@ public class VariableString implements Expression<String> {
 			}
 		}
 		
-		final Pattern pattern;
+		Pattern pattern;
 		if (string != null) {
-			final StringBuilder p = new StringBuilder();
-			stringLoop: for (final Object o : string) {
+			StringBuilder p = new StringBuilder();
+			stringLoop: for (Object o : string) {
 				if (o instanceof Expression) {
-					for (final ClassInfo<?> ci : Classes.getClassInfos()) {
-						final Parser<?> parser = ci.getParser();
+					for (ClassInfo<?> ci : Classes.getClassInfos()) {
+						Parser<?> parser = ci.getParser();
 						if (parser != null && ci.getC().isAssignableFrom(((Expression<?>) o).getReturnType())) {
-							p.append("(?!%)" + parser.getVariableNamePattern() + "(?<!%)");
+							p.append("(?!%)")
+								.append(parser.getVariableNamePattern())
+								.append("(?<!%)");
 							continue stringLoop;
 						}
 					}
@@ -330,7 +323,7 @@ public class VariableString implements Expression<String> {
 			Config cs = parserInstance.getCurrentScript(); //Eclipse's nullness forced me to do this
 			if (cs != null) {
 				if (!ScriptOptions.getInstance().suppressesWarning(cs.getFile(), "conflict")) {
-					for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+					for (Entry<String, Pattern> e : variableNames.entrySet()) {
 						if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
 							Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
 							break;
@@ -338,7 +331,7 @@ public class VariableString implements Expression<String> {
 					}
 				}
 			} else {
-				for (final Entry<String, Pattern> e : variableNames.entrySet()) {
+				for (Entry<String, Pattern> e : variableNames.entrySet()) {
 					if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
 						Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
 						break;
@@ -356,7 +349,7 @@ public class VariableString implements Expression<String> {
 	 * @param start Index after the opening bracket
 	 * @return The next closing curly bracket
 	 */
-	public static int nextVariableBracket(final String s, final int start) {
+	public static int nextVariableBracket(String s, int start) {
 		int n = 0;
 		for (int i = start; i < s.length(); i++) {
 			if (s.charAt(i) == '}') {
@@ -370,17 +363,16 @@ public class VariableString implements Expression<String> {
 		return -1;
 	}
 	
-	public static VariableString[] makeStrings(final String[] args) {
+	public static VariableString[] makeStrings(String[] args) {
 		VariableString[] strings = new VariableString[args.length];
 		int j = 0;
-		for (int i = 0; i < args.length; i++) {
-			final VariableString vs = newInstance("" + args[i]);
+		for (String arg : args) {
+			VariableString vs = newInstance(arg);
 			if (vs != null)
 				strings[j++] = vs;
 		}
 		if (j != args.length)
 			strings = Arrays.copyOf(strings, j);
-		assert strings != null;
 		return strings;
 	}
 	
@@ -389,11 +381,11 @@ public class VariableString implements Expression<String> {
 	 * @return a new array containing all newly created VariableStrings, or null if one is invalid
 	 */
 	@Nullable
-	public static VariableString[] makeStringsFromQuoted(final List<String> args) {
-		final VariableString[] strings = new VariableString[args.size()];
+	public static VariableString[] makeStringsFromQuoted(List<String> args) {
+		VariableString[] strings = new VariableString[args.size()];
 		for (int i = 0; i < args.size(); i++) {
 			assert args.get(i).startsWith("\"") && args.get(i).endsWith("\"");
-			final VariableString vs = newInstance("" + args.get(i).substring(1, args.get(i).length() - 1));
+			VariableString vs = newInstance(args.get(i).substring(1, args.get(i).length() - 1));
 			if (vs == null)
 				return null;
 			strings[i] = vs;
@@ -408,7 +400,7 @@ public class VariableString implements Expression<String> {
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toString(@Nullable final Event e) {
+	public String toString(@Nullable Event e) {
 		if (isSimple) {
 			assert simple != null;
 			return simple;
@@ -418,19 +410,17 @@ public class VariableString implements Expression<String> {
 			throw new IllegalArgumentException("Event may not be null in non-simple VariableStrings!");
 		}
 
-		final Object[] string = this.string;
+		Object[] string = this.string;
 		assert string != null;
-		final StringBuilder b = new StringBuilder();
-		for (int i = 0; i < string.length; i++) {
-			final Object o = string[i];
+		StringBuilder b = new StringBuilder();
+		for (Object o : string) {
 			if (o instanceof Expression<?>) {
-				assert mode != StringMode.MESSAGE;
 				b.append(Classes.toString(((Expression<?>) o).getArray(e), true, mode));
 			} else {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	/**
@@ -439,24 +429,22 @@ public class VariableString implements Expression<String> {
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toUnformattedString(final Event e) {
+	public String toUnformattedString(Event e) {
 		if (isSimple) {
 			assert simpleUnformatted != null;
 			return simpleUnformatted;
 		}
-		final Object[] string = this.stringUnformatted;
+		Object[] string = this.stringUnformatted;
 		assert string != null;
-		final StringBuilder b = new StringBuilder();
-		for (int i = 0; i < string.length; i++) {
-			final Object o = string[i];
+		StringBuilder b = new StringBuilder();
+		for (Object o : string) {
 			if (o instanceof Expression<?>) {
-				assert mode != StringMode.MESSAGE;
 				b.append(Classes.toString(((Expression<?>) o).getArray(e), true, mode));
 			} else {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	/**
@@ -496,7 +484,6 @@ public class VariableString implements Expression<String> {
 					}
 					continue;
 				} else if (o instanceof Expression<?>) {
-					assert mode != StringMode.MESSAGE;
 					text = Classes.toString(((Expression<?>) o).getArray(e), true, mode);
 				} else {
 					assert false;
@@ -545,15 +532,15 @@ public class VariableString implements Expression<String> {
 	 * @param e Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toChatString(final Event e) {
+	public String toChatString(Event e) {
 		return ChatMessages.toJson(getMessageComponents(e));
 	}
 	
 	@Nullable
-	private static ChatColor getLastColor(final CharSequence s) {
+	private static ChatColor getLastColor(CharSequence s) {
 		for (int i = s.length() - 2; i >= 0; i--) {
 			if (s.charAt(i) == ChatColor.COLOR_CHAR) {
-				final ChatColor c = ChatColor.getByChar(s.charAt(i + 1));
+				ChatColor c = ChatColor.getByChar(s.charAt(i + 1));
 				if (c != null && (c.isColor() || c == ChatColor.RESET))
 					return c;
 			}
@@ -570,15 +557,15 @@ public class VariableString implements Expression<String> {
 	 * Use {@link #toString(Event)} to get the actual string
 	 */
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
+	public String toString(@Nullable Event e, boolean debug) {
 		if (isSimple) {
 			assert simple != null;
 			return '"' + simple + '"';
 		}
-		final Object[] string = this.string;
+		Object[] string = this.string;
 		assert string != null;
-		final StringBuilder b = new StringBuilder("\"");
-		for (final Object o : string) {
+		StringBuilder b = new StringBuilder("\"");
+		for (Object o : string) {
 			if (o instanceof Expression) {
 				b.append("%").append(((Expression<?>) o).toString(e, debug)).append("%");
 			} else {
@@ -586,7 +573,7 @@ public class VariableString implements Expression<String> {
 			}
 		}
 		b.append('"');
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	public String getDefaultVariableName() {
@@ -594,17 +581,19 @@ public class VariableString implements Expression<String> {
 			assert simple != null;
 			return simple;
 		}
-		final Object[] string = this.string;
+		Object[] string = this.string;
 		assert string != null;
-		final StringBuilder b = new StringBuilder();
-		for (final Object o : string) {
+		StringBuilder b = new StringBuilder();
+		for (Object o : string) {
 			if (o instanceof Expression) {
-				b.append("<" + Classes.getSuperClassInfo(((Expression<?>) o).getReturnType()).getCodeName() + ">");
+				b.append("<")
+					.append(Classes.getSuperClassInfo(((Expression<?>) o).getReturnType()).getCodeName())
+					.append(">");
 			} else {
 				b.append(o);
 			}
 		}
-		return "" + b.toString();
+		return b.toString();
 	}
 	
 	public boolean isSimple() {
@@ -615,7 +604,7 @@ public class VariableString implements Expression<String> {
 		return mode;
 	}
 	
-	public VariableString setMode(final StringMode mode) {
+	public VariableString setMode(StringMode mode) {
 		if (this.mode == mode || isSimple)
 			return this;
 		BlockingLogHandler h = new BlockingLogHandler().start();
@@ -632,22 +621,22 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public String getSingle(final Event e) {
+	public String getSingle(Event e) {
 		return toString(e);
 	}
 	
 	@Override
-	public String[] getArray(final Event e) {
+	public String[] getArray(Event e) {
 		return new String[] {toString(e)};
 	}
 	
 	@Override
-	public String[] getAll(final Event e) {
+	public String[] getAll(Event e) {
 		return new String[] {toString(e)};
 	}
 	
@@ -657,19 +646,19 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Override
-	public boolean check(final Event e, final Checker<? super String> c, final boolean negated) {
+	public boolean check(Event e, Checker<? super String> c, boolean negated) {
 		return SimpleExpression.check(getAll(e), c, negated, false);
 	}
 	
 	@Override
-	public boolean check(final Event e, final Checker<? super String> c) {
+	public boolean check(Event e, Checker<? super String> c) {
 		return SimpleExpression.check(getAll(e), c, false, false);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Nullable
-	public <R> Expression<? extends R> getConvertedExpression(final Class<R>... to) {
+	public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
 		if (CollectionUtils.containsSuperclass(to, String.class))
 			return (Expression<? extends R>) this;
 		return null;
@@ -682,12 +671,12 @@ public class VariableString implements Expression<String> {
 	
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
 		return null;
 	}
 	
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 	
@@ -697,7 +686,7 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Override
-	public boolean setTime(final int time) {
+	public boolean setTime(int time) {
 		return false;
 	}
 	
@@ -712,12 +701,12 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@Override
-	public Iterator<? extends String> iterator(final Event e) {
+	public Iterator<? extends String> iterator(Event e) {
 		return new SingleItemIterator<>(toString(e));
 	}
 	
 	@Override
-	public boolean isLoopOf(final String s) {
+	public boolean isLoopOf(String s) {
 		return false;
 	}
 	
@@ -727,11 +716,11 @@ public class VariableString implements Expression<String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Expression<T> setStringMode(final Expression<T> e, final StringMode mode) {
+	public static <T> Expression<T> setStringMode(Expression<T> e, StringMode mode) {
 		if (e instanceof ExpressionList) {
-			final Expression<?>[] ls = ((ExpressionList<?>) e).getExpressions();
+			Expression<?>[] ls = ((ExpressionList<?>) e).getExpressions();
 			for (int i = 0; i < ls.length; i++) {
-				final Expression<?> l = ls[i];
+				Expression<?> l = ls[i];
 				assert l != null;
 				ls[i] = setStringMode(l, mode);
 			}
