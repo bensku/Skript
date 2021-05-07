@@ -91,7 +91,7 @@ public class DefaultFunctions {
 					return new Long[] {(Long) params[0][0]};
 				return new Long[] {Math2.ceil(((Number) params[0][0]).doubleValue())};
 			}
-		}.description("Rounds a number down, i.e. returns the closest integer larger than or equal to the argument.")
+		}.description("Rounds a number up, i.e. returns the closest integer larger than or equal to the argument.")
 				.examples("ceil(2.34) = 3", "ceil(2) = 2", "ceil(2.99) = 3")
 				.since("2.2"));
 		Functions.registerFunction(new JavaFunction<Long>("ceiling", numberParam, longClass, true) {
