@@ -16,12 +16,13 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.util;
-
 /**
- * This class is a dummy class for {@link VisualEffect} that
- * is used to register the "visualeffect" type on Bukkit builds
- * without org.bukkit.Particle
+ * Contains the default expression of Skript.
+ * 
+ * @author Peter Güttinger
  */
-public class VisualEffectDummy {
-}
+@NonNullByDefault
+package ch.njol.skript.expressions.arithmetic;
+
+import org.eclipse.jdt.annotation.NonNullByDefault;
+

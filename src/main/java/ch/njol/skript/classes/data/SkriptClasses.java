@@ -18,15 +18,6 @@
  */
 package ch.njol.skript.classes.data;
 
-import java.io.StreamCorruptedException;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemData;
@@ -59,11 +50,19 @@ import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.VisualEffect;
-import ch.njol.skript.util.VisualEffectDummy;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.util.visual.VisualEffect;
+import ch.njol.skript.util.visual.VisualEffects;
 import ch.njol.yggdrasil.Fields;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.StreamCorruptedException;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -697,9 +696,9 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
-						if (ColorRGB.isRGBColor(input)) {
-							return ColorRGB.fromString(input);
-						}
+						Color rgbColor = ColorRGB.fromString(input);
+						if (rgbColor != null)
+							return rgbColor;
 						return SkriptColor.fromName(input);
 					}
 					
@@ -851,41 +850,38 @@ public class SkriptClasses {
 						}
 					}
 				}));
-		if (Skript.classExists("org.bukkit.Particle")) {
-			Classes.registerClass(new ClassInfo<>(VisualEffect.class, "visualeffect")
-					.name("Visual Effect")
-					.description("A visible effect, e.g. particles.")
-					.examples("show wolf hearts on the clicked wolf",
-							"play mob spawner flames at the targeted block to the player")
-					.usage(VisualEffect.getAllNames())
-					.since("2.1")
-					.user("(visual|particle) effects?")
-					.parser(new Parser<VisualEffect>() {
-						@Override
-						@Nullable
-						public VisualEffect parse(final String s, final ParseContext context) {
-							return VisualEffect.parse(s);
-						}
 
-						@Override
-						public String toString(final VisualEffect e, final int flags) {
-							return e.toString(flags);
-						}
+		Classes.registerClass(new ClassInfo<>(VisualEffect.class, "visualeffect")
+				.name("Visual Effect")
+				.description("A visible effect, e.g. particles.")
+				.examples("show wolf hearts on the clicked wolf",
+						"play mob spawner flames at the targeted block to the player")
+				.usage(VisualEffects.getAllNames())
+				.since("2.1")
+				.user("(visual|particle) effects?")
+				.parser(new Parser<VisualEffect>() {
+					@Override
+					@Nullable
+					public VisualEffect parse(String s, ParseContext context) {
+						return VisualEffects.parse(s);
+					}
 
-						@Override
-						public String toVariableNameString(final VisualEffect e) {
-							return e.toString();
-						}
+					@Override
+					public String toString(VisualEffect e, int flags) {
+						return e.toString(flags);
+					}
 
-						@Override
-						public String getVariableNamePattern() {
-							return ".*";
-						}
-					})
-					.serializer(new YggdrasilSerializer<VisualEffect>()));
-		} else {
-			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
-		}
+					@Override
+					public String toVariableNameString(VisualEffect e) {
+						return e.toString();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".*";
+					}
+				})
+				.serializer(new YggdrasilSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(GameruleValue.class, "gamerulevalue")
 				.user("gamerule values?")
