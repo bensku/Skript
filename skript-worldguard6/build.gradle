@@ -8,5 +8,5 @@ dependencies {
 }
 
 jar {
-	archiveName 'Skript-worldguard6.jar'
+	archiveFileName = 'Skript-worldguard6.jar'
 }

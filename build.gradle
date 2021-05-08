@@ -6,13 +6,12 @@ import java.time.LocalTime
 
 plugins {
 	id 'com.github.johnrengelman.shadow' version '6.1.0'
-	id 'com.github.hierynomus.license' version '0.14.0'
+	id 'com.github.hierynomus.license' version '0.16.1'
 	id 'java'
 }
 
 allprojects {
 	repositories {
-		jcenter()
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
@@ -53,12 +52,12 @@ task checkAliases {
 
 task jar(overwrite: true, type: ShadowJar) {
 	dependsOn checkAliases
-	archiveName jarName ? 'Skript.jar' : jarName
+	archiveFileName = jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
 
 task build(overwrite: true, type: ShadowJar) {
-	archiveName jarName ? 'Skript.jar' : jarName
+	archiveFileName = jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
 
@@ -73,8 +72,7 @@ task sourceJar(type: Jar) {
 tasks.withType(ShadowJar) {
 	dependsOn relocateShadowJar
 	configurations = [
-		project.configurations.shadow,
-		project.configurations.compile
+		project.configurations.shadow
 	]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
@@ -199,7 +197,7 @@ task githubResources(type: ProcessResources) {
 task githubRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn githubResources
-	archiveName = 'Skript-github.jar'
+	archiveFileName = 'Skript-github.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
@@ -235,7 +233,7 @@ task spigotResources(type: ProcessResources) {
 task spigotRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
-	archiveName = 'Skript-spigot.jar'
+	archiveFileName = 'Skript-spigot.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
@@ -267,7 +265,7 @@ task nightlyResources(type: ProcessResources) {
 task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources, licenseMain
-	archiveName = 'Skript-nightly.jar'
+	archiveFileName = 'Skript-nightly.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
