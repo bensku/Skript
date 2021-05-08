@@ -60,7 +60,7 @@ public class ExprSortedList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] unsorted = list.getAll(e);
+		Object[] unsorted = list.getArray(e);
 		Object[] sorted = (Object[]) Array.newInstance(getReturnType(), unsorted.length); // Not yet sorted...
 		
 		for (int i = 0; i < sorted.length; i++) {

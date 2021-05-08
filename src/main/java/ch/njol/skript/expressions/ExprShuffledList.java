@@ -60,7 +60,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] origin = list.getAll(e).clone();
+		Object[] origin = list.getArray(e).clone();
 		List<Object> shuffled = Arrays.asList(origin); // Not yet shuffled...
 		Collections.shuffle(shuffled);
 
