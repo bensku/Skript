@@ -18,10 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import ch.njol.skript.util.LiteralUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -46,22 +48,23 @@ public class ExprReversedList extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprReversedList.class, Object.class, ExpressionType.COMBINED, "reversed %objects%");
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> list;
 
 	@Override
-	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		list = exprs[0].getConvertedExpression(Object.class);
-		return list != null;
+		list = LiteralUtils.defendExpression(exprs[0]);
+		return LiteralUtils.canInitSafely(list);
 	}
 
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		List<Object> reversed = Arrays.asList(list.getAll(e).clone());
+		Object[] inputArray = list.getArray(e).clone();
+		List<?> reversed = Arrays.asList(inputArray);
 		Collections.reverse(reversed);
-		return reversed.toArray();
+		Object[] array = (Object[]) Array.newInstance(getReturnType(), inputArray.length);
+		return reversed.toArray(array);
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class ExprReversedList extends SimpleExpression<Object> {
 
 	@Override
 	public Class<?> getReturnType() {
-		return Object.class;
+		return list.getReturnType();
 	}
 
 	@Override
