@@ -16,33 +16,39 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.function;
+package ch.njol.skript.util.visual;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import ch.njol.skript.util.Color;
 
-public final class FunctionEvent<T> extends Event {
-	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
-	
-	private final Function<? extends T> function;
-	
-	public FunctionEvent(Function<? extends T> function) {
-		this.function = function;
+public class ParticleOption {
+
+	org.bukkit.Color color;
+	float size;
+
+	public ParticleOption(Color color, float size) {
+		this.color = color.asBukkitColor();
+		this.size = size;
 	}
-	
-	public Function<? extends T> getFunction() {
-		return function;
+
+	public org.bukkit.Color getBukkitColor() {
+		return color;
 	}
-	
+
+	public float getRed() {
+		return (float) color.getRed() / 255.0f;
+	}
+
+	public float getGreen() {
+		return (float) color.getGreen() / 255.0f;
+	}
+
+	public float getBlue() {
+		return (float) color.getBlue() / 255.0f;
+	}
+
 	@Override
-	public HandlerList getHandlers() {
-		return handlers;
+	public String toString() {
+		return "ParticleOption{color=" + color + ", size=" + size + "}";
 	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
-	
+
 }

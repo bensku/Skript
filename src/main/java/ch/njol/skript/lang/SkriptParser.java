@@ -525,6 +525,11 @@ public class SkriptParser {
 						}
 					}
 					
+					if (onlySingular && !e.isSingle()) {
+						Skript.error("'" + expr + "' can only accept singular expressions, not plural", ErrorQuality.SEMANTIC_ERROR);
+						return null;
+					}
+					
 					// No directly same type found
 					Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
 					if (r != null) {
@@ -1351,11 +1356,15 @@ public class SkriptParser {
 	 * @return Index of the end quote
 	 */
 	private static int nextQuote(final String s, final int from) {
+		boolean inExpression = false;
 		for (int i = from; i < s.length(); i++) {
-			if (s.charAt(i) == '"') {
+			char c = s.charAt(i);
+			if (c == '"' && !inExpression) {
 				if (i == s.length() - 1 || s.charAt(i + 1) != '"')
 					return i;
 				i++;
+			} else if (c == '%') {
+				inExpression = !inExpression;
 			}
 		}
 		return -1;

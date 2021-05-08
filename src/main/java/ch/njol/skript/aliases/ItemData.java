@@ -49,6 +49,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ch.njol.util.EnumTypeAdapter;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.ItemUtils;
@@ -85,7 +86,7 @@ public class ItemData implements Cloneable, YggdrasilExtendedSerializable {
 	
 	// Load or create material registry
 	static {
-		Gson gson = new GsonBuilder().serializeNulls().create();
+		Gson gson = new GsonBuilder().registerTypeAdapterFactory(EnumTypeAdapter.factory).serializeNulls().create();
 		Path materialsFile = Paths.get(Skript.getInstance().getDataFolder().getAbsolutePath(), "materials.json");
 		if (Files.exists(materialsFile)) {
 			String content = null;

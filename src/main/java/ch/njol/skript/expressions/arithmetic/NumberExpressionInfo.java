@@ -16,33 +16,24 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.function;
+package ch.njol.skript.expressions.arithmetic;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public final class FunctionEvent<T> extends Event {
+import ch.njol.skript.lang.Expression;
+
+public class NumberExpressionInfo implements ArithmeticGettable {
 	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
+	private final Expression<? extends Number> expression;
 	
-	private final Function<? extends T> function;
-	
-	public FunctionEvent(Function<? extends T> function) {
-		this.function = function;
-	}
-	
-	public Function<? extends T> getFunction() {
-		return function;
+	public NumberExpressionInfo(Expression<? extends Number> expression) {
+		this.expression = expression;
 	}
 	
 	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
+	public Number get(Event event, boolean integer) {
+		Number number = expression.getSingle(event);
+		return number != null ? number : 0;
 	}
 	
 }

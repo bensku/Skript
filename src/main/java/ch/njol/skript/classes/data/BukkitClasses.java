@@ -219,7 +219,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(final Block b, final int flags) {
-						return ItemType.toString(b, flags);
+						return BlockUtils.blockToString(b, flags);
 					}
 					
 					@Override
