@@ -506,8 +506,8 @@ public class VariableString implements Expression<String> {
 				
 				// Convert it to plain text
 				String text = null;
-				if (o instanceof ExprColoured) { // Special case: user wants to process formatting
-					String unformatted = ((ExprColoured) o).getSingle(e);
+				if (o instanceof ExprColoured && ((ExprColoured) o).isUnsafeFormat()) { // Special case: user wants to process formatting
+					String unformatted = Classes.toString(((ExprColoured) o).getArray(e), true, mode);
 					if (unformatted != null) {
 						message.addAll(ChatMessages.parse(unformatted));
 					}
