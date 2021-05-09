@@ -23,6 +23,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.coll.CollectionUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.entity.LivingEntity;
@@ -66,8 +67,13 @@ public class EvtMove extends SkriptEvent {
 
 	@Override
 	public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
-		if (HAS_ENTITY_MOVE && parseResult.mark == 1) {
-			types = ((Literal<EntityData<?>>) args[0]).getAll();
+		if (parseResult.mark == 1) {
+			if (HAS_ENTITY_MOVE)
+				types = ((Literal<EntityData<?>>) args[0]).getAll();
+			else {
+				Skript.error("Entity move event requires Paper 1.16.5+", ErrorQuality.SEMANTIC_ERROR);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -81,9 +87,7 @@ public class EvtMove extends SkriptEvent {
 			LivingEntity entity = entityEvent.getEntity();
 			for (EntityData<?> type : types) {
 				if (type.isInstance(entity)) {
-					if (!HAS_POS_METHOD) {
-						return true;
-					} else if (((EntityMoveEvent) event).hasChangedPosition()) {
+					if (!HAS_POS_METHOD || entityEvent.hasChangedPosition()) {
 						return true;
 					}
 				}
@@ -96,4 +100,5 @@ public class EvtMove extends SkriptEvent {
 	public String toString(@Nullable Event e, boolean debug) {
 		return (HAS_ENTITY_MOVE && types != null ? types.toString() : "player") + " move";
 	}
+
 }
