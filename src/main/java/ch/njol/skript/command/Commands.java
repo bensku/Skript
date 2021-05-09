@@ -488,11 +488,12 @@ public abstract class Commands {
 		}
 		
 		Commands.currentArguments = currentArguments;
-		final ScriptCommand c;
+		ScriptCommand c;
 		try {
-			c = new ScriptCommand(config, command, "" + pattern.toString(), currentArguments, description, usage,
+			c = new ScriptCommand(config, command, pattern.toString(), currentArguments, description, usage,
 					aliases, permission, permissionMessage, cooldown, cooldownMessage, cooldownBypass, cooldownStorage,
 					executableBy, ScriptLoader.loadItems(trigger));
+			c.trigger.setLineNumber(node.getLine());
 		} finally {
 			Commands.currentArguments = null;
 		}
@@ -502,7 +503,6 @@ public abstract class Commands {
 		
 		if (Skript.logVeryHigh() && !Skript.debug())
 			Skript.info("registered command " + desc);
-		currentArguments = null;
 		return c;
 	}
 	

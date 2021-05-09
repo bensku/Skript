@@ -45,6 +45,7 @@ public class ScriptFunction<T> extends Function<T> {
 				new SimpleEvent(),
 				ScriptLoader.loadItems(node)
 			);
+			trigger.setLineNumber(node.getLine());
 		} finally {
 			Functions.currentFunction = null;
 		}

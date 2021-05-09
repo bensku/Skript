@@ -1682,7 +1682,7 @@ public class SkriptParser {
 	 * Validates a user-defined pattern (used in {@link ExprParse}).
 	 * 
 	 * @param pattern
-	 * @return The pattern with %codenames% and a boolean array that contains whetehr the expressions are plural or not
+	 * @return The pattern with %codenames% and a boolean array that contains whether the expressions are plural or not
 	 */
 	@Nullable
 	public static NonNullPair<String, boolean[]> validatePattern(final String pattern) {
