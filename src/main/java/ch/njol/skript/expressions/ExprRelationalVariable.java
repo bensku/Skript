@@ -66,6 +66,11 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
 	static {
 		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
+			/*
+			 * Registered as a SIMPLE expression type due to workaround parser order. For example, the line
+			 * 'set {data} of player's tool to "tool data"' will be parsed as 'set ({data} of player)'s tool to "tool data"'
+			 * INSTEAD of 'set data of (player's tool) to "tool data"' when registered as a PROPERTY expression type.
+			 */
 			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.SIMPLE,
 					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
