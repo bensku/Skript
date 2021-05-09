@@ -43,6 +43,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -124,8 +125,7 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 			return;
 
 		Function<Timespan, Timespan> value = null;
-		ClassInfo<Timespan> ci = Classes.getExactClassInfo(Timespan.class);
-		assert ci != null;
+		ClassInfo<Timespan> ci = DefaultClasses.TIMESPAN;
 		Arithmetic<Timespan, Timespan> arithmetic = ci.getRelativeMath();
 		Timespan changed = (Timespan) delta[0];
 		assert arithmetic != null;
