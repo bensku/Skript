@@ -102,6 +102,14 @@ public abstract class Commands {
 	static {
 		init(); // separate method for the annotation
 	}
+	public static Set<String> getScriptCommands(){
+		return commands.keySet();
+	}
+	
+	@Nullable
+	public static SimpleCommandMap getCommandMap(){
+		return commandMap;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private static void init() {
@@ -170,7 +178,7 @@ public abstract class Commands {
 		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.HIGHEST)
 		public void onServerCommand(final ServerCommandEvent e) {
-			if (e.getCommand() == null || e.getCommand().isEmpty())
+			if (e.getCommand() == null || e.getCommand().isEmpty() || e.isCancelled())
 				return;
 			if (SkriptConfig.enableEffectCommands.value() && e.getCommand().startsWith(SkriptConfig.effectCommandToken.value())) {
 				if (handleEffectCommand(e.getSender(), e.getCommand())) {
@@ -480,11 +488,12 @@ public abstract class Commands {
 		}
 		
 		Commands.currentArguments = currentArguments;
-		final ScriptCommand c;
+		ScriptCommand c;
 		try {
-			c = new ScriptCommand(config, command, "" + pattern.toString(), currentArguments, description, usage,
+			c = new ScriptCommand(config, command, pattern.toString(), currentArguments, description, usage,
 					aliases, permission, permissionMessage, cooldown, cooldownMessage, cooldownBypass, cooldownStorage,
 					executableBy, ScriptLoader.loadItems(trigger));
+			c.trigger.setLineNumber(node.getLine());
 		} finally {
 			Commands.currentArguments = null;
 		}
@@ -494,14 +503,13 @@ public abstract class Commands {
 		
 		if (Skript.logVeryHigh() && !Skript.debug())
 			Skript.info("registered command " + desc);
-		currentArguments = null;
 		return c;
 	}
 	
-//	public static boolean skriptCommandExists(final String command) {
-//		final ScriptCommand c = commands.get(command);
-//		return c != null && c.getName().equals(command);
-//	}
+	public static boolean skriptCommandExists(final String command) {
+		final ScriptCommand c = commands.get(command);
+		return c != null && c.getName().equals(command);
+	}
 	
 	public static void registerCommand(final ScriptCommand command) {
 		// Validate that there are no duplicates
