@@ -1303,10 +1303,10 @@ public final class Skript extends JavaPlugin implements Listener {
 			throw new IllegalArgumentException("returnType must be a normal type");
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
 		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath, type);
-		for (int i = type.ordinal() + 1; i < ExpressionType.values().length; i++) {
+		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
+		for (int i = type.ordinal(); i < ExpressionType.values().length; i++) {
 			expressionTypesStartIndices[i]++;
 		}
-		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
 	}
 	
 	@SuppressWarnings("null")
