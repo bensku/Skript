@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.SequenceInputStream;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,8 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
@@ -383,6 +386,28 @@ public abstract class Classes {
 		checkAllowClassInfoInteraction();
 		final ClassInfo<T> ci = getExactClassInfo(c);
 		return ci == null ? null : ci.getDefaultExpression();
+	}
+	
+	/**
+	 * Clones the given object by calling {@link ClassInfo#clone(Object)},
+	 * getting the {@link ClassInfo} from the closest registered superclass
+	 * (or the given object's class). Supports arrays too.
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public static Object clone(Object obj) {
+		if (obj == null)
+			return null;
+		if (obj.getClass().isArray()) {
+			int length = Array.getLength(obj);
+			Object clone = Array.newInstance(obj.getClass().getComponentType(), length);
+			for (int i = 0; i < length; i++) {
+				Array.set(clone, i, clone(Array.get(obj, i)));
+			}
+			return clone;
+		} else {
+			ClassInfo classInfo = getSuperClassInfo(obj.getClass());
+			return classInfo.clone(obj);
+		}
 	}
 	
 	/**
