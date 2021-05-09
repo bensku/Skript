@@ -19,6 +19,8 @@
 package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemData;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -27,67 +29,57 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-@Name("Reversed List")
-@Description("Reverses given list.")
-@Examples({"set {_list::*} to reversed {_list::*}"})
-@Since("2.4")
-public class ExprReversedList extends SimpleExpression<Object> {
-
+@Name("Plain Item")
+@Description("A plain item is an item with no modifications. It can be used to convert items to their default state or to match with other default items.")
+@Examples({"if the player's tool is a plain diamond: # check if player's tool has no modifications",
+		"\tsend \"You are holding a plain diamond!\""})
+@Since("INSERT VERSION")
+public class ExprPlain extends SimpleExpression<ItemType> {
+	
+	@SuppressWarnings("null")
+	private Expression<ItemType> item;
+	
 	static {
-		Skript.registerExpression(ExprReversedList.class, Object.class, ExpressionType.COMBINED, "reversed %objects%");
+		Skript.registerExpression(ExprPlain.class, ItemType.class, ExpressionType.COMBINED, "[a[n]] (plain|unmodified) %itemtype%");
 	}
-
-	@SuppressWarnings("NotNullFieldNotInitialized")
-	private Expression<?> list;
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		list = LiteralUtils.defendExpression(exprs[0]);
-		return LiteralUtils.canInitSafely(list);
+		item = (Expression<ItemType>) exprs[0];
+		return true;
 	}
-
+	
 	@Override
 	@Nullable
-	protected Object[] get(Event e) {
-		Object[] inputArray = list.getArray(e).clone();
-		Object[] array = (Object[]) Array.newInstance(getReturnType(), inputArray.length);
-		System.arraycopy(inputArray, 0, array, 0, inputArray.length);
-		reverse(array);
-		return array;
+	protected ItemType[] get(Event e) {
+		ItemType itemType = item.getSingle(e);
+		if (itemType == null)
+			return new ItemType[0];
+		ItemData data = new ItemData(itemType.getMaterial());
+		data.setPlain(true);
+		ItemType plain = new ItemType(data);
+		return new ItemType[]{plain};
 	}
-
-	private void reverse(Object[] array) {
-		for (int i = 0; i < array.length / 2; i++) {
-			Object temp = array[i];
-			int reverse = array.length - i - 1;
-			array[i] = array[reverse];
-			array[reverse] = temp;
-		}
-	}
-
+	
 	@Override
 	public boolean isSingle() {
-		return false;
+		return true;
 	}
-
+	
 	@Override
-	public Class<?> getReturnType() {
-		return list.getReturnType();
+	public Class<? extends ItemType> getReturnType() {
+		return ItemType.class;
 	}
-
+	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "reversed " + list.toString(e, debug);
+		return "plain " + item.toString(e, debug);
 	}
-
+	
 }
