@@ -525,26 +525,16 @@ public class SkriptParser {
 						}
 					}
 					
+					if (onlySingular && !e.isSingle()) {
+						Skript.error("'" + expr + "' can only accept singular expressions, not plural", ErrorQuality.SEMANTIC_ERROR);
+						return null;
+					}
+					
 					// No directly same type found
-					if (types.length == 1) { // Only one type is accepted here
-						// So, we'll just create converted expression
-						@SuppressWarnings("unchecked") // This is safe... probably
-						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-						if (r != null) {
-							log.printLog();
-							return r;
-						}
-					} else { // Multiple types accepted
-						if (returnType == Object.class) { // No specific return type, so probably variable etc.
-							log.printLog();
-							return e; // Expression will have to deal with it runtime
-						} else {
-							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-							if (r != null) {
-								log.printLog();
-								return r;
-							}
-						}
+					Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+					if (r != null) {
+						log.printLog();
+						return r;
 					}
 
 					// Print errors, if we couldn't get the correct type
@@ -1366,11 +1356,15 @@ public class SkriptParser {
 	 * @return Index of the end quote
 	 */
 	private static int nextQuote(final String s, final int from) {
+		boolean inExpression = false;
 		for (int i = from; i < s.length(); i++) {
-			if (s.charAt(i) == '"') {
+			char c = s.charAt(i);
+			if (c == '"' && !inExpression) {
 				if (i == s.length() - 1 || s.charAt(i + 1) != '"')
 					return i;
 				i++;
+			} else if (c == '%') {
+				inExpression = !inExpression;
 			}
 		}
 		return -1;
@@ -1688,7 +1682,7 @@ public class SkriptParser {
 	 * Validates a user-defined pattern (used in {@link ExprParse}).
 	 * 
 	 * @param pattern
-	 * @return The pattern with %codenames% and a boolean array that contains whetehr the expressions are plural or not
+	 * @return The pattern with %codenames% and a boolean array that contains whether the expressions are plural or not
 	 */
 	@Nullable
 	public static NonNullPair<String, boolean[]> validatePattern(final String pattern) {

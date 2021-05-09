@@ -1053,8 +1053,13 @@ public final class Skript extends JavaPlugin implements Listener {
 					Thread.sleep(10000);
 				} catch (final InterruptedException e) {}
 				try {
-					final Field modifiers = Field.class.getDeclaredField("modifiers");
-					modifiers.setAccessible(true);
+					Field modifiers = null;
+					try {
+						modifiers = Field.class.getDeclaredField("modifiers");
+					} catch (final NoSuchFieldException ignored) { /* ignored */ }
+					if (modifiers != null) {
+						modifiers.setAccessible(true);
+					}
 					final JarFile jar = new JarFile(getFile());
 					try {
 						for (final JarEntry e : new EnumerationIterable<>(jar.entries())) {
@@ -1063,11 +1068,13 @@ public final class Skript extends JavaPlugin implements Listener {
 									final Class<?> c = Class.forName(e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length()), false, getClassLoader());
 									for (final Field f : c.getDeclaredFields()) {
 										if (Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive()) {
-											if (Modifier.isFinal(f.getModifiers())) {
+											if (Modifier.isFinal(f.getModifiers()) && modifiers != null) {
 												modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
 											}
-											f.setAccessible(true);
-											f.set(null, null);
+											if (!Modifier.isFinal(f.getModifiers())) {
+												f.setAccessible(true);
+												f.set(null, null);
+											}
 										}
 									}
 								} catch (final Throwable ex) {
@@ -1296,10 +1303,10 @@ public final class Skript extends JavaPlugin implements Listener {
 			throw new IllegalArgumentException("returnType must be a normal type");
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
 		final ExpressionInfo<E, T> info = new ExpressionInfo<>(patterns, returnType, c, originClassPath, type);
-		for (int i = type.ordinal() + 1; i < ExpressionType.values().length; i++) {
+		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
+		for (int i = type.ordinal(); i < ExpressionType.values().length; i++) {
 			expressionTypesStartIndices[i]++;
 		}
-		expressions.add(expressionTypesStartIndices[type.ordinal()], info);
 	}
 	
 	@SuppressWarnings("null")

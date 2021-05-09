@@ -116,11 +116,9 @@ public class NewBlockCompat implements BlockCompat {
 		private ItemType specialTorchFloors;
 		
 		private boolean typesLoaded = false;
-
-		/**
-		 * Cached BlockFace values.
-		 */
-		private BlockFace[] faces = BlockFace.values();
+		
+		private static final BlockFace[] CARDINAL_FACES =
+			new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 		
 		@SuppressWarnings("null") // Late initialization with loadTypes() to avoid circular dependencies
 		public NewBlockSetter() {}
@@ -276,8 +274,7 @@ public class NewBlockCompat implements BlockCompat {
 
 		@Nullable
 		private BlockFace findWallTorchSide(Block block) {
-			for (BlockFace face : faces) {
-				assert face != null;
+			for (BlockFace face : CARDINAL_FACES) {
 				Block relative = block.getRelative(face);
 				if (relative.getType().isOccluding() || specialTorchSides.isOfType(relative))
 					return face.getOppositeFace(); // Torch can be rotated towards from this face
