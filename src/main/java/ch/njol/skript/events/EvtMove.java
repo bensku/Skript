@@ -26,7 +26,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.coll.CollectionUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.eclipse.jdt.annotation.Nullable;
@@ -35,10 +36,6 @@ public class EvtMove extends SkriptEvent {
 
 	private static final boolean HAS_ENTITY_MOVE = Skript.classExists("io.papermc.paper.event.entity.EntityMoveEvent");
 
-	// There was a point the event existed but this method did not
-	private static final boolean HAS_POS_METHOD = HAS_ENTITY_MOVE &&
-		Skript.methodExists(EntityMoveEvent.class, "hasChangedPosition", boolean.class);
-
 	static {
 		Class<? extends Event>[] events;
 		if (HAS_ENTITY_MOVE)
@@ -46,10 +43,9 @@ public class EvtMove extends SkriptEvent {
 		else
 			events = CollectionUtils.array(PlayerMoveEvent.class);
 
-		Skript.registerEvent("Move", EvtMove.class, events,
-			"(0¦player|1¦%entitydatas%) move")
+		Skript.registerEvent("Move", EvtMove.class, events, "%entitydata% move")
 			.description("Called when a player or entity moves.",
-				"NOTE: Entity move event will only be called when the entity moves position, not orientation (ie: looking around).",
+				"NOTE: Move event will only be called when the entity/player moves position, not orientation (ie: looking around).",
 				"NOTE: These events can be performance heavy as they are called quite often.",
 				"If you use these events, and later remove them, a server restart is recommended to clear registered events from Skript.")
 			.examples("on player move:",
@@ -58,39 +54,35 @@ public class EvtMove extends SkriptEvent {
 				"on skeleton move:",
 				"\tif event-entity is not in world \"world\":",
 				"\t\tkill event-entity")
-			.requiredPlugins("Paper 1.16.5+ (for entity move)")
+			.requiredPlugins("Paper 1.16.5+ (entity move)")
 			.since("INSERT VERSION");
 	}
 
-	@Nullable
-	private EntityData<?>[] types = null;
+	private EntityData<?> type;
+	private boolean isPlayer;
 
 	@Override
 	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
-		if (parseResult.mark == 1) {
-			if (HAS_ENTITY_MOVE)
-				types = ((Literal<EntityData<?>>) args[0]).getAll();
-			else {
-				Skript.error("Entity move event requires Paper 1.16.5+", ErrorQuality.SEMANTIC_ERROR);
-				return false;
-			}
+		type = ((Literal<EntityData<?>>) args[0]).getSingle();
+		isPlayer = Player.class.isAssignableFrom(type.getType());
+
+		if (!HAS_ENTITY_MOVE && !isPlayer) {
+			Skript.error("Entity move event requires Paper 1.16.5+", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
 		return true;
 	}
 
 	@Override
 	public boolean check(Event event) {
-		if (types == null && event instanceof PlayerMoveEvent) {
-			return true;
-		} else if (HAS_ENTITY_MOVE && types != null && event instanceof EntityMoveEvent) {
+		if (isPlayer && event instanceof PlayerMoveEvent) {
+			PlayerMoveEvent playerEvent = (PlayerMoveEvent) event;
+			return moveCheck(playerEvent.getFrom(), playerEvent.getTo());
+
+		} else if (HAS_ENTITY_MOVE && event instanceof EntityMoveEvent) {
 			EntityMoveEvent entityEvent = (EntityMoveEvent) event;
-			LivingEntity entity = entityEvent.getEntity();
-			for (EntityData<?> type : types) {
-				if (type.isInstance(entity)) {
-					if (!HAS_POS_METHOD || entityEvent.hasChangedPosition()) {
-						return true;
-					}
-				}
+			if (type.isInstance(entityEvent.getEntity())) {
+				return moveCheck(entityEvent.getFrom(), entityEvent.getTo());
 			}
 		}
 		return false;
@@ -98,7 +90,11 @@ public class EvtMove extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return (HAS_ENTITY_MOVE && types != null ? types.toString() : "player") + " move";
+		return type + " move";
+	}
+
+	private static boolean moveCheck(Location from, Location to) {
+		return from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ() || from.getWorld() != to.getWorld();
 	}
 
 }
