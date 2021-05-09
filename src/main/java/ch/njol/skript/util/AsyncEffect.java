@@ -51,11 +51,17 @@ public abstract class AsyncEffect extends Effect {
 		Delay.addDelayedEvent(e); // Mark this event as delayed
 		Object localVars = Variables.removeLocals(e); // Back up local variables
 		
+		if (!Skript.getInstance().isEnabled()) // See https://github.com/SkriptLang/Skript/issues/3702
+			return null;
+		
 		Bukkit.getScheduler().runTaskAsynchronously(Skript.getInstance(), new Runnable() {
 			@SuppressWarnings("synthetic-access")
 			@Override
 			public void run() {
 				execute(e); // Execute this effect
+				
+				if (!Skript.getInstance().isEnabled()) // See https://github.com/SkriptLang/Skript/issues/3702
+					return;
 				
 				Bukkit.getScheduler().runTask(Skript.getInstance(), new Runnable() {
 					@Override

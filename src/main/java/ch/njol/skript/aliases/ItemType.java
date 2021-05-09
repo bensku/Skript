@@ -1153,6 +1153,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	
 	/**
 	 * Checks whether this item type contains the given enchantments.
+	 * Also checks the enchantment level.
 	 * @param enchantments The enchantments to be checked.
 	 */
 	public boolean hasEnchantments(EnchantmentType... enchantments) {
@@ -1163,6 +1164,8 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			Enchantment type = enchantment.getType();
 			assert type != null; // Bukkit working different than we expect
 			if (!meta.hasEnchant(type))
+				return false;
+			if (enchantment.getInternalLevel() != -1 && meta.getEnchantLevel(type) < enchantment.getLevel())
 				return false;
 		}
 		return true;
