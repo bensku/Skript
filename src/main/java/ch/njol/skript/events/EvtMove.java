@@ -34,6 +34,10 @@ public class EvtMove extends SkriptEvent {
 
 	private static final boolean HAS_ENTITY_MOVE = Skript.classExists("io.papermc.paper.event.entity.EntityMoveEvent");
 
+	// There was a point the event existed but this method did not
+	private static final boolean HAS_POS_METHOD = HAS_ENTITY_MOVE &&
+		Skript.methodExists(EntityMoveEvent.class, "hasChangedPosition", boolean.class);
+
 	static {
 		Class<? extends Event>[] events;
 		if (HAS_ENTITY_MOVE)
@@ -45,15 +49,16 @@ public class EvtMove extends SkriptEvent {
 			"(0¦player|1¦%entitydatas%) move")
 			.description("Called when a player or entity moves.",
 				"NOTE: Entity move event will only be called when the entity moves position, not orientation (ie: looking around).",
-				"NOTE: This event can be performance heavy as it is called quite often.",
-				"If you use this event, and later remove it, a server restart is recommend to clear registered events from Skript.")
-		.examples("on player move:",
-			"\tif player does not have permission \"player.can.move\":",
-			"\t\tcancel event",
-			"on skeleton move:",
-			"\tif event-entity is not in world \"world\":",
-			"\t\tkill event-entity")
-		.since("INSERT VERSION");
+				"NOTE: These events can be performance heavy as they are called quite often.",
+				"If you use these events, and later remove them, a server restart is recommended to clear registered events from Skript.")
+			.examples("on player move:",
+				"\tif player does not have permission \"player.can.move\":",
+				"\t\tcancel event",
+				"on skeleton move:",
+				"\tif event-entity is not in world \"world\":",
+				"\t\tkill event-entity")
+			.requiredPlugins("Paper 1.16.5+ (for entity move)")
+			.since("INSERT VERSION");
 	}
 
 	@Nullable
@@ -76,7 +81,9 @@ public class EvtMove extends SkriptEvent {
 			LivingEntity entity = entityEvent.getEntity();
 			for (EntityData<?> type : types) {
 				if (type.isInstance(entity)) {
-					if (((EntityMoveEvent) event).hasChangedOrientation()) {
+					if (!HAS_POS_METHOD) {
+						return true;
+					} else if (((EntityMoveEvent) event).hasChangedPosition()) {
 						return true;
 					}
 				}
@@ -87,6 +94,6 @@ public class EvtMove extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "null";
+		return (HAS_ENTITY_MOVE && types != null ? types.toString() : "player") + " move";
 	}
 }
