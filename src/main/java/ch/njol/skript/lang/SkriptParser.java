@@ -1127,14 +1127,31 @@ public class SkriptParser {
 				return null;
 			}
 			
+			String functionName = "" + m.group(1);
+			String args = m.group(2);
+			Expression<?>[] params;
+			
+			// Check for incorrect quotes, e.g. "myFunction() + otherFunction()" being parsed as one function
+			// See https://github.com/SkriptLang/Skript/issues/1532
+			int level = 0;
+			for (char c : args.toCharArray()) {
+				if (c == '(') {
+					level++;
+				} else if (c == ')') {
+					if (level == 0) {
+						log.printLog();
+						return null;
+					}
+					level--;
+				}
+			}
+			
 			if ((flags & PARSE_EXPRESSIONS) == 0) {
 				Skript.error("Functions cannot be used here (or there is a problem with your arguments).");
 				log.printError();
 				return null;
 			}
-			final String functionName = "" + m.group(1);
-			final String args = m.group(2);
-			final Expression<?>[] params;
+			
 			if (args.length() != 0) {
 				final Expression<?> ps = new SkriptParser(args, flags | PARSE_LITERALS, context).suppressMissingAndOrWarnings().parseExpression(Object.class);
 				if (ps == null) {
