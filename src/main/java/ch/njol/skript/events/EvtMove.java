@@ -43,7 +43,7 @@ public class EvtMove extends SkriptEvent {
 		else
 			events = CollectionUtils.array(PlayerMoveEvent.class);
 
-		Skript.registerEvent("Move", EvtMove.class, events, "%entitydata% move")
+		Skript.registerEvent("Move", EvtMove.class, events, "%entitydata% (move|walk|step)")
 			.description("Called when a player or entity moves.",
 				"NOTE: Move event will only be called when the entity/player moves position, not orientation (ie: looking around).",
 				"NOTE: These events can be performance heavy as they are called quite often.",
@@ -78,7 +78,6 @@ public class EvtMove extends SkriptEvent {
 		if (isPlayer && event instanceof PlayerMoveEvent) {
 			PlayerMoveEvent playerEvent = (PlayerMoveEvent) event;
 			return moveCheck(playerEvent.getFrom(), playerEvent.getTo());
-
 		} else if (HAS_ENTITY_MOVE && event instanceof EntityMoveEvent) {
 			EntityMoveEvent entityEvent = (EntityMoveEvent) event;
 			if (type.isInstance(entityEvent.getEntity())) {
