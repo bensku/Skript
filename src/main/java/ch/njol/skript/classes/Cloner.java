@@ -16,12 +16,14 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.util;
+package ch.njol.skript.classes;
 
 /**
- * This class is a dummy class for {@link VisualEffect} that
- * is used to register the "visualeffect" type on Bukkit builds
- * without org.bukkit.Particle
+ * An interface for optionally cloning an object,
+ * should return the given object if no cloning is required.
  */
-public class VisualEffectDummy {
+public interface Cloner<T> {
+	
+	T clone(T t);
+	
 }
