@@ -653,8 +653,8 @@ final public class ScriptLoader {
 						if (c != null) {
 							commands.add(c);
 							i.commandNames.add(c.getName()); // For tab completion
+							i.commands++;
 						}
-						i.commands++;
 						
 						deleteCurrentEvent();
 						
@@ -666,8 +666,8 @@ final public class ScriptLoader {
 						final Function<?> func = Functions.loadFunction(node);
 						if (func != null) {
 							functions.add(func);
+							i.functions++;
 						}
-						i.functions++;
 						
 						deleteCurrentEvent();
 						

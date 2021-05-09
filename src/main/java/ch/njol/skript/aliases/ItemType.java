@@ -762,7 +762,11 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 					 * item meta is completely different.
 					 */
 					ItemData other = is != null ? new ItemData(is) : null;
-					if (other != null && other.matchAlias(d).isAtLeast(((d.isAlias()) && !other.isAlias()) ? MatchQuality.SAME_MATERIAL : MatchQuality.EXACT)) {
+					if (other == null) {
+						continue;
+					}
+					boolean plain = d.isPlain() != other.isPlain();
+					if (d.matchPlain(other) || other.matchAlias(d).isAtLeast(plain ? MatchQuality.EXACT : (d.isAlias() && !other.isAlias() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM))) {
 						if (all && amount == -1) {
 							list.set(i, null);
 							removed = 1;
