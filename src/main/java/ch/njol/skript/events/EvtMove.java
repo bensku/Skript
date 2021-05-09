@@ -22,7 +22,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.coll.CollectionUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
@@ -66,7 +66,7 @@ public class EvtMove extends SkriptEvent {
 	private EntityData<?>[] types = null;
 
 	@Override
-	public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
+	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
 		if (parseResult.mark == 1) {
 			if (HAS_ENTITY_MOVE)
 				types = ((Literal<EntityData<?>>) args[0]).getAll();
@@ -82,7 +82,7 @@ public class EvtMove extends SkriptEvent {
 	public boolean check(Event event) {
 		if (types == null && event instanceof PlayerMoveEvent) {
 			return true;
-		} else if (types != null && HAS_ENTITY_MOVE && event instanceof EntityMoveEvent) {
+		} else if (HAS_ENTITY_MOVE && types != null && event instanceof EntityMoveEvent) {
 			EntityMoveEvent entityEvent = (EntityMoveEvent) event;
 			LivingEntity entity = entityEvent.getEntity();
 			for (EntityData<?> type : types) {
