@@ -1935,9 +1935,7 @@ public class BukkitClasses {
 				})
 			);
 		}
-		
-		// The serializer of this ClassInfo points to Object due to issue #3185
-		// DO NOT DO THIS UNDER NORMAL CIRCUMSTANCES
+
 		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Classes.registerClass(new ClassInfo<>(PersistentDataHolder.class, "persistentdataholder")
 					.user("persistent data ?holders?")
@@ -1953,8 +1951,7 @@ public class BukkitClasses {
 					)
 					.examples("set persistent data value \"epic\" of player to true")
 					.requiredPlugins("1.14 or newer")
-					.since("2.5")
-					.serializeAs(Object.class));
+					.since("INSERT VERSION"));
 		}
 
 		if (Skript.classExists("org.bukkit.enchantments.EnchantmentOffer")) {

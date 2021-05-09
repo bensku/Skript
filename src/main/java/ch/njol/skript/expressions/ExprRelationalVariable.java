@@ -60,19 +60,19 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set {isAdmin} of player to true",
 			"set {oldNames::*} of player to \"Noob_Sl4yer\" and \"Skr1pt_M4st3r\""})
 @RequiredPlugins("1.14 or newer")
-@Since("2.5")
+@Since("INSERT VERSION")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 
 	static {
 		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
-			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.PROPERTY,
+			Skript.registerExpression(ExprRelationalVariable.class, Object.class, ExpressionType.SIMPLE,
 					"[(relational|relation( |-)based) variable[s]] %objects% of %persistentdataholders/itemtypes/blocks%"
 			);
 		}
 	}
 
-	private ExpressionList<Variable<?>> variables;
+	private ExpressionList<?> variables;
 	private Expression<Object> holders;
 
 	private ExprRelationalVariable<?> source;
@@ -106,7 +106,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 				return false;
 			}
 		}
-		variables = (ExpressionList<Variable<?>>) exprList;
+		variables = exprList;
 		holders = (Expression<Object>) exprs[1];
 		return true;
 	}
@@ -220,8 +220,8 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 					if (var.isList() || mode == ChangeMode.REMOVE_ALL) {
 						for (Object holder : holders) {
 							Map<String, Object> varMap = PersistentDataUtils.getListMap(varName, holder);
-							int sizeBefore = varMap.size();
 							if (varMap != null) {
+								int sizeBefore = varMap.size();
 								for (Object value : delta)
 									varMap.entrySet().removeIf(entry -> Relation.EQUAL.is(Comparators.compare(entry.getValue(), value)));
 								if (sizeBefore != varMap.size()) // It changed so we should set it
