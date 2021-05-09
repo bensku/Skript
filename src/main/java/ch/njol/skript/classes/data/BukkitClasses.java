@@ -219,7 +219,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(final Block b, final int flags) {
-						return ItemType.toString(b, flags);
+						return BlockUtils.blockToString(b, flags);
 					}
 					
 					@Override
@@ -464,7 +464,8 @@ public class BukkitClasses {
 							return null;
 						}
 					}
-				}));
+				})
+				.cloner(Location::clone));
 		
 		Classes.registerClass(new ClassInfo<>(Vector.class, "vector")
 				.user("vectors?")
@@ -535,7 +536,8 @@ public class BukkitClasses {
 					protected boolean canBeInstantiated() {
 						return false;
 					}
-				}));
+				})
+				.cloner(Vector::clone));
 		
 		Classes.registerClass(new ClassInfo<>(World.class, "world")
 				.user("worlds?")
@@ -1108,7 +1110,9 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "item:.+";
 					}
-				}).serializer(new ConfigurationSerializer<ItemStack>()));
+				})
+				.cloner(ItemStack::clone)
+				.serializer(new ConfigurationSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(Item.class, "itementity")
 				.name(ClassInfo.NO_DOC)
