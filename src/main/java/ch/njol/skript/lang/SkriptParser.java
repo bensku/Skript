@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 
+import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -317,7 +318,7 @@ public class SkriptParser {
 			log.clear();
 			if ((flags & PARSE_EXPRESSIONS) != 0) {
 				final Expression<?> e;
-				if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
+				if (expr.startsWith("\"") && expr.length() != 1 && nextQuote(expr, 1) == expr.length() - 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
 					e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
 				} else {
 					e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
@@ -495,7 +496,7 @@ public class SkriptParser {
 			log.clear();
 			if ((flags & PARSE_EXPRESSIONS) != 0) {
 				final Expression<?> e;
-				if (expr.startsWith("\"") && expr.endsWith("\"") && expr.length() != 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
+				if (expr.startsWith("\"") && expr.length() != 1 && nextQuote(expr, 1) == expr.length() - 1 && (types[0] == Object.class || CollectionUtils.contains(types, String.class))) {
 					e = VariableString.newInstance("" + expr.substring(1, expr.length() - 1));
 				} else {
 					e = (Expression<?>) parse(expr, (Iterator) Skript.getExpressions(types), null);
@@ -525,26 +526,16 @@ public class SkriptParser {
 						}
 					}
 					
+					if (onlySingular && !e.isSingle()) {
+						Skript.error("'" + expr + "' can only accept singular expressions, not plural", ErrorQuality.SEMANTIC_ERROR);
+						return null;
+					}
+					
 					// No directly same type found
-					if (types.length == 1) { // Only one type is accepted here
-						// So, we'll just create converted expression
-						@SuppressWarnings("unchecked") // This is safe... probably
-						Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-						if (r != null) {
-							log.printLog();
-							return r;
-						}
-					} else { // Multiple types accepted
-						if (returnType == Object.class) { // No specific return type, so probably variable etc.
-							log.printLog();
-							return e; // Expression will have to deal with it runtime
-						} else {
-							Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
-							if (r != null) {
-								log.printLog();
-								return r;
-							}
-						}
+					Expression<?> r = e.getConvertedExpression((Class<Object>[]) types);
+					if (r != null) {
+						log.printLog();
+						return r;
 					}
 
 					// Print errors, if we couldn't get the correct type
@@ -1137,14 +1128,31 @@ public class SkriptParser {
 				return null;
 			}
 			
+			String functionName = "" + m.group(1);
+			String args = m.group(2);
+			Expression<?>[] params;
+			
+			// Check for incorrect quotes, e.g. "myFunction() + otherFunction()" being parsed as one function
+			// See https://github.com/SkriptLang/Skript/issues/1532
+			int level = 0;
+			for (char c : args.toCharArray()) {
+				if (c == '(') {
+					level++;
+				} else if (c == ')') {
+					if (level == 0) {
+						log.printLog();
+						return null;
+					}
+					level--;
+				}
+			}
+			
 			if ((flags & PARSE_EXPRESSIONS) == 0) {
 				Skript.error("Functions cannot be used here (or there is a problem with your arguments).");
 				log.printError();
 				return null;
 			}
-			final String functionName = "" + m.group(1);
-			final String args = m.group(2);
-			final Expression<?>[] params;
+			
 			if (args.length() != 0) {
 				final Expression<?> ps = new SkriptParser(args, flags | PARSE_LITERALS, context).suppressMissingAndOrWarnings().parseExpression(Object.class);
 				if (ps == null) {
@@ -1228,11 +1236,35 @@ public class SkriptParser {
 	}
 	
 	@Nullable
-	public static NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent(final String event, final String defaultError) {
-		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
+	public static NonNullPair<SkriptEventInfo<?>, SkriptEvent> parseEvent(String event, String defaultError) {
+		RetainingLogHandler log = SkriptLogger.startRetainingLog();
 		try {
-			final NonNullPair<SkriptEventInfo<?>, SkriptEvent> e = new SkriptParser(event, PARSE_LITERALS, ParseContext.EVENT).parseEvent();
+			String[] split = event.split(" with priority ");
+			EventPriority priority;
+			if (split.length != 1) {
+				event = String.join(" with priority ", Arrays.copyOfRange(split, 0, split.length - 1));
+				
+				String priorityString = split[split.length - 1];
+				try {
+					priority = EventPriority.valueOf(priorityString.toUpperCase());
+				} catch (IllegalArgumentException e) { // Priority doesn't exist
+					log.printErrors("The priority " + priorityString + " doesn't exist");
+					return null;
+				}
+			} else {
+				priority = SkriptConfig.defaultEventPriority.value();
+			}
+			
+			NonNullPair<SkriptEventInfo<?>, SkriptEvent> e = new SkriptParser(event, PARSE_LITERALS, ParseContext.EVENT).parseEvent();
 			if (e != null) {
+				if (e.getSecond() instanceof SelfRegisteringSkriptEvent) {
+					log.printErrors("This event doesn't support event priority");
+					return null;
+				}
+				
+				//noinspection ConstantConditions
+				e.getSecond().eventPriority = priority;
+				
 				log.printLog();
 				return e;
 			}
@@ -1366,11 +1398,15 @@ public class SkriptParser {
 	 * @return Index of the end quote
 	 */
 	private static int nextQuote(final String s, final int from) {
+		boolean inExpression = false;
 		for (int i = from; i < s.length(); i++) {
-			if (s.charAt(i) == '"') {
+			char c = s.charAt(i);
+			if (c == '"' && !inExpression) {
 				if (i == s.length() - 1 || s.charAt(i + 1) != '"')
 					return i;
 				i++;
+			} else if (c == '%') {
+				inExpression = !inExpression;
 			}
 		}
 		return -1;
@@ -1688,7 +1724,7 @@ public class SkriptParser {
 	 * Validates a user-defined pattern (used in {@link ExprParse}).
 	 * 
 	 * @param pattern
-	 * @return The pattern with %codenames% and a boolean array that contains whetehr the expressions are plural or not
+	 * @return The pattern with %codenames% and a boolean array that contains whether the expressions are plural or not
 	 */
 	@Nullable
 	public static NonNullPair<String, boolean[]> validatePattern(final String pattern) {
