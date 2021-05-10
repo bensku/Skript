@@ -540,6 +540,7 @@ chat styles:
 	suggest_command: suggest command, sgt
 	change_page: change page
 	show_text: tooltip, show text, ttp
+	font: font, f
 	insertion: insertion, insert, ins
 
 # -- Directions --
@@ -1766,6 +1767,7 @@ spawn reasons:
 	village_defense: village defense, golem defense, iron golem defense
 	village_invasion: village invasion, village invading
 	sheared: shear, sheared
+	piglin_zombified: piglin zombified, piglin zombify, piglin zombifying
 
 # -- Difficulties --
 difficulties:
