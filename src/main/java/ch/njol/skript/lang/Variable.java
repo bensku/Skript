@@ -18,24 +18,7 @@
  */
 package ch.njol.skript.lang;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.TreeMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -45,11 +28,13 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.ScriptOptions;
 import ch.njol.skript.util.StringMode;
 import ch.njol.skript.util.Utils;
 import ch.njol.skript.variables.TypeHints;
@@ -60,6 +45,24 @@ import ch.njol.util.Pair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.EmptyIterator;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -175,9 +178,12 @@ public class Variable<T> implements Expression<T> {
 		name = "" + name.trim();
 		if (!isValidVariableName(name, true, true))
 			return null;
-		VariableString vs = VariableString.newInstance(name.startsWith(LOCAL_VARIABLE_TOKEN) ? "" + name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : name, StringMode.VARIABLE_NAME);
+		VariableString vs = VariableString.newInstance(
+			name.startsWith(LOCAL_VARIABLE_TOKEN) ? name.substring(LOCAL_VARIABLE_TOKEN.length()).trim() : name, StringMode.VARIABLE_NAME);
 		if (vs == null)
 			return null;
+
+		checkVariableConflicts(name, vs);
 
 		boolean isLocal = name.startsWith(LOCAL_VARIABLE_TOKEN);
 		boolean isPlural = name.endsWith(SEPARATOR + "*");
@@ -225,6 +231,77 @@ public class Variable<T> implements Expression<T> {
 		}
 
 		return new Variable<>(vs, types, isLocal, isPlural, null);
+	}
+
+	public static boolean disableVariableStartingWithExpressionWarnings = false;
+	private final static Map<String, Pattern> variableNames = new HashMap<>();
+
+	private static void checkVariableConflicts(String name, VariableString variableString) {
+
+		if (removeLocalToken(name).startsWith("%")) {// inside the if to only print this message once per variable
+			if (ScriptLoader.currentScript != null
+					&& disableVariableStartingWithExpressionWarnings
+					&& !ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "start expression")) {
+				Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). " +
+					"You could prefix it with the script's name: " +
+					"{" + StringUtils.substring(ScriptLoader.currentScript.getFileName(), 0, -3) + "." + name + "}");
+			}
+		}
+
+		Object[] string = variableString.getStringUnformatted();
+		if (string == null && variableString.isSimple()) {
+			string = new Object[] {variableString.getDefaultVariableName()};
+		}
+		Pattern pattern;
+		if (string != null) {
+			StringBuilder p = new StringBuilder();
+			if (name.startsWith(LOCAL_VARIABLE_TOKEN))
+				p.append("_");
+
+			stringLoop: for (Object o : string) {
+				if (o instanceof Expression) {
+					for (ClassInfo<?> ci : Classes.getClassInfos()) {
+						Parser<?> parser = ci.getParser();
+						if (parser != null && ci.getC().isAssignableFrom(((Expression<?>) o).getReturnType())) {
+							p.append("(?!%)")
+								.append(parser.getVariableNamePattern())
+								.append("(?<!%)");
+							continue stringLoop;
+						}
+					}
+					p.append("[^%*](.*[^%*])?"); // [^*] to not report {var::%index%}/{var::*} as conflict
+				} else {
+					p.append(Pattern.quote(o.toString()));
+				}
+			}
+			pattern = Pattern.compile(p.toString());
+		} else {
+			pattern = Pattern.compile(Pattern.quote(name));
+		}
+
+		if (!SkriptConfig.disableVariableConflictWarnings.value()
+				&& !(ScriptLoader.currentScript != null
+				&& ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "conflict"))) {
+			for (Entry<String, Pattern> e : variableNames.entrySet()) {
+				if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
+					Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
+					break;
+				}
+			}
+		}
+
+		variableNames.put(name, pattern);
+	}
+
+	private static String removeLocalToken(String string) {
+		return string.startsWith(LOCAL_VARIABLE_TOKEN) ? string.substring(LOCAL_VARIABLE_TOKEN.length()) : string;
+	}
+
+	public static void removeVariableConflictCache(boolean localOnly) {
+		if (localOnly)
+			variableNames.keySet().removeIf(string -> string.startsWith(LOCAL_VARIABLE_TOKEN));
+		else
+			variableNames.clear();
 	}
 
 	@Override

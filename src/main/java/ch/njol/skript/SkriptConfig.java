@@ -18,25 +18,13 @@
  */
 package ch.njol.skript;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-
-import org.bukkit.event.EventPriority;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.EnumParser;
 import ch.njol.skript.config.Option;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.log.SkriptLogger;
@@ -49,6 +37,17 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Setter;
+import org.bukkit.event.EventPriority;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Important: don't save values from the config, a '/skript reload config/configs/all' won't work correctly otherwise!
@@ -207,14 +206,9 @@ public abstract class SkriptConfig {
 	public final static Option<Boolean> disableVariableConflictWarnings = new Option<Boolean>("disable variable conflict warnings", false);
 	public final static Option<Boolean> disableObjectCannotBeSavedWarnings = new Option<Boolean>("disable variable will not be saved warnings", false);
 	public final static Option<Boolean> disableMissingAndOrWarnings = new Option<Boolean>("disable variable missing and/or warnings", false);
-	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings = new Option<Boolean>("disable starting a variable's name with an expression warnings", false)
-			.setter(new Setter<Boolean>() {
-
-				@Override
-				public void set(Boolean t) {
-					VariableString.disableVariableStartingWithExpressionWarnings = t;
-				}
-			});
+	public final static Option<Boolean> disableVariableStartingWithExpressionWarnings =
+		new Option<>("disable starting a variable's name with an expression warnings", false)
+			.setter(t -> Variable.disableVariableStartingWithExpressionWarnings = t);
 	
 	@Deprecated
 	public final static Option<Boolean> enableScriptCaching = new Option<Boolean>("enable script caching", false)

@@ -53,6 +53,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import ch.njol.skript.lang.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -968,7 +969,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * Clears triggers, commands, functions and variable names
 	 */
 	static void disableScripts() {
-		VariableString.variableNames.clear();
+		Variable.removeVariableConflictCache(false);
 		SkriptEventHandler.removeAllTriggers();
 		Commands.clearCommands();
 		Functions.clearFunctions();
