@@ -126,8 +126,24 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Entity> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "the last " + (from == 0 ? "spawned" : from == 1 ? "shot" : from == 2 ? "dropped" : "created")
-			+ " " + type;
+		String word;
+		switch (from) {
+			case 0:
+				word = "spawned";
+				break;
+			case 1:
+				word = "shot";
+				break;
+			case 2:
+				word = "dropped";
+				break;
+			case 3:
+				word = "struck";
+				break;
+			default:
+				throw new IllegalStateException();
+		}
+		return "the last " + word + " " + type;
 	}
 	
 }
