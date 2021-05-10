@@ -387,7 +387,7 @@ public class Noun extends Message {
 	}
 	
 	public static String toString(final String singular, final String plural, final int gender, final int flags) {
-		return getArticleWithSpace(flags, gender) + ((flags & Language.F_PLURAL) != 0 ? plural : singular);
+		return getArticleWithSpace(gender, flags) + ((flags & Language.F_PLURAL) != 0 ? plural : singular);
 	}
 	
 }

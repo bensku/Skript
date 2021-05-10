@@ -57,7 +57,7 @@ public class AABB implements Iterable<Block> {
 			throw new IllegalArgumentException("Blocks must be in the same world");
 		world = b1.getWorld();
 		lowerBound = new Vector(Math.min(b1.getX(), b2.getX()), Math.min(b1.getY(), b2.getY()), Math.min(b1.getZ(), b2.getZ()));
-		upperBound = new Vector(Math.max(b1.getX(), b2.getX()) + 1, Math.max(b1.getY(), b2.getY()) + 1, Math.max(b1.getZ(), b2.getZ()) + 1);
+		upperBound = new Vector(Math.max(b1.getX(), b2.getX()), Math.max(b1.getY(), b2.getY()), Math.max(b1.getZ(), b2.getZ()));
 	}
 	
 	@SuppressWarnings("null")
@@ -65,19 +65,19 @@ public class AABB implements Iterable<Block> {
 		assert rX >= 0 && rY >= 0 && rZ >= 0 : rX + "," + rY + "," + rY;
 		world = center.getWorld();
 		lowerBound = new Vector(center.getX() - rX, Math.max(center.getY() - rY, 0), center.getZ() - rZ);
-		upperBound = new Vector(center.getX() + rX, Math.min(center.getY() + rY, world.getMaxHeight()), center.getZ() + rZ);
+		upperBound = new Vector(center.getX() + rX, Math.min(center.getY() + rY, world.getMaxHeight() - 1), center.getZ() + rZ);
 	}
 	
 	public AABB(final World w, final Vector v1, final Vector v2) {
 		world = w;
 		lowerBound = new Vector(Math.min(v1.getX(), v2.getX()), Math.min(v1.getY(), v2.getY()), Math.min(v1.getZ(), v2.getZ()));
-		upperBound = new Vector(Math.max(v1.getX(), v2.getX()) + 1, Math.max(v1.getY(), v2.getY()) + 1, Math.max(v1.getZ(), v2.getZ()) + 1);
+		upperBound = new Vector(Math.max(v1.getX(), v2.getX()), Math.max(v1.getY(), v2.getY()), Math.max(v1.getZ(), v2.getZ()));
 	}
 	
 	public AABB(final Chunk c) {
 		world = c.getWorld();
 		lowerBound = c.getBlock(0, 0, 0).getLocation().toVector();
-		upperBound = lowerBound.clone().add(new Vector(16, world.getMaxHeight(), 16));
+		upperBound = lowerBound.clone().add(new Vector(15, world.getMaxHeight() - 1, 15));
 	}
 	
 	public boolean contains(final Location l) {
