@@ -237,6 +237,8 @@ public class Variable<T> implements Expression<T> {
 	private final static Map<String, Pattern> variableNames = new HashMap<>();
 
 	private static void checkVariableConflicts(String name, VariableString variableString) {
+		if (variableNames.containsKey(name))
+			return;
 
 		if (removeLocalToken(name).startsWith("%")) {// inside the if to only print this message once per variable
 			if (ScriptLoader.currentScript != null
