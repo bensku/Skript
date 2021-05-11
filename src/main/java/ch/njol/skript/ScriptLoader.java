@@ -41,7 +41,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 
-import ch.njol.skript.lang.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
@@ -1033,6 +1032,7 @@ final public class ScriptLoader {
 	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<TriggerItem> loadItems(final SectionNode node) {
+
 		if (Skript.debug())
 			indentation += "    ";
 		
