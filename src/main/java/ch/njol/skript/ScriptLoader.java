@@ -1033,8 +1033,6 @@ final public class ScriptLoader {
 	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<TriggerItem> loadItems(final SectionNode node) {
-		Variable.removeVariableConflictCache(true);
-
 		if (Skript.debug())
 			indentation += "    ";
 		

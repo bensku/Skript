@@ -969,7 +969,6 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * Clears triggers, commands, functions and variable names
 	 */
 	static void disableScripts() {
-		Variable.removeVariableConflictCache(false);
 		SkriptEventHandler.removeAllTriggers();
 		Commands.clearCommands();
 		Functions.clearFunctions();

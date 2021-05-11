@@ -573,11 +573,6 @@ public class VariableString implements Expression<String> {
 			h.stop();
 		}
 	}
-
-	@Nullable
-	public Object[] getStringUnformatted() {
-		return stringUnformatted;
-	}
 	
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {

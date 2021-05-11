@@ -171,10 +171,6 @@ public class Variable<T> implements Expression<T> {
 	 */
 	@Nullable
 	public static <T> Variable<T> newInstance(String name, Class<? extends T>[] types) {
-//		if (name.startsWith(LOCAL_VARIABLE_TOKEN) && name.contains(SEPARATOR)) {
-//			Skript.error("Local variables cannot be lists, i.e. must not contain the separator '" + SEPARATOR + "' (error in variable {" + name + "})");
-//			return null;
-//		} else
 		name = "" + name.trim();
 		if (!isValidVariableName(name, true, true))
 			return null;
@@ -183,10 +179,16 @@ public class Variable<T> implements Expression<T> {
 		if (vs == null)
 			return null;
 
-		checkVariableConflicts(name, vs);
-
 		boolean isLocal = name.startsWith(LOCAL_VARIABLE_TOKEN);
 		boolean isPlural = name.endsWith(SEPARATOR + "*");
+
+		if (!SkriptConfig.disableVariableStartingWithExpressionWarnings.value()
+				&& !ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "start expression")
+				&& (isLocal ? name.substring(LOCAL_VARIABLE_TOKEN.length()) : name).startsWith("%")) {
+			Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). " +
+				"You could prefix it with the script's name: " +
+				"{" + StringUtils.substring(ScriptLoader.currentScript.getFileName(), 0, -3) + "." + name + "}");
+		}
 
 		// Check for local variable type hints
 		if (isLocal && vs.isSimple()) { // Only variable names we fully know already
@@ -203,7 +205,6 @@ public class Variable<T> implements Expression<T> {
 
 				// Or with conversion?
 				for (Class<? extends T> type : types) {
-					assert type != null;
 					if (Converters.converterExists(hint, type)) {
 						// Hint matches, even though converter is needed
 						return new Variable<>(vs, CollectionUtils.array(type), isLocal, isPlural, null);
@@ -231,79 +232,6 @@ public class Variable<T> implements Expression<T> {
 		}
 
 		return new Variable<>(vs, types, isLocal, isPlural, null);
-	}
-
-	public static boolean disableVariableStartingWithExpressionWarnings = false;
-	private final static Map<String, Pattern> variableNames = new HashMap<>();
-
-	private static void checkVariableConflicts(String name, VariableString variableString) {
-		if (variableNames.containsKey(name))
-			return;
-
-		if (removeLocalToken(name).startsWith("%")) {// inside the if to only print this message once per variable
-			if (ScriptLoader.currentScript != null
-					&& disableVariableStartingWithExpressionWarnings
-					&& !ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "start expression")) {
-				Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). " +
-					"You could prefix it with the script's name: " +
-					"{" + StringUtils.substring(ScriptLoader.currentScript.getFileName(), 0, -3) + "." + name + "}");
-			}
-		}
-
-		Object[] string = variableString.getStringUnformatted();
-		if (string == null && variableString.isSimple()) {
-			string = new Object[] {variableString.getDefaultVariableName()};
-		}
-		Pattern pattern;
-		if (string != null) {
-			StringBuilder p = new StringBuilder();
-			if (name.startsWith(LOCAL_VARIABLE_TOKEN))
-				p.append("_");
-
-			stringLoop: for (Object o : string) {
-				if (o instanceof Expression) {
-					for (ClassInfo<?> ci : Classes.getClassInfos()) {
-						Parser<?> parser = ci.getParser();
-						if (parser != null && ci.getC().isAssignableFrom(((Expression<?>) o).getReturnType())) {
-							p.append("(?!%)")
-								.append(parser.getVariableNamePattern())
-								.append("(?<!%)");
-							continue stringLoop;
-						}
-					}
-					p.append("[^%*](.*[^%*])?"); // [^*] to not report {var::%index%}/{var::*} as conflict
-				} else {
-					p.append(Pattern.quote(o.toString()));
-				}
-			}
-			pattern = Pattern.compile(p.toString());
-		} else {
-			pattern = Pattern.compile(Pattern.quote(name));
-		}
-
-		if (!SkriptConfig.disableVariableConflictWarnings.value()
-				&& !(ScriptLoader.currentScript != null
-				&& ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "conflict"))) {
-			for (Entry<String, Pattern> e : variableNames.entrySet()) {
-				if (e.getValue().matcher(name).matches() || pattern.matcher(e.getKey()).matches()) {
-					Skript.warning("Possible name conflict of variables {" + name + "} and {" + e.getKey() + "} (there might be more conflicts).");
-					break;
-				}
-			}
-		}
-
-		variableNames.put(name, pattern);
-	}
-
-	private static String removeLocalToken(String string) {
-		return string.startsWith(LOCAL_VARIABLE_TOKEN) ? string.substring(LOCAL_VARIABLE_TOKEN.length()) : string;
-	}
-
-	public static void removeVariableConflictCache(boolean localOnly) {
-		if (localOnly)
-			variableNames.keySet().removeIf(string -> string.startsWith(LOCAL_VARIABLE_TOKEN));
-		else
-			variableNames.clear();
 	}
 
 	@Override
