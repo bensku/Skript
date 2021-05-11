@@ -1767,7 +1767,7 @@ spawn reasons:
 	village_defense: village defense, golem defense, iron golem defense
 	village_invasion: village invasion, village invading
 	sheared: shear, sheared
-	piglin_zombified: piglin zombified, piglin zombify, piglin zombifying
+	piglin_zombified: piglin zombification
 
 # -- Difficulties --
 difficulties:
