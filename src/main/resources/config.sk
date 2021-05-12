@@ -122,7 +122,7 @@ plugin priority: high
 # This setting will control if you want that added extra check
 disable damage event cancellation checking: false
 
-log player commands: true
+log player commands: false
 # Whether Skript should log the usage of custom commands.
 # They will be logged as [INFORMATION] in this format: '<player>: /<command> <arguments>'
 

@@ -47,6 +47,7 @@ import com.destroystokyo.paper.block.BlockSoundGroup;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A block that gets all data from the world, but either delays
@@ -161,7 +162,7 @@ public class DelayedChangeBlock implements Block {
 	public int getZ() {
 		return b.getZ();
 	}
-	
+
 	@Override
 	public Location getLocation() {
 		return b.getLocation();
@@ -355,7 +356,7 @@ public class DelayedChangeBlock implements Block {
 	public Collection<ItemStack> getDrops(ItemStack tool, @Nullable Entity entity) {
 		return b.getDrops(tool, entity);
 	}
-	
+
 	@Nullable
 	@Override
 	public Location getLocation(final @Nullable Location loc) {
@@ -433,5 +434,20 @@ public class DelayedChangeBlock implements Block {
 	public float getDestroySpeed(ItemStack itemStack) {
 		return b.getDestroySpeed(itemStack);
 	}
-	
+
+	@Override
+	public boolean isPreferredTool(@NotNull ItemStack tool) {
+		return b.isPreferredTool(tool);
+	}
+
+	@Override
+	public boolean isValidTool(@NotNull ItemStack itemStack) {
+		return b.isValidTool(itemStack);
+	}
+
+	@Override
+	public @NotNull float getDestroySpeed(@NotNull ItemStack itemStack, boolean considerEnchants) {
+		return b.getDestroySpeed(itemStack, considerEnchants);
+	}
+
 }

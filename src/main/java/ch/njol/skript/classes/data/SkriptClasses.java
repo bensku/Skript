@@ -250,6 +250,7 @@ public class SkriptClasses {
 						return "itemtype:.+";
 					}
 				})
+				.cloner(ItemType::clone)
 				.serializer(new YggdrasilSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(Time.class, "time")
