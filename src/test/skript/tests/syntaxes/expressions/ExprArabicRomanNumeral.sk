@@ -10,4 +10,4 @@ test "roman numeral":
 	assert roman numeral of 49999 is not set with "49999 is low enough to be converted to a roman numeral"
 	loop 100 times:
 		set {_n} to random integer from 1 to 3333
-	assert (arabic numeral of (roman numeral of {_n})) is {_n} with "%{_n}% didn't correctly convert to roman and then numeral (Roman: %roman numeral of {_n}%) %{_n}%"
+	assert (arabic numeral of (roman numeral of {_n})) is {_n} with "%{_n}% didn't correctly convert to roman and then numeral (Arabic->Roman: %roman numeral of {_n}%, Roman->Arabic: %arabic numeral of (roman numeral of {_n})%) %{_n}%"
