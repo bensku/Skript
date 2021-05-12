@@ -62,6 +62,33 @@ public class Language {
 	 */
 	private static String name = "english";
 	
+	/**
+	 * Get if Skript uses the Localized language instead of English.
+	 * @return True if Skript uses the Localized language elements, false otherwise
+	 */
+	public static boolean isUsingLocalizedLanguage() {
+		return useLocal;
+	}
+	
+	/**
+	 * Get elements of the English language of Skript syntax.
+	 * @return A copy of all the elements of the English language
+	 */
+	public static HashMap<String, String> getEnglishLanguage() {
+		return new HashMap<>(english);
+	}
+	
+	/**
+	 * Get elements of the Localized language of Skript syntax.
+	 * @return A copy of all the elements of the Localized language
+	 */
+	@Nullable
+	public static HashMap<String, String> getLocalized() {
+		if (localized != null)
+			return new HashMap<>(localized);
+		return localized;
+	}
+	
 	final static HashMap<String, String> english = new HashMap<>();
 	/**
 	 * May be null.

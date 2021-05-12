@@ -389,7 +389,7 @@ public class HTMLGenerator {
 			String[] eventLinks = new String[eventNames.length];
 			for (int i = 0; i < eventNames.length; i++) {
 				String eventName = eventNames[i];
-				eventLinks[i] = "<a href=\"classes.html#" + eventName + "\">" + eventName + "</a>";
+				eventLinks[i] = "<a href=\"events.html#" + eventName + "\">" + eventName + "</a>";
 			}
 			desc = desc.replace("${element.events}", Joiner.on(", ").join(eventLinks));
 		}

@@ -26,6 +26,7 @@ import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import ch.njol.skript.SkriptConfig;
 import ch.njol.util.Math2;
 
 /**
@@ -83,10 +84,13 @@ public abstract class HealthUtils {
 			heal(e, -d);
 			return;
 		}
-		EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
-		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled()) return;
-		e.damage(event.getDamage());
+		if (!SkriptConfig.disableDamageCancelChecking.value()) {
+			EntityDamageEvent event = new EntityDamageEvent(e, DamageCause.CUSTOM, d * 2);
+			Bukkit.getPluginManager().callEvent(event);
+			if (event.isCancelled())
+				return;
+		}
+		e.damage(d * 2);
 	}
 	/** Heal an entity
 	 * @param e Entity to heal
