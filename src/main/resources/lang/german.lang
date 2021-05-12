@@ -103,16 +103,16 @@ skript command:
 	info:
 		aliases: Die Aliase von Skript finden Sie hier: <aqua>https://github.com/SkriptLang/skript-aliases
 		documentation: Die Dokumentation von Skript finden Sie hier: <aqua>https://skriptlang.github.io/Skript
-		version:
-		server:
-		addons:
+		version: Skript Version: <aqua>%s
+		server: Server Version: <aqua>%s
+		addons: Installierte Skript Addons:
 
 # -- Updater --
 updater:
 	not started: Es wurde noch nicht geprüft, ob eine neue Version verfügbar ist. Benutze <gold>/skript update check<reset> um die Überprüfung zu starten.
 	checking: Es wird geprüft, ob eine neue Version verfügbar ist...
 	check in progress: Es wird gerade geprüft, ob eine neue Version verfügbar ist.
-	updater disabled:
+	updater disabled: Die Überprüfung für weitere Skript Versionen ist deaktiviert. Demnach konnte keine neue Skript Version gefunden werden.
 	check error: <red>Beim Prüfen auf eine neue Version ist ein Fehler aufgetreten:<light red> %s
 	running latest version: Auf diesem Server läuft die neueste Version von Skript.
 	running latest version (beta): Auf diesem Server läuft eine <i>Beta<r>-Version von Skript, und es is keine neue <i>stabile<r> Version verfügbar. Auf neuere Beta-Versionen muss manuell aktualisiert werden!
@@ -122,7 +122,7 @@ updater:
 	download error: <red>Beim Herunterladen der neuesten Version ist ein Fehler aufgetreten:<light red> %s
 	downloaded: Die neueste Version von Skript wurde heruntergeladen! Starte den Server neu oder benutze /reload um die Änderungen zu übernehmen.
 	internal error: Während der Überprüfung auf eine neue Version ist ein interner Fehler aufgetreten. Im Server-Log finden sich weitere Informationen.
-	custom version:
+	custom version: Du besitzt eine inoffizielle Version von Skript. Demnach konnte nach keinem Update gesucht werden.
 
 # -- Commands --
 commands:
@@ -134,8 +134,8 @@ commands:
 	invalid argument: Unbekanntes Argument <gray>'%s<gray>'<reset>. Erlaubt sind:
 	too many arguments: Dieser Befehl akzeptiert nur %s %s.
 	internal error: Während der Ausführung des Befehls ist ein interner Fehler aufgetreten.
-	no player starts with:
-	multiple players start with:
+	no player starts with: Kein Spieler dessen Name mit '%s' beginnt ist online.
+	multiple players start with: Es gibt mehrere online Spieler, dessen Namen mit '%s' anfangen.
 
 # -- Hooks --
 hooks:
@@ -145,21 +145,21 @@ hooks:
 # -- Aliases --
 aliases:
 	# Errors and warnings
-	empty string:
-	invalid item type:
-	empty name:
+	empty string: '' ist kein Item Type
+	invalid item type: '%s' ist kein Item Type
+	empty name: Ein Alias muss einen Namen beinhalten
 	brackets error: Klammern haben eine spezielle Bedeutung in Gegenstandsnamen und können nicht normal benutzt werden
-	not enough brackets:
-	too many brackets:
+	not enough brackets: Abschnitte(Sektionen), die mit %s ('%s') anfangen, müssen auch geschlossen werden
+	too many brackets: Das Symbol %s ('%s') schließt einen nicht existenten Abschnitt (Sektion)
 	unknown variation: Die Variation {%s} wurde nicht definiert
 	missing aliases: Für folgende IDs sind keine Gegenstandsnamen definiert:
 	empty alias: '%s' resultiert in einem leeren Gegenstand (d.h. es repräsentiert keine ID/Werte), es wird deshalb ignoriert
-	invalid minecraft id:
-	useless variation:
-	invalid tags:
+	invalid minecraft id: Die Minecraft ID %s ist nicht gültig
+	useless variation: Variationen hat keine Minecraft ID oder Tags spezifiziert, demnach ist es sinnlos
+	invalid tags: Spezifizierte tags sind nicht in gültiger JSON definiert
 	unexpected section: Unerwarteter Abschnitt
-	invalid variation section:
-	outside section:
+	invalid variation section: Ein Abschnitt(Sektion) sollte ein Variationsabschnitt sein. Aber %s ist kein gültiger Name
+	outside section: Aliase müssen sich in Abschnitte(Sektionen) befinden
 
 	# Other messages
 	loaded x aliases from: %s deutsche Gegenstandsnamen aus %s geladen
