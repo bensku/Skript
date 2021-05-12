@@ -41,8 +41,8 @@ public class ExprRomanNumeral extends SimplePropertyExpression<Number, String> {
 
 	@Nullable
 	public static String toRoman(int number) {
-		if ((number <= 0) || (number > 40000)) {
-			throw new IllegalArgumentException(number + " is not in range (0,40000]");
+		if ((number <= 0) || (number >= 40000)) {
+			return null;
 		}
 
 		List<RomanNumeral> romanNumerals = RomanNumeral.getReverseSortedValues();
