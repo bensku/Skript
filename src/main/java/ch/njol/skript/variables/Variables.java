@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
@@ -82,9 +83,9 @@ public abstract class Variables {
 			}
 			
 			@SuppressWarnings("unchecked")
-			private final void init() {
+			private void init() {
 				// used by asserts
-				info = (ClassInfo<? extends ConfigurationSerializable>) Classes.getExactClassInfo(Object.class);
+				info = (ClassInfo<? extends ConfigurationSerializable>) (ClassInfo<?>) Classes.getExactClassInfo(Object.class);
 			}
 			
 			@SuppressWarnings({"unchecked"})
@@ -244,7 +245,7 @@ public abstract class Variables {
 	/**
 	 * Not to be accessed outside of Bukkit's main thread!
 	 */
-	private final static Map<Event, VariablesMap> localVariables = new HashMap<>();
+	private final static Map<Event, VariablesMap> localVariables = new ConcurrentHashMap<>();
 	
 	/**
 	 * Remember to lock with {@link #getReadLock()} and to not make any changes!
@@ -291,7 +292,7 @@ public abstract class Variables {
 	 * Returns the internal value of the requested variable.
 	 * <p>
 	 * <b>Do not modify the returned value!</b>
-	 * 
+	 *
 	 * @param name
 	 * @return an Object for a normal Variable or a Map<String, Object> for a list variable, or null if the variable is not set.
 	 */
@@ -315,7 +316,7 @@ public abstract class Variables {
 						return change.value;
 				}
 			}
-				
+			
 			try {
 				variablesLock.readLock().lock();
 				return variables.getVariable(n);
@@ -327,7 +328,7 @@ public abstract class Variables {
 	
 	/**
 	 * Sets a variable.
-	 * 
+	 *
 	 * @param name The variable's name. Can be a "list variable::*" (<tt>value</tt> must be <tt>null</tt> in this case)
 	 * @param value The variable's value. Use <tt>null</tt> to delete the variable.
 	 */
@@ -348,9 +349,7 @@ public abstract class Variables {
 		}
 		if (local) {
 			assert e != null : n;
-			VariablesMap map = localVariables.get(e);
-			if (map == null)
-				localVariables.put(e, map = new VariablesMap());
+			VariablesMap map = localVariables.computeIfAbsent(e, event -> new VariablesMap());
 			map.setVariable(n, value);
 		} else {
 			setVariable(n, value);
@@ -433,7 +432,7 @@ public abstract class Variables {
 	 * Must be called on Bukkit's main thread.
 	 * <p>
 	 * This method directly invokes {@link VariablesStorage#save(String, String, byte[])}, i.e. you should not be holding any database locks or such when calling this!
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @param source
@@ -484,7 +483,7 @@ public abstract class Variables {
 	
 	/**
 	 * Stores loaded variables into the variables map and the appropriate databases.
-	 * 
+	 *
 	 * @return How many variables were not stored anywhere
 	 */
 	@SuppressWarnings("null")
