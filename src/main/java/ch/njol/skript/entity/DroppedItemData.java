@@ -46,6 +46,12 @@ public class DroppedItemData extends EntityData<Item> {
 	@Nullable
 	private ItemType[] types;
 	
+	public DroppedItemData() {}
+	
+	public DroppedItemData(@Nullable ItemType[] types) {
+		this.types = types;
+	}
+	
 	@Override
 	protected boolean init(final Literal<?>[] exprs, final int matchedPattern, final ParseResult parseResult) {
 		if (exprs.length > 0 && exprs[0] != null)
@@ -101,7 +107,7 @@ public class DroppedItemData extends EntityData<Item> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new DroppedItemData();
+		return new DroppedItemData(types);
 	}
 	
 	@Override

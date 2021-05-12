@@ -43,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("The amount of health healed in a healing event.")
 @Examples({"increase heal amount by 2",
 	"remove 0.5 from heal amount"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 @Events("heal")
 public class ExprHealAmount extends SimpleExpression<Number> {
 	

@@ -31,6 +31,7 @@ import org.bukkit.DyeColor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.localization.Adjective;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.variables.Variables;
@@ -41,8 +42,8 @@ public enum SkriptColor implements Color {
 
 	BLACK(DyeColor.BLACK, ChatColor.BLACK),
 	DARK_GREY(DyeColor.GRAY, ChatColor.DARK_GRAY),
-	// DyeColor.LIGHT_GRAY on 1.13, DyeColor.SILVER on earlier
-	LIGHT_GREY(DyeColor.getByColor(org.bukkit.Color.fromRGB(0x9D9D97)), ChatColor.GRAY),
+	// DyeColor.LIGHT_GRAY on 1.13, DyeColor.SILVER on earlier (dye colors were changed in 1.12)
+	LIGHT_GREY(DyeColor.getByColor(org.bukkit.Color.fromRGB(Skript.isRunningMinecraft(1, 12) ? 0x9D9D97 : 0x999999)), ChatColor.GRAY),
 	WHITE(DyeColor.WHITE, ChatColor.WHITE),
 	
 	DARK_BLUE(DyeColor.BLUE, ChatColor.DARK_BLUE),
@@ -148,8 +149,8 @@ public enum SkriptColor implements Color {
 	
 	
 	/**
-	 * @param name The name of the color defined by Skript's .lang files.
-	 * @return Optional if any Skript Color matched up with the defined name
+	 * @param name The String name of the color defined by Skript's .lang files.
+	 * @return Skript Color if matched up with the defined name
 	 */
 	@Nullable
 	public static SkriptColor fromName(String name) {
@@ -158,7 +159,7 @@ public enum SkriptColor implements Color {
 	
 	/**
 	 * @param dye DyeColor to match against a defined Skript Color.
-	 * @return Optional if any Skript Color matched up with the defined DyeColor
+	 * @return Skript Color if matched up with the defined DyeColor
 	 */
 	public static SkriptColor fromDyeColor(DyeColor dye) {
 		for (SkriptColor color : colors) {
@@ -182,8 +183,8 @@ public enum SkriptColor implements Color {
 	
 	/**
 	 * @deprecated Magic numbers
-	 * @param data DyeColor to match against a defined Skript Color.
-	 * @return Optional if any Skript Color matched up with the defined DyeColor
+	 * @param data short to match against a defined Skript Color.
+	 * @return Skript Color if matched up with the defined short
 	 */
 	@Deprecated
 	@Nullable
@@ -202,8 +203,8 @@ public enum SkriptColor implements Color {
 	
 	/**
 	 * @deprecated Magic numbers
-	 * @param data DyeColor to match against a defined Skript Color.
-	 * @return Optional if any Skript Color matched up with the defined DyeColor
+	 * @param data short to match against a defined Skript Color.
+	 * @return Skript Color if matched up with the defined short
 	 */
 	@Deprecated
 	@Nullable

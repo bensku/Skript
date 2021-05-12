@@ -47,36 +47,40 @@ import ch.njol.util.Kleenean;
 		"	return 2 * {_i}"})
 @Since("2.2")
 public class EffReturn extends Effect {
+	
 	static {
 		Skript.registerEffect(EffReturn.class, "return %objects%");
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private ScriptFunction<?> function;
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> value;
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		final ScriptFunction<?> f = Functions.currentFunction;
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		ScriptFunction<?> f = Functions.currentFunction;
 		if (f == null) {
 			Skript.error("The return statement can only be used in a function");
 			return false;
 		}
+		
 		if (!isDelayed.isFalse()) {
 			Skript.error("A return statement after a delay is useless, as the calling trigger will resume when the delay starts (and won't get any returned value)");
 			return false;
 		}
+		
 		function = f;
-		final ClassInfo<?> rt = function.getReturnType();
+		ClassInfo<?> rt = function.getReturnType();
 		if (rt == null) {
 			Skript.error("This function doesn't return any value. Please use 'stop' or 'exit' if you want to stop the function.");
 			return false;
 		}
-		final RetainingLogHandler log = SkriptLogger.startRetainingLog();
-		final Expression<?> v;
+		
+		RetainingLogHandler log = SkriptLogger.startRetainingLog();
+		Expression<?> v;
 		try {
 			v = exprs[0].getConvertedExpression(rt.getC());
 			if (v == null) {
@@ -87,11 +91,13 @@ public class EffReturn extends Effect {
 		} finally {
 			log.stop();
 		}
+		
 		if (f.isSingle() && !v.isSingle()) {
 			Skript.error("This function is defined to only return a single " + rt.toString() + ", but this return statement can return multiple values.");
 			return false;
 		}
 		value = v;
+		
 		return true;
 	}
 	
@@ -100,20 +106,21 @@ public class EffReturn extends Effect {
 	@Nullable
 	protected TriggerItem walk(final Event e) {
 		debug(e, false);
-		if (e instanceof FunctionEvent)
-			((ScriptFunction) function).setReturnValue((FunctionEvent) e, value.getArray(e));
-		else
+		if (e instanceof FunctionEvent) {
+			((ScriptFunction) function).setReturnValue(value.getArray(e));
+		} else {
 			assert false : e;
+		}
 		return null;
 	}
 	
 	@Override
-	protected void execute(final Event e) {
+	protected void execute(Event e) {
 		assert false;
 	}
 	
 	@Override
-	public String toString(@Nullable final Event e, final boolean debug) {
+	public String toString(@Nullable Event e, boolean debug) {
 		return "return " + value.toString(e, debug);
 	}
 	

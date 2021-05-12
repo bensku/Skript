@@ -1,4 +1,4 @@
-test "spawn cats by type" when minecraft version is "1.15.2":
+test "spawn cats by type" when running minecraft "1.15.2":
 	delete all cats
 	set {_l} to location of spawn of world "world"
 	spawn 5 all black cats at {_l}

@@ -39,6 +39,8 @@ import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.EntityPortalExitEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.EntityTameEvent;
@@ -197,7 +199,7 @@ public class SimpleEvents {
 				.since("1.0");
 //		Skript.registerEvent(SimpleEvent.class, EntityInteractEvent.class, "interact");// = entity interacts with block, e.g. endermen?; player -> PlayerInteractEvent // likely tripwires, pressure plates, etc.
 		Skript.registerEvent("Portal Enter", SimpleEvent.class, EntityPortalEnterEvent.class, "portal enter[ing]", "entering [a] portal")
-				.description("Called when a player enters a nether portal and the swirly animation starts to play.")
+				.description("Called when an entity enters a nether portal or an end portal. Please note that this event will be fired many times for a nether portal.")
 				.examples("on portal enter:")
 				.since("1.0");
 		Skript.registerEvent("Heal", SimpleEvent.class, EntityRegainHealthEvent.class, "heal[ing]")
@@ -297,11 +299,15 @@ public class SimpleEvents {
 				.description("Called when a player is kicked from the server. You can change the <a href='expressions.html#ExprMessage'>kick message</a> or <a href='effects.html#EffCancelEvent'>cancel the event</a> entirely.")
 				.examples("on kick:")
 				.since("1.0");
+		Skript.registerEvent("Entity Portal", SimpleEvent.class, EntityPortalEvent.class, "entity portal")
+				.description("Called when an entity uses a nether or end portal. <a href='effects.html#EffCancelEvent'>Cancel the event</a> to prevent the entity from teleporting.")
+				.examples("on entity portal:", "\tbroadcast \"A %type of event-entity% has entered a portal!")
+				.since("2.5.3");
 		Skript.registerEvent("Portal", SimpleEvent.class, PlayerPortalEvent.class, "[player] portal")
 				.description("Called when a player uses a nether or end portal. <a href='effects.html#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
 				.examples("on player portal:")
 				.since("1.0");
-		Skript.registerEvent("Quit", SimpleEvent.class, PlayerQuitEvent.class, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
+		Skript.registerEvent("Quit", SimpleEvent.class, PlayerQuitEvent.class, "(quit[ting]|disconnect[ing]|log[ ]out|logging out|leav(e|ing))")
 				.description("Called when a player leaves the server.")
 				.examples("on quit:",
 						"on disconnect:")
@@ -329,9 +335,10 @@ public class SimpleEvents {
 				.since("1.0");
 		Skript.registerEvent("Portal Create", SimpleEvent.class, PortalCreateEvent.class, "portal creat(e|ion)")
 				.description("Called when a portal is created, either by a player or mob lighting an obsidian frame on fire, or by a nether portal creating its teleportation target in the nether/overworld.",
-						"Please note that it's not possible to use <a href='expressions.html#ExprEntity'>the player</a> in this event.")
+						"In Minecraft 1.14+, you can use <a href='expressions.html#ExprEntity'>the player</a> in this event.", "Please note that there may not always be a player (or other entity) in this event.")
 				.examples("on portal create:")
-				.since("1.0");
+				.requiredPlugins("Minecraft 1.14+ (event-entity support)")
+				.since("1.0, 2.5.3 (event-entity support)");
 		Skript.registerEvent("Projectile Hit", SimpleEvent.class, ProjectileHitEvent.class, "projectile hit")
 				.description("Called when a projectile hits an entity or a block.",
 						"Use the <a href='#damage'>damage event</a> with a <a href='conditions.html#CondIsSet'>check</a> for a <a href='expressions.html#ExprEntity'>projectile</a> " +
@@ -573,11 +580,11 @@ public class SimpleEvents {
 		Skript.registerEvent("Inventory Pickup", SimpleEvent.class, InventoryPickupItemEvent.class, "inventory pick[ ]up")
 				.description("Called when an inventory (a hopper, a hopper minecart, etc.) picks up an item")
 				.examples("on inventory pickup:")
-				.since("INSERT VERSION");
+				.since("2.5.1");
 		Skript.registerEvent("Horse Jump", SimpleEvent.class, HorseJumpEvent.class, "horse jump")
 			.description("Called when a horse jumps.")
 			.examples("on horse jump:", "\tpush event-entity upwards at speed 2")
-			.since("INSERT VERSION");
+			.since("2.5.1");
 		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
@@ -589,7 +596,7 @@ public class SimpleEvents {
 			.description("Called when a player swings his arm.")
 			.examples("on arm swing:",
 				"\tsend \"You swung your arm!\"")
-			.since("INSERT VERSION");
+			.since("2.5.1");
 		if (Skript.classExists("org.bukkit.event.player.PlayerItemMendEvent")) {
 			Skript.registerEvent("Item Mend", SimpleEvent.class, PlayerItemMendEvent.class, "item mend[ing]")
 				.description("Called when a player has an item repaired via the Mending enchantment.")
@@ -598,7 +605,7 @@ public class SimpleEvents {
 					"\tchance of 50%:",
 					"\t\tcancel the event",
 					"\t\tsend \"Oops! Mending failed!\" to player")
-				.since("INSERT VERSION");
+				.since("2.5.1");
 		}
 	}
 }
