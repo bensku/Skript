@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -38,6 +37,13 @@ public class MooshroomData extends EntityData<MushroomCow> {
 	
 	@Nullable
 	private Variant variant = null;
+	
+	public MooshroomData() {}
+	
+	public MooshroomData(@Nullable Variant variant) {
+		this.variant = variant;
+		super.matchedPattern = variant == Variant.BROWN ? 2 : 1;
+	}
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
@@ -71,7 +77,7 @@ public class MooshroomData extends EntityData<MushroomCow> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new MooshroomData();
+		return new MooshroomData(variant);
 	}
 	
 	@Override

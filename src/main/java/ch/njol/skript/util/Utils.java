@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -39,6 +38,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.util.Checker;
 import net.md_5.bungee.api.ChatColor;
 
 import com.google.common.collect.Iterables;
@@ -516,7 +516,7 @@ public abstract class Utils {
 	public static String replaceChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll("" + message.replace("<<none>>", ""), stylePattern, new Callback<String, Matcher>() {
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement("" + message.replace("<<none>>", "")), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
@@ -535,6 +535,11 @@ public abstract class Utils {
 			}
 		});
 		assert m != null;
+		// Restore user input post-sanitization
+		// Sometimes, the message has already been restored
+		if (!message.equals(m)) {
+			m = m.replace("\\$", "$").replace("\\\\", "\\");
+		}
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
 	}
@@ -549,7 +554,7 @@ public abstract class Utils {
 	public static String replaceEnglishChatStyles(final String message) {
 		if (message.isEmpty())
 			return message;
-		String m = StringUtils.replaceAll(message, stylePattern, new Callback<String, Matcher>() {
+		String m = StringUtils.replaceAll(Matcher.quoteReplacement(message), stylePattern, new Callback<String, Matcher>() {
 			@Override
 			public String run(final Matcher m) {
 				SkriptColor color = SkriptColor.fromName("" + m.group(1));
@@ -568,6 +573,11 @@ public abstract class Utils {
 			}
 		});
 		assert m != null;
+		// Restore user input post-sanitization
+		// Sometimes, the message has already been restored
+		if (!message.equals(m)) {
+			m = m.replace("\\$", "$").replace("\\\\", "\\");
+		}
 		m = ChatColor.translateAlternateColorCodes('&', "" + m);
 		return "" + m;
 	}
@@ -687,6 +697,22 @@ public abstract class Utils {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Class not found!");
 		}
+	}
+	
+	/**
+	 * Finds the index of the last in a {@link List} that matches the given {@link Checker}.
+	 *
+	 * @param list the {@link List} to search.
+	 * @param checker the {@link Checker} to match elements against.
+	 * @return the index of the element found, or -1 if no matching element was found.
+	 */
+	public static <T> int findLastIndex(List<T> list, Checker<T> checker) {
+		int lastIndex = -1;
+		for (int i = 0; i < list.size(); i++) {
+			if (checker.check(list.get(i)))
+				lastIndex = i;
+		}
+		return lastIndex;
 	}
 	
 }

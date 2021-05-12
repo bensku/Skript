@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -49,6 +48,7 @@ import com.destroystokyo.paper.block.BlockSoundGroup;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A block that gets all data from a BlockState, and either reflects changes on the BlockState or delays them to the real block by 1 tick depending on which constructor is used.
@@ -162,7 +162,7 @@ public class BlockStateBlock implements Block {
 	public int getZ() {
 		return state.getZ();
 	}
-	
+
 	@Override
 	public Location getLocation() {
 		return state.getLocation();
@@ -258,6 +258,26 @@ public class BlockStateBlock implements Block {
 	}
 	
 	@Override
+	public boolean isBuildable() {
+		return state.getBlock().isBuildable();
+	}
+	
+	@Override
+	public boolean isBurnable() {
+		return state.getBlock().isBurnable();
+	}
+	
+	@Override
+	public boolean isReplaceable() {
+		return state.getBlock().isReplaceable();
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return state.getBlock().isSolid();
+	}
+	
+	@Override
 	public double getTemperature() {
 		return state.getBlock().getTemperature();
 	}
@@ -339,7 +359,7 @@ public class BlockStateBlock implements Block {
 		assert false;
 		return Collections.emptySet();
 	}
-	
+
 	@Nullable
 	@Override
 	public Location getLocation(final @Nullable Location loc) {
@@ -445,4 +465,25 @@ public class BlockStateBlock implements Block {
 	public String getTranslationKey() {
 		return state.getBlock().getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return state.getBlock().getDestroySpeed(itemStack);
+	}
+
+	@Override
+	public boolean isPreferredTool(@NotNull ItemStack tool) {
+		return state.getBlock().isPreferredTool(tool);
+	}
+
+	@Override
+	public boolean isValidTool(@NotNull ItemStack itemStack) {
+		return state.getBlock().isValidTool(itemStack);
+	}
+
+	@Override
+	public @NotNull float getDestroySpeed(@NotNull ItemStack itemStack, boolean considerEnchants) {
+		return state.getBlock().getDestroySpeed(itemStack, considerEnchants);
+	}
+
 }

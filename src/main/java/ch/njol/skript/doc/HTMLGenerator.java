@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.doc;
 
@@ -390,7 +389,7 @@ public class HTMLGenerator {
 			String[] eventLinks = new String[eventNames.length];
 			for (int i = 0; i < eventNames.length; i++) {
 				String eventName = eventNames[i];
-				eventLinks[i] = "<a href=\"classes.html#" + eventName + "\">" + eventName + "</a>";
+				eventLinks[i] = "<a href=\"events.html#" + eventName + "\">" + eventName + "</a>";
 			}
 			desc = desc.replace("${element.events}", Joiner.on(", ").join(eventLinks));
 		}

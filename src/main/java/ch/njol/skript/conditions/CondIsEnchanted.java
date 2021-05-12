@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -49,7 +48,7 @@ public class CondIsEnchanted extends Condition {
 		PropertyCondition.register(CondIsEnchanted.class, "enchanted [with %-enchantmenttype%]", "itemtypes");
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<ItemType> items;
 	@Nullable
 	private Expression<EnchantmentType> enchs;
@@ -66,7 +65,7 @@ public class CondIsEnchanted extends Condition {
 	@Override
 	public boolean check(final Event e) {
 		if (enchs != null)
-			return items.check(e, item -> enchs.check(e, ench -> item.hasEnchantments(ench)), isNegated());
+			return items.check(e, item -> enchs.check(e, item::hasEnchantments), isNegated());
 		else
 			return items.check(e, ItemType::hasEnchantments, isNegated());
 		

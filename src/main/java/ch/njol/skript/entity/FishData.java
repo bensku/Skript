@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -43,6 +42,13 @@ public class FishData extends EntityData<Fish> {
 	private boolean init = true;
 	private boolean wildcard = false;
 	private int pattern = -1;
+	
+	public FishData() {}
+	
+	public FishData(int pattern) {
+		this.pattern = pattern;
+		super.matchedPattern = pattern;
+	}
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
@@ -91,7 +97,7 @@ public class FishData extends EntityData<Fish> {
 
 	@Override
 	public EntityData getSuperType() {
-		return new FishData();
+		return new FishData(pattern);
 	}
 
 	@Override

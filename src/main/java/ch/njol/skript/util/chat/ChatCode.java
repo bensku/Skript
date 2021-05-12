@@ -14,16 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.chat;
 
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * Chat codes; includes color codes (<a href="http://wiki.vg/Chat#Colors">reference</a>)
- * and also, some formatting codes (mostly <a href="http://wiki.vg/Chat">this</a>)
+ * Chat codes; includes color codes (<a href="https://wiki.vg/Chat#Colors">reference</a>)
+ * and also, some formatting codes (mostly <a href="https://wiki.vg/Chat">this</a>)
  */
 public interface ChatCode {
 	

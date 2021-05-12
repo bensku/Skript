@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -26,6 +25,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Converter;
@@ -107,6 +107,7 @@ public class ExprGameMode extends PropertyExpression<Player, GameMode> {
 	
 	@Override
 	public boolean setTime(final int time) {
-		return super.setTime(time, PlayerGameModeChangeEvent.class, getExpr());
+		return super.setTime(time, PlayerGameModeChangeEvent.class);
 	}
+	
 }

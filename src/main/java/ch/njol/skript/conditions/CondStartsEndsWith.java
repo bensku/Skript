@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.conditions;
 
@@ -34,15 +33,15 @@ import ch.njol.util.Kleenean;
 
 @Name("Starts/Ends With")
 @Description("Checks if a text starts or ends with another.")
-@Examples({"if the argument starts with \"test\":",
-		"	send \"Stop!\""})
-@Since("2.2-dev36")
+@Examples({"if the argument starts with \"test\" or \"debug\":",
+	"\tsend \"Stop!\""})
+@Since("2.2-dev36, 2.5.1 (multiple strings support)")
 public class CondStartsEndsWith extends Condition {
 	
 	static {
 		Skript.registerCondition(CondStartsEndsWith.class,
-				"%strings% (start|1¦end)[s] with %string%",
-				"%strings% (doesn't|does not|do not|don't) (start|1¦end) with %string%");
+			"%strings% (start|1¦end)[s] with %strings%",
+			"%strings% (doesn't|does not|do not|don't) (start|1¦end) with %strings%");
 	}
 	
 	@SuppressWarnings("null")
@@ -63,15 +62,41 @@ public class CondStartsEndsWith extends Condition {
 	
 	@Override
 	public boolean check(Event e) {
-		String affix = this.affix.getSingle(e);
-		
-		if (affix == null) {
+		String[] affixes = this.affix.getAll(e);
+		if (affixes.length < 1)
 			return false;
-		}
-		
 		return strings.check(e,
-				string -> usingEnds ? string.endsWith(affix) : string.startsWith(affix),
-				isNegated());
+			string -> {
+				if (usingEnds) { // Using 'ends with'
+					if (this.affix.getAnd()) {
+						for (String str : affixes) {
+							if (!string.endsWith(str))
+								return false;
+						}
+						return true;
+					} else {
+						for (String str : affixes) {
+							if (string.endsWith((str)))
+								return true;
+						}
+					}
+				} else { // Using 'starts with'
+					if (this.affix.getAnd()) {
+						for (String str : affixes) {
+							if (!string.startsWith(str))
+								return false;
+						}
+						return true;
+					} else {
+						for (String str : affixes) {
+							if (string.startsWith((str)))
+								return true;
+						}
+					}
+				}
+				return false;
+			},
+			isNegated());
 	}
 	
 	@Override

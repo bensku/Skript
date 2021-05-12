@@ -1,4 +1,4 @@
-/*
+/**
  *   This file is part of Skript.
  *
  *  Skript is free software: you can redistribute it and/or modify
@@ -13,12 +13,9 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * Copyright 2011-2017 Peter Güttinger and contributors
- * 
+ *
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-
 package ch.njol.skript.util.chat;
 
 import org.eclipse.jdt.annotation.Nullable;
@@ -137,6 +134,13 @@ public enum SkriptChatCode implements ChatCode {
 			// Especially since 1.13 might break the old ones completely...
 			HoverEvent e = new HoverEvent(HoverEvent.Action.show_text, param);
 			component.hoverEvent = e;
+		}
+	},
+
+	font(true) {
+		@Override
+		public void updateComponent(MessageComponent component, String param) {
+			component.font = param;
 		}
 	},
 

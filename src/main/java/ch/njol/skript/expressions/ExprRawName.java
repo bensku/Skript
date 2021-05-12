@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -79,8 +78,7 @@ public class ExprRawName extends SimpleExpression<String> {
 	@SuppressWarnings("null")
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		String[] strs = get(e);
-		if (strs == null) return "";
-		return Arrays.toString(strs);
+		return "minecraft name of " + types.toString(e, debug);
 	}
+	
 }

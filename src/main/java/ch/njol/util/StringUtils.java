@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.util;
 
@@ -420,6 +419,23 @@ public abstract class StringUtils {
 					+ Character.digit(s.charAt(i+1), 16));
 		}
 		return data;
+	}
+	
+	public static int indexOfOutsideGroup(String string, char find, char groupOpen, char groupClose, int i) {
+		int group = 0;
+		for (; i < string.length(); i++) {
+			char c = string.charAt(i);
+			if (c == '\\') {
+				i++;
+			} else if (c == groupOpen) {
+				group++;
+			} else if (c == groupClose) {
+				group--;
+			} else if (c == find && group == 0) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 }

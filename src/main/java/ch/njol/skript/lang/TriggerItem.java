@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
 
@@ -79,7 +78,7 @@ public abstract class TriggerItem implements Debuggable {
 	/**
 	 * @param start
 	 * @param e
-	 * @return false iff an exception occurred
+	 * @return false if an exception occurred
 	 */
 	public static boolean walk(final TriggerItem start, final Event e) {
 		assert start != null && e != null;

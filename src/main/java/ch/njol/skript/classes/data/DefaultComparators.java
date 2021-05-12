@@ -14,16 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes.data;
 
 import java.util.Objects;
 
+import ch.njol.skript.aliases.MatchQuality;
 import ch.njol.skript.util.GameruleValue;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -45,6 +46,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
@@ -104,6 +106,8 @@ public class DefaultComparators {
 
 			@Override
 			public Relation compare(Slot o1, Slot o2) {
+				if (o1 instanceof EquipmentSlot != o2 instanceof EquipmentSlot)
+					return Relation.NOT_EQUAL;
 				if (o1.isSameSlot(o2))
 					return Relation.EQUAL;
 				return Relation.NOT_EQUAL;
@@ -140,7 +144,10 @@ public class DefaultComparators {
 		Comparators.registerComparator(Slot.class, ItemType.class, new Comparator<Slot, ItemType>() {
 			@Override
 			public Relation compare(Slot slot, ItemType item) {
-				return Relation.get(item.isOfType(slot.getItem()));
+				ItemStack stack = slot.getItem();
+				if (stack == null)
+					return Comparators.compare(new ItemType(Material.AIR), item);
+				return Comparators.compare(new ItemType(stack), item);
 			}
 			
 			@Override
@@ -153,7 +160,7 @@ public class DefaultComparators {
 		Comparators.registerComparator(ItemStack.class, ItemType.class, new Comparator<ItemStack, ItemType>() {
 			@Override
 			public Relation compare(final ItemStack is, final ItemType it) {
-				return Relation.get(it.isOfType(is));
+				return Comparators.compare(new ItemType(is), it);
 			}
 			
 			@Override
@@ -194,7 +201,23 @@ public class DefaultComparators {
 		Comparators.registerComparator(ItemType.class, ItemType.class, new Comparator<ItemType, ItemType>() {
 			@Override
 			public Relation compare(final ItemType i1, final ItemType i2) {
-				return Relation.get(i2.isSupertypeOf(i1));
+				if (i1.isAll() != i2.isAll())
+					return Relation.NOT_EQUAL;
+				if (i1.getAmount() != i2.getAmount())
+					return Relation.NOT_EQUAL;
+				for (ItemData myType : i1.getTypes()) {
+					for (ItemData otherType : i2.getTypes()) {
+						if (myType.matchPlain(otherType)) {
+							return Relation.EQUAL;
+						}
+						boolean plain = myType.isPlain() != otherType.isPlain();
+						// Don't require an EXACT match if the other ItemData is an alias. They only need to share a material.
+						if (myType.matchAlias(otherType).isAtLeast(plain ? MatchQuality.EXACT : otherType.isAlias() && !myType.isAlias() ? MatchQuality.SAME_MATERIAL : MatchQuality.SAME_ITEM)) {
+							return Relation.EQUAL;
+						}
+					}
+				}
+				return Relation.NOT_EQUAL;
 			}
 			
 			@Override
@@ -444,7 +467,7 @@ public class DefaultComparators {
 			public Relation compare(final DamageCause dc, final ItemType t) {
 				switch (dc) {
 					case FIRE:
-						return Relation.get(t.isOfType(Material.LAVA));
+						return Relation.get(t.isOfType(Material.FIRE));
 					case LAVA:
 						return Relation.get(t.equals(lava));
 					case MAGIC:

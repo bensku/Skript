@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.command;
 
@@ -89,6 +88,7 @@ public abstract class Commands {
 	
 	public final static ArgsMessage m_too_many_arguments = new ArgsMessage("commands.too many arguments");
 	public final static Message m_internal_error = new Message("commands.internal error");
+	public final static Message m_correct_usage = new Message("commands.correct usage");
 	
 	private final static Map<String, ScriptCommand> commands = new HashMap<>();
 	
@@ -101,6 +101,14 @@ public abstract class Commands {
 	
 	static {
 		init(); // separate method for the annotation
+	}
+	public static Set<String> getScriptCommands(){
+		return commands.keySet();
+	}
+	
+	@Nullable
+	public static SimpleCommandMap getCommandMap(){
+		return commandMap;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -170,7 +178,7 @@ public abstract class Commands {
 		@SuppressWarnings("null")
 		@EventHandler(priority = EventPriority.HIGHEST)
 		public void onServerCommand(final ServerCommandEvent e) {
-			if (e.getCommand() == null || e.getCommand().isEmpty())
+			if (e.getCommand() == null || e.getCommand().isEmpty() || e.isCancelled())
 				return;
 			if (SkriptConfig.enableEffectCommands.value() && e.getCommand().startsWith(SkriptConfig.effectCommandToken.value())) {
 				if (handleEffectCommand(e.getSender(), e.getCommand())) {
@@ -407,7 +415,7 @@ public abstract class Commands {
 		if (!(node.get("trigger") instanceof SectionNode))
 			return null;
 		
-		final String usage = ScriptLoader.replaceOptions(node.get("usage", desc));
+		final String usage = ScriptLoader.replaceOptions(node.get("usage", m_correct_usage + " " + desc));
 		final String description = ScriptLoader.replaceOptions(node.get("description", ""));
 		ArrayList<String> aliases = new ArrayList<>(Arrays.asList(ScriptLoader.replaceOptions(node.get("aliases", "")).split("\\s*,\\s*/?")));
 		if (aliases.get(0).startsWith("/"))
@@ -480,11 +488,12 @@ public abstract class Commands {
 		}
 		
 		Commands.currentArguments = currentArguments;
-		final ScriptCommand c;
+		ScriptCommand c;
 		try {
-			c = new ScriptCommand(config, command, "" + pattern.toString(), currentArguments, description, usage,
+			c = new ScriptCommand(config, command, pattern.toString(), currentArguments, description, usage,
 					aliases, permission, permissionMessage, cooldown, cooldownMessage, cooldownBypass, cooldownStorage,
 					executableBy, ScriptLoader.loadItems(trigger));
+			c.trigger.setLineNumber(node.getLine());
 		} finally {
 			Commands.currentArguments = null;
 		}
@@ -494,14 +503,13 @@ public abstract class Commands {
 		
 		if (Skript.logVeryHigh() && !Skript.debug())
 			Skript.info("registered command " + desc);
-		currentArguments = null;
 		return c;
 	}
 	
-//	public static boolean skriptCommandExists(final String command) {
-//		final ScriptCommand c = commands.get(command);
-//		return c != null && c.getName().equals(command);
-//	}
+	public static boolean skriptCommandExists(final String command) {
+		final ScriptCommand c = commands.get(command);
+		return c != null && c.getName().equals(command);
+	}
 	
 	public static void registerCommand(final ScriptCommand command) {
 		// Validate that there are no duplicates
