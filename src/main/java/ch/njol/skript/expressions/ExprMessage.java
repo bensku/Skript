@@ -1,46 +1,28 @@
 
 /**
- *   This file is part of Skript.
+ * This file is part of Skript.
  *
- *  Skript is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Skript is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Skript is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Skript is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.command.UnknownCommandEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Events;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.events.util.PlayerChatEventHandler;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -49,6 +31,15 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.bukkit.event.command.UnknownCommandEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 /**
  * @author Peter Güttinger
@@ -78,14 +69,14 @@ import ch.njol.util.coll.CollectionUtils;
 @Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (unknown command message)")
 @Events({"chat", "join", "quit", "death", "unknown command"})
 public class ExprMessage extends SimpleExpression<String> {
-	
+
 	static {
 		Skript.registerExpression(ExprMessage.class, String.class, ExpressionType.SIMPLE, MessageType.patterns.toArray(new String[0]));
 	}
-	
+
 	@SuppressWarnings("null")
 	private MessageType type;
-	
+
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
@@ -96,16 +87,12 @@ public class ExprMessage extends SimpleExpression<String> {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected String[] get(final Event e) {
-		for (final Class<? extends Event> c : type.getEvents()) {
-			if (ScriptLoader.isCurrentEvent(c))
-				return new String[]{type.get(e)};
-		}
-		return new String[0];
+		return new String[]{type.get(e)};
 	}
-	
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -113,33 +100,30 @@ public class ExprMessage extends SimpleExpression<String> {
 			return CollectionUtils.array(String.class);
 		return null;
 	}
-	
+
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		if (delta == null)
 			return;
-		Class<? extends Event>[] events = type.getEvents();
-		for (Class<? extends Event> evt : events) {
-			if (evt.isInstance(e))
-				type.set(e, "" + delta[0]);
-		}
+		type.set(e, "" + delta[0]);
 	}
-	
+
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
-	
+
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
 		return "the " + type.name + " message";
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static enum MessageType {
 		CHAT("chat", "[chat( |-)]message", true) {
@@ -147,7 +131,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{PlayerChatEventHandler.usesAsyncEvent ? AsyncPlayerChatEvent.class : PlayerChatEvent.class};
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -156,7 +140,7 @@ public class ExprMessage extends SimpleExpression<String> {
 				else
 					return ((PlayerChatEvent) e).getMessage();
 			}
-			
+
 			@Override
 			void set(final Event e, final String message) {
 				if (PlayerChatEventHandler.usesAsyncEvent)
@@ -170,13 +154,13 @@ public class ExprMessage extends SimpleExpression<String> {
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{PlayerJoinEvent.class};
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final Event e) {
 				return ((PlayerJoinEvent) e).getJoinMessage();
 			}
-			
+
 			@Override
 			void set(final Event e, final String message) {
 				((PlayerJoinEvent) e).setJoinMessage(message);
@@ -187,7 +171,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{PlayerQuitEvent.class, PlayerKickEvent.class};
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -196,7 +180,7 @@ public class ExprMessage extends SimpleExpression<String> {
 				else
 					return ((PlayerQuitEvent) e).getQuitMessage();
 			}
-			
+
 			@Override
 			void set(final Event e, final String message) {
 				if (e instanceof PlayerKickEvent)
@@ -210,7 +194,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{EntityDeathEvent.class};
 			}
-			
+
 			@Override
 			@Nullable
 			String get(final Event e) {
@@ -218,34 +202,34 @@ public class ExprMessage extends SimpleExpression<String> {
 					return ((PlayerDeathEvent) e).getDeathMessage();
 				return null;
 			}
-			
+
 			@Override
 			void set(Event e, String message) {
-			
+
 			}
-			
+
 		},
 		UNKNOWN_COMMAND("unknown command", "unknown (command|cmd) message", Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
 			@Override
 			Class<? extends Event>[] getEvents() {
 				return new Class[]{UnknownCommandEvent.class};
 			}
-			
+
 			@Nullable
 			@Override
 			String get(Event e) {
 				return ((UnknownCommandEvent) e).getMessage();
 			}
-			
+
 			@Override
 			void set(Event e, String message) {
 				((UnknownCommandEvent) e).setMessage(message);
 			}
 		};
-		
+
 		static ArrayList<String> patterns = new ArrayList<>();
 		static EnumSet<MessageType> supportedTypes;
-		
+
 		static {
 			MessageType[] types = values();
 			supportedTypes = EnumSet.noneOf(MessageType.class);
@@ -256,24 +240,24 @@ public class ExprMessage extends SimpleExpression<String> {
 				}
 			}
 		}
-		
+
 		final String name;
 		private final String pattern;
 		private final boolean supported;
-		
+
 		MessageType(final String name, final String pattern, boolean supported) {
 			this.name = name;
 			this.pattern = "[the] " + pattern;
 			this.supported = supported;
 		}
-		
+
 		abstract Class<? extends Event>[] getEvents();
-		
+
 		@Nullable
 		abstract String get(Event e);
-		
+
 		abstract void set(Event e, String message);
-		
+
 	}
-	
+
 }
