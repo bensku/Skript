@@ -20,6 +20,7 @@ package ch.njol.skript.events;
 
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
@@ -193,7 +194,7 @@ public class SimpleEvents {
 				.description("Called when an entity is set on fire, e.g. by fire or lava, a fireball, or by standing in direct sunlight (zombies, skeletons).")
 				.examples("on combust:")
 				.since("1.0");
-		Skript.registerEvent("Explode", SimpleEvent.class, EntityExplodeEvent.class, "explo(d(e|ing)|sion)")
+		Skript.registerEvent("Explode", SimpleEvent.class, EntityExplodeEvent.class, "[entity] explo(d(e|ing)|sion)")
 				.description("Called when an entity (a primed TNT or a creeper) explodes.")
 				.examples("on explosion:")
 				.since("1.0");
@@ -607,5 +608,10 @@ public class SimpleEvents {
 					"\t\tsend \"Oops! Mending failed!\" to player")
 				.since("2.5.1");
 		}
+		Skript.registerEvent("Block Explode", SimpleEvent.class, BlockExplodeEvent.class, "block explo(d(e|ing)|sion)")
+			.description("Called when a block explodes. (Also triggered by <a href='effects.html#EffExplosion'>create explosion effect</a>)")
+			.examples("on block explode:",
+				"\tremove all chests from exploded blocks")
+			.since("INSERT VERSION");
 	}
 }

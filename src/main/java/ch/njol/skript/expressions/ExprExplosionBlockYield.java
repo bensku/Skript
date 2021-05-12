@@ -19,6 +19,7 @@
 package ch.njol.skript.expressions;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -54,11 +55,16 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 				"[the] percentage of blocks dropped"
 		);
 	}
+	
+	boolean isEntity = false;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(EntityExplodeEvent.class)) {
-			Skript.error("The 'explosion block yield' is only usable in an explosion event", ErrorQuality.SEMANTIC_ERROR);
+		if (ScriptLoader.isCurrentEvent(EntityExplodeEvent.class)) {
+			isEntity = true;
+		}
+		else if (!ScriptLoader.isCurrentEvent(BlockExplodeEvent.class)) {
+			Skript.error("The 'explosion block yield' is only usable in an entity/block explosion event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 		return true;
@@ -67,7 +73,7 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		return new Number[]{((EntityExplodeEvent) e).getYield()};
+		return new Number[]{ (isEntity ? ((EntityExplodeEvent) e).getYield() : ((BlockExplodeEvent) e).getYield()) };
 	}
 
 	@Override
@@ -89,32 +95,47 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 		float n = delta == null ? 0 : ((Number) delta[0]).floatValue();
 		if (n < 0) // Yield can't be negative
 			return;
-		EntityExplodeEvent e = (EntityExplodeEvent) event;
+				
 		// Yield can be a value from 0 to 1
 		switch (mode) {
 			case SET:
-				e.setYield(n);
+				typeSetYield(event, n);
 				break;
 			case ADD:
-				float add = e.getYield() + n;
+				float add = typeGetYield(event) + n;
 				if (add < 0)
 					return;
-				e.setYield(add);
+				typeSetYield(event, add);
 				break;
 			case REMOVE:
-				float subtract = e.getYield() - n;
+				float subtract = typeGetYield(event) - n;
 				if (subtract < 0)
 					return;
-				e.setYield(subtract);
+				typeSetYield(event, subtract);
 				break;
 			case DELETE:
-				e.setYield(0);
+				typeSetYield(event, 0);
 				break;
 			default:
 				assert false;
 		}
 	}
 
+	private float typeGetYield(Event e) {
+		if (isEntity) {
+			return ((EntityExplodeEvent) e).getYield();
+		} else {
+			return ((BlockExplodeEvent) e).getYield();
+		}
+	}
+	private void typeSetYield(Event e, float yield) {
+		if (isEntity) {
+			((EntityExplodeEvent) e).setYield(yield);
+		} else {
+			((BlockExplodeEvent) e).setYield(yield);
+		}
+	}
+	
 	@Override
 	public boolean isSingle() {
 		return true;
