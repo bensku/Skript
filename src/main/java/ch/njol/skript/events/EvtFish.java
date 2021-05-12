@@ -59,8 +59,6 @@ public class EvtFish extends SkriptEvent {
 			return true;
 		} else {
 			List<PlayerFishEvent.State> enumStates = Arrays.asList(PlayerFishEvent.State.values());
-			if (enumStates.containsAll(Arrays.asList(states.getArray())))
-				return true;
 		}
 		return false;
 	}
