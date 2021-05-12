@@ -18,10 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import ch.njol.skript.util.LiteralUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -41,40 +43,36 @@ import ch.njol.util.Kleenean;
 @Examples({"set {_list::*} to shuffled {_list::*}"})
 @Since("2.2-dev32")
 public class ExprShuffledList extends SimpleExpression<Object> {
-	
+
 	static{
 		Skript.registerExpression(ExprShuffledList.class, Object.class, ExpressionType.COMBINED, "shuffled %objects%");
 	}
-	
-	@SuppressWarnings("null")
-	private Expression<Object> list;
-	
-	@SuppressWarnings({"null", "unchecked"})
+
+	@SuppressWarnings("NotNullFieldNotInitialized")
+	private Expression<?> list;
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		list = (Expression<Object>) exprs[0];
-		return true;
+		list = LiteralUtils.defendExpression(exprs[0]);
+		return LiteralUtils.canInitSafely(list);
 	}
-	
+
 	@Override
 	@Nullable
 	protected Object[] get(Event e) {
-		Object[] origin = list.getAll(e);
-		List<Object> shuffled = Arrays.asList(origin.clone()); // Not yet shuffled...
-		
-		try {
-			Collections.shuffle(shuffled);
-		} catch (IllegalArgumentException ex) { // In case elements are not comparable
-			Skript.error("Tried to sort a list, but some objects are not comparable!");
-		}
-		return shuffled.toArray();
+		Object[] origin = list.getArray(e).clone();
+		List<Object> shuffled = Arrays.asList(origin); // Not yet shuffled...
+		Collections.shuffle(shuffled);
+
+		Object[] array = (Object[]) Array.newInstance(getReturnType(), origin.length);
+		return shuffled.toArray(array);
 	}
-	
+
 	@Override
 	public Class<? extends Object> getReturnType() {
-		return Object.class;
+		return list.getReturnType();
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return false;
@@ -82,6 +80,7 @@ public class ExprShuffledList extends SimpleExpression<Object> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "shuffled list";
+		return "shuffled " + list.toString(e, debug);
 	}
+
 }

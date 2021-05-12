@@ -3,10 +3,7 @@ test "item durability":
 	set durability of {_i} to 500
 	assert durability of {_i} = 500 with "Durability of item should have been 500"
 
-# This SHOULD be 'when minecraft version is not "1.13"' but there seems to be a bug with versions in tests
-# This technically should test 1.12.2 and above, but for some reason its not
-# Luckily we only want to test this on 1.12.2 and below, so this bug is working in our favor
-test "block data value" when minecraft version is "1.12.2":
+test "block data value" when running below minecraft "1.13.2":
 	set block at spawn of world "world" to farmland
 	set {_b} to block above block at spawn of world "world"
 	set block at {_b} to fully grown wheat plant

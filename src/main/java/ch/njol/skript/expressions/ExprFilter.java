@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Iterators;
 import ch.njol.skript.Skript;
@@ -48,13 +49,14 @@ import ch.njol.util.coll.iterator.ArrayIterator;
 
 @Name("Filter")
 @Description("Filters a list based on a condition. " +
-		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]" +
+		"For example, if you ran 'broadcast \"something\" and \"something else\" where [string input is \"something\"]', " +
 		"only \"something\" would be broadcast as it is the only string that matched the condition.")
 @Examples("send \"congrats on being staff!\" to all players where [player input has permission \"staff\"]")
 @Since("2.2-dev36")
 @SuppressWarnings({"null", "unchecked"})
 public class ExprFilter extends SimpleExpression<Object> {
 
+	@Nullable
 	private static ExprFilter parsing;
 
 	static {
@@ -68,6 +70,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 	private String rawCond;
 	private Expression<Object> objects;
 
+	@Nullable
 	public static ExprFilter getParsing() {
 		return parsing;
 	}
@@ -163,16 +166,20 @@ public class ExprFilter extends SimpleExpression<Object> {
 			);
 		}
 
-		private ExprInput<?> source;
-		private Class<T> superType;
+		@Nullable
+		private final ExprInput<?> source;
+		private final Class<? extends T>[] types;
+		private final Class<T> superType;
+		@SuppressWarnings("NotNullFieldNotInitialized")
 		private ExprFilter parent;
+		@Nullable
 		private ClassInfo<?> inputType;
 
-	public ExprInput() {
+		public ExprInput() {
 			this(null, (Class<? extends T>) Object.class);
 		}
 
-		public ExprInput(ExprInput<?> source, Class<? extends T>... types) {
+		public ExprInput(@Nullable ExprInput<?> source, Class<? extends T>... types) {
 			this.source = source;
 			if (source != null) {
 				this.parent = source.parent;
@@ -181,6 +188,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 				parent.addChild(this);
 			}
 
+			this.types = types;
 			this.superType = (Class<T>) Utils.getSuperType(types);
 		}
 
@@ -204,7 +212,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			}
 
 			try {
-				return Converters.convertStrictly(new Object[]{current}, superType);
+				return Converters.convertArray(new Object[]{current}, types, superType);
 			} catch (ClassCastException e1) {
 				return (T[]) Array.newInstance(superType, 0);
 			}
@@ -229,6 +237,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			return superType;
 		}
 
+		@Nullable
 		private ClassInfo<?> getClassInfo() {
 			return inputType;
 		}
