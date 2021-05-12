@@ -75,8 +75,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		if (ScriptLoader.isCurrentEvent(EntityExplodeEvent.class)) {
 			isEntity = true;
-		}
-		else if (!ScriptLoader.isCurrentEvent(BlockExplodeEvent.class)) {
+		} else if (!ScriptLoader.isCurrentEvent(BlockExplodeEvent.class)) {
 			Skript.error("Exploded blocks can only be retrieved from an entity/block explode event.");
 			return false;
 		}
@@ -127,9 +126,9 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 				assert delta != null;
 				blocks.clear();
 				for (Object de : delta) {
-					if (de instanceof ItemType) {
+					if (de instanceof ItemType)
 						break;
-					}
+					
 					if (((Block) de).getType() != Material.AIR) // Performance
 						blocks.add((Block) de);
 				}
@@ -142,9 +141,9 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 			case ADD:
 				assert delta != null;
 				for (Object de : delta) {
-					if (de instanceof ItemType) {
+					if (de instanceof ItemType)
 						break;
-					}
+						
 					if (((Block) de).getType() != Material.AIR) // Performance
 						blocks.add((Block) de);
 				}
@@ -155,7 +154,6 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 				assert delta != null;
 				for (Object de : delta) {
 					if (de instanceof ItemType) {						
-						Bukkit.broadcastMessage("!> " + ((ItemType) de).getAmount());
 						int loopLimit = ((ItemType) de).getAmount() == 0 ? blocks.size() : ((ItemType) de).getAmount();
 						if (((ItemType) de).isAll() || mode == ChangeMode.REMOVE_ALL) // all %itemtype% OR REMOVE_ALL
 							loopLimit = blocks.size();
@@ -173,7 +171,6 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 						blocks.removeIf(b -> b.equals((Block) de));
 					}
 				}
-				
 				break;
 		}
 	}
