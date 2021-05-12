@@ -18,10 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import org.bukkit.boss.BossBar;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -33,35 +29,38 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import org.bukkit.boss.BossBar;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("BossBar Progress")
 @Description("The progress of a bossbar out of 100 (100 is a full bar, and 0 an empty one).")
 @Since("INSERT VERSION")
 @Examples("set progress of a new bossbar to 10")
 public class ExprBossBarProgress extends SimpleExpression<Number> {
-	
+
 	static {
 		Skript.registerExpression(ExprBossBarProgress.class, Number.class, ExpressionType.COMBINED, "progress of [[boss[ ]]bar] %bossbar%", "[[boss[ ]]bar] %bossbar%'s progress");
 	}
-	
+
 	@SuppressWarnings("null")
 	Expression<BossBar> bar;
-	
+
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		bar = (Expression<BossBar>) exprs[0];
 		return true;
 	}
-	
+
 	@Nullable
 	@Override
 	protected Number[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
 		if (bossBar == null)
 			return null;
-		return new Number[]{bossBar.getProgress()*100};
+		return new Number[]{Math.round(bossBar.getProgress() * 100)};
 	}
-	
+
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
@@ -75,45 +74,49 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 				return null;
 		}
 	}
-	
+
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		short mod = 1;
+		double mod = 1;
+		if (delta == null) return;
+		double change = ((Long) delta[0]) * mod / 100;
 		switch (mode) {
 			case REMOVE:
 				mod = -1;
 			case ADD:
-				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e))
-						bossBar.setProgress(bossBar.getProgress() + (double) delta[0] * mod/100);
+				for (BossBar bossBar : bar.getArray(e)) {
+					Double newProgress = bossBar.getProgress() + change;
+					if (newProgress < 0 || newProgress > 1) continue;
+					bossBar.setProgress(newProgress);
 				}
 				break;
 			case RESET:
 				for (BossBar bossBar : bar.getArray(e))
 					bossBar.setProgress(0);
 				break;
-			case SET:
-				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e))
-						bossBar.setProgress((Double) delta[0] / 100);
-				}
+			case SET: {
+				if (change < 0 || change > 1) return;
+				for (BossBar bossBar : bar.getArray(e))
+					bossBar.setProgress(change);
+
 				break;
+			}
 		}
 	}
-	
+
 	@Override
 	public boolean isSingle() {
 		return true;
 	}
-	
+
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return "progress of bossbar " + bar.toString(e, debug);
 	}
-	
+
 }
