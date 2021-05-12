@@ -47,6 +47,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -75,7 +76,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
 import org.bukkit.util.Vector;
@@ -226,7 +227,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(final Block b, final int flags) {
-						return ItemType.toString(b, flags);
+						return BlockUtils.blockToString(b, flags);
 					}
 					
 					@Override
@@ -471,7 +472,8 @@ public class BukkitClasses {
 							return null;
 						}
 					}
-				}));
+				})
+				.cloner(Location::clone));
 		
 		Classes.registerClass(new ClassInfo<>(Vector.class, "vector")
 				.user("vectors?")
@@ -542,7 +544,8 @@ public class BukkitClasses {
 					protected boolean canBeInstantiated() {
 						return false;
 					}
-				}));
+				})
+				.cloner(Vector::clone));
 		
 		Classes.registerClass(new ClassInfo<>(World.class, "world")
 				.user("worlds?")
@@ -857,12 +860,9 @@ public class BukkitClasses {
 						if (context == ParseContext.COMMAND) {
 							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
 								return Bukkit.getOfflinePlayer(UUID.fromString(s));
-							else if (!s.matches("\\S+") || s.length() > 16)
+							else if (!s.matches("[a-zA-Z0-9_]+") || s.length() > 16)
 								return null;
 							return Bukkit.getOfflinePlayer(s);
-							// TODO return an unresolved player and resolve it on a different thread after the command was parsed, and block the command until it is ready
-							// FIXME add note to changelog if not fixed in the next update
-							// return new UnresolvedOfflinePlayer(s);
 						}
 						// if (s.matches("\"\\S+\""))
 						// 	return Bukkit.getOfflinePlayer(s.substring(1, s.length() - 1));
@@ -903,14 +903,10 @@ public class BukkitClasses {
 						return "" + p.getName();
 					}
 				}).serializer(new Serializer<OfflinePlayer>() {
-					private final boolean uuidSupported = Skript.methodExists(OfflinePlayer.class, "getUniqueId");
-					
 					@Override
 					public Fields serialize(final OfflinePlayer p) {
 						final Fields f = new Fields();
-						if (uuidSupported)
-							f.putObject("uuid", p.getUniqueId());
-						f.putObject("name", p.getName());
+						f.putObject("uuid", p.getUniqueId());
 						return f;
 					}
 					
@@ -927,7 +923,7 @@ public class BukkitClasses {
 					@SuppressWarnings("deprecation")
 					@Override
 					protected OfflinePlayer deserialize(final Fields fields) throws StreamCorruptedException {
-						if (fields.contains("uuid") && uuidSupported) {
+						if (fields.contains("uuid")) {
 							final UUID uuid = fields.getObject("uuid", UUID.class);
 							if (uuid == null)
 								throw new StreamCorruptedException();
@@ -1000,7 +996,6 @@ public class BukkitClasses {
 				.defaultExpression(new EventValueExpression<>(InventoryHolder.class))
 				.after("entity", "block")
 				.parser(new Parser<InventoryHolder>() {
-					
 					@Override
 					public boolean canParse(ParseContext context) {
 						return false;
@@ -1008,7 +1003,13 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(InventoryHolder holder, int flags) {
-						return Classes.toString(holder instanceof BlockState ? ((BlockState) holder).getBlock() : holder);
+						if (holder instanceof BlockState) {
+							return Classes.toString(((BlockState) holder).getBlock());
+						} else if (holder instanceof DoubleChest) {
+							return "double chest";
+						} else {
+							return Classes.toString(holder);
+						}
 					}
 					
 					@Override
@@ -1122,7 +1123,9 @@ public class BukkitClasses {
 					public String getVariableNamePattern() {
 						return "item:.+";
 					}
-				}).serializer(new ConfigurationSerializer<ItemStack>()));
+				})
+				.cloner(ItemStack::clone)
+				.serializer(new ConfigurationSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(Item.class, "itementity")
 				.name(ClassInfo.NO_DOC)
@@ -1161,9 +1164,78 @@ public class BukkitClasses {
 				})
 				.serializer(new EnumSerializer<>(Biome.class)));
 		
-		// PotionEffect is not used; ItemType is used instead
+		Classes.registerClass(new ClassInfo<>(PotionEffect.class, "potioneffect")
+			.user("potion ?effects?")
+			.name("Potion Effect")
+			.description("A potion effect, including the potion effect type, tier and duration.")
+			.usage("speed of tier 1 for 10 seconds")
+			.since("2.5.2")
+			.parser(new Parser<PotionEffect>() {
+				
+				@Override
+				public boolean canParse(ParseContext context) {
+					return false;
+				}
+				
+				@Override
+				public String toString(PotionEffect potionEffect, int flags) {
+					return PotionEffectUtils.toString(potionEffect);
+				}
+				
+				@Override
+				public String toVariableNameString(PotionEffect o) {
+					return "potion_effect:" + o.getType().getName();
+				}
+				
+				@Override
+				public String getVariableNamePattern() {
+					return "potion_effect:.+";
+				}
+			})
+			.serializer(new Serializer<PotionEffect>() {
+				@Override
+				public Fields serialize(PotionEffect o) {
+					Fields fields = new Fields();
+					fields.putObject("type", o.getType().getName());
+					fields.putPrimitive("amplifier", o.getAmplifier());
+					fields.putPrimitive("duration", o.getDuration());
+					fields.putPrimitive("particles", o.hasParticles());
+					fields.putPrimitive("ambient", o.isAmbient());
+					return fields;
+				}
+				
+				@Override
+				public void deserialize(PotionEffect o, Fields f) {
+					assert false;
+				}
+				
+				@Override
+				protected PotionEffect deserialize(Fields fields) throws StreamCorruptedException {
+					String typeName = fields.getObject("type", String.class);
+					assert typeName != null;
+					PotionEffectType type = PotionEffectType.getByName(typeName);
+					if (type == null)
+						throw new StreamCorruptedException("Invalid PotionEffectType " + typeName);
+					int amplifier = fields.getPrimitive("amplifier", int.class);
+					int duration = fields.getPrimitive("duration", int.class);
+					boolean particles = fields.getPrimitive("particles", boolean.class);
+					boolean ambient = fields.getPrimitive("ambient", boolean.class);
+					return new PotionEffect(type, duration, amplifier, ambient, particles);
+				}
+				
+				@Override
+				public boolean mustSyncDeserialization() {
+					return false;
+				}
+				
+				@Override
+				protected boolean canBeInstantiated() {
+					return false;
+				}
+			}));
+		
 		Classes.registerClass(new ClassInfo<>(PotionEffectType.class, "potioneffecttype")
-				.user("potion( ?effect)?( ?type)?s?")
+				.user("potion( ?effect)? ?types?") // "type" had to be made non-optional to prevent clashing with potion effects
 				.name("Potion Effect Type")
 				.description("A potion effect type, e.g. 'strength' or 'swiftness'.")
 				.usage(StringUtils.join(PotionEffectUtils.getNames(), ", "))
@@ -1609,8 +1681,13 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(FireworkEffect.class, "fireworkeffect")
 				.user("firework ?effects?")
 				.name("Firework Effect")
-				.description("A configuration of effects that defines the firework when exploded.")
+				.description("A configuration of effects that defines the firework when exploded",
+					"which can be used in the <a href='effects.html#EffFireworkLaunch'>launch firework</a> effect.",
+					"See the <a href='expressions.html#ExprFireworkEffect'>firework effect</a> expression for detailed patterns.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.class))
+				.examples("launch flickering trailing burst firework colored blue and green at player",
+					"launch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity",
+					"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1")
 				.since("2.4")
 				.parser(new Parser<FireworkEffect>() {
 					@Override

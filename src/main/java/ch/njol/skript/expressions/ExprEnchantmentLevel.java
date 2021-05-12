@@ -129,7 +129,7 @@ public class ExprEnchantmentLevel extends SimpleExpression<Integer> {
 					changed = Math.max(0, enchant.getLevel() - changed);
 				
 				if (changed > 0)
-					item.addEnchantments(new EnchantmentType(type, newLevel));
+					item.addEnchantments(new EnchantmentType(type, changed));
 			}
 		}
 	}
