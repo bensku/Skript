@@ -14,10 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang;
+
+import java.util.Arrays;
 
 /**
  * @author Peter Güttinger
@@ -45,4 +46,27 @@ public class SyntaxElementInfo<E extends SyntaxElement> {
 		}
 	}
 	
+	/**
+	 * Get the class that represents this element.
+	 * @return The Class of the element
+	 */
+	public Class<E> getElementClass() {
+		return c;
+	}
+	
+	/**
+	 * Get the patterns of this syntax element.
+	 * @return Array of Skript patterns for this element
+	 */
+	public String[] getPatterns() {
+		return Arrays.copyOf(patterns, patterns.length);
+	}
+	
+	/**
+	 * Get the original classpath for this element.
+	 * @return The original ClassPath for this element
+	 */
+	public String getOriginClassPath() {
+		return originClassPath;
+	}
 }

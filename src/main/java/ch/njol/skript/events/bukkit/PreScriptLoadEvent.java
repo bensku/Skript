@@ -14,24 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.events.bukkit;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import ch.njol.skript.config.Config;
 import ch.njol.util.Validate;
 
+/**
+ * This event has no guarantee of being on the main thread.
+ * Please do not use bukkit api before checking {@link Bukkit#isPrimaryThread()}
+ */
+
 public class PreScriptLoadEvent extends Event {
 
     private final List<Config> scripts;
 
     public PreScriptLoadEvent(List<Config> scripts) {
+        super(!Bukkit.isPrimaryThread());
         Validate.notNull(scripts);
         this.scripts = scripts;
     }

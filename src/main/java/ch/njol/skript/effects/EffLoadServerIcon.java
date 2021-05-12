@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -28,6 +27,7 @@ import org.bukkit.event.Event;
 import org.bukkit.util.CachedServerIcon;
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -70,6 +70,7 @@ public class EffLoadServerIcon extends AsyncEffect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+		ScriptLoader.hasDelayBefore = Kleenean.TRUE;
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The load server icon effect requires Paper 1.12.2 or newer");
 			return false;
@@ -80,7 +81,11 @@ public class EffLoadServerIcon extends AsyncEffect {
 
     @Override
     protected void execute(Event e) {
-		Path p = Paths.get(path.getSingle(e));
+		String pathString = path.getSingle(e);
+		if (pathString == null)
+			return;
+		
+		Path p = Paths.get(pathString);
 		if (Files.isRegularFile(p)) {
 			try {
 				lastLoaded = Bukkit.loadServerIcon(p.toFile());

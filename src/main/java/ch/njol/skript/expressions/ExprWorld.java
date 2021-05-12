@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -110,10 +109,13 @@ public class ExprWorld extends PropertyExpression<Object, World> {
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
-		if (!(getExpr().getAll(e) instanceof Location[] && delta != null)) return;
+		Object[] objects = getExpr().getArray(e);
+		
+		if (!(objects instanceof Location[] && delta != null))
+			return;
 
-		for (final Location loc : (Location[]) getExpr().getAll(e)) {
-				loc.setWorld((World) delta[0]);
+		for (final Location loc : (Location[]) objects) {
+			loc.setWorld((World) delta[0]);
 		}	
 	}
 	

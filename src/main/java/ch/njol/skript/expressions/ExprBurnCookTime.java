@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -44,6 +43,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -125,8 +125,7 @@ public class ExprBurnCookTime extends PropertyExpression<Block, Timespan> {
 			return;
 
 		Function<Timespan, Timespan> value = null;
-		ClassInfo<Timespan> ci = Classes.getExactClassInfo(Timespan.class);
-		assert ci != null;
+		ClassInfo<Timespan> ci = DefaultClasses.TIMESPAN;
 		Arithmetic<Timespan, Timespan> arithmetic = ci.getRelativeMath();
 		Timespan changed = (Timespan) delta[0];
 		assert arithmetic != null;

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -50,6 +49,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 	}
 
 	private final ExprDefaultValue<?> source;
+	private final Class<? extends T>[] types;
 	private final Class<T> superType;
 	@Nullable
 	private Expression<Object> first;
@@ -68,6 +68,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 			this.first = source.first;
 			this.second = source.second;
 		}
+		this.types = types;
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
 
@@ -84,7 +85,7 @@ public class ExprDefaultValue<T> extends SimpleExpression<T> {
 		Object[] first = this.first.getArray(e);
 		Object values[] = first.length != 0 ? first : second.getArray(e);
 		try {
-			return Converters.convertStrictly(values, superType);
+			return Converters.convertArray(values, types, superType);
 		} catch (ClassCastException e1) {
 			return (T[]) Array.newInstance(superType, 0);
 		}

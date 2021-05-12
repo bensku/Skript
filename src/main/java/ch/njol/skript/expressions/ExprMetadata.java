@@ -1,21 +1,20 @@
 /**
- * This file is part of Skript.
+ *   This file is part of Skript.
  *
- * Skript is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * Skript is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -66,6 +65,7 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 	private Expression<String> values;
 	@Nullable
 	private Expression<Metadatable> holders;
+	private Class<? extends T>[] types;
 	private Class<T> superType;
 
 	public ExprMetadata() {
@@ -78,6 +78,7 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 			this.values = source.values;
 			this.holders = source.holders;
 		}
+		this.types = types;
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
 
@@ -100,7 +101,7 @@ public class ExprMetadata<T> extends SimpleExpression<T> {
 			}
 		}
 		try {
-			return Converters.convertStrictly(values.toArray(), superType);
+			return Converters.convertArray(values.toArray(), types, superType);
 		} catch (ClassCastException e1) {
 			return (T[]) Array.newInstance(superType, 0);
 		}

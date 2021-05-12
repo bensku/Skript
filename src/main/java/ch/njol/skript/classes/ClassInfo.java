@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes;
 
@@ -52,6 +51,9 @@ public class ClassInfo<T> implements Debuggable {
 	
 	@Nullable
 	private Parser<? extends T> parser = null;
+	
+	@Nullable
+	private Cloner<T> cloner = null;
 	
 	@Nullable
 	private Pattern[] userInputPatterns = null;
@@ -94,13 +96,21 @@ public class ClassInfo<T> implements Debuggable {
 	 */
 	public ClassInfo(final Class<T> c, final String codeName) {
 		this.c = c;
-		if (!isVaildCodeName(codeName))
+		if (!isValidCodeName(codeName))
 			throw new IllegalArgumentException("Code names for classes must be lowercase and only consist of latin letters and arabic numbers");
 		this.codeName = codeName;
 		name = new Noun("types." + codeName);
 	}
 	
+	/**
+	 * Incorrect spelling in method name. This will be removed in the future.
+	 */
+	@Deprecated
 	public static boolean isVaildCodeName(final String name) {
+		return isValidCodeName(name);
+	}
+	
+	public static boolean isValidCodeName(final String name) {
 		return name.matches("[a-z0-9]+");
 	}
 	
@@ -112,6 +122,16 @@ public class ClassInfo<T> implements Debuggable {
 	public ClassInfo<T> parser(final Parser<? extends T> parser) {
 		assert this.parser == null;
 		this.parser = parser;
+		return this;
+	}
+	
+	/**
+	 * @param cloner A {@link Cloner} to clone values when setting variables
+	 *                  or passing function arguments.
+	 */
+	public ClassInfo<T> cloner(Cloner<T> cloner) {
+		assert this.cloner == null;
+		this.cloner = cloner;
 		return this;
 	}
 	
@@ -292,6 +312,19 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public Parser<? extends T> getParser() {
 		return parser;
+	}
+	
+	@Nullable
+	public Cloner<? extends T> getCloner() {
+		return cloner;
+	}
+	
+	/**
+	 * Clones the given object using {@link ClassInfo#cloner},
+	 * returning the given object if no {@link Cloner} is registered.
+	 */
+	public T clone(T t) {
+		return cloner == null ? t : cloner.clone(t);
 	}
 	
 	@Nullable

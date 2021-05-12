@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util;
 
@@ -48,6 +47,7 @@ import com.destroystokyo.paper.block.BlockSoundGroup;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.block.BlockCompat;
 import ch.njol.skript.bukkitutil.block.MagicBlockCompat;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A block that gets all data from the world, but either delays
@@ -162,7 +162,7 @@ public class DelayedChangeBlock implements Block {
 	public int getZ() {
 		return b.getZ();
 	}
-	
+
 	@Override
 	public Location getLocation() {
 		return b.getLocation();
@@ -258,6 +258,26 @@ public class DelayedChangeBlock implements Block {
 	}
 	
 	@Override
+	public boolean isBuildable() {
+		return b.isBuildable();
+	}
+	
+	@Override
+	public boolean isBurnable() {
+		return b.isBurnable();
+	}
+	
+	@Override
+	public boolean isReplaceable() {
+		return b.isReplaceable();
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return b.isSolid();
+	}
+	
+	@Override
 	public double getTemperature() {
 		return b.getTemperature();
 	}
@@ -336,7 +356,7 @@ public class DelayedChangeBlock implements Block {
 	public Collection<ItemStack> getDrops(ItemStack tool, @Nullable Entity entity) {
 		return b.getDrops(tool, entity);
 	}
-	
+
 	@Nullable
 	@Override
 	public Location getLocation(final @Nullable Location loc) {
@@ -409,4 +429,25 @@ public class DelayedChangeBlock implements Block {
 	public String getTranslationKey() {
 		return b.getTranslationKey();
 	}
+	
+	@Override
+	public float getDestroySpeed(ItemStack itemStack) {
+		return b.getDestroySpeed(itemStack);
+	}
+
+	@Override
+	public boolean isPreferredTool(@NotNull ItemStack tool) {
+		return b.isPreferredTool(tool);
+	}
+
+	@Override
+	public boolean isValidTool(@NotNull ItemStack itemStack) {
+		return b.isValidTool(itemStack);
+	}
+
+	@Override
+	public @NotNull float getDestroySpeed(@NotNull ItemStack itemStack, boolean considerEnchants) {
+		return b.getDestroySpeed(itemStack, considerEnchants);
+	}
+
 }

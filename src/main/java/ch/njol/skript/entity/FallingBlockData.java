@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -56,6 +55,12 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	
 	@Nullable
 	private ItemType[] types = null;
+	
+	public FallingBlockData() {}
+	
+	public FallingBlockData(@Nullable ItemType[] types) {
+		this.types = types;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -145,7 +150,7 @@ public class FallingBlockData extends EntityData<FallingBlock> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new FallingBlockData();
+		return new FallingBlockData(types);
 	}
 	
 	@Override

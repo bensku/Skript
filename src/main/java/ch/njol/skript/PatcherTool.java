@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript;
 
@@ -69,8 +68,8 @@ public class PatcherTool {
 		}
 		
 		// Open jars and patch target
-		try (FileSystem source = FileSystems.newFileSystem(currentFile, null); 
-				FileSystem target = FileSystems.newFileSystem(patchedFile, null)) {
+		try (FileSystem source = FileSystems.newFileSystem(currentFile, (ClassLoader) null);
+				FileSystem target = FileSystems.newFileSystem(patchedFile, (ClassLoader) null)) {
 			assert source != null;
 			assert target != null;
 			new PatcherTool(source, target).patch(options);

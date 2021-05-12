@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -78,6 +77,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 	private Expression<Object> holders;
 
 	private ExprRelationalVariable<?> source;
+	private Class<? extends T>[] types;
 	private Class<T> superType;
 
 	public ExprRelationalVariable() {
@@ -90,6 +90,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 			this.variables = source.variables;
 			this.holders = source.holders;
 		}
+		this.types = types;
 		this.superType = (Class<T>) Utils.getSuperType(types);
 	}
 
@@ -125,7 +126,7 @@ public class ExprRelationalVariable<T> extends SimpleExpression<T> {
 			}
 		}
 		try {
-			return Converters.convertStrictly(values.toArray(), superType);
+			return Converters.convertArray(values.toArray(), types, superType);
 		} catch (ClassCastException ex) {
 			return (T[]) Array.newInstance(superType, 0);
 		}

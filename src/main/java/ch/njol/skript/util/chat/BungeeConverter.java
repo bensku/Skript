@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.util.chat;
 
@@ -34,6 +33,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class BungeeConverter {
 
 	private static boolean HAS_INSERTION_SUPPORT = Skript.methodExists(BaseComponent.class, "setInsertion", String.class);
+	private static boolean HAS_FONT_SUPPORT = Skript.methodExists(BaseComponent.class, "setFont", String.class);
 
 	@SuppressWarnings("null")
 	public static BaseComponent convert(MessageComponent origin) {
@@ -60,7 +60,9 @@ public class BungeeConverter {
 		if (origin.hoverEvent != null)
 			base.setHoverEvent(new HoverEvent(HoverEvent.Action.valueOf(origin.hoverEvent.action.spigotName),
 					convert(ChatMessages.parse(origin.hoverEvent.value)))); // Parse color (and possibly hex codes) here
-		
+
+		if (origin.font != null && HAS_FONT_SUPPORT)
+			base.setFont(origin.font);
 		return base;
 	}
 

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -64,6 +63,8 @@ public class ExprDifficulty extends SimplePropertyExpression<World, Difficulty> 
 		Difficulty difficulty = (Difficulty) delta[0];
 		for (World world : getExpr().getArray(e)) {
 			world.setDifficulty(difficulty);
+			if (difficulty != Difficulty.PEACEFUL)
+				world.setSpawnFlags(true, world.getAllowAnimals()); // Force enable spawn monsters as changing difficulty won't change this by itself
 		}
 	}
 	

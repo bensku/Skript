@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.expressions;
 
@@ -72,7 +71,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	protected Object[] get(final Event e, final Object[] source) {
 		String name = this.name.getSingle(e);
 		if (name == null)
-			return source; // No name provided, do nothing
+			return get(source, obj -> obj); // No name provided, do nothing
 		return get(source, new Getter<Object, Object>() {
 			@Override
 			@Nullable

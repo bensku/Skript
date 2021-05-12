@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.lang.util;
 
@@ -258,6 +257,17 @@ public abstract class SimpleExpression<T> implements Expression<T> {
 		}
 		this.time = time;
 		return false;
+	}
+	
+	protected final boolean setTime(final int time, final Class<? extends Event> applicableEvent) {
+		if (ScriptLoader.hasDelayBefore == Kleenean.TRUE && time != 0) {
+			Skript.error("Can't use time states after the event has already passed");
+			return false;
+		}
+		if (!ScriptLoader.isCurrentEvent(applicableEvent))
+			return false;
+		this.time = time;
+		return true;
 	}
 	
 	protected final boolean setTime(final int time, final Class<? extends Event> applicableEvent, final Expression<?>... mustbeDefaultVars) {

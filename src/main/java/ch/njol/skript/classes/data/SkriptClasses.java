@@ -14,19 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.classes.data;
-
-import java.io.StreamCorruptedException;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.Aliases;
@@ -48,6 +38,7 @@ import ch.njol.skript.localization.Noun;
 import ch.njol.skript.localization.RegexMessage;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.EnchantmentType;
@@ -59,11 +50,19 @@ import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timeperiod;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
-import ch.njol.skript.util.VisualEffect;
-import ch.njol.skript.util.VisualEffectDummy;
 import ch.njol.skript.util.WeatherType;
 import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.util.visual.VisualEffect;
+import ch.njol.skript.util.visual.VisualEffects;
 import ch.njol.yggdrasil.Fields;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.StreamCorruptedException;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -251,6 +250,7 @@ public class SkriptClasses {
 						return "itemtype:.+";
 					}
 				})
+				.cloner(ItemType::clone)
 				.serializer(new YggdrasilSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(Time.class, "time")
@@ -585,18 +585,32 @@ public class SkriptClasses {
 					public Class<Object>[] acceptChange(final ChangeMode mode) {
 						if (mode == ChangeMode.RESET)
 							return null;
+						if (mode == ChangeMode.SET)
+							return new Class[] {ItemType[].class, ItemStack[].class};
 						return new Class[] {ItemType.class, ItemStack.class};
 					}
 					
 					@Override
 					public void change(final Slot[] slots, final @Nullable Object[] deltas, final ChangeMode mode) {
+						if (mode == ChangeMode.SET) {
+							if (deltas != null) {
+								if (deltas.length == 1) {
+									final Object delta = deltas[0];
+									for (final Slot slot : slots) {
+										slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								} else if (deltas.length == slots.length) {
+									for (int i = 0; i < slots.length; i++) {
+										final Object delta = deltas[i];
+										slots[i].setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
+									}
+								}
+							}
+							return;
+						}
 						final Object delta = deltas == null ? null : deltas[0];
 						for (final Slot slot : slots) {
 							switch (mode) {
-								case SET:
-									assert delta != null;
-									slot.setItem(delta instanceof ItemStack ? (ItemStack) delta : ((ItemType) delta).getItem().getRandom());
-									break;
 								case ADD:
 									assert delta != null;
 									if (delta instanceof ItemStack) {
@@ -643,7 +657,32 @@ public class SkriptClasses {
 							}
 						}
 					}
-				}).serializeAs(ItemStack.class));
+				})
+				.parser(new Parser<Slot>() {
+					@Override
+					public boolean canParse(final ParseContext context) {
+						return false;
+					}
+					
+					@Override
+					public String toString(Slot o, int flags) {
+						ItemStack i = o.getItem();
+						if (i == null)
+							return new ItemType(Material.AIR).toString(flags);
+						return ItemType.toString(i, flags);
+					}
+					
+					@Override
+					public String toVariableNameString(Slot o) {
+						return "slot:" + o.toString();
+					}
+					
+					@Override
+					public String getVariableNamePattern() {
+						return "slot:.+";
+					}
+				})
+				.serializeAs(ItemStack.class));
 		
 		Classes.registerClass(new ClassInfo<>(Color.class, "color")
 				.user("colou?rs?")
@@ -658,6 +697,9 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public Color parse(String input, ParseContext context) {
+						Color rgbColor = ColorRGB.fromString(input);
+						if (rgbColor != null)
+							return rgbColor;
 						return SkriptColor.fromName(input);
 					}
 					
@@ -809,41 +851,38 @@ public class SkriptClasses {
 						}
 					}
 				}));
-		if (Skript.classExists("org.bukkit.Particle")) {
-			Classes.registerClass(new ClassInfo<>(VisualEffect.class, "visualeffect")
-					.name("Visual Effect")
-					.description("A visible effect, e.g. particles.")
-					.examples("show wolf hearts on the clicked wolf",
-							"play mob spawner flames at the targeted block to the player")
-					.usage(VisualEffect.getAllNames())
-					.since("2.1")
-					.user("(visual|particle) effects?")
-					.parser(new Parser<VisualEffect>() {
-						@Override
-						@Nullable
-						public VisualEffect parse(final String s, final ParseContext context) {
-							return VisualEffect.parse(s);
-						}
 
-						@Override
-						public String toString(final VisualEffect e, final int flags) {
-							return e.toString(flags);
-						}
+		Classes.registerClass(new ClassInfo<>(VisualEffect.class, "visualeffect")
+				.name("Visual Effect")
+				.description("A visible effect, e.g. particles.")
+				.examples("show wolf hearts on the clicked wolf",
+						"play mob spawner flames at the targeted block to the player")
+				.usage(VisualEffects.getAllNames())
+				.since("2.1")
+				.user("(visual|particle) effects?")
+				.parser(new Parser<VisualEffect>() {
+					@Override
+					@Nullable
+					public VisualEffect parse(String s, ParseContext context) {
+						return VisualEffects.parse(s);
+					}
 
-						@Override
-						public String toVariableNameString(final VisualEffect e) {
-							return e.toString();
-						}
+					@Override
+					public String toString(VisualEffect e, int flags) {
+						return e.toString(flags);
+					}
 
-						@Override
-						public String getVariableNamePattern() {
-							return ".*";
-						}
-					})
-					.serializer(new YggdrasilSerializer<VisualEffect>()));
-		} else {
-			Classes.registerClass(new ClassInfo<>(VisualEffectDummy.class, "visualeffect"));
-		}
+					@Override
+					public String toVariableNameString(VisualEffect e) {
+						return e.toString();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".*";
+					}
+				})
+				.serializer(new YggdrasilSerializer<>()));
 		
 		Classes.registerClass(new ClassInfo<>(GameruleValue.class, "gamerulevalue")
 				.user("gamerule values?")

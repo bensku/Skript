@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.effects;
 
@@ -272,22 +271,17 @@ public class EffChange extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		final Expression<?> changer = this.changer;
+	protected void execute(Event e) {
+		Expression<?> changer = this.changer;
 		Object[] delta = changer == null ? null : changer.getArray(e);
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
-		if (delta != null && delta.length == 0)
+
+		if ((delta == null || delta.length == 0) && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET)) {
+			if (changed.acceptChange(ChangeMode.DELETE) != null)
+				changed.change(e, null, ChangeMode.DELETE);
 			return;
-		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET))
-			return;
-		changed.change(e, delta, mode); // Trigger beforeChanged hook
-		// REMIND use a random element out of delta if changed only supports changing a single instance
-//		changed.change(e, new Changer2<Object>() {
-//			@Override
-//			public Object change(Object o) {
-//				return delta;
-//			}
-//		}, mode);
+		}
+		changed.change(e, delta, mode);
 	}
 	
 	@Override

@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * Copyright 2011-2017 Peter Güttinger and contributors
+ * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 package ch.njol.skript.entity;
 
@@ -28,6 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.localization.Language;
 
 public class PandaData extends EntityData<Panda> {
 	
@@ -38,6 +38,13 @@ public class PandaData extends EntityData<Panda> {
 	
 	@Nullable
 	private Gene mainGene = null, hiddenGene = null;
+	
+	public PandaData() {}
+	
+	public PandaData(@Nullable Gene mainGene, @Nullable Gene hiddenGene) {
+		this.mainGene = mainGene;
+		this.hiddenGene = hiddenGene;
+	}
 	
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
@@ -89,7 +96,7 @@ public class PandaData extends EntityData<Panda> {
 	
 	@Override
 	public EntityData getSuperType() {
-		return new PandaData();
+		return new PandaData(mainGene, hiddenGene);
 	}
 	
 	@Override
@@ -116,4 +123,16 @@ public class PandaData extends EntityData<Panda> {
 		PandaData d = (PandaData) data;
 		return (mainGene == null || mainGene == d.mainGene) && (hiddenGene == null || hiddenGene == d.hiddenGene);
 	}
+	
+	@Override
+	public String toString(int flags) {
+		StringBuilder builder = new StringBuilder();
+		if (mainGene != null)
+			builder.append(Language.getList("genes." + mainGene.name())[0]).append(" ");
+		if (hiddenGene != null && hiddenGene != mainGene)
+			builder.append(Language.getList("genes." + hiddenGene.name())[0]).append(" ");
+		builder.append(Language.get("panda"));
+		return builder.toString();
+	}
+	
 }
