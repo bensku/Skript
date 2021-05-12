@@ -441,9 +441,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			setEnabled(false);
 			return;
 		}
-		
-		Language.setUseLocal(true);
-		
+
 		Commands.registerListeners();
 		
 		if (logNormal())
@@ -481,8 +479,6 @@ public final class Skript extends JavaPlugin implements Listener {
 					error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
 					Skript.exception(e);
 				}
-				
-				Language.setUseLocal(false);
 				
 				if (TestMode.ENABLED) {
 					info("Preparing Skript for testing...");

@@ -347,12 +347,9 @@ final public class ScriptLoader {
 			
 			final ErrorDescLogHandler h = SkriptLogger.startLogHandler(new ErrorDescLogHandler(null, null, m_no_errors.toString()));
 			try {
-				Language.setUseLocal(false);
-				
 				List<Config> configs = loadStructures(scriptsFolder);
 				i = loadScripts(configs);
 			} finally {
-				Language.setUseLocal(true);
 				h.stop();
 			}
 			
@@ -408,24 +405,18 @@ final public class ScriptLoader {
 		AtomicBoolean syncCommands = new AtomicBoolean(false);
 		Runnable task = () -> {
 			// Do NOT sort here, list must be loaded in order it came in (see issue #667)
-			final boolean wasLocal = Language.setUseLocal(false);
-			try {
-				Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
-				
-				for (final Config cfg : configs) {
-					assert cfg != null : configs.toString();
-					ScriptInfo info = loadScript(cfg);
-					
-					// Check if commands have been changed and a re-send is needed
-					if (!info.commandNames.equals(commandNames.get(cfg.getFileName()))) {
-						syncCommands.set(true); // Sync once after everything has been loaded
-						commandNames.put(cfg.getFileName(), info.commandNames); // These will soon be sent to clients
-					}
-					i.add(info);
+			Bukkit.getPluginManager().callEvent(new PreScriptLoadEvent(configs));
+
+			for (final Config cfg : configs) {
+				assert cfg != null : configs.toString();
+				ScriptInfo info = loadScript(cfg);
+
+				// Check if commands have been changed and a re-send is needed
+				if (!info.commandNames.equals(commandNames.get(cfg.getFileName()))) {
+					syncCommands.set(true); // Sync once after everything has been loaded
+					commandNames.put(cfg.getFileName(), info.commandNames); // These will soon be sent to clients
 				}
-			} finally {
-				if (wasLocal)
-					Language.setUseLocal(true);
+				i.add(info);
 			}
 			
 			SkriptEventHandler.registerBukkitEvents();

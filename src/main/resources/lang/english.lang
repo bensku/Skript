@@ -181,7 +181,6 @@ hooks:
 aliases:
 	# regexes for Skript
 	any: any:
-	any-skp: any # same as 'any', but a Skript pattern
 	every: (?:every|all)
 	of every: of (?:every|all)
 	of: of(?: any)?
@@ -206,7 +205,6 @@ aliases:
 	# Other messages
 	loaded x aliases from: Loaded %s english aliases from %s
 	loaded x aliases: Loaded a total of %s english aliases
-	anything: anything
 	named: named
 
 # -- Enchantments --
@@ -1740,6 +1738,7 @@ spawn reasons:
 	build_snowman: built snowman, build snowman
 	build_wither: built wither, build wither
 	chunk_gen: chunk generation
+	command: command
 	cured: cured
 	custom: customized, customised, custom
 	default: default
