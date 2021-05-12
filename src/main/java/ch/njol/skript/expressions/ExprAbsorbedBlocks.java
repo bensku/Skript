@@ -40,7 +40,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.util.Kleenean;
-
 @Name("Absorbed blocks")
 @Description("The blocks absorbed by a sponge block.")
 @Events("sponge absorb")
