@@ -77,7 +77,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 			isEntity = true;
 		}
 		else if (!ScriptLoader.isCurrentEvent(BlockExplodeEvent.class)) {
-			Skript.error("Exploded blocks can only be retrieved from an explode or block explode event.");
+			Skript.error("Exploded blocks can only be retrieved from an entity/block explode event.");
 			return false;
 		}
 		return true;
