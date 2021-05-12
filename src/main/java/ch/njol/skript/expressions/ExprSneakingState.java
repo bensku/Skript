@@ -33,7 +33,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Sneaking State")
-@Description("Whether the player(s) are sneaking. Note that it doesn't force them to sneak, it just changes how other players see the players.")
+@Description("Whether the player(s) are sneaking. Note that if set to true it doesn't actually force them to sneak (for example it doesn't slow them down), it just changes how other players see them.")
 @Examples({"set sneak mode of all players to true",
 	"send \"%sneaking state of player%\""})
 @Since("INSERT VERSION")
