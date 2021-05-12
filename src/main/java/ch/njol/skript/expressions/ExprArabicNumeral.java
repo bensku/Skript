@@ -57,6 +57,9 @@ public class ExprArabicNumeral extends SimplePropertyExpression<String, Number> 
 				i++;
 			}
 		}
+		if (result == 0) {
+			return null;
+		}
 		return result;
 	}
 
