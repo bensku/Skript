@@ -2017,7 +2017,7 @@ public class BukkitClasses {
 		Classes.registerClass(new ClassInfo<>(PlayerFishEvent.State.class, "fishingstate")
 				.user("fish(ing|) ?states?")
 				.name("Fishing state")
-				.description("Represents the fishing state in a <a href='events.html#fishing'>fishing</a> event")
+				.description("Represents the fishing state in a <a href='events.html#fishing'>fishing</a> event.")
 				.usage(fishStateUtils.getAllNames())
 				.since("INSERT VERSION")
 				.parser(new Parser<PlayerFishEvent.State>() {
