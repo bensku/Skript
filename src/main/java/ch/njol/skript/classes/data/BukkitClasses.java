@@ -317,7 +317,6 @@ public class BukkitClasses {
 					public String toVariableNameString(BlockData o) {
 						return "blockdata:" + o.getAsString();
 					}
-
 				})
 				.serializer(new Serializer<BlockData>() {
 					@Override
@@ -549,7 +548,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final World w) {
 						return "" + w.getName();
 					}
-
 				}).serializer(new Serializer<World>() {
 					@Override
 					public Fields serialize(final World w) {
@@ -629,7 +627,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final Inventory i) {
 						return "inventory of " + Classes.toString(i.getHolder(), StringMode.VARIABLE_NAME);
 					}
-
 				}).changer(DefaultChangers.inventoryChanger));
 		
 		Classes.registerClass(new ClassInfo<>(InventoryAction.class, "inventoryaction")
@@ -657,7 +654,6 @@ public class BukkitClasses {
 					public String toVariableNameString(InventoryAction o) {
 						return o.name();
 					}
-
 				}));
 		
 		final EnumUtils<ClickType> invClicks = new EnumUtils<>(ClickType.class, "click types");
@@ -687,7 +683,6 @@ public class BukkitClasses {
 					public String toVariableNameString(ClickType o) {
 						return o.name();
 					}
-
 				}));
 		
 		final EnumUtils<InventoryType> invTypes = new EnumUtils<>(InventoryType.class, "inventory types");
@@ -716,7 +711,6 @@ public class BukkitClasses {
 					public String toVariableNameString(InventoryType o) {
 						return o.name();
 					}
-
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(Player.class, "player")
@@ -915,7 +909,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final CommandSender s) {
 						return "" + s.getName();
 					}
-
 				}));
 		
 		Classes.registerClass(new ClassInfo<>(InventoryHolder.class, "inventoryholder")
@@ -943,7 +936,6 @@ public class BukkitClasses {
 					public String toVariableNameString(InventoryHolder holder) {
 						return toString(holder, 0);
 					}
-
 				}));
 		Classes.registerClass(new ClassInfo<>(GameMode.class, "gamemode")
 				.user("game ?modes?")
@@ -983,7 +975,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final GameMode o) {
 						return "" + o.toString().toLowerCase(Locale.ENGLISH);
 					}
-
 				}).serializer(new EnumSerializer<>(GameMode.class)));
 		
 		Classes.registerClass(new ClassInfo<>(ItemStack.class, "itemstack")
@@ -1033,11 +1024,9 @@ public class BukkitClasses {
 						for (Entry<Enchantment, Integer> entry : i.getEnchantments().entrySet())
 							b.append("#" + EnchantmentUtils.getKey(entry.getKey()))
 									.append(":" + entry.getValue());
-						
-						
-						return "" + b.toString();
-					}
 
+						return b.toString();
+					}
 				})
 				.cloner(ItemStack::clone)
 				.serializer(new ConfigurationSerializer<>()));
@@ -1071,7 +1060,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final Biome b) {
 						return "" + b.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(Biome.class)));
 		
@@ -1166,7 +1154,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final PotionEffectType p) {
 						return "" + p.getName();
 					}
-
 				})
 				.serializer(new Serializer<PotionEffectType>() {
 					@Override
@@ -1237,7 +1224,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final DamageCause d) {
 						return "" + d.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(DamageCause.class)));
 		
@@ -1269,7 +1255,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final Chunk c) {
 						return c.getWorld().getName() + ":" + c.getX() + "," + c.getZ();
 					}
-
 				})
 				.serializer(new Serializer<Chunk>() {
 					@Override
@@ -1350,7 +1335,6 @@ public class BukkitClasses {
 					public String toVariableNameString(final Enchantment e) {
 						return "" + EnchantmentUtils.getKey(e);
 					}
-
 				})
 				.serializer(new Serializer<Enchantment>() {
 					@Override
@@ -1459,7 +1443,6 @@ public class BukkitClasses {
 					public String toVariableNameString(TeleportCause teleportCause) {
 						return teleportCause.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(TeleportCause.class)));
 		
@@ -1487,7 +1470,6 @@ public class BukkitClasses {
 					public String toVariableNameString(SpawnReason spawnReason) {
 						return spawnReason.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(SpawnReason.class)));
 		
@@ -1519,7 +1501,6 @@ public class BukkitClasses {
 						public String toVariableNameString(final CachedServerIcon o) {
 							return "server icon";
 						}
-
 					}));
 		}
 		
@@ -1549,7 +1530,6 @@ public class BukkitClasses {
 					public String toVariableNameString(FireworkEffect.Type type) {
 						return type.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(FireworkEffect.Type.class)));
 		
@@ -1585,7 +1565,6 @@ public class BukkitClasses {
 					public String toVariableNameString(FireworkEffect effect) {
 						return "firework effect " + effect.toString();
 					}
-
 				}));
 		
 		EnumUtils<Difficulty> difficulties = new EnumUtils<>(Difficulty.class, "difficulties");
@@ -1628,19 +1607,18 @@ public class BukkitClasses {
 					public String toString(Status state, int flags) {
 						return resourcePackStates.toString(state, flags);
 					}
-					
+
 					@Override
 					@Nullable
 					public Status parse(final String s, final ParseContext context) {
 						return resourcePackStates.parse(s);
 					}
-					
+
 					@SuppressWarnings("null")
 					@Override
 					public String toVariableNameString(Status state) {
 						return state.name();
 					}
-
 				})
 				.serializer(new EnumSerializer<>(Status.class)));
 		
@@ -1671,7 +1649,6 @@ public class BukkitClasses {
 						public String toVariableNameString(SoundCategory category) {
 							return category.name();
 						}
-
 					})
 					.serializer(new EnumSerializer<>(SoundCategory.class)));
 		}
@@ -1701,7 +1678,6 @@ public class BukkitClasses {
 						public String toVariableNameString(Gene gene) {
 							return gene.name();
 						}
-
 					})
 					.serializer(new EnumSerializer<>(Gene.class)));
 		}
@@ -1729,7 +1705,6 @@ public class BukkitClasses {
 				public String toVariableNameString(RegainReason o) {
 					return "regainreason:" + o.name();
 				}
-
 			})
 			.serializer(new EnumSerializer<>(RegainReason.class)));
 		if (Skript.classExists("org.bukkit.entity.Cat$Type")) {
@@ -1758,7 +1733,6 @@ public class BukkitClasses {
 						public String toVariableNameString(Cat.Type race) {
 							return race.name();
 						}
-
 					})
 					.serializer(new EnumSerializer<>(Cat.Type.class)));
 		}
@@ -1787,7 +1761,6 @@ public class BukkitClasses {
 					public String toVariableNameString(GameRule o) {
 						return o.getName();
 					}
-
 				})
 			);
 		}
@@ -1835,7 +1808,6 @@ public class BukkitClasses {
 					public String toVariableNameString(EnchantmentOffer eo) {
 						return "offer:" + EnchantmentType.toString(eo.getEnchantment()) + "=" + eo.getEnchantmentLevel();
 					}
-
 				}));
 		}
 		EnumUtils<Attribute> attributes = new EnumUtils<>(Attribute.class, "attribute types");
@@ -1863,7 +1835,6 @@ public class BukkitClasses {
 					public String toVariableNameString(Attribute a) {
 						return toString(a, 0);
 					}
-
 				})
 				.serializer(new EnumSerializer<>(Attribute.class)));
 	}

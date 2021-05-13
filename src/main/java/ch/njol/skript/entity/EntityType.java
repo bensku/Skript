@@ -60,7 +60,6 @@ public class EntityType implements Cloneable, YggdrasilSerializable {
 					public String toVariableNameString(final EntityType t) {
 						return "entitytype:" + t.toString();
 					}
-
                 })
 				.serializer(new YggdrasilSerializer<EntityType>() {
 //						return t.amount + "*" + EntityData.serializer.serialize(t.data);

@@ -92,7 +92,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Number n) {
 						return StringUtils.toString(n.doubleValue(), VARIABLENAME_NUMBERACCURACY);
 					}
-
                 }).serializer(new Serializer<Number>() {
 					@Override
 					public Fields serialize(final Number n) {
@@ -154,7 +153,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Long l) {
 						return "" + l;
 					}
-
                 }).serializer(new Serializer<Long>() {
 					@Override
 					public Fields serialize(final Long n) {
@@ -211,7 +209,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Integer i) {
 						return "" + i;
 					}
-
                 }).serializer(new Serializer<Integer>() {
 					@Override
 					public Fields serialize(final Integer n) {
@@ -274,7 +271,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Double d) {
 						return StringUtils.toString(d, VARIABLENAME_NUMBERACCURACY);
 					}
-
                 }).serializer(new Serializer<Double>() {
 					@Override
 					public Fields serialize(final Double n) {
@@ -335,7 +331,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Float f) {
 						return StringUtils.toString(f.doubleValue(), VARIABLENAME_NUMBERACCURACY);
 					}
-
                 }).serializer(new Serializer<Float>() {
 					@Override
 					public Fields serialize(final Float n) {
@@ -402,7 +397,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Boolean b) {
 						return "" + b;
 					}
-
                 }).serializer(new Serializer<Boolean>() {
 					@Override
 					public Fields serialize(final Boolean n) {
@@ -459,7 +453,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Short s) {
 						return "" + s;
 					}
-
                 }).serializer(new Serializer<Short>() {
 					@Override
 					public Fields serialize(final Short n) {
@@ -516,7 +509,6 @@ public class JavaClasses {
 					public String toVariableNameString(final Byte b) {
 						return "" + b;
 					}
-
                 }).serializer(new Serializer<Byte>() {
 					@Override
 					public Fields serialize(final Byte n) {
@@ -608,7 +600,6 @@ public class JavaClasses {
 					public String toVariableNameString(final String s) {
 						return s;
 					}
-
                 }).serializer(new Serializer<String>() {
 					@Override
 					public Fields serialize(final String n) {

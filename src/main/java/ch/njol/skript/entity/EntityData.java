@@ -171,7 +171,6 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 					public String toVariableNameString(final EntityData o) {
 						return "entitydata:" + o.toString();
 					}
-
                 }).serializer(serializer));
 	}
 	

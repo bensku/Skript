@@ -571,7 +571,6 @@ public abstract class Classes {
 			public String toVariableNameString(final T o) {
 				throw new UnsupportedOperationException();
 			}
-
         };
 	}
 	

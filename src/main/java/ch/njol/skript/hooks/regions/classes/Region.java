@@ -99,7 +99,6 @@ public abstract class Region implements YggdrasilExtendedSerializable {
 					public String toVariableNameString(final Region r) {
 						return r.toString();
 					}
-
                 })
 				.serializer(new YggdrasilSerializer<Region>() {
 					@Override

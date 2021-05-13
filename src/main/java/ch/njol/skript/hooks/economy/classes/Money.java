@@ -65,7 +65,6 @@ public class Money {
 					public String toVariableNameString(final Money o) {
 						return "money:" + o.amount;
 					}
-
                 })
 				.math(Money.class, new Arithmetic<Money, Money>() {
 					@Override
