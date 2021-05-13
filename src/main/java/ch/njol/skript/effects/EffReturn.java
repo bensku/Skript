@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.effects;
 
+import ch.njol.skript.lang.Loop;
+import ch.njol.skript.lang.TriggerSection;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -111,6 +113,14 @@ public class EffReturn extends Effect {
 		} else {
 			assert false : e;
 		}
+
+		TriggerSection parent = getParent();
+		while (parent != null) {
+			if (parent instanceof Loop)
+				((Loop) parent).exit(e);
+			parent = parent.getParent();
+		}
+
 		return null;
 	}
 	
