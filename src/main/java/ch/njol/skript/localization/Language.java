@@ -268,11 +268,15 @@ public class Language {
 	private static HashMap<String, String> load(@Nullable InputStream in, String name) {
 		if (in == null)
 			return new HashMap<>();
-		try (in) {
+		try {
 			return new Config(in, name + ".lang", false, false, ":").toMap(".");
 		} catch (IOException e) {
 			Skript.exception(e, "Could not load the language file '" + name + ".lang': " + ExceptionUtils.toString(e));
 			return new HashMap<>();
+		} finally {
+			try {
+				in.close();
+			} catch (IOException ignored) { }
 		}
 	}
 
