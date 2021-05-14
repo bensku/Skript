@@ -18,12 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.HealthUtils;
@@ -39,6 +33,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -53,47 +51,44 @@ public class EffHealth extends Effect {
 
 	static {
 		Skript.registerEffect(EffHealth.class,
-				"damage %livingentities/itemtypes% by %number% [heart[s]][ with fake cause %-damagecause%]",
-				"heal %livingentities% [by %-number% [heart[s]]]",
-				"repair %itemtypes% [by %-number%]");
+			"damage %livingentities/itemtypes% by %number% [heart[s]]",
+			"heal %livingentities% [by %-number% [heart[s]]]",
+			"repair %itemtypes% [by %-number%]");
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> damageables;
 	@Nullable
 	private Expression<Number> damage;
 	private boolean heal = false;
-	@Nullable
-	private Expression<DamageCause> damageCause;
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		damageables = vars[0];
-		if (ItemStack.class.isAssignableFrom(damageables.getReturnType())) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		damageables = exprs[0];
+		if (ItemType.class.isAssignableFrom(damageables.getReturnType())) {
 			if (!ChangerUtils.acceptsChange(damageables, ChangeMode.SET, ItemType.class)) {
 				Skript.error(damageables + " cannot be changed, thus it cannot be damaged or repaired.");
 				return false;
 			}
 		}
-		damage = (Expression<Number>) vars[1];
+		damage = (Expression<Number>) exprs[1];
 		heal = (matchedPattern >= 1);
-		
-		if (vars.length >= 3) damageCause = (Expression<DamageCause>) vars[2];
+
 		return true;
 	}
 
 	@Override
-	public void execute(final Event e) {
+	public void execute(Event e) {
 		double damage = 0;
 		if (this.damage != null) {
-			final Number n = this.damage.getSingle(e);
-			if (n == null)
+			Number number = this.damage.getSingle(e);
+			if (number == null)
 				return;
-			damage = n.doubleValue();
+			damage = number.doubleValue();
 		}
 		Object[] arr = damageables.getArray(e);
-		if (arr.length > 0 && arr[0] instanceof ItemType) {
+		if (ItemType.class.isAssignableFrom(damageables.getReturnType())) {
 			ItemType[] newarr = new ItemType[arr.length];
 			for (int i = 0; i < arr.length; i++) {
 				ItemStack is = ((ItemType) arr[i]).getRandom();
@@ -105,21 +100,13 @@ public class EffHealth extends Effect {
 				}
 				newarr[i] = new ItemType(is);
 			}
-			
-			// Set changed item back to source
-			// We KNOW this is supported, but have to check anyway to prepare SimpleExpression for change
-			damageables.acceptChange(ChangeMode.SET);
-			damageables.change(e, newarr, ChangeMode.SET);
+
+			if (arr.length != 0)
+				damageables.change(e, newarr, ChangeMode.SET);
 		} else {
-			for (final Object damageable : arr) {
+			for (Object damageable : arr) {
 				LivingEntity entity = (LivingEntity) damageable;
-				assert entity != null;
 				if (!heal) {
-					DamageCause cause = DamageCause.CUSTOM;
-					if (damageCause != null)
-						cause = damageCause.getSingle(e);
-					assert cause != null;
-					HealthUtils.setDamageCause(entity, cause);
 					HealthUtils.damage(entity, damage);
 				} else if (this.damage == null) {
 					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
@@ -131,8 +118,8 @@ public class EffHealth extends Effect {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return (heal ? "heal " : "damage ") + damageables.toString(e, debug) + (damage != null ? " by " + damage.toString(e, debug) : "");
+	public String toString(@Nullable Event e, boolean debug) {
+		return (heal ? "heal" : "damage") + " " + damageables.toString(e, debug) + (damage != null ? " by " + damage.toString(e, debug) : "");
 	}
 
 }
