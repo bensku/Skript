@@ -16,33 +16,14 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.function;
+package ch.njol.skript.classes;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
-public final class FunctionEvent<T> extends Event {
+/**
+ * An interface for optionally cloning an object,
+ * should return the given object if no cloning is required.
+ */
+public interface Cloner<T> {
 	
-	// Bukkit stuff
-	private final static HandlerList handlers = new HandlerList();
-	
-	private final Function<? extends T> function;
-	
-	public FunctionEvent(Function<? extends T> function) {
-		this.function = function;
-	}
-	
-	public Function<? extends T> getFunction() {
-		return function;
-	}
-	
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+	T clone(T t);
 	
 }

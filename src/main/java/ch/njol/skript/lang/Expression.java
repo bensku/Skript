@@ -28,7 +28,6 @@ import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
@@ -37,6 +36,7 @@ import ch.njol.skript.conditions.CondIsSet;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Checker;
 
@@ -293,9 +293,10 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 			return null;
 		
 		// Slots must be transformed to item stacks when writing to variables
-		// Also, item stacks must be cloned (to be safe from Vanilla /clear)
-		Object[] newDelta = null; // Created when a needs to be cloned
+		// Also, some types must be cloned
+		Object[] newDelta = null;
 		if (changed instanceof Variable) {
+			newDelta = new Object[delta.length];
 			for (int i = 0; i < delta.length; i++) {
 				Object value = delta[i];
 				if (value instanceof Slot) {
@@ -304,23 +305,9 @@ public interface Expression<T> extends SyntaxElement, Debuggable {
 						item = item.clone(); // ItemStack in inventory is mutable
 					}
 					
-					if (newDelta == null) {
-						newDelta = new Object[delta.length];
-						System.arraycopy(delta, 0, newDelta, 0, delta.length);
-					}
 					newDelta[i] = item;
-				} else if (value instanceof ItemType) {
-					if (newDelta == null) {
-						newDelta = new Object[delta.length];
-						System.arraycopy(delta, 0, newDelta, 0, delta.length);
-					}
-					newDelta[i] = ((ItemType) value).clone();
-				} else if (value instanceof ItemStack) {
-					if (newDelta == null) {
-						newDelta = new Object[delta.length];
-						System.arraycopy(delta, 0, newDelta, 0, delta.length);
-					}
-					newDelta[i] = ((ItemStack) value).clone();
+				} else {
+					newDelta[i] = Classes.clone(delta[i]);
 				}
 			}
 		}
