@@ -84,11 +84,9 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 				if (!delayed) {
 					if (e instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) e).getPlayer() == ent) {
 						final PlayerInventory i = ((PlayerItemHeldEvent) e).getPlayer().getInventory();
-						assert i != null;
 						return new InventorySlot(i, getTime() >= 0 ? ((PlayerItemHeldEvent) e).getNewSlot() : ((PlayerItemHeldEvent) e).getPreviousSlot());
 					} else if (e instanceof PlayerBucketEvent && ((PlayerBucketEvent) e).getPlayer() == ent) {
 						final PlayerInventory i = ((PlayerBucketEvent) e).getPlayer().getInventory();
-						assert i != null;
 						return new InventorySlot(i, offHand ? EquipmentSlot.EquipSlot.OFF_HAND.slotNumber : ((PlayerBucketEvent) e).getPlayer().getInventory().getHeldItemSlot()) {
 							@Override
 							@Nullable
