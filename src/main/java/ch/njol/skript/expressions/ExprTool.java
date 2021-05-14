@@ -60,8 +60,8 @@ import ch.njol.util.Kleenean;
 public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	static {
 		Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY,
-			"[the] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item))) [of %livingentities%]",
-			"%livingentities%'[s] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item)))");
+			"[the] ((tool|held item|weapon)|1¦(off[ ]hand (tool|item))) [of %livingentities%]",
+			"%livingentities%'[s] ((tool|held item|weapon)|1¦(off[ ]hand (tool|item)))");
 	}
 
 	private boolean offHand;
