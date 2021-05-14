@@ -68,7 +68,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
 		setExpr((Expression<Player>) exprs[0]);
 		offHand = parser.mark == 1;
 		return true;
