@@ -59,7 +59,7 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 	
 	@Override
 	protected DamageCause[] get(Event e, LivingEntity[] source) {
-		return get(source, new Getter<>() {
+		return get(source, new Getter<DamageCause, LivingEntity>() {
 			@Override
 			public DamageCause get(LivingEntity entity) {
 				EntityDamageEvent dmgEvt = entity.getLastDamageCause();
