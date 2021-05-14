@@ -60,8 +60,8 @@ import ch.njol.util.Kleenean;
 public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	static {
 		Skript.registerExpression(ExprTool.class, Slot.class, ExpressionType.PROPERTY,
-			"[the] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item)|shield[ item])) [of %livingentities%]",
-			"%livingentities%'[s] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item)|shield[ item]))");
+			"[the] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item))) [of %livingentities%]",
+			"%livingentities%'[s] (0¦(tool|held item|weapon)|1¦(off[ ]hand (tool|item)))");
 	}
 
 	private boolean offHand;
@@ -69,7 +69,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
-		setExpr((Expression<Player>) exprs[0]);
+		setExpr((Expression<LivingEntity>) exprs[0]);
 		offHand = parser.mark == 1;
 		return true;
 	}
@@ -130,9 +130,8 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		String time = getTime() == 1 ? "future " : getTime() == -1 ? "former " : "";
 		String hand = offHand ? "off hand" : "";
-		return String.format("%s %s tool of %s", time, hand, getExpr().toString(e, debug));
+		return String.format("%s tool of %s", hand, getExpr().toString(e, debug));
 	}
 
 	@SuppressWarnings("unchecked")
