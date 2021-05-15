@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -57,10 +58,10 @@ public class Language {
 	 */
 	private static String name = "english";
 
-	private static final HashMap<String, String> english = new HashMap<>();
+	private static final HashMap<String, String> defaultLanguage = new HashMap<>();
 
 	@Nullable
-	private static HashMap<String, String> localized = null;
+	private static HashMap<String, String> localizedLanguage = null;
 	
 	private static final HashMap<Plugin, Version> langVersion = new HashMap<>();
 	
@@ -70,19 +71,22 @@ public class Language {
 	
 	@Nullable
 	private static String get_i(String key) {
-		if (localized != null) {
-			String s = localized.get(key);
-			if (s != null)
-				return s;
+		String value;
+		if ((value = defaultLanguage.get(key)) != null) {
+			return value;
 		}
-		String s = english.get(key);
-		if (s == null && Skript.testing())
+
+		if (localizedLanguage != null && (value = localizedLanguage.get(key)) != null) {
+			return value;
+		}
+
+		if (Skript.testing())
 			missingEntryError(key);
-		return s;
+		return null;
 	}
 	
 	/**
-	 * Gets a string from the language file with the given key, or the english variant if the string is missing from the chosen language's file, or the key itself if the key does
+	 * Gets a string from the language file with the given key, or the key itself if the key does
 	 * not exist.
 	 * 
 	 * @param key The message's key (case-insensitive)
@@ -157,72 +161,71 @@ public class Language {
 	}
 	
 	/**
-	 * @return Whether the given key exists in the <b>english</b> language file.
+	 * @return Whether the given key exists in any loaded language file.
 	 */
 	public static boolean keyExists(String key) {
-		return english.containsKey(key.toLowerCase(Locale.ENGLISH));
+		key = key.toLowerCase(Locale.ENGLISH);
+		return defaultLanguage.containsKey(key) || (localizedLanguage != null && localizedLanguage.containsKey(key));
 	}
 
 	/**
-	 * @return whether the default English language is loaded.
+	 * @return Whether the given key exists in the default language file.
+	 */
+	public static boolean keyExistsDefault(String key) {
+		return defaultLanguage.containsKey(key.toLowerCase(Locale.ENGLISH));
+	}
+
+	/**
+	 * @return whether the default language file is loaded.
 	 */
 	public static boolean isInitialized() {
-		return !english.isEmpty();
-	}
-
-	/**
-	 * Get if Skript uses the Localized language instead of English.
-	 * @return True if Skript uses the Localized language elements, false otherwise
-	 */
-	public static boolean isUsingLocalizedLanguage() {
-		return localized != null;
+		return !defaultLanguage.isEmpty();
 	}
 
 	public static void loadDefault(SkriptAddon addon) {
 		if (addon.getLanguageFileDirectory() == null)
 			return;
 
-		InputStream din = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/english.lang");
-		if (din == null)
-			throw new IllegalStateException(addon + " is missing the required english.lang file!");
-
-		HashMap<String, String> en;
-		try {
-			en = new Config(din, "english.lang", false, false, ":").toMap(".");
-		} catch (Exception e) {
-			throw Skript.exception(e, "Could not load " + addon + "'s default language file!");
-		} finally {
-			try {
-				din.close();
-			} catch (IOException ignored) {}
+		InputStream din = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/default.lang");
+		if (din == null && addon != Skript.getAddonInstance()) {
+			// Backwards compatibility with addons
+			din = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/english.lang");
 		}
+
+		if (din == null)
+			throw new IllegalStateException(addon + " is missing the required default.lang file!");
+
+		HashMap<String, String> en = load(din, "default");
 
 		String v = en.get("version");
 		if (v == null)
-			Skript.warning("Missing version in english.lang");
+			Skript.warning("Missing version in default.lang");
 
 		langVersion.put(addon.plugin, v == null ? Skript.getVersion() : new Version(v));
 		en.remove("version");
-		english.putAll(en);
+		defaultLanguage.putAll(en);
+
 		for (LanguageChangeListener l : listeners)
 			l.onLanguageChange();
 	}
 	
 	public static boolean load(String name) {
 		name = "" + name.toLowerCase();
-		if (name.equals("english"))
-			return true;
 
-		localized = new HashMap<>();
+		localizedLanguage = new HashMap<>();
 		boolean exists = load(Skript.getAddonInstance(), name);
 		for (SkriptAddon addon : Skript.getAddons()) {
 			exists |= load(addon, name);
 		}
 		if (!exists) {
-			localized = null;
-			Language.name = "english";
+			if (name.equals("english")) {
+				throw new RuntimeException("English language is missing (english.lang)");
+			} else {
+				load("english");
+			}
 			return false;
 		}
+
 		Language.name = name;
 
 		for (LanguageChangeListener l : listeners)
@@ -235,10 +238,10 @@ public class Language {
 		if (addon.getLanguageFileDirectory() == null)
 			return false;
 		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + "/" + name + ".lang"), name);
-		File f = new File(addon.plugin.getDataFolder(), addon.getLanguageFileDirectory() + File.separator + name + ".lang");
+		File file = new File(addon.plugin.getDataFolder(), addon.getLanguageFileDirectory() + File.separator + name + ".lang");
 		try {
-			if (f.exists())
-				l.putAll(load(new FileInputStream(f), name));
+			if (file.exists())
+				l.putAll(load(new FileInputStream(file), name));
 		} catch (FileNotFoundException e) {
 			assert false;
 		}
@@ -258,10 +261,20 @@ public class Language {
 			}
 		}
 		l.remove("version");
-		if (localized != null)
-			localized.putAll(l);
-		else
+		if (localizedLanguage != null) {
+			for (Map.Entry<String, String> entry : l.entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+				if (defaultLanguage.containsKey(key)) {
+					Skript.warning("'" + key + "' is part of the default language file, " +
+						"and can therefore not be modified in a localized language file.");
+				} else {
+					localizedLanguage.put(key, value);
+				}
+			}
+		} else {
 			assert false : addon + "; " + name;
+		}
 		return true;
 	}
 	
@@ -271,6 +284,7 @@ public class Language {
 		try {
 			return new Config(in, name + ".lang", false, false, ":").toMap(".");
 		} catch (IOException e) {
+			//noinspection ThrowableNotThrown
 			Skript.exception(e, "Could not load the language file '" + name + ".lang': " + ExceptionUtils.toString(e));
 			return new HashMap<>();
 		} finally {
@@ -283,7 +297,7 @@ public class Language {
 	private static final List<LanguageChangeListener> listeners = new ArrayList<>();
 	
 	public enum LanguageListenerPriority {
-		EARLIEST, NORMAL, LATEST;
+		EARLIEST, NORMAL, LATEST
 	}
 	
 	private static final int[] priorityStartIndices = new int[LanguageListenerPriority.values().length];

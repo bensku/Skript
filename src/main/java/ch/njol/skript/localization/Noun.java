@@ -311,10 +311,6 @@ public class Noun extends Message {
 	static final List<String> definiteArticles = new ArrayList<>(3);
 	static String definitePluralArticle = "";
 	
-	static final List<String> localIndefiniteArticles = new ArrayList<>(3);
-	static final List<String> localDefiniteArticles = new ArrayList<>(3);
-	static String localDefinitePluralArticle = "";
-	
 	static {
 		Language.addListener(() -> {
 			genders.clear();
@@ -322,7 +318,7 @@ public class Noun extends Message {
 			definiteArticles.clear();
 
 			for (int i = 0; i < 100; i++) {
-				if (!Language.keyExists(GENDERS_SECTION + i + ".id"))
+				if (!Language.keyExistsDefault(GENDERS_SECTION + i + ".id"))
 					break;
 				String g = Language.get(GENDERS_SECTION + i + ".id");
 				if (g.equalsIgnoreCase(PLURAL_TOKEN) || g.equalsIgnoreCase(NO_GENDER_TOKEN)) {
@@ -344,14 +340,6 @@ public class Noun extends Message {
 			if (dpa == null)
 				Skript.error("Missing entry '" + GENDERS_SECTION + "plural.definite article' in the language file!");
 			definitePluralArticle = dpa == null ? "" : dpa;
-
-			if (Language.isUsingLocalizedLanguage() || localIndefiniteArticles.isEmpty()) {
-				localIndefiniteArticles.clear();
-				localIndefiniteArticles.addAll(indefiniteArticles);
-				localDefiniteArticles.clear();
-				localDefiniteArticles.addAll(definiteArticles);
-				localDefinitePluralArticle = definitePluralArticle;
-			}
 		}, LanguageListenerPriority.EARLIEST);
 	}
 	
@@ -366,19 +354,11 @@ public class Noun extends Message {
 	public static boolean isIndefiniteArticle(String s) {
 		return indefiniteArticles.contains(s.toLowerCase());
 	}
-	
-	public static boolean isLocalIndefiniteArticle(String s) {
-		return localIndefiniteArticles.contains(s.toLowerCase());
-	}
-	
+
 	public static boolean isDefiniteArticle(String s) {
 		return definiteArticles.contains(s.toLowerCase()) || definitePluralArticle.equalsIgnoreCase(s);
 	}
-	
-	public static boolean isLocalDefiniteArticle(String s) {
-		return localDefiniteArticles.contains(s.toLowerCase()) || localDefinitePluralArticle.equalsIgnoreCase(s);
-	}
-	
+
 	public static String toString(String singular, String plural, int gender, int flags) {
 		return getArticleWithSpace(gender, flags) + ((flags & Language.F_PLURAL) != 0 ? plural : singular);
 	}

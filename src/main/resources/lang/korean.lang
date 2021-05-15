@@ -3,6 +3,9 @@
 # Which version of Skript this language file was written for
 version: @version@
 
+# What null (nothing) should show up as in a string/text
+none: <none>
+
 # -- Skript --
 skript:
 	copyright: ~ created by & © Peter Güttinger aka Njol ~
