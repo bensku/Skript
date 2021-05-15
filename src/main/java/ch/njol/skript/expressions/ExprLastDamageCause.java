@@ -52,8 +52,8 @@ public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Damage
 
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
-	public boolean init(Expression<?>[] vars, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
-		setExpr((Expression<LivingEntity>) vars[0]);
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		setExpr((Expression<LivingEntity>) exprs[0]);
 		return true;
 	}
 	

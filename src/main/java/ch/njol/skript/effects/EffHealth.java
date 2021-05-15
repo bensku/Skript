@@ -51,7 +51,7 @@ public class EffHealth extends Effect {
 
 	static {
 		Skript.registerEffect(EffHealth.class,
-			"damage %livingentities/itemtypes% by %number% [heart[s]]",
+			"damage %livingentities/itemtypes% by %number% [heart[s]] [with fake cause %-damagecause%]",
 			"heal %livingentities% [by %-number% [heart[s]]]",
 			"repair %itemtypes% [by %-number%]");
 	}
@@ -65,15 +65,19 @@ public class EffHealth extends Effect {
 	@SuppressWarnings({"unchecked", "null"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parser) {
+		if (matchedPattern == 0 && exprs[2] != null)
+			Skript.warning("The fake damage cause extension of this effect has no functionality, " +
+				"and will be removed in the future");
+
 		damageables = exprs[0];
-		if (ItemType.class.isAssignableFrom(damageables.getReturnType())) {
+		if (!LivingEntity.class.isAssignableFrom(damageables.getReturnType())) {
 			if (!ChangerUtils.acceptsChange(damageables, ChangeMode.SET, ItemType.class)) {
 				Skript.error(damageables + " cannot be changed, thus it cannot be damaged or repaired.");
 				return false;
 			}
 		}
 		damage = (Expression<Number>) exprs[1];
-		heal = (matchedPattern >= 1);
+		heal = matchedPattern >= 1;
 
 		return true;
 	}
@@ -87,34 +91,40 @@ public class EffHealth extends Effect {
 				return;
 			damage = number.doubleValue();
 		}
-		Object[] arr = damageables.getArray(e);
-		if (ItemType.class.isAssignableFrom(damageables.getReturnType())) {
-			ItemType[] newarr = new ItemType[arr.length];
-			for (int i = 0; i < arr.length; i++) {
-				ItemStack is = ((ItemType) arr[i]).getRandom();
-				assert is != null;
-				if (this.damage == null) {
-					ItemUtils.setDamage(is, 0);
-				} else {
-					ItemUtils.setDamage(is, (int) Math2.fit(0, ItemUtils.getDamage(is) + (heal ? -damage : damage), is.getType().getMaxDurability()));
-				}
-				newarr[i] = new ItemType(is);
-			}
+		Object[] array = damageables.getArray(e);
+		Object[] newArray = array.clone();
 
-			if (arr.length != 0)
-				damageables.change(e, newarr, ChangeMode.SET);
-		} else {
-			for (Object damageable : arr) {
-				LivingEntity entity = (LivingEntity) damageable;
-				if (!heal) {
-					HealthUtils.damage(entity, damage);
-				} else if (this.damage == null) {
-					HealthUtils.setHealth(entity, HealthUtils.getMaxHealth(entity));
+		boolean requiresChange = false;
+		for (int i = 0; i < array.length; i++) {
+			Object value = array[i];
+			if (value instanceof ItemType) {
+				ItemType itemType = (ItemType) value;
+				ItemStack itemStack = itemType.getRandom();
+
+				if (this.damage == null) {
+					ItemUtils.setDamage(itemStack, 0);
 				} else {
-					HealthUtils.heal(entity, damage);
+					ItemUtils.setDamage(itemStack, (int) Math2.fit(0, ItemUtils.getDamage(itemStack) + (heal ? -damage : damage), itemStack.getType().getMaxDurability()));
 				}
+
+				newArray[i] = new ItemType(itemStack);
+				requiresChange = true;
+			} else {
+				LivingEntity livingEntity = (LivingEntity) value;
+				if (!heal) {
+					HealthUtils.damage(livingEntity, damage);
+				} else if (this.damage == null) {
+					HealthUtils.setHealth(livingEntity, HealthUtils.getMaxHealth(livingEntity));
+				} else {
+					HealthUtils.heal(livingEntity, damage);
+				}
+
+				newArray[i] = livingEntity;
 			}
 		}
+
+		if (requiresChange)
+			damageables.change(e, newArray, ChangeMode.SET);
 	}
 
 	@Override
