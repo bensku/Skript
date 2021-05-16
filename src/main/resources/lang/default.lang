@@ -230,6 +230,7 @@ biomes:
 	soul_sand_valley: soul sand valley
 	warped_forest: warped forest
 	basalt_deltas: basalt deltas
+	custom: custom, unknown
 
 # -- Tree Types --
 tree types:
