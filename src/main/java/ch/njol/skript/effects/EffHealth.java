@@ -92,7 +92,7 @@ public class EffHealth extends Effect {
 			damage = number.doubleValue();
 		}
 		Object[] array = damageables.getArray(e);
-		Object[] newArray = array.clone();
+		Object[] newArray = new Object[array.length];
 
 		boolean requiresChange = false;
 		for (int i = 0; i < array.length; i++) {
