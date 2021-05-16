@@ -237,6 +237,10 @@ public class Language {
 	private static boolean load(SkriptAddon addon, String name) {
 		if (addon.getLanguageFileDirectory() == null)
 			return false;
+		// Backwards addon compatibility
+		if (name.equals("english") && addon.plugin.getResource(addon.getLanguageFileDirectory() + "/default.lang") == null)
+			return true;
+
 		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + "/" + name + ".lang"), name);
 		File file = new File(addon.plugin.getDataFolder(), addon.getLanguageFileDirectory() + File.separator + name + ".lang");
 		try {
