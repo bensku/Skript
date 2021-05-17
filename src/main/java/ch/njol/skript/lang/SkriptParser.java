@@ -1252,12 +1252,12 @@ public class SkriptParser {
 					return null;
 				}
 			} else {
-				priority = SkriptConfig.defaultEventPriority.value();
+				priority = null;
 			}
 			
 			NonNullPair<SkriptEventInfo<?>, SkriptEvent> e = new SkriptParser(event, PARSE_LITERALS, ParseContext.EVENT).parseEvent();
 			if (e != null) {
-				if (e.getSecond() instanceof SelfRegisteringSkriptEvent) {
+				if (priority != null && e.getSecond() instanceof SelfRegisteringSkriptEvent) {
 					log.printErrors("This event doesn't support event priority");
 					return null;
 				}
