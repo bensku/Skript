@@ -28,7 +28,7 @@ import java.util.Iterator;
  *
  * @see ch.njol.skript.log.LogHandler
  */
-public interface OpenCloseable {
+public interface OpenCloseable extends AutoCloseable {
 	
 	/**
 	 * An {@link OpenCloseable} without effect.

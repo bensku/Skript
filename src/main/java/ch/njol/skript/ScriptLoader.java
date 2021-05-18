@@ -419,8 +419,12 @@ public class ScriptLoader {
 		Runnable task = () -> {
 			try {
 				openCloseable.open();
-				T t = supplier.get();
-				openCloseable.close();
+				T t;
+				try {
+					t = supplier.get();
+				} finally {
+					openCloseable.close();
+				}
 				
 				future.complete(t);
 			} catch (Throwable t) {
