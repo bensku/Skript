@@ -41,7 +41,6 @@ import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.PluralizingArgsMessage;
 import ch.njol.skript.log.RedirectingLogHandler;
-import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.tests.runner.SkriptTestEvent;
 import ch.njol.skript.tests.runner.TestMode;
 import ch.njol.skript.tests.runner.TestTracker;
@@ -132,7 +131,7 @@ public class SkriptCommand implements CommandExecutor {
 					if (!ScriptLoader.isAsync())
 						ScriptLoader.disableScripts();
 					
-					ScriptLoader.runScriptsLoad(logHandler)
+					ScriptLoader.loadScripts(logHandler)
 						.thenAccept(unused ->
 							reloaded(sender, logHandler, "config, aliases and scripts"));
 				} else if (args[1].equalsIgnoreCase("scripts")) {
@@ -141,7 +140,7 @@ public class SkriptCommand implements CommandExecutor {
 					if (!ScriptLoader.isAsync())
 						ScriptLoader.disableScripts();
 					
-					ScriptLoader.runScriptsLoad(logHandler)
+					ScriptLoader.loadScripts(logHandler)
 						.thenAccept(unused ->
 							reloaded(sender, logHandler, "scripts"));
 				} else if (args[1].equalsIgnoreCase("config")) {
@@ -163,12 +162,12 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						}
 						reloading(sender, "script", f.getName());
-						ScriptLoader.runScriptReload(f, logHandler)
+						ScriptLoader.reloadScript(f, logHandler)
 							.thenAccept(scriptInfo ->
 								reloaded(sender, logHandler, "script", f.getName()));
 					} else {
 						reloading(sender, "scripts in folder", f.getName());
-						ScriptLoader.runScriptsReload(f, logHandler)
+						ScriptLoader.reloadScripts(f, logHandler)
 							.thenAccept(scriptInfo -> {
 								int enabled = scriptInfo.files;
 								if (enabled == 0)
@@ -184,7 +183,7 @@ public class SkriptCommand implements CommandExecutor {
 						info(sender, "enable.all.enabling");
 						File[] files = toggleScripts(new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER), true).toArray(new File[0]);
 						List<Config> configs = ScriptLoader.loadStructures(files);
-						ScriptLoader.runScriptsLoad(configs, logHandler)
+						ScriptLoader.loadScripts(configs, logHandler)
 							.thenAccept(scriptInfo -> {
 								if (logHandler.numErrors() == 0) {
 									info(sender, "enable.all.enabled");
@@ -218,7 +217,7 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						
 						String fileName = f.getName();
-						ScriptLoader.runScriptsLoad(Collections.singletonList(config), logHandler)
+						ScriptLoader.loadScripts(Collections.singletonList(config), logHandler)
 							.thenAccept(scriptInfo -> {
 								if (logHandler.numErrors() == 0) {
 									info(sender, "enable.single.enabled", fileName);
@@ -247,7 +246,7 @@ public class SkriptCommand implements CommandExecutor {
 							return true;
 						
 						String fileName = f.getName();
-						ScriptLoader.runScriptsLoad(configs, logHandler)
+						ScriptLoader.loadScripts(configs, logHandler)
 							.thenAccept(scriptInfo -> {
 								if (logHandler.numErrors() == 0) {
 									info(sender, "enable.folder.enabled", fileName, scriptInfo.files);
@@ -365,7 +364,7 @@ public class SkriptCommand implements CommandExecutor {
 				
 				Config config = ScriptLoader.loadStructure(script);
 				if (config != null) {
-					ScriptLoader.runScriptsLoad(Collections.singletonList(config), logHandler)
+					ScriptLoader.loadScripts(Collections.singletonList(config), logHandler)
 						.thenAccept(scriptInfo ->
 							// Code should run on server thread
 							Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), () -> {

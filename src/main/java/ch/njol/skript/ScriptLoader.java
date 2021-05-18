@@ -448,10 +448,10 @@ public class ScriptLoader {
 	 * Script loading methods
 	 */
 	/**
-	 * Loads all scripts in the scripts folder using {@link #runScriptsLoad(List, OpenCloseable)},
+	 * Loads all scripts in the scripts folder using {@link #loadScripts(List, OpenCloseable)},
 	 * sending info/error messages when done.
 	 */
-	static CompletableFuture<Void> runScriptsLoad(OpenCloseable openCloseable) {
+	static CompletableFuture<Void> loadScripts(OpenCloseable openCloseable) {
 		File scriptsFolder = new File(Skript.getInstance().getDataFolder(), Skript.SCRIPTSFOLDER + File.separator);
 		if (!scriptsFolder.isDirectory())
 			//noinspection ResultOfMethodCallIgnored
@@ -474,7 +474,7 @@ public class ScriptLoader {
 			logHandler.stop();
 		}
 		
-		return runScriptsLoad(configs, OpenCloseable.combine(openCloseable, logHandler))
+		return loadScripts(configs, OpenCloseable.combine(openCloseable, logHandler))
 			.whenComplete((scriptInfo, throwable) -> Language.setUseLocal(true))
 			.thenAccept(scriptInfo -> {
 				// Success
@@ -519,7 +519,7 @@ public class ScriptLoader {
 	 *                         each individual script load (see {@link #makeFuture(Supplier, OpenCloseable)}).
 	 * @return Info on the loaded scripts.
 	 */
-	public static CompletableFuture<ScriptInfo> runScriptsLoad(List<Config> configs, OpenCloseable openCloseable) {
+	public static CompletableFuture<ScriptInfo> loadScripts(List<Config> configs, OpenCloseable openCloseable) {
 		AtomicBoolean syncCommands = new AtomicBoolean();
 		
 		boolean wasLocal = Language.setUseLocal(false);
@@ -1059,7 +1059,7 @@ public class ScriptLoader {
 	 * @param script Script file.
 	 * @return Future of statistics of the newly loaded script.
 	 */
-	public static CompletableFuture<ScriptInfo> runScriptReload(File script, OpenCloseable openCloseable) {
+	public static CompletableFuture<ScriptInfo> reloadScript(File script, OpenCloseable openCloseable) {
 		if (!isAsync()) {
 			unloadScript_(script);
 		}
@@ -1067,7 +1067,7 @@ public class ScriptLoader {
 		Functions.validateFunctions();
 		if (config == null)
 			return CompletableFuture.completedFuture(new ScriptInfo());
-		return runScriptsLoad(Collections.singletonList(config), openCloseable);
+		return loadScripts(Collections.singletonList(config), openCloseable);
 	}
 	
 	/**
@@ -1075,13 +1075,13 @@ public class ScriptLoader {
 	 * @param folder A folder.
 	 * @return Future of statistics of newly loaded scripts.
 	 */
-	public static CompletableFuture<ScriptInfo> runScriptsReload(File folder, OpenCloseable openCloseable) {
+	public static CompletableFuture<ScriptInfo> reloadScripts(File folder, OpenCloseable openCloseable) {
 		if (!isAsync()) {
 			unloadScripts_(folder);
 		}
 		List<Config> configs = loadStructures(folder);
 		Functions.validateFunctions();
-		return runScriptsLoad(configs, openCloseable);
+		return loadScripts(configs, openCloseable);
 	}
 
 	
@@ -1322,59 +1322,59 @@ public class ScriptLoader {
 	 * by new methods in this class.
 	 */
 	/**
-	 * @see #runScriptsLoad(OpenCloseable)
+	 * @see #loadScripts(OpenCloseable)
 	 */
 	@Deprecated
 	static void loadScripts() {
 		if (!isAsync())
 			disableScripts();
-		runScriptsLoad(OpenCloseable.EMPTY).join();
+		loadScripts(OpenCloseable.EMPTY).join();
 	}
 	
 	/**
-	 * @see #runScriptsLoad(List, OpenCloseable)
+	 * @see #loadScripts(List, OpenCloseable)
 	 */
 	@Deprecated
 	public static ScriptInfo loadScripts(List<Config> configs) {
-		return runScriptsLoad(configs, OpenCloseable.EMPTY).join();
+		return loadScripts(configs, OpenCloseable.EMPTY).join();
 	}
 	
 	/**
-	 * @see #runScriptsLoad(List, OpenCloseable)
+	 * @see #loadScripts(List, OpenCloseable)
 	 * @see RetainingLogHandler
 	 */
 	@Deprecated
 	public static ScriptInfo loadScripts(List<Config> configs, List<LogEntry> logOut) {
 		RetainingLogHandler logHandler = new RetainingLogHandler();
 		try {
-			return runScriptsLoad(configs, logHandler).join();
+			return loadScripts(configs, logHandler).join();
 		} finally {
 			logOut.addAll(logHandler.getLog());
 		}
 	}
 	
 	/**
-	 * @see #runScriptsLoad(List, OpenCloseable)
+	 * @see #loadScripts(List, OpenCloseable)
 	 */
 	@Deprecated
 	public static ScriptInfo loadScripts(Config... configs) {
-		return runScriptsLoad(Arrays.asList(configs), OpenCloseable.EMPTY).join();
+		return loadScripts(Arrays.asList(configs), OpenCloseable.EMPTY).join();
 	}
 	
 	/**
-	 * @see #runScriptReload(File, OpenCloseable)
+	 * @see #reloadScript(File, OpenCloseable)
 	 */
 	@Deprecated
 	public static ScriptInfo reloadScript(File script) {
-		return runScriptReload(script, OpenCloseable.EMPTY).join();
+		return reloadScript(script, OpenCloseable.EMPTY).join();
 	}
 	
 	/**
-	 * @see #runScriptsReload(File, OpenCloseable)
+	 * @see #reloadScripts(File, OpenCloseable)
 	 */
 	@Deprecated
 	public static ScriptInfo reloadScripts(File folder) {
-		return runScriptsReload(folder, OpenCloseable.EMPTY).join();
+		return reloadScripts(folder, OpenCloseable.EMPTY).join();
 	}
 	
 	/**

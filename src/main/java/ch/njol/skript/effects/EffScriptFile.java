@@ -91,7 +91,7 @@ public class EffScriptFile extends Effect {
 				}
 				Config config = ScriptLoader.loadStructure(file);
 				if (config != null)
-					ScriptLoader.runScriptsLoad(Collections.singletonList(config), OpenCloseable.EMPTY);
+					ScriptLoader.loadScripts(Collections.singletonList(config), OpenCloseable.EMPTY);
 				break;
 			}
 			case RELOAD: {
@@ -99,7 +99,7 @@ public class EffScriptFile extends Effect {
 					return;
 				}
 				
-				ScriptLoader.runScriptReload(file, OpenCloseable.EMPTY);
+				ScriptLoader.reloadScript(file, OpenCloseable.EMPTY);
 				break;
 			}
 			case DISABLE: {

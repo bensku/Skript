@@ -553,7 +553,7 @@ public final class Skript extends JavaPlugin implements Listener {
 							File testDir = TestMode.TEST_DIR.toFile();
 							assert testDir != null;
 							List<Config> configs = ScriptLoader.loadStructures(testDir);
-							ScriptLoader.runScriptsLoad(configs, errorCounter).join();
+							ScriptLoader.loadScripts(configs, errorCounter).join();
 						} finally {
 							errorCounter.stop();
 						}
@@ -712,7 +712,7 @@ public final class Skript extends JavaPlugin implements Listener {
 				/*
 				 * Start loading scripts
 				 */
-				ScriptLoader.runScriptsLoad(OpenCloseable.EMPTY)
+				ScriptLoader.loadScripts(OpenCloseable.EMPTY)
 					.thenAccept(unused -> {
 						Skript.info(m_finished_loading.toString());
 						
