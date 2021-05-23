@@ -71,7 +71,7 @@ public class ParseLogHandler extends LogHandler {
 	}
 	
 	/**
-	 * Prints the retained log, but no errors
+	 * Prints the retained log
 	 */
 	public void printLog() {
 		printedErrorOrLog = true;

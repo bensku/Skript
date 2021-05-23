@@ -27,8 +27,18 @@ import ch.njol.util.Kleenean;
 
 import java.util.List;
 
+/**
+ * A {@link Section} with code contents.
+ */
 public abstract class CodeSection extends Section {
 
+	/**
+	 * Loads the code in the given {@link SectionNode},
+	 * appropriately modifying {@link ParserInstance#getCurrentSections()}.
+	 * <br>
+	 * This method does not modify {@code hasDelayBefore} in {@link ParserInstance},
+	 * the calling code must deal with this.
+	 */
 	protected void loadCode(SectionNode sectionNode) {
 		List<TriggerSection> currentSections = ParserInstance.get().getCurrentSections();
 		currentSections.add(this);
@@ -39,6 +49,11 @@ public abstract class CodeSection extends Section {
 		}
 	}
 
+	/**
+	 * Loads the code using {@link #loadCode(SectionNode)}, while also
+	 * adjusting {@code hasDelayBefore} from {@link ParserInstance}, expecting the loaded code to be called
+	 * 0 or more times during execution of this section.
+	 */
 	protected void loadOptionalCode(SectionNode sectionNode) {
 		Kleenean hadDelayBefore = getParser().getHasDelayBefore();
 		loadCode(sectionNode);

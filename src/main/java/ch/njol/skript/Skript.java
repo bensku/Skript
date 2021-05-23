@@ -1221,6 +1221,14 @@ public final class Skript extends JavaPlugin implements Listener {
 		statements.add(info);
 	}
 
+	/**
+	 * Registers a {@link Section}.
+	 *
+	 * @param section The section's class
+	 * @param patterns Skript patterns to match this section
+	 * @see Section
+	 * @see ch.njol.skript.lang.util.CodeSection
+	 */
 	public static <E extends Section> void registerSection(Class<E> section, String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();

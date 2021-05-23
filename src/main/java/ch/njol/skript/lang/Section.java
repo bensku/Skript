@@ -28,6 +28,11 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A section that can decide what it does with its contents, as code isn't parsed by default.
+ *
+ * @see Skript#registerSection(Class, String...)
+ */
 public abstract class Section extends TriggerSection implements SyntaxElement {
 
 	@Override
