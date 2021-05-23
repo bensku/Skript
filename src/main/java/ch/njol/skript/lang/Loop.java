@@ -21,6 +21,7 @@ package ch.njol.skript.lang;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.ContainerExpression;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
@@ -28,6 +29,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -58,13 +60,18 @@ public class Loop extends TriggerSection {
 		} else {
 			this.expr = expr;
 		}
-		ScriptLoader.currentSections.add(this);
-		ScriptLoader.currentLoops.add(this);
+		
+		ParserInstance parserInstance = ParserInstance.get();
+		List<TriggerSection> currentSections = parserInstance.getCurrentSections();
+		List<Loop> currentLoops = parserInstance.getCurrentLoops();
+		
+		currentSections.add(this);
+		currentLoops.add(this);
 		try {
 			setTriggerItems(ScriptLoader.loadItems(node));
 		} finally {
-			ScriptLoader.currentLoops.remove(ScriptLoader.currentLoops.size() - 1);
-			ScriptLoader.currentSections.remove(ScriptLoader.currentSections.size() - 1);
+			currentLoops.remove(currentLoops.size() - 1);
+			currentSections.remove(currentSections.size() - 1);
 		}
 		super.setNext(this);
 	}

@@ -267,23 +267,20 @@ public abstract class Aliases {
 				t.setAmount(1);
 		}
 		
-		final String lc = s.toLowerCase();
-		final String of = Language.getSpaced("enchantments.of").toLowerCase();
+		String lc = s.toLowerCase();
+		String of = Language.getSpaced("enchantments.of").toLowerCase();
 		int c = -1;
 		outer: while ((c = lc.indexOf(of, c + 1)) != -1) {
-			final ItemType t2 = t.clone();
-			final BlockingLogHandler log = SkriptLogger.startLogHandler(new BlockingLogHandler());
-			try {
+			ItemType t2 = t.clone();
+			try (BlockingLogHandler ignored = new BlockingLogHandler().start()) {
 				if (parseType("" + s.substring(0, c), t2, false) == null)
 					continue;
-			} finally {
-				log.stop();
 			}
 			if (t2.numTypes() == 0)
 				continue;
-			final String[] enchs = lc.substring(c + of.length()).split("\\s*(,|" + Pattern.quote(Language.get("and")) + ")\\s*");
+			String[] enchs = lc.substring(c + of.length()).split("\\s*(,|" + Pattern.quote(Language.get("and")) + ")\\s*");
 			for (final String ench : enchs) {
-				final EnchantmentType e = EnchantmentType.parse("" + ench);
+				EnchantmentType e = EnchantmentType.parse("" + ench);
 				if (e == null)
 					continue outer;
 				t2.addEnchantments(e);
