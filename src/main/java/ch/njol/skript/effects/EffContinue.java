@@ -23,7 +23,6 @@ import java.util.List;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -71,7 +70,7 @@ public class EffContinue extends Effect {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		List<Loop> loops = ScriptLoader.currentLoops;
+		List<Loop> loops = getParser().getCurrentLoops();
 		if (loops.isEmpty()) {
 			Skript.error("Continue may only be used in loops");
 			return false;
