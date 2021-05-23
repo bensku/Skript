@@ -18,19 +18,20 @@
  */
 package ch.njol.skript.lang;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.ContainerExpression;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * A trigger section which represents a loop.
@@ -38,17 +39,17 @@ import ch.njol.skript.util.Container.ContainerType;
  * @author Peter Güttinger
  */
 public class Loop extends TriggerSection {
-	
+
 	private final Expression<?> expr;
-	
-	private transient Map<Event, Object> current = new WeakHashMap<>();
-	private transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
+
+	private final transient Map<Event, Object> current = new WeakHashMap<>();
+	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
 	
 	@Nullable
 	private TriggerItem actualNext;
 	
 	@SuppressWarnings("unchecked")
-	public <T> Loop(final Expression<?> expr, final SectionNode node) {
+	public Loop(final Expression<?> expr, final SectionNode node) {
 		assert expr != null;
 		assert node != null;
 		if (Container.class.isAssignableFrom(expr.getReturnType())) {
@@ -59,13 +60,18 @@ public class Loop extends TriggerSection {
 		} else {
 			this.expr = expr;
 		}
-		ScriptLoader.currentSections.add(this);
-		ScriptLoader.currentLoops.add(this);
+		
+		ParserInstance parserInstance = ParserInstance.get();
+		List<TriggerSection> currentSections = parserInstance.getCurrentSections();
+		List<Loop> currentLoops = parserInstance.getCurrentLoops();
+		
+		currentSections.add(this);
+		currentLoops.add(this);
 		try {
 			setTriggerItems(ScriptLoader.loadItems(node));
 		} finally {
-			ScriptLoader.currentLoops.remove(ScriptLoader.currentLoops.size() - 1);
-			ScriptLoader.currentSections.remove(ScriptLoader.currentSections.size() - 1);
+			currentLoops.remove(currentLoops.size() - 1);
+			currentSections.remove(currentSections.size() - 1);
 		}
 		super.setNext(this);
 	}
@@ -84,8 +90,7 @@ public class Loop extends TriggerSection {
 			}
 		}
 		if (iter == null || !iter.hasNext()) {
-			if (iter != null)
-				currentIter.remove(e); // a loop inside another loop can be called multiple times in the same event
+			exit(e);
 			debug(e, false);
 			return actualNext;
 		} else {
@@ -119,7 +124,9 @@ public class Loop extends TriggerSection {
 		return actualNext;
 	}
 	
-	public Map<Event, Iterator<?>> getCurrentIter() {
-		return currentIter;
+	public void exit(Event event) {
+		current.remove(event);
+		currentIter.remove(event);
 	}
+	
 }
