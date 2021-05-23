@@ -18,25 +18,24 @@
  */
 package ch.njol.skript.lang.parser;
 
+import ch.njol.skript.config.Config;
+import ch.njol.skript.config.Node;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.TriggerSection;
+import ch.njol.skript.log.HandlerList;
+import ch.njol.skript.sections.LoopSection;
+import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.config.Config;
-import ch.njol.skript.config.Node;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Loop;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.TriggerSection;
-import ch.njol.skript.log.HandlerList;
-import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 
 public class ParserInstance {
 	
@@ -70,7 +69,7 @@ public class ParserInstance {
 	
 	// Sections
 	private List<TriggerSection> currentSections = new ArrayList<>();
-	private List<Loop> currentLoops = new ArrayList<>();
+	private List<LoopSection> currentLoops = new ArrayList<>();
 	private Kleenean hasDelayBefore = Kleenean.FALSE;
 	private String indentation = "";
 	
@@ -117,7 +116,7 @@ public class ParserInstance {
 		return currentSections;
 	}
 	
-	public List<Loop> getCurrentLoops() {
+	public List<LoopSection> getCurrentLoops() {
 		return currentLoops;
 	}
 	
@@ -167,7 +166,7 @@ public class ParserInstance {
 		this.currentSections = currentSections;
 	}
 	
-	public void setCurrentLoops(List<Loop> currentLoops) {
+	public void setCurrentLoops(List<LoopSection> currentLoops) {
 		this.currentLoops = currentLoops;
 	}
 	
