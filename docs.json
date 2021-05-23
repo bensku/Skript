@@ -1,5 +1,5 @@
 {
-  "skriptVersion" : "2.5.3",
+  "skriptVersion" : "2.6-alpha1",
 
   "classes" : [
     {
@@ -261,8 +261,8 @@
     "pattern_end"
   ],
   "since" : "2.4",
-  "description" : "A configuration of effects that defines the firework when exploded.",
-  "examples" : ""
+  "description" : "A configuration of effects that defines the firework when exploded\\nwhich can be used in the <a href='effects.html#EffFireworkLaunch'>launch firework</a> effect.\\nSee the <a href='expressions.html#ExprFireworkEffect'>firework effect</a> expression for detailed patterns.",
+  "examples" : "launch flickering trailing burst firework colored blue and green at player\\nlaunch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity\\nlaunch ball large coloured red, purple and white fading to light green and black at player's location with duration 1"
 },
 {
   "id" : "fireworktype",
@@ -444,18 +444,6 @@
   "examples" : "set metadata value \"super cool\" of player to true"
 },
 {
-  "id" : "money",
-  "name" : "Money",
-  "patterns" : [
-    "&lt;code&gt;&amp;lt;number&amp;gt; $&lt;/code&gt; or &lt;code&gt;$ &amp;lt;number&amp;gt;&lt;/code&gt;, where '$' is your server's currency, e.g. '10 rupees' or '£5.00'",
-
-    "pattern_end"
-  ],
-  "since" : "2.0",
-  "description" : "A certain amount of money. Please note that this differs from <a href='#number'>numbers</a> as it includes a currency symbol or name, but usually the two are interchangeable, e.g. you can both <code>add 100$ to the player's balance</code> and <code>add 100 to the player's balance</code>.",
-  "examples" : "add 10£ to the player's account\\nremove Fr. 9.95 from the player's money\\nset the victim's money to 0\\nincrease the attacker's balance by the level of the victim * 100"
-},
-{
   "id" : "number",
   "name" : "Number",
   "patterns" : [
@@ -540,18 +528,6 @@
   "examples" : "projectile is a snowball\\nshoot an arrow at speed 5 from the player"
 },
 {
-  "id" : "region",
-  "name" : "Region",
-  "patterns" : [
-    "&quot;region name&quot;",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "A region of a regions plugin. Skript currently supports WorldGuard, Factions, GriefPrevention and PreciousStones.\\nPlease note that some regions plugins do not have named regions, some use numerical ids to identify regions, and some may have regions with the same name in different worlds, thus using regions like \"region name\" in scripts may or may not work.",
-  "examples" : ""
-},
-{
   "id" : "resourcepackstate",
   "name" : "Resource Pack State",
   "patterns" : [
@@ -590,7 +566,7 @@
   "id" : "spawnreason",
   "name" : "Spawn Reason",
   "patterns" : [
-    "natural, jockey, chunk generation, mob spawner, egg, spawn egg, lightning, built snowman, built iron golem, built wither, village defense, village invasion, breed, slime split, reinforcements, nether portal, dispense egg, infection, cured, ocelot baby, silverfish reveal, mount, trap, ender pearl, perching, drowned, shear, explosion, raid, patrol, beehive, customized, default",
+    "natural, jockey, chunk generation, mob spawner, egg, spawn egg, lightning, built snowman, built iron golem, built wither, village defense, village invasion, breed, slime split, reinforcements, nether portal, dispense egg, infection, cured, ocelot baby, silverfish reveal, mount, trap, ender pearl, perching, drowned, shear, explosion, raid, patrol, beehive, piglin zombification, spawn reasons.command, customized, default",
 
     "pattern_end"
   ],
@@ -705,7 +681,7 @@
   "id" : "visualeffect",
   "name" : "Visual Effect",
   "patterns" : [
-    "ender signal, mobspawner flames, potion break, smoke, hurt, wolf smoke, wolf hearts, wolf shaking, sheep eating, iron golem offering rose, villager hearts, angry villager entity, happy villager entity, witch magic, zombie turning to a villager, firework explosion, arrow particles, jumping rabbit, love hearts, squid rotation reset, entity poof, guardian target, block with shield, shield break, armor stand hit, hurt by thorns, iron golem sheathing rose, resurrection by totem, hurt by drowning, hurt by explosion, firework's spark, critical hit, magical critical hit, potion swirl, transparent potion swirl, spell, spell, witch spell, note, portal, flying glyph, flame, lava pop, footstep, water splash, smoke particle, huge explosion, large explosion, explosion, void fog, small smoke, cloud, coloured dust, snowball break, water drip, lava drip, snow shovel, slime, heart, angry villager, happy villager, large smoke, item crack, block break, block dust, end rod, barrier, damage indicator, dragon breath, mob appearance, suspended, sweep attack, water bubble, water wake, water drop, falling dust, totem, spit, squid ink, bubble pop, current down, bubble column up, nautilus, dolphin, sneeze, campfire cosy smoke, campfire signal smoke, composter, flash, falling lava, landing lava, falling water, dripping honey, falling honey, landing honey, falling nectar, ash, crimson spore, soul fire flame, warped spore, dripping obsidian tear, falling obsidian tear, landing obsidian tear, soul, reverse portal, white ash",
+    "smoke, potion break, ender signal, mobspawner flames, arrow particles, jumping rabbit, hurt, wolf smoke, wolf hearts, wolf shaking, sheep eating, iron golem offering rose, villager hearts, angry villager entity, happy villager entity, witch magic, zombie turning to a villager, firework explosion, love hearts, squid rotation reset, entity poof, guardian target, block with shield, shield break, armor stand hit, hurt by thorns, iron golem sheathing rose, resurrection by totem, hurt by drowning, hurt by explosion, explosion, large explosion, huge explosion, firework's spark, water bubble, water splash, water wake, suspended, void fog, critical hit, magical critical hit, smoke particle, large smoke, spell, spell, potion swirl, transparent potion swirl, witch spell, water drip, lava drip, angry villager, happy villager, small smoke, note, portal, flying glyph, flame, lava pop, cloud, coloured dust, snowball break, snow shovel, slime, heart, barrier, item crack, block break, block dust, water drop, mob appearance, dragon breath, end rod, damage indicator, sweep attack, falling dust, totem, spit, squid ink, bubble pop, current down, bubble column up, nautilus, dolphin, sneeze, campfire cosy smoke, campfire signal smoke, composter, flash, falling lava, landing lava, falling water, dripping honey, falling honey, landing honey, falling nectar, soul fire flame, ash, crimson spore, warped spore, soul, dripping obsidian tear, falling obsidian tear, landing obsidian tear, reverse portal, white ash",
 
     "pattern_end"
   ],
@@ -754,20 +730,6 @@
   "since" : "2.4",
   "description" : "Checks if the given string is alphanumeric.",
   "examples" : "if the argument is not alphanumeric:\\n    send \"Invalid name!\""
-},
-{
-  "id" : "CondCanBuild",
-  "name" : "Can Build",
-  "patterns" : [
-    "%<a href='classes.html#player'>players</a>% (can|(is|are) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#player'>players</a>% (can('t|not)|(is|are)(n't| not) allowed to) build %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.0",
-  "description" : "Tests whether a player is allowed to build at a certain location.
-This condition requires a supported <a href='../classes.html#region'>regions</a> plugin to be installed.",
-  "examples" : "command /setblock <material>:\\n    description: set the block at your crosshair to a different type\\n    trigger:\\n        player cannot build at the targeted block:\\n            message \"You do not have permission to change blocks there!\"\\n            stop\\n        set the targeted block to argument"
 },
 {
   "id" : "CondCanFly",
@@ -829,24 +791,24 @@ Valid values are between 0% and 100%, or if the percent sign is omitted between 
   "patterns" : [
     "[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) ((greater|more|higher|bigger|larger) than|above)|\\&gt;) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\&gt;=) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) ((less|smaller) than|below)|\\&lt;) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) (less|smaller|below) [than] or (equal to|the same as)|\\&lt;=) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) ((less|smaller|lower) than|below)|\\&lt;) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% ((is|are)[((n't| not| neither)]) (less|smaller|lower|below) [than] or (equal to|the same as)|\\&lt;=) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% ((is|are) (not|neither)|isn't|aren't|!=) [equal to] %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (is|are|=) [(equal to|the same as)] %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (is|are) between %<a href='classes.html#object'>objects</a>% and %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (is not|are not|isn't|aren't) between %<a href='classes.html#object'>objects</a>% and %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) ((greater|more|higher|bigger|larger) than|above) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) ((less|smaller) than|below) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) (less|smaller|below) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) ((less|smaller|lower) than|below) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% (was|were)[((n't| not| neither)]) (less|smaller|lower|below) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% ((was|were) (not|neither)|wasn't|weren't) [equal to] %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (was|were) [(equal to|the same as)] %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (was|were) between %<a href='classes.html#object'>objects</a>% and %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (was not|were not|wasn't|weren't) between %<a href='classes.html#object'>objects</a>% and %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) ((greater|more|higher|bigger|larger) than|above) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) ((less|smaller) than|below) %<a href='classes.html#object'>objects</a>%",
-"[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) (less|smaller|below) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) ((less|smaller|lower) than|below) %<a href='classes.html#object'>objects</a>%",
+"[neither] %<a href='classes.html#object'>objects</a>% (will be|(will (not|neither) be|won't be)) (less|smaller|lower|below) [than] or (equal to|the same as) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% ((will (not|neither) be|won't be)|(isn't|aren't|is not|are not) (turning|changing) [in]to) [equal to] %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% (will be [(equal to|the same as)]|(is|are) (turning|changing) [in]to) %<a href='classes.html#object'>objects</a>%",
 "[neither] %<a href='classes.html#object'>objects</a>% will be between %<a href='classes.html#object'>objects</a>% and %<a href='classes.html#object'>objects</a>%",
@@ -865,11 +827,8 @@ Note: This is the only element where not all patterns are shown. It has actually
   "patterns" : [
     "%<a href='classes.html#inventory'>inventories</a>% (has|have) %<a href='classes.html#itemtype'>item types</a>% [in [(the[ir]|his|her|its)] inventory]",
 "%<a href='classes.html#inventory'>inventories</a>% (doesn't|does not|do not|don't) have %<a href='classes.html#itemtype'>item types</a>% [in [(the[ir]|his|her|its)] inventory]",
-"%<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>% contain[s] %<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>%",
+"%<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>% contain[(s)] %<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>%",
 "%<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>% (doesn't|does not|do not|don't) contain %<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#string'>texts</a>/<a href='classes.html#object'>objects</a>%",
-"[the] list [of] %<a href='classes.html#object'>objects</a>% (doesn't|does not|do not|don't) contain %<a href='classes.html#object'>objects</a>%",
-"[the] list [of] %<a href='classes.html#object'>objects</a>% contain[s] %<a href='classes.html#object'>objects</a>%",
-"(all|any|none) of %<a href='classes.html#string'>texts</a>% contain[s] %<a href='classes.html#string'>texts</a>%",
 
     "pattern_end"
   ],
@@ -1293,20 +1252,6 @@ Note: This is the only element where not all patterns are shown. It has actually
   "examples" : "if chunk at {home::%player's uuid%} is loaded:\\nif chunk 1, 10 in world \"world\" is loaded:\\nif world(\"lobby\") is loaded:"
 },
 {
-  "id" : "CondIsMember",
-  "name" : "Is Member/Owner of Region",
-  "patterns" : [
-    "%<a href='classes.html#offlineplayer'>offline players</a>% (is|are) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
-"%<a href='classes.html#offlineplayer'>offline players</a>% (is|are)(n't| not) ([a] member|[(the|an)] owner) of [[the] region] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Checks whether a player is a member or owner of a particular region.
-This condition requires a supported regions plugin to be installed.",
-  "examples" : "on region enter:\\n    player is the owner of the region\\n    message \"Welcome back to %region%!\"\\n    send \"%player% just entered %region%!\" to all members of the region"
-},
-{
   "id" : "CondIsVectorNormalized",
   "name" : "Is Normalized",
   "patterns" : [
@@ -1359,6 +1304,23 @@ This condition requires a supported regions plugin to be installed.",
 A block is passable if it has no colliding parts that would prevent players from moving through it.
 Blocks like tall grass, flowers, signs, etc. are passable, but open doors, fence gates, trap doors, etc. are not because they still have parts that can be collided with.",
   "examples" : "if player's targeted block is passable"
+},
+{
+  "id" : "CondIsPluginEnabled",
+  "name" : "Is Plugin Enabled",
+  "patterns" : [
+    "plugin[s] %<a href='classes.html#string'>texts</a>% (is|are) enabled",
+"plugin[s] %<a href='classes.html#string'>texts</a>% (is|are)(n't| not) enabled",
+"plugin[s] %<a href='classes.html#string'>texts</a>% (is|are) disabled",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "Check if a plugin is enabled/disabled on the server.
+Plugin names can be found in the plugin's 'plugin.yml' file or by using the '/plugins' command, they are NOT the name of the plugin's jar file.
+When checking if a plugin is not enabled, this will return true if the plugin is either disabled or not on the server. 
+When checking if a plugin is disabled, this will return true if the plugin is on the server and is disabled.",
+  "examples" : "if plugin \"Vault\" is enabled:\\nif plugin \"WorldGuard\" is not enabled:\\nif plugins \"Essentials\" and \"Vault\" are enabled:\\nif plugin \"MyBrokenPlugin\" is disabled:"
 },
 {
   "id" : "CondIsPoisoned",
@@ -1571,6 +1533,19 @@ For more info, see <a href='https://minecraft.gamepedia.com/Slime#.22Slime_chunk
   "examples" : "if server is whitelisted:\\nif player is whitelisted"
 },
 {
+  "id" : "CondIsSkriptCommand",
+  "name" : "Is a Skript command",
+  "patterns" : [
+    "%<a href='classes.html#string'>text</a>% (is|are) [a] s(k|c)ript (command|cmd)",
+"%<a href='classes.html#string'>text</a>% (isn't|is not|aren't|are not) [a] s(k|c)ript (command|cmd)",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "Checks whether a command/string is a custom Skript command.",
+  "examples" : "# Example 1\\non command:\\n    command is a skript command\\n\\n# Example 2\\n\"sometext\" is a skript command"
+},
+{
   "id" : "CondIsInWorld",
   "name" : "Is in World",
   "patterns" : [
@@ -1647,22 +1622,6 @@ For more info, see <a href='https://minecraft.gamepedia.com/Slime#.22Slime_chunk
   "since" : "1.3.4",
   "description" : "Checks the PvP state of a world.",
   "examples" : "PvP is enabled\\nPvP is disabled in \"world\""
-},
-{
-  "id" : "CondRegionContains",
-  "name" : "Region Contains",
-  "patterns" : [
-    "[[the] region] %<a href='classes.html#region'>regions</a>% contain[s] %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#location'>locations</a>% (is|are) ([contained] in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
-"[[the] region] %<a href='classes.html#region'>regions</a>% (do|does)(n't| not) contain %<a href='classes.html#direction'>directions</a>% %<a href='classes.html#location'>locations</a>%",
-"%<a href='classes.html#location'>locations</a>% (is|are)(n't| not) (contained in|part of) [[the] region] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Checks whether a location is contained in a particular <a href='../classes.html#region'>region</a>.
-This condition requires a supported regions plugin to be installed.",
-  "examples" : "player is in the region {regions::3}\\non region enter:\\n    region contains {flags.%world%.red}\\n    message \"The red flag is near!\""
 },
 {
   "id" : "CondResourcePack",
@@ -1775,11 +1734,11 @@ You can add a tool, which will spawn items based on how that tool would break th
   "id" : "EffBroadcast",
   "name" : "Broadcast",
   "patterns" : [
-    "broadcast %<a href='classes.html#string'>texts</a>% [(to|in) %<a href='classes.html#world'>worlds</a>%]",
+    "broadcast %<a href='classes.html#object'>objects</a>% [(to|in) %<a href='classes.html#world'>worlds</a>%]",
 
     "pattern_end"
   ],
-  "since" : "1.0",
+  "since" : "1.0, 2.6 (broadcasting objects)",
   "description" : "Broadcasts a message to the server. Only formatting options supported by console
 (i.e. colors) are supported. If you need to use advanced chat formatting, send the
 message to all players instead of broadcasting it.",
@@ -2041,7 +2000,7 @@ message to all players instead of broadcasting it.",
     "pattern_end"
   ],
   "since" : "1.0",
-  "description" : "Creates an explosion of a given force. The Minecraft Wiki has an <a href='http://www.minecraftwiki.net/wiki/Explosion'>article on explosions</a> which lists the explosion forces of TNT, creepers, etc.
+  "description" : "Creates an explosion of a given force. The Minecraft Wiki has an <a href='https://www.minecraftwiki.net/wiki/Explosion'>article on explosions</a> which lists the explosion forces of TNT, creepers, etc.
 Hint: use a force of 0 to create a fake explosion that does no damage whatsoever, or use the explosion effect introduced in Skript 2.0.
 Starting with Bukkit 1.4.5 and Skript 2.0 you can use safe explosions which will damage entities but won't destroy any blocks.",
   "examples" : "create an explosion of force 10 at the player\\ncreate an explosion of force 0 at the victim"
@@ -2183,7 +2142,7 @@ Note: This effect does not set the entity's health to 0 (which causes issues), b
     "pattern_end"
   ],
   "since" : "1.4",
-  "description" : "Strike lightning at a given location. Can use 'ligning effect' to create a lightning that does not harm entities or start fires.",
+  "description" : "Strike lightning at a given location. Can use 'lightning effect' to create a lightning that does not harm entities or start fires.",
   "examples" : "strike lightning at the player\\nstrike lightning effect at the victim"
 },
 {
@@ -2295,11 +2254,11 @@ NB: Using 'server.log' as the log file will write to the default server log. Omi
   "id" : "EffMessage",
   "name" : "Message",
   "patterns" : [
-    "(message|send [message[s]]) %<a href='classes.html#string'>texts</a>% [to %<a href='classes.html#commandsender'>players/console</a>%] [from %<a href='classes.html#player'>player</a>%]",
+    "(message|send [message[s]]) %<a href='classes.html#object'>objects</a>% [to %<a href='classes.html#commandsender'>players/console</a>%] [from %<a href='classes.html#player'>player</a>%]",
 
     "pattern_end"
   ],
-  "since" : "1.0, 2.2-dev26 (advanced features), 2.5.2 (optional sender)",
+  "since" : "1.0, 2.2-dev26 (advanced features), 2.5.2 (optional sender), 2.6 (sending objects)",
   "description" : "Sends a message to the given player. Only styles written
 in given string or in <a href=expressions.html#ExprColoured>formatted expressions</a> will be parsed.
 Adding an optional sender allows the messages to be sent as if a specific player sent them.
@@ -2323,7 +2282,7 @@ but for this to work, the message needs to be sent from a player.",
   "id" : "EffOpenInventory",
   "name" : "Open/Close Inventory",
   "patterns" : [
-    "[(open|show) (((crafting [table]|workbench)|chest|anvil|hopper|dropper|dispenser) (view|window|inventory)]|%<a href='classes.html#inventory'>inventory</a>%) (to|for) %<a href='classes.html#player'>players</a>%",
+    "[(open|show) (((crafting [table]|workbench)|chest|anvil|hopper|dropper|dispenser) (view|window|inventory)]|%<a href='classes.html#inventory'>inventory</a>/<a href='classes.html#inventorytype'>inventory type</a>%) (to|for) %<a href='classes.html#player'>players</a>%",
 "close [the] inventory [view] (to|of|for) %<a href='classes.html#player'>players</a>%",
 "close %<a href='classes.html#player'>players</a>%'[s] inventory [view]",
 
@@ -3022,7 +2981,7 @@ This may require that there is enough space above the given location and that th
     "pattern_end"
   ],
   "since" : "2.0",
-  "description" : "Called when a player enters a command (not neccessarily a Skript command).",
+  "description" : "Called when a player enters a command (not necessarily a Skript command) but you can check if command is a skript command, see <a href='conditions.html#CondIsSkriptCommand'>Is a Skript command condition</a>.",
   "examples" : "on command:\\non command \"/stop\":\\non command \"pm Njol \":"
 },
 {
@@ -3638,6 +3597,18 @@ This may require that there is enough space above the given location and that th
   "examples" : "on lightning:\\n    spawn a zombie at location of event-entity"
 },
 {
+  "id" : "move",
+  "name" : "On Move",
+  "patterns" : [
+    "%<a href='classes.html#entitydata'>entity type</a>% (move|walk|step)",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "Called when a player or entity moves.\\nNOTE: Move event will only be called when the entity/player moves position, not orientation (ie: looking around).\\nNOTE: These events can be performance heavy as they are called quite often.\\nIf you use these events, and later remove them, a server restart is recommended to clear registered events from Skript.",
+  "examples" : "on player move:\\n    if player does not have permission \"player.can.move\":\\n        cancel event\\non skeleton move:\\n    if event-entity is not in world \"world\":\\n        kill event-entity"
+},
+{
   "id" : "move_on",
   "name" : "On Move On",
   "patterns" : [
@@ -3823,7 +3794,7 @@ This may require that there is enough space above the given location and that th
   "id" : "quit",
   "name" : "On Quit",
   "patterns" : [
-    "(quit[ting]|disconnect[ing]|log[ ]out|logging out)",
+    "(quit[ting]|disconnect[ing]|log[ ]out|logging out|leav(e|ing))",
 
     "pattern_end"
   ],
@@ -3842,19 +3813,6 @@ This may require that there is enough space above the given location and that th
   "since" : "1.0",
   "description" : "Called when the redstone current of a block changes. This event is of not much use yet.",
   "examples" : "on redstone change:\\n    send \"someone is using redstone\" to console"
-},
-{
-  "id" : "region_enterleave",
-  "name" : "On Region Enter/Leave",
-  "patterns" : [
-    "(enter[ing]|leav(e|ing)|exit[ing]) [of] ([a] region|[[the] region] %<a href='classes.html#region'>regions</a>%)",
-"region (enter[ing]|leav(e|ing)|exit[ing])",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "Called when a player enters or leaves a <a href='../classes.html#region'>region</a>.\\nThis event requires a supported regions plugin to be installed.",
-  "examples" : "on region exit:\\n    message \"Leaving %region%.\""
 },
 {
   "id" : "resource_pack_request_response",
@@ -3909,13 +3867,13 @@ This may require that there is enough space above the given location and that th
   "id" : "script_loadunload",
   "name" : "On Script Load/Unload",
   "patterns" : [
-    "[script] (load|init|enable)",
-"[script] (unload|stop|disable)",
+    "[(async)] [script] (load|init|enable)",
+"[(async)] [script] (unload|stop|disable)",
 
     "pattern_end"
   ],
   "since" : "2.0",
-  "description" : "Called directly after the trigger is loaded, or directly before the whole script is unloaded.",
+  "description" : "Called directly after the trigger is loaded, or directly before the whole script is unloaded.\\nThe keyword 'async' indicates the trigger can be ran asynchronously, ",
   "examples" : "on load:\\n    set {running::%script%} to true\\non unload:\\n    set {running::%script%} to false"
 },
 {
@@ -4384,6 +4342,18 @@ This may require that there is enough space above the given location and that th
   "examples" : "command /scripts:\\n    trigger:\\n        send \"All Scripts: %scripts%\" to player\\n        send \"Loaded Scripts: %enabled scripts%\" to player\\n        send \"Unloaded Scripts: %disabled scripts%\" to player"
 },
 {
+  "id" : "ExprAllCommands",
+  "name" : "All commands",
+  "patterns" : [
+    "[(all|the|all [of] the)] [registered] [(script)] commands",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "Returns all registered commands or all script commands.",
+  "examples" : "send \"Number of all commands: %size of all commands%\"\\nsend \"Number of all script commands: %size of all script commands%\""
+},
+{
   "id" : "ExprAlphabetList",
   "name" : "Alphabetical Sort",
   "patterns" : [
@@ -4456,7 +4426,7 @@ Please note that getting a list's recursive size can cause lag if the list is la
   "since" : "2.5",
   "description" : "The applied enchantments in an enchant event.
  Deleting or removing the applied enchantments will prevent the item's enchantment.",
-  "examples" : "on enchant\\n    set the applied enchantments to sharpness 10 and fire aspect 5"
+  "examples" : "on enchant:\\n    set the applied enchantments to sharpness 10 and fire aspect 5"
 },
 {
   "id" : "ExprArgument",
@@ -4480,10 +4450,25 @@ One can also use the type of the argument instead of its index to address the ar
   "id" : "ExprArithmetic",
   "name" : "Arithmetic",
   "patterns" : [
-    "%<a href='classes.html#number'>number</a>%[ ]+[ ]%<a href='classes.html#number'>number</a>%",
+    "\\(%<a href='classes.html#number'>number</a>%\\)[ ]+[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]+[ ]%<a href='classes.html#number'>number</a>%",
+"%<a href='classes.html#number'>number</a>%[ ]+[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"%<a href='classes.html#number'>number</a>%[ ]+[ ]%<a href='classes.html#number'>number</a>%",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]-[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]-[ ]%<a href='classes.html#number'>number</a>%",
+"%<a href='classes.html#number'>number</a>%[ ]-[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
 "%<a href='classes.html#number'>number</a>%[ ]-[ ]%<a href='classes.html#number'>number</a>%",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]*[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]*[ ]%<a href='classes.html#number'>number</a>%",
+"%<a href='classes.html#number'>number</a>%[ ]*[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
 "%<a href='classes.html#number'>number</a>%[ ]*[ ]%<a href='classes.html#number'>number</a>%",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]/[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]/[ ]%<a href='classes.html#number'>number</a>%",
+"%<a href='classes.html#number'>number</a>%[ ]/[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
 "%<a href='classes.html#number'>number</a>%[ ]/[ ]%<a href='classes.html#number'>number</a>%",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]^[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
+"\\(%<a href='classes.html#number'>number</a>%\\)[ ]^[ ]%<a href='classes.html#number'>number</a>%",
+"%<a href='classes.html#number'>number</a>%[ ]^[ ]\\(%<a href='classes.html#number'>number</a>%\\)",
 "%<a href='classes.html#number'>number</a>%[ ]^[ ]%<a href='classes.html#number'>number</a>%",
 
     "pattern_end"
@@ -4650,19 +4635,6 @@ Can optionally include a direction as well, e.g. 'block above' or 'block in fron
   "description" : "Blocks relative to other blocks or between other blocks. Can be used to get blocks relative to other blocks or for looping.
 Blocks from/to and between will return a straight line whereas blocks within will return a cuboid.",
   "examples" : "loop blocks above the player:\\nloop blocks between the block below the player and the targeted block:\\nset the blocks below the player, the victim and the targeted block to air\\nset all blocks within {loc1} and {loc2} to stone\\nset all blocks within chunk at player to air"
-},
-{
-  "id" : "ExprBlocksInRegion",
-  "name" : "Blocks in Region",
-  "patterns" : [
-    "[(all|the)] blocks (in|of) [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "All blocks in a <a href='../classes.html#region'>region</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "loop all blocks in the region {arena.%{faction.%player%}%}:\\n    clear the loop-block"
 },
 {
   "id" : "ExprBookAuthor",
@@ -4836,6 +4808,33 @@ the <a href=effects.html#EffSend>send effect</a>.",
   "since" : "2.0",
   "description" : "The command that caused an 'on command' event (excluding the leading slash and all arguments)",
   "examples" : "# prevent any commands except for the /exit command during some game\\non command:\\n    if {game::%player%::playing} is true:\\n        if the command is not \"exit\":\\n            message \"You're not allowed to use commands during the game\"\\n            cancel the event"
+},
+{
+  "id" : "ExprCommandInfo",
+  "name" : "Command Info",
+  "patterns" : [
+    "[the] main command [label] of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] main command [name]",
+"[the] description of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] description",
+"[the] label of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] label",
+"[the] usage of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] usage",
+"[(all|the|all [of] the)] aliases of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] aliases",
+"[the] permission of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] permission",
+"[the] permission message of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] permission message",
+"[the] plugin [owner] of command %<a href='classes.html#string'>texts</a>%",
+"command %<a href='classes.html#string'>texts</a>%'[s] plugin [owner]",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "Get information about a command.",
+  "examples" : "main name of command \"skript\"\\ndescription of command \"help\"\\nlabel of command \"pl\"\\nusage of command \"help\"\\naliases of command \"bukkit:help\"\\npermission of command \"/op\"\\ncommand \"op\"'s permission message\\ncommand \"sk\"'s plugin owner"
 },
 {
   "id" : "ExprCommandSender",
@@ -5434,6 +5433,19 @@ Read <a href='https://minecraft.gamepedia.com/Explosion'>this wiki page</a> for 
   "examples" : "send \"%final damage%\" to victim"
 },
 {
+  "id" : "ExprFireworkEffect",
+  "name" : "Firework Effect",
+  "patterns" : [
+    "[(flickering|trailing|flickering trailing|trailing flickering)] %<a href='classes.html#fireworktype'>firework type</a>% [firework [effect]] colo[u]red %<a href='classes.html#color'>colors</a>%",
+"[(flickering|trailing|flickering trailing|trailing flickering)] %<a href='classes.html#fireworktype'>firework type</a>% [firework [effect]] colo[u]red %<a href='classes.html#color'>colors</a>% fad(e|ing) [to] %<a href='classes.html#color'>colors</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.4",
+  "description" : "Represents a 'firework effect' which can be used in the <a href='effects.html#EffFireworkLaunch'>launch firework</a> effect.",
+  "examples" : "launch flickering trailing burst firework colored blue and green at player\\nlaunch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity\\nlaunch ball large coloured red, purple and white fading to light green and black at player's location with duration 1"
+},
+{
   "id" : "ExprFlightMode",
   "name" : "Flight Mode",
   "patterns" : [
@@ -5532,13 +5544,13 @@ Remember to use '<a href='#ExprBlock'>block</a>' and not 'furnace', as 'furnace'
   "id" : "ExprGlidingState",
   "name" : "Gliding State",
   "patterns" : [
-    "[the] (gliding|glider) [state] of %<a href='classes.html#entity'>entities</a>%",
-"%<a href='classes.html#entity'>entities</a>%'[s] (gliding|glider) [state]",
+    "[the] (gliding|glider) [state] of %<a href='classes.html#livingentity'>living entities</a>%",
+"%<a href='classes.html#livingentity'>living entities</a>%'[s] (gliding|glider) [state]",
 
     "pattern_end"
   ],
   "since" : "2.2-dev21",
-  "description" : "Sets of gets gliding state of player. It allows you to set gliding state of entity even if they do not have an <a href=\"http://minecraft.gamepedia.com/Elytra\">Elytra</a> equipped.",
+  "description" : "Sets of gets gliding state of player. It allows you to set gliding state of entity even if they do not have an <a href=\"https://minecraft.gamepedia.com/Elytra\">Elytra</a> equipped.",
   "examples" : "set gliding of player to off"
 },
 {
@@ -6346,19 +6358,6 @@ Please note that the location of an entity is at it's feet, use <a href='#ExprEy
   "examples" : "on right click on minecart:\\n    set derailed velocity of event-entity to vector 2, 10, 2"
 },
 {
-  "id" : "ExprBalance",
-  "name" : "Money",
-  "patterns" : [
-    "[the] (money|balance|[bank] account) of %<a href='classes.html#offlineplayer'>offline players</a>%",
-"%<a href='classes.html#offlineplayer'>offline players</a>%'[s] (money|balance|[bank] account)",
-
-    "pattern_end"
-  ],
-  "since" : "2.0, 2.5 (offline player support)",
-  "description" : "How much virtual money a player has (can be changed). This expression requires Vault and a compatible economy plugin to be installed.",
-  "examples" : "message \"You have %player's money%\" # the currency name will be added automatically\\nremove 20$ from the player's balance # replace '$' by whatever currency you use\\nadd 200 to the player's account # or omit the currency alltogether"
-},
-{
   "id" : "ExprPushedBlocks",
   "name" : "Moved blocks",
   "patterns" : [
@@ -6374,8 +6373,8 @@ Please note that the location of an entity is at it's feet, use <a href='#ExprEy
   "id" : "ExprName",
   "name" : "Name / Display Name / Tab List Name",
   "patterns" : [
-    "[the] ((player|tab)[ ]list name[s]) of %<a href='classes.html#player'>players</a>%",
-"%<a href='classes.html#player'>players</a>%'[s] ((player|tab)[ ]list name[s])",
+    "[the] (name[s]|(display|nick|chat|custom)[ ]name[s]) of %<a href='classes.html#player'>players</a>/<a href='classes.html#entity'>entities</a>/<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#slot'>slots</a>/<a href='classes.html#gamerule'>gamerules</a>%",
+"%<a href='classes.html#player'>players</a>/<a href='classes.html#entity'>entities</a>/<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#slot'>slots</a>/<a href='classes.html#gamerule'>gamerules</a>%'[s] (name[s]|(display|nick|chat|custom)[ ]name[s])",
 
     "pattern_end"
   ],
@@ -6417,8 +6416,8 @@ Please note that the location of an entity is at it's feet, use <a href='#ExprEy
   "id" : "ExprName",
   "name" : "Name / Display Name / Tab List Name",
   "patterns" : [
-    "[the] (name[s]|(display|nick|chat|custom)[ ]name[s]) of %<a href='classes.html#player'>players</a>/<a href='classes.html#entity'>entities</a>/<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#slot'>slots</a>/<a href='classes.html#gamerule'>gamerules</a>%",
-"%<a href='classes.html#player'>players</a>/<a href='classes.html#entity'>entities</a>/<a href='classes.html#itemtype'>item types</a>/<a href='classes.html#inventory'>inventories</a>/<a href='classes.html#slot'>slots</a>/<a href='classes.html#gamerule'>gamerules</a>%'[s] (name[s]|(display|nick|chat|custom)[ ]name[s])",
+    "[the] ((player|tab)[ ]list name[s]) of %<a href='classes.html#player'>players</a>%",
+"%<a href='classes.html#player'>players</a>%'[s] ((player|tab)[ ]list name[s])",
 
     "pattern_end"
   ],
@@ -6637,6 +6636,18 @@ See also: <a href='#ExprVehicle'>vehicle</a>",
   "examples" : "command /ping <player=%player%>:\\n    trigger:\\n        send \"%arg-1%'s ping is %arg-1's ping%\""
 },
 {
+  "id" : "ExprPlain",
+  "name" : "Plain Item",
+  "patterns" : [
+    "[a[n]] (plain|unmodified) %<a href='classes.html#itemtype'>item type</a>%",
+
+    "pattern_end"
+  ],
+  "since" : "2.6",
+  "description" : "A plain item is an item with no modifications. It can be used to convert items to their default state or to match with other default items.",
+  "examples" : "if the player's tool is a plain diamond: # check if player's tool has no modifications\\n    send \"You are holding a plain diamond!\""
+},
+{
   "id" : "ExprPlayerlistHeaderFooter",
   "name" : "Player List Header and Footer",
   "patterns" : [
@@ -6766,7 +6777,7 @@ When adding a potion effect type (rather than a potion effect), it will default 
     "pattern_end"
   ],
   "since" : "2.3",
-  "description" : "The protocol version that will be sent as the protocol version of the server in a server list ping event. For more information and list of protocol versions <a href='http://wiki.vg/Protocol_version_numbers'>visit wiki.vg</a>.
+  "description" : "The protocol version that will be sent as the protocol version of the server in a server list ping event. For more information and list of protocol versions <a href='https://wiki.vg/Protocol_version_numbers'>visit wiki.vg</a>.
 If this protocol version doesn't match with the protocol version of the client, the client will see the <a href='#ExprVersionString'>version string</a>.
 But please note that, this expression has no visual effect over the version string. For example if the server uses PaperSpigot 1.12.2, and you make the protocol version 107 (1.9),
 the version string will not be \"Paper 1.9\", it will still be \"Paper 1.12.2\".
@@ -6839,46 +6850,6 @@ Please note that the order of the numbers doesn't matter, i.e. <code>random numb
   "since" : "2.5",
   "description" : "Power of a redstone block",
   "examples" : "if redstone power of targeted block is 15:\\n    send \"This block is very powerful!\""
-},
-{
-  "id" : "ExprRegion",
-  "name" : "Region",
-  "patterns" : [
-    "[the] [event-]region",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "The <a href='classes.html#region'>region</a> involved in an event.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "on region enter:\\n    region is {forbidden region}\\n    cancel the event"
-},
-{
-  "id" : "ExprMembersOfRegion",
-  "name" : "Region Members & Owners",
-  "patterns" : [
-    "[(all|the)] (members|owner[s]) of [[the] region[s]] %<a href='classes.html#region'>regions</a>%",
-"[[the] region[s]] %<a href='classes.html#region'>regions</a>%'[s] (members|owner[s])",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "A list of members or owners of a <a href='../classes.html#region'>region</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "on entering of a region:\\n    message \"You're entering %region% whose owners are %owners of region%\"."
-},
-{
-  "id" : "ExprRegionsAt",
-  "name" : "Regions At",
-  "patterns" : [
-    "[the] region[s] %<a href='classes.html#direction'>direction</a>% %<a href='classes.html#location'>locations</a>%",
-
-    "pattern_end"
-  ],
-  "since" : "2.1",
-  "description" : "All <a href='../classes.html#region'>regions</a> at a particular <a href='../classes/#location'>location</a>.
-This expression requires a supported regions plugin to be installed.",
-  "examples" : "On click on a sign:\\n    line 1 of the clicked block is \"[region info]\"\\n    set {_regions::*} to regions at the clicked block\\n    if {_regions::*} is empty:\\n        message \"No regions exist at this sign.\"\\n    else:\\n        message \"Regions containing this sign: <gold>%{_regions::*}%<r>.\""
 },
 {
   "id" : "ExprRemainingAir",
@@ -7811,7 +7782,7 @@ This can only be set in a <a href='events.html#server_list_ping'>server list pin
     "pattern_end"
   ],
   "since" : "2.2",
-  "description" : "Rounds a number down, i.e. returns the closest integer larger than or equal to the argument.",
+  "description" : "Rounds a number up, i.e. returns the closest integer larger than or equal to the argument.",
   "examples" : "ceil(2.34) = 3\\nceil(2) = 2\\nceil(2.99) = 3"
 },
 {
