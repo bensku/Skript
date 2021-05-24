@@ -45,7 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Description({"Teleport an entity to a specific location. ",
 		"This effect is delayed by default on Paper, meaning certain syntax such as the return effect for functions cannot be used after this effect.",
 		"The keyword 'force' indicates this effect will not be delayed, ",
-		"which may cause lag spikes or server crashes when using this effect to teleport players to unloaded chunks."})
+		"which may cause lag spikes or server crashes when using this effect to teleport entities to unloaded chunks."})
 @Examples({"teleport the player to {homes.%player%}",
 		"teleport the attacker to the victim"})
 @Since("1.0")
