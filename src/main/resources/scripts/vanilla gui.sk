@@ -1,16 +1,28 @@
-#
-# A vanilla example of a gui creation using Skript only
-# Requires Skript 2.3+
-#
-
-command /gui:
-	trigger:
-		set {_gui} to a new chest inventory with 6 row with name "Gui Test"
-		set slot 0 of {_gui} to stone
-		open {_gui} to player
+command /vanillaGUI:
+    description: The best way of doing something.
+    trigger:
+        set metadata tag "vanillaGUI" of player to chest inventory with 3 rows# named "&7Hello There"
+        set slot 0 of metadata tag "vanillaGUI" of player to stone named "&6General Kenobi"
+        set slot 1 of metadata tag "vanillaGUI" of player to player's skull named "&6%player%" with lore "&7Right click me to receive my head!"
+        open (metadata tag "vanillaGUI" of player) to player
  
 on inventory click:
-	if name of event-inventory is "Gui Test":
-		if index of event-slot = 0:
-			cancel event
-			send "You clicked on the slot 0 !"
+    if event-inventory = (metadata tag "vanillaGUI" of player):
+        #check if the clicked inventory is the one we just created
+        cancel event
+        #cancel the clicking. This makes the Item unstealable
+        if index of event-slot is 0:
+            #check if the clicked slot is the stone, so 0
+            give event-slot to player
+            #give the clicked item to the player.
+        else if index of event-slot is 1:
+            #check if the clicked slot is the skull, so 1
+            if event-click type is right mouse button:
+                #check if the player right clicks the item
+                set {_playerHead} to uncolored name of event-slot parsed as player
+                give event-slot to player
+                send "&6Player %player% has received a skull of you!" to {_playerHead}
+                #since we can't use arguments, we just parse the name of the event-slot and get the skull by doing that.
+                #you can use the variable as you like. I simply sent a plain text to the player.
+                #ban {_playerHead} would also work
+                #using NBT will work as well!
