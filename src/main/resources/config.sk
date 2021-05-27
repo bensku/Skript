@@ -186,6 +186,17 @@ keep command last usage dates: false
 # but when the player uses the command again after the cooldown period is over, the last usage will be deleted as it's no longer needed,
 # If you need to use the expression 'last usage date', then you'll want to enable this.
 
+script loader thread size: 0
+# Enables asynchronous script loading, which will load scripts in the background instead of blocking the server to load scripts.
+# Setting this to a value of 0 or lower will disabled asynchronous loading, and all scripts will be loaded on the main server thread.
+# Setting this to a value of 1 will enabled asynchronous loading, which won't block the main server.
+# Setting this to a value of 2 or higher will enable parallel loading as well as asynchronous loading,
+#   which will distribute the loading of scripts over multiple threads. This could cause issues if your scripts depend on
+#   their loading order (function definitions are always loaded in advance, so they won't be affected).
+# You may also set this option to 'processor count' (without apostrophes) to use the number of available processors.
+# Do note that though, this option may cause issues with addons and possibly some scripts! Do NOT enable this option unless you have really long
+#   script load times AND you take the risk of lost data and full responsibility!
+
 # ==== Variables ====
 
 databases:

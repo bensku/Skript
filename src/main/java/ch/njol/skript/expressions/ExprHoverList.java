@@ -29,7 +29,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import com.destroystokyo.paper.profile.PlayerProfile;
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -74,7 +73,7 @@ public class ExprHoverList extends SimpleExpression<String> {
 		if (!PAPER_EVENT_EXISTS) {
 			Skript.error("The hover list expression requires Paper 1.12.2 or newer");
 			return false;
-		} else if (!ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class)) {
+		} else if (!getParser().isCurrentEvent(PaperServerListPingEvent.class)) {
 			Skript.error("The hover list expression can't be used outside of a server list ping event");
 			return false;
 		}
@@ -92,7 +91,7 @@ public class ExprHoverList extends SimpleExpression<String> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (ScriptLoader.hasDelayBefore.isTrue()) {
+		if (getParser().getHasDelayBefore().isTrue()) {
 			Skript.error("Can't change the hover list anymore after the server list ping event has already passed");
 			return null;
 		}

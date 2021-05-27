@@ -18,10 +18,11 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.List;
+
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -35,6 +36,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.While;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 
@@ -70,7 +72,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		switch (matchedPattern) {
 			case 0:
-				breakLevels = ScriptLoader.currentSections.size() + 1;
+				breakLevels = getParser().getCurrentSections().size() + 1;
 				type = EVERYTHING;
 				break;
 			case 1:
@@ -97,11 +99,12 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 		return true;
 	}
 	
-	private static int numLevels(final int type) {
+	private static int numLevels(int type) {
+		List<TriggerSection> currentSections = ParserInstance.get().getCurrentSections();
 		if (type == EVERYTHING)
-			return ScriptLoader.currentSections.size();
+			return currentSections.size();
 		int r = 0;
-		for (final TriggerSection s : ScriptLoader.currentSections) {
+		for (TriggerSection s : currentSections) {
 			if (type == CONDITIONALS ? s instanceof Conditional : s instanceof Loop || s instanceof While)
 				r++;
 		}
