@@ -115,7 +115,33 @@ public class ParserInstance {
 	public List<TriggerSection> getCurrentSections() {
 		return currentSections;
 	}
-	
+
+	/**
+	 * @return whether {@link #getCurrentSections()} contains
+	 * an section instance of the given class (or subclass).
+	 */
+	public boolean isCurrentSection(Class<? extends TriggerSection> sectionClass) {
+		for (TriggerSection triggerSection : currentSections) {
+			if (sectionClass.isInstance(triggerSection))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return the outermost section which is an instance of the given class.
+	 * Returns {@code null} if {@link #isCurrentSection(Class)} returns {@code false}.
+	 */
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public <T extends TriggerSection> T getCurrentSection(Class<T> sectionClass) {
+		for (TriggerSection triggerSection : currentSections) {
+			if (sectionClass.isInstance(triggerSection))
+				return (T) triggerSection;
+		}
+		return null;
+	}
+
 	public List<LoopSection> getCurrentLoops() {
 		return currentLoops;
 	}
