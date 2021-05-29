@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Converter;
 import ch.njol.skript.classes.Converter.ConverterInfo;
@@ -97,8 +96,8 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		Loop loop = null;
 		
 		@SuppressWarnings("null")
-		boolean b = ScriptOptions.getInstance().usesNewLoops(ScriptLoader.currentScript.getFile());
-		for (final Loop l : ScriptLoader.currentLoops) {
+		boolean b = ScriptOptions.getInstance().usesNewLoops(getParser().getCurrentScript().getFile());
+		for (final Loop l : getParser().getCurrentLoops()) {
 			if ((c != null && c.isAssignableFrom(l.getLoopedExpression().getReturnType())) || (b ? "value".equals(s) : false) || l.getLoopedExpression().isLoopOf(s)) {
 				if (j < i) {
 					j++;

@@ -27,9 +27,7 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.bukkitutil.ProjectileUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Events;
 import ch.njol.skript.doc.Examples;
@@ -62,7 +60,7 @@ public class ExprAttacker extends SimpleExpression<Entity> {
 	
 	@Override
 	public boolean init(final Expression<?>[] vars, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
-		if (!ScriptLoader.isCurrentEvent(EntityDamageByEntityEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class)) {
+		if (!getParser().isCurrentEvent(EntityDamageByEntityEvent.class, EntityDeathEvent.class, VehicleDamageEvent.class, VehicleDestroyEvent.class)) {
 			Skript.error("Cannot use 'attacker' outside of a damage/death/destroy event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
@@ -79,13 +77,15 @@ public class ExprAttacker extends SimpleExpression<Entity> {
 		if (e == null)
 			return null;
 		if (e instanceof EntityDamageByEntityEvent) {
-			if (((EntityDamageByEntityEvent) e).getDamager() instanceof Projectile) {
-				final Object o = ProjectileUtils.getShooter((Projectile) ((EntityDamageByEntityEvent) e).getDamager());
+			final EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) e;
+			if (edbee.getDamager() instanceof Projectile) {
+				final Projectile p = (Projectile) edbee.getDamager();
+				final Object o = p.getShooter();
 				if (o instanceof Entity)
 					return (Entity) o;
 				return null;
 			}
-			return ((EntityDamageByEntityEvent) e).getDamager();
+			return edbee.getDamager();
 //		} else if (e instanceof EntityDamageByBlockEvent) {
 //			return ((EntityDamageByBlockEvent) e).getDamager();
 		} else if (e instanceof EntityDeathEvent) {
