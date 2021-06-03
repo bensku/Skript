@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.lang;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.SkriptConfig;
@@ -28,8 +27,8 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Comparator.Relation;
-import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Comparators;
@@ -55,14 +54,12 @@ import org.eclipse.jdt.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 /**
  * @author Peter Güttinger
@@ -183,11 +180,11 @@ public class Variable<T> implements Expression<T> {
 		boolean isPlural = name.endsWith(SEPARATOR + "*");
 
 		if (!SkriptConfig.disableVariableStartingWithExpressionWarnings.value()
-				&& !ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "start expression")
+				&& !ScriptOptions.getInstance().suppressesWarning(ParserInstance.get().getCurrentScript().getFile(), "start expression")
 				&& (isLocal ? name.substring(LOCAL_VARIABLE_TOKEN.length()) : name).startsWith("%")) {
 			Skript.warning("Starting a variable's name with an expression is discouraged ({" + name + "}). " +
 				"You could prefix it with the script's name: " +
-				"{" + StringUtils.substring(ScriptLoader.currentScript.getFileName(), 0, -3) + "." + name + "}");
+				"{" + StringUtils.substring(ParserInstance.get().getCurrentScript().getFileName(), 0, -3) + "." + name + "}");
 		}
 
 		// Check for local variable type hints
