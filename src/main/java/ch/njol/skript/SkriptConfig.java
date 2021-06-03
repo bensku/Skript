@@ -237,8 +237,23 @@ public class SkriptConfig {
 				}
 			});
 
-	public static final Option<Boolean> asyncLoaderEnabled = new Option<>("asynchronous script loading", false)
-			.setter(t -> ScriptLoader.loadAsync = t)
+	public static final Option<String> scriptLoaderThreadSize = new Option<>("script loader thread size", "0")
+			.setter(s -> {
+				int asyncLoaderSize;
+				
+				if (s.equalsIgnoreCase("processor count")) {
+					asyncLoaderSize = Runtime.getRuntime().availableProcessors();
+				} else {
+					try {
+						asyncLoaderSize = Integer.parseInt(s);
+					} catch (NumberFormatException e) {
+						Skript.error("Invalid option: " + s);
+						return;
+					}
+				}
+				
+				ScriptLoader.setAsyncLoaderSize(asyncLoaderSize);
+			})
 			.optional(true);
 	
 	public static final Option<Boolean> allowUnsafePlatforms = new Option<>("allow unsafe platforms", false)

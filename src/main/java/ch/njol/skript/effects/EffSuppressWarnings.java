@@ -18,7 +18,11 @@
  */
 package ch.njol.skript.effects;
 
-import ch.njol.skript.ScriptLoader;
+import java.io.File;
+
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -29,8 +33,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.ScriptOptions;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;
 
@@ -53,11 +55,12 @@ public class EffSuppressWarnings extends Effect {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		if (ScriptLoader.currentScript == null) {
+		Config cs = getParser().getCurrentScript();
+		if (cs == null) {
 			Skript.error("You can only suppress warnings for script files!");
 			return false;
 		}
-		File scriptFile = ScriptLoader.currentScript.getFile();
+		File scriptFile = cs.getFile();
 		mark = parseResult.mark;
 		switch (parseResult.mark) {
 			case CONFLICT: { // Possible variable conflicts

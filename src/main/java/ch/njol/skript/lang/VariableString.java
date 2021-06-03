@@ -22,6 +22,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.ExprColoured;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
@@ -295,7 +296,7 @@ public class VariableString implements Expression<String> {
 		}
 		return new VariableString(orig, sa, mode);
 	}
-	
+
 	/**
 	 * Copied from {@code SkriptParser#nextBracket(String, char, char, int, boolean)}, but removed escaping & returns -1 on error.
 	 * 
@@ -561,7 +562,7 @@ public class VariableString implements Expression<String> {
 	public VariableString setMode(StringMode mode) {
 		if (this.mode == mode || isSimple)
 			return this;
-		BlockingLogHandler h = SkriptLogger.startLogHandler(new BlockingLogHandler());
+		BlockingLogHandler h = new BlockingLogHandler().start();
 		try {
 			VariableString vs = newInstance(orig, mode);
 			if (vs == null) {
