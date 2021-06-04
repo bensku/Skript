@@ -49,7 +49,6 @@ public class ConditionalSection extends CodeSection {
 	private ConditionalType type;
 	private Condition condition;
 
-	private Kleenean hadDelayBefore;
 	private Kleenean hasDelayAfter;
 
 	@Override
@@ -82,28 +81,31 @@ public class ConditionalSection extends CodeSection {
 			lastIf = null;
 		}
 
-		hadDelayBefore = getParser().getHasDelayBefore();
+		Kleenean hadDelayBefore = getParser().getHasDelayBefore();
 		loadCode(sectionNode);
 		hasDelayAfter = getParser().getHasDelayBefore();
-		if (hadDelayBefore.isTrue())
+
+		// If the code definitely has a delay before this section, or if the section did not alter the delayed Kleenean,
+		//  there's no need to change the Kleenean.
+		if (hadDelayBefore.isTrue() || hadDelayBefore.equals(hasDelayAfter))
 			return true;
 
 		if (type == ConditionalType.ELSE) {
-			if (!lastIf.hadDelayBefore.isTrue()) {
-				if (getParser().getHasDelayBefore().isTrue()
-						&& lastIf.hasDelayAfter.isTrue()
-						&& getElseIfs(triggerItems).stream().map(ConditionalSection::getHadDelayBefore).allMatch(Kleenean::isTrue)) {
-					getParser().setHasDelayBefore(Kleenean.TRUE);
-				} else {
-					if (!(getParser().getHasDelayBefore().isFalse()
-							&& getElseIfs(triggerItems).stream().map(ConditionalSection::getHadDelayBefore).allMatch(Kleenean::isFalse)))
-						getParser().setHasDelayBefore(Kleenean.UNKNOWN);
-					else
-						getParser().setHasDelayBefore(lastIf.hadDelayBefore);
-				}
+			// In an else section, ...
+			if (hasDelayAfter.isTrue()
+					&& lastIf.hasDelayAfter.isTrue()
+					&& getElseIfs(triggerItems).stream().map(ConditionalSection::getHasDelayAfter).allMatch(Kleenean::isTrue)) {
+				// ... if the if section, all else-if sections and the else section have definite delays,
+				//  mark delayed as TRUE.
+				getParser().setHasDelayBefore(Kleenean.TRUE);
+			} else {
+				// ... otherwise mark delayed as UNKNOWN.
+				getParser().setHasDelayBefore(Kleenean.UNKNOWN);
 			}
 		} else {
-			if (!getParser().getHasDelayBefore().isFalse()) {
+			if (!hasDelayAfter.isFalse()) {
+				// If an if section or else-if section has some delay (definite or possible) in it,
+				//  set the delayed Kleenean to UNKNOWN.
 				getParser().setHasDelayBefore(Kleenean.UNKNOWN);
 			}
 		}
@@ -145,8 +147,8 @@ public class ConditionalSection extends CodeSection {
 		}
 	}
 
-	private Kleenean getHadDelayBefore() {
-		return hadDelayBefore;
+	private Kleenean getHasDelayAfter() {
+		return hasDelayAfter;
 	}
 
 	@Nullable

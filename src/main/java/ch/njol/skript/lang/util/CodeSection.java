@@ -36,8 +36,8 @@ public abstract class CodeSection extends Section {
 	 * Loads the code in the given {@link SectionNode},
 	 * appropriately modifying {@link ParserInstance#getCurrentSections()}.
 	 * <br>
-	 * This method does not modify {@code hasDelayBefore} in {@link ParserInstance},
-	 * the calling code must deal with this.
+	 * This method itself does not modify {@link ParserInstance#getHasDelayBefore()}
+	 * (although the loaded code may change it), the calling code must deal with this.
 	 */
 	protected void loadCode(SectionNode sectionNode) {
 		List<TriggerSection> currentSections = ParserInstance.get().getCurrentSections();
@@ -50,9 +50,11 @@ public abstract class CodeSection extends Section {
 	}
 
 	/**
-	 * Loads the code using {@link #loadCode(SectionNode)}, while also
-	 * adjusting {@code hasDelayBefore} from {@link ParserInstance}, expecting the loaded code to be called
-	 * 0 or more times during execution of this section.
+	 * Loads the code using {@link #loadCode(SectionNode)}.
+	 * <br>
+	 * This method also adjusts {@link ParserInstance#getHasDelayBefore()} to expect the code
+	 * to be called zero or more times. This is done by setting {@code hasDelayBefore} to {@link Kleenean#UNKNOWN}
+	 * if the loaded section has a possible or definite delay in it.
 	 */
 	protected void loadOptionalCode(SectionNode sectionNode) {
 		Kleenean hadDelayBefore = getParser().getHasDelayBefore();

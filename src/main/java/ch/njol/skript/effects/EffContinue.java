@@ -25,7 +25,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.sections.LoopSection;
 import ch.njol.util.Kleenean;
@@ -51,7 +51,7 @@ public class EffContinue extends Effect {
 	private LoopSection loop;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		List<LoopSection> loops = getParser().getCurrentLoops();
 		if (loops.isEmpty()) {
 			Skript.error("Continue may only be used in loops");
