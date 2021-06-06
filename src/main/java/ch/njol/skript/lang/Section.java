@@ -50,14 +50,12 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Nullable
-	public static Section parse(String expr, String defaultError) {
-		return (Section) SkriptParser.parse(expr, (Iterator) Skript.getSections().iterator(), defaultError);
-	}
-
-	public static void setContext(SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public static Section parse(String expr, String defaultError, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		SectionContext sectionContext = ParserInstance.get().getData(SectionContext.class);
 		sectionContext.sectionNode = sectionNode;
 		sectionContext.triggerItems = triggerItems;
+
+		return (Section) SkriptParser.parse(expr, (Iterator) Skript.getSections().iterator(), defaultError);
 	}
 
 	static {

@@ -1131,8 +1131,7 @@ public class ScriptLoader {
 					continue;
 				TypeHints.enterScope(); // Begin conditional type hints
 
-				Section.setContext((SectionNode) n, items);
-				Section section = Section.parse(expr, "Can't understand this section: " + expr);
+				Section section = Section.parse(expr, "Can't understand this section: " + expr, (SectionNode) n, items);
 				if (section == null)
 					continue;
 
