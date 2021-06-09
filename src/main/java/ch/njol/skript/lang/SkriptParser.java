@@ -1324,7 +1324,7 @@ public class SkriptParser {
 	 * @return The index of the next bracket
 	 * @throws MalformedPatternException If the group is not closed
 	 */
-	private static int nextBracket(final String pattern, final char closingBracket, final char openingBracket, final int start, final boolean isGroup) throws MalformedPatternException {
+	public static int nextBracket(final String pattern, final char closingBracket, final char openingBracket, final int start, final boolean isGroup) throws MalformedPatternException {
 		int n = 0;
 		for (int i = start; i < pattern.length(); i++) {
 			if (pattern.charAt(i) == '\\') {
@@ -1819,17 +1819,17 @@ public class SkriptParser {
 		return true;
 	}
 	
-	private final static class ExprInfo {
+	public static class ExprInfo {
 		public ExprInfo(final int length) {
 			classes = new ClassInfo[length];
 			isPlural = new boolean[length];
 		}
 		
-		final ClassInfo<?>[] classes;
-		final boolean[] isPlural;
-		boolean isOptional;
-		int flagMask = ~0;
-		int time = 0;
+		public final ClassInfo<?>[] classes;
+		public final boolean[] isPlural;
+		public boolean isOptional;
+		public int flagMask = ~0;
+		public int time = 0;
 	}
 	
 	private static final Map<String,ExprInfo> exprInfoCache = new HashMap<>();
