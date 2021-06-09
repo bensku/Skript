@@ -56,7 +56,12 @@ public class LoopSection extends CodeSection {
 	private TriggerItem actualNext;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public boolean init(Expression<?>[] exprs,
+						int matchedPattern,
+						Kleenean isDelayed,
+						ParseResult parseResult,
+						SectionNode sectionNode,
+						List<TriggerItem> triggerItems) {
 		expr = exprs[0];
 
 		if (Container.class.isAssignableFrom(expr.getReturnType())) {

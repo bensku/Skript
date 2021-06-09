@@ -44,7 +44,12 @@ public class WhileSection extends CodeSection {
 	private TriggerItem actualNext;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	public boolean init(Expression<?>[] exprs,
+						int matchedPattern,
+						Kleenean isDelayed,
+						ParseResult parseResult,
+						SectionNode sectionNode,
+						List<TriggerItem> triggerItems) {
 		String expr = parseResult.regexes.get(0).group();
 
 		condition = Condition.parse(expr, "Can't understand this condition: " + expr);
