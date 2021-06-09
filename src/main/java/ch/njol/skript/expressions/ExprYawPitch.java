@@ -82,7 +82,7 @@ public class ExprYawPitch extends SimplePropertyExpression<Object, Number> {
 	@SuppressWarnings("null")
 	@Override
 	public void change(Event e, Object[] delta, ChangeMode mode) {
-		if (delta[0] == null)
+		if (delta == null)
 			return;
 		float value = ((Number) delta[0]).floatValue();
 		Object single = getExpr().getSingle(e);
