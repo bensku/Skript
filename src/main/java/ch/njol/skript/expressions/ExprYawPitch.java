@@ -122,6 +122,9 @@ public class ExprYawPitch extends SimplePropertyExpression<Object, Number> {
 		float yaw = VectorMath.getYaw(vector);
 		float pitch = VectorMath.getPitch(vector);
 		switch (mode) {
+			case REMOVE:
+				n = -n;
+				//$FALL-THROUGH$
 			case ADD:
 				if (usesYaw)
 					yaw += n;
@@ -130,9 +133,6 @@ public class ExprYawPitch extends SimplePropertyExpression<Object, Number> {
 				vector = VectorMath.fromYawAndPitch(yaw, pitch);
 				getExpr().change(e, new org.bukkit.util.Vector[]{vector}, ChangeMode.SET);
 				break;
-			case REMOVE:
-				n = -n;
-				//$FALL-THROUGH$
 			case SET:
 				if (usesYaw)
 					yaw = VectorMath.fromSkriptYaw(n);
