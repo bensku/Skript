@@ -34,9 +34,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.util.Vector;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Yaw / Pitch")
 @Description("The yaw or pitch of a location or vector.")
 @Examples({"log \"%player%: %location of player%, %player's yaw%, %player's pitch%\" to \"playerlocs.log\"",
