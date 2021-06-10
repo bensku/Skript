@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.lang;
 
+import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -47,6 +48,39 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 								 ParseResult parseResult,
 								 SectionNode sectionNode,
 								 List<TriggerItem> triggerItems);
+
+	/**
+	 * Loads the code in the given {@link SectionNode},
+	 * appropriately modifying {@link ParserInstance#getCurrentSections()}.
+	 * <br>
+	 * This method itself does not modify {@link ParserInstance#getHasDelayBefore()}
+	 * (although the loaded code may change it), the calling code must deal with this.
+	 */
+	protected void loadCode(SectionNode sectionNode) {
+		List<TriggerSection> currentSections = ParserInstance.get().getCurrentSections();
+		currentSections.add(this);
+		try {
+			setTriggerItems(ScriptLoader.loadItems(sectionNode));
+		} finally {
+			currentSections.remove(currentSections.size() - 1);
+		}
+	}
+
+	/**
+	 * Loads the code using {@link #loadCode(SectionNode)}.
+	 * <br>
+	 * This method also adjusts {@link ParserInstance#getHasDelayBefore()} to expect the code
+	 * to be called zero or more times. This is done by setting {@code hasDelayBefore} to {@link Kleenean#UNKNOWN}
+	 * if the loaded section has a possible or definite delay in it.
+	 */
+	protected void loadOptionalCode(SectionNode sectionNode) {
+		Kleenean hadDelayBefore = getParser().getHasDelayBefore();
+		loadCode(sectionNode);
+		if (hadDelayBefore.isTrue())
+			return;
+		if (!getParser().getHasDelayBefore().isFalse())
+			getParser().setHasDelayBefore(Kleenean.UNKNOWN);
+	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Nullable

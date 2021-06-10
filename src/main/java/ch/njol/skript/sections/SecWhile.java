@@ -22,16 +22,16 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.util.CodeSection;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.List;
 
-public class SecWhile extends CodeSection {
+public class SecWhile extends Section {
 
 	static {
 		Skript.registerSection(SecWhile.class, "while <.+>");

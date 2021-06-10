@@ -22,12 +22,10 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.Variable;
-import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.CodeSection;
 import ch.njol.skript.lang.util.ContainerExpression;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
@@ -40,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class SecLoop extends CodeSection {
+public class SecLoop extends Section {
 
 	static {
 		Skript.registerSection(SecLoop.class, "loop %objects%");
