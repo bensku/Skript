@@ -73,14 +73,11 @@ public class SecLoop extends CodeSection {
 
 		ParserInstance parserInstance = ParserInstance.get();
 		List<TriggerSection> currentSections = parserInstance.getCurrentSections();
-		List<SecLoop> currentLoops = parserInstance.getCurrentLoops();
 
 		currentSections.add(this);
-		currentLoops.add(this);
 		try {
 			loadOptionalCode(sectionNode);
 		} finally {
-			currentLoops.remove(currentLoops.size() - 1);
 			currentSections.remove(currentSections.size() - 1);
 		}
 		super.setNext(this);

@@ -52,7 +52,7 @@ public class EffContinue extends Effect {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		List<SecLoop> loops = getParser().getCurrentLoops();
+		List<SecLoop> loops = getParser().getCurrentSections(SecLoop.class);
 		if (loops.isEmpty()) {
 			Skript.error("Continue may only be used in loops");
 			return false;

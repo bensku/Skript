@@ -25,11 +25,11 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.log.HandlerList;
-import ch.njol.skript.sections.SecLoop;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +69,6 @@ public class ParserInstance {
 	
 	// Sections
 	private List<TriggerSection> currentSections = new ArrayList<>();
-	private List<SecLoop> currentLoops = new ArrayList<>();
 	private Kleenean hasDelayBefore = Kleenean.FALSE;
 	private String indentation = "";
 	
@@ -131,6 +130,7 @@ public class ParserInstance {
 	/**
 	 * @return the outermost section which is an instance of the given class.
 	 * Returns {@code null} if {@link #isCurrentSection(Class)} returns {@code false}.
+	 * @see #getCurrentSections()
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
@@ -142,8 +142,20 @@ public class ParserInstance {
 		return null;
 	}
 
-	public List<SecLoop> getCurrentLoops() {
-		return currentLoops;
+	/**
+	 * @return a {@link List} of current sections that are an instance of the given class.
+	 * Modifications to the returned list are not saved.
+	 * @see #getCurrentSections()
+	 */
+	@SuppressWarnings("unchecked")
+	@NotNull
+	public <T extends TriggerSection> List<T> getCurrentSections(Class<T> sectionClass) {
+		List<T> list = new ArrayList<>();
+		for (TriggerSection triggerSection : currentSections) {
+			if (sectionClass.isInstance(triggerSection))
+				list.add((T) triggerSection);
+		}
+		return list;
 	}
 	
 	/**
@@ -190,10 +202,6 @@ public class ParserInstance {
 	
 	public void setCurrentSections(List<TriggerSection> currentSections) {
 		this.currentSections = currentSections;
-	}
-	
-	public void setCurrentLoops(List<SecLoop> currentLoops) {
-		this.currentLoops = currentLoops;
 	}
 	
 	/**

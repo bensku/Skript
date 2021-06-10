@@ -1341,20 +1341,18 @@ public class ScriptLoader {
 	}
 	
 	/**
-	 * @see ParserInstance#getCurrentLoops()
+	 * @see ParserInstance#getCurrentSections(Class)
 	 */
 	@Deprecated
 	public static List<SecLoop> getCurrentLoops() {
-		return getParser().getCurrentLoops();
+		return getParser().getCurrentSections(SecLoop.class);
 	}
-	
+
 	/**
-	 * @see ParserInstance#setCurrentLoops(List)
+	 * Never use this method, it has no effect.
 	 */
 	@Deprecated
-	public static void setCurrentLoops(List<SecLoop> currentLoops) {
-		getParser().setCurrentLoops(currentLoops);
-	}
+	public static void setCurrentLoops(List<SecLoop> currentLoops) { }
 	
 	/**
 	 * @see ParserInstance#getCurrentEventName()
