@@ -389,7 +389,7 @@ public class HTMLGenerator {
 			String[] eventLinks = new String[eventNames.length];
 			for (int i = 0; i < eventNames.length; i++) {
 				String eventName = eventNames[i];
-				eventLinks[i] = "<a href=\"events.html#" + eventName + "\">" + eventName + "</a>";
+				eventLinks[i] = "<a href=\"events.html#" + eventName.replaceAll(" ?/ ?", "_").replaceAll(" +", "_") + "\">" + eventName + "</a>";
 			}
 			desc = desc.replace("${element.events}", Joiner.on(", ").join(eventLinks));
 		}
@@ -437,6 +437,7 @@ public class HTMLGenerator {
 	}
 	
 	private String generateEvent(String descTemp, SkriptEventInfo<?> info) {
+		Class<?> c = info.c;
 		String desc = "";
 		
 		String docName = info.getName();
@@ -453,8 +454,19 @@ public class HTMLGenerator {
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		desc = desc.replace("${element.id}", info.getId());
 		
+		Events events = c.getAnnotation(Events.class);
 		assert desc != null;
-		desc = handleIf(desc, "${if events}", false);
+		desc = handleIf(desc, "${if events}", events != null);
+		if (events != null) {
+			String[] eventNames = events.value();
+			String[] eventLinks = new String[eventNames.length];
+			for (int i = 0; i < eventNames.length; i++) {
+				String eventName = eventNames[i];
+				eventLinks[i] = "<a href=\"events.html#" + eventName.replaceAll(" ?/ ?", "_").replaceAll(" +", "_") + "\">" + eventName + "</a>";
+			}
+			desc = desc.replace("${element.events}", Joiner.on(", ").join(eventLinks));
+		}
+		desc = desc.replace("${element.events-safe}", events == null ? "" : Joiner.on(", ").join(events.value()));
 
 		String[] requiredPlugins = info.getRequiredPlugins();
 		desc = handleIf(desc, "${if required-plugins}", requiredPlugins != null);
@@ -491,6 +503,7 @@ public class HTMLGenerator {
 	}
 	
 	private String generateClass(String descTemp, ClassInfo<?> info) {
+		Class<?> c = info.getC();
 		String desc = "";
 		
 		String docName = info.getDocName();
@@ -507,8 +520,20 @@ public class HTMLGenerator {
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		desc = desc.replace("${element.id}", info.getCodeName());
 		
+		Events events = c.getAnnotation(Events.class);
 		assert desc != null;
-		desc = handleIf(desc, "${if events}", false);
+		desc = handleIf(desc, "${if events}", events != null);
+		if (events != null) {
+			String[] eventNames = events.value();
+			String[] eventLinks = new String[eventNames.length];
+			for (int i = 0; i < eventNames.length; i++) {
+				String eventName = eventNames[i];
+				eventLinks[i] = "<a href=\"events.html#" + eventName.replaceAll(" ?/ ?", "_").replaceAll(" +", "_") + "\">" + eventName + "</a>";
+			}
+			desc = desc.replace("${element.events}", Joiner.on(", ").join(eventLinks));
+		}
+		desc = desc.replace("${element.events-safe}", events == null ? "" : Joiner.on(", ").join(events.value()));
+
 		
 		String[] requiredPlugins = info.getRequiredPlugins();
 		desc = handleIf(desc, "${if required-plugins}", requiredPlugins != null);
@@ -565,8 +590,8 @@ public class HTMLGenerator {
 		desc = desc.replace("${element.id}", info.getName());
 		
 		assert desc != null;
-		desc = handleIf(desc, "${if events}", false);
-		desc = handleIf(desc, "${if required-plugins}", false);
+		desc = handleIf(desc, "${if events}", false); // Functions doesn't require events as for now and would never I think?
+		desc = handleIf(desc, "${if required-plugins}", false); // Currently this isn't a thing but later on it might be?
 		
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");

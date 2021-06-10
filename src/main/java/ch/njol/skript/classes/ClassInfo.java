@@ -277,10 +277,6 @@ public class ClassInfo<T> implements Debuggable {
 		return this;
 	}
 	
-	public String[] getRequiredPlugins() {
-		return requiredPlugins;
-	}
-	
 	/**
 	 * Overrides default documentation id, which is assigned from class name.
 	 * This is especially useful for inner classes whose names are useless without
@@ -389,6 +385,11 @@ public class ClassInfo<T> implements Debuggable {
 	@Nullable
 	public String getDocName() {
 		return docName;
+	}
+
+	@Nullable
+	public String[] getRequiredPlugins() {
+		return requiredPlugins;
 	}
 	
 	/**
