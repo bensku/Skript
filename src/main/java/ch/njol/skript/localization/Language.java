@@ -186,10 +186,10 @@ public class Language {
 		if (addon.getLanguageFileDirectory() == null)
 			return;
 
-		InputStream din = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/default.lang");
+		InputStream din = addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "default.lang");
 		if (din == null && addon != Skript.getAddonInstance()) {
 			// Backwards compatibility with addons
-			din = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/english.lang");
+			din = addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "english.lang");
 		}
 
 		if (din == null)
@@ -238,10 +238,10 @@ public class Language {
 		if (addon.getLanguageFileDirectory() == null)
 			return false;
 		// Backwards addon compatibility
-		if (name.equals("english") && addon.plugin.getResource(addon.getLanguageFileDirectory() + "/default.lang") == null)
+		if (name.equals("english") && addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "default.lang") == null)
 			return true;
 
-		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + "/" + name + ".lang"), name);
+		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + name + ".lang"), name);
 		File file = new File(addon.plugin.getDataFolder(), addon.getLanguageFileDirectory() + File.separator + name + ".lang");
 		try {
 			if (file.exists())
