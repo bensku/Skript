@@ -34,7 +34,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
-import ch.njol.skript.sections.LoopSection;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -72,7 +72,7 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 	private String name;
 	
 	@SuppressWarnings("null")
-	private LoopSection loop;
+	private SecLoop loop;
 	
 	// whether this loops a variable
 	boolean isVariableLoop = false;
@@ -91,9 +91,9 @@ public class ExprLoopValue extends SimpleExpression<Object> {
 		}
 		Class<?> c = Classes.getClassFromUserInput(s);
 		int j = 1;
-		LoopSection loop = null;
+		SecLoop loop = null;
 
-		for (LoopSection l : getParser().getCurrentLoops()) {
+		for (SecLoop l : getParser().getCurrentLoops()) {
 			if ((c != null && c.isAssignableFrom(l.getLoopedExpression().getReturnType())) || "value".equals(s) || l.getLoopedExpression().isLoopOf(s)) {
 				if (j < i) {
 					j++;

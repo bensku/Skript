@@ -40,10 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class LoopSection extends CodeSection {
+public class SecLoop extends CodeSection {
 
 	static {
-		Skript.registerSection(LoopSection.class, "loop %objects%");
+		Skript.registerSection(SecLoop.class, "loop %objects%");
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
@@ -73,7 +73,7 @@ public class LoopSection extends CodeSection {
 
 		ParserInstance parserInstance = ParserInstance.get();
 		List<TriggerSection> currentSections = parserInstance.getCurrentSections();
-		List<LoopSection> currentLoops = parserInstance.getCurrentLoops();
+		List<SecLoop> currentLoops = parserInstance.getCurrentLoops();
 
 		currentSections.add(this);
 		currentLoops.add(this);
@@ -126,7 +126,7 @@ public class LoopSection extends CodeSection {
 	}
 
 	@Override
-	public LoopSection setNext(@Nullable TriggerItem next) {
+	public SecLoop setNext(@Nullable TriggerItem next) {
 		actualNext = next;
 		return this;
 	}

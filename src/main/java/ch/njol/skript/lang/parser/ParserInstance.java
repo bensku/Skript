@@ -25,7 +25,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.log.HandlerList;
-import ch.njol.skript.sections.LoopSection;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
@@ -69,7 +69,7 @@ public class ParserInstance {
 	
 	// Sections
 	private List<TriggerSection> currentSections = new ArrayList<>();
-	private List<LoopSection> currentLoops = new ArrayList<>();
+	private List<SecLoop> currentLoops = new ArrayList<>();
 	private Kleenean hasDelayBefore = Kleenean.FALSE;
 	private String indentation = "";
 	
@@ -142,7 +142,7 @@ public class ParserInstance {
 		return null;
 	}
 
-	public List<LoopSection> getCurrentLoops() {
+	public List<SecLoop> getCurrentLoops() {
 		return currentLoops;
 	}
 	
@@ -192,7 +192,7 @@ public class ParserInstance {
 		this.currentSections = currentSections;
 	}
 	
-	public void setCurrentLoops(List<LoopSection> currentLoops) {
+	public void setCurrentLoops(List<SecLoop> currentLoops) {
 		this.currentLoops = currentLoops;
 	}
 	

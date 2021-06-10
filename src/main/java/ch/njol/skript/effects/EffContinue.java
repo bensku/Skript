@@ -27,7 +27,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.sections.LoopSection;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -48,11 +48,11 @@ public class EffContinue extends Effect {
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
-	private LoopSection loop;
+	private SecLoop loop;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		List<LoopSection> loops = getParser().getCurrentLoops();
+		List<SecLoop> loops = getParser().getCurrentLoops();
 		if (loops.isEmpty()) {
 			Skript.error("Continue may only be used in loops");
 			return false;

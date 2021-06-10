@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
-public class ConditionalSection extends CodeSection {
+public class SecConditional extends CodeSection {
 
 	static {
-		Skript.registerSection(ConditionalSection.class,
+		Skript.registerSection(SecConditional.class,
 			"else",
 			"else if <.+>",
 			"[(1¦if)] <.+>");
@@ -67,7 +67,7 @@ public class ConditionalSection extends CodeSection {
 				return false;
 		}
 
-		ConditionalSection lastIf;
+		SecConditional lastIf;
 		if (type != ConditionalType.IF) {
 			lastIf = getIf(triggerItems);
 			if (lastIf == null) {
@@ -94,7 +94,7 @@ public class ConditionalSection extends CodeSection {
 			// In an else section, ...
 			if (hasDelayAfter.isTrue()
 					&& lastIf.hasDelayAfter.isTrue()
-					&& getElseIfs(triggerItems).stream().map(ConditionalSection::getHasDelayAfter).allMatch(Kleenean::isTrue)) {
+					&& getElseIfs(triggerItems).stream().map(SecConditional::getHasDelayAfter).allMatch(Kleenean::isTrue)) {
 				// ... if the if section, all else-if sections and the else section have definite delays,
 				//  mark delayed as TRUE.
 				getParser().setHasDelayBefore(Kleenean.TRUE);
@@ -128,7 +128,7 @@ public class ConditionalSection extends CodeSection {
 	@Nullable
 	private TriggerItem getSkippedNext() {
 		TriggerItem next = getNext();
-		while (next instanceof ConditionalSection && ((ConditionalSection) next).type != ConditionalType.IF)
+		while (next instanceof SecConditional && ((SecConditional) next).type != ConditionalType.IF)
 			next = next.getNext();
 		return next;
 	}
@@ -152,15 +152,15 @@ public class ConditionalSection extends CodeSection {
 	}
 
 	@Nullable
-	private static ConditionalSection getIf(List<TriggerItem> triggerItems) {
+	private static SecConditional getIf(List<TriggerItem> triggerItems) {
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
-			if (triggerItem instanceof ConditionalSection) {
-				ConditionalSection conditionalSection = (ConditionalSection) triggerItem;
+			if (triggerItem instanceof SecConditional) {
+				SecConditional secConditional = (SecConditional) triggerItem;
 
-				if (conditionalSection.type == ConditionalType.IF)
-					return conditionalSection;
-				else if (conditionalSection.type == ConditionalType.ELSE)
+				if (secConditional.type == ConditionalType.IF)
+					return secConditional;
+				else if (secConditional.type == ConditionalType.ELSE)
 					return null;
 			} else {
 				return null;
@@ -169,15 +169,15 @@ public class ConditionalSection extends CodeSection {
 		return null;
 	}
 
-	private static List<ConditionalSection> getElseIfs(List<TriggerItem> triggerItems) {
-		List<ConditionalSection> list = new ArrayList<>();
+	private static List<SecConditional> getElseIfs(List<TriggerItem> triggerItems) {
+		List<SecConditional> list = new ArrayList<>();
 		for (int i = triggerItems.size() - 1; i >= 0; i--) {
 			TriggerItem triggerItem = triggerItems.get(i);
-			if (triggerItem instanceof ConditionalSection) {
-				ConditionalSection conditionalSection = (ConditionalSection) triggerItem;
+			if (triggerItem instanceof SecConditional) {
+				SecConditional secConditional = (SecConditional) triggerItem;
 
-				if (conditionalSection.type == ConditionalType.ELSE_IF)
-					list.add(conditionalSection);
+				if (secConditional.type == ConditionalType.ELSE_IF)
+					list.add(secConditional);
 				else
 					break;
 			} else {

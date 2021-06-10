@@ -31,10 +31,10 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.List;
 
-public class WhileSection extends CodeSection {
+public class SecWhile extends CodeSection {
 
 	static {
-		Skript.registerSection(WhileSection.class, "while <.+>");
+		Skript.registerSection(SecWhile.class, "while <.+>");
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
@@ -74,7 +74,7 @@ public class WhileSection extends CodeSection {
 	}
 
 	@Override
-	public WhileSection setNext(@Nullable TriggerItem next) {
+	public SecWhile setNext(@Nullable TriggerItem next) {
 		actualNext = next;
 		return this;
 	}

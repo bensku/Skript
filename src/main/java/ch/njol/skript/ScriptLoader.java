@@ -57,7 +57,7 @@ import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
-import ch.njol.skript.sections.LoopSection;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.Task;
@@ -1344,7 +1344,7 @@ public class ScriptLoader {
 	 * @see ParserInstance#getCurrentLoops()
 	 */
 	@Deprecated
-	public static List<LoopSection> getCurrentLoops() {
+	public static List<SecLoop> getCurrentLoops() {
 		return getParser().getCurrentLoops();
 	}
 	
@@ -1352,7 +1352,7 @@ public class ScriptLoader {
 	 * @see ParserInstance#setCurrentLoops(List)
 	 */
 	@Deprecated
-	public static void setCurrentLoops(List<LoopSection> currentLoops) {
+	public static void setCurrentLoops(List<SecLoop> currentLoops) {
 		getParser().setCurrentLoops(currentLoops);
 	}
 	

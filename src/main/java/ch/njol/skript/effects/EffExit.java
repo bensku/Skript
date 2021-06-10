@@ -30,9 +30,9 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.sections.ConditionalSection;
-import ch.njol.skript.sections.LoopSection;
-import ch.njol.skript.sections.WhileSection;
+import ch.njol.skript.sections.SecConditional;
+import ch.njol.skript.sections.SecLoop;
+import ch.njol.skript.sections.SecWhile;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -104,7 +104,7 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 			return currentSections.size();
 		int r = 0;
 		for (TriggerSection s : currentSections) {
-			if (type == CONDITIONALS ? s instanceof ConditionalSection : s instanceof LoopSection || s instanceof WhileSection)
+			if (type == CONDITIONALS ? s instanceof SecConditional : s instanceof SecLoop || s instanceof SecWhile)
 				r++;
 		}
 		return r;
@@ -121,14 +121,14 @@ public class EffExit extends Effect { // TODO [code style] warn user about code 
 				assert false : this;
 				return null;
 			}
-			if (n instanceof LoopSection) {
-				((LoopSection) n).exit(e);
+			if (n instanceof SecLoop) {
+				((SecLoop) n).exit(e);
 			}
 
-			if (type == EVERYTHING || type == CONDITIONALS && n instanceof ConditionalSection || type == LOOPS && (n instanceof LoopSection || n instanceof WhileSection))
+			if (type == EVERYTHING || type == CONDITIONALS && n instanceof SecConditional || type == LOOPS && (n instanceof SecLoop || n instanceof SecWhile))
 				i--;
 		}
-		return n instanceof LoopSection ? ((LoopSection) n).getActualNext() : n instanceof WhileSection ? ((WhileSection) n).getActualNext() : n.getNext();
+		return n instanceof SecLoop ? ((SecLoop) n).getActualNext() : n instanceof SecWhile ? ((SecWhile) n).getActualNext() : n.getNext();
 	}
 	
 	@Override
