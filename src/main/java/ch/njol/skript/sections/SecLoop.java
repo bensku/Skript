@@ -71,15 +71,7 @@ public class SecLoop extends CodeSection {
 			expr = new ContainerExpression((Expression<? extends Container<?>>) expr, type.value());
 		}
 
-		ParserInstance parserInstance = ParserInstance.get();
-		List<TriggerSection> currentSections = parserInstance.getCurrentSections();
-
-		currentSections.add(this);
-		try {
-			loadOptionalCode(sectionNode);
-		} finally {
-			currentSections.remove(currentSections.size() - 1);
-		}
+		loadOptionalCode(sectionNode);
 		super.setNext(this);
 
 		return true;
