@@ -2076,7 +2076,7 @@ public class BukkitClasses {
 				.serializer(new Serializer<BossBar>() {
 					@Override
 					public Fields serialize(BossBar bar) throws NotSerializableException {
-						if(KEYED_BOSS_BARS_EXIST && bar instanceof KeyedBossBar) {
+						if (KEYED_BOSS_BARS_EXIST && bar instanceof KeyedBossBar) {
 							Fields fields = new Fields();
 							fields.putObject("id", ((KeyedBossBar) bar).getKey().getKey());
 							return fields;
