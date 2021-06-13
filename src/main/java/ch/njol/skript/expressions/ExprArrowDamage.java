@@ -71,13 +71,15 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 			case ADD:
 				for (Projectile entity : getExpr().getArray(e)) {
 					double dmg = ProjectileUtils.getDamage(entity) + strength * mod;
-					if (dmg < 0) continue;
+					if (dmg < 0)
+						continue;
 					ProjectileUtils.setDamage(entity, dmg);
 				}
 				break;
 			case RESET:
 			case SET:
-				if (strength < 0) return;
+				if (strength < 0)
+					return;
 				for (Projectile entity : getExpr().getArray(e)) {
 					ProjectileUtils.setDamage(entity, strength);
 				}
@@ -96,3 +98,4 @@ public class ExprArrowDamage extends SimplePropertyExpression<Projectile, Number
 	}
 
 }
+
