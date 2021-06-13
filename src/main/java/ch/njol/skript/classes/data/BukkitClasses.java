@@ -2114,7 +2114,7 @@ public class BukkitClasses {
 						BossBar bar = Bukkit.createBossBar(title, color, style);
 						bar.setProgress(fields.getAndRemovePrimitive("progress", double.class));
 						bar.setVisible(fields.getAndRemovePrimitive("visible", boolean.class));
-						if(fields.hasField("flags")) {
+						if (fields.hasField("flags")) {
 							for (Object flag : fields.getAndRemoveObject("flags", List.class))
 								bar.addFlag((BarFlag) flag);
 						}
