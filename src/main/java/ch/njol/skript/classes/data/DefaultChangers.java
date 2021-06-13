@@ -383,7 +383,7 @@ public class DefaultChangers {
 					}
 					break;
 				case ADD:
-					if(delta != null) {
+					if (delta != null) {
 						for (BossBar bossBar : what) {
 							for (Object o : delta) {
 								bossBar.addPlayer((Player) o);
