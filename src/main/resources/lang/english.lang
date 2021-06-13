@@ -1345,6 +1345,7 @@ damage causes:
 	hot_floor: magma, hot floor
 	cramming: cramming
 	dryout: dryout
+	freeze: freeze
 	custom: unknown, custom, plugin, a plugin
 
 # -- Teleport Causes --
