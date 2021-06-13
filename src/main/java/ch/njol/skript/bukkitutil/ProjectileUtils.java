@@ -69,5 +69,30 @@ public abstract class ProjectileUtils {
 			Skript.exception(e, "security manager present");
 		}
 	}
+	@Nullable
+	public static Object getShooter(final @Nullable Projectile p) {
+		if (p == null)
+			return null;
+		try {
+			return getShooter.invoke(p);
+		} catch (final IllegalAccessException | IllegalArgumentException  e) {
+			assert false;
+			return null;
+		} catch (final InvocationTargetException e) {
+			Skript.exception(e);
+			return null;
+		}
+	}
+	public static void setShooter(final Projectile p, final @Nullable Object shooter) {
+		try {
+			setShooter.invoke(p, shooter);
+		} catch (final IllegalAccessException e) {
+			assert false;
+		} catch (final IllegalArgumentException e) {
+			Skript.exception(e, "invalid parameter passed to (" + p + ").setShooter: " + shooter);
+		} catch (final InvocationTargetException e) {
+			Skript.exception(e);
+		}
+	}
 
 }
