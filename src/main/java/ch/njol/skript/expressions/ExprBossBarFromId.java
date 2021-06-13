@@ -51,6 +51,7 @@ public class ExprBossBarFromId extends SimpleExpression<BossBar> {
 	}
 
 
+
 	@SuppressWarnings("null")
 	private Expression<String> id;
 	
