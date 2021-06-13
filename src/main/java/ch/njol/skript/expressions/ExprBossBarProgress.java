@@ -78,11 +78,11 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 		if (delta == null)
 			return;
 		double mod = 1;
-		double change = ((Long) delta[0]) * mod / 100;
 		switch (mode) {
 			case REMOVE:
 				mod = -1;
-			case ADD:
+			case ADD: {
+				double change = ((Long) delta[0]) * mod / 100;
 				for (BossBar bossBar : bar.getArray(e)) {
 					Double newProgress = bossBar.getProgress() + change;
 					if (newProgress < 0 || newProgress > 1)
@@ -90,11 +90,13 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 					bossBar.setProgress(newProgress);
 				}
 				break;
+			}
 			case RESET:
 				for (BossBar bossBar : bar.getArray(e))
 					bossBar.setProgress(0);
 				break;
 			case SET: {
+				double change = ((Long) delta[0]) * mod / 100;
 				if (change < 0 || change > 1)
 					return;
 				for (BossBar bossBar : bar.getArray(e))
