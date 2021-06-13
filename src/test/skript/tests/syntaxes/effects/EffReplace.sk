@@ -30,7 +30,7 @@ test "replace strings":
 	replace first "bob" in {_text::3} with "bobby"
 	replace first "bob" with "bobby" in {_text::4}
 
-	#Replace Last
+	# Replace Last
 	replace last "bob" with "bobby" in {_text::5}
 	replace last "bob" in {_text::6} with "bobby"
 

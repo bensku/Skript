@@ -19,8 +19,18 @@
  */
 package ch.njol.skript.util;
 
+/**
+ * Used in {@link ch.njol.skript.effects.EffReplace} and {@link ch.njol.skript.expressions.ExprReplace}
+ */
 public enum ReplacementTypes {
+	
 	ALL,
 	FIRST,
 	LAST
+	
+	@Override
+	public String toString() {
+		return super.toString().toLowerCase();
+	}
+	
 }

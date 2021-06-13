@@ -101,11 +101,13 @@ public class EffReplace extends Effect {
 		Object[] storage = this.storage.getAll(e);
 		Object[] objToReplace = this.objToReplace.getAll(e);
 		Object replacement = this.replacement.getSingle(e);
-		if (storage.length < 1 || objToReplace.length < 1 || replacement == null) return;
+		if (storage.length < 1 || objToReplace.length < 1 || replacement == null)
+			return;
 		if (replaceString) {
-			Object[] oldtextToReplace = Arrays.stream((String[]) objToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
+			String[] oldtextToReplace = Arrays.stream((String[]) objToReplace).map((he) -> ((caseSensitive ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray(String[]::new);
 			String newText = (String) replacement;
-			if (!regex) newText = newText.replace("$", "\\$");
+			if (!regex)
+				newText = newText.replace("$", "\\$");
 			switch (type) {
 				case ALL:
 					for (int x = 0; x < storage.length; x++) {
@@ -125,7 +127,8 @@ public class EffReplace extends Effect {
 					for (int x = 0; x < storage.length; x++) {
 						for (Object s : oldtextToReplace) {
 							Matcher matcher = Pattern.compile((String) s).matcher((String) storage[x]);
-							if (!matcher.find()) continue;
+							if (!matcher.find())
+								continue;
 							int lastMatchStart = 0;
 							do {
 								lastMatchStart = matcher.start();

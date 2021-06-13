@@ -45,10 +45,11 @@ import ch.njol.util.Kleenean;
 @Examples({"on chat:",
 		"\tset {_hey} to replace all \"hello\" in message with \"hey\" #this will replace all the values without changing the message",
 		"\tsend {_hey}",
-		"set {_no} to  replace first \"yes\" in \"Yes, yes\" with \"no\" with case sensitivity #Only the second yes gets replaced with no"
+		"set {_no} to replace first \"yes\" in \"Yes, yes\" with \"no\" with case sensitivity #Only the second yes gets replaced with no"
 })
 @Since("INSERT VERSION")
 public class ExprReplace extends SimpleExpression<String> {
+
 	static {
 		Skript.registerExpression(ExprReplace.class, String.class, ExpressionType.COMBINED,
 				"replace (1¦first|2¦last|0¦all|every|) %strings% with %string% in %string% [(4¦with case sensitivity)]",
@@ -65,7 +66,8 @@ public class ExprReplace extends SimpleExpression<String> {
 	@SuppressWarnings({"unchecked", "null"})
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
 		int mark = parseResult.mark;
-		if (matchedPattern == 1) regex = true;
+		if (matchedPattern == 1)
+			regex = true;
 		if (SkriptConfig.caseSensitive.value() || (parseResult.mark ^ 4) < 4)
 			caseSensitive = true;
 		textToReplace = (Expression<String>) expressions[0];
@@ -79,11 +81,13 @@ public class ExprReplace extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("null")
 	protected String[] get(Event event) {
-		Object[] oldtextToReplace = Arrays.stream(textToReplace.getAll(event)).map((String he) -> ((caseSensitive && !regex ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray();
+		String[] oldtextToReplace = Arrays.stream(textToReplace.getAll(event)).map((String he) -> ((caseSensitive && !regex ? "" : "(?i)") + (regex ? he : Pattern.quote(he)))).toArray(String[]::new);
 		String newText = replacement.getSingle(event);
 		String newStorage = storage.getSingle(event);
-		if (newText == null || newStorage == null || oldtextToReplace.length < 1) return null;
-		if (!regex) newText = newText.replace("$", "\\$");
+		if (newText == null || newStorage == null || oldtextToReplace.length < 1)
+			return null;
+		if (!regex)
+			newText = newText.replace("$", "\\$");
 		switch (type) {
 			case ALL:
 				for (Object s : oldtextToReplace) {
@@ -98,7 +102,8 @@ public class ExprReplace extends SimpleExpression<String> {
 			case LAST:
 				for (Object s : oldtextToReplace) {
 					Matcher matcher = Pattern.compile((String) s).matcher(newStorage);
-					if (!matcher.find()) continue;
+					if (!matcher.find())
+						continue;
 					int lastMatchStart;
 					do {
 						lastMatchStart = matcher.start();

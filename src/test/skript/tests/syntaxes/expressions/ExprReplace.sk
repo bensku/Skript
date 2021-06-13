@@ -8,7 +8,7 @@ test "replace":
 	# Replace First
 	set {_text::2} to replace first "bob" with "bobby" in {_text::2}
 
-	#Replace Last
+	# Replace Last
 	set {_text::3} to replace last "bob" with "bobby" in {_text::3}
 
 
