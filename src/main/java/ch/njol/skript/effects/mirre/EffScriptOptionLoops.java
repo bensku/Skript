@@ -21,7 +21,6 @@ package ch.njol.skript.effects.mirre;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -51,12 +50,12 @@ public class EffScriptOptionLoops extends Effect {
 	@SuppressWarnings("null")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if(!ScriptLoader.isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE){
+		if(!getParser().isCurrentEvent(ScriptEvent.class) || isDelayed == Kleenean.TRUE){
 			Skript.error("Current event is not Script Event or you have a delay before the script option. Defaulting to 2.2 loops.", ErrorQuality.SEMANTIC_ERROR);
-			ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), true);
+			ScriptOptions.getInstance().setUsesNewLoops(getParser().getCurrentScript().getFile(), true);
 			return false;
 		}
-		ScriptOptions.getInstance().setUsesNewLoops(ScriptLoader.currentScript.getFile(), parseResult.mark == 2);
+		ScriptOptions.getInstance().setUsesNewLoops(getParser().getCurrentScript().getFile(), parseResult.mark == 2);
 		return true;
 	}
 
