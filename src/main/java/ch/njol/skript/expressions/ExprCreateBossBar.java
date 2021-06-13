@@ -37,7 +37,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("New BossBar")
+@Name("Create BossBar")
 @Description("Creates a new bossbar")
 @Examples("set {_b} to a new bossbar")
 @Since("INSERT VERSION")
