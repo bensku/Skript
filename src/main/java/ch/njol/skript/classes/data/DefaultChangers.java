@@ -372,7 +372,7 @@ public class DefaultChangers {
 			switch (mode) {
 				case DELETE:
 					for (BossBar bossBar : what) {
-						if(bossBar instanceof KeyedBossBar) {
+						if (bossBar instanceof KeyedBossBar) {
 							bossBar.removeAll();
 							bossBar.setVisible(false);
 							Bukkit.removeBossBar(((KeyedBossBar) bossBar).getKey());
