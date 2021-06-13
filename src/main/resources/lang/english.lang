@@ -1256,6 +1256,12 @@ entities:
 	goat:
 		name: goat¦s
 		pattern: <age> goat(|1¦s)|(4¦)goat (kid(|1¦s)|child(|1¦ren))
+	screaming goat:
+		name: goat¦s
+		pattern: <age> screaming goat(|1¦s)|(4¦)screaming goat (kid(|1¦s)|child(|1¦ren))
+	quiet goat:
+		name: goat¦s
+		pattern: <age> quiet goat(|1¦s)|(4¦)quiet goat (kid(|1¦s)|child(|1¦ren))
 	glow squid:
 		name: glow squid¦s
 		pattern: glow squid(|1¦s)
@@ -1263,21 +1269,20 @@ entities:
 		name: axolotl¦s @an
 		pattern: <age> axolotl(|1¦s)|(4¦)axolotl (kid(|1¦s)|child(|1¦ren))
 	lucy axolotl:
-		name: axolotl¦s @an
+		name: axolotl¦s
 		pattern: <age> lucy axolotl(|1¦s)|(4¦)lucy axolotl (kid(|1¦s)|child(|1¦ren))
 	wild axolotl:
-		name: axolotl¦s @an
+		name: axolotl¦s
 		pattern: <age> wild axolotl(|1¦s)|(4¦)wild axolotl (kid(|1¦s)|child(|1¦ren))
 	gold axolotl:
-		name: axolotl¦s @an
+		name: axolotl¦s
 		pattern: <age> gold axolotl(|1¦s)|(4¦)gold axolotl (kid(|1¦s)|child(|1¦ren))
 	cyan axolotl:
-		name: axolotl¦s @an
+		name: axolotl¦s
 		pattern: <age> cyan axolotl(|1¦s)|(4¦)cyan axolotl (kid(|1¦s)|child(|1¦ren))
 	blue axolotl:
-		name: axolotl¦s @an
+		name: axolotl¦s
 		pattern: <age> blue axolotl(|1¦s)|(4¦)blue axolotl (kid(|1¦s)|child(|1¦ren))
-
 	marker:
 		name: marker¦s
 		pattern: marker(|1¦s)

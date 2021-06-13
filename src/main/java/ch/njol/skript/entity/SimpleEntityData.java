@@ -302,7 +302,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 			types.add(new SimpleEntityDataInfo("piglin brute", PiglinBrute.class));
 
 		if (Skript.isRunningMinecraft(1, 17)) {
-			types.add(new SimpleEntityDataInfo("goat", Goat.class)); // eventually needs its own class (screaming goat)
 			types.add(new SimpleEntityDataInfo("glow squid", GlowSquid.class));
 			types.add(new SimpleEntityDataInfo("marker", Marker.class));
 			types.add(new SimpleEntityDataInfo("glow item frame", GlowItemFrame.class));
