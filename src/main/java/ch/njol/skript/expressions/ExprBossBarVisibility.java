@@ -57,9 +57,7 @@ public class ExprBossBarVisibility extends SimpleExpression<Boolean> {
 	@Override
 	protected Boolean[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return new Boolean[]{bossBar.isVisible()};
+		return bossBar == null ? null : new Boolean[]{bossBar.isVisible()};
 	}
 	
 	@Nullable
