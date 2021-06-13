@@ -54,9 +54,7 @@ public class ExprBossBarColor extends SimpleExpression<BarColor> {
 	@Override
 	protected BarColor[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return new BarColor[]{bossBar.getColor()};
+		return bossBar == null ? null : new BarColor[]{bossBar.getColor()};
 	}
 	
 	@Nullable
