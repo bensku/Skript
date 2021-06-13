@@ -42,7 +42,7 @@ import org.eclipse.jdt.annotation.Nullable;
 	"if plugin \"WorldGuard\" is not enabled:",
 	"if plugins \"Essentials\" and \"Vault\" are enabled:",
 	"if plugin \"MyBrokenPlugin\" is disabled:"})
-@Since("INSERT VERSION")
+@Since("2.6")
 public class CondIsPluginEnabled extends Condition {
 
 	static {

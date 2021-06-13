@@ -52,6 +52,11 @@ public class AliasesProvider {
 	 * All aliases that are currently loaded by this provider.
 	 */
 	private final Map<String, ItemType> aliases;
+
+	/**
+	 * All materials that are currently loaded by this provider.
+	 */
+	private final List<Material> materials;
 	
 	/**
 	 * Tags are in JSON format. We may need GSON when merging tags
@@ -166,6 +171,7 @@ public class AliasesProvider {
 		this.aliases = new HashMap<>(expectedCount);
 		this.variations = new HashMap<>(expectedCount / 20);
 		this.aliasesMap = new AliasesMap();
+		this.materials = new ArrayList<>();
 		
 		this.gson = new Gson();
 	}
@@ -259,6 +265,8 @@ public class AliasesProvider {
 			if (material == null) { // If server doesn't recognize id, do not proceed
 				throw new InvalidMinecraftIdException(id);
 			}
+			if (!materials.contains(material))
+				materials.add(material);
 			
 			// Hacky: get related entity from block states
 			String entityName = blockStates.remove("relatedEntity");
@@ -376,6 +384,15 @@ public class AliasesProvider {
 
 	public int getAliasCount() {
 		return aliases.size();
+	}
+
+	/**
+	 * Check if this provider has an alias for the given material.
+	 * @param material Material to check alias for
+	 * @return True if this material has an alias
+	 */
+	public boolean hasAliasForMaterial(Material material) {
+		return materials.contains(material);
 	}
 
 }

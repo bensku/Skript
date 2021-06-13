@@ -63,7 +63,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 		"\tcancel event",
 		"\tsend \"[%player%] >> %message%\" to all players from player"})
 @RequiredPlugins("Minecraft 1.16.4+ for optional sender")
-@Since("1.0, 2.2-dev26 (advanced features), 2.5.2 (optional sender), INSERT VERSION (sending objects)")
+@Since("1.0, 2.2-dev26 (advanced features), 2.5.2 (optional sender), 2.6 (sending objects)")
 public class EffMessage extends Effect {
 	
 	private static final boolean SUPPORTS_SENDER = Skript.classExists("org.bukkit.command.CommandSender$Spigot") &&
