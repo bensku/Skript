@@ -2037,7 +2037,7 @@ public class BukkitClasses {
 				.user("boss ?bars?")
 				.name("Boss Bar")
 				.description("Represents a bossbar.")
-				.requiredPlugins("1.13+ (Bossbar by id)")
+				.requiredPlugins("1.13+ (bossbars with IDs")
 				.examples("set {_b} to a new bossbar","set {_a} to bossbar with id \"example\"")
 				.since("INSERT VERSION")
 				.parser(new Parser<BossBar>() {
