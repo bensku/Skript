@@ -2066,7 +2066,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(BossBar o, int flags) {
-						if(KEYED_BOSS_BARS_EXIST && o instanceof KeyedBossBar){
+						if (KEYED_BOSS_BARS_EXIST && o instanceof KeyedBossBar) {
 							return String.format("Bossbar with id %s", ((KeyedBossBar) o).getKey().getKey());
 						} else {
 							return String.format("Bossbar with title %s, style %s, color %s", o.getTitle(), o.getStyle(), o.getColor());
