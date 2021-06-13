@@ -1262,6 +1262,22 @@ entities:
 	axolotl:
 		name: axolotl¦s @an
 		pattern: <age> axolotl(|1¦s)|(4¦)axolotl (kid(|1¦s)|child(|1¦ren))
+	lucy axolotl:
+		name: axolotl¦s @an
+		pattern: <age> lucy axolotl(|1¦s)|(4¦)lucy axolotl (kid(|1¦s)|child(|1¦ren))
+	wild axolotl:
+		name: axolotl¦s @an
+		pattern: <age> wild axolotl(|1¦s)|(4¦)wild axolotl (kid(|1¦s)|child(|1¦ren))
+	gold axolotl:
+		name: axolotl¦s @an
+		pattern: <age> gold axolotl(|1¦s)|(4¦)gold axolotl (kid(|1¦s)|child(|1¦ren))
+	cyan axolotl:
+		name: axolotl¦s @an
+		pattern: <age> cyan axolotl(|1¦s)|(4¦)cyan axolotl (kid(|1¦s)|child(|1¦ren))
+	blue axolotl:
+		name: axolotl¦s @an
+		pattern: <age> blue axolotl(|1¦s)|(4¦)blue axolotl (kid(|1¦s)|child(|1¦ren))
+
 	marker:
 		name: marker¦s
 		pattern: marker(|1¦s)
