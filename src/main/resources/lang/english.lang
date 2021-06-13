@@ -1266,7 +1266,7 @@ heal reasons:
 	wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
 
 # -- BossBar --
-# -- BossBar Colour --
+# -- BossBar Color --
 bossbar colors:
 	blue: blue
 	green: green
