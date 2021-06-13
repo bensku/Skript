@@ -2146,7 +2146,7 @@ public class BukkitClasses {
 		EnumUtils<BarColor> bossbarColours = new EnumUtils<>(BarColor.class, "bossbar colors");
 		Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
 				.user("(0|boss) ?bar colou?r")
-				.name("BossBar Colour")
+				.name("BossBar Color")
 				.description("A bossbar color")
 				.usage(bossbarColours.getAllNames())
 				.examples("set (bossbar with id \"example\")'s colour to red")

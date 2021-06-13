@@ -36,7 +36,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-@Name("New Id-based BossBar")
+@Name("Create BossBar with ID")
 @Description("Create a new id-based bossbar")
 @RequiredPlugins("1.13+")
 @Examples({"create bar with id \"example\" and title \"title\"",

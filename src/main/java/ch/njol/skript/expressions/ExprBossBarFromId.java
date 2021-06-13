@@ -50,6 +50,7 @@ public class ExprBossBarFromId extends SimpleExpression<BossBar> {
 			Skript.registerExpression(ExprBossBarFromId.class, BossBar.class, ExpressionType.COMBINED, "[boss[ ]]bar [(from|with) id] %string%");
 	}
 
+
 	@SuppressWarnings("null")
 	private Expression<String> id;
 	
