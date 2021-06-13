@@ -78,7 +78,7 @@ public class GoatData extends EntityData<Goat> {
 
 	@Override
 	protected int hashCode_i() {
-		return 0;
+		return screaming;
 	}
 
 	@Override
