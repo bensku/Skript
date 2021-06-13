@@ -2,7 +2,7 @@ package ch.njol.skript.entity;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Axolotl.Variant;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +11,7 @@ public class AxolotlData extends EntityData<Axolotl> {
 
 	static {
 		if (Skript.classExists("org.bukkit.entity.Axolotl")) {
-			EntityData.register(AxolotlData.class, "axolotl", Axolotl.class, 1,
+			EntityData.register(AxolotlData.class, "axolotl", Axolotl.class, 0,
 				"axolotl", "lucy axolotl", "wild axolotl", "gold axolotl", "cyan axolotl", "blue axolotl");
 		}
 	}
@@ -27,7 +27,7 @@ public class AxolotlData extends EntityData<Axolotl> {
 	}
 
 	@Override
-	protected boolean init(Literal<?>[] exprs, int matchedPattern, SkriptParser.ParseResult parseResult) {
+	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		if (matchedPattern > 0)
 			variant = Variant.values()[matchedPattern - 1];
 		return true;
