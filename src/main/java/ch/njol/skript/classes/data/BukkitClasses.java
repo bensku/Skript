@@ -2091,7 +2091,7 @@ public class BukkitClasses {
 								fields.putObject("players", bar.getPlayers().toArray(new Player[0]));
 							ArrayList<BarFlag> barFlags = new ArrayList<>();
 							for (BarFlag barFlag : BarFlag.values()) {
-								if(bar.hasFlag(barFlag))
+								if (bar.hasFlag(barFlag))
 									barFlags.add(barFlag);
 							}
 							if (barFlags.size() > 0) {
