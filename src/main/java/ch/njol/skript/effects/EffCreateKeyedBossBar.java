@@ -33,7 +33,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
 @Name("New Id-based BossBar")
@@ -46,7 +46,7 @@ public class EffCreateKeyedBossBar extends Effect {
 	
 	static {
 		if (Skript.classExists("org.bukkit.boss.KeyedBossBar"))
-			Skript.registerEffect(EffCreateKeyedBossBar.class, "create [id based] [boss[ ]]bar with id %string% [(and|with)] title[d] %string%");
+			Skript.registerEffect(EffCreateKeyedBossBar.class, "create [a] [boss[ ]]bar with id %string% [(and|with)] title[d] %string%");
 	}
 	
 	@SuppressWarnings("null")
@@ -55,7 +55,7 @@ public class EffCreateKeyedBossBar extends Effect {
 	Expression<String> title;
 	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		id = (Expression<String>) exprs[0];
 		title = (Expression<String>) exprs[0];
 		return true;
