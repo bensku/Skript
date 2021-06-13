@@ -2120,7 +2120,7 @@ public class BukkitClasses {
 						}
 						if (fields.hasField("players")) {
 							for (OfflinePlayer player : fields.getAndRemoveObject("players", OfflinePlayer[].class)) {
-								if(player.isOnline())
+								if (player.isOnline())
 									bar.addPlayer((Player) player);
 							}
 						}
