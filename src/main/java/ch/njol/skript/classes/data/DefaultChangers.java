@@ -361,7 +361,7 @@ public class DefaultChangers {
 				case REMOVE:
 				case DELETE:
 				case ADD:
-					return new Class[] {Player.class};
+					return new Class[]{Player.class};
 				default:
 					return null;
 			}
