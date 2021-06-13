@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Since;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.event.Event;
@@ -35,6 +37,8 @@ import ch.njol.util.Kleenean;
 
 @Name("BossBar Color")
 @Description("The <a href='classes.html#bossbarcolor'>color</a> of a bossbar")
+@Examples("set {_b} to a new bossbar\nset colour of bossbar {_b} to pink")
+@Since("INSERT VERSION")
 public class ExprBossBarColor extends SimpleExpression<BarColor> {
 	
 	static {

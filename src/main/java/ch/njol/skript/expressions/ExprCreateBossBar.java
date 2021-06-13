@@ -55,7 +55,7 @@ public class ExprCreateBossBar extends SimpleExpression<BossBar> {
 	@Nullable
 	@Override
 	protected BossBar[] get(Event e) {
-		return CollectionUtils.array(Bukkit.createBossBar("BossBar", BarColor.WHITE, BarStyle.SOLID));
+		return CollectionUtils.array(Bukkit.createBossBar("BossBar", BarColor.PINK, BarStyle.SOLID));
 	}
 	
 	@Override
