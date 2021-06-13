@@ -392,7 +392,7 @@ public class DefaultChangers {
 					}
 					break;
 				case REMOVE:
-					if(delta != null) {
+					if (delta != null) {
 						for (BossBar bossBar : what) {
 							for (Object o : delta) {
 								bossBar.removePlayer((Player) o);
