@@ -21,7 +21,7 @@ package ch.njol.skript.conditions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Comparator;
+import ch.njol.skript.classes.Comparator.Relation;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -98,13 +98,11 @@ public class CondContains extends Condition {
 		CheckType checkType = this.checkType;
 
 		Object[] containerValues = containers.getArray(e);
-		Object[] itemValues = items.getArray(e);
 
-		if (containerValues.length == 0 || itemValues.length == 0)
+		if (containerValues.length == 0)
 			return isNegated();
 
 		boolean containersAnd = containers.getAnd();
-		boolean itemsAnd = items.getAnd();
 
 		// Change checkType according to values
 		if (checkType == CheckType.UNKNOWN) {
@@ -127,7 +125,7 @@ public class CondContains extends Condition {
 			checker = o -> {
 				Inventory inventory = (Inventory) o;
 
-				return SimpleExpression.check(itemValues, o1 -> {
+				return items.check(e, o1 -> {
 					if (o1 instanceof ItemType)
 						return ((ItemType) o1).isContainedIn(inventory);
 					else if (o1 instanceof ItemStack)
@@ -136,29 +134,26 @@ public class CondContains extends Condition {
 						return Objects.equals(inventory, o1);
 					else
 						return false;
-				}, false, itemsAnd);
+				});
 			};
 		} else if (checkType == CheckType.STRING) {
 			boolean caseSensitive = SkriptConfig.caseSensitive.value();
 			checker = o -> {
 				String string = (String) o;
 
-				return SimpleExpression.check(itemValues, o1 -> {
+				return items.check(e, o1 -> {
 					if (o1 instanceof String) {
 						return StringUtils.contains(string, (String) o1, caseSensitive);
 					} else {
 						return false;
 					}
-				}, false, itemsAnd);
+				});
 			};
 		} else {
 			assert checkType == CheckType.OBJECTS;
 
 			and = false;
-			checker = (o) ->
-				SimpleExpression.check(itemValues,
-					o1 -> Comparators.compare(o, o1) == Comparator.Relation.EQUAL,
-					false, itemsAnd);
+			checker = (o) -> items.check(e, o1 -> Comparators.compare(o, o1) == Relation.EQUAL);
 		}
 
 		return SimpleExpression.check(containerValues, checker, isNegated(), and);
