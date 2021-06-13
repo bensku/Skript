@@ -28,6 +28,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Boat;
@@ -57,6 +58,9 @@ import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
+import org.bukkit.entity.GlowItemFrame;
+import org.bukkit.entity.GlowSquid;
+import org.bukkit.entity.Goat;
 import org.bukkit.entity.Golem;
 import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Hoglin;
@@ -73,6 +77,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.LlamaSpit;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Marker;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Mule;
@@ -295,6 +300,14 @@ public class SimpleEntityData extends EntityData<Entity> {
 		
 		if (Skript.classExists("org.bukkit.entity.PiglinBrute")) // Added in 1.16.2
 			types.add(new SimpleEntityDataInfo("piglin brute", PiglinBrute.class));
+
+		if (Skript.isRunningMinecraft(1, 17)) {
+			types.add(new SimpleEntityDataInfo("goat", Goat.class)); // eventually needs its own class (screaming goat)
+			types.add(new SimpleEntityDataInfo("glow squid", GlowSquid.class));
+			types.add(new SimpleEntityDataInfo("axolotl", Axolotl.class)); // eventually needs its own class (pattern)
+			types.add(new SimpleEntityDataInfo("marker", Marker.class));
+			types.add(new SimpleEntityDataInfo("glow item frame", GlowItemFrame.class));
+		}
 		
 		// Register zombie after Husk and Drowned to make sure both work
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
