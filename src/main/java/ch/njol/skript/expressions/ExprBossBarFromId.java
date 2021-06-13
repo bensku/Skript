@@ -38,10 +38,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("BossBar From Id")
-@Description("Get an id-based bossbar from its id")
+@Name("BossBar from ID")
+@Description("Get an id-based bossbar from its ID")
 @RequiredPlugins("1.13+")
-@Examples("set bossbar from id \"example\"'s style to solid")
+@Examples("set style of bossbar from id \"example\" to solid")
 @Since("INSERT VERSION")
 public class ExprBossBarFromId extends SimpleExpression<BossBar> {
 	
@@ -49,6 +49,7 @@ public class ExprBossBarFromId extends SimpleExpression<BossBar> {
 		if (Skript.classExists("org.bukkit.boss.KeyedBossBar"))
 			Skript.registerExpression(ExprBossBarFromId.class, BossBar.class, ExpressionType.COMBINED, "[boss[ ]]bar [(from|with) id] %string%");
 	}
+
 	@SuppressWarnings("null")
 	private Expression<String> id;
 	
@@ -62,10 +63,7 @@ public class ExprBossBarFromId extends SimpleExpression<BossBar> {
 	@Override
 	protected KeyedBossBar[] get(Event e) {
 		String id = this.id.getSingle(e);
-		if (id != null)
-			return CollectionUtils.array(Bukkit.getBossBar(NamespacedKey.minecraft(id)));
-		else
-			return null;
+		return id == null ? null : CollectionUtils.array(Bukkit.getBossBar(NamespacedKey.minecraft(id)));
 	}
 	
 	@Override

@@ -57,9 +57,7 @@ public class ExprBossBarTitle extends SimpleExpression<String> {
 	@Override
 	protected String[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return new String[]{bossBar.getTitle()};
+		return bossBar == null ? null : new String[]{bossBar.getTitle()};
 	}
 	
 	@Nullable

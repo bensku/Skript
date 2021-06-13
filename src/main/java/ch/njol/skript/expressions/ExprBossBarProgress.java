@@ -56,9 +56,7 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 	@Override
 	protected Number[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return new Number[]{Math.round(bossBar.getProgress() * 100)};
+		return bossBar == null ? null : new Number[]{Math.round(bossBar.getProgress() * 100)};
 	}
 
 	@Nullable
@@ -77,8 +75,9 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+		if (delta == null)
+			return;
 		double mod = 1;
-		if (delta == null) return;
 		double change = ((Long) delta[0]) * mod / 100;
 		switch (mode) {
 			case REMOVE:
@@ -86,7 +85,8 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 			case ADD:
 				for (BossBar bossBar : bar.getArray(e)) {
 					Double newProgress = bossBar.getProgress() + change;
-					if (newProgress < 0 || newProgress > 1) continue;
+					if (newProgress < 0 || newProgress > 1)
+						continue;
 					bossBar.setProgress(newProgress);
 				}
 				break;
@@ -95,10 +95,10 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 					bossBar.setProgress(0);
 				break;
 			case SET: {
-				if (change < 0 || change > 1) return;
+				if (change < 0 || change > 1)
+					return;
 				for (BossBar bossBar : bar.getArray(e))
 					bossBar.setProgress(change);
-
 				break;
 			}
 		}

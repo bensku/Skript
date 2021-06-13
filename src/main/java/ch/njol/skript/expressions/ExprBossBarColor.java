@@ -33,7 +33,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-@Name("BossBar Colour")
+@Name("BossBar Color")
 @Description("The <a href='classes.html#bossbarcolor'>color</a> of a bossbar")
 public class ExprBossBarColor extends SimpleExpression<BarColor> {
 	
@@ -89,7 +89,7 @@ public class ExprBossBarColor extends SimpleExpression<BarColor> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "colour of bossbar " + bar.toString(e, debug);
+		return "color of bossbar " + bar.toString(e, debug);
 	}
 	
 }

@@ -59,9 +59,7 @@ public class ExprBossBarPlayers extends SimpleExpression<Player> {
 	@Override
 	protected Player[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return bossBar.getPlayers().toArray(new Player[0]);
+		return bossBar == null ? null : bossBar.getPlayers().toArray(new Player[0]);
 	}
 	
 	@Nullable

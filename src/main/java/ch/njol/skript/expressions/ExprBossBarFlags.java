@@ -41,8 +41,8 @@ import ch.njol.util.Kleenean;
 
 @Name("BossBar Flags")
 @Description("The <a href='classes.html#bossbarflag'>flags</a> of a bossbar")
-@Since("INSERT VERSION")
 @Examples("add darken sky to flags of a new bossbar")
+@Since("INSERT VERSION")
 public class ExprBossBarFlags extends SimpleExpression<BarFlag> {
 	
 	static {

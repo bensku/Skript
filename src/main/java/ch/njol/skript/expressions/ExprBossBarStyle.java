@@ -58,9 +58,7 @@ public class ExprBossBarStyle extends SimpleExpression<BarStyle> {
 	@Override
 	protected BarStyle[] get(Event e) {
 		BossBar bossBar = bar.getSingle(e);
-		if (bossBar == null)
-			return null;
-		return new BarStyle[]{bossBar.getStyle()};
+		return bossBar == null ? null : new BarStyle[]{bossBar.getStyle()};
 	}
 	
 	@Nullable
