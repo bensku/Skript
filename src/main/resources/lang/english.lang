@@ -394,6 +394,9 @@ biomes:
 	soul_sand_valley: soul sand valley
 	warped_forest: warped forest
 	basalt_deltas: basalt deltas
+	# 1.17 biomes
+	dripstone_caves: dripstone caves
+	lush_caves: lush caves
 
 # -- Tree Types --
 tree types:
