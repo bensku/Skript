@@ -2104,7 +2104,7 @@ public class BukkitClasses {
 					@Override
 					@SuppressWarnings("null")
 					protected BossBar deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
-						if(fields.hasField("id")) {
+						if (fields.hasField("id")) {
 							BossBar bar = Bukkit.getBossBar(NamespacedKey.minecraft(fields.getAndRemoveObject("id", String.class)));
 							return bar;
 						}
