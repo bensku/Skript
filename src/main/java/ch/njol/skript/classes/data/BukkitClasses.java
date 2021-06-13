@@ -2094,7 +2094,7 @@ public class BukkitClasses {
 								if(bar.hasFlag(barFlag))
 									barFlags.add(barFlag);
 							}
-							if(barFlags.size() > 0) {
+							if (barFlags.size() > 0) {
 								fields.putObject("flags", barFlags);
 							}
 							return fields;
