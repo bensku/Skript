@@ -2049,10 +2049,11 @@ public class BukkitClasses {
 					
 					@Override
 					public String getVariableNamePattern() {
-						return "\\S+";
+						return "[\\sA-Za-z]+";
 					}
 				})
 				.serializer(new EnumSerializer<>(Horse.Color.class)));
+
 		EnumUtils<Horse.Style> horseStyleUtils = new EnumUtils<>(Horse.Style.class, "horse styles");
 		Classes.registerClass(new ClassInfo<>(Horse.Style.class, "horsestyle")
 				.user("horse styles?")
@@ -2079,7 +2080,7 @@ public class BukkitClasses {
 					
 					@Override
 					public String getVariableNamePattern() {
-						return "\\S+";
+						return "[\\sA-Za-z]+";
 					}
 				})
 				.serializer(new EnumSerializer<>(Horse.Style.class)));
