@@ -76,9 +76,7 @@ public class ExprBossBarColor extends SimpleExpression<BarColor> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		BarColor color = delta != null ? (BarColor) delta[0] : BarColor.WHITE;
-		for (BossBar bossBar : bar.getArray(e)) {
-			bossBar.setColor(color);
-		}
+		bar.getSingle(e).setColor(color);
 	}
 	
 	@Override

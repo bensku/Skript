@@ -83,24 +83,21 @@ public class ExprBossBarProgress extends SimpleExpression<Number> {
 				mod = -1;
 			case ADD: {
 				double change = ((Long) delta[0]) * mod / 100;
-				for (BossBar bossBar : bar.getArray(e)) {
-					Double newProgress = bossBar.getProgress() + change;
-					if (newProgress < 0 || newProgress > 1)
-						continue;
-					bossBar.setProgress(newProgress);
-				}
+				BossBar bossBar = bar.getSingle(e);
+				Double newProgress = bossBar.getProgress() + change;
+				if (newProgress < 0 || newProgress > 1)
+					return;
+				bossBar.setProgress(newProgress);
 				break;
 			}
 			case RESET:
-				for (BossBar bossBar : bar.getArray(e))
-					bossBar.setProgress(0);
+				bar.getSingle(e).setProgress(0);
 				break;
 			case SET: {
 				double change = ((Long) delta[0]) * mod / 100;
 				if (change < 0 || change > 1)
 					return;
-				for (BossBar bossBar : bar.getArray(e))
-					bossBar.setProgress(change);
+				bar.getSingle(e).setProgress(change);
 				break;
 			}
 		}

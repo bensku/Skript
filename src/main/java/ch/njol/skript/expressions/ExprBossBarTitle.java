@@ -74,9 +74,7 @@ public class ExprBossBarTitle extends SimpleExpression<String> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta != null) {
-			for (BossBar bossBar : bar.getArray(e)) {
-				bossBar.setTitle((String) delta[0]);
-			}
+			bar.getSingle(e).setTitle((String) delta[0]);
 		}
 	}
 	

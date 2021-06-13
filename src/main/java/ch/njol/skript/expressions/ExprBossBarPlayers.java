@@ -79,19 +79,17 @@ public class ExprBossBarPlayers extends SimpleExpression<Player> {
 		switch (mode) {
 			case ADD:
 				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e)) {
-						for (Object o : delta) {
-							bossBar.addPlayer((Player) o);
-						}
+					BossBar bossBar = bar.getSingle(e);
+					for (Object o : delta) {
+						bossBar.addPlayer((Player) o);
 					}
 				}
 				break;
 			case REMOVE:
 				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e)) {
-						for (Object o : delta) {
-							bossBar.removePlayer((Player) o);
-						}
+					BossBar bossBar = bar.getSingle(e);
+					for (Object o : delta) {
+						bossBar.removePlayer((Player) o);
 					}
 				}
 				break;

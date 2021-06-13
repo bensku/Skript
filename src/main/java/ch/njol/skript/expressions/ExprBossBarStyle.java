@@ -76,9 +76,7 @@ public class ExprBossBarStyle extends SimpleExpression<BarStyle> {
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		BarStyle style = delta != null ? (BarStyle) delta[0] : BarStyle.SOLID;
-		for (BossBar bossBar : bar.getArray(e)) {
-			bossBar.setStyle(style);
-		}
+			bar.getSingle(e).setStyle(style);
 	}
 	
 	@Override

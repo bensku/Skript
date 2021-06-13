@@ -89,30 +89,29 @@ public class ExprBossBarFlags extends SimpleExpression<BarFlag> {
 		switch (mode) {
 			case ADD:
 				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e)) {
-						for (Object o : delta) {
-							bossBar.addFlag((BarFlag) o);
-						}
-						//This is done as flags for pre existing players aren't updated until they're readded to the bossbar
-						List<Player> players = bossBar.getPlayers();
-						bossBar.removeAll();
-						for (Player player : players) {
-							bossBar.addPlayer(player);
-						}
+					BossBar bossBar = bar.getSingle(e);
+					for (Object o : delta) {
+						bossBar.addFlag((BarFlag) o);
+					}
+					//This is done as flags for pre existing players aren't updated until they're readded to the bossbar
+					List<Player> players = bossBar.getPlayers();
+					bossBar.removeAll();
+					for (Player player : players) {
+						bossBar.addPlayer(player);
 					}
 				}
 				break;
 			case REMOVE:
 				if (delta != null) {
-					for (BossBar bossBar : bar.getArray(e)) {
-						for (Object o : delta) {
-							bossBar.removeFlag((BarFlag) o);
-						}
-						List<Player> players = bossBar.getPlayers();
-						bossBar.removeAll();
-						for (Player player : players) {
-							bossBar.addPlayer(player);
-						}
+					BossBar bossBar = bar.getSingle(e);
+					for (Object o : delta) {
+						bossBar.removeFlag((BarFlag) o);
+					}
+					//This is done as flags for pre existing players aren't updated until they're readded to the bossbar
+					List<Player> players = bossBar.getPlayers();
+					bossBar.removeAll();
+					for (Player player : players) {
+						bossBar.addPlayer(player);
 					}
 				}
 				break;
