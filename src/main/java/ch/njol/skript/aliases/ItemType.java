@@ -553,7 +553,6 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	 * @see #removeFrom(ItemStack)
 	 * @see #removeFrom(List...)
 	 */
-	@Nullable
 	public ItemStack getRandom() {
 		int numItems = types.size();
 		int index = random.nextInt(numItems);

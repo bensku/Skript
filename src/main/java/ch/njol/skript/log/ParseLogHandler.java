@@ -37,9 +37,9 @@ public class ParseLogHandler extends LogHandler {
 	private final List<LogEntry> log = new ArrayList<>();
 	
 	@Override
-	public LogResult log(final LogEntry entry) {
+	public LogResult log(LogEntry entry) {
 		if (entry.getLevel().intValue() >= Level.SEVERE.intValue()) {
-			final LogEntry e = error;
+			LogEntry e = error;
 			if (e == null || entry.getQuality() > e.getQuality()) {
 				error = entry;
 				if (e != null)
@@ -59,7 +59,13 @@ public class ParseLogHandler extends LogHandler {
 			SkriptLogger.LOGGER.warning("Parse log wasn't instructed to print anything at " + SkriptLogger.getCaller());
 	}
 	
-	public void error(final String error, final ErrorQuality quality) {
+	@Override
+	public ParseLogHandler start() {
+		SkriptLogger.startLogHandler(this);
+		return this;
+	}
+	
+	public void error(String error, ErrorQuality quality) {
 		log(new LogEntry(SkriptLogger.SEVERE, quality, error));
 	}
 	
@@ -67,7 +73,7 @@ public class ParseLogHandler extends LogHandler {
 	 * Clears all log messages except for the error
 	 */
 	public void clear() {
-		for (final LogEntry e : log)
+		for (LogEntry e : log)
 			e.discarded("cleared");
 		log.clear();
 	}
@@ -92,27 +98,27 @@ public class ParseLogHandler extends LogHandler {
 	 * 
 	 * @param def Error to log if no error has been logged so far, can be null
 	 */
-	public void printError(final @Nullable String def) {
+	public void printError(@Nullable String def) {
 		printedErrorOrLog = true;
 		stop();
-		final LogEntry error = this.error;
+		LogEntry error = this.error;
 		if (error != null)
 			SkriptLogger.log(error);
 		else if (def != null)
 			SkriptLogger.log(new LogEntry(SkriptLogger.SEVERE, ErrorQuality.SEMANTIC_ERROR, def));
-		for (final LogEntry e : log)
+		for (LogEntry e : log)
 			e.discarded("not printed");
 	}
 	
-	public void printError(final String def, final ErrorQuality quality) {
+	public void printError(String def, ErrorQuality quality) {
 		printedErrorOrLog = true;
 		stop();
-		final LogEntry error = this.error;
+		LogEntry error = this.error;
 		if (error != null && error.quality >= quality.quality())
 			SkriptLogger.log(error);
 		else
 			SkriptLogger.log(new LogEntry(SkriptLogger.SEVERE, quality, def));
-		for (final LogEntry e : log)
+		for (LogEntry e : log)
 			e.discarded("not printed");
 	}
 	
