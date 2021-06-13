@@ -2087,7 +2087,7 @@ public class BukkitClasses {
 							fields.putObject("color", bar.getColor());
 							fields.putObject("style", bar.getStyle());
 							fields.putPrimitive("visible", bar.isVisible());
-							if(bar.getPlayers().size() > 0)
+							if (bar.getPlayers().size() > 0)
 								fields.putObject("players", bar.getPlayers().toArray(new Player[0]));
 							ArrayList<BarFlag> barFlags = new ArrayList<>();
 							for (BarFlag barFlag : BarFlag.values()) {
