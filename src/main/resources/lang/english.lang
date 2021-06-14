@@ -1835,6 +1835,7 @@ spawn reasons:
 	chunk_gen: chunk generation
 	cured: cured
 	custom: customized, customised, custom
+	command: command
 	default: default
 	dispense_egg: dispense egg, dispensing egg
 	drowned: drowned
