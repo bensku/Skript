@@ -208,7 +208,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 		types.add(new SimpleEntityDataInfo("snowball", Snowball.class));
 		types.add(new SimpleEntityDataInfo("snow golem", Snowman.class));
 		types.add(new SimpleEntityDataInfo("spider", Spider.class));
-		types.add(new SimpleEntityDataInfo("squid", Squid.class));
 		types.add(new SimpleEntityDataInfo("bottle of enchanting", ThrownExpBottle.class));
 		types.add(new SimpleEntityDataInfo("tnt", TNTPrimed.class));
 		types.add(new SimpleEntityDataInfo("leash hitch", LeashHitch.class));
@@ -307,6 +306,8 @@ public class SimpleEntityData extends EntityData<Entity> {
 		
 		// Register zombie after Husk and Drowned to make sure both work
 		types.add(new SimpleEntityDataInfo("zombie", Zombie.class));
+		// Register squid after glow squid to make sure both work
+		types.add(new SimpleEntityDataInfo("squid", Squid.class));
 		
 		// TODO !Update with every version [entities]
 		
