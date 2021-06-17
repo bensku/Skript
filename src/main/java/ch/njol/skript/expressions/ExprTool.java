@@ -54,7 +54,7 @@ import ch.njol.util.Kleenean;
 @Description("The item an entity is holding in their main or off hand.")
 @Examples({"player's tool is a pickaxe",
 	"player's off hand tool is a shield",
-	"set tool of all player's to diamond sword",
+	"set tool of all players to a diamond sword",
 	"set offhand tool of target entity to a bow"})
 @Since("1.0")
 public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
