@@ -118,9 +118,6 @@ plugin priority: high
 # - effects 'remove ... from drops'/'clear drops': Drops added by other plugins are not removed => increase priority
 #                                                  Skript removes drops it shouldn't => decrease priority or specify which item types to remove
 
-# Skript will call an extra EntityDamageEvent to check if the damage effect can be cancelled.
-# This setting will control if you want that added extra check
-disable damage event cancellation checking: false
 
 log player commands: false
 # Whether Skript should log the usage of custom commands.

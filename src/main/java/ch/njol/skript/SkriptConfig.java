@@ -154,10 +154,8 @@ public class SkriptConfig {
 			return null;
 		}
 	});
-	
-	public static final Option<Boolean> disableDamageCancelChecking = new Option<>("disable damage event cancellation checking", false);
-	
-	public static final Option<Boolean> logPlayerCommands = new Option<>("log player commands", false);
+  
+	public static final Option<Boolean> logPlayerCommands = new Option<Boolean>("log player commands", false);
 	
 	/**
 	 * Maximum number of digits to display after the period for floats and doubles

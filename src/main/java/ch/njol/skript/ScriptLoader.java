@@ -32,11 +32,8 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
-import ch.njol.skript.lang.Condition;
-import ch.njol.skript.lang.Conditional;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Loop;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SelfRegisteringSkriptEvent;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEventInfo;
@@ -45,7 +42,6 @@ import ch.njol.skript.lang.Statement;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.TriggerSection;
-import ch.njol.skript.lang.While;
 import ch.njol.skript.lang.function.Function;
 import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
@@ -60,6 +56,7 @@ import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.ExceptionUtils;
 import ch.njol.skript.util.Task;
@@ -1104,15 +1101,12 @@ public class ScriptLoader {
 	/**
 	 * Loads a section by converting it to {@link TriggerItem}s.
 	 */
-	@SuppressWarnings("unchecked")
 	public static ArrayList<TriggerItem> loadItems(SectionNode node) {
 		if (Skript.debug())
 			getParser().setIndentation(getParser().getIndentation() + "    ");
 		
 		ArrayList<TriggerItem> items = new ArrayList<>();
-		
-		Kleenean hadDelayBeforeLastIf = Kleenean.FALSE;
-		
+
 		for (Node n : node) {
 			SkriptLogger.setNode(n);
 			if (n instanceof SimpleNode) {
@@ -1129,99 +1123,20 @@ public class ScriptLoader {
 				if (stmt instanceof Delay)
 					getParser().setHasDelayBefore(Kleenean.TRUE);
 			} else if (n instanceof SectionNode) {
-				String name = replaceOptions("" + n.getKey());
-				if (!SkriptParser.validateLine(name))
+				String expr = replaceOptions("" + n.getKey());
+				if (!SkriptParser.validateLine(expr))
 					continue;
 				TypeHints.enterScope(); // Begin conditional type hints
-				
-				if (StringUtils.startsWithIgnoreCase(name, "loop ")) {
-					String l = "" + name.substring("loop ".length());
-					RetainingLogHandler h = SkriptLogger.startRetainingLog();
-					Expression<?> loopedExpr;
-					try {
-						loopedExpr = new SkriptParser(l).parseExpression(Object.class);
-						if (loopedExpr != null)
-							loopedExpr = loopedExpr.getConvertedExpression(Object.class);
-						if (loopedExpr == null) {
-							h.printErrors("Can't understand this loop: '" + name + "'");
-							continue;
-						}
-						h.printLog();
-					} finally {
-						h.stop();
-					}
-					
-					if (loopedExpr.isSingle()) {
-						Skript.error("Can't loop " + loopedExpr + " because it's only a single value");
-						continue;
-					}
-					if (Skript.debug() || n.debug())
-						Skript.debug(getParser().getIndentation() + "loop " + loopedExpr.toString(null, true) + ":");
-					
-					Kleenean hadDelayBefore = getParser().getHasDelayBefore();
-					items.add(new Loop(loopedExpr, (SectionNode) n));
-					if (hadDelayBefore != Kleenean.TRUE && getParser().getHasDelayBefore() != Kleenean.FALSE)
-						getParser().setHasDelayBefore(Kleenean.UNKNOWN);
-				} else if (StringUtils.startsWithIgnoreCase(name, "while ")) {
-					String l = "" + name.substring("while ".length());
-					Condition c = Condition.parse(l, "Can't understand this condition: " + l);
-					if (c == null)
-						continue;
-					if (Skript.debug() || n.debug())
-						Skript.debug(getParser().getIndentation() + "while " + c.toString(null, true) + ":");
-					Kleenean hadDelayBefore = getParser().getHasDelayBefore();
-					items.add(new While(c, (SectionNode) n));
-					if (hadDelayBefore != Kleenean.TRUE && getParser().getHasDelayBefore() != Kleenean.FALSE)
-						getParser().setHasDelayBefore(Kleenean.UNKNOWN);
-				} else if (name.equalsIgnoreCase("else")) {
-					if (items.size() == 0
-						|| !(items.get(items.size() - 1) instanceof Conditional)
-						|| ((Conditional) items.get(items.size() - 1)).hasElseClause()
-					) {
-						Skript.error("'else' has to be placed just after an 'if' or 'else if' section");
-						continue;
-					}
-					if (Skript.debug() || n.debug())
-						Skript.debug(getParser().getIndentation() + "else:");
-					
-					Kleenean hadDelayAfterLastIf = getParser().getHasDelayBefore();
-					getParser().setHasDelayBefore(hadDelayBeforeLastIf);
-					((Conditional) items.get(items.size() - 1)).loadElseClause((SectionNode) n);
-					getParser().setHasDelayBefore(hadDelayBeforeLastIf.or(hadDelayAfterLastIf.and(getParser().getHasDelayBefore())));
-				} else if (StringUtils.startsWithIgnoreCase(name, "else if ")) {
-					if (items.size() == 0
-						|| !(items.get(items.size() - 1) instanceof Conditional)
-						|| ((Conditional) items.get(items.size() - 1)).hasElseClause()
-					) {
-						Skript.error("'else if' has to be placed just after another 'if' or 'else if' section");
-						continue;
-					}
-					name = "" + name.substring("else if ".length());
-					Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
-					if (cond == null)
-						continue;
-					if (Skript.debug() || n.debug())
-						Skript.debug(getParser().getIndentation() + "else if " + cond.toString(null, true));
-					Kleenean hadDelayAfterLastIf = getParser().getHasDelayBefore();
-					getParser().setHasDelayBefore(hadDelayBeforeLastIf);
-					((Conditional) items.get(items.size() - 1)).loadElseIf(cond, (SectionNode) n);
-					getParser().setHasDelayBefore(
-						hadDelayBeforeLastIf.or(hadDelayAfterLastIf.and(
-							getParser().getHasDelayBefore().and(Kleenean.UNKNOWN))));
-				} else {
-					if (StringUtils.startsWithIgnoreCase(name, "if "))
-						name = "" + name.substring(3);
-					Condition cond = Condition.parse(name, "can't understand this condition: '" + name + "'");
-					if (cond == null)
-						continue;
-					if (Skript.debug() || n.debug())
-						Skript.debug(getParser().getIndentation() + cond.toString(null, true) + ":");
-					Kleenean hadDelayBefore = getParser().getHasDelayBefore();
-					hadDelayBeforeLastIf = hadDelayBefore;
-					items.add(new Conditional(cond, (SectionNode) n));
-					getParser().setHasDelayBefore(hadDelayBefore.or(getParser().getHasDelayBefore().and(Kleenean.UNKNOWN)));
-				}
-				
+
+				Section section = Section.parse(expr, "Can't understand this section: " + expr, (SectionNode) n, items);
+				if (section == null)
+					continue;
+
+				if (Skript.debug() || n.debug())
+					Skript.debug(getParser().getIndentation() + section.toString(null, true));
+
+				items.add(section);
+
 				// Destroy these conditional type hints
 				TypeHints.exitScope();
 			}
@@ -1423,20 +1338,18 @@ public class ScriptLoader {
 	}
 	
 	/**
-	 * @see ParserInstance#getCurrentLoops()
+	 * @see ParserInstance#getCurrentSections(Class)
 	 */
 	@Deprecated
-	public static List<Loop> getCurrentLoops() {
-		return getParser().getCurrentLoops();
+	public static List<SecLoop> getCurrentLoops() {
+		return getParser().getCurrentSections(SecLoop.class);
 	}
-	
+
 	/**
-	 * @see ParserInstance#setCurrentLoops(List)
+	 * Never use this method, it has no effect.
 	 */
 	@Deprecated
-	public static void setCurrentLoops(List<Loop> currentLoops) {
-		getParser().setCurrentLoops(currentLoops);
-	}
+	public static void setCurrentLoops(List<SecLoop> currentLoops) { }
 	
 	/**
 	 * @see ParserInstance#getCurrentEventName()
