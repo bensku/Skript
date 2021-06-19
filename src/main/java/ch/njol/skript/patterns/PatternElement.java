@@ -24,10 +24,15 @@ import org.jetbrains.annotations.Nullable;
 public abstract class PatternElement {
 
 	@Nullable
-	protected PatternElement next;
+	PatternElement next;
 
 	@Nullable
-	public abstract MatchResult match(String expr, MatchResult matchResult);
+	public MatchResult match(String expr, MatchResult matchResult) {
+		return match(expr, matchResult, next);
+	}
+
+	@Nullable
+	public abstract MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next);
 
 	@Nullable
 	protected MatchResult matchNext(String expr, MatchResult matchResult) {
@@ -35,10 +40,6 @@ public abstract class PatternElement {
 			return matchResult.exprOffset == expr.length() ? matchResult : null;
 		}
 		return next.match(expr, matchResult);
-	}
-
-	public void setNext(PatternElement patternElement) {
-		next = patternElement;
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class TypePatternElement extends PatternElement {
 
 	@Override
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult) {
+	public MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next) {
 		ExprInfo exprInfo = getExprInfo();
 
 		int newExprOffset;

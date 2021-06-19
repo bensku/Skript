@@ -40,23 +40,15 @@ public class ChoicePatternElement extends PatternElement {
 
 	@Override
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult) {
+	public MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next) {
 		for (Choice choice : choices) {
 			MatchResult matchResultCopy = matchResult.copy();
 			matchResultCopy.mark ^= choice.mark;
-			MatchResult newMatchResult = choice.patternElement.match(expr, matchResultCopy);
+			MatchResult newMatchResult = choice.patternElement.match(expr, matchResultCopy, next);
 			if (newMatchResult != null)
 				return newMatchResult;
 		}
 		return null;
-	}
-
-	@Override
-	public void setNext(PatternElement patternElement) {
-		super.setNext(patternElement);
-		for (Choice choice : choices) {
-			choice.patternElement.setNext(patternElement);
-		}
 	}
 
 	@Override
