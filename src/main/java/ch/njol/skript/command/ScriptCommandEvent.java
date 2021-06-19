@@ -26,16 +26,25 @@ import org.bukkit.event.HandlerList;
  */
 public class ScriptCommandEvent extends CommandEvent {
 	
-	private final ScriptCommand skriptCommand;
+	private final ScriptCommand scriptCommand;
 	private boolean cooldownCancelled = false;
+	private final String commandLabel;
 
-	public ScriptCommandEvent(final ScriptCommand command, final CommandSender sender) {
-		super(sender, command.getLabel(), null);
-		skriptCommand = command;
+	public ScriptCommandEvent(ScriptCommand scriptCommand, CommandSender sender, String commandLabel) {
+		super(sender, scriptCommand.getLabel(), null);
+		this.scriptCommand = scriptCommand;
+		this.commandLabel = commandLabel;
 	}
 	
 	public ScriptCommand getSkriptCommand() {
-		return skriptCommand;
+		return scriptCommand;
+	}
+
+	/**
+	 * @return The used command label. This may be a command alias.
+	 */
+	public String getCommandLabel() {
+		return commandLabel;
 	}
 	
 	@Override
