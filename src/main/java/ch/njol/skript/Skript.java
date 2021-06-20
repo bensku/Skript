@@ -991,7 +991,10 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 
-	private boolean isServerRunning() {
+	private static final Method IS_RUNNING;
+	private static final Object MC_SERVER;
+
+	static {
 		Server server = Bukkit.getServer();
 		Class<?> clazz = server.getClass();
 
@@ -1002,22 +1005,22 @@ public final class Skript extends JavaPlugin implements Listener {
 			throw new RuntimeException(e);
 		}
 
-		Object mcServer;
 		try {
-			mcServer = serverMethod.invoke(server);
+			MC_SERVER = serverMethod.invoke(server);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
 
-		Method isRunningMethod;
 		try {
-			isRunningMethod = mcServer.getClass().getMethod("isRunning");
+			IS_RUNNING = MC_SERVER.getClass().getMethod("isRunning");
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
+	private boolean isServerRunning() {
 		try {
-			return (boolean) isRunningMethod.invoke(mcServer);
+			return (boolean) IS_RUNNING.invoke(MC_SERVER);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
