@@ -1026,7 +1026,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 
-	public void beforeDisable() {
+	private void beforeDisable() {
 		partDisabled = true;
 		EvtSkript.onSkriptStop(); // TODO [code style] warn user about delays in Skript stop events
 
