@@ -285,6 +285,18 @@ public final class Skript extends JavaPlugin implements Listener {
 		// If nothing got triggered, everything is probably ok
 		return true;
 	}
+
+	private static final List<Class<? extends Hook<?>>> disabledHookRegistrations = new ArrayList<>();
+
+	/**
+	 * Disables the registration for the given hook class. If Skript's hooks have been loaded,
+	 * this method will do nothing. It should be used in something like {@link JavaPlugin#onLoad()}.
+	 * @param hooks The hooks to disable the registration of.
+	 */
+	@SafeVarargs
+	public static void disableHookRegistration(Class<? extends Hook<?>>... hooks) {
+		Collections.addAll(disabledHookRegistrations, hooks);
+	}
 	
 	@Override
 	public void onEnable() {
@@ -463,7 +475,7 @@ public final class Skript extends JavaPlugin implements Listener {
 								final String c = e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length());
 								try {
 									final Class<?> hook = Class.forName(c, true, getClassLoader());
-									if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook) {
+									if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook && !disabledHookRegistrations.contains(hook)) {
 										hook.getDeclaredConstructor().setAccessible(true);
 										hook.getDeclaredConstructor().newInstance();
 									}
@@ -472,7 +484,6 @@ public final class Skript extends JavaPlugin implements Listener {
 								} catch (final ExceptionInInitializerError err) {
 									Skript.exception(err.getCause(), "Class " + c + " generated an exception while loading");
 								}
-								continue;
 							}
 						}
 					}
