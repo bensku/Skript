@@ -991,34 +991,45 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 	}
 
-	private static final Method IS_RUNNING;
-	private static final Object MC_SERVER;
+	private static final boolean IS_STOPPING_EXISTS;
+	@Nullable
+	private static Method IS_RUNNING;
+	@Nullable
+	private static Object MC_SERVER;
 
 	static {
-		Server server = Bukkit.getServer();
-		Class<?> clazz = server.getClass();
+		IS_STOPPING_EXISTS = methodExists(Server.class, "isStopping");
 
-		Method serverMethod;
-		try {
-			serverMethod = clazz.getMethod("getServer");
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
+		if (!IS_STOPPING_EXISTS) {
+			Server server = Bukkit.getServer();
+			Class<?> clazz = server.getClass();
 
-		try {
-			MC_SERVER = serverMethod.invoke(server);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
+			Method serverMethod;
+			try {
+				serverMethod = clazz.getMethod("getServer");
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
 
-		try {
-			IS_RUNNING = MC_SERVER.getClass().getMethod("isRunning");
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
+			try {
+				MC_SERVER = serverMethod.invoke(server);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+
+			try {
+				IS_RUNNING = MC_SERVER.getClass().getMethod("isRunning");
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private boolean isServerRunning() {
+		if (IS_STOPPING_EXISTS)
+			return !Bukkit.getServer().isStopping();
+
 		try {
 			return (boolean) IS_RUNNING.invoke(MC_SERVER);
 		} catch (IllegalAccessException | InvocationTargetException e) {
