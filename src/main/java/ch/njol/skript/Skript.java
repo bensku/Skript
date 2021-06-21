@@ -286,15 +286,29 @@ public final class Skript extends JavaPlugin implements Listener {
 		return true;
 	}
 
-	private static final List<Class<? extends Hook<?>>> disabledHookRegistrations = new ArrayList<>();
+	private static final Set<Class<? extends Hook<?>>> disabledHookRegistrations = new HashSet<>();
 
 	/**
-	 * Disables the registration for the given hook class. If Skript's hooks have been loaded,
-	 * this method will do nothing. It should be used in something like {@link JavaPlugin#onLoad()}.
+	 * Checks whether a hook has been enabled.
+	 * @param hook The hook to check.
+	 * @return Whether the hook is enabled.
+	 * @see #disableHookRegistration(Class[]) 
+	 */
+	public static boolean isHookEnabled(Class<? extends Hook<?>> hook) {
+		return !disabledHookRegistrations.contains(hook);
+	}
+
+	/**
+	 * Disables the registration for the given hook classes. If Skript has been enabled, this method
+	 * will throw an API exception. It should be used in something like {@link JavaPlugin#onLoad()}.
 	 * @param hooks The hooks to disable the registration of.
+	 * @see #isHookEnabled(Class)    
 	 */
 	@SafeVarargs
 	public static void disableHookRegistration(Class<? extends Hook<?>>... hooks) {
+		if (instance != null && instance.isEnabled()) { // Hooks have been registered if Skript is enabled
+			throw new SkriptAPIException("Disabling hooks is not possible after Skript has been enabled!");
+		}
 		Collections.addAll(disabledHookRegistrations, hooks);
 	}
 	
@@ -475,7 +489,7 @@ public final class Skript extends JavaPlugin implements Listener {
 								final String c = e.getName().replace('/', '.').substring(0, e.getName().length() - ".class".length());
 								try {
 									final Class<?> hook = Class.forName(c, true, getClassLoader());
-									if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook && !disabledHookRegistrations.contains(hook)) {
+									if (hook != null && Hook.class.isAssignableFrom(hook) && !hook.isInterface() && Hook.class != hook && isHookEnabled((Class<? extends Hook<?>>) hook)) {
 										hook.getDeclaredConstructor().setAccessible(true);
 										hook.getDeclaredConstructor().newInstance();
 									}
