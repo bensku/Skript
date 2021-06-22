@@ -5,14 +5,17 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.time.LocalTime
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '6.1.0'
-	id 'com.github.hierynomus.license' version '0.14.0'
+	id 'com.github.johnrengelman.shadow' version '7.0.0'
+	id 'com.github.hierynomus.license' version '0.16.1'
 	id 'java'
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += ["-source", "1.8", "-target", "1.8"]
 }
 
 allprojects {
 	repositories {
-		jcenter()
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
@@ -73,8 +76,7 @@ task sourceJar(type: Jar) {
 tasks.withType(ShadowJar) {
 	dependsOn relocateShadowJar
 	configurations = [
-		project.configurations.shadow,
-		project.configurations.compile
+		project.configurations.shadow
 	]
 	dependencies {
 		include(dependency('io.papermc:paperlib'))
