@@ -16,23 +16,13 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.localization;
-
-import org.junit.Test;
-
 /**
+ * Code related to logging.
+ * 
  * @author Peter Güttinger
  */
-public class RegexMessageTest {
-	
-	@Test
-	public void test() {
-		
-		final String[] tests = {"", "!", "a", "()", "^$", "$^", "\n", "\r\n"};
-		
-		for (final String test : tests)
-			assert !RegexMessage.nop.matcher(test).find() && !RegexMessage.nop.matcher(test).matches() : test;
-		
-	}
-	
-}
+@NonNullByDefault
+package ch.njol.skript.sections;
+
+import org.eclipse.jdt.annotation.NonNullByDefault;
+

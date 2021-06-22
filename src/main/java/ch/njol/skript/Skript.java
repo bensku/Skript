@@ -52,6 +52,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import ch.njol.skript.lang.Section;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -433,7 +434,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		ChatMessages.registerListeners();
 		
 		try {
-			getAddonInstance().loadClasses("ch.njol.skript", "conditions", "effects", "events", "expressions", "entity");
+			getAddonInstance().loadClasses("ch.njol.skript", "conditions", "effects", "events", "expressions", "entity", "sections");
 		} catch (final Exception e) {
 			exception(e, "Could not load required .class files: " + e.getLocalizedMessage());
 			setEnabled(false);
@@ -1185,12 +1186,13 @@ public final class Skript extends JavaPlugin implements Listener {
 			return a;
 	}
 	
-	// ================ CONDITIONS & EFFECTS ================
-	
+	// ================ CONDITIONS & EFFECTS & SECTIONS ================
+
 	private final static Collection<SyntaxElementInfo<? extends Condition>> conditions = new ArrayList<>(50);
 	private final static Collection<SyntaxElementInfo<? extends Effect>> effects = new ArrayList<>(50);
 	private final static Collection<SyntaxElementInfo<? extends Statement>> statements = new ArrayList<>(100);
-	
+	private final static Collection<SyntaxElementInfo<? extends Section>> sections = new ArrayList<>(50);
+
 	/**
 	 * registers a {@link Condition}.
 	 * 
@@ -1218,7 +1220,21 @@ public final class Skript extends JavaPlugin implements Listener {
 		effects.add(info);
 		statements.add(info);
 	}
-	
+
+	/**
+	 * Registers a {@link Section}.
+	 *
+	 * @param section The section's class
+	 * @param patterns Skript patterns to match this section
+	 * @see Section
+	 */
+	public static <E extends Section> void registerSection(Class<E> section, String... patterns) throws IllegalArgumentException {
+		checkAcceptRegistrations();
+		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
+		SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, section, originClassPath);
+		sections.add(info);
+	}
+
 	public static Collection<SyntaxElementInfo<? extends Statement>> getStatements() {
 		return statements;
 	}
@@ -1230,7 +1246,11 @@ public final class Skript extends JavaPlugin implements Listener {
 	public static Collection<SyntaxElementInfo<? extends Effect>> getEffects() {
 		return effects;
 	}
-	
+
+	public static Collection<SyntaxElementInfo<? extends Section>> getSections() {
+		return sections;
+	}
+
 	// ================ EXPRESSIONS ================
 	
 	private final static List<ExpressionInfo<?, ?>> expressions = new ArrayList<>(100);
