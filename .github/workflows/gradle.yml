@@ -17,6 +17,10 @@ jobs:
         java-version: 16
     - name: Build Skript
       run: ./gradlew nightlyRelease
+    - name: Set up JDK 8
+      uses: actions/setup-java@v1
+      with:
+          java-version: 1.8
     - name: Run test scripts
       run: ./gradlew skriptTest
     - name: Upload Nightly Build
