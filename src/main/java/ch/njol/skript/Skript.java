@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -56,6 +57,7 @@ import ch.njol.skript.lang.Section;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -64,6 +66,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -177,6 +180,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	private static Skript instance = null;
 	
 	private static boolean disabled = false;
+	private static boolean partDisabled = false;
 	
 	public static Skript getInstance() {
 		final Skript i = instance;
@@ -288,6 +292,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onEnable() {
+		Bukkit.getPluginManager().registerEvents(this, this);
 		if (disabled) {
 			Skript.error(m_invalid_reload.toString());
 			setEnabled(false);
@@ -972,16 +977,82 @@ public final class Skript extends JavaPlugin implements Listener {
 	public static void closeOnDisable(final Closeable closeable) {
 		closeOnDisable.add(closeable);
 	}
-	
+
+	@SuppressWarnings("unused")
+	@EventHandler
+	public void onPluginDisable(PluginDisableEvent event) {
+		Plugin plugin = event.getPlugin();
+		PluginDescriptionFile descriptionFile = plugin.getDescription();
+		if (descriptionFile.getDepend().contains("Skript") || descriptionFile.getSoftDepend().contains("Skript")) {
+			// An addon being disabled, check if server is being stopped
+			if (!isServerRunning()) {
+				beforeDisable();
+			}
+		}
+	}
+
+	private static final boolean IS_STOPPING_EXISTS;
+	@Nullable
+	private static Method IS_RUNNING;
+	@Nullable
+	private static Object MC_SERVER;
+
+	static {
+		IS_STOPPING_EXISTS = methodExists(Server.class, "isStopping");
+
+		if (!IS_STOPPING_EXISTS) {
+			Server server = Bukkit.getServer();
+			Class<?> clazz = server.getClass();
+
+			Method serverMethod;
+			try {
+				serverMethod = clazz.getMethod("getServer");
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
+
+			try {
+				MC_SERVER = serverMethod.invoke(server);
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+
+			try {
+				IS_RUNNING = MC_SERVER.getClass().getMethod("isRunning");
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	private boolean isServerRunning() {
+		if (IS_STOPPING_EXISTS)
+			return !Bukkit.getServer().isStopping();
+
+		try {
+			return (boolean) IS_RUNNING.invoke(MC_SERVER);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void beforeDisable() {
+		partDisabled = true;
+		EvtSkript.onSkriptStop(); // TODO [code style] warn user about delays in Skript stop events
+
+		ScriptLoader.disableScripts();
+	}
+
 	@Override
 	public void onDisable() {
 		if (disabled)
 			return;
 		disabled = true;
-		
-		EvtSkript.onSkriptStop(); // TODO [code style] warn user about delays in Skript stop events
-		
-		ScriptLoader.disableScripts();
+
+		if (!partDisabled) {
+			beforeDisable();
+		}
 		
 		Bukkit.getScheduler().cancelTasks(this);
 		
