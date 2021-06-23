@@ -69,7 +69,18 @@ public class ParseLogHandler extends LogHandler {
 			e.discarded("cleared");
 		log.clear();
 	}
-	
+
+	public void clearError() {
+		if (error != null)
+			error.discarded("cleared");
+		error = null;
+	}
+
+	public void clearAll() {
+		clear();
+		clearError();
+	}
+
 	/**
 	 * Prints the retained log
 	 */
