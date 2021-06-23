@@ -287,6 +287,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 
 	private static final Set<Class<? extends Hook<?>>> disabledHookRegistrations = new HashSet<>();
+	private static boolean finishedLoadingHooks = false;
 
 	/**
 	 * Checks whether a hook has been enabled.
@@ -306,7 +307,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	 */
 	@SafeVarargs
 	public static void disableHookRegistration(Class<? extends Hook<?>>... hooks) {
-		if (instance != null && instance.isEnabled()) { // Hooks have been registered if Skript is enabled
+		if (finishedLoadingHooks) { // Hooks have been registered if Skript is enabled
 			throw new SkriptAPIException("Disabling hooks is not possible after Skript has been enabled!");
 		}
 		Collections.addAll(disabledHookRegistrations, hooks);
@@ -505,6 +506,7 @@ public final class Skript extends JavaPlugin implements Listener {
 					error("Error while loading plugin hooks" + (e.getLocalizedMessage() == null ? "" : ": " + e.getLocalizedMessage()));
 					Skript.exception(e);
 				}
+				finishedLoadingHooks = true;
 				
 				Language.setUseLocal(false);
 				
