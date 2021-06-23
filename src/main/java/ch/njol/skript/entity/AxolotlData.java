@@ -41,7 +41,7 @@ public class AxolotlData extends EntityData<Axolotl> {
 
 	public AxolotlData(@Nullable Variant variant) {
 		this.variant = variant;
-		matchedPattern = variant != null ? variant.ordinal() + 1 : 0; // is this right?
+		matchedPattern = variant != null ? variant.ordinal() + 1 : 0;
 	}
 
 	@Override
