@@ -1704,16 +1704,17 @@ visual effects:
 		white_ash:
 			name: white ash @-
 			pattern: white ash
+
 		# 1.17 particles
 		light:
 			name: light @-
 			pattern: light
-		dust_color_transition:
-			name: dust color transition @-
-			pattern: dust color transition # <---- this guy needs some work
-		vibration:
-			name: vibration @-
-			pattern: vibration # <---- this guy needs some work
+		#dust_color_transition:
+			#name: dust color transition @a
+			#pattern: dust colo[u]r transition [from %-color%] [to %-color%] [with size %-number%]
+		#vibration:
+			#name: vibration @a
+			#pattern: vibration
 		falling_spore_blossom:
 			name: falling spore blossom @-
 			pattern: falling spore blossom
