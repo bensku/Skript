@@ -20,6 +20,10 @@ package ch.njol.skript.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.command.ScriptCommandEvent;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -28,6 +32,15 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Used Command Label")
+@Description("The used command label in a script command. If a script command has aliases, this can be used to determine the used alias.")
+@Examples({
+	"command /commandwithaliases:",
+	"\taliases: /aliasone, /aliastwo, /aliasthree",
+	"\ttrigger:",
+	"\t\tsend \"You used the alias '%the used command alias%'\" to the player"
+})
+@Since("INSERT VERSION")
 public class ExprCommandLabel extends SimpleExpression<String> {
 
 	static {
