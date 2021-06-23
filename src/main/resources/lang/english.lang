@@ -1823,6 +1823,7 @@ inventory types:
 	grindstone: grindstone inventory
 	stonecutter: stonecutter inventory
 	smithing: smithing inventory
+	composter: composter inventory
 
 # -- Spawn Reasons --
 spawn reasons:
