@@ -33,9 +33,6 @@ dependencies {
 		exclude group: 'org.bstats', module: 'bstats-bukkit'
 	}
 	implementation fileTree(dir: 'lib', include: '*.jar')
-
-	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-	testImplementation group: 'org.easymock', name: 'easymock', version: '4.2'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -140,8 +137,8 @@ tasks.create('testNaming') {
 // Create a test task with given name, environments dir/file and is it development mode task
 void createTestTask(String name, String environments, boolean devMode) {
 	tasks.create(name) {
-		// Execute JUnit tests, compile Skript and check test naming
-		dependsOn test, jar, testNaming
+		// Compile Skript and check test naming
+		dependsOn jar, testNaming
 		doFirst {
 			if (devMode) {
 				standardInput = System.in
