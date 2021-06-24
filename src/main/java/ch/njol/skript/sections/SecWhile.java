@@ -16,66 +16,77 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.effects;
+package ch.njol.skript.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
+import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.sections.SecLoop;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.List;
 
-@Name("Continue")
-@Description("Skips the value currently being looped, moving on to the next value if it exists.")
-@Examples({"loop all players:",
-		"\tif loop-value does not have permission \"moderator\":",
-		"\t\tcontinue # filter out non moderators",
-		"\tbroadcast \"%loop-player% is a moderator!\" # Only moderators get broadcast"})
-@Since("2.2-dev37")
-public class EffContinue extends Effect {
+public class SecWhile extends Section {
 
 	static {
-		Skript.registerEffect(EffContinue.class, "continue [loop]");
+		Skript.registerSection(SecWhile.class, "while <.+>");
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
-	private SecLoop loop;
+	private Condition condition;
+
+	@Nullable
+	private TriggerItem actualNext;
 
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		List<SecLoop> loops = getParser().getCurrentSections(SecLoop.class);
-		if (loops.isEmpty()) {
-			Skript.error("Continue may only be used in loops");
+	public boolean init(Expression<?>[] exprs,
+						int matchedPattern,
+						Kleenean isDelayed,
+						ParseResult parseResult,
+						SectionNode sectionNode,
+						List<TriggerItem> triggerItems) {
+		String expr = parseResult.regexes.get(0).group();
+
+		condition = Condition.parse(expr, "Can't understand this condition: " + expr);
+		if (condition == null)
 			return false;
-		}
-		loop = loops.get(loops.size() - 1);
-		return true;
-	}
+		loadOptionalCode(sectionNode);
 
-	@Override
-	protected void execute(Event e) {
-		throw new UnsupportedOperationException();
+		super.setNext(this);
+
+		return true;
 	}
 
 	@Nullable
 	@Override
 	protected TriggerItem walk(Event e) {
-		TriggerItem.walk(loop, e);
-		return null;
+		if (condition.check(e)) {
+			return walk(e, true);
+		} else {
+			debug(e, false);
+			return actualNext;
+		}
+	}
+
+	@Override
+	public SecWhile setNext(@Nullable TriggerItem next) {
+		actualNext = next;
+		return this;
+	}
+
+	@Nullable
+	public TriggerItem getActualNext() {
+		return actualNext;
 	}
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		return "continue";
+		return "while " + condition.toString(e, debug);
 	}
 
 }
