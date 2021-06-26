@@ -3,7 +3,7 @@ description: Suggest a new feature for Skript.
 body:
   - type: markdown
     attributes:
-      description: |
+      value: |
         ## Guidelines
         Please make sure that your suggestion is not already something in Skript.
         Also make sure that someone else hasn't already suggested this.
