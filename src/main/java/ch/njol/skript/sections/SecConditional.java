@@ -90,10 +90,11 @@ public class SecConditional extends Section {
 				if (!condition.check(null)) {
 					return true;
 				}
-			} catch (NullPointerException ignore) {
+			} catch (NullPointerException | IllegalArgumentException ignore) {
 				String expr = parseResult.regexes.get(0).group();
 				String e = matchedPattern == 1 ? "else " : "";
 				Skript.error("Condition '" + expr + "' can't be used with '" + e + "parse if': " + condition);
+				return false;
 			}
 		}
 
