@@ -9,14 +9,8 @@ body:
         Try to make sure there are no issues of this same problem currently open either.
   - type: textarea
     attributes:
-      label: Skript Version
+      label: Skript/Server Version
       description: Run '/skript info' and paste the full, unmodified output here.
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: Server Version
-      description: Run '/version' and paste the full, unmodified output here.
     validations:
       required: true
   - type: textarea
@@ -40,7 +34,7 @@ body:
         If you are going to use a paste site, please use something like https://gist.github.com/ or https://paste.gg/.
       value: |
         ```
-        Replace this text with your paste link or.
+        Replace this text with your paste link or errors/screenshots/videos.
         ```
     validations:
       required: false
