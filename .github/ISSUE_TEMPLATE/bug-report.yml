@@ -21,8 +21,16 @@ body:
       required: true
   - type: textarea
     attributes:
+      label: Expected Behavior
+      description: What was supposed to happen? If you're not sure, please state so.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
       label: Steps to Reproduce
-      description: What did you do to make this problem happen? Try to be as thorough as possible.
+      description: |
+        What did you do to make this problem happen? Try to be as thorough as possible.
+        You may include any code if necessary. Please make sure it is actually testable by someone.
     validations:
       required: true
   - type: textarea
