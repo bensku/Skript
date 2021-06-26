@@ -4,7 +4,7 @@ test "SecConditional - ParseIf":
 		floopidy flopidy flernindurf
 		assert 10 = 1 with "ParseIf section was parsed and failed"
 
-	parse if plugin "Skript" is enabled:
+	else parse if plugin "Skript" is enabled:
 		#this code in this should SHOULD be parsed
 		set {_a} to 10 # I mean.. what else do you put here, amirite?
 
