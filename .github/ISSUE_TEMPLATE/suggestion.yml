@@ -5,8 +5,7 @@ body:
     attributes:
       value: |
         ## Guidelines
-        Please make sure that your suggestion is not already something in Skript.
-        Also make sure that someone else hasn't already suggested this.
+        Please make sure that your suggestion isn't something already in Skript, and that it hasn't been suggested before.
   - type: textarea
     attributes:
       label: Suggestion

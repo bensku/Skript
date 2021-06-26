@@ -11,6 +11,10 @@ body:
     attributes:
       label: Skript/Server Version
       description: Run '/skript info' and paste the full, unmodified output here.
+      value: |
+        ```
+        Replace this text with your output from the command.
+        ```
     validations:
       required: true
   - type: textarea
