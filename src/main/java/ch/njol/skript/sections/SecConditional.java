@@ -38,8 +38,8 @@ public class SecConditional extends Section {
 	static {
 		Skript.registerSection(SecConditional.class,
 			"else",
-			"else if <.+>",
-			"[(1¦if)] <.+>");
+			"else (|1¦parse) if <.+>",
+			"[(1¦parse if|2¦if)] <.+>");
 	}
 
 	private enum ConditionalType {
@@ -48,6 +48,7 @@ public class SecConditional extends Section {
 
 	private ConditionalType type;
 	private Condition condition;
+	private boolean parseIf;
 
 	private Kleenean hasDelayAfter;
 
@@ -59,6 +60,7 @@ public class SecConditional extends Section {
 						SectionNode sectionNode,
 						List<TriggerItem> triggerItems) {
 		type = ConditionalType.values()[matchedPattern];
+		parseIf = parseResult.mark == 1;
 		if (type == ConditionalType.IF || type == ConditionalType.ELSE_IF) {
 			String expr = parseResult.regexes.get(0).group();
 			// Don't print a default error if 'if' keyword wasn't provided
@@ -79,6 +81,20 @@ public class SecConditional extends Section {
 			}
 		} else {
 			lastIf = null;
+		}
+
+		// ([else] parse if) If condition is valid and false, do not parse the section
+		if (parseIf) {
+			// Since this is parsed at parse time not runtime, we can only accept literals
+			try {
+				if (!condition.check(null)) {
+					return true;
+				}
+			} catch (NullPointerException ignore) {
+				String expr = parseResult.regexes.get(0).group();
+				String e = matchedPattern == 1 ? "else " : "";
+				Skript.error("Condition '" + expr + "' can't be used with '" + e + "parse if': " + condition);
+			}
 		}
 
 		Kleenean hadDelayBefore = getParser().getHasDelayBefore();
@@ -135,11 +151,12 @@ public class SecConditional extends Section {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
+		String parseIf = this.parseIf ? "parse " : "";
 		switch (type) {
 			case IF:
-				return "if " + condition.toString(e, debug);
+				return parseIf + "if " + condition.toString(e, debug);
 			case ELSE_IF:
-				return "else if " + condition.toString(e, debug);
+				return "else " + parseIf + "if " + condition.toString(e, debug);
 			case ELSE:
 				return "else";
 			default:
