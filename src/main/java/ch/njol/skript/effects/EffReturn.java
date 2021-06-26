@@ -18,9 +18,6 @@
  */
 package ch.njol.skript.effects;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.doc.Description;
@@ -31,12 +28,16 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.TriggerSection;
 import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.ScriptFunction;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.sections.SecLoop;
 import ch.njol.util.Kleenean;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * @author Peter Güttinger
@@ -111,6 +112,14 @@ public class EffReturn extends Effect {
 		} else {
 			assert false : e;
 		}
+
+		TriggerSection parent = getParent();
+		while (parent != null) {
+			if (parent instanceof SecLoop)
+				((SecLoop) parent).exit(e);
+			parent = parent.getParent();
+		}
+
 		return null;
 	}
 	

@@ -5,9 +5,13 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.time.LocalTime
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '6.1.0'
+	id 'com.github.johnrengelman.shadow' version '7.0.0'
 	id 'com.github.hierynomus.license' version '0.16.1'
 	id 'java'
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += ["-source", "1.8", "-target", "1.8"]
 }
 
 allprojects {
@@ -23,7 +27,7 @@ allprojects {
 
 dependencies {
 	shadow group: 'io.papermc', name: 'paperlib', version: '1.0.6'
-	implementation group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.4-R0.1-SNAPSHOT'
+	implementation group: 'io.papermc.paper', name: 'paper-api', version: '1.17-R0.1-SNAPSHOT'
 	implementation group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
 	implementation group: 'com.google.code.findbugs', name: 'findbugs', version: '3.0.1'
 	implementation group: 'com.sk89q.worldguard', name: 'worldguard-legacy', version: '7.0.0-SNAPSHOT'
@@ -32,9 +36,6 @@ dependencies {
 		exclude group: 'org.bstats', module: 'bstats-bukkit'
 	}
 	implementation fileTree(dir: 'lib', include: '*.jar')
-
-	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-	testImplementation group: 'org.easymock', name: 'easymock', version: '4.2'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -138,8 +139,8 @@ tasks.create('testNaming') {
 // Create a test task with given name, environments dir/file and is it development mode task
 void createTestTask(String name, String environments, boolean devMode) {
 	tasks.create(name) {
-		// Execute JUnit tests, compile Skript and check test naming
-		dependsOn test, jar, testNaming
+		// Compile Skript and check test naming
+		dependsOn jar, testNaming
 		doFirst {
 			if (devMode) {
 				standardInput = System.in
@@ -165,11 +166,11 @@ void createTestTask(String name, String environments, boolean devMode) {
 }
 
 // Register different Skript testing tasks
-createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.16.3.json', false)
+createTestTask('quickTest', 'src/test/skript/environments/main/paper-1.17.json', false)
 createTestTask('skriptTest', 'src/test/skript/environments/main', false)
 createTestTask('skriptTestFull', 'src/test/skript/environments/', false)
 createTestTask('skriptTestDev', 'src/test/skript/environments/main/' + (project.property('testEnv') == null
-	? 'paper-1.16.3.json' : project.property('testEnv') + '.json'), true)
+	? 'paper-1.17.json' : project.property('testEnv') + '.json'), true)
 
 // Build flavor configurations
 task githubResources(type: ProcessResources) {
