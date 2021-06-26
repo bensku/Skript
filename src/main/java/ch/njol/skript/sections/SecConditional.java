@@ -49,7 +49,6 @@ public class SecConditional extends Section {
 	private ConditionalType type;
 	private Condition condition;
 	private boolean parseIf;
-	private boolean parseIfPassed;
 
 	private Kleenean hasDelayAfter;
 
@@ -91,7 +90,6 @@ public class SecConditional extends Section {
 				if (!condition.check(null)) {
 					return true;
 				}
-				parseIfPassed = true;
 			} catch (NullPointerException ignore) {
 				String expr = parseResult.regexes.get(0).group();
 				String e = matchedPattern == 1 ? "else " : "";
@@ -134,7 +132,7 @@ public class SecConditional extends Section {
 	@Nullable
 	@Override
 	protected TriggerItem walk(Event e) {
-		if (type == ConditionalType.ELSE || (parseIf && parseIfPassed) || condition.check(e)) {
+		if (type == ConditionalType.ELSE || condition.check(e)) {
 			if (last != null)
 				last.setNext(getSkippedNext());
 			return first != null ? first : getSkippedNext();
