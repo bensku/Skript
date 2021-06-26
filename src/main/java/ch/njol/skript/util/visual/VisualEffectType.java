@@ -41,7 +41,7 @@ public class VisualEffectType {
 	private Noun name;
 
 	private boolean colorable = false;
-	private BiFunction<Object, Location, Object> dataSupplier = (o, location) -> null;
+	private BiFunction<Object[], Location, Object> dataSupplier = (o, location) -> null;
 
 	private VisualEffectType(Enum<?> effect) {
 		this.effect = effect;
@@ -55,12 +55,12 @@ public class VisualEffectType {
 		return colorable;
 	}
 
-	public void withData(BiFunction<Object, Location, Object> dataSupplier) {
+	public void withData(BiFunction<Object[], Location, Object> dataSupplier) {
 		this.dataSupplier = dataSupplier;
 	}
 
 	@Nullable
-	public Object getData(Object raw, Location location) {
+	public Object getData(Object[] raw, Location location) {
 		return dataSupplier.apply(raw, location);
 	}
 
