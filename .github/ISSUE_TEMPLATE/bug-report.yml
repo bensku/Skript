@@ -3,8 +3,8 @@ description: Report a bug you've encountered in Skript.
 body:
   - type: markdown
     attributes:
-      label: Guidelines
       value: |
+        ## Guidelines
         Please make sure you are running the latest version of Skript on a supported server platform and version.
         Try to make sure there are no issues of this same problem currently open either.
   - type: textarea
