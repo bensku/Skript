@@ -52,6 +52,7 @@ public class SecConditional extends Section {
 	private ConditionalType type;
 	private Condition condition;
 	private boolean parseIf;
+	private boolean parseIfPassed;
 
 	private Kleenean hasDelayAfter;
 
@@ -109,6 +110,7 @@ public class SecConditional extends Section {
 			if (!condition.check(new SkriptParseEvent())) {
 				return true;
 			}
+			parseIfPassed = true;
 		}
 
 		Kleenean hadDelayBefore = getParser().getHasDelayBefore();
@@ -146,7 +148,9 @@ public class SecConditional extends Section {
 	@Nullable
 	@Override
 	protected TriggerItem walk(Event e) {
-		if (type == ConditionalType.ELSE || condition.check(e)) {
+		if (parseIf && !parseIfPassed) {
+			return getNext();
+		} else if (type == ConditionalType.ELSE || parseIf || condition.check(e)) {
 			if (last != null)
 				last.setNext(getSkippedNext());
 			return first != null ? first : getSkippedNext();
