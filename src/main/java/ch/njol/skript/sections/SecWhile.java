@@ -73,6 +73,7 @@ public class SecWhile extends Section {
 			ranDoWhile = true;
 			return walk(e, true);
 		} else {
+			reset();
 			debug(e, false);
 			return actualNext;
 		}
@@ -92,6 +93,10 @@ public class SecWhile extends Section {
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
 		return (doWhile ? "do " : "") + "while " + condition.toString(e, debug);
+	}
+
+	public void reset() {
+		ranDoWhile = false;
 	}
 
 }
