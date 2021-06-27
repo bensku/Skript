@@ -35,11 +35,14 @@ public class VisualEffect implements YggdrasilSerializable {
 
 	private static final boolean HAS_REDSTONE_DATA = Skript.classExists("org.bukkit.Particle$DustOptions");
 
-	private final VisualEffectType type;
+	private VisualEffectType type;
 
-	private final Object[] data;
+	private Object[] data;
 	private float speed;
 	private float dX, dY, dZ;
+
+	@SuppressWarnings("unused")
+	private VisualEffect() { }
 
 	public VisualEffect(VisualEffectType type, Object[] data, float speed, float dX, float dY, float dZ) {
 		this.type = type;

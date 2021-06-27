@@ -48,6 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,13 +69,21 @@ public class VisualEffects {
 	private static VisualEffectType[] visualEffectTypes;
 
 	static {
-		Variables.yggdrasil.registerSingleClass(VisualEffectType.class, "VisualEffect.NewType");
 		Variables.yggdrasil.registerSingleClass(Effect.class, "Bukkit_Effect");
 		Variables.yggdrasil.registerSingleClass(EntityEffect.class, "Bukkit_EntityEffect");
 	}
 
 	public static VisualEffectType get(int i) {
 		return visualEffectTypes[i];
+	}
+
+	@Nullable
+	public static VisualEffectType get(String id) {
+		for (VisualEffectType type : visualEffectTypes) {
+			if (id.equals(type.getId()))
+				return type;
+		}
+		return null;
 	}
 
 	public static String getAllNames() {

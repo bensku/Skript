@@ -116,10 +116,7 @@ public class ExprVisualEffect extends SimpleExpression<VisualEffect> {
 
 	@Override
 	public String toString(@Nullable Event e, boolean debug) {
-		// TODO
 		return "visual effect " + type.getName();
 	}
-
-	// TODO visual effect serialization
 
 }
