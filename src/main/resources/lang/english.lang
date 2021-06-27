@@ -158,6 +158,7 @@ updater:
 	downloaded: The latest version of Skript has been downloaded! Restart the server or use /reload to apply the changes.
 	internal error: An internal error occurred while checking for the latest version of Skript. Please refer to the server log for details.
 	custom version: You're currently running a custom Skript version. No updates will be automatically installed.
+	nightly build: You're currently running a development build of Skript. No updates will be automatically installed.
 
 # -- Commands --
 commands:
