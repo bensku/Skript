@@ -20,11 +20,14 @@ package ch.njol.skript.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.events.bukkit.SkriptParseEvent;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -63,8 +66,26 @@ public class SecConditional extends Section {
 		parseIf = parseResult.mark == 1;
 		if (type == ConditionalType.IF || type == ConditionalType.ELSE_IF) {
 			String expr = parseResult.regexes.get(0).group();
+			ParserInstance parser = getParser();
+			Class<? extends Event>[] currentEvents = parser.getCurrentEvents();
+			String currentEventName = parser.getCurrentEventName();
+			SkriptEvent currentSkriptEvent = parser.getCurrentSkriptEvent();
+
+			// Change event if using 'parse if'
+			if (parseIf) {
+				parser.setCurrentEvents(new Class[]{SkriptParseEvent.class});
+				parser.setCurrentEventName("parse");
+				parser.setCurrentSkriptEvent(null);
+			}
 			// Don't print a default error if 'if' keyword wasn't provided
 			condition = Condition.parse(expr, parseResult.mark != 0 ? "Can't understand this condition: '" + expr + "'" : null);
+
+			if (parseIf) {
+				parser.setCurrentEvents(currentEvents);
+				parser.setCurrentEventName(currentEventName);
+				parser.setCurrentSkriptEvent(currentSkriptEvent);
+			}
+
 			if (condition == null)
 				return false;
 		}
@@ -85,16 +106,8 @@ public class SecConditional extends Section {
 
 		// ([else] parse if) If condition is valid and false, do not parse the section
 		if (parseIf) {
-			// Since this is parsed at parse time not runtime, we can only accept literals
-			try {
-				if (!condition.check(null)) {
-					return true;
-				}
-			} catch (NullPointerException | IllegalArgumentException ignore) {
-				String expr = parseResult.regexes.get(0).group();
-				String e = matchedPattern == 1 ? "else " : "";
-				Skript.error("Condition '" + expr + "' can't be used with '" + e + "parse if': " + condition);
-				return false;
+			if (!condition.check(new SkriptParseEvent())) {
+				return true;
 			}
 		}
 
