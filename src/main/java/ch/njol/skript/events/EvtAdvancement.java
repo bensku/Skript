@@ -19,48 +19,17 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import ch.njol.skript.events.EvtAdvancement;
+import ch.njol.skript.lang.util.SimpleEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
-import org.eclipse.jdt.annotation.Nullable;
-
-
-public class EvtAdvancement extends SkriptEvent {
-
+public class EvtAdvancement extends SimpleEvent {
     static {
         Skript.registerEvent("Advancement done", EvtAdvancement.class, PlayerAdvancementDoneEvent.class, "[on] advancement (done|finish)")
                 .description("Called when a player does an advancement")
                 .examples("on advancement done:",
                         "\tsend \"You did an advancement\" to player")
                 .since("INSERT VERSION");
-        EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, Player.class, new Getter<Player, PlayerAdvancementDoneEvent>() {
-            @Override
-            public Player get(PlayerAdvancementDoneEvent e) {
-                return e.getPlayer();
-            }
-        }, 0);
-
     }
-
-    @Override
-    public boolean init(Literal<?>[] args, int matchedPattern, SkriptParser.ParseResult parseResult) {
-        return true;
-    }
-
-    @Override
-    public boolean check(Event e) {
-        return true;
-    }
-
-    @Override
-    public String toString(@Nullable Event e, boolean debug) {
-        return "on advancement";
-    }
+}
 }
