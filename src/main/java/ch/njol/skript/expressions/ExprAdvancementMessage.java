@@ -18,17 +18,18 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -39,7 +40,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import java.util.Objects;
 
 @Name("Advancement message")
 @Description("Sets the advancement message for on advancement: event")
@@ -52,10 +52,11 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
     }
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (ScriptLoader.isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
             return true;
         }
+        Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
         return false;
     }
     @Override
@@ -65,20 +66,18 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
     }
 
     @Override
-    public Class<?>[] acceptChange(final Changer. ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
+    public Class<?>[] acceptChange(final ChangeMode mode) {
+        if (mode == ChangeMode.SET) {
             return CollectionUtils.array(String.class);
         }
         return null;
     }
     @Override
-    public void change(final Event e, @Nullable Object[] delta, final Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
+    public void change(final Event e, @Nullable Object[] delta, final ChangeMode mode) {
+        if (mode == ChangeMode.SET) {
             String msg = delta[0].toString();
             Component message = Component.text(msg);
             ((PlayerAdvancementDoneEvent) e).message(message);
-        } else if (mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET) {
-            ((PlayerAdvancementDoneEvent) e).message();
         }
     }
 
