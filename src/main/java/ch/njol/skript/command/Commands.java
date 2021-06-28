@@ -65,6 +65,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.VariableString;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.localization.ArgsMessage;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.localization.Message;
@@ -268,9 +269,10 @@ public abstract class Commands {
 			command = "" + command.substring(SkriptConfig.effectCommandToken.value().length()).trim();
 			final RetainingLogHandler log = SkriptLogger.startRetainingLog();
 			try {
-				ScriptLoader.setCurrentEvent("effect command", EffectCommandEvent.class);
-				final Effect e = Effect.parse(command, null);
-				ScriptLoader.deleteCurrentEvent();
+				ParserInstance parserInstance = ParserInstance.get();
+				parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
+				Effect e = Effect.parse(command, null);
+				parserInstance.deleteCurrentEvent();
 				
 				if (e != null) {
 					log.clear(); // ignore warnings and stuff

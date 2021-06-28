@@ -43,6 +43,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -66,7 +67,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.CachedServerIcon;
@@ -100,7 +100,6 @@ import ch.njol.skript.util.EnumUtils;
 import ch.njol.skript.util.InventoryActions;
 import ch.njol.skript.util.PotionEffectUtils;
 import ch.njol.skript.util.StringMode;
-import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 
@@ -988,7 +987,6 @@ public class BukkitClasses {
 				.defaultExpression(new EventValueExpression<>(InventoryHolder.class))
 				.after("entity", "block")
 				.parser(new Parser<InventoryHolder>() {
-					
 					@Override
 					public boolean canParse(ParseContext context) {
 						return false;
@@ -996,7 +994,13 @@ public class BukkitClasses {
 					
 					@Override
 					public String toString(InventoryHolder holder, int flags) {
-						return Classes.toString(holder instanceof BlockState ? ((BlockState) holder).getBlock() : holder);
+						if (holder instanceof BlockState) {
+							return Classes.toString(((BlockState) holder).getBlock());
+						} else if (holder instanceof DoubleChest) {
+							return "double chest";
+						} else {
+							return Classes.toString(holder);
+						}
 					}
 					
 					@Override
