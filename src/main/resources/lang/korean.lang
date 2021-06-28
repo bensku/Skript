@@ -126,6 +126,7 @@ updater:
 	downloaded: Skript의 최신 버전이 다운로드되었습니다! 서버를 다시 시작하거나 /reload를 사용하여 변경 사항을 적용하십시오.
 	internal error: <red>Skript의 최신 버전을 확인하는 중에 내부 오류가 발생했습니다. 자세한 내용은 서버 로그를 참조하십시오.
 	custom version: 현재 맞춤 Skript 버전을 실행하고 있습니다. 업데이트가 자동으로 설치되지 않습니다.
+	nightly build: You're currently running a development build of Skript. No updates will be automatically installed.
 
 # -- Commands --
 commands:
