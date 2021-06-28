@@ -186,26 +186,31 @@ public class Language {
 		if (addon.getLanguageFileDirectory() == null)
 			return;
 
-		InputStream din = addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "default.lang");
-		if (din == null && addon != Skript.getAddonInstance()) {
-			// Backwards compatibility with addons
-			din = addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "english.lang");
-			if (din != null)
-				Skript.warning(addon.getName() + " is using the english.lang file instead of the recommended default.lang file");
+		InputStream defaultIs = addon.plugin.getResource(addon.getLanguageFileDirectory() +  "/default.lang");
+		InputStream englishIs = addon.plugin.getResource(addon.getLanguageFileDirectory() + "/english.lang");
+
+		if (defaultIs == null) {
+			if (englishIs == null) {
+				throw new IllegalStateException(addon + " is missing the required default.lang file!");
+			} else {
+				defaultIs = englishIs;
+				englishIs = null;
+			}
 		}
+		HashMap<String, String> def = load(defaultIs, "default");
+		HashMap<String, String> en = load(englishIs, "english");
 
-		if (din == null)
-			throw new IllegalStateException(addon + " is missing the required default.lang file!");
-
-		HashMap<String, String> en = load(din, "default");
-
-		String v = en.get("version");
+		String v = def.get("version");
 		if (v == null)
 			Skript.warning("Missing version in default.lang");
 
 		langVersion.put(addon.plugin, v == null ? Skript.getVersion() : new Version(v));
-		en.remove("version");
-		defaultLanguage.putAll(en);
+		def.remove("version");
+		defaultLanguage.putAll(def);
+
+		if (localizedLanguage == null)
+			localizedLanguage = new HashMap<>();
+		localizedLanguage.putAll(en);
 
 		for (LanguageChangeListener l : listeners)
 			l.onLanguageChange();
@@ -240,10 +245,10 @@ public class Language {
 		if (addon.getLanguageFileDirectory() == null)
 			return false;
 		// Backwards addon compatibility
-		if (name.equals("english") && addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "default.lang") == null)
+		if (name.equals("english") && addon.plugin.getResource(addon.getLanguageFileDirectory() + "/default.lang") == null)
 			return true;
 
-		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + name + ".lang"), name);
+		HashMap<String, String> l = load(addon.plugin.getResource(addon.getLanguageFileDirectory() + "/" + name + ".lang"), name);
 		File file = new File(addon.plugin.getDataFolder(), addon.getLanguageFileDirectory() + File.separator + name + ".lang");
 		try {
 			if (file.exists())

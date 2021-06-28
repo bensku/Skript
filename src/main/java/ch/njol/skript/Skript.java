@@ -330,7 +330,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		version = new Version("" + getDescription().getVersion()); // Skript version
 		
-		Language.loadDefault(getAddonInstance());
+		getAddonInstance();
 		
 		Workarounds.init();
 		
