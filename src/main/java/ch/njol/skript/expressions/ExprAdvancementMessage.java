@@ -24,6 +24,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -44,6 +45,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Name("Advancement message")
 @Description("Sets the advancement message for on advancement: event")
 @Examples("set the advancement message to \"%event-player% did an advancement!\"")
+@RequiredPlugins("Paper 1.16.5+")
 @Since("INSERT VERSION")
 public class ExprAdvancementMessage extends SimpleExpression<String> {
 
