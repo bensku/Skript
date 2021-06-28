@@ -190,6 +190,8 @@ public class Language {
 		if (din == null && addon != Skript.getAddonInstance()) {
 			// Backwards compatibility with addons
 			din = addon.plugin.getResource(addon.getLanguageFileDirectory() + File.separator + "english.lang");
+			if (din != null)
+				Skript.warning(addon.getName() + " is using the english.lang file instead of the recommended default.lang file");
 		}
 
 		if (din == null)
