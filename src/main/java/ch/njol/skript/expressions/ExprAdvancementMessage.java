@@ -60,7 +60,7 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 			Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-        return true;
+		return true;
 	}
 
 	@Override
