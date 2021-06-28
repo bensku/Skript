@@ -51,8 +51,36 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
         Skript.registerExpression(ExprAdvancementMessage.class, String.class, ExpressionType.SIMPLE, "[the] advancement message");
     }
 
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        if (ScriptLoader.isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
+            return true;
+        }
+        return false;
+    }
+    @Override
+    @Nullable
+    protected String[] get(Event e) {
+        return new String[] {((PlayerAdvancementDoneEvent) e).message().toString()};
+    }
 
-
+    @Override
+    public Class<?>[] acceptChange(final Changer. ChangeMode mode) {
+        if (mode == Changer.ChangeMode.SET) {
+            return CollectionUtils.array(String.class);
+        }
+        return null;
+    }
+    @Override
+    public void change(final Event e, @Nullable Object[] delta, final Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.SET) {
+            String msg = delta[0].toString();
+            Component message = Component.text(msg);
+            ((PlayerAdvancementDoneEvent) e).message(message);
+        } else if (mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET) {
+            ((PlayerAdvancementDoneEvent) e).message();
+        }
+    }
 
     @Override
     public boolean isSingle() {
@@ -67,39 +95,5 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
     @Override
     public String toString(@Nullable Event e, boolean debug) {
         return "the advancement message";
-    }
-
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (ScriptLoader.isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Nullable
-    @Override
-    protected String[] get(Event e) {
-        return new String[] {Objects.requireNonNull(((PlayerAdvancementDoneEvent) e).message()).toString()};
-    }
-
-    @Override
-    public Class<?>[] acceptChange(final Changer. ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
-            return CollectionUtils.array(String.class);
-        }
-        return null;
-    }
-
-    @Override
-    public void change(final Event e, @Nullable Object[] delta, final Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
-            assert delta[0] != null;
-            String msg = delta[0].toString();
-            Component message = Component.text(msg);
-            ((PlayerAdvancementDoneEvent) e).message(message);
-        } else if (mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET) {
-            ((PlayerAdvancementDoneEvent) e).message();
-        }
     }
 }
