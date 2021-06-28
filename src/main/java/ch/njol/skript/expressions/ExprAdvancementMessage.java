@@ -57,8 +57,8 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
-			return false;
 			Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
+			return false;
 		}
         return true;
 	}
