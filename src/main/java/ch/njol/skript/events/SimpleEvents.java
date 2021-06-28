@@ -607,5 +607,13 @@ public class SimpleEvents {
 					"\t\tsend \"Oops! Mending failed!\" to player")
 				.since("2.5.1");
 		}
+		if(Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent")) {
+			Skript.registerEvent("Advancement done", EvtAdvancement.class, PlayerAdvancementDoneEvent.class, "[on] advancement (done|finish)")
+				.description("Called when a player does an advancement")
+				.examples("on advancement done:",
+					"\tsend \"You did an advancement\" to player")
+				.requiredPlugins("1.12+")
+				.since("INSERT VERSION");
+		}
 	}
 }
