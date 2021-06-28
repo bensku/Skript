@@ -24,12 +24,12 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 public class EvtAdvancement extends SimpleEvent {
-    static {
-        Skript.registerEvent("Advancement done", EvtAdvancement.class, PlayerAdvancementDoneEvent.class, "[on] advancement (done|finish)")
-                .description("Called when a player does an advancement")
-                .examples("on advancement done:",
+	static {
+		Skript.registerEvent("Advancement done", EvtAdvancement.class, PlayerAdvancementDoneEvent.class, "[on] advancement (done|finish)")
+				.description("Called when a player does an advancement")
+				.examples("on advancement done:",
                         "\tsend \"You did an advancement\" to player")
-                .since("INSERT VERSION");
-    }
-
+				.requiredPlugins("1.12+")
+				.since("INSERT VERSION");
+	}
 }
