@@ -31,5 +31,5 @@ public class EvtAdvancement extends SimpleEvent {
                         "\tsend \"You did an advancement\" to player")
                 .since("INSERT VERSION");
     }
-}
+
 }
