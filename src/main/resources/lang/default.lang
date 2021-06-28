@@ -80,6 +80,7 @@ enchantments:
 		binding_curse: Curse of Binding
 		# It's sweeping on 1.10 and below for some reason.
 		sweeping: Sweeping Edge
+		sweeping_edge: Sweeping Edge
 		# New 1.13 Enchantments
 		channeling: Channeling, Channelling
 		riptide: Riptide

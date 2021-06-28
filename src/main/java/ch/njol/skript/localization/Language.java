@@ -109,7 +109,7 @@ public class Language {
 	}
 	
 	public static void missingEntryError(String key) {
-		Skript.error("Missing entry '" + key.toLowerCase(Locale.ENGLISH) + "' in the default english language file");
+		Skript.error("Missing entry '" + key.toLowerCase(Locale.ENGLISH) + "' in the default/english language file");
 	}
 	
 	/**
