@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+
 public class EvtAdvancement extends SkriptEvent {
 
     static {
@@ -40,7 +41,6 @@ public class EvtAdvancement extends SkriptEvent {
                         "\tsend \"You did an advancement\" to player")
                 .since("INSERT VERSION");
         EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, Player.class, new Getter<Player, PlayerAdvancementDoneEvent>() {
-            @Nullable
             @Override
             public Player get(PlayerAdvancementDoneEvent e) {
                 return e.getPlayer();
