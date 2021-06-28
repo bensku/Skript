@@ -41,7 +41,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-
 @Name("Advancement message")
 @Description("Sets the advancement message for on advancement: event")
 @Examples("set the advancement message to \"%event-player% did an advancement!\"")
@@ -49,52 +48,59 @@ import org.eclipse.jdt.annotation.Nullable;
 @Since("INSERT VERSION")
 public class ExprAdvancementMessage extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprAdvancementMessage.class, String.class, ExpressionType.SIMPLE, "[the] advancement message");
-    }
+	static {
+		Skript.registerExpression(ExprAdvancementMessage.class, String.class, ExpressionType.SIMPLE, "[the] advancement message");
+		Skript.classExists("PlayerAdvancementDoneEvent.class");
+		Skript.methodExists(PlayerAdvancementDoneEvent.class, "message");
+	}
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (getParser().isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
-            return true;
-        }
-        Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
-        return false;
-    }
-    @Override
-    @Nullable
-    protected String[] get(Event e) {
-        return new String[] {((PlayerAdvancementDoneEvent) e).message().toString()};
-    }
-
-    @Override
-    public Class<?>[] acceptChange(final ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(String.class);
-        }
-        return null;
-    }
-    @Override
-    public void change(final Event e, @Nullable Object[] delta, final ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            String msg = delta[0].toString();
-            Component message = Component.text(msg);
-            ((PlayerAdvancementDoneEvent) e).message(message);
-        }
-    }
-
-    @Override
-    public boolean isSingle() {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (!getParser().isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
+		return false;
+		Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
+		}
         return true;
-    }
+	}
 
-    @Override
-    public Class<? extends String> getReturnType() {
-        return String.class;
-    }
+	@Override
+	@Nullable
+	protected String[] get(Event e) {
+		Component message = ((PlayerAdvancementDoneEvent) e).message();
+		if (message == null)
+			return null;
+		return new String[] {message.toString()};
+	}
 
-    @Override
-    public String toString(@Nullable Event e, boolean debug) {
-        return "the advancement message";
-    }
+	@Override
+	public Class<?>[] acceptChange(final ChangeMode mode) {
+		if (mode == ChangeMode.SET) {
+			return CollectionUtils.array(String.class);
+		}
+		return null;
+	}
+
+	@Override
+	public void change(final Event e, @Nullable Object[] delta, final ChangeMode mode) {
+		if (mode == ChangeMode.SET) {
+			String msg = (String) delta[0];
+			Component message = Component.text(msg);
+			((PlayerAdvancementDoneEvent) e).message(message);
+		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return true;
+	}
+
+	@Override
+	public Class<? extends String> getReturnType() {
+		return String.class;
+	}
+
+	@Override
+	public String toString(@Nullable Event e, boolean debug) {
+		return "the advancement message";
+	}
 }
