@@ -54,7 +54,7 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 		}
 	}
 	
-    @Override
+	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
 			return false;
