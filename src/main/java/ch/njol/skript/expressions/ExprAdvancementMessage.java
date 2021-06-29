@@ -49,7 +49,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class ExprAdvancementMessage extends SimpleExpression<String> {
 
 	static {
-		if (Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent") && Skript.methodExists(org.bukkit.event.player.PlayerAdvancementDoneEvent.class, "message")) {
+		if (Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent") && Skript.methodExists(PlayerAdvancementDoneEvent.class, "message")) {
 				Skript.registerExpression(ExprAdvancementMessage.class, String.class, ExpressionType.SIMPLE, "[the] advancement message");
 		}
 	}
@@ -57,7 +57,7 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(PlayerAdvancementDoneEvent.class)) {
-			Skript.error("Cannot use the advancement message outside an on advancement done event", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The 'advancement message' is only usable in advancement done events");
 			return false;
 		}
 		return true;

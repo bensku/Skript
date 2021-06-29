@@ -610,9 +610,9 @@ public class SimpleEvents {
 		}
 		if (Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent")) {
 			Skript.registerEvent("Advancement Completion", SimpleEvent.class, PlayerAdvancementDoneEvent.class, "advancement (completion|done|finish)")
-				.description("Called when a player does an advancement")
+				.description("Called when a player completes an advancement")
 				.examples("on advancement completion:",
-					"\tsend \"You did an advancement\" to player")
+					"\tsend \"You completed an advancement\" to player")
 				.requiredPlugins("Minecraft 1.12 or newer")
 				.since("INSERT VERSION");
 		}
