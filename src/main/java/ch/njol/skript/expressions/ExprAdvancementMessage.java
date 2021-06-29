@@ -86,7 +86,8 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 			String msg = (String) delta[0];
 			Component message = Component.text(msg);
 			((PlayerAdvancementDoneEvent) e).message(message);
-		}
+		} else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
+			((PlayerAdvancementDoneEvent) e).message(null);
 	}
 
 	@Override
