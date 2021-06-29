@@ -608,12 +608,12 @@ public class SimpleEvents {
 					"\t\tsend \"Oops! Mending failed!\" to player")
 				.since("2.5.1");
 		}
-		if(Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent")) {
-			Skript.registerEvent("Advancement done", SimpleEvent.class, PlayerAdvancementDoneEvent.class, "[on] advancement (done|finish)")
+		if (Skript.classExists("org.bukkit.event.player.PlayerAdvancementDoneEvent")) {
+			Skript.registerEvent("Advancement Completion", SimpleEvent.class, PlayerAdvancementDoneEvent.class, "advancement (completion|done|finish)")
 				.description("Called when a player does an advancement")
-				.examples("on advancement done:",
+				.examples("on advancement completion:",
 					"\tsend \"You did an advancement\" to player")
-				.requiredPlugins("1.12+")
+				.requiredPlugins("Minecraft 1.12 or newer")
 				.since("INSERT VERSION");
 		}
 	}

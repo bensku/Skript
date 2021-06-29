@@ -41,9 +41,9 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-@Name("Advancement message")
-@Description("Sets the advancement message for on advancement: event")
-@Examples("set the advancement message to \"%event-player% did an advancement!\"")
+@Name("Advancement Message")
+@Description("The advancement message in an advancement completion event.")
+@Examples("set the advancement message to \"%event-player% completed an advancement!\"")
 @RequiredPlugins("Paper 1.16.5+")
 @Since("INSERT VERSION")
 public class ExprAdvancementMessage extends SimpleExpression<String> {
@@ -82,13 +82,12 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 
 	@Override
 	public void change(final Event e, @Nullable Object[] delta, final ChangeMode mode) {
+		Component message = null;
 		if (mode == ChangeMode.SET) {
 			String msg = (String) delta[0];
-			Component message = Component.text(msg);
-			((PlayerAdvancementDoneEvent) e).message(message);
-		} else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
-			((PlayerAdvancementDoneEvent) e).message(null);
+			message = Component.text(msg);
 		}
+		((PlayerAdvancementDoneEvent) e).message(message);
 	}
 	@Override
 	public boolean isSingle() {
@@ -104,4 +103,5 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "the advancement message";
 	}
+
 }
