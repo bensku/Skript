@@ -88,8 +88,8 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 			((PlayerAdvancementDoneEvent) e).message(message);
 		} else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
 			((PlayerAdvancementDoneEvent) e).message(null);
+		}
 	}
-
 	@Override
 	public boolean isSingle() {
 		return true;
