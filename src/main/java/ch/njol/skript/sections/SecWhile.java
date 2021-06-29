@@ -69,7 +69,7 @@ public class SecWhile extends Section {
 	@Nullable
 	@Override
 	protected TriggerItem walk(Event e) {
-		if (condition.check(e) || (doWhile && !ranDoWhile)) {
+		if ((doWhile && !ranDoWhile) || condition.check(e)) {
 			ranDoWhile = true;
 			return walk(e, true);
 		} else {
