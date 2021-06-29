@@ -74,7 +74,7 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 
 	@Override
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET) {
+		if (mode == ChangeMode.SET || mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
 			return CollectionUtils.array(String.class);
 		}
 		return null;
