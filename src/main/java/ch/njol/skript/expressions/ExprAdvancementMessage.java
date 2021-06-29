@@ -89,6 +89,7 @@ public class ExprAdvancementMessage extends SimpleExpression<String> {
 		}
 		((PlayerAdvancementDoneEvent) e).message(message);
 	}
+
 	@Override
 	public boolean isSingle() {
 		return true;
