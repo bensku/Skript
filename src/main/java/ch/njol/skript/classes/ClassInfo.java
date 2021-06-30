@@ -386,7 +386,12 @@ public class ClassInfo<T> implements Debuggable {
 	public String getDocName() {
 		return docName;
 	}
-	
+
+	@Nullable
+	public String[] getRequiredPlugins() {
+		return requiredPlugins;
+	}
+
 	/**
 	 * Gets overridden documentation id of this this type. If no override has
 	 * been set, null is returned and the caller may try to derive this from
