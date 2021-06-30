@@ -16,23 +16,25 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.localization;
+package ch.njol.skript.events.bukkit;
 
-import org.junit.Test;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * @author Peter Güttinger
+ * Internally used for parsing `parse if` sections
  */
-public class RegexMessageTest {
-	
-	@Test
-	public void test() {
-		
-		final String[] tests = {"", "!", "a", "()", "^$", "$^", "\n", "\r\n"};
-		
-		for (final String test : tests)
-			assert !RegexMessage.nop.matcher(test).find() && !RegexMessage.nop.matcher(test).matches() : test;
-		
+public class SkriptParseEvent extends Event {
+
+	private final static HandlerList handlers = new HandlerList();
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
 	}
-	
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }

@@ -16,37 +16,13 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.update;
-
-
 /**
- * Status of currently installed release.
+ * Code related to logging.
+ * 
+ * @author Peter Güttinger
  */
-public enum ReleaseStatus {
-	
-	/**
-	 * Latest release in channel. This is a good thing.
-	 */
-	LATEST,
-	
-	/**
-	 * Old, probably unsupported release.
-	 */
-	OUTDATED,
-	
-	/**
-	 * Updates have not been checked, so it not known if any exist.
-	 */
-	UNKNOWN,
-	
-	/**
-	 * Updates have been checked, but this release was not found at all.
-	 * It might be not yet published.
-	 */
-	CUSTOM,
+@NonNullByDefault
+package ch.njol.skript.sections;
 
-	/**
-	 * Running a developer/nightly build, updates will not be checked.
-	 */
-	DEVELOPMENT
-}
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
