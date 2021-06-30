@@ -437,6 +437,7 @@ public class HTMLGenerator {
 	}
 	
 	private String generateEvent(String descTemp, SkriptEventInfo<?> info) {
+		Class<?> c = info.c;
 		String desc = "";
 		
 		String docName = info.getName();
@@ -455,8 +456,11 @@ public class HTMLGenerator {
 		
 		assert desc != null;
 		desc = handleIf(desc, "${if events}", false);
-		desc = handleIf(desc, "${if required-plugins}", false);
-		
+
+		String[] plugins = info.getRequiredPlugins();
+		desc = handleIf(desc, "${if required-plugins}", plugins != null);
+		desc = desc.replace("${element.required-plugins}", plugins == null ? "" : Joiner.on(", ").join(plugins));
+
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
 		while (generate != -1) {
@@ -506,8 +510,11 @@ public class HTMLGenerator {
 		
 		assert desc != null;
 		desc = handleIf(desc, "${if events}", false);
-		desc = handleIf(desc, "${if required-plugins}", false);
-		
+
+		String[] plugins = info.getRequiredPlugins();
+		desc = handleIf(desc, "${if required-plugins}", plugins != null);
+		desc = desc.replace("${element.required-plugins}", plugins == null ? "" : Joiner.on(", ").join(plugins));
+
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
 		while (generate != -1) {
@@ -560,8 +567,11 @@ public class HTMLGenerator {
 		
 		assert desc != null;
 		desc = handleIf(desc, "${if events}", false);
-		desc = handleIf(desc, "${if required-plugins}", false);
-		
+
+		String[] plugins = info.getRequiredPlugins();
+		desc = handleIf(desc, "${if required-plugins}", plugins != null);
+		desc = desc.replace("${element.required-plugins}", plugins == null ? "" : Joiner.on(", ").join(plugins));
+
 		List<String> toGen = Lists.newArrayList();
 		int generate = desc.indexOf("${generate");
 		while (generate != -1) {
