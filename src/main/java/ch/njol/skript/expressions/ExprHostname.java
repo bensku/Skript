@@ -51,7 +51,7 @@ public class ExprHostname extends SimpleExpression<String> {
 	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PlayerLoginEvent.class)) {
-			Skript.error("You can only use hostname expression in connect event.");
+			Skript.error("The hostname expression must only be used in a player connect event.");
 			return false;
 		}
 		return true;
