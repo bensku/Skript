@@ -1648,8 +1648,7 @@ public class BukkitClasses {
 				.documentationId("FireworkType")
 				.parser(new Parser<FireworkEffect.Type>() {
 					@Override
-					@Nullable
-					public FireworkEffect.Type parse(String input, ParseContext context) {
+					public FireworkEffect.@Nullable Type parse(String input, ParseContext context) {
 						return fireworktypes.parse(input);
 					}
 					
@@ -1885,9 +1884,8 @@ public class BukkitClasses {
 					.requiredPlugins("Minecraft 1.14 or newer")
 					.documentationId("CatType")
 					.parser(new Parser<Cat.Type>() {
-						@Nullable
 						@Override
-						public Cat.Type parse(String expr, ParseContext context) {
+						public Cat.@Nullable Type parse(String expr, ParseContext context) {
 							return races.parse(expr);
 						}
 						
