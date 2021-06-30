@@ -45,6 +45,8 @@ public abstract class JavaFunction<T> extends Function<T> {
 	private String[] examples = null;
 	@Nullable
 	private String since = null;
+	@Nullable
+	private String[] requiredPlugins;
 	
 	/**
 	 * Only used for Skript's documentation.
@@ -78,6 +80,20 @@ public abstract class JavaFunction<T> extends Function<T> {
 		this.since = since;
 		return this;
 	}
+
+	/**
+	 * Other plugin dependencies for this function.
+	 *
+	 * Only used for Skript's documentation.
+	 *
+	 * @param pluginNames
+	 * @return This JavaFunction object
+	 */
+	public JavaFunction<T> requiredPlugins(final String... pluginNames) {
+		assert this.requiredPlugins == null;
+		this.requiredPlugins = pluginNames;
+		return this;
+	}
 	
 	@Nullable
 	public String[] getDescription() {
@@ -92,6 +108,11 @@ public abstract class JavaFunction<T> extends Function<T> {
 	@Nullable
 	public String getSince() {
 		return since;
+	}
+
+	@Nullable
+	public String[] getRequiredPlugins() {
+		return requiredPlugins;
 	}
 
 	@Override
