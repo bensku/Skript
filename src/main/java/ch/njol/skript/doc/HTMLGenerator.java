@@ -437,7 +437,6 @@ public class HTMLGenerator {
 	}
 	
 	private String generateEvent(String descTemp, SkriptEventInfo<?> info) {
-		Class<?> c = info.c;
 		String desc = "";
 		
 		String docName = info.getName();
