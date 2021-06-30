@@ -1,0 +1,13 @@
+test "SecConditional - ParseIf":
+	parse if plugin "LaDeDa-LeFakePlugin" is enabled:
+		#this code in this section should NOT be parsed
+		floopidy flopidy flernindurf
+		assert 10 = 1 with "ParseIf section was parsed and failed"
+
+	else parse if plugin "Skript" is enabled:
+		#this code in this should SHOULD be parsed
+		set {_a} to 10 # I mean.. what else do you put here, amirite?
+
+	else:
+		#this code in this section SHOULD be parsed but should NOT be ran
+		assert 10 = 1 with "ParseIf/Else section was parsed and failed"
