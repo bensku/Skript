@@ -84,6 +84,12 @@ public class MessageComponent {
 	@Nullable
 	public ClickEvent clickEvent;
 	
+	/**
+	 * Font of the component. 1.16+. Null for BaseComponents means default font.
+	 */
+	@Nullable
+	public String font;
+	
 	public static class ClickEvent {
 		
 		public ClickEvent(ClickEvent.Action action, String value) {

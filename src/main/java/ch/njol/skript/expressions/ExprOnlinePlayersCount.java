@@ -23,7 +23,6 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.PlayerUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -62,9 +61,9 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Number> {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		boolean isPaperEvent = PAPER_EVENT_EXISTS && ScriptLoader.isCurrentEvent(PaperServerListPingEvent.class);
+		boolean isPaperEvent = PAPER_EVENT_EXISTS && getParser().isCurrentEvent(PaperServerListPingEvent.class);
 		if (parseResult.mark == 2) {
-			if (ScriptLoader.isCurrentEvent(ServerListPingEvent.class)) {
+			if (getParser().isCurrentEvent(ServerListPingEvent.class)) {
 				Skript.error("The 'fake' online players count expression requires Paper 1.12.2 or newer");
 				return false;
 			} else if (!isPaperEvent) {
@@ -89,7 +88,7 @@ public class ExprOnlinePlayersCount extends SimpleExpression<Number> {
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (!isReal) {
-			if (ScriptLoader.hasDelayBefore.isTrue()) {
+			if (getParser().getHasDelayBefore().isTrue()) {
 				Skript.error("Can't change the shown online players count anymore after the server list ping event has already passed");
 				return null;
 			}
