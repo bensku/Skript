@@ -71,7 +71,7 @@ public class ExprNamed extends PropertyExpression<Object, Object> {
 	protected Object[] get(final Event e, final Object[] source) {
 		String name = this.name.getSingle(e);
 		if (name == null)
-			return source; // No name provided, do nothing
+			return get(source, obj -> obj); // No name provided, do nothing
 		return get(source, new Getter<Object, Object>() {
 			@Override
 			@Nullable

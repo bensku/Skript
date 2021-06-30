@@ -24,7 +24,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -72,7 +71,7 @@ public class ExprEnchantmentExpCosts extends SimpleExpression<Number>{
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!ScriptLoader.isCurrentEvent(PrepareItemEnchantEvent.class)) {
+		if (!getParser().isCurrentEvent(PrepareItemEnchantEvent.class)) {
 			Skript.error("The enchantment exp level cost is only usable in an enchant prepare event.", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
