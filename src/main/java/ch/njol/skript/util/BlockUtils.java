@@ -20,6 +20,7 @@ package ch.njol.skript.util;
 
 import java.util.Arrays;
 
+import ch.njol.skript.aliases.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -113,6 +114,30 @@ public abstract class BlockUtils {
 		} catch (IllegalArgumentException ignore) {
 			return null;
 		}
+	}
+
+	/**
+	 * Get the string version of a block, including type and location.
+	 * ex: 'stone' at 1.5, 1.5, 1.5 in world 'world'
+	 *
+	 * @param block Block to get string of
+	 * @param flags
+	 * @return String version of block
+	 */
+	@Nullable
+	public static String blockToString(Block block, int flags) {
+		String type = ItemType.toString(block, flags);
+		Location location = getLocation(block);
+		if (location == null) {
+			return null;
+		}
+
+		double x = location.getX();
+		double y = location.getY();
+		double z = location.getZ();
+		String world = location.getWorld().getName();
+
+		return String.format("'%s' at %s, %s, %s in world '%s'", type, x, y, z, world);
 	}
 	
 }
