@@ -240,6 +240,7 @@ public class ScriptLoader {
 	private static void updateDisabledScripts(Path path) {
 		disabledFiles.clear();
 		try {
+			// TODO handle AccessDeniedException
 			Files.walk(path)
 				.map(Path::toFile)
 				.filter(disabledFilter::accept)
