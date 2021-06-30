@@ -18,10 +18,7 @@
  */
 package ch.njol.skript.util;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -714,5 +711,19 @@ public abstract class Utils {
 		}
 		return lastIndex;
 	}
+
+	// Removes the first n elements from a Collection
+	public <E> boolean removeFirstIf(Collection<E> coll, int n, Predicate<E> filter) {
+		Iterator<E> each = coll.iterator();
+		boolean removed = false;
+
+		while (each.hasNext() && n-- > 0) {
+			if (filter.test(each.next())) {
+				each.remove();
+				removed = true;
+			}
+		}
+		return removed;
+}
 	
 }

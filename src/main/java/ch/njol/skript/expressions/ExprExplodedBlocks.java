@@ -18,11 +18,12 @@
  */
 package ch.njol.skript.expressions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -39,14 +40,15 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 @Name("Exploded Blocks")
-@Description("Get all the blocks that were destroyed in an block/entity explode event (Can be set/removed from/deleted/added to)")
-@Examples({"on block explode:",
-	"\tadd exploded blocks to {exploded-blocks::*}",
+@Description("Get all the blocks that were destroyed in an entity/block explode event (Can be set/removed from/deleted/added to)")
+@Examples({
+	"on block explode:",
+	"\tadd exploded blocks to {_exploded-blocks::*}",
 	"\t",
 	"\tloop exploded blocks:",
 	"\t\tif loop-block is sand:",
@@ -54,11 +56,15 @@ import ch.njol.util.Kleenean;
 	"\t",
 	"\tset exploded blocks to blocks in radius 3 around event-location  # this will clear exploded blocks and set it to the specified blocks",
 	"\tremove all chests from exploded blocks",
-	"\tremove stone from exploded blocks # will remove only one block that equals to stone block type",
-	"\tdelete exploded blocks",
+	"\tremove 3 stone from exploded blocks # will remove only 3 stone blocks",
+	"\tremove stone from exploded blocks # will remove all stones blocks - 'any' and 'all' will do the same",
 	"\tadd blocks in radius 3 around event-location to exploded blocks",
+	"\tdelete exploded blocks # will clear exploded blocks",
 	"\t",
 	"on entity explode:",
+	"\tremove all stone from exploded blocks",
+	"\t",
+	"on explode:",
 	"\tremove all stone from exploded blocks"})
 @Events("explode")
 @Since("2.5")
@@ -68,13 +74,9 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 		Skript.registerExpression(ExprExplodedBlocks.class, Block.class, ExpressionType.SIMPLE, "[the] exploded blocks");
 	}
 	
-	boolean isEntity = false;
-	
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		if (getParser().isCurrentEvent(EntityExplodeEvent.class)) {
-			isEntity = true;
-		} else if (!getParser().isCurrentEvent(BlockExplodeEvent.class)) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (!getParser().isCurrentEvent(BlockExplodeEvent.class, EntityExplodeEvent.class)) {
 			Skript.error("Exploded blocks can only be retrieved from an entity/block explode event.");
 			return false;
 		}
@@ -85,16 +87,24 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	@Override
 	protected Block[] get(Event e) {
 		List<Block> blockList;
-		
-		if (isEntity)
+
+		if (e instanceof EntityExplodeEvent) {
 			blockList = ((EntityExplodeEvent) e).blockList();
+		}
+
 		else
 			blockList = ((BlockExplodeEvent) e).blockList();
-		
+
 		return blockList.toArray(new Block[blockList.size()]);
 	}
-	
-	
+
+	@Nullable
+	@Override
+	public Iterator<? extends Block> iterator(Event e) {
+		List<Block> blocks = e instanceof EntityExplodeEvent ? ((EntityExplodeEvent) e).blockList() : ((BlockExplodeEvent) e).blockList();
+		return new ArrayList(blocks).iterator();
+	}
+
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
@@ -115,66 +125,63 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	@Override
 	public void change(Event e, final @Nullable Object[] delta, final ChangeMode mode) {
 		List<Block> blocks;
-		if (isEntity)
+		if (e instanceof EntityExplodeEvent) {
 			blocks = ((EntityExplodeEvent) e).blockList();
+		}
 		else
 			blocks = ((BlockExplodeEvent) e).blockList();
-		
+
 		switch (mode) {
-			case SET:
-				assert delta != null;
-				blocks.clear();
-				for (Object de : delta) {
-					if (de instanceof ItemType)
-						break;
-					
-					if (((Block) de).getType() != Material.AIR) // Performance
-						blocks.add((Block) de);
-				}
-				break;
-				
 			case DELETE:
-				blocks.clear();
-				break;
-				
+			case SET:
 			case ADD:
 				assert delta != null;
-				for (Object de : delta) {
-					if (de instanceof ItemType)
-						break;
-						
-					if (((Block) de).getType() != Material.AIR) // Performance
-						blocks.add((Block) de);
+				if (mode != ChangeMode.ADD)
+					blocks.clear();
+
+				for (Object o : delta) {
+					if (o instanceof ItemType)
+						continue;
+
+					if (((Block) o).getType() != Material.AIR) // Performance
+						blocks.add((Block) o);
 				}
 				break;
-				
+
 			case REMOVE:
 			case REMOVE_ALL: // ItemType here will allow `remove [all] %itemtypes% from exploded blocks` to remove all/specific amount of specific block type that matches an itemtype, a shortcut for looping
 				assert delta != null;
-				for (Object de : delta) {
-					if (de instanceof ItemType) {						
-						int loopLimit = ((ItemType) de).getAmount() == 0 ? blocks.size() : ((ItemType) de).getAmount();
-						if (((ItemType) de).isAll() || mode == ChangeMode.REMOVE_ALL) // all %itemtype% OR REMOVE_ALL
-							loopLimit = blocks.size();
-						
-						for (int i = 0; i < loopLimit; i++) {
-							for (Block b : blocks) {
-								if (b.getType() == ((ItemType) de).getMaterial()) {
-									blocks.remove(b);
+				int amountReached = 0;
+
+				for (Object o : delta) {
+					if (o instanceof Block) {
+						blocks.remove((Block) o); // no need to check whether they are equals, since blocks are only passed by reference
+
+					} else if (o instanceof ItemType) {
+						ItemType item = ((ItemType) o);
+						int amount = item.getInternalAmount(); // -1 when using 'all' or 'any' of alias
+
+						if (amount == -1 || mode == ChangeMode.REMOVE_ALL) { // all %itemtype% OR REMOVE_ALL
+							blocks.removeIf(item::isOfType);
+							break;
+						}
+
+						else if (amount > 0)
+							for (Block b : new ArrayList<>(blocks)) {
+								if (amountReached >= amount)
 									break;
+								else if (item.isOfType(b)) {
+									blocks.remove(b);
+									amountReached++; // only ++ if a matched item was removed
 								}
 							}
-						}
-						
-					} else {
-						blocks.removeIf(b -> b.equals((Block) de));
 					}
 				}
 				break;
 		}
 	}
-	
-	
+
+
 	@Override
 	public boolean isSingle() {
 		return false;
@@ -187,7 +194,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean d) {
-		return "exploded blocks";
+		return e instanceof EntityExplodeEvent ? "entity" : "block" + " event's exploded blocks";
 	}
 	
 }
