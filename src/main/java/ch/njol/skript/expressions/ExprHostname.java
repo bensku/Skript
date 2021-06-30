@@ -35,7 +35,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
 @Name("Hostname")
-@Description("The hostname/domain of the connecting player in a <a href='events.html#connect'>connect</a> event.")
+@Description("The hostname used by the connecting player to connect to the server in a <a href='events.html#connect'>connect</a> event.")
 @Examples({
 		"on connect:",
 		"\thostname is \"testers.example.com\"",
@@ -47,8 +47,8 @@ public class ExprHostname extends SimpleExpression<String> {
 		Skript.registerExpression(ExprHostname.class, String.class, ExpressionType.SIMPLE, "[the] (host|domain)[ ][name]");
 	}
 
-	@SuppressWarnings({"null", "unchecked"})
 	@Override
+	@SuppressWarnings({"null", "unchecked"})
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!ScriptLoader.isCurrentEvent(PlayerLoginEvent.class)) {
 			Skript.error("You can only use hostname expression in connect event.");
