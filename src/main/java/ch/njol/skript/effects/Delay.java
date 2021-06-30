@@ -78,7 +78,7 @@ public class Delay extends Effect {
 		debug(e, true);
 		final long start = Skript.debug() ? System.nanoTime() : 0;
 		final TriggerItem next = getNext();
-		if (next != null) {
+		if (next != null && Skript.getInstance().isEnabled()) { // See https://github.com/SkriptLang/Skript/issues/3702
 			delayed.add(e);
 			final Timespan d = duration.getSingle(e);
 			if (d == null)
