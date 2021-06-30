@@ -16,16 +16,13 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.parser;
-
 /**
- * Loads script from disk to memory and registers function signatures.
+ * Code related to logging.
+ * 
+ * @author Peter Güttinger
  */
-public class LoaderInstance implements Runnable {
+@NonNullByDefault
+package ch.njol.skript.sections;
 
-	@Override
-	public void run() {
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
-	}
-	
-}

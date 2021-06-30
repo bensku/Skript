@@ -16,13 +16,25 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.parser;
+package ch.njol.skript.events.bukkit;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * Several utils, mostly copy-pasted from old parser.
- * Do not ask what they do - as long they work.
+ * Internally used for parsing `parse if` sections
  */
-public class ParserUtils {
-	
-	
+public class SkriptParseEvent extends Event {
+
+	private final static HandlerList handlers = new HandlerList();
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }
