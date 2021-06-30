@@ -27,11 +27,10 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+
+import ch.njol.skript.tests.runner.TestMode;
 import ch.njol.util.StringUtils;
 
-/**
- * @author Peter Güttinger
- */
 public class SkriptCommandTabCompleter implements TabCompleter {
 		
 	@Override
@@ -49,6 +48,12 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 			options.add("disable");
 			options.add("update");
 			options.add("info");
+			if (new File(Skript.getInstance().getDataFolder() + "/doc-templates").exists()) {
+				options.add("gen-docs");
+			}
+			if (TestMode.DEV_MODE) {
+				options.add("test");
+			}
 		}
 		
 		else if (args[0].equalsIgnoreCase("update")) {
@@ -63,6 +68,7 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 			String fs = File.separator;
 			
 			try {
+				// Live update, this will get all old and new (even not loaded) scripts
 				Files.walk(scripts.toPath())
 					.map(Path::toFile)
 					.filter(f -> (!f.isDirectory() && f.getName().toLowerCase().endsWith(".sk")) || f.isDirectory()) // filter folders and skript files only 
