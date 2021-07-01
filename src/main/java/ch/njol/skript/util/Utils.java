@@ -712,15 +712,22 @@ public abstract class Utils {
 		return lastIndex;
 	}
 
-	// Removes the first n elements from a Collection
-	public <E> boolean removeFirstIf(Collection<E> coll, int n, Predicate<E> filter) {
+	/**
+	 * Removes the first n elements from a Collection that matches the filter
+	 *
+	 * @param coll the {@link Collection} to remove from.
+	 * @param n the amount of elements to remove
+	 * @param filter the {@link Predicate} / filter that will be checked to remove the elements
+	 * @return amount of elements that matched the filter and has been removed.
+	 */
+	public <E> int removeFirstIf(Collection<E> coll, int n, Predicate<E> filter) {
 		Iterator<E> each = coll.iterator();
-		boolean removed = false;
+		int removed = 0;
 
-		while (each.hasNext() && n-- > 0) {
+		for (; each.hasNext() && n > 0; n--) {
 			if (filter.test(each.next())) {
 				each.remove();
-				removed = true;
+				removed++;
 			}
 		}
 		return removed;

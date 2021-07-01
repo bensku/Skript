@@ -80,10 +80,10 @@ public final class EvtExplode extends SkriptEvent {
 	@Override
 	public boolean check(final Event e) {
 		if (type == ENTITY)
-			return e instanceof EntityExplodeEvent ? true : false;
+			return e instanceof EntityExplodeEvent;
 
 		if (type == BLOCK)
-			return e instanceof BlockExplodeEvent ? true : false;
+			return e instanceof BlockExplodeEvent;
 
 		else // Any
 			return true;
