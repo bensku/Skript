@@ -18,71 +18,81 @@
  */
 package ch.njol.skript.entity;
 
-import org.bukkit.entity.Cat;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.entity.Goat;
+import org.jetbrains.annotations.Nullable;
 
-public class CatData extends EntityData<Cat> {
-	
+public class GoatData extends EntityData<Goat> {
+
 	static {
-		if (Skript.classExists("org.bukkit.entity.Cat"))
-			EntityData.register(CatData.class, "cat", Cat.class, "cat");
+		if (Skript.classExists("org.bukkit.entity.Goat"))
+			EntityData.register(GoatData.class, "goat", Goat.class, 0,
+				"goat", "screaming goat", "quiet goat");
 	}
-	
-	private Cat.@Nullable Type race = null;
-	
-	@SuppressWarnings("unchecked")
+
+	private int screaming = 0; // 0 = random, 1 = screaming, 2 = quiet
+
+	public GoatData() {}
+
+	public GoatData(int screaming) {
+		this.screaming = screaming;
+	}
+
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
-		if (exprs.length > 0 && exprs[0] != null)
-			race = ((Literal<Cat.Type>) exprs[0]).getSingle();
+		screaming = matchedPattern;
 		return true;
 	}
-	
+
 	@Override
-	protected boolean init(@Nullable Class<? extends Cat> c, @Nullable Cat cat) {
-		race = (cat == null) ? Cat.Type.TABBY : cat.getCatType();
+	protected boolean init(@Nullable Class<? extends Goat> c, @Nullable Goat goat) {
+		if (goat != null && matchedPattern > 0)
+			goat.setScreaming(matchedPattern == 1);
 		return true;
 	}
-	
+
 	@Override
-	public void set(Cat entity) {
-		Cat.Type type = race != null ? race : CollectionUtils.getRandom(Cat.Type.values());
-		assert type != null;
-		entity.setCatType(type);
+	public void set(Goat entity) {
+		if (matchedPattern > 0)
+			entity.setScreaming(screaming == 1);
 	}
-	
+
 	@Override
-	protected boolean match(Cat entity) {
-		return race == null || entity.getCatType() == race;
+	protected boolean match(Goat entity) {
+		if (matchedPattern > 0)
+			return entity.isScreaming() ? screaming == 1 : screaming == 2;
+		return true;
 	}
-	
+
 	@Override
-	public Class<? extends Cat> getType() {
-		return Cat.class;
+	public Class<? extends Goat> getType() {
+		return Goat.class;
 	}
-	
+
 	@Override
 	public EntityData getSuperType() {
-		return new CatData();
+		return new GoatData(screaming);
 	}
-	
+
 	@Override
 	protected int hashCode_i() {
-		return race != null ? race.hashCode() : 0;
+		return screaming;
 	}
-	
+
 	@Override
 	protected boolean equals_i(EntityData<?> data) {
-		return data instanceof CatData ? race == ((CatData) data).race : false;
+		if (!(data instanceof GoatData))
+			return false;
+		return screaming == ((GoatData) data).screaming;
 	}
-	
+
 	@Override
 	public boolean isSupertypeOf(EntityData<?> data) {
-		return data instanceof CatData ? race == null || race == ((CatData) data).race : false;
+		if (!(data instanceof GoatData))
+			return false;
+		return screaming == ((GoatData) data).screaming;
 	}
+
 }

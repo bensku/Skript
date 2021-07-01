@@ -215,7 +215,7 @@ public class EffChange extends Effect {
 						log.printError();
 						return false;
 					}
-					log.clearAll();
+					log.clear();
 					final Class<?>[] r = new Class[rs.length];
 					for (int i = 0; i < rs.length; i++)
 						r[i] = rs[i].isArray() ? rs[i].getComponentType() : rs[i];
