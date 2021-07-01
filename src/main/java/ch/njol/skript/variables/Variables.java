@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
@@ -244,7 +245,7 @@ public abstract class Variables {
 	/**
 	 * Not to be accessed outside of Bukkit's main thread!
 	 */
-	private final static Map<Event, VariablesMap> localVariables = new HashMap<>();
+	private final static Map<Event, VariablesMap> localVariables = new ConcurrentHashMap<>();
 	
 	/**
 	 * Remember to lock with {@link #getReadLock()} and to not make any changes!
@@ -348,9 +349,7 @@ public abstract class Variables {
 		}
 		if (local) {
 			assert e != null : n;
-			VariablesMap map = localVariables.get(e);
-			if (map == null)
-				localVariables.put(e, map = new VariablesMap());
+			VariablesMap map = localVariables.computeIfAbsent(e, event -> new VariablesMap());
 			map.setVariable(n, value);
 		} else {
 			setVariable(n, value);
@@ -523,8 +522,7 @@ public abstract class Variables {
 		return new SerializedVariable(name, var);
 	}
 	
-	@Nullable
-	public static SerializedVariable.Value serialize(final @Nullable Object value) {
+	public static SerializedVariable.@Nullable Value serialize(final @Nullable Object value) {
 		assert Bukkit.isPrimaryThread();
 		return Classes.serialize(value);
 	}
