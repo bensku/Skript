@@ -23,13 +23,23 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A section that may also be used as an effect,
+ * meaning there may be no section to parse.
+ * <br><br>
+ * When loading code, all EffectSections should first verify whether a section actually
+ * exists through the usage of {@link #hasSection}. If this method returns true, it is
+ * safe to assert that the section node and list of trigger items are not null.
+ * <br><br>
+ * @see Section
+ * @see Skript#registerSection(Class, String...)
+ */
 public abstract class EffectSection extends Section {
 
 	private boolean hasSection = false;
@@ -56,9 +66,6 @@ public abstract class EffectSection extends Section {
 								 ParseResult parseResult,
 								 @Nullable SectionNode sectionNode,
 								 @Nullable List<TriggerItem> triggerItems);
-
-	@Override
-	public abstract void execute(Event event);
 
 	/**
 	 * Similar to {@link Section#parse(String, String, SectionNode, List)}, but will only attempt to parse from other {@link EffectSection}s.

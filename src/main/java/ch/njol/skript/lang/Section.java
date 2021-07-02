@@ -20,6 +20,7 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.Config;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
@@ -28,12 +29,30 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * A section that can decide what it does with its contents, as code isn't parsed by default.
+ * <br><br>
+ * In most cases though, a section should load its code through one of the following loading methods:
+ * {@link #loadCode(SectionNode)}, {@link #loadCode(SectionNode, String, Class[])}, {@link #loadOptionalCode(SectionNode)}
+ * <br><br>
+ * Every section must override the {@link TriggerSection#walk(Event)} method. In this method, you can determine whether
+ * or not the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
+ * should not run it with this event passed in this walk method.
+ * <br><br>
+ * If you wish to run the section, you should return {@link TriggerSection#first} or {@link TriggerSection#walk(Event, boolean)}
+ * where the boolean value is true. The walk method is likely preferred as it will verify that {@link TriggerSection#first} is not null,
+ * and, if it is return {@link TriggerSection#getNext()} instead, meaning execution can continue.
+ * <br><br>
+ * If you do not wish to run this section, you should return {@link TriggerSection#getNext()} or {@link TriggerSection#walk(Event, boolean)}
+ * where the boolean value is false. If you do run the section, the code after the section will be ran unless you are using a {@link Trigger}
+ * from {@link #loadCode(SectionNode, String, Class[])}.
+ * <br><br>
+ * It is possible to run the section without a Trigger and not continue on by setting {@link TriggerItem#setNext(TriggerItem)} to null
+ * using {@link TriggerSection#last}. It is recommend that you have a way for the code
+ * after the section to eventually run, as to not leave users confused.
  *
  * @see Skript#registerSection(Class, String...)
  */
@@ -48,30 +67,12 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		return init(exprs, matchedPattern, isDelayed, parseResult, sectionContext.sectionNode, sectionContext.triggerItems);
 	}
 
-	@Override
-	@Nullable
-	protected TriggerItem walk(Event e) {
-		if (last != null) { // We don't want to start running code outside of the section
-			last.setNext(null);
-		}
-		execute(e);
-		return getNext();
-	}
-
 	public abstract boolean init(Expression<?>[] exprs,
 								 int matchedPattern,
 								 Kleenean isDelayed,
 								 ParseResult parseResult,
 								 SectionNode sectionNode,
 								 List<TriggerItem> triggerItems);
-
-	/**
-	 * This method is called when a section is reached. When overriding this method,
-	 * be sure to call {@link #runSection(Event)} to run the section.
-	 */
-	public void execute(Event event) {
-		runSection(event);
-	}
 
 	/**
 	 * Loads the code in the given {@link SectionNode},
@@ -100,9 +101,11 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	 * @param sectionNode The section node to load.
 	 * @param name The name of the event(s) being used.
 	 * @param events The event(s) during the section's execution.
+	 * @return A trigger containing the loaded section. This should be stored and used
+	 * to run the section one or more times.
 	 */
 	@SafeVarargs
-	protected final void loadCode(SectionNode sectionNode, String name, Class<? extends Event>... events) {
+	protected final Trigger loadCode(SectionNode sectionNode, String name, Class<? extends Event>... events) {
 		ParserInstance parser = getParser();
 		String previousName = parser.getCurrentEventName();
 		Class<? extends Event>[] previousEvents = parser.getCurrentEvents();
@@ -116,13 +119,16 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		sections.add(this);
 		parser.setCurrentSections(sections);
 		parser.setHasDelayBefore(Kleenean.FALSE);
-		loadCode(sectionNode);
+		List<TriggerItem> triggerItems = ScriptLoader.loadItems(sectionNode);
 
 		//noinspection ConstantConditions - We are resetting it to what it was
 		parser.setCurrentEvent(previousName, previousEvents);
 		parser.setCurrentSkriptEvent(previousSkriptEvent);
 		parser.setCurrentSections(previousSections);
 		parser.setHasDelayBefore(previousDelay);
+
+		Config script = parser.getCurrentScript();
+		return new Trigger(script != null ? script.getFile() : null, toString(), null, triggerItems);
 	}
 
 	/**
@@ -139,18 +145,6 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 			return;
 		if (!getParser().getHasDelayBefore().isFalse())
 			getParser().setHasDelayBefore(Kleenean.UNKNOWN);
-	}
-
-	/**
-	 * Runs the code within a section with the given event.
-	 * <b>ALL</b> sections must call either {@link #loadCode(SectionNode)} or {@link #loadOptionalCode(SectionNode)}
-	 * before calling this method.
-	 */
-	protected final void runSection(Event event) {
-		if (first == null) {
-			Skript.exception("All sections must call a load method before calling Section#runSection.");
-		}
-		TriggerItem.walk(first, event);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
