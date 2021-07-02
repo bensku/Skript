@@ -2,7 +2,6 @@ html {
   scroll-behavior: smooth;
 }
 
-
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -16,14 +15,13 @@ html {
   border-radius: 10px;
 }
 
-
 * {
   margin: 0px;
   padding: 0px;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: oldlace;
   display: grid;
   /*
@@ -34,7 +32,6 @@ body {
   grid-template-columns: 16vw 84vw;
   grid-template-rows: 55px 94vh;
   overflow: hidden;
-
 }
 
 .main-page {
@@ -57,16 +54,15 @@ a:visited {
 
 /* Pattern right section list items */
 .item-details:nth-child(1) ul li:nth-child(odd) {
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .item-details:nth-child(1) ul li:nth-child(even) {
-  background-color: rgba(0,0,0,.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 ul {
   list-style: none;
 }
-
 
 #global-navigation {
   grid-row-start: 1;
@@ -91,10 +87,11 @@ ul {
 
   padding: 10px;
   padding-bottom: 16px;
-  transition: all .1s;
+  transition: all 0.1s;
 }
 
-#global-navigation  a:hover, .active-tab {
+#global-navigation a:hover,
+.active-tab {
   color: #ffc107;
   /*border-bottom: 3px solid #ff9800;*/
 
@@ -130,12 +127,11 @@ ul {
   padding-left: 25px;
   z-index: 9999;
   transition: color 0.2s;
-  width: 14vw;
+  width: 14.1vw;
 }
 
-
 #nav-title:hover {
-color: rgba(255, 152, 0, 0.9);
+  color: rgba(255, 152, 0, 0.9);
 }
 
 #nav-contents {
@@ -149,7 +145,7 @@ color: rgba(255, 152, 0, 0.9);
 #nav-contents > a {
   display: block;
   font-size: 18px;
-  background-color: rgba(0,0,0,.03);
+  background-color: rgba(0, 0, 0, 0.03);
   text-decoration: none;
   color: #2f3e46;
   margin: 6px 10px;
@@ -164,9 +160,10 @@ color: rgba(255, 152, 0, 0.9);
   font-weight: bold;
 }
 
-#nav-contents a:hover, .active-item {
+#nav-contents a:hover,
+.active-item {
   color: black;
-  background-color: rgba(0,0,0,.08);
+  background-color: rgba(0, 0, 0, 0.08);
   border-left: solid 3px #ff9800;
 }
 
@@ -177,13 +174,14 @@ color: rgba(255, 152, 0, 0.9);
   margin-left: 30px;
   position: relative;
   top: 55px;
-  height: calc(100vh - 55px); /* Fixed the TOP CSS 55px due to body having overflow hidden and top = 55px so the last 55px is hidden, this will fix it */
+  height: calc(
+    97vh - 55px
+  ); /* Fixed the TOP CSS 55px due to body having overflow hidden and top = 55px so the last 55px is hidden, this will fix it */
 
   padding: 0.22em;
   padding-right: 30px;
   overflow: scroll;
 }
-
 
 #content.no-left-panel {
   grid-column-start: 1;
@@ -231,24 +229,24 @@ table {
   background-color: #deb887;
   text-align: center;
   font-weight: bold;
-  color: rgba(0,0,0,.8);
+  color: rgba(0, 0, 0, 0.8);
 
   width: 8em;
   padding: 0.3em;
 }
 
 .item-content .item-details:nth-child(odd) td:nth-child(2) {
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .item-content .item-details:nth-child(even) td:nth-child(2) {
-  background-color: rgba(0,0,0,.08);
+  background-color: rgba(0, 0, 0, 0.08);
 }
 
 /* OVERRIDE */
-.item-content .item-details:nth-child(1) td:nth-child(1)  {
+.item-content .item-details:nth-child(1) td:nth-child(1) {
   background-color: #deb887;
 }
-.item-content .item-details:nth-child(1) td:nth-child(2)  {
+.item-content .item-details:nth-child(1) td:nth-child(2) {
   background-color: unset;
 }
 
@@ -260,26 +258,17 @@ table {
   background-color: rgba(222, 184, 135, 0.8);
 }
 
-
-.item-table-label:hover {
-
-}
-
 .item-details {
   border-collapse: collapse;
   width: 80vw;
   max-width: 80vw;
 }
 
-.item-content tr:nth-child(1n+2) { /* 1n+2 will choose all elements excpet the first */
-  /* background-color: rgba(0, 0, 0, .1);*/ /* HANDLED IN ANOTHER PLACE NOW */
-}
-
-
-.item-content tr:nth-child(1n+2) td:nth-child(2) { /* 1n+2 will choose all elements excpet the first */
+.item-content tr:nth-child(1n + 2) td:nth-child(2) {
+  /* 1n+2 will choose all elements excpet the first */
   padding: 8px;
   font-weight: 500;
-  color: rgba(0,0,0,.8)
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .noleftpad {
@@ -294,7 +283,6 @@ td ul {
 .item-description {
   padding: 15px;
   background-color: rgba(234, 204, 166, 0.4);
-
 }
 
 .item-description > p {
@@ -303,44 +291,33 @@ td ul {
 
 .skript-code-block {
   padding: 6px;
-  font-family: 'Poppins', sans-serif;
-
+  font-family: "Source Code Pro", monospace;
 }
-
 
 .item-examples p {
   background-color: rgb(255, 152, 0);
   border-left: 3px solid rgba(255, 152, 0, 0.5);
   padding: 5px;
-  color: rgba(0,0,0,.8);
+  color: rgba(0, 0, 0, 0.8);
   max-width: 85px;
   margin-top: 25px;
-
 }
 
-
 .item-examples .skript-code-block {
-  background-color: rgba(0,0,0,.08);
+  background-color: rgba(0, 0, 0, 0.08);
   visibility: visible;
-  font-family: 'Source Code Pro', monospace;
+  font-family: "Source Code Pro", monospace;
   font-weight: 400;
-
-
 }
 
 .skript-code-block > a {
   text-decoration: none;
 }
 
-ul > .skript-code-block {
-}
-
-
-
 .item-examples > .skript-code-block {
   border-left: solid 3px #ff9800;
   padding: 30px;
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .box-title {
@@ -349,15 +326,14 @@ ul > .skript-code-block {
   padding: 5px;
   padding-right: 7px;
   margin-top: 20px;
-  color: rgba(0,0,0,.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .box {
   border-left: 3px solid #ff9800;
   padding: 15px;
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
-
 }
 
 .box-title-red {
@@ -373,9 +349,8 @@ ul > .skript-code-block {
 .box-red {
   border-left: 3px solid #ff4e4e;
   padding: 15px;
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
-
 }
 
 @media (max-width: 768px) {
@@ -428,9 +403,6 @@ ul > .skript-code-block {
   #side-nav {
     top: 0;
   }
-
-  #content {
-  }
 }
 
 @media (max-width: 1200px) {
@@ -455,7 +427,51 @@ ul > .skript-code-block {
   #side-nav {
     top: 0;
   }
+}
 
-  #content {
-  }
+.title {
+  margin-top: 32px;
+}
+.subtitle {
+  padding-left: 20px !important;
+}
+.left-margin {
+  margin-left: 20px !important;
+}
+.colors-table {
+  width: 75%;
+  margin: 32px auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  /*border-radius: 5px;*/
+}
+.colors-table th,
+.colors-table td {
+  padding: 12px 15px;
+}
+.colors-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.colors-table tbody tr:nth-of-type(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.colors-table tbody tr:last-of-type {
+  border-bottom: 2px solid #ff9800;
+}
+
+ol.custom-list {
+  margin-left: 16px;
+  list-style: none;
+  counter-reset: my-awesome-counter;
+}
+ol.custom-list li {
+  counter-increment: my-awesome-counter;
+}
+ol.custom-list li::before {
+  content: counter(my-awesome-counter) ". ";
+  font-weight: bold;
 }

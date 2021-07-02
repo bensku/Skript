@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.base.Joiner;
@@ -385,19 +386,19 @@ public class HTMLGenerator {
 		String desc = "";
 		
 		Name name = c.getAnnotation(Name.class);
-		desc = descTemp.replace("${element.name}", ifNullEmpty(name.value(), "Unknown Name"));
+		desc = descTemp.replace("${element.name}", nullCheck(name.value(), "Unknown Name"));
 		
 		Since since = c.getAnnotation(Since.class);
-		desc = desc.replace("${element.since}", ifNullEmpty(since.value(), "Unknown"));
+		desc = desc.replace("${element.since}", nullCheck(since.value(), "Unknown"));
 		
 		Description description = c.getAnnotation(Description.class);
-		desc = desc.replace("${element.desc}", Joiner.on("\n").join(ifNullEmpty(description.value(), "Unknown description.")).replace("\n\n", "<p>"));
-		desc = desc.replace("${element.desc-safe}", Joiner.on("\n").join(ifNullEmpty(description.value(), "Unknown description."))
+		desc = desc.replace("${element.desc}", Joiner.on("\n").join(nullCheck(description.value(), "Unknown description.")).replace("\n\n", "<p>"));
+		desc = desc.replace("${element.desc-safe}", Joiner.on("\n").join(nullCheck(description.value(), "Unknown description."))
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		
 		Examples examples = c.getAnnotation(Examples.class);
-		desc = desc.replace("${element.examples}", Joiner.on("<br>").join(ifNullEmpty(examples.value(), "No examples available.")));
-		desc = desc.replace("${element.examples-safe}", Joiner.on("\\n").join(ifNullEmpty(examples.value(), "No examples available."))
+		desc = desc.replace("${element.examples}", Joiner.on("<br>").join(nullCheck(examples.value(), "Missing examples.")));
+		desc = desc.replace("${element.examples-safe}", Joiner.on("\\n").join(nullCheck(examples.value(), "Missing examples."))
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		desc = desc.replace("${element.id}", info.c.getSimpleName());
 		
@@ -438,7 +439,7 @@ public class HTMLGenerator {
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
 			//Skript.info("Pattern is " + pattern);
 			String patterns = "";
-			for (String line : ifNullEmpty(info.patterns, "No patterns available.")) {
+			for (String line : nullCheck(info.patterns, "Missing patterns.")) {
 				assert line != null;
 				line = cleanPatterns(line);
 				String parsed = pattern.replace("${element.pattern}", line);
@@ -459,19 +460,19 @@ public class HTMLGenerator {
 	private String generateEvent(String descTemp, SkriptEventInfo<?> info) {
 		String desc = "";
 		
-		String docName = ifNullEmpty(info.getName(), "Unknown Name");
+		String docName = nullCheck(info.getName(), "Unknown Name");
 		desc = descTemp.replace("${element.name}", docName);
 		
-		String since = ifNullEmpty(info.getSince(), "Unknown");
+		String since = nullCheck(info.getSince(), "Unknown");
 		desc = desc.replace("${element.since}", since);
 		
-		String[] description = ifNullEmpty(info.getDescription(), "Missing description.");
+		String[] description = nullCheck(info.getDescription(), "Missing description.");
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description).replace("\n\n", "<p>"));
 		desc = desc
 				.replace("${element.desc-safe}", Joiner.on("\\n").join(description)
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		
-		String[] examples = ifNullEmpty(info.getExamples(), "No examples available.");
+		String[] examples = nullCheck(info.getExamples(), "Missing examples.");
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples));
 		desc = desc
 				.replace("${element.examples-safe}", Joiner.on("\\n").join(examples)
@@ -497,7 +498,7 @@ public class HTMLGenerator {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
 			String patterns = "";
-			for (String line : ifNullEmpty(info.patterns, "No patterns available.")) {
+			for (String line : nullCheck(info.patterns, "Missing patterns.")) {
 				assert line != null;
 				line = cleanPatterns(line);
 				String parsed = pattern.replace("${element.pattern}", line);
@@ -515,19 +516,19 @@ public class HTMLGenerator {
 	private String generateClass(String descTemp, ClassInfo<?> info) {
 		String desc = "";
 		
-		String docName = ifNullEmpty(info.getDocName(), "Unknown Name");
+		String docName = nullCheck(info.getDocName(), "Unknown Name");
 		desc = descTemp.replace("${element.name}", docName);
 		
-		String since = ifNullEmpty(info.getSince(), "Unknown");
+		String since = nullCheck(info.getSince(), "Unknown");
 		desc = desc.replace("${element.since}", since);
 		
-		String[] description = ifNullEmpty(info.getDescription(), "Missing description.");
+		String[] description = nullCheck(info.getDescription(), "Missing description.");
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description).replace("\n\n", "<p>"));
 		desc = desc
 				.replace("${element.desc-safe}", Joiner.on("\\n").join(description)
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		
-		String[] examples = ifNullEmpty(info.getExamples(), "No examples available.");
+		String[] examples = nullCheck(info.getExamples(), "Missing examples.");
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples));
 		desc = desc.replace("${element.examples-safe}", Joiner.on("\\n").join(examples)
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
@@ -552,7 +553,7 @@ public class HTMLGenerator {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(template + "/templates/" + split[1]));
 			String patterns = "";
-			String[] lines = ifNullEmpty(info.getUsage(), "No patterns available.");
+			String[] lines = nullCheck(info.getUsage(), "Missing patterns.");
 			if (lines == null)
 				continue;
 			for (String line : lines) {
@@ -573,19 +574,19 @@ public class HTMLGenerator {
 	private String generateFunction(String descTemp, JavaFunction<?> info) {
 		String desc = "";
 		
-		String docName = ifNullEmpty(info.getName(), "Unknown Name");
+		String docName = nullCheck(info.getName(), "Unknown Name");
 		desc = descTemp.replace("${element.name}", docName);
 		
-		String since = ifNullEmpty(info.getSince(), "Unknown");
+		String since = nullCheck(info.getSince(), "Unknown");
 		desc = desc.replace("${element.since}", since);
 		
-		String[] description = ifNullEmpty(info.getDescription(), "Missing description.");
+		String[] description = nullCheck(info.getDescription(), "Missing description.");
 		desc = desc.replace("${element.desc}", Joiner.on("\n").join(description));
 		desc = desc
 				.replace("${element.desc-safe}", Joiner.on("\\n").join(description)
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 		
-		String[] examples = ifNullEmpty(info.getExamples(), "No examples available.");
+		String[] examples = nullCheck(info.getExamples(), "Missing examples.");
 		desc = desc.replace("${element.examples}", Joiner.on("\n<br>").join(examples));
 		desc = desc
 				.replace("${element.examples-safe}", Joiner.on("\\n").join(examples)
@@ -693,23 +694,21 @@ public class HTMLGenerator {
 		return s;
 	}
 	
-	public String ifNullEmpty(String o, String m) {
-		if (o == null) // Null check first otherwise NullPointerExpection is thrown
-			return m;
-		if (o.isEmpty()) 
-			return m;
-		
-		return o;
+	
+	/**
+	 *
+	 * Checks if an object is empty or null then it will return the message provided
+	 * 
+	 * @param object the object to check
+	 * @param message the message to reutn of conitions are true
+	 * 
+	 */
+	public String nullCheck(@Nullable String object, @NonNull String message) {
+		return (object == null || object.isEmpty()) ? message : object; // Null check first otherwise NullPointerExpection is thrown
 	}
-	public String[] ifNullEmpty(String[] o, String m) {
-		if (o == null) // Null check first otherwise NullPointerExpection is thrown
-			return new String[]{ m };
-		if (o.length == 0) 
-			return new String[]{ m };
-		if (o[0].equals("")) 
-			return new String[]{ m };
-		
-		return o;
+	
+	public String[] nullCheck(@Nullable String[] object, @NonNull String message) {
+		return (object == null || object.length == 0 || object[0].equals("")) ? new String[]{ message } : object; // Null check first otherwise NullPointerExpection is thrown
 	}
 			
 	
