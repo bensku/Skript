@@ -79,19 +79,12 @@ public final class EvtExplode extends SkriptEvent {
 	@SuppressWarnings("null")
 	@Override
 	public boolean check(final Event e) {
-		if (type == ENTITY)
-			return e instanceof EntityExplodeEvent;
-
-		if (type == BLOCK)
-			return e instanceof BlockExplodeEvent;
-
-		else // Any
-			return true;
+		return type == ENTITY ? e instanceof EntityExplodeEvent : (type == BLOCK ? e instanceof BlockExplodeEvent : true);   
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return (type == ENTITY ? "entity" : type == BLOCK ? "block" : "any") + (" explode");
+		return (type == ENTITY ? "entity" : (type == BLOCK ? "block" : "")) + " explode";
 	}
 	
 }

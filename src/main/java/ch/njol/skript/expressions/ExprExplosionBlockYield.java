@@ -55,14 +55,10 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 		);
 	}
 	
-	boolean isEntity = false;
-
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (getParser().isCurrentEvent(EntityExplodeEvent.class)) {
-			isEntity = true;
-		} else if (!getParser().isCurrentEvent(BlockExplodeEvent.class)) {
-			Skript.error("The 'explosion block yield' is only usable in an entity/block explosion event", ErrorQuality.SEMANTIC_ERROR);
+		if (!getParser().isCurrentEvent(BlockExplodeEvent.class, EntityExplodeEvent.class)) {
+			Skript.error("Explosion block yield can only be retrieved from an explode event.");
 			return false;
 		}
 		return true;
@@ -71,7 +67,7 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	@Override
 	@Nullable
 	protected Number[] get(Event e) {
-		return new Number[]{ (isEntity ? ((EntityExplodeEvent) e).getYield() : ((BlockExplodeEvent) e).getYield()) };
+		return new Number[]{ typeGetYield(e) };
 	}
 
 	@Override
@@ -120,7 +116,7 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	}
 
 	private float typeGetYield(Event e) {
-		if (isEntity) {
+		if (e instanceof EntityExplodeEvent) {
 			return ((EntityExplodeEvent) e).getYield();
 		} else {
 			return ((BlockExplodeEvent) e).getYield();
@@ -128,7 +124,7 @@ public class ExprExplosionBlockYield extends SimpleExpression<Number> {
 	}
 	
 	private void typeSetYield(Event e, float yield) {
-		if (isEntity) {
+		if (e instanceof EntityExplodeEvent) {
 			((EntityExplodeEvent) e).setYield(yield);
 		} else {
 			((BlockExplodeEvent) e).setYield(yield);

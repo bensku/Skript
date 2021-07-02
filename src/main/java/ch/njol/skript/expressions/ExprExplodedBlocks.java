@@ -67,7 +67,7 @@ import ch.njol.util.Kleenean;
 	"on explode:",
 	"\tremove all stone from exploded blocks"})
 @Events("explode")
-@Since("2.5")
+@Since("2.5, INSERT VERSION (changing the list)")
 public class ExprExplodedBlocks extends SimpleExpression<Block> {
 
 	static {
@@ -77,7 +77,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(BlockExplodeEvent.class, EntityExplodeEvent.class)) {
-			Skript.error("Exploded blocks can only be retrieved from an entity/block explode event.");
+			Skript.error("Exploded blocks can only be retrieved from an explode event.");
 			return false;
 		}
 		return true;
@@ -86,22 +86,13 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	@Nullable
 	@Override
 	protected Block[] get(Event e) {
-		List<Block> blockList;
-
-		if (e instanceof EntityExplodeEvent) {
-			blockList = ((EntityExplodeEvent) e).blockList();
-		}
-
-		else
-			blockList = ((BlockExplodeEvent) e).blockList();
-
-		return blockList.toArray(new Block[blockList.size()]);
+		return getBlocks(e).toArray(new Block[0]);
 	}
 
 	@Nullable
 	@Override
 	public Iterator<? extends Block> iterator(Event e) {
-		List<Block> blocks = e instanceof EntityExplodeEvent ? ((EntityExplodeEvent) e).blockList() : ((BlockExplodeEvent) e).blockList();
+		List<Block> blocks = getBlocks(e);
 		return new ArrayList(blocks).iterator();
 	}
 
@@ -124,18 +115,15 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	
 	@Override
 	public void change(Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		List<Block> blocks;
-		if (e instanceof EntityExplodeEvent) {
-			blocks = ((EntityExplodeEvent) e).blockList();
-		}
-		else
-			blocks = ((BlockExplodeEvent) e).blockList();
+		List<Block> blocks = getBlocks(e);
 
 		switch (mode) {
 			case DELETE:
 			case SET:
 			case ADD:
-				assert delta != null;
+				if (mode != ChangeMode.DELETE)
+					assert delta != null;
+				
 				if (mode != ChangeMode.ADD)
 					blocks.clear();
 
@@ -156,7 +144,6 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 				for (Object o : delta) {
 					if (o instanceof Block) {
 						blocks.remove((Block) o); // no need to check whether they are equals, since blocks are only passed by reference
-
 					} else if (o instanceof ItemType) {
 						ItemType item = ((ItemType) o);
 						int amount = item.getInternalAmount(); // -1 when using 'all' or 'any' of alias
@@ -164,9 +151,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 						if (amount == -1 || mode == ChangeMode.REMOVE_ALL) { // all %itemtype% OR REMOVE_ALL
 							blocks.removeIf(item::isOfType);
 							break;
-						}
-
-						else if (amount > 0)
+						} else if (amount > 0)
 							for (Block b : new ArrayList<>(blocks)) {
 								if (amountReached >= amount)
 									break;
@@ -182,6 +167,10 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	}
 
 
+	private static List<Block> getBlocks(Event e) {
+		return e instanceof EntityExplodeEvent ? ((EntityExplodeEvent) e).blockList() : ((BlockExplodeEvent) e).blockList();
+	}
+	
 	@Override
 	public boolean isSingle() {
 		return false;
@@ -194,7 +183,7 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 	
 	@Override
 	public String toString(@Nullable Event e, boolean d) {
-		return e instanceof EntityExplodeEvent ? "entity" : "block" + " event's exploded blocks";
+		return "exploded blocks";
 	}
 	
 }

@@ -35,7 +35,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on explode:",
 	"\texplosion type = \"block\" # Either \"block\" or \"entity\""})
 @Events("explode")
-@Since("2.5")
+@Since("INSERT VERSION")
 public class ExprExplosionCause extends SimpleExpression<String> {
 
 	static {
@@ -59,7 +59,7 @@ public class ExprExplosionCause extends SimpleExpression<String> {
 
 	@Override
 	public boolean isSingle() {
-		return false;
+		return true;
 	}
 	
 	@Override
