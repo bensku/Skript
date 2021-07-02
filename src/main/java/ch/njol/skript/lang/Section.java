@@ -27,6 +27,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,13 +80,46 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	 * (although the loaded code may change it), the calling code must deal with this.
 	 */
 	protected void loadCode(SectionNode sectionNode) {
-		List<TriggerSection> currentSections = ParserInstance.get().getCurrentSections();
+		List<TriggerSection> currentSections = getParser().getCurrentSections();
 		currentSections.add(this);
 		try {
 			setTriggerItems(ScriptLoader.loadItems(sectionNode));
 		} finally {
 			currentSections.remove(currentSections.size() - 1);
 		}
+	}
+
+	/**
+	 * Loads the code in the given {@link SectionNode},
+	 * appropriately modifying {@link ParserInstance#getCurrentSections()}.
+	 *
+	 * This method differs from {@link #loadCode(SectionNode)} in that it
+	 * is meant for code that will be executed in a different event.
+	 *
+	 * @param sectionNode The section node to load.
+	 * @param name The name of the event(s) being used.
+	 * @param events The event(s) during the section's execution.
+	 */
+	@SafeVarargs
+	protected final void loadCode(SectionNode sectionNode, String name, Class<? extends Event>... events) {
+		ParserInstance parser = getParser();
+		String previousName = parser.getCurrentEventName();
+		Class<? extends Event>[] previousEvents = parser.getCurrentEvents();
+		SkriptEvent previousSkriptEvent = parser.getCurrentSkriptEvent();
+		List<TriggerSection> previousSections = parser.getCurrentSections();
+		Kleenean previousDelay = parser.getHasDelayBefore();
+
+		parser.setCurrentEvent(name, events);
+		parser.setCurrentSkriptEvent(null);
+		parser.setCurrentSections(Collections.singletonList(this));
+		parser.setHasDelayBefore(Kleenean.FALSE);
+		loadCode(sectionNode);
+
+		//noinspection ConstantConditions - We are resetting it to what it was
+		parser.setCurrentEvent(previousName, previousEvents);
+		parser.setCurrentSkriptEvent(previousSkriptEvent);
+		parser.setCurrentSections(previousSections);
+		parser.setHasDelayBefore(previousDelay);
 	}
 
 	/**
