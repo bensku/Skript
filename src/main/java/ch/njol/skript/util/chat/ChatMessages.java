@@ -514,7 +514,7 @@ public class ChatMessages {
 			2nd Replace: strips colors using <color name> (NOTE: This regex expression replaces any two words surrounded by <> such as <any text>)
 			3rd Replace: strips colors & or §
 		*/
-		plain = plain.replaceAll("<(link|url|run command|suggest command|tooltip):(.*?)>", "$2").replaceAll("<\\w+? ?\\w+?>", "").replaceAll("(?i)[&§][0-9a-folkrnm]", "");
+		plain = plain.replaceAll("<(link|(open |)url|(run |)command|cmd|suggest command|sgt|tooltip|show text|ttp|insertion|insert|ins):(.*?)>", "$2").replaceAll("<\\w+? ?\\w+?>", "").replaceAll("(?i)[&§][0-9a-folkrnm]", ""); // (NOTE: These values are changable in message config, so this better be improved later)
 
 		assert plain != null;
 		return plain;
