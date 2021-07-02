@@ -27,6 +27,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -111,7 +112,9 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 
 		parser.setCurrentEvent(name, events);
 		parser.setCurrentSkriptEvent(null);
-		parser.setCurrentSections(Collections.singletonList(this));
+		List<TriggerSection> sections = new ArrayList<>();
+		sections.add(this);
+		parser.setCurrentSections(sections);
 		parser.setHasDelayBefore(Kleenean.FALSE);
 		loadCode(sectionNode);
 
