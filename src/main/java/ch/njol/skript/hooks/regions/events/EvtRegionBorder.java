@@ -128,11 +128,10 @@ public class EvtRegionBorder extends SelfRegisteringSkriptEvent {
 	
 	static void callEvent(final Region r, final PlayerMoveEvent me, final boolean enter) {
 		final Player p = me.getPlayer();
-		assert p != null;
 		final RegionBorderEvent e = new RegionBorderEvent(r, p, enter);
 		e.setCancelled(me.isCancelled());
 		for (final Trigger t : triggers) {
-			if (((EvtRegionBorder) t.getEvent()).applies(e))
+			if (t.getEvent() != null && ((EvtRegionBorder) t.getEvent()).applies(e))
 				t.execute(e);
 		}
 		me.setCancelled(e.isCancelled());

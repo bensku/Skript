@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import ch.njol.skript.lang.SkriptEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -110,7 +111,8 @@ public abstract class SkriptEventHandler {
 			boolean hasTrigger = false;
 			while (ts.hasNext()) {
 				Trigger trigger = ts.next();
-				if (trigger.getEvent().getEventPriority() == priority && trigger.getEvent().check(e)) {
+				SkriptEvent skriptEvent = trigger.getEvent();
+				if (skriptEvent != null && skriptEvent.getEventPriority() == priority && skriptEvent.check(e)) {
 					hasTrigger = true;
 					break;
 				}
@@ -133,7 +135,8 @@ public abstract class SkriptEventHandler {
 		
 		while (ts.hasNext()) {
 			Trigger t = ts.next();
-			if (t.getEvent().getEventPriority() != priority || !t.getEvent().check(e))
+			SkriptEvent skriptEvent = t.getEvent();
+			if (skriptEvent == null || skriptEvent.getEventPriority() != priority || !skriptEvent.check(e))
 				continue;
 			
 			logTriggerStart(t);
@@ -207,7 +210,8 @@ public abstract class SkriptEventHandler {
 			Trigger t = selfRegisteredTriggers.get(i);
 			if (script.equals(t.getScript())) {
 				info.triggers++;
-				((SelfRegisteringSkriptEvent) t.getEvent()).unregister(t);
+				if (t.getEvent() != null)
+					((SelfRegisteringSkriptEvent) t.getEvent()).unregister(t);
 				selfRegisteredTriggers.remove(i);
 				i--;
 			}
@@ -220,8 +224,10 @@ public abstract class SkriptEventHandler {
 	
 	static void removeAllTriggers() {
 		triggers.clear();
-		for (Trigger t : selfRegisteredTriggers)
-			((SelfRegisteringSkriptEvent) t.getEvent()).unregisterAll();
+		for (Trigger t : selfRegisteredTriggers) {
+			if (t.getEvent() != null)
+				((SelfRegisteringSkriptEvent) t.getEvent()).unregisterAll();
+		}
 		selfRegisteredTriggers.clear();
 	}
 	
@@ -236,7 +242,12 @@ public abstract class SkriptEventHandler {
 			Class<? extends Event> e = pair.getFirst();
 			
 			EventPriority priority;
-			priority = pair.getSecond().getEvent().getEventPriority();
+			SkriptEvent skriptEvent = pair.getSecond().getEvent();
+			if (skriptEvent != null) {
+				priority = skriptEvent.getEventPriority();
+			} else { // Fallback to default priority
+				priority = SkriptConfig.defaultEventPriority.value();
+			}
 			
 			PriorityListener listener = listeners[priority.ordinal()];
 			EventExecutor executor = listener.executor;

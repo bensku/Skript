@@ -32,6 +32,7 @@ import ch.njol.skript.variables.Variables;
 public class Trigger extends TriggerSection {
 	
 	private final String name;
+	@Nullable
 	private final SkriptEvent event;
 	
 	@Nullable
@@ -39,7 +40,7 @@ public class Trigger extends TriggerSection {
 	private int line = -1; // -1 is default: it means there is no line number available
 	private String debugLabel;
 	
-	public Trigger(final @Nullable File script, final String name, final SkriptEvent event, final List<TriggerItem> items) {
+	public Trigger(@Nullable File script, String name, @Nullable SkriptEvent event, List<TriggerItem> items) {
 		super(items);
 		this.script = script;
 		this.name = name;
@@ -80,7 +81,7 @@ public class Trigger extends TriggerSection {
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return name + " (" + event.toString(e, debug) + ")";
+		return name + (event != null ? " (" + event.toString(e, debug) + ")" : "");
 	}
 	
 	/**
@@ -90,7 +91,8 @@ public class Trigger extends TriggerSection {
 	public String getName() {
 		return name;
 	}
-	
+
+	@Nullable
 	public SkriptEvent getEvent() {
 		return event;
 	}
