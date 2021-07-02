@@ -16,13 +16,14 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.parser;
-
 /**
- * Several utils, mostly copy-pasted from old parser.
- * Do not ask what they do - as long they work.
+ * Code related to logging.
+ * 
+ * @author Peter Güttinger
  */
-public class ParserUtils {
-	
-	
-}
+@NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
+package ch.njol.skript.sections;
+
+import org.eclipse.jdt.annotation.DefaultLocation;
+import org.eclipse.jdt.annotation.NonNullByDefault;
+

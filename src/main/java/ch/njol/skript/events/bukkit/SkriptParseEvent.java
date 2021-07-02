@@ -16,16 +16,25 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.lang.parser;
+package ch.njol.skript.events.bukkit;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * Loads script from disk to memory and registers function signatures.
+ * Internally used for parsing `parse if` sections
  */
-public class LoaderInstance implements Runnable {
+public class SkriptParseEvent extends Event {
+
+	private final static HandlerList handlers = new HandlerList();
 
 	@Override
-	public void run() {
-
+	public HandlerList getHandlers() {
+		return handlers;
 	}
-	
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
 }
