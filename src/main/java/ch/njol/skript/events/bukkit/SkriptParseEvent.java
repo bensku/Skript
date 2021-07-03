@@ -16,12 +16,25 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
+package ch.njol.skript.events.bukkit;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
 /**
- * @author Peter Güttinger
+ * Internally used for parsing `parse if` sections
  */
-@NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
-package ch.njol.skript.lang.util;
+public class SkriptParseEvent extends Event {
 
-import org.eclipse.jdt.annotation.DefaultLocation;
-import org.eclipse.jdt.annotation.NonNullByDefault;
+	private final static HandlerList handlers = new HandlerList();
 
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
+}
