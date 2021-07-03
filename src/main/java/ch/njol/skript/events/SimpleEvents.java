@@ -307,7 +307,7 @@ public class SimpleEvents {
 				.description("Called when a player uses a nether or end portal. <a href='effects.html#EffCancelEvent'>Cancel the event</a> to prevent the player from teleporting.")
 				.examples("on player portal:")
 				.since("1.0");
-		Skript.registerEvent("Quit", SimpleEvent.class, PlayerQuitEvent.class, "(quit[ting]|disconnect[ing]|log[ ]out|logging out)")
+		Skript.registerEvent("Quit", SimpleEvent.class, PlayerQuitEvent.class, "(quit[ting]|disconnect[ing]|log[ ]out|logging out|leav(e|ing))")
 				.description("Called when a player leaves the server.")
 				.examples("on quit:",
 						"on disconnect:")
