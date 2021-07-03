@@ -791,9 +791,6 @@ public class BukkitClasses {
 								return null;
 							}
 						}
-						// if (s.matches("\"\\S+\""))
-						// 	return Bukkit.getPlayerExact(s.substring(1, s.length() - 1));
-						assert false;
 						return null;
 					}
 					
