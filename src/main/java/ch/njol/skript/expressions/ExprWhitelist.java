@@ -76,27 +76,32 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	
 	@Override
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null) return;
 		switch (mode) {
 			case SET:
 				Bukkit.setWhitelist((Boolean) delta[0]);
 				break;
 			case ADD:
-				for (Object p : delta)
-					((OfflinePlayer) p).setWhitelisted(true);
+				if (delta != null) {
+					for (Object p : delta)
+						((OfflinePlayer) p).setWhitelisted(true);
+				}
 				break;
 			case REMOVE:
-				for (Object p : delta)
-					((OfflinePlayer) p).setWhitelisted(false);
+				if (delta != null) {
+					for (Object p : delta)
+						((OfflinePlayer) p).setWhitelisted(false);
+				}
 				break;
 			case RESET:
 				for (OfflinePlayer p : Bukkit.getWhitelistedPlayers())
 					p.setWhitelisted(false);
 				break;
 			case TOGGLE:
-				for (Object p : delta) {
-					OfflinePlayer player = (OfflinePlayer) p;
-					player.setWhitelisted(!player.isWhitelisted());
+				if (delta != null) {
+					for (Object p : delta) {
+						OfflinePlayer player = (OfflinePlayer) p;
+						player.setWhitelisted(!player.isWhitelisted());
+					}
 				}
 				break;
 			default:
