@@ -18,6 +18,10 @@
  */
 package ch.njol.skript.expressions;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.eclipse.jdt.annotation.Nullable;
+
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -25,14 +29,11 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Flight Mode")
 @Description("Whether the player(s) are allowed to fly. Use <a href=effects.html#EffMakeFly>Make Fly</a> effect to force player(s) to fly.")
 @Examples({"set flight mode of player to true", "send \"%flying state of all players%\""})
-@Since("2.2-dev34")
+@Since("2.2-dev34, INSERT VERSION (toggle support)")
 public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 
 	static {
@@ -47,7 +48,7 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET) {
+		if (mode == Changer.ChangeMode.SET || mode == Changer.ChangeMode.RESET || mode == Changer.ChangeMode.TOGGLE) {
 			return CollectionUtils.array(Boolean.class);
 		}
 		return null;
@@ -57,7 +58,11 @@ public class ExprFlightMode extends SimplePropertyExpression<Player, Boolean> {
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		boolean state = mode != Changer.ChangeMode.RESET && delta != null && (boolean) delta[0];
 		for (Player player : getExpr().getArray(event)) {
-			player.setAllowFlight(state);
+			if (mode == Changer.ChangeMode.TOGGLE) {
+				player.setAllowFlight(!player.getAllowFlight());
+			} else {
+				player.setAllowFlight(state);
+			}
 		}
 	}
 

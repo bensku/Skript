@@ -33,7 +33,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Entity AI")
 @Description("Returns whether an entity has AI.")
 @Examples("set artificial intelligence of target entity to false")
-@Since("2.5")
+@Since("2.5, INSERT VERSION (toggle support)")
 public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 	
 	static {
@@ -49,12 +49,23 @@ public class ExprAI extends SimplePropertyExpression<LivingEntity, Boolean> {
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return mode == Changer.ChangeMode.SET ? CollectionUtils.array(Boolean.class) : null;
+		switch (mode) {
+			case SET:
+			case TOGGLE:
+				return CollectionUtils.array(Boolean.class);
+			default:
+				return null;
+		}
 	}
 	
 	@Override
 	public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
 		if (delta == null || delta[0] == null) {
+			if (mode == Changer.ChangeMode.TOGGLE) {
+				for (LivingEntity entity : getExpr().getArray(event)) {
+					entity.setAI(!entity.hasAI());
+				}
+			}
 			return;
 		}
 		boolean value = (Boolean) delta[0];

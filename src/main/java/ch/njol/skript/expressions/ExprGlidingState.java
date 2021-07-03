@@ -33,7 +33,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Name("Gliding State")
 @Description("Sets of gets gliding state of player. It allows you to set gliding state of entity even if they do not have an <a href=\"http://minecraft.gamepedia.com/Elytra\">Elytra</a> equipped.")
 @Examples({"set gliding of player to off"})
-@Since("2.2-dev21")
+@Since("2.2-dev21, INSERT VERSION (toggle support)")
 public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boolean> {
 	
 	static {
@@ -59,14 +59,19 @@ public class ExprGlidingState extends SimplePropertyExpression<LivingEntity, Boo
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return new Class[] {Boolean.class};
 		return null;
 	}
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		for (final LivingEntity entity : getExpr().getArray(e))
-			entity.setGliding(delta == null ? false : (Boolean) delta[0]);
+		for (final LivingEntity entity : getExpr().getArray(e)) {
+			if (mode == ChangeMode.TOGGLE) {
+				entity.setGliding(!entity.isGliding());
+			} else {
+				entity.setGliding(delta == null ? false : (Boolean) delta[0]);
+			}
+		}
 	}
 }
