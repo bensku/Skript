@@ -706,7 +706,7 @@ public class HTMLGenerator {
 	}
 	
 	public String[] getNullOrEmptyDefault(@Nullable String[] string, String message) {
-		return (string == null || string.length == 0 || string[0].equals("")) ? new String[]{ message } : string; // Null check first otherwise NullPointerExpection is thrown
+		return (string == null || string.length == 0 || string[0].equals("")) ? new String[]{ message } : string; // Null check first otherwise NullPointerException is thrown
 	}
 			
 	
