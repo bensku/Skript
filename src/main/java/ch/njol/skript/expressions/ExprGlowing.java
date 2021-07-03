@@ -57,7 +57,7 @@ public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return new Class[] {Boolean.class};
 		return null;
 	}
