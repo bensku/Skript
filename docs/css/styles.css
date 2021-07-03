@@ -128,6 +128,10 @@ ul {
     width: 14.1vw;
 }
 
+#nav-title {
+    font-size: clamp(1.25em, 1.35vw, 2em);
+}
+
 #nav-title:hover {
     color: rgba(255, 152, 0, 0.9);
 }
