@@ -63,7 +63,6 @@ public class DefaultChangers {
 				default: // REMIND reset entity? (unshear, remove held item, reset weapon/armour, ...)
 					return null;
 			}
-			assert false;
 			return null;
 		}
 		
