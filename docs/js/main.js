@@ -26,12 +26,13 @@ contents.addEventListener('scroll', (e) => {
 
 // Active Tab
 const pageLink = window.location.toString().replaceAll(/(.*)\/(.+?).html(.*)/gi, '$2');
-document.querySelectorAll(`#global-navigation a[href="${pageLink}.html"]`)[0].classList.add("active-tab");
+if (pageLink === "" || pageLink == window.location.toString()) // home page - when there is no `.+?.html` pageLink will = windown.location due to current regex
+  document.querySelectorAll('#global-navigation a[href="index.html"]')[0].classList.add("active-tab");
+else
+  document.querySelectorAll(`#global-navigation a[href="${pageLink}.html"]`)[0].classList.add("active-tab");
 
 
 // No Left Panel
 const noLeftPanel = document.querySelectorAll('#content.no-left-panel')[0];
-if (noLeftPanel != null) {
+if (noLeftPanel != null)
   document.querySelectorAll('#side-nav')[0].classList.add('no-left-panel');
-}
-

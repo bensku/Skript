@@ -219,113 +219,113 @@
     <p class="subtitle">
         For information not related to Skript, see
         <a href="https://minecraft.gamepedia.com/Formatting_codes#Color_codes">Minecraft Wiki page</a
-		>
-		concerning colors. Note that depending on Skript configuration, color
-		codes may do more than just change color of text after them. By default,
-		for backwards compatibility, they clear following styles: magic, bold,
-		strikethrough, underlined, italic. Other styles are not affected, and
-		this feature can be toggled of in config.sk.
-	</p>
-	<h2 class="title">Other Styles</h2>
-	<p class="subtitle">
-		Minecraft also has various other styles available. The following are
-		available everywhere, including item and entity names:
-	</p>
+    >
+    concerning colors. Note that depending on Skript configuration, color
+    codes may do more than just change color of text after them. By default,
+    for backwards compatibility, they clear following styles: magic, bold,
+    strikethrough, underlined, italic. Other styles are not affected, and
+    this feature can be toggled of in config.sk.
+  </p>
+  <h2 class="title">Other Styles</h2>
+  <p class="subtitle">
+    Minecraft also has various other styles available. The following are
+    available everywhere, including item and entity names:
+  </p>
 
-	<table class="colors-table">
-		<tr style="font-weight: 700">
-			<td>Code</td>
-			<td>Name</td>
-			<td>Alternative Names</td>
-		</tr>
-		<tr>
-			<td>§k</td>
-			<td>magic</td>
-			<td>obfuscated</td>
-		</tr>
-		<tr>
-			<td>§l</td>
-			<td style="font-weight: bold">bold</td>
-			<td>b</td>
-		</tr>
-		<tr>
-			<td>§m</td>
-			<td style="text-decoration: line-through">strikethrough</td>
-			<td>strike, s</td>
-		</tr>
-		<tr>
-			<td>§n</td>
-			<td style="text-decoration: line-under">underlined</td>
-			<td>underline, u</td>
-		</tr>
-		<tr>
-			<td>§o</td>
-			<td style="font-style: italic">italic</td>
-			<td>italics, i</td>
-		</tr>
-		<tr>
-			<td>§r</td>
-			<td>reset</td>
-			<td>r</td>
-		</tr>
-	</table>
-	<p class="subtitle">
-		If it wasn't clear from the table, §r clears all other formatting and
-		colors. You'll probably use it quite often when sending chat messages
-		from scripts.
-	</p>
-	<p class="subtitle">
-		Skript also supports certain newer features, which are only available in
-		chat. Those do not have formatting codes, so you must use tags for them.
-	</p>
-	<table class="colors-table">
-		<tr style="font-weight: 700">
-			<td>Name</td>
-			<td>Alternative Names</td>
-			<td>Description</td>
-		</tr>
-		<tr>
-			<td>link</td>
-			<td>open url, url</td>
-			<td>Opens a link when player clicks on text</td>
-		</tr>
-		<tr>
-			<td>run command</td>
-			<td>command, cmd</td>
-			<td>Makes player execute a chat command when they click on text</td>
-		</tr>
-		<tr>
-			<td>suggest command</td>
-			<td>sgt</td>
-			<td>Adds a command to chat prompt of player when clicked</td>
-		</tr>
-		<tr>
-			<td>tooltip</td>
-			<td>show text, ttp</td>
-			<td>Shows a tooltip when player hovers over text with their mouse</td>
-		</tr>
-		<tr>
-			<td>insertion</td>
-			<td>insert, ins</td>
-			<td>Will append a text at player's current cursor in chat input only while holding SHIFT.</td>
-		</tr>
-	</table>
-	<p class="subtitle">All of these styles require a parameter, in format</p>
-	<div class="box skript-code-block left-margin">
-		&lt;name:parameter&gt;
-	</div>
-	<p class="subtitle">
-		For link, parameter must be either http or https url if you want clients
-		to recognize it. For others, it can be any text you'd like (you can make
-		player run invalid commands if you wish).
-	</p>
-	<h2 class="title">Text and Variables</h2>
-	<p class="subtitle">
-		Variable names are text, but obviously formatting that text does no
-		good. However, everything else you can do for text, you can do for
-		variable names. A guide about this is coming... some day.
-	</p>
-	<p style="padding-bottom: 20px">
-		Guide written by <a href="https://github.com/bensku">bensku</a>.
+  <table class="colors-table">
+    <tr style="font-weight: 700">
+      <td>Code</td>
+      <td>Name</td>
+      <td>Alternative Names</td>
+    </tr>
+    <tr>
+      <td>§k</td>
+      <td>magic</td>
+      <td>obfuscated</td>
+    </tr>
+    <tr>
+      <td>§l</td>
+      <td style="font-weight: bold">bold</td>
+      <td>b</td>
+    </tr>
+    <tr>
+      <td>§m</td>
+      <td style="text-decoration: line-through">strikethrough</td>
+      <td>strike, s</td>
+    </tr>
+    <tr>
+      <td>§n</td>
+      <td style="text-decoration: line-under">underlined</td>
+      <td>underline, u</td>
+    </tr>
+    <tr>
+      <td>§o</td>
+      <td style="font-style: italic">italic</td>
+      <td>italics, i</td>
+    </tr>
+    <tr>
+      <td>§r</td>
+      <td>reset</td>
+      <td>r</td>
+    </tr>
+  </table>
+  <p class="subtitle">
+    If it wasn't clear from the table, §r clears all other formatting and
+    colors. You'll probably use it quite often when sending chat messages
+    from scripts.
+  </p>
+  <p class="subtitle">
+    Skript also supports certain newer features, which are only available in
+    chat. Those do not have formatting codes, so you must use tags for them.
+  </p>
+  <table class="colors-table">
+    <tr style="font-weight: 700">
+      <td>Name</td>
+      <td>Alternative Names</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <td>link</td>
+      <td>open url, url</td>
+      <td>Opens a link when player clicks on text</td>
+    </tr>
+    <tr>
+      <td>run command</td>
+      <td>command, cmd</td>
+      <td>Makes player execute a chat command when they click on text</td>
+    </tr>
+    <tr>
+      <td>suggest command</td>
+      <td>sgt</td>
+      <td>Adds a command to chat prompt of player when clicked</td>
+    </tr>
+    <tr>
+      <td>tooltip</td>
+      <td>show text, ttp</td>
+      <td>Shows a tooltip when player hovers over text with their mouse</td>
+    </tr>
+    <tr>
+      <td>insertion</td>
+      <td>insert, ins</td>
+      <td>Will append a text at player's current cursor in chat input only while holding SHIFT.</td>
+    </tr>
+  </table>
+  <p class="subtitle">All of these styles require a parameter, in format</p>
+  <div class="box skript-code-block left-margin">
+    &lt;name:parameter&gt;
+  </div>
+  <p class="subtitle">
+    For link, parameter must be either http or https url if you want clients
+    to recognize it. For others, it can be any text you'd like (you can make
+    player run invalid commands if you wish).
+  </p>
+  <h2 class="title">Text and Variables</h2>
+  <p class="subtitle">
+    Variable names are text, but obviously formatting that text does no
+    good. However, everything else you can do for text, you can do for
+    variable names. A guide about this is coming... some day.
+  </p>
+  <p style="padding-bottom: 20px">
+    Guide written by <a href="https://github.com/bensku">bensku</a>.
     </p>
 </div>
