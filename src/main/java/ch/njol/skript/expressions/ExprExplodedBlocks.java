@@ -83,14 +83,14 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 		return true;
 	}
 	
-	@Nullable
 	@Override
+	@Nullable
 	protected Block[] get(Event e) {
 		return getBlocks(e).toArray(new Block[0]);
 	}
 
-	@Nullable
 	@Override
+	@Nullable
 	public Iterator<? extends Block> iterator(Event e) {
 		List<Block> blocks = getBlocks(e);
 		return new ArrayList(blocks).iterator();
@@ -121,25 +121,25 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 			case DELETE:
 			case SET:
 			case ADD:
-				if (mode != ChangeMode.DELETE)
-					assert delta != null;
-				
 				if (mode != ChangeMode.ADD)
 					blocks.clear();
-
-				for (Object o : delta) {
-					if (o instanceof ItemType)
-						continue;
-
-					if (((Block) o).getType() != Material.AIR) // Performance
-						blocks.add((Block) o);
+					
+				if (mode != ChangeMode.DELETE) {
+					assert delta != null;
+					for (Object o : delta) {
+						if (o instanceof ItemType)
+							continue;
+	
+						if (((Block) o).getType() != Material.AIR) // Performance
+							blocks.add((Block) o);
+					}
 				}
 				break;
 
 			case REMOVE:
 			case REMOVE_ALL: // ItemType here will allow `remove [all] %itemtypes% from exploded blocks` to remove all/specific amount of specific block type that matches an itemtype, a shortcut for looping
 				assert delta != null;
-				int amountReached = 0;
+				int amountRemoved = 0; // Remove X alias
 
 				for (Object o : delta) {
 					if (o instanceof Block) {
@@ -153,11 +153,11 @@ public class ExprExplodedBlocks extends SimpleExpression<Block> {
 							break;
 						} else if (amount > 0)
 							for (Block b : new ArrayList<>(blocks)) {
-								if (amountReached >= amount)
+								if (amountRemoved >= amount)
 									break;
 								else if (item.isOfType(b)) {
 									blocks.remove(b);
-									amountReached++; // only ++ if a matched item was removed
+									amountRemoved++; // only ++ if a matched item was removed
 								}
 							}
 					}

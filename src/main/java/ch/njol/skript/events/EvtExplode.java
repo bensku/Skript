@@ -19,30 +19,17 @@
 package ch.njol.skript.events;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
-/**
- * @author Peter Güttinger
- */
 @SuppressWarnings("unchecked")
-public final class EvtExplode extends SkriptEvent {
+public class EvtExplode extends SkriptEvent {
 
 	private final static int ENTITY = 1, BLOCK = 2, ANY = ENTITY | BLOCK;
 
@@ -69,22 +56,22 @@ public final class EvtExplode extends SkriptEvent {
 	@Nullable
 	private int type;
 	
-	@SuppressWarnings("null")
 	@Override
+	@SuppressWarnings("null")
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final ParseResult parser) {
 		type = parser.mark == 0 ? ANY : parser.mark;
 		return true;
 	}
 	
-	@SuppressWarnings("null")
 	@Override
+	@SuppressWarnings("null")
 	public boolean check(final Event e) {
 		return type == ENTITY ? e instanceof EntityExplodeEvent : (type == BLOCK ? e instanceof BlockExplodeEvent : true);   
 	}
 	
 	@Override
 	public String toString(final @Nullable Event e, final boolean debug) {
-		return (type == ENTITY ? "entity" : (type == BLOCK ? "block" : "")) + " explode";
+		return (type == ENTITY ? "entity " : (type == BLOCK ? "block " : "")) + "explode";
 	}
 	
 }

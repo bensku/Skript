@@ -31,15 +31,17 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Explosion Cause")
-@Description("Get explosion cause in 'on explode' event")
+@Description("Get detonator/explosion cause in 'on explode' event")
 @Examples({"on explode:",
-	"\texplosion type = \"block\" # Either \"block\" or \"entity\""})
+	"\texplosion cause is a block",
+	"\texplosion cause is an entity",
+	"\tbroadcast \"%detonator% detonated an explosion at %event-location%\""})
 @Events("explode")
 @Since("INSERT VERSION")
-public class ExprExplosionCause extends SimpleExpression<String> {
-
+public class ExprExplosionCause extends SimpleExpression<Object> {
+	
 	static {
-		Skript.registerExpression(ExprExplosionCause.class, String.class, ExpressionType.SIMPLE, "(explosion (type|cause)|detonator)");
+		Skript.registerExpression(ExprExplosionCause.class, Object.class, ExpressionType.SIMPLE, "(explosion cause|detonator)");
 	}
 	
 	@Override
@@ -53,8 +55,8 @@ public class ExprExplosionCause extends SimpleExpression<String> {
 	
 	@Nullable
 	@Override
-	protected String[] get(Event e) {
-		return new String[] { (e instanceof EntityExplodeEvent) ? "entity" : "block" };
+	protected Object[] get(Event e) {
+		return new Object[] { (e instanceof EntityExplodeEvent) ? ((EntityExplodeEvent) e).getEntity() : ((BlockExplodeEvent) e).getBlock()};
 	}
 
 	@Override
@@ -63,8 +65,8 @@ public class ExprExplosionCause extends SimpleExpression<String> {
 	}
 	
 	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
+	public Class<?> getReturnType() {
+		return Object.class; // Can't get event here and isCurrentEvent returns a list
 	}
 	
 	@Override
