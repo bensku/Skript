@@ -36,3 +36,32 @@ else
 const noLeftPanel = document.querySelectorAll('#content.no-left-panel')[0];
 if (noLeftPanel != null)
   document.querySelectorAll('#side-nav')[0].classList.add('no-left-panel');
+
+// <> Magic Text
+function getRandomChar() {
+	chars = "ÂÃÉÊÐÑÙÚÛÜéêëãòóôēĔąĆćŇň1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()-=_+{}[";
+	return chars.charAt(Math.floor(Math.random() * chars.length) + 1)
+}
+
+function magicTextGen(element) {
+  var msg = element.textContent;
+	var length = msg.length;
+
+	setInterval(() => {
+    var newMsg = "";
+    for (i = 0; i <= length; i++) {
+      newMsg += getRandomChar(msg.charAt(i));
+    }
+    element.textContent = newMsg;
+
+  }, 30)
+}
+
+function renderMagicText() {
+	document.querySelectorAll('.magic-text').forEach( (e) => {
+		magicTextGen(e);
+	})
+}
+renderMagicText();
+
+// Magic Text </>
