@@ -362,9 +362,12 @@ td ul {
         grid-template-columns: 20% minmax(80%, 100%);
     }
     #global-navigation {
-        height: 4.1em;
+        height: calc(4.1em + 2px); /* +2px due to 18px padding botton not 16px */
         display: flex;
         flex-wrap: wrap;
+    }
+    #global-navigation > li {
+        padding-bottom: 18px;
     }
     #global-navigation > a {
         padding: 10px;
@@ -377,19 +380,11 @@ td ul {
     #side-nav {
         top: 0;
     }
-    #content {
-        margin-top: 100px;
-    }
 }
 
 @media (max-width: 1024px) {
     body {
         grid-template-columns: 20% minmax(80%, 100%);
-    }
-    #global-navigation {
-        height: 4.1em;
-        display: flex;
-        flex-wrap: wrap;
     }
     #global-navigation > a {
         padding: 10px;
@@ -407,6 +402,18 @@ td ul {
 @media (max-width: 1200px) {
     body {
         grid-template-columns: 20% minmax(80%, 100%);
+    }
+    #side-nav {
+        padding-top: 110px;
+    }
+    #content {
+        padding-top: 55px !important; /* !important to override home */
+    }
+    #global-navigation li {
+        white-space: nowrap;
+    }
+    #global-navigation {
+        display: flex;
     }
     #global-navigation {
         grid-column-start: 1;
