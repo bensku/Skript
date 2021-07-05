@@ -780,21 +780,20 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public Player parse(final String s, final ParseContext context) {
-						if (context == ParseContext.COMMAND) {
-							if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
-								return Bukkit.getPlayer(UUID.fromString(s));
-							final List<Player> ps = Bukkit.matchPlayer(s);
-							if (ps.size() == 1)
-								return ps.get(0);
-							if (ps.size() == 0)
-								Skript.error(String.format(Language.get("commands.no player starts with"), s));
-							else
-								Skript.error(String.format(Language.get("commands.multiple players start with"), s));
-							return null;
+						if (!s.isEmpty()) {
+							if (context == ParseContext.COMMAND) {
+								if (s.matches("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"))
+									return Bukkit.getPlayer(UUID.fromString(s));
+								final List<Player> ps = Bukkit.matchPlayer(s);
+								if (ps.size() == 1)
+									return ps.get(0);
+								if (ps.size() == 0)
+									Skript.error(String.format(Language.get("commands.no player starts with"), s));
+								else
+									Skript.error(String.format(Language.get("commands.multiple players start with"), s));
+								return null;
+							}
 						}
-						// if (s.matches("\"\\S+\""))
-						// 	return Bukkit.getPlayerExact(s.substring(1, s.length() - 1));
-						assert false;
 						return null;
 					}
 					
