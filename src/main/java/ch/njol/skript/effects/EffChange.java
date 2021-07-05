@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer;
@@ -149,13 +148,13 @@ public class EffChange extends Effect {
 				changed = exprs[0];
 		}
 		
-		final CountingLogHandler h = SkriptLogger.startLogHandler(new CountingLogHandler(Level.SEVERE));
-		final Class<?>[] rs;
-		final String what;
+		CountingLogHandler h = new CountingLogHandler(Level.SEVERE).start();
+		Class<?>[] rs;
+		String what;
 		try {
 			rs = changed.acceptChange(mode);
-			final ClassInfo<?> c = Classes.getSuperClassInfo(changed.getReturnType());
-			final Changer<?> changer = c.getChanger();
+			ClassInfo<?> c = Classes.getSuperClassInfo(changed.getReturnType());
+			Changer<?> changer = c.getChanger();
 			what = changer == null || !Arrays.equals(changer.acceptChange(mode), rs) ? changed.toString(null, false) : c.getName().withIndefiniteArticle();
 		} finally {
 			h.stop();
@@ -217,7 +216,6 @@ public class EffChange extends Effect {
 						return false;
 					}
 					log.clear();
-					log.printLog();
 					final Class<?>[] r = new Class[rs.length];
 					for (int i = 0; i < rs.length; i++)
 						r[i] = rs[i].isArray() ? rs[i].getComponentType() : rs[i];
@@ -257,8 +255,8 @@ public class EffChange extends Effect {
 			if (changed instanceof Variable && !((Variable<?>) changed).isLocal() && (mode == ChangeMode.SET || ((Variable<?>) changed).isList() && mode == ChangeMode.ADD)) {
 				final ClassInfo<?> ci = Classes.getSuperClassInfo(ch.getReturnType());
 				if (ci.getC() != Object.class && ci.getSerializer() == null && ci.getSerializeAs() == null && !SkriptConfig.disableObjectCannotBeSavedWarnings.value()) {
-					if (ScriptLoader.currentScript != null) {
-						if (!ScriptOptions.getInstance().suppressesWarning(ScriptLoader.currentScript.getFile(), "instance var")) {
+					if (getParser().getCurrentScript() != null) {
+						if (!ScriptOptions.getInstance().suppressesWarning(getParser().getCurrentScript().getFile(), "instance var")) {
 							Skript.warning(ci.getName().withIndefiniteArticle() + " cannot be saved, i.e. the contents of the variable " + changed + " will be lost when the server stops.");
 						}
 					} else {
@@ -271,22 +269,17 @@ public class EffChange extends Effect {
 	}
 	
 	@Override
-	protected void execute(final Event e) {
-		final Expression<?> changer = this.changer;
+	protected void execute(Event e) {
+		Expression<?> changer = this.changer;
 		Object[] delta = changer == null ? null : changer.getArray(e);
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
-		if (delta != null && delta.length == 0)
+
+		if ((delta == null || delta.length == 0) && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET)) {
+			if (changed.acceptChange(ChangeMode.DELETE) != null)
+				changed.change(e, null, ChangeMode.DELETE);
 			return;
-		if (delta == null && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET))
-			return;
-		changed.change(e, delta, mode); // Trigger beforeChanged hook
-		// REMIND use a random element out of delta if changed only supports changing a single instance
-//		changed.change(e, new Changer2<Object>() {
-//			@Override
-//			public Object change(Object o) {
-//				return delta;
-//			}
-//		}, mode);
+		}
+		changed.change(e, delta, mode);
 	}
 	
 	@Override

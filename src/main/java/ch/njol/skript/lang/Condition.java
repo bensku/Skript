@@ -36,8 +36,7 @@ import ch.njol.util.coll.iterator.SingleItemIterator;
 
 /**
  * A condition which must be fulfilled for the trigger to continue. If the condition is in a section the behaviour depends on the section.
- * 
- * @author Peter Güttinger
+ *
  * @see Skript#registerCondition(Class, String...)
  */
 public abstract class Condition extends Statement implements Expression<Boolean> {
@@ -55,17 +54,17 @@ public abstract class Condition extends Statement implements Expression<Boolean>
 	 * @param e the event to check
 	 * @return <code>true</code> if the condition is satisfied, <code>false</code> otherwise or if the condition doesn't apply to this event.
 	 */
-	public abstract boolean check(final Event e);
+	public abstract boolean check(Event e);
 	
 	@Override
-	public final boolean run(final Event e) {
+	public final boolean run(Event e) {
 		return check(e);
 	}
 	
 	/**
 	 * Sets the negation state of this condition. This will change the behaviour of {@link Expression#check(Event, Checker, boolean)}.
 	 */
-	protected final void setNegated(final boolean invert) {
+	protected final void setNegated(boolean invert) {
 		negated = invert;
 	}
 	
@@ -78,7 +77,7 @@ public abstract class Condition extends Statement implements Expression<Boolean>
 	
 	@SuppressWarnings({"ConstantConditions", "unchecked"})
 	@Nullable
-	public static Condition parse(String s, final String defaultError) {
+	public static Condition parse(String s, @Nullable String defaultError) {
 		s = s.trim();
 		while (s.startsWith("(") && SkriptParser.next(s, 0, ParseContext.DEFAULT) == s.length())
 			s = s.substring(1, s.length() - 1);
