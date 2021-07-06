@@ -137,7 +137,7 @@ ul {
 }
 
 #nav-contents {
-    height: calc(100vh - 60px);
+    height: calc(97vh - 60px);
     /* Fix the TOP css of #side-nav */
     width: 100%;
     overflow: scroll;
@@ -155,6 +155,7 @@ ul {
     word-wrap: break-word;
     padding: 5px 15px;
     transition: background-color 0.1s, font 0.1s;
+    word-break: break-word;
 }
 
 #side-nav a:focus {
@@ -175,11 +176,12 @@ ul {
     margin-left: 30px;
     position: relative;
     top: 55px;
-    height: calc( 97vh - 55px);
+    height: calc(97vh - 55px);
     /* Fixed the TOP CSS 55px due to body having overflow hidden and top = 55px so the last 55px is hidden, this will fix it */
     padding: 0.22em;
     padding-right: 30px;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 #content.no-left-panel {
@@ -303,7 +305,7 @@ td ul {
     border-left: 3px solid rgba(255, 152, 0, 0.5);
     padding: 5px;
     color: rgba(0, 0, 0, 0.8);
-    max-width: 85px;
+    width: max-content;
     margin-top: 25px;
 }
 
@@ -361,24 +363,52 @@ td ul {
     body {
         grid-template-columns: 20% minmax(80%, 100%);
     }
+
+    #nav-contents {
+        margin-top: 110px;
+    }
+
+    #content {
+        padding-top: 0px !important;
+        margin-top: 50px;
+        margin-left: 10px;
+        /* !important to override home */
+    }
+
     #global-navigation {
-        height: calc(4.1em + 2px); /* +2px due to 18px padding botton not 16px */
+        height: calc(4.1em + 2px);
+        /* +2px due to 18px padding botton not 16px */
         display: flex;
         flex-wrap: wrap;
     }
+
     #global-navigation > li {
         padding-bottom: 18px;
     }
+
     #global-navigation > a {
         padding: 10px;
         padding-top: 0.1em;
         padding-bottom: 0.1em;
     }
+
     #nav-title {
         display: none;
     }
+
     #side-nav {
         top: 0;
+    }
+
+    #nav-contents > a {
+        font-size: 12px;
+    }
+
+    .item-description {
+        font-size: 14px;
+    }
+    .item-table-label {
+        width: 5em;
     }
 }
 
@@ -386,14 +416,17 @@ td ul {
     body {
         grid-template-columns: 20% minmax(80%, 100%);
     }
+
     #global-navigation > a {
         padding: 10px;
         padding-top: 0.1em;
         padding-bottom: 0.1em;
     }
+
     #nav-title {
         display: none;
     }
+
     #side-nav {
         top: 0;
     }
@@ -403,30 +436,30 @@ td ul {
     body {
         grid-template-columns: 20% minmax(80%, 100%);
     }
-    #side-nav {
-        padding-top: 110px;
-    }
-    #content {
-        padding-top: 55px !important; /* !important to override home */
-    }
+
     #global-navigation li {
         white-space: nowrap;
     }
+
     #global-navigation {
         display: flex;
     }
+
     #global-navigation {
         grid-column-start: 1;
         grid-column-end: none;
     }
+
     #global-navigation > a {
         padding: 10px;
         padding-top: 0.1em;
         padding-bottom: 0.1em;
     }
+
     #nav-title {
         display: none;
     }
+
     #side-nav {
         top: 0;
     }
@@ -484,4 +517,13 @@ ol.custom-list li {
 ol.custom-list li::before {
     content: counter(my-awesome-counter) ". ";
     font-weight: bold;
+}
+
+code {
+    font-family: "Source Code Pro", monospace;
+    font-weight: bold;
+}
+
+pre {
+    font-family: "Source Code Pro", monospace;
 }

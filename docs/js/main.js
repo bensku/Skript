@@ -65,3 +65,20 @@ function renderMagicText() {
 renderMagicText();
 
 // Magic Text </>
+
+// <> Mobile anchor correction due to doubled size header)
+function offsetAnchor(event, element) {
+  if (window.innerWidth <= 768 ) {
+    event.preventDefault();
+    content = document.querySelectorAll("#content")[0];
+    actualElement = document.getElementById(element.getAttribute("href").replace("#", ""));
+    content.scroll(0, actualElement.offsetTop - 15);
+  }
+}
+
+document.querySelectorAll("#nav-contents a").forEach((e) => {
+  e.addEventListener("click", (event) => {
+    offsetAnchor(event, e);
+  });
+})
+// Mobile anchor correction </>

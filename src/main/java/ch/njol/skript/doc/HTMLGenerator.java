@@ -26,9 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
 
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.base.Joiner;
@@ -46,10 +44,6 @@ import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.Utils;
-import ch.njol.util.Callback;
-import ch.njol.util.NonNullPair;
-import ch.njol.util.StringUtils;
 
 /**
  * Template engine, primarily used for generating Skript documentation
@@ -209,11 +203,11 @@ public class HTMLGenerator {
 					if (filesInside.isDirectory()) 
 						continue;
 						
-					if (!filesInside.getName().toLowerCase().endsWith(".png")) {
+					if (!filesInside.getName().toLowerCase().endsWith(".png")) { // Copy images
 						writeFile(new File(fileTo + "/" + filesInside.getName()), readFile(filesInside));
 					}
 					
-					else if (!filesInside.getName().matches("(?i)(.*)\\.(html?|js|css|json)")) { // Copy images
+					else if (!filesInside.getName().matches("(?i)(.*)\\.(html?|js|css|json)")) {
 						try {
 							Files.copy(filesInside, new File(fileTo + "/" + filesInside.getName()));
 						} catch (IOException e) {
@@ -646,55 +640,10 @@ public class HTMLGenerator {
 		}
 	}
 	
-	static String cleanPatterns(final String patterns) {
-		final String s = StringUtils.replaceAll("" +
-				Documentation.escapeHTML(patterns) // escape HTML
-				.replaceAll("(?<=[\\(\\|])[-0-9]+?¦", "") // remove marks
-				.replace("()", "") // remove empty mark setting groups (mark¦)
-				.replaceAll("\\(([^|]+?)\\|\\)", "[$1]") // replace (mark¦x|) groups with [x]
-				.replaceAll("\\(\\|([^|]+?)\\)", "[$1]") // dito
-				.replaceAll("\\((.+?)\\|\\)", "[($1)]") // replace (a|b|) with [(a|b)]
-				.replaceAll("\\(\\|(.+?)\\)", "[($1)]") // dito
-		, "(?<!\\\\)%(.+?)(?<!\\\\)%", new Callback<String, Matcher>() { // link & fancy types
-			@Override
-			public String run(final Matcher m) {
-				String s = m.group(1);
-				if (s.startsWith("-"))
-					s = s.substring(1);
-				String flag = "";
-				if (s.startsWith("*") || s.startsWith("~")) {
-					flag = s.substring(0, 1);
-					s = s.substring(1);
-				}
-				final int a = s.indexOf("@");
-				if (a != -1)
-					s = s.substring(0, a);
-				final StringBuilder b = new StringBuilder("%");
-				b.append(flag);
-				boolean first = true;
-				for (final String c : s.split("/")) {
-					assert c != null;
-					if (!first)
-						b.append("/");
-					first = false;
-					final NonNullPair<String, Boolean> p = Utils.getEnglishPlural(c);
-					final ClassInfo<?> ci = Classes.getClassInfoNoError(p.getFirst());
-					if (ci != null && ci.getDocName() != null && ci.getDocName() != ClassInfo.NO_DOC) {
-						b.append("<a href='classes.html#").append(p.getFirst()).append("'>").append(ci.getName().toString(p.getSecond())).append("</a>");
-					} else {
-						b.append(c);
-						if (ci != null && ci.getDocName() != ClassInfo.NO_DOC)
-							Skript.warning("Used class " + p.getFirst() + " has no docName/name defined");
-					}
-				}
-				return "" + b.append("%").toString();
-			}
-		});
-		assert s != null : patterns;
-		return s;
+	private static String cleanPatterns(final String patterns) {
+		return Documentation.cleanPatterns(patterns);
 	}
-	
-	
+
 	/**
 	 * Checks if a string is empty or null then it will return the message provided
 	 * 
