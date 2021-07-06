@@ -107,6 +107,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	@SafeVarargs
 	protected final Trigger loadCode(SectionNode sectionNode, String name, Class<? extends Event>... events) {
 		ParserInstance parser = getParser();
+
 		String previousName = parser.getCurrentEventName();
 		Class<? extends Event>[] previousEvents = parser.getCurrentEvents();
 		SkriptEvent previousSkriptEvent = parser.getCurrentSkriptEvent();
