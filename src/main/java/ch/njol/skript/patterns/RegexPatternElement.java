@@ -38,7 +38,7 @@ public class RegexPatternElement extends PatternElement {
 
 	@Override
 	public String toString() {
-		return "<" + pattern + ">" + nextToString();
+		return "<" + pattern + ">";
 	}
 
 }

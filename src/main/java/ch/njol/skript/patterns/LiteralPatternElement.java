@@ -20,20 +20,33 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
-// TODO handle spaces
+// TODO handle spaces properly
 public class LiteralPatternElement extends PatternElement {
 
+	private final boolean startSpace;
 	private final String literal;
 
 	public LiteralPatternElement(String literal) {
+		this.startSpace = literal.startsWith(" ");
+		if (literal.startsWith(" "))
+			literal = literal.substring(1);
 		this.literal = literal.toLowerCase();
 	}
 
 	@Override
 	@Nullable
 	public MatchResult match(String expr, MatchResult matchResult) {
-		if (expr.toLowerCase().startsWith(literal, matchResult.exprOffset)) {
-			matchResult.exprOffset += literal.length();
+		int exprOffset = matchResult.exprOffset;
+		if (startSpace) {
+			if (expr.charAt(exprOffset) == ' ') {
+				exprOffset++;
+			} else if (exprOffset == 0 || expr.charAt(exprOffset - 1) != ' ') {
+				return null;
+			}
+		}
+
+		if (expr.toLowerCase().startsWith(literal, exprOffset)) {
+			matchResult.exprOffset = exprOffset + literal.length();
 			return matchNext(expr, matchResult);
 		}
 		return null;
@@ -41,7 +54,7 @@ public class LiteralPatternElement extends PatternElement {
 
 	@Override
 	public String toString() {
-		return literal + nextToString();
+		return (startSpace ? " " : "") + literal;
 	}
 
 }

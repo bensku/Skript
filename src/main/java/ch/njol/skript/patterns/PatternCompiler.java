@@ -20,7 +20,6 @@ package ch.njol.skript.patterns;
 
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.patterns.ChoicePatternElement.Choice;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,8 +30,13 @@ import java.util.regex.PatternSyntaxException;
 
 public class PatternCompiler {
 
-	public static PatternElement compile(String pattern) {
-		return compile(pattern, new AtomicInteger(0));
+	public static SkriptPattern compile(String pattern) {
+		if (pattern.isEmpty())
+			throw new InvalidPatternException(pattern, "Pattern is empty");
+
+		AtomicInteger atomicInteger = new AtomicInteger(0);
+		PatternElement first = compile(pattern, atomicInteger);
+		return new SkriptPattern(first, atomicInteger.get());
 	}
 
 	private static PatternElement compile(String pattern, AtomicInteger expressionOffset) {
@@ -143,7 +147,7 @@ public class PatternCompiler {
 		}
 
 		if (first == null) {
-			throw new InvalidPatternException(pattern, "Pattern is empty");
+			return new LiteralPatternElement("");
 		}
 
 		return first;
@@ -158,6 +162,7 @@ public class PatternCompiler {
 				last = last.next;
 
 			last.setNext(next);
+			last.originalNext = next;
 			return first;
 		}
 	}

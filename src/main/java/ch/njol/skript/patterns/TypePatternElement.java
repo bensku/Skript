@@ -26,6 +26,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ExprInfo;
 import ch.njol.skript.lang.parser.ParserInstance;
+import ch.njol.skript.localization.Noun;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -33,7 +34,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
-import ch.njol.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class TypePatternElement extends PatternElement {
@@ -97,7 +97,7 @@ public class TypePatternElement extends PatternElement {
 
 	@Override
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next) {
+	public MatchResult match(String expr, MatchResult matchResult) {
 		ExprInfo exprInfo = getExprInfo();
 
 		int newExprOffset;
@@ -172,13 +172,17 @@ public class TypePatternElement extends PatternElement {
 				stringBuilder.append("*");
 		}
 		for (int i = 0; i < classes.length; i++) {
-			stringBuilder.append(classes[i].getName().toString(isPlural[i]));
+			String codeName = classes[i].getCodeName();
+			if (isPlural[i])
+				stringBuilder.append(Utils.toEnglishPlural(codeName));
+			else
+				stringBuilder.append(codeName);
 			if (i != classes.length - 1)
 				stringBuilder.append("/");
 		}
 		if (time != 0)
 			stringBuilder.append("@").append(time);
-		return stringBuilder.append("%").append(nextToString()).toString();
+		return stringBuilder.append("%").toString();
 	}
 
 	private ExprInfo getExprInfo() {

@@ -20,19 +20,20 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
-// TODO add more log handlers (match result copies)
 public abstract class PatternElement {
 
 	@Nullable
 	PatternElement next;
 
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult) {
-		return match(expr, matchResult, next);
+	PatternElement originalNext;
+
+	void setNext(@Nullable PatternElement next) {
+		this.next = next;
 	}
 
 	@Nullable
-	public abstract MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next);
+	public abstract MatchResult match(String expr, MatchResult matchResult);
 
 	@Nullable
 	protected MatchResult matchNext(String expr, MatchResult matchResult) {
@@ -45,8 +46,13 @@ public abstract class PatternElement {
 	@Override
 	public abstract String toString();
 
-	protected String nextToString() {
-		return next == null ? "" : next.toString();
+	public String toFullString() {
+		StringBuilder stringBuilder = new StringBuilder(toString());
+		PatternElement next = this;
+		while ((next = next.originalNext) != null) {
+			stringBuilder.append(next);
+		}
+		return stringBuilder.toString();
 	}
 
 }

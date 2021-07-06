@@ -31,7 +31,7 @@ public class MatchResult {
 	Expression<?>[] expressions = new Expression[0];
 	String expr;
 	int mark;
-	List<java.util.regex.MatchResult> matchResults = new ArrayList<>();
+	List<java.util.regex.MatchResult> regexResults = new ArrayList<>();
 
 	public MatchResult copy() {
 		MatchResult matchResult = new MatchResult();
@@ -39,7 +39,7 @@ public class MatchResult {
 		matchResult.expressions = this.expressions.clone();
 		matchResult.expr = this.expr;
 		matchResult.mark = this.mark;
-		matchResult.matchResults = new ArrayList<>(this.matchResults);
+		matchResult.regexResults = new ArrayList<>(this.regexResults);
 		return matchResult;
 	}
 
@@ -50,7 +50,7 @@ public class MatchResult {
 			", expressions=" + Arrays.toString(expressions) +
 			", expr='" + expr + '\'' +
 			", mark=" + mark +
-			", matchResults=" + matchResults +
+			", regexResults=" + regexResults +
 			'}';
 	}
 

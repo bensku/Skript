@@ -18,34 +18,34 @@
  */
 package ch.njol.skript.patterns;
 
+import ch.njol.skript.lang.Expression;
 import org.jetbrains.annotations.Nullable;
 
-public class OptionalPatternElement extends PatternElement {
+public class SkriptPattern {
 
-	private final PatternElement patternElement;
+	private final PatternElement first;
+	private final int expressionAmount;
 
-	public OptionalPatternElement(PatternElement patternElement) {
-		this.patternElement = patternElement;
+	public SkriptPattern(PatternElement first, int expressionAmount) {
+		this.first = first;
+		this.expressionAmount = expressionAmount;
 	}
 
-	@Override
-	void setNext(@Nullable PatternElement next) {
-		super.setNext(next);
-		patternElement.setNext(next);
-	}
-
-	@Override
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult) {
-		MatchResult newMatchResult = patternElement.match(expr, matchResult.copy());
-		if (newMatchResult != null)
-			return newMatchResult;
-		return matchNext(expr, matchResult);
+	public MatchResult match(String expr) {
+		expr = expr.trim();
+		while (expr.contains("  "))
+			expr = expr.replace("  ", " ");
+
+		MatchResult matchResult = new MatchResult();
+		matchResult.expr = expr;
+		matchResult.expressions = new Expression[expressionAmount];
+		return first.match(expr, matchResult);
 	}
 
 	@Override
 	public String toString() {
-		return "[" + patternElement.toFullString() + "]";
+		return first.toFullString();
 	}
 
 }

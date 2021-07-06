@@ -39,12 +39,19 @@ public class ChoicePatternElement extends PatternElement {
 	}
 
 	@Override
+	void setNext(@Nullable PatternElement next) {
+		super.setNext(next);
+		for (Choice choice : choices)
+			choice.patternElement.setNext(next);
+	}
+
+	@Override
 	@Nullable
-	public MatchResult match(String expr, MatchResult matchResult, @Nullable PatternElement next) {
+	public MatchResult match(String expr, MatchResult matchResult) {
 		for (Choice choice : choices) {
 			MatchResult matchResultCopy = matchResult.copy();
 			matchResultCopy.mark ^= choice.mark;
-			MatchResult newMatchResult = choice.patternElement.match(expr, matchResultCopy, next);
+			MatchResult newMatchResult = choice.patternElement.match(expr, matchResultCopy);
 			if (newMatchResult != null)
 				return newMatchResult;
 		}
@@ -63,10 +70,10 @@ public class ChoicePatternElement extends PatternElement {
 					.append(choice.mark)
 					.append("¦");
 			}
-			stringBuilder.append(choice.patternElement);
+			stringBuilder.append(choice.patternElement.toFullString());
 			if (i != 0)
 				stringBuilder.append("|");
 		}
-		return stringBuilder.append(")").append(nextToString()).toString();
+		return stringBuilder.append(")").toString();
 	}
 }
