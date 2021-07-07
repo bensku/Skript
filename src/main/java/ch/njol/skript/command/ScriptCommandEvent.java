@@ -26,21 +26,45 @@ import org.bukkit.event.HandlerList;
  */
 public class ScriptCommandEvent extends CommandEvent {
 	
-	private final ScriptCommand skriptCommand;
+	private final ScriptCommand scriptCommand;
+	private final String commandLabel;
+	private final String rest;
+
 	private boolean cooldownCancelled = false;
 
-	public ScriptCommandEvent(final ScriptCommand command, final CommandSender sender) {
-		super(sender, command.getLabel(), null);
-		skriptCommand = command;
+	/**
+	 * @param scriptCommand The script command executed.
+	 * @param sender The executor of this script command.
+	 * @param commandLabel The command name (may be the used alias)
+	 * @param rest The rest of the command string (the arguments)
+	 */
+	public ScriptCommandEvent(ScriptCommand scriptCommand, CommandSender sender, String commandLabel, String rest) {
+		super(sender, scriptCommand.getLabel(), rest.split(" "));
+		this.scriptCommand = scriptCommand;
+		this.commandLabel = commandLabel;
+		this.rest = rest;
 	}
-	
+
+	/**
+	 * @return The script command executed.
+	 */
 	public ScriptCommand getSkriptCommand() {
-		return skriptCommand;
+		return scriptCommand;
 	}
-	
-	@Override
-	public String[] getArgs() {
-		throw new UnsupportedOperationException();
+
+	/**
+	 * @return The used command label. This may be a command alias.
+	 */
+	public String getCommandLabel() {
+		return commandLabel;
+	}
+
+	/**
+	 * @return The arguments combined into one string.
+	 * @see CommandEvent#getArgs()
+	 */
+	public String getArgsString() {
+		return rest;
 	}
 
 	public boolean isCooldownCancelled() {
