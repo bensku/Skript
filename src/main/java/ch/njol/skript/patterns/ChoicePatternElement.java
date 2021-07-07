@@ -42,7 +42,7 @@ public class ChoicePatternElement extends PatternElement {
 	void setNext(@Nullable PatternElement next) {
 		super.setNext(next);
 		for (Choice choice : choices)
-			choice.patternElement.setNext(next);
+			choice.patternElement.setLastNext(next);
 	}
 
 	@Override

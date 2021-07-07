@@ -105,14 +105,14 @@ public class TypePatternElement extends PatternElement {
 			newExprOffset = expr.length();
 		} else {
 			// TODO move next method to here?
-			newExprOffset = SkriptParser.next(expr, matchResult.exprOffset, ParseContext.DEFAULT);
+			newExprOffset = SkriptParser.next(expr, matchResult.exprOffset, matchResult.parseContext);
 			if (newExprOffset == -1)
 				return null;
 		}
 
 		ParseLogHandler loopLogHandler = SkriptLogger.startParseLogHandler();
 		try {
-			for (; newExprOffset != -1; newExprOffset = SkriptParser.next(expr, newExprOffset, ParseContext.DEFAULT)) {
+			for (; newExprOffset != -1; newExprOffset = SkriptParser.next(expr, newExprOffset, matchResult.parseContext)) {
 				loopLogHandler.clear();
 
 				MatchResult matchResultCopy = matchResult.copy();
@@ -123,7 +123,7 @@ public class TypePatternElement extends PatternElement {
 				if (newMatchResult != null) {
 					ParseLogHandler expressionLogHandler = SkriptLogger.startParseLogHandler();
 					try {
-						Expression<?> expression = new SkriptParser(expr.substring(matchResult.exprOffset, newExprOffset), flagMask, ParseContext.DEFAULT).parseExpression(exprInfo);
+						Expression<?> expression = new SkriptParser(expr.substring(matchResult.exprOffset, newExprOffset), matchResult.flags & flagMask, matchResult.parseContext).parseExpression(exprInfo);
 						if (expression != null) {
 							if (time != 0) {
 								if (expression instanceof Literal)

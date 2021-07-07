@@ -134,6 +134,11 @@ public class SkriptParser {
 			expr = parser.expr;
 			exprs = new Expression<?>[countUnescaped(pattern, '%') / 2];
 		}
+
+		public ParseResult(String expr, Expression<?>[] expressions) {
+			this.expr = expr;
+			this.exprs = expressions;
+		}
 	}
 	
 	private final static class MalformedPatternException extends RuntimeException {

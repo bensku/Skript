@@ -31,7 +31,7 @@ public class OptionalPatternElement extends PatternElement {
 	@Override
 	void setNext(@Nullable PatternElement next) {
 		super.setNext(next);
-		patternElement.setNext(next);
+		patternElement.setLastNext(next);
 	}
 
 	@Override

@@ -19,6 +19,8 @@
 package ch.njol.skript.patterns;
 
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.SkriptParser;
 import org.jetbrains.annotations.Nullable;
 
 public class SkriptPattern {
@@ -32,15 +34,20 @@ public class SkriptPattern {
 	}
 
 	@Nullable
-	public MatchResult match(String expr) {
+	public MatchResult match(String expr, int flags, ParseContext parseContext) {
 		expr = expr.trim();
-		while (expr.contains("  "))
-			expr = expr.replace("  ", " ");
 
 		MatchResult matchResult = new MatchResult();
 		matchResult.expr = expr;
 		matchResult.expressions = new Expression[expressionAmount];
+		matchResult.parseContext = parseContext;
+		matchResult.flags = flags;
 		return first.match(expr, matchResult);
+	}
+
+	@Nullable
+	public MatchResult match(String expr) {
+		return match(expr, SkriptParser.ALL_FLAGS, ParseContext.DEFAULT);
 	}
 
 	@Override

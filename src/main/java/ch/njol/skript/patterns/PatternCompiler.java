@@ -31,9 +31,6 @@ import java.util.regex.PatternSyntaxException;
 public class PatternCompiler {
 
 	public static SkriptPattern compile(String pattern) {
-		if (pattern.isEmpty())
-			throw new InvalidPatternException(pattern, "Pattern is empty");
-
 		AtomicInteger atomicInteger = new AtomicInteger(0);
 		PatternElement first = compile(pattern, atomicInteger);
 		return new SkriptPattern(first, atomicInteger.get());
@@ -86,12 +83,10 @@ public class PatternCompiler {
 					int mark = 0;
 					if ((i = part.indexOf('¦')) != -1) {
 						String intString = part.substring(0, i);
-						part = part.substring(i + 1);
 						try {
 							mark = Integer.parseInt(intString);
-						} catch (NumberFormatException e) {
-							throw new InvalidPatternException(pattern, "Invalid parse mark", e);
-						}
+							part = part.substring(i + 1);
+						} catch (NumberFormatException ignored) { } // Do nothing
 					}
 
 					PatternElement patternElement = compile(part, expressionOffset);
@@ -133,7 +128,7 @@ public class PatternCompiler {
 
 				first = setFirst(first, new RegexPatternElement(regexPattern));
 
-				i = end + 1;
+				i = end;
 			} else if (c == '\\') {
 				i++;
 				literalBuilder.append(pattern.charAt(i));

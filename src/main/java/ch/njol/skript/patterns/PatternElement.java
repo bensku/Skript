@@ -32,6 +32,17 @@ public abstract class PatternElement {
 		this.next = next;
 	}
 
+	void setLastNext(@Nullable PatternElement newNext) {
+		PatternElement next = this;
+		while (true) {
+			if (next.next == null) {
+				next.setNext(newNext);
+				return;
+			}
+			next = next.next;
+		}
+	}
+
 	@Nullable
 	public abstract MatchResult match(String expr, MatchResult matchResult);
 

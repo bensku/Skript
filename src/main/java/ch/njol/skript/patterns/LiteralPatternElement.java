@@ -20,41 +20,38 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
-// TODO handle spaces properly
 public class LiteralPatternElement extends PatternElement {
 
-	private final boolean startSpace;
-	private final String literal;
+	private final char[] literal;
 
 	public LiteralPatternElement(String literal) {
-		this.startSpace = literal.startsWith(" ");
-		if (literal.startsWith(" "))
-			literal = literal.substring(1);
-		this.literal = literal.toLowerCase();
+		this.literal = literal.toLowerCase().toCharArray();
 	}
 
 	@Override
 	@Nullable
 	public MatchResult match(String expr, MatchResult matchResult) {
-		int exprOffset = matchResult.exprOffset;
-		if (startSpace) {
-			if (expr.charAt(exprOffset) == ' ') {
-				exprOffset++;
-			} else if (exprOffset == 0 || expr.charAt(exprOffset - 1) != ' ') {
+		char[] exprChars = expr.toLowerCase().toCharArray();
+
+		int exprIndex = matchResult.exprOffset;
+		for (char c : literal) {
+			if (c == ' ') {
+				if (exprIndex == 0 || exprIndex == exprChars.length || (exprIndex > 0 && exprChars[exprIndex - 1] == ' '))
+					continue;
+				else if (exprChars[exprIndex] != ' ')
+					return null;
+			} else if (exprIndex == exprChars.length || c != exprChars[exprIndex])
 				return null;
-			}
+			exprIndex++;
 		}
 
-		if (expr.toLowerCase().startsWith(literal, exprOffset)) {
-			matchResult.exprOffset = exprOffset + literal.length();
-			return matchNext(expr, matchResult);
-		}
-		return null;
+		matchResult.exprOffset = exprIndex;
+		return matchNext(expr, matchResult);
 	}
 
 	@Override
 	public String toString() {
-		return (startSpace ? " " : "") + literal;
+		return new String(literal);
 	}
 
 }
