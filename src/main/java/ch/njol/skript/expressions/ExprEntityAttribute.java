@@ -53,20 +53,22 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
-				"%attributetype% attribute [value] of %entities%",
-				"%entities%'[s] %attributetype% attribute [value]");
+				"%attributetype% attribute [(1¦base|modified)] [value] of %entities%",
+				"%entities%'[s] %attributetype% [(1¦base|modified)] attribute [value]");
 	}
 	
 	private static final boolean DEFAULTVALUE_EXISTS = Skript.isRunningMinecraft(1, 11);
 	
 	@Nullable
 	private Expression<Attribute> attributes;
-	
+	private boolean isBase;
+
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attributes = (Expression<Attribute>) exprs[matchedPattern];
 		setExpr((Expression<? extends Entity>) exprs[matchedPattern ^ 1]);
+		isBase = parseResult.mark == 1;
 		return true;
 	}
 
@@ -75,7 +77,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
 		return Stream.of(entities)
-		    .map(ent -> getAttribute(ent, a).getBaseValue())
+		    .map(ent -> isBase ? getAttribute(ent, a).getBaseValue() : getAttribute(ent, a).getValue())
 		    .toArray(Number[]::new);
 	}
 
@@ -97,7 +99,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 			if(ai != null) {
 				switch(mode) {
 					case ADD:
-						ai.setBaseValue(ai.getBaseValue() + d);
+						ai.setBaseValue(getAttributeValue(ai) + d);
 						break;
 					case SET:
 						ai.setBaseValue(d);
@@ -109,7 +111,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 						ai.setBaseValue(ai.getDefaultValue());
 						break;
 					case REMOVE:
-						ai.setBaseValue(ai.getBaseValue() - d);
+						ai.setBaseValue(getAttributeValue(ai) - d);
 						break;
 					case REMOVE_ALL:
 						assert false;
@@ -135,6 +137,10 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	        return ((Attributable) e).getAttribute(a);
 	    }
 	   return null;
+	}
+
+	private double getAttributeValue(AttributeInstance ai) {
+		return isBase ? ai.getBaseValue() : ai.getValue();
 	}
 	
 }
