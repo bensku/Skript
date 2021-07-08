@@ -77,7 +77,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
 		return Stream.of(entities)
-		    .map(ent -> withModifiers ? getAttribute(ent, a).getValue() : getAttribute(ent, a).getBaseValue())
+		    .map(ent -> getAttribute(ent, a))
+		    .map(att -> withModifiers ? att.getValue() : att.getBaseValue())
 		    .toArray(Number[]::new);
 	}
 
@@ -138,4 +139,5 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	    }
 	   return null;
 	}
+
 }
