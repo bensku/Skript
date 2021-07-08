@@ -30,6 +30,14 @@ public class ChoicePatternElement extends PatternElement {
 			this.patternElement = patternElement;
 			this.mark = mark;
 		}
+
+		public PatternElement getPatternElement() {
+			return patternElement;
+		}
+
+		public int getMark() {
+			return mark;
+		}
 	}
 
 	private final Choice[] choices;

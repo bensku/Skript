@@ -30,6 +30,8 @@ import java.util.regex.PatternSyntaxException;
 
 public class PatternCompiler {
 
+	private static final PatternElement EMPTY = new LiteralPatternElement("");
+
 	public static SkriptPattern compile(String pattern) {
 		AtomicInteger atomicInteger = new AtomicInteger(0);
 		PatternElement first = compile(pattern, atomicInteger);
@@ -37,63 +39,67 @@ public class PatternCompiler {
 	}
 
 	private static PatternElement compile(String pattern, AtomicInteger expressionOffset) {
+		part_parsing: {
+			List<String> parts = new ArrayList<>();
+
+			int i = 0;
+			int lastFound = 0;
+			for (; i < pattern.length(); i++) {
+				char c = pattern.charAt(i);
+				if (c == '(') {
+					i = SkriptParser.nextBracket(pattern, ')', '(', i + 1, true);
+				} else if (c == '|') {
+					parts.add(pattern.substring(lastFound, i));
+					lastFound = i + 1;
+				} else if (c == '\\') {
+					i++;
+				}
+			}
+
+			parts.add(pattern.substring(lastFound, i));
+
+			List<Choice> choices = new ArrayList<>();
+			for (String part : parts) {
+				int mark = 0;
+				if ((i = part.indexOf('¦')) != -1) {
+					String intString = part.substring(0, i);
+					try {
+						mark = Integer.parseInt(intString);
+						part = part.substring(i + 1);
+					} catch (NumberFormatException ignored) {
+					} // Do nothing
+				}
+
+				if (parts.size() == 1 && mark == 0) {
+					break part_parsing;
+				}
+
+				PatternElement patternElement = compile(part, expressionOffset);
+				choices.add(new Choice(patternElement, mark));
+			}
+
+			return new ChoicePatternElement(choices.toArray(new Choice[0]));
+		}
+
 		StringBuilder literalBuilder = new StringBuilder();
 		PatternElement first = null;
 
 		for (int i = 0; i < pattern.length(); i++) {
 			char c = pattern.charAt(i);
-			if (c == '[') {
+			if (c == '[' || c == '(') {
 				if (literalBuilder.length() != 0) {
 					first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
 					literalBuilder = new StringBuilder();
 				}
 
-				int end = SkriptParser.nextBracket(pattern, ']', '[', i + 1, true);
+				int end = SkriptParser.nextBracket(pattern, c == '[' ? ']' : ')', c, i + 1, true);
 				PatternElement patternElement = compile(pattern.substring(i + 1, end), expressionOffset);
 
-				first = setFirst(first, new OptionalPatternElement(patternElement));
-
-				i = end;
-			} else if (c == '(') {
-				if (literalBuilder.length() != 0) {
-					first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
-					literalBuilder = new StringBuilder();
+				if (c == '[') {
+					first = setFirst(first, new OptionalPatternElement(patternElement));
+				} else {
+					first = setFirst(first, patternElement);
 				}
-
-				int end = SkriptParser.nextBracket(pattern, ')', '(', i + 1, true);
-
-				List<String> parts = new ArrayList<>();
-				int lastFound = ++i;
-				for (; i < end; i++) {
-					char innerChar = pattern.charAt(i);
-					if (innerChar == '(') {
-						i = SkriptParser.nextBracket(pattern, ')', '(', i + 1, true);
-					} else if (innerChar == '|') {
-						parts.add(pattern.substring(lastFound, i));
-						lastFound = i + 1;
-					} else if (innerChar == '\\') {
-						i++;
-					}
-				}
-
-				parts.add(pattern.substring(lastFound, i));
-
-				List<Choice> choices = new ArrayList<>();
-				for (String part : parts) {
-					int mark = 0;
-					if ((i = part.indexOf('¦')) != -1) {
-						String intString = part.substring(0, i);
-						try {
-							mark = Integer.parseInt(intString);
-							part = part.substring(i + 1);
-						} catch (NumberFormatException ignored) { } // Do nothing
-					}
-
-					PatternElement patternElement = compile(part, expressionOffset);
-					choices.add(new Choice(patternElement, mark));
-				}
-
-				first = setFirst(first, new ChoicePatternElement(choices.toArray(new Choice[0])));
 
 				i = end;
 			} else if (c == '%') {
@@ -142,7 +148,7 @@ public class PatternCompiler {
 		}
 
 		if (first == null) {
-			return new LiteralPatternElement("");
+			return EMPTY;
 		}
 
 		return first;
