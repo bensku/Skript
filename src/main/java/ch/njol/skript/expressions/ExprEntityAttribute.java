@@ -61,14 +61,14 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	
 	@Nullable
 	private Expression<Attribute> attributes;
-	private boolean isBase;
+	private boolean withModifiers;
 
 	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attributes = (Expression<Attribute>) exprs[matchedPattern];
 		setExpr((Expression<? extends Entity>) exprs[matchedPattern ^ 1]);
-		isBase = parseResult.mark != 1;
+		withModifiers = parseResult.mark == 1;
 		return true;
 	}
 
@@ -77,14 +77,14 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	protected Number[] get(Event e, Entity[] entities) {
 		Attribute a = attributes.getSingle(e);
 		return Stream.of(entities)
-		    .map(ent -> isBase ? getAttribute(ent, a).getBaseValue() : getAttribute(ent, a).getValue())
+		    .map(ent -> withModifiers ? getAttribute(ent, a).getValue() : getAttribute(ent, a).getBaseValue())
 		    .toArray(Number[]::new);
 	}
 
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS) || !isBase)
+		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS) || withModifiers)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
