@@ -53,8 +53,8 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	
 	static {
 		Skript.registerExpression(ExprEntityAttribute.class, Number.class, ExpressionType.COMBINED,
-				"%attributetype% attribute [(1¦base|modified)] [value] of %entities%",
-				"%entities%'[s] %attributetype% [(1¦base|modified)] attribute [value]");
+				"%attributetype% attribute [value] [(1¦with modifiers)] of %entities%",
+				"%entities%'[s] %attributetype% attribute [value] [(1¦with modifiers)]");
 	}
 	
 	private static final boolean DEFAULTVALUE_EXISTS = Skript.isRunningMinecraft(1, 11);
@@ -68,7 +68,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		attributes = (Expression<Attribute>) exprs[matchedPattern];
 		setExpr((Expression<? extends Entity>) exprs[matchedPattern ^ 1]);
-		isBase = parseResult.mark == 1;
+		isBase = parseResult.mark != 1;
 		return true;
 	}
 
@@ -84,7 +84,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS))
+		if (mode == ChangeMode.REMOVE_ALL || (mode == ChangeMode.RESET && !DEFAULTVALUE_EXISTS) || !isBase)
 			return null;
 		return CollectionUtils.array(Number.class);
 	}
