@@ -24,10 +24,10 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * An internal class to be used where a SkriptEvent may be needed, but no actual one exists.
+ * To be used where a SkriptEvent may be needed, but no actual one exists.
  * @see Section#loadCode(SectionNode, String, Class[]) 
  */
-class FakeSkriptEvent extends SkriptEvent {
+public class FakeSkriptEvent extends SkriptEvent {
 
 	private final String name;
 
