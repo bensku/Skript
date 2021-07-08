@@ -99,7 +99,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 			if(ai != null) {
 				switch(mode) {
 					case ADD:
-						ai.setBaseValue(getAttributeValue(ai) + d);
+						ai.setBaseValue(ai.getBaseValue() + d);
 						break;
 					case SET:
 						ai.setBaseValue(d);
@@ -111,7 +111,7 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 						ai.setBaseValue(ai.getDefaultValue());
 						break;
 					case REMOVE:
-						ai.setBaseValue(getAttributeValue(ai) - d);
+						ai.setBaseValue(ai.getBaseValue() - d);
 						break;
 					case REMOVE_ALL:
 						assert false;
@@ -138,9 +138,4 @@ public class ExprEntityAttribute extends PropertyExpression<Entity, Number> {
 	    }
 	   return null;
 	}
-
-	private double getAttributeValue(AttributeInstance ai) {
-		return isBase ? ai.getBaseValue() : ai.getValue();
-	}
-	
 }
