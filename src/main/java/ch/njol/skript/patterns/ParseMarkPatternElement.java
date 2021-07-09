@@ -20,6 +20,9 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link PatternElement} that applies a parse mark when matched.
+ */
 public class ParseMarkPatternElement extends PatternElement {
 
 	private final int mark;

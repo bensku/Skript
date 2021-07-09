@@ -22,11 +22,9 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
-import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SkriptParser.ExprInfo;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.localization.Noun;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -36,6 +34,9 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link PatternElement} that contains a type to be matched with an expressions, for example {@code %number%}.
+ */
 public class TypePatternElement extends PatternElement {
 
 	private final ClassInfo<?>[] classes;

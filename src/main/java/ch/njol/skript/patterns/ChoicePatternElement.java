@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A {@link PatternElement} that has multiple options, for example {@code hello|world}.
+ */
 public class ChoicePatternElement extends PatternElement {
 
 	private final List<PatternElement> patternElements = new ArrayList<>();

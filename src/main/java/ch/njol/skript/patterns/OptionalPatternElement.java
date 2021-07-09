@@ -20,6 +20,9 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link PatternElement} that contains an optional part, for example {@code [hello world]}.
+ */
 public class OptionalPatternElement extends PatternElement {
 
 	private final PatternElement patternElement;

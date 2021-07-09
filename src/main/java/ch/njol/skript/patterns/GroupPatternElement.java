@@ -20,6 +20,9 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link PatternElement} that represents a group, for example {@code (test)}.
+ */
 public class GroupPatternElement extends PatternElement {
 
 	private final PatternElement patternElement;

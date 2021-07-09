@@ -18,7 +18,6 @@
  */
 package ch.njol.skript.patterns;
 
-import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
@@ -27,6 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A {@link PatternElement} that contains a regex {@link Pattern}, for example {@code <.+>}.
+ */
 public class RegexPatternElement extends PatternElement {
 
 	private final Pattern pattern;

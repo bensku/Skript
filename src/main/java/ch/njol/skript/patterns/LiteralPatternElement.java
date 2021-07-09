@@ -20,6 +20,10 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link PatternElement} that contains a literal string to be matched, for example {@code hello world}.
+ * This element does not handle spaces as would be expected.
+ */
 public class LiteralPatternElement extends PatternElement {
 
 	private final char[] literal;
