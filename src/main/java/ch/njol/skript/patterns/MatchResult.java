@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A result from pattern matching.
+ */
 public class MatchResult {
 
 	int exprOffset;
@@ -67,6 +70,7 @@ public class MatchResult {
 			", mark=" + mark +
 			", regexResults=" + regexResults +
 			", parseContext=" + parseContext +
+			", flags=" + flags +
 			'}';
 	}
 
