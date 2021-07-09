@@ -19,92 +19,107 @@
 package ch.njol.skript.patterns;
 
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.patterns.ChoicePatternElement.Choice;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * The pattern structure is a linked list of {@link PatternElement}s,
+ * where {@link PatternElement#next} points to the next element to be matched,
+ * which can be on an outer level, and where {@link PatternElement#originalNext} points
+ * to the next element on the same level.
+ */
 public class PatternCompiler {
 
-	private static final PatternElement EMPTY = new LiteralPatternElement("");
+	/**
+	 * @return an empty {@link PatternElement}
+	 */
+	private static PatternElement getEmpty() {
+		return new LiteralPatternElement("");
+	}
 
+	/**
+	 * Parses a pattern String into a {@link SkriptPattern}.
+	 */
 	public static SkriptPattern compile(String pattern) {
 		AtomicInteger atomicInteger = new AtomicInteger(0);
 		PatternElement first = compile(pattern, atomicInteger);
 		return new SkriptPattern(first, atomicInteger.get());
 	}
 
+	/**
+	 * Compiles the given pattern String into a pattern.<br>
+	 * The {@code expressionOffset} is to keep track of which index the next
+	 * {@link TypePatternElement} should be initiated with.
+	 * @return The first link of the {@link PatternElement} chain
+	 */
 	private static PatternElement compile(String pattern, AtomicInteger expressionOffset) {
-		part_parsing: {
-			List<String> parts = new ArrayList<>();
-
-			int i = 0;
-			int lastFound = 0;
-			for (; i < pattern.length(); i++) {
-				char c = pattern.charAt(i);
-				if (c == '(') {
-					i = SkriptParser.nextBracket(pattern, ')', '(', i + 1, true);
-				} else if (c == '|') {
-					parts.add(pattern.substring(lastFound, i));
-					lastFound = i + 1;
-				} else if (c == '\\') {
-					i++;
-				}
-			}
-
-			parts.add(pattern.substring(lastFound, i));
-
-			List<Choice> choices = new ArrayList<>();
-			for (String part : parts) {
-				int mark = 0;
-				if ((i = part.indexOf('¦')) != -1) {
-					String intString = part.substring(0, i);
-					try {
-						mark = Integer.parseInt(intString);
-						part = part.substring(i + 1);
-					} catch (NumberFormatException ignored) {
-					} // Do nothing
-				}
-
-				if (parts.size() == 1 && mark == 0) {
-					break part_parsing;
-				}
-
-				PatternElement patternElement = compile(part, expressionOffset);
-				choices.add(new Choice(patternElement, mark));
-			}
-
-			return new ChoicePatternElement(choices.toArray(new Choice[0]));
-		}
-
 		StringBuilder literalBuilder = new StringBuilder();
 		PatternElement first = null;
 
 		for (int i = 0; i < pattern.length(); i++) {
 			char c = pattern.charAt(i);
-			if (c == '[' || c == '(') {
+			if (c == '[') {
 				if (literalBuilder.length() != 0) {
-					first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
+					first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
 					literalBuilder = new StringBuilder();
 				}
 
-				int end = SkriptParser.nextBracket(pattern, c == '[' ? ']' : ')', c, i + 1, true);
+				int end = SkriptParser.nextBracket(pattern, ']', c, i + 1, true);
 				PatternElement patternElement = compile(pattern.substring(i + 1, end), expressionOffset);
 
-				if (c == '[') {
-					first = setFirst(first, new OptionalPatternElement(patternElement));
-				} else {
-					first = setFirst(first, patternElement);
-				}
+				first = appendElement(first, new OptionalPatternElement(patternElement));
 
 				i = end;
+			} else if (c == '(') {
+				if (literalBuilder.length() != 0) {
+					first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
+					literalBuilder = new StringBuilder();
+				}
+
+				int end = SkriptParser.nextBracket(pattern, ')', c, i + 1, true);
+				PatternElement patternElement = compile(pattern.substring(i + 1, end), expressionOffset);
+
+				first = appendElement(first, new GroupPatternElement(patternElement));
+
+				i = end;
+			} else if (c == '|') {
+				if (literalBuilder.length() != 0) {
+					first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
+					literalBuilder = new StringBuilder();
+				}
+
+				PatternElement prevFirst = first;
+
+				ChoicePatternElement choicePatternElement;
+				if (first instanceof ChoicePatternElement) {
+					choicePatternElement = (ChoicePatternElement) first;
+				} else {
+					first = choicePatternElement = new ChoicePatternElement();
+					choicePatternElement.add(prevFirst != null ? prevFirst : getEmpty());
+				}
+				choicePatternElement.add(getEmpty());
+			} else if (c == '¦') {
+				if (literalBuilder.length() == 0)
+					throw new InvalidPatternException(pattern, "empty parse mark at " + i);
+
+				String intString = literalBuilder.toString();
+				int mark;
+				try {
+					mark = Integer.parseInt(intString);
+				} catch (NumberFormatException e) {
+					throw new InvalidPatternException(pattern, "invalid parse mark at " + i, e);
+				}
+				literalBuilder = new StringBuilder();
+
+				ParseMarkPatternElement parseMarkPatternElement = new ParseMarkPatternElement(mark);
+
+				first = appendElement(first, parseMarkPatternElement);
 			} else if (c == '%') {
 				if (literalBuilder.length() != 0) {
-					first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
+					first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
 					literalBuilder = new StringBuilder();
 				}
 
@@ -112,27 +127,27 @@ public class PatternCompiler {
 				int exprOffset = expressionOffset.getAndIncrement();
 				TypePatternElement typePatternElement = TypePatternElement.fromString(pattern.substring(i + 1, end), exprOffset);
 
-				first = setFirst(first, typePatternElement);
+				first = appendElement(first, typePatternElement);
 
 				i = end;
 			} else if (c == '<') {
 				if (literalBuilder.length() != 0) {
-					first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
+					first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
 					literalBuilder = new StringBuilder();
 				}
 
 				int end = pattern.indexOf('>', i + 1);
 				if (end == -1)
-					throw new InvalidPatternException(pattern, "Missing closing regex bracket '>'");
+					throw new InvalidPatternException(pattern, "missing closing regex bracket '>' at " + i);
 
 				Pattern regexPattern;
 				try {
 					regexPattern = Pattern.compile(pattern.substring(i + 1, end));
 				} catch (final PatternSyntaxException e) {
-					throw new InvalidPatternException(pattern, "Invalid regex <" + pattern.substring(i + 1, end) + ">", e);
+					throw new InvalidPatternException(pattern, "invalid regex <" + pattern.substring(i + 1, end) + "> at " + i, e);
 				}
 
-				first = setFirst(first, new RegexPatternElement(regexPattern));
+				first = appendElement(first, new RegexPatternElement(regexPattern));
 
 				i = end;
 			} else if (c == '\\') {
@@ -144,20 +159,31 @@ public class PatternCompiler {
 		}
 
 		if (literalBuilder.length() != 0) {
-			first = setFirst(first, new LiteralPatternElement(literalBuilder.toString()));
+			first = appendElement(first, new LiteralPatternElement(literalBuilder.toString()));
 		}
 
 		if (first == null) {
-			return EMPTY;
+			return getEmpty();
 		}
 
 		return first;
 	}
 
-	private static PatternElement setFirst(@Nullable PatternElement first, PatternElement next) {
-		if (first == null) {
+	/**
+	 * Adds a {@link PatternElement} to the end of the list given by the first parameter.
+	 * Returns the new first element of the list.
+	 */
+	private static PatternElement appendElement(@Nullable PatternElement first, PatternElement next) {
+		if (first == null || (first instanceof LiteralPatternElement && first.next == null && ((LiteralPatternElement) first).isEmpty())) {
 			return next;
 		} else {
+			if (first instanceof ChoicePatternElement) {
+				ChoicePatternElement choicePatternElement = (ChoicePatternElement) first;
+				PatternElement last = choicePatternElement.getLast();
+				choicePatternElement.setLast(appendElement(last, next));
+				return first;
+			}
+
 			PatternElement last = first;
 			while (last.next != null)
 				last = last.next;

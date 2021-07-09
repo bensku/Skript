@@ -20,42 +20,24 @@ package ch.njol.skript.patterns;
 
 import org.jetbrains.annotations.Nullable;
 
-public class LiteralPatternElement extends PatternElement {
+public class ParseMarkPatternElement extends PatternElement {
 
-	private final char[] literal;
+	private final int mark;
 
-	public LiteralPatternElement(String literal) {
-		this.literal = literal.toLowerCase().toCharArray();
-	}
-
-	public boolean isEmpty() {
-		return literal.length == 0;
+	public ParseMarkPatternElement(int mark) {
+		this.mark = mark;
 	}
 
 	@Override
 	@Nullable
 	public MatchResult match(String expr, MatchResult matchResult) {
-		char[] exprChars = expr.toLowerCase().toCharArray();
-
-		int exprIndex = matchResult.exprOffset;
-		for (char c : literal) {
-			if (c == ' ') {
-				if (exprIndex == 0 || exprIndex == exprChars.length || (exprIndex > 0 && exprChars[exprIndex - 1] == ' '))
-					continue;
-				else if (exprChars[exprIndex] != ' ')
-					return null;
-			} else if (exprIndex == exprChars.length || c != exprChars[exprIndex])
-				return null;
-			exprIndex++;
-		}
-
-		matchResult.exprOffset = exprIndex;
+		matchResult.mark ^= mark;
 		return matchNext(expr, matchResult);
 	}
 
 	@Override
 	public String toString() {
-		return new String(literal);
+		return mark + "¦";
 	}
 
 }
