@@ -54,12 +54,12 @@ task checkAliases {
 
 task jar(overwrite: true, type: ShadowJar) {
 	dependsOn checkAliases
-	archiveName jarName ? 'Skript.jar' : jarName
+	archiveFileName = jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
 
 task build(overwrite: true, type: ShadowJar) {
-	archiveName jarName ? 'Skript.jar' : jarName
+	archiveFileName = jarName ? 'Skript.jar' : jarName
 	from sourceSets.main.output
 }
 
@@ -212,7 +212,7 @@ task githubResources(type: ProcessResources) {
 task githubRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn githubResources
-	archiveName = 'Skript-github.jar'
+	archiveFileName = 'Skript-github.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
@@ -248,7 +248,7 @@ task spigotResources(type: ProcessResources) {
 task spigotRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn spigotResources
-	archiveName = 'Skript-spigot.jar'
+	archiveFileName = 'Skript-spigot.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
@@ -280,7 +280,7 @@ task nightlyResources(type: ProcessResources) {
 task nightlyRelease(type: ShadowJar) {
 	from sourceSets.main.output
 	dependsOn nightlyResources, licenseMain
-	archiveName = 'Skript-nightly.jar'
+	archiveFileName = 'Skript-nightly.jar'
 	manifest {
 		attributes(
 			'Name': 'ch/njol/skript',
