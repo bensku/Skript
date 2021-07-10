@@ -23,18 +23,31 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SkriptPattern {
 
 	private final PatternElement first;
 	private final int expressionAmount;
 
+	private final String @Nullable[] keywords;
+
 	public SkriptPattern(PatternElement first, int expressionAmount) {
 		this.first = first;
 		this.expressionAmount = expressionAmount;
+		keywords = getKeywords(first);
 	}
 
 	@Nullable
 	public MatchResult match(String expr, int flags, ParseContext parseContext) {
+		// Matching shortcut
+		String lowerExpr = expr.toLowerCase();
+		if (keywords != null)
+			for (String keyword : keywords)
+				if (!lowerExpr.contains(keyword))
+					return null;
+
 		expr = expr.trim();
 
 		MatchResult matchResult = new MatchResult();
@@ -53,6 +66,26 @@ public class SkriptPattern {
 	@Override
 	public String toString() {
 		return first.toFullString();
+	}
+
+	public static String @Nullable[] getKeywords(PatternElement first) {
+		List<String> keywords = new ArrayList<>();
+		PatternElement next = first;
+		while (next != null) {
+			if (next instanceof LiteralPatternElement) {
+				String literal = next.toString().trim();
+				while (literal.contains("  "))
+					literal = literal.replace("  ", " ");
+				keywords.add(literal);
+			} else if (next instanceof GroupPatternElement) {
+				next = ((GroupPatternElement) next).getPatternElement();
+				continue;
+			}
+			next = next.next;
+		}
+		if (keywords.size() == 0)
+			return null;
+		return keywords.toArray(new String[0]);
 	}
 
 }

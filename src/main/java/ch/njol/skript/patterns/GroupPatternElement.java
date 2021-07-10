@@ -31,6 +31,10 @@ public class GroupPatternElement extends PatternElement {
 		this.patternElement = patternElement;
 	}
 
+	public PatternElement getPatternElement() {
+		return patternElement;
+	}
+
 	@Override
 	void setNext(@Nullable PatternElement next) {
 		super.setNext(next);
