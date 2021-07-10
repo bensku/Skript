@@ -99,17 +99,16 @@ public class TypePatternElement extends PatternElement {
 	@Override
 	@Nullable
 	public MatchResult match(String expr, MatchResult matchResult) {
-		ExprInfo exprInfo = getExprInfo();
-
 		int newExprOffset;
 		if (next == null) {
 			newExprOffset = expr.length();
 		} else {
-			// TODO move next method to here?
 			newExprOffset = SkriptParser.next(expr, matchResult.exprOffset, matchResult.parseContext);
 			if (newExprOffset == -1)
 				return null;
 		}
+
+		ExprInfo exprInfo = getExprInfo();
 
 		ParseLogHandler loopLogHandler = SkriptLogger.startParseLogHandler();
 		try {
