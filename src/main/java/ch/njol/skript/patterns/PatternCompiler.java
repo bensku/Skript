@@ -103,14 +103,14 @@ public class PatternCompiler {
 				choicePatternElement.add(getEmpty());
 			} else if (c == '¦') {
 				if (literalBuilder.length() == 0)
-					throw new InvalidPatternException(pattern, "empty parse mark at " + i);
+					throw new MalformedPatternException(pattern, "empty parse mark at " + i);
 
 				String intString = literalBuilder.toString();
 				int mark;
 				try {
 					mark = Integer.parseInt(intString);
 				} catch (NumberFormatException e) {
-					throw new InvalidPatternException(pattern, "invalid parse mark at " + i, e);
+					throw new MalformedPatternException(pattern, "invalid parse mark at " + i, e);
 				}
 				literalBuilder = new StringBuilder();
 
@@ -138,13 +138,13 @@ public class PatternCompiler {
 
 				int end = pattern.indexOf('>', i + 1);
 				if (end == -1)
-					throw new InvalidPatternException(pattern, "missing closing regex bracket '>' at " + i);
+					throw new MalformedPatternException(pattern, "missing closing regex bracket '>' at " + i);
 
 				Pattern regexPattern;
 				try {
 					regexPattern = Pattern.compile(pattern.substring(i + 1, end));
 				} catch (final PatternSyntaxException e) {
-					throw new InvalidPatternException(pattern, "invalid regex <" + pattern.substring(i + 1, end) + "> at " + i, e);
+					throw new MalformedPatternException(pattern, "invalid regex <" + pattern.substring(i + 1, end) + "> at " + i, e);
 				}
 
 				first = appendElement(first, new RegexPatternElement(regexPattern));

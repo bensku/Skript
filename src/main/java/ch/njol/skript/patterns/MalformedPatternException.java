@@ -20,13 +20,13 @@ package ch.njol.skript.patterns;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-public class InvalidPatternException extends IllegalArgumentException {
+public class MalformedPatternException extends IllegalArgumentException {
 
-	public InvalidPatternException(String pattern, String message) {
+	public MalformedPatternException(String pattern, String message) {
 		this(pattern, message, null);
 	}
 
-	public InvalidPatternException(String pattern, String message, @Nullable Throwable cause) {
+	public MalformedPatternException(String pattern, String message, @Nullable Throwable cause) {
 		super(message + " [pattern: " + pattern + "]", cause);
 	}
 

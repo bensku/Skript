@@ -41,6 +41,7 @@ import ch.njol.skript.log.LogEntry;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.patterns.MalformedPatternException;
 import ch.njol.skript.patterns.PatternCompiler;
 import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.skript.registrations.Classes;
@@ -141,19 +142,7 @@ public class SkriptParser {
 			this.exprs = expressions;
 		}
 	}
-	
-	private final static class MalformedPatternException extends RuntimeException {
-		private static final long serialVersionUID = -5133477361763823946L;
-		
-		public MalformedPatternException(final String pattern, final String message) {
-			this(pattern, message, null);
-		}
-		
-		public MalformedPatternException(final String pattern, final String message, final @Nullable Throwable cause) {
-			super(message + " [pattern: " + pattern + "]", cause);
-		}
-	}
-	
+
 	/**
 	 * Parses a single literal, i.e. not lists of literals.
 	 * <p>
@@ -1303,24 +1292,6 @@ public class SkriptParser {
 		}
 		return i + 1;
 	}
-	
-	private static int getGroupLevel(final String pattern, final int j) {
-		assert j >= 0 && j <= pattern.length() : j + "; " + pattern;
-		int level = 0;
-		for (int i = 0; i < j; i++) {
-			final char c = pattern.charAt(i);
-			if (c == '\\') {
-				i++;
-			} else if (c == '(') {
-				level++;
-			} else if (c == ')') {
-				if (level == 0)
-					throw new MalformedPatternException(pattern, "Unexpected closing bracket ')'");
-				level--;
-			}
-		}
-		return level;
-	}
 
 	private static final Map<String, SkriptPattern> patterns = new HashMap<>();
 
@@ -1334,213 +1305,6 @@ public class SkriptParser {
 			return null;
 		return matchResult.toParseResult();
 	}
-
-
-//	@Nullable
-//	private final ParseResult parse_i(final String pattern, int i, int j) {
-//		ParseResult res;
-//		int end, i2;
-//
-//		while (j < pattern.length()) {
-//			switch (pattern.charAt(j)) {
-//				case '[': {
-//					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
-//					try {
-//						res = parse_i(pattern, i, j + 1);
-//						if (res != null) {
-//							log.printLog();
-//							return res;
-//						}
-//						log.clear();
-//						j = nextBracket(pattern, ']', '[', j + 1, true) + 1;
-//						res = parse_i(pattern, i, j);
-//						if (res == null)
-//							log.printError();
-//						else
-//							log.printLog();
-//						return res;
-//					} finally {
-//						log.stop();
-//					}
-//				}
-//				case '(': {
-//					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
-//					try {
-//						final int start = j;
-//						for (; j < pattern.length(); j++) {
-//							log.clear();
-//							if (j == start || pattern.charAt(j) == '|') {
-//								int mark = 0;
-//								if (j != pattern.length() - 1 && ('0' <= pattern.charAt(j + 1) && pattern.charAt(j + 1) <= '9' || pattern.charAt(j + 1) == '-')) {
-//									final int j2 = pattern.indexOf('¦', j + 2);
-//									if (j2 != -1) {
-//										try {
-//											mark = Integer.parseInt(pattern.substring(j + 1, j2));
-//											j = j2;
-//										} catch (final NumberFormatException e) {}
-//									}
-//								}
-//								res = parse_i(pattern, i, j + 1);
-//								if (res != null) {
-//									log.printLog();
-//									res.mark ^= mark; // doesn't do anything if no mark was set as x ^ 0 == x
-//									return res;
-//								}
-//							} else if (pattern.charAt(j) == '(') {
-//								j = nextBracket(pattern, ')', '(', j + 1, true);
-//							} else if (pattern.charAt(j) == ')') {
-//								break;
-//							} else if (j == pattern.length() - 1) {
-//								throw new MalformedPatternException(pattern, "Missing closing bracket ')'");
-//							}
-//						}
-//						log.printError();
-//						return null;
-//					} finally {
-//						log.stop();
-//					}
-//				}
-//				case '%': {
-//					if (i == expr.length())
-//						return null;
-//					end = pattern.indexOf('%', j + 1);
-//					if (end == -1)
-//						throw new MalformedPatternException(pattern, "Odd number of '%'");
-//					final String name = "" + pattern.substring(j + 1, end); // %type/anothertype%
-//					final ExprInfo vi = getExprInfo(name);
-//					if (end == pattern.length() - 1) {
-//						i2 = expr.length();
-//					} else {
-//						i2 = next(expr, i, context);
-//						if (i2 == -1)
-//							return null;
-//					}
-//					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
-//					try {
-//						for (; i2 != -1; i2 = next(expr, i2, context)) {
-//							log.clear();
-//							res = parse_i(pattern, i2, end + 1);
-//							if (res != null) {
-//								final ParseLogHandler log2 = SkriptLogger.startParseLogHandler();
-//								try { // Loop over all types that could go here
-//									final Expression<?> e = new SkriptParser("" + expr.substring(i, i2), flags & vi.flagMask, context).parseExpression(vi);
-//									if (e != null) {
-////										if (!vi.isPlural[k] && !e.isSingle()) { // Wrong number of arguments
-////											if (context == ParseContext.COMMAND) {
-////												Skript.error(Commands.m_too_many_arguments.toString(vi.classes[k].getName().getIndefiniteArticle(), vi.classes[k].getName().toString()), ErrorQuality.SEMANTIC_ERROR);
-////												return null;
-////											} else {
-////												Skript.error("'" + expr.substring(0, i) + "<...>" + expr.substring(i2) + "' can only accept a single " + vi.classes[k].getName() + ", not more", ErrorQuality.SEMANTIC_ERROR);
-////												return null;
-////											}
-////										}
-//										if (vi.time != 0) {
-//											if (e instanceof Literal<?>)
-//												return null;
-//											if (getParser().getHasDelayBefore() == Kleenean.TRUE) {
-//												Skript.error("Cannot use time states after the event has already passed", ErrorQuality.SEMANTIC_ERROR);
-//												return null;
-//											}
-//											if (!e.setTime(vi.time)) {
-//												Skript.error(e + " does not have a " + (vi.time == -1 ? "past" : "future") + " state", ErrorQuality.SEMANTIC_ERROR);
-//												return null;
-//											}
-//										}
-//										log2.printLog();
-//										log.printLog();
-//										res.exprs[countUnescaped(pattern, '%', 0, j) / 2] = e;
-//										return res;
-//									}
-//									// results in useless errors most of the time
-////									Skript.error("'" + expr.substring(i, i2) + "' is " + notOfType(vi.classes), ErrorQuality.NOT_AN_EXPRESSION);
-//									return null;
-//								} finally {
-//									log2.printError();
-//								}
-//							}
-//						}
-//					} finally {
-//						if (!log.isStopped())
-//							log.printError();
-//					}
-//					return null;
-//				}
-//				case '<': {
-//					end = pattern.indexOf('>', j + 1);// not next()
-//					if (end == -1)
-//						throw new MalformedPatternException(pattern, "Missing closing regex bracket '>'");
-//					Pattern p;
-//					try {
-//						p = Pattern.compile(pattern.substring(j + 1, end));
-//					} catch (final PatternSyntaxException e) {
-//						throw new MalformedPatternException(pattern, "Invalid regex <" + pattern.substring(j + 1, end) + ">", e);
-//					}
-//					final ParseLogHandler log = SkriptLogger.startParseLogHandler();
-//					try {
-//						final Matcher m = p.matcher(expr);
-//						for (i2 = next(expr, i, context); i2 != -1; i2 = next(expr, i2, context)) {
-//							log.clear();
-//							m.region(i, i2);
-//							if (m.matches()) {
-//								res = parse_i(pattern, i2, end + 1);
-//								if (res != null) {
-//									res.regexes.add(0, m.toMatchResult());
-//									log.printLog();
-//									return res;
-//								}
-//							}
-//						}
-//						log.printError(null);
-//						return null;
-//					} finally {
-//						log.stop();
-//					}
-//				}
-//				case ']':
-//				case ')':
-//					j++;
-//					continue;
-//				case '|':
-//					final int newJ = nextBracket(pattern, ')', '(', j + 1, getGroupLevel(pattern, j) != 0);
-//					if (newJ == -1) {
-//						if (i == expr.length()) {
-//							j = pattern.length();
-//							break;
-//						} else {
-//							i = 0;
-//							j++;
-//							continue;
-//						}
-//					} else {
-//						j = newJ + 1;
-//						break;
-//					}
-//				case ' ':
-//					if (i == 0 || i == expr.length() || (i > 0 && expr.charAt(i - 1) == ' ')) {
-//						j++;
-//						continue;
-//					} else if (expr.charAt(i) != ' ') {
-//						return null;
-//					}
-//					i++;
-//					j++;
-//					continue;
-//				case '\\':
-//					j++;
-//					if (j == pattern.length())
-//						throw new MalformedPatternException(pattern, "Must not end with a backslash");
-//					//$FALL-THROUGH$
-//				default:
-//					if (i == expr.length() || Character.toLowerCase(pattern.charAt(j)) != Character.toLowerCase(expr.charAt(i)))
-//						return null;
-//					i++;
-//					j++;
-//			}
-//		}
-//		if (i == expr.length() && j == pattern.length())
-//			return new ParseResult(this, pattern);
-//		return null;
-//	}
 
 	/**
 	 * Validates a user-defined pattern (used in {@link ExprParse}).
@@ -1656,7 +1420,7 @@ public class SkriptParser {
 	
 	private static final Map<String,ExprInfo> exprInfoCache = new HashMap<>();
 	
-	private static ExprInfo getExprInfo(String s) throws MalformedPatternException, IllegalArgumentException, SkriptAPIException {
+	private static ExprInfo getExprInfo(String s) throws IllegalArgumentException, SkriptAPIException {
 		ExprInfo r = exprInfoCache.get(s);
 		if (r == null) {
 			r = createExprInfo(s);
@@ -1666,7 +1430,7 @@ public class SkriptParser {
 		return r;
 	}
 	
-	private static ExprInfo createExprInfo(String s) throws MalformedPatternException, IllegalArgumentException, SkriptAPIException {
+	private static ExprInfo createExprInfo(String s) throws IllegalArgumentException, SkriptAPIException {
 		final ExprInfo r = new ExprInfo(StringUtils.count(s, '/') + 1);
 		r.isOptional = s.startsWith("-");
 		if (r.isOptional)

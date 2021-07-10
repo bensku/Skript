@@ -80,7 +80,7 @@ public class TypePatternElement extends PatternElement {
 		int timeStart = s.indexOf("@");
 		if (timeStart != -1) {
 			time = Integer.parseInt(s.substring(timeStart + 1));
-			s = "" + s.substring(0, timeStart);
+			s = s.substring(0, timeStart);
 		}
 
 		String[] classes = s.split("/");
@@ -168,7 +168,7 @@ public class TypePatternElement extends PatternElement {
 		if (flagMask != ~0) {
 			if ((flagMask & SkriptParser.PARSE_LITERALS) != 0)
 				stringBuilder.append("~");
-			if ((flagMask & SkriptParser.PARSE_EXPRESSIONS) != 0)
+			else if ((flagMask & SkriptParser.PARSE_EXPRESSIONS) != 0)
 				stringBuilder.append("*");
 		}
 		for (int i = 0; i < classes.length; i++) {
