@@ -129,7 +129,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		parser.setHasDelayBefore(previousDelay);
 
 		Config script = parser.getCurrentScript();
-		return new Trigger(script != null ? script.getFile() : null, toString(), new FakeSkriptEvent(name), triggerItems);
+		return new Trigger(script != null ? script.getFile() : null, name, new FakeSkriptEvent(name), triggerItems);
 	}
 
 	/**
