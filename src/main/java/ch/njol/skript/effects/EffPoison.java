@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.effects;
 
+import ch.njol.skript.util.PotionEffectUtils;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
@@ -51,8 +52,6 @@ public class EffPoison extends Effect {
 				"(cure|unpoison) %livingentities% [(from|of) poison]");
 	}
 	
-	private final static int DEFAULT_DURATION = 15 * 20; // 15 seconds on hard difficulty, same as EffPotion
-	
 	@SuppressWarnings("null")
 	private Expression<LivingEntity> entites;
 	@Nullable
@@ -81,7 +80,7 @@ public class EffPoison extends Effect {
 			if (!cure) {
 				Timespan dur;
 				int d = (int) (duration != null && (dur = duration.getSingle(e)) != null ? 
-						(dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : dur.getTicks_i()) : DEFAULT_DURATION);
+						(dur.getTicks_i() >= Integer.MAX_VALUE ? Integer.MAX_VALUE : dur.getTicks_i()) : PotionEffectUtils.DEFAULT_DURATION_TICKS);
 				if (le.hasPotionEffect(PotionEffectType.POISON)) {
 					for (final PotionEffect pe : le.getActivePotionEffects()) {
 						if (pe.getType() != PotionEffectType.POISON)

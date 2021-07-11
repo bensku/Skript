@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.util.PotionEffectUtils;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -36,21 +37,29 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
 @Name("Potion Effect")
-@Description({"Create a new potion effect to apply to an entity or item type. Do note that when applying potion effects ",
-	"to tipped arrows/lingering potions, Minecraft reduces the timespan."})
-@Examples({"set {_p} to potion effect of speed of tier 1 without particles for 10 minutes",
-	"add {_p} to potion effects of player's tool",
-	"add {_p} to potion effects of target entity",
-	"add potion effect of speed 1 to potion effects of player"})
-@Since("2.5.2")
+@Description({
+		"Create a new potion effect to apply to an entity or item type. Do note that when applying potion effects ",
+		"to tipped arrows/lingering potions, Minecraft reduces the timespan."
+})
+@Examples({
+		"set {_p} to potion effect of speed of tier 1 without particles for 10 minutes",
+		"add {_p} to potion effects of player's tool",
+		"add {_p} to potion effects of target entity",
+		"add potion effect of speed 1 to potion effects of player"
+})
+@Since("2.5.2, INSERT VERSION (new syntax)")
 public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
+
 	static {
 		Skript.registerExpression(ExprPotionEffect.class, PotionEffect.class, ExpressionType.COMBINED,
-			"[new] potion effect of %potioneffecttype% [potion] [[[of] tier] %-number%] [(1¦without particles)] [for %-timespan%]",
-			"[new] ambient potion effect of %potioneffecttype% [potion] [[[of] tier] %-number%] [(1¦without particles)] [for %-timespan%]");
+				"[new] potion [effect] of %potioneffecttype% [potion] [[[of] tier] %-number%] [(1¦without particles)] [for %-timespan%]",
+				"[new] [potion [effect] of] %potioneffecttype% [potion] [[of] tier] %number% [(1¦without particles)] [for %-timespan%]", // "speed 2"
+				"[new] ambient potion [effect] of %potioneffecttype% [potion] [[[of] tier] %-number%] [(1¦without particles)] [for %-timespan%]",
+				"[new] ambient [potion [effect] of] %potioneffecttype% [potion] [[of] tier] %number% [(1¦without particles)] [for %-timespan%]" // "ambient speed 2"
+		);
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<PotionEffectType> potionEffectType;
 	@Nullable
 	private Expression<Number> tier;
@@ -60,33 +69,37 @@ public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 	private boolean ambient;
 	
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		potionEffectType = (Expression<PotionEffectType>) exprs[0];
 		tier = (Expression<Number>) exprs[1];
 		timespan = (Expression<Timespan>) exprs[2];
 		particles = parseResult.mark == 0;
-		ambient = matchedPattern == 1;
+		ambient = matchedPattern >= 2;
 		return true;
 	}
 	
 	@Override
 	@Nullable
-	protected PotionEffect[] get(final Event e) {
+	protected PotionEffect[] get(Event e) {
 		PotionEffectType potionEffectType = this.potionEffectType.getSingle(e);
 		if (potionEffectType == null)
 			return null;
+
 		int tier = 0;
 		if (this.tier != null) {
 			Number n = this.tier.getSingle(e);
 			if (n != null)
 				tier = n.intValue() - 1;
 		}
-		int ticks = 15 * 20; // 15 second default potion length
+
+		int ticks = PotionEffectUtils.DEFAULT_DURATION_TICKS;
 		if (this.timespan != null) {
 			Timespan timespan = this.timespan.getSingle(e);
 			if (timespan != null)
 				ticks = (int) timespan.getTicks_i();
 		}
+
 		return new PotionEffect[]{new PotionEffect(potionEffectType, ticks, tier, ambient, particles)};
 	}
 	
