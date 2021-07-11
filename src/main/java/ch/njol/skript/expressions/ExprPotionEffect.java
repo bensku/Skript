@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
+import ch.njol.skript.util.PotionEffectUtils;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -92,7 +93,7 @@ public class ExprPotionEffect extends SimpleExpression<PotionEffect> {
 				tier = n.intValue() - 1;
 		}
 
-		int ticks = 300; // 15 second (300 ticks) default potion length
+		int ticks = PotionEffectUtils.DEFAULT_DURATION_TICKS;
 		if (this.timespan != null) {
 			Timespan timespan = this.timespan.getSingle(e);
 			if (timespan != null)

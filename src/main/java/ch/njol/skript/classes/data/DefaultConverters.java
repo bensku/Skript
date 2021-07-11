@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.classes.data;
 
+import ch.njol.skript.util.PotionEffectUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -356,9 +357,9 @@ public class DefaultConverters {
 			});
 		}
 
-		// PotionEffectType -> PotionEffect (300 ticks = 15 seconds default duration)
+		// PotionEffectType -> PotionEffect
 		Converters.registerConverter(PotionEffectType.class, PotionEffect.class,
-			potionEffectType -> new PotionEffect(potionEffectType, 300, 0, false, true)
+			potionEffectType -> new PotionEffect(potionEffectType, PotionEffectUtils.DEFAULT_DURATION_TICKS, 0, false, true)
 		);
 
 	}

@@ -47,6 +47,12 @@ import ch.njol.skript.localization.LanguageChangeListener;
 public abstract class PotionEffectUtils {
 	
 	private static final boolean HAS_SUSPICIOUS_META = Skript.classExists("org.bukkit.inventory.meta.SuspiciousStewMeta");
+
+	/**
+	 * 30 seconds is the default length for the /effect command
+	 * https://minecraft.fandom.com/wiki/Commands/effect
+	 */
+	public static final int DEFAULT_DURATION_TICKS = 600;
 	
 	private PotionEffectUtils() {}
 	
@@ -248,7 +254,7 @@ public abstract class PotionEffectUtils {
 			if (object instanceof PotionEffect)
 				effect = (PotionEffect) object;
 			else if (object instanceof PotionEffectType)
-				effect = new PotionEffect((PotionEffectType) object, 15 * 20, 0, false);
+				effect = new PotionEffect((PotionEffectType) object, DEFAULT_DURATION_TICKS, 0, false);
 			else
 				continue;
 			
@@ -303,7 +309,7 @@ public abstract class PotionEffectUtils {
 			if (object instanceof PotionEffect)
 				effect = (PotionEffect) object;
 			else if (object instanceof PotionEffectType)
-				effect = new PotionEffect((PotionEffectType) object, 15 * 20, 0, false);
+				effect = new PotionEffect((PotionEffectType) object, DEFAULT_DURATION_TICKS, 0, false);
 			else
 				continue;
 			
