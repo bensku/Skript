@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.log;
 
+import java.util.Date;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -37,6 +38,8 @@ public class RedirectingLogHandler extends LogHandler {
 	private final String prefix;
 	
 	private int numErrors = 0;
+	
+	private long timeTaken = System.currentTimeMillis();
 	
 	public RedirectingLogHandler(CommandSender recipient, @Nullable String prefix) {
 		this.recipient = recipient == Bukkit.getConsoleSender() ? null : recipient;
@@ -63,4 +66,7 @@ public class RedirectingLogHandler extends LogHandler {
 		return numErrors;
 	}
 	
+	public long getTimeTaken() {
+		return System.currentTimeMillis() - timeTaken;
+	}
 }

@@ -87,9 +87,9 @@ public class SkriptCommand implements CommandExecutor {
 	
 	private static final ArgsMessage m_reloading = new ArgsMessage(CONFIG_NODE + ".reload.reloading");
 	
-	private static void reloading(CommandSender sender, String what, Object... args) {
+	private static void reloading(CommandSender sender, String what, final Object... args) {
 		what = args.length == 0 ? Language.get(CONFIG_NODE + ".reload." + what) : Language.format(CONFIG_NODE + ".reload." + what, args);
-		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what)));
+		Skript.info(sender, StringUtils.fixCapitalization(m_reloading.toString(what) + "\n "));
 	}
 	
 	private static final ArgsMessage m_reloaded = new ArgsMessage(CONFIG_NODE + ".reload.reloaded");
@@ -98,9 +98,9 @@ public class SkriptCommand implements CommandExecutor {
 	private static void reloaded(CommandSender sender, RedirectingLogHandler r, String what, Object... args) {
 		what = args.length == 0 ? Language.get(CONFIG_NODE + ".reload." + what) : PluralizingArgsMessage.format(Language.format(CONFIG_NODE + ".reload." + what, args));
 		if (r.numErrors() == 0)
-			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what))));
+			Skript.info(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reloaded.toString(what, String.valueOf(r.getTimeTaken())))));
 		else
-			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors()))));
+			Skript.error(sender, StringUtils.fixCapitalization(PluralizingArgsMessage.format(m_reload_error.toString(what, r.numErrors(), String.valueOf(r.getTimeTaken())))));
 	}
 	
 	private static void info(CommandSender sender, String what, Object... args) {

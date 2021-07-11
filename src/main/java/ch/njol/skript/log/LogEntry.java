@@ -128,8 +128,28 @@ public class LogEntry {
 	public String toString() {
 		if (node == null || level.intValue() < Level.WARNING.intValue())
 			return message;
+		
 		Config c = node.getConfig();
-		return message + from + " (" + c.getFileName() + ", line " + node.getLine() + ": " + node.save().trim() + "')";
+		
+		String t = "    "; // Because \t shows unknown char in mc
+		boolean isError = level.intValue() == Level.SEVERE.intValue();
+		
+		StringBuilder levelColor = new StringBuilder("");
+		if (level.intValue() == Level.WARNING.intValue()) // Warnings
+			levelColor.append("§e");
+		else if (isError) // Errors
+			levelColor.append("§c");
+		else // Anything else?
+			levelColor.append("§f");
+		
+		return
+			(isError ? "§4" : "§6") + "§lLine " + node.getLine() + ":§7 (" + c.getFileName() + ")" +
+			"\n" +
+			t + levelColor + message +
+			from +
+			"\n" +
+			t + "§6Line: §7" + node.save().trim() +
+			"\n ";
 	}
 	
 }
