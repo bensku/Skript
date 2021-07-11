@@ -46,6 +46,7 @@ import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.HorseJumpEvent;
@@ -111,9 +112,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.lang.util.SimpleEvent;
 
-/**
- * @author Peter Güttinger
- */
 public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
@@ -585,13 +583,14 @@ public class SimpleEvents {
 			.description("Called when a horse jumps.")
 			.examples("on horse jump:", "\tpush event-entity upwards at speed 2")
 			.since("2.5.1");
-		if(Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent"))
+		if (Skript.classExists("org.bukkit.event.block.BlockFertilizeEvent")) {
 			Skript.registerEvent("Block Fertilize", SimpleEvent.class, BlockFertilizeEvent.class, "[block] fertilize")
 			.description("Called when a player fertilizes blocks.")
 			.requiredPlugins("Minecraft 1.13 or newer")
 			.examples("on block fertilize:",
 				"\tsend \"Fertilized %size of fertilized blocks% blocks got fertilized.\"")
 			.since("2.5");
+		}
 		Skript.registerEvent("Arm Swing", SimpleEvent.class, PlayerAnimationEvent.class, "[player] arm swing")
 			.description("Called when a player swings his arm.")
 			.examples("on arm swing:",
@@ -606,6 +605,23 @@ public class SimpleEvents {
 					"\t\tcancel the event",
 					"\t\tsend \"Oops! Mending failed!\" to player")
 				.since("2.5.1");
+		}
+		if (Skript.classExists("org.bukkit.event.entity.EntityTransformEvent")) {
+			Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class, "entity transform[ation]")
+			.description("Called before an entity transforms into other another entity/entities. This event triggers for:",
+					"- villager to zombie villager (infection)",
+					"- zombie villager to villager (curing)",
+					"- zombie to drowned (drowning)",
+					"- pig to zombie pigman (lightning)",
+					"- mooshroom cow to cow (shearing)",
+					"- slime split (splitting)",
+					"You can get the original entity (prior to the transformation) by using event-entity.",
+					"Note that when cancelling this event, although the transformation will be stopped, the server will still try to transform the entity every tick.",
+					"As such, it is recommended to kill the event-entity immediately after cancelling the entity transform event to prevent issues.")
+			.requiredPlugins("Minecraft 1.13.2 or newer")
+			.examples("on entity transform:",
+					"\tbroadcast \"%transformed entities%\"")
+			.since("INSERT VERSION");
 		}
 	}
 }
