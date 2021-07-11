@@ -18,15 +18,13 @@
  */
 package ch.njol.skript.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.CondHasRelationalVariable;
+import ch.njol.skript.expressions.ExprRelationalVariable;
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.variables.SerializedVariable.Value;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -38,13 +36,14 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.conditions.CondHasRelationalVariable;
-import ch.njol.skript.expressions.ExprRelationalVariable;
-import ch.njol.skript.lang.Variable;
-import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.variables.SerializedVariable.Value;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * This class allows Persistent Data to work properly with Skript.
@@ -91,7 +90,6 @@ public class PersistentDataUtils {
 	 * @param name The name to convert
 	 * @return The created {@link NamespacedKey}
 	 */
-	@SuppressWarnings("null")
 	public static NamespacedKey getNamespacedKey(String name) {
 		// Encode the name in Base64 to make sure the key name is valid
 		name = Base64.getEncoder().encodeToString(name.getBytes(StandardCharsets.UTF_8)).replace('=', '_').replace('+', '.');
@@ -454,6 +452,7 @@ public class PersistentDataUtils {
 
 		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
 			Map<String, Object> returnMap = new HashMap<>();
+			//noinspection ConstantConditions - 'has' check means 'get' won't be null
 			for (Entry<String, Value> entry : actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).entrySet()) {
 				returnMap.put(entry.getKey(), Classes.deserialize(entry.getValue().type, entry.getValue().data));
 			}
@@ -540,10 +539,12 @@ public class PersistentDataUtils {
 		NamespacedKey key = getNamespacedKey(keyName);
 
 		if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) { // It exists under Persistent Data
+			//noinspection ConstantConditions - 'has' check means 'get' won't be null
 			return actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).keySet();
 		} else if (holder instanceof Metadatable) { // Check Metadata
 			for (MetadataValue mv : ((Metadatable) holder).getMetadata(keyName)) { // Get the latest value set by Skript
 				if (mv.getOwningPlugin() == Skript.getInstance())
+					//noinspection ConstantConditions - 'has' check means 'get' won't be null
 					return ((Map<String, Object>) mv.value()).keySet();
 			}
 		}
@@ -584,6 +585,7 @@ public class PersistentDataUtils {
 				if (actualHolder.getPersistentDataContainer().has(key, LIST_VARIABLE_TYPE)) {
 					if (index.equals("*")) // There will NEVER be an empty map stored.
 						continue;
+					//noinspection ConstantConditions - 'has' check means 'get' won't be null
 					if (actualHolder.getPersistentDataContainer().get(key, LIST_VARIABLE_TYPE).containsKey(index))
 						continue;
 					return false;
@@ -594,6 +596,7 @@ public class PersistentDataUtils {
 						return false;
 					} else { // They have something under that key name, check the values.
 						for (MetadataValue mv : mHolder.getMetadata(keyName)) { // Get the latest value set by Skript
+							//noinspection ConstantConditions - 'has' check means 'get' won't be null
 							if (mv.getOwningPlugin() == Skript.getInstance() && !((Map<String, Object>) mv.value()).containsKey(index))
 								return false;
 						}

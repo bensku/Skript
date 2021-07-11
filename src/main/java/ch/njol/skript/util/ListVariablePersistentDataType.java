@@ -18,17 +18,17 @@
  */
 package ch.njol.skript.util;
 
+import ch.njol.skript.variables.SerializedVariable.Value;
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-
-import ch.njol.skript.variables.SerializedVariable.Value;
 
 /**
  * This {@link PersistentDataType} is used for list variables.
@@ -42,25 +42,24 @@ import ch.njol.skript.variables.SerializedVariable.Value;
  */
 public final class ListVariablePersistentDataType implements PersistentDataType<byte[], Map<String, Value>> {
 
-	// This is how many bytes an int is.
-	private final int INT_LENGTH = 4;
-
+	// An int is 4 bytes
+	private static final int INT_LENGTH = 4;
 	// Charset used for converting bytes and Strings
-	@SuppressWarnings("null")
-	private final Charset SERIALIZED_CHARSET = StandardCharsets.UTF_8;
+	private static final Charset SERIALIZED_CHARSET = StandardCharsets.UTF_8;
 
 	@Override
+	@NotNull
 	public Class<byte[]> getPrimitiveType() {
 		return byte[].class;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@NotNull
+	@SuppressWarnings("unchecked")
 	public Class<Map<String, Value>> getComplexType() {
 		return (Class<Map<String, Value>>) (Class<?>) Map.class;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public byte[] toPrimitive(Map<String, Value> complex, PersistentDataAdapterContext context) {
 		int bufferLength = 0;
@@ -92,6 +91,7 @@ public final class ListVariablePersistentDataType implements PersistentDataType<
 	}
 
 	@Override
+	@NotNull
 	public Map<String, Value> fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
 		ByteBuffer bb = ByteBuffer.wrap(primitive);
 

@@ -45,12 +45,11 @@ import ch.njol.util.Kleenean;
 @Examples({"player holds relational variable {isAdmin}",
 			"player holds relational variable {oldNames::*}"})
 @RequiredPlugins("1.14 or newer")
-@Since("2.5")
+@Since("INSERT VERSION")
 public class CondHasRelationalVariable extends Condition {
 
 	static {
-		// Temporarily disabled until bugs are fixed
-		if (false && Skript.isRunningMinecraft(1, 14)) {
+		if (Skript.classExists("org.bukkit.persistence.PersistentDataHolder")) {
 			Skript.registerCondition(CondHasRelationalVariable.class,
 					"%persistentdataholders/itemtypes/blocks% (has|have|holds) [(relational|relation( |-)based) variable[s]] %objects%",
 					"%persistentdataholders/itemtypes/blocks% (doesn't|does not|do not|don't) (have|hold) [(relational|relation( |-)based) variable[s]] %objects%"
@@ -58,10 +57,8 @@ public class CondHasRelationalVariable extends Condition {
 		}
 	}
 
-	@SuppressWarnings("null")
 	private Expression<Object> holders;
-	@SuppressWarnings("null")
-	private ExpressionList<Variable<?>> variables;
+	private ExpressionList<?> variables;
 
 	@Override
 	@SuppressWarnings({"unchecked", "null"})
@@ -77,7 +74,7 @@ public class CondHasRelationalVariable extends Condition {
 				return false;
 			}
 		}
-		variables = (ExpressionList<Variable<?>>) exprList;
+		variables = exprList;
 		holders = (Expression<Object>) exprs[0];
 		setNegated(matchedPattern == 1);
 		return true;
