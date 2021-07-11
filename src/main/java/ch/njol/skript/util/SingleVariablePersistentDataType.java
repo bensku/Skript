@@ -18,14 +18,14 @@
  */
 package ch.njol.skript.util;
 
+import ch.njol.skript.variables.SerializedVariable.Value;
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-
-import ch.njol.skript.variables.SerializedVariable.Value;
 
 /**
  * This {@link PersistentDataType} is used for single variables.
@@ -37,24 +37,23 @@ import ch.njol.skript.variables.SerializedVariable.Value;
  */
 public final class SingleVariablePersistentDataType implements PersistentDataType<byte[], Value> {
 
-	// This is how many bytes an int is.
-	private final int INT_LENGTH = 4;
-
+	// An int is 4 bytes
+	private static final int INT_LENGTH = 4;
 	// Charset used for converting bytes and Strings
-	@SuppressWarnings("null")
-	private final Charset SERIALIZED_CHARSET = StandardCharsets.UTF_8;
+	private static final Charset SERIALIZED_CHARSET = StandardCharsets.UTF_8;
 
 	@Override
+	@NotNull
 	public Class<byte[]> getPrimitiveType() {
 		return byte[].class;
 	}
 
 	@Override
+	@NotNull
 	public Class<Value> getComplexType() {
 		return Value.class;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public byte[] toPrimitive(Value complex, PersistentDataAdapterContext context) {
 		byte[] type = complex.type.getBytes(SERIALIZED_CHARSET);
@@ -68,6 +67,7 @@ public final class SingleVariablePersistentDataType implements PersistentDataTyp
 	}
 
 	@Override
+	@NotNull
 	public Value fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
 		ByteBuffer bb = ByteBuffer.wrap(primitive);
 
