@@ -19,8 +19,10 @@
 package ch.njol.skript.variables;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,6 +40,8 @@ import java.util.regex.Pattern;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
+import ch.njol.skript.config.Config;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.log.SkriptLogger;
@@ -68,7 +73,10 @@ public class FlatFileStorage extends VariablesStorage {
 	private volatile boolean loaded = false;
 	
 	final AtomicInteger changes = new AtomicInteger(0);
-	private final int REQUIRED_CHANGES_FOR_RESAVE = 1000;
+	
+	private int REQUIRED_CHANGES_FOR_RESAVE = 1000;
+	
+	private int FILE_REWRITE_FREQUENCY_TICKS = 20 * 60 * 5;
 	
 	@Nullable
 	private Task saveTask;
@@ -80,9 +88,9 @@ public class FlatFileStorage extends VariablesStorage {
 	}
 	
 	/**
-	 * Doesn'ts lock the connection as required by {@link Variables#variableLoaded(String, Object, VariablesStorage)}.
+	 * Doesn't lock the connection as required by {@link Variables#variableLoaded(String, Object, VariablesStorage)}.
 	 */
-	@SuppressWarnings({"deprecation"})
+	@SuppressWarnings({"deprecation", "resource"})
 	@Override
 	protected boolean load_i(final SectionNode n) {
 		SkriptLogger.setNode(null);
@@ -97,6 +105,7 @@ public class FlatFileStorage extends VariablesStorage {
 		boolean update2_0_beta3 = false;
 		final Version v2_1 = new Version(2, 1);
 		boolean update2_1 = false;
+		final Version post_2_3 = new Version(2, 5, 5);
 		
 		BufferedReader r = null;
 		try {
@@ -189,9 +198,73 @@ public class FlatFileStorage extends VariablesStorage {
 			Skript.info(file.getName() + " successfully updated.");
 		}
 		
+		Version previousVersion = SkriptConfig.getPreviousConfigVersion();
+		if (previousVersion == null || previousVersion.isSmallerThan(post_2_3)) { // If previousVersion is null, the config is probably broken or ancient
+			try {
+				Skript.info("Updating your config to version INSERT VERSION...");
+				Config cfg = SkriptConfig.getConfig();
+				if (cfg == null) {
+					Skript.error("Could not get the Skript config file!");
+				} else {
+					File f = cfg.getFile();
+					r = new BufferedReader(new InputStreamReader(new FileInputStream(f), UTF_8));
+					List<String> convertedCfg = new ArrayList<>();
+					String line = null;
+					while ((line = r.readLine()) != null) {
+						convertedCfg.add(line);
+						if (line.contains("type: CSV") || line.contains("type: SQLite")) {
+							convertedCfg.add("");
+							convertedCfg.add("		required variable changes for save: 1000");
+							convertedCfg.add("		# The number of variables that are needed to be updated in order for a re-writing of a flat file database to occur.");
+							convertedCfg.add("		# Setting this value lower is not recommended unless the server stores very few Skript variables, in which case it may be wise to lower");
+							convertedCfg.add("		# this threshold to ensure that variables are always saved (prevents data loss during a crash).");
+							convertedCfg.add("");
+							convertedCfg.add("		variable save interval: 6000");
+							convertedCfg.add("		# The number of ticks that should pass before the flat file database file is re-written.");
+							convertedCfg.add("		# Setting this value lower is not recommended as saving large database files may cause server lag.");
+							convertedCfg.add("		# It is not advisable for the value set to be 1200 ticks (1 minute) or lower, as this may cause bad things to happen");
+							convertedCfg.add("		# if a database save has not succeeded before next one starts.");
+						}
+					}
+					r.close();
+					
+					BufferedWriter w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), UTF_8));
+					for (String str : convertedCfg) {
+						w.write(str + "\n");
+					}
+					w.close();
+					
+					Skript.info("Successfully updated your config to version INSERT VERSION!");
+				}
+			} catch (IOException e) {
+				Skript.error("Could not update config to the version INSERT VERSION!");
+				ioEx = e;
+			}
+		} else { // Valid Config Version
+			Integer threshold = getValue(n, "required variable changes for save", Integer.class);
+			if (threshold != null) {
+				if (threshold < 0)
+					Skript.error("The variable re-save threshold cannot be negative!");
+				else
+					REQUIRED_CHANGES_FOR_RESAVE = threshold;
+			}
+			
+			Integer rewrite = getValue(n, "variable save interval", Integer.class);
+			if (rewrite != null) {
+				if (rewrite < 1) {
+					Skript.error("The file re-write frequency cannot be less than 1 tick!");
+				} else {
+					if (rewrite <= 20 * 60)
+						Skript.warning("It is not recommended for the file re-write frequency to be less than a minute!");
+					FILE_REWRITE_FREQUENCY_TICKS = rewrite;
+				}
+			}
+		}
+		
 		connect();
 		
-		saveTask = new Task(Skript.getInstance(), 5 * 60 * 20, 5 * 60 * 20, true) {
+		saveTask = new Task(Skript.getInstance(), FILE_REWRITE_FREQUENCY_TICKS, FILE_REWRITE_FREQUENCY_TICKS, true) {
+			@SuppressWarnings("synthetic-access")
 			@Override
 			public void run() {
 				if (changes.get() >= REQUIRED_CHANGES_FOR_RESAVE) {
@@ -344,6 +417,7 @@ public class FlatFileStorage extends VariablesStorage {
 	 * 
 	 * @param finalSave whether this is the last save in this session or not.
 	 */
+	@SuppressWarnings("resource")
 	public final void saveVariables(final boolean finalSave) {
 		if (finalSave) {
 			final Task st = saveTask;

@@ -50,6 +50,7 @@ import ch.njol.skript.timings.SkriptTimings;
 import ch.njol.skript.update.ReleaseChannel;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.Version;
 import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.util.chat.LinkParseMode;
 import ch.njol.skript.variables.Variables;
@@ -381,6 +382,17 @@ public abstract class SkriptConfig {
 		return mainConfig;
 	}
 	
+	@SuppressWarnings("null")
+	private static Version previousConfigVersion = null;
+	
+	/**
+	 * Returns the previous config file version, before Skript automatically updates the version number
+	 */
+	@Nullable
+	public static Version getPreviousConfigVersion() {
+		return previousConfigVersion;
+	}
+	
 	// also used for reloading
 	static boolean load() {
 		try {
@@ -411,7 +423,12 @@ public abstract class SkriptConfig {
 				return false;
 			}
 			mainConfig = mc;
-			
+			String rawPreviousConfigVersion = mc.getMainNode().getValue(version.key);
+			if (rawPreviousConfigVersion != null) {
+				try {
+					previousConfigVersion = new Version(rawPreviousConfigVersion);
+				} catch (IllegalArgumentException e) {}
+			}
 			if (!Skript.getVersion().toString().equals(mc.get(version.key))) {
 				try {
 					final InputStream in = Skript.getInstance().getResource("config.sk");
