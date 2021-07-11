@@ -34,6 +34,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -353,5 +355,11 @@ public class DefaultConverters {
 				}
 			});
 		}
+
+		// PotionEffectType -> PotionEffect (300 ticks = 15 seconds default duration)
+		Converters.registerConverter(PotionEffectType.class, PotionEffect.class,
+			potionEffectType -> new PotionEffect(potionEffectType, 300, 0, false, true)
+		);
+
 	}
 }
