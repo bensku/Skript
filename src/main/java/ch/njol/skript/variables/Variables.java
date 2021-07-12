@@ -274,6 +274,23 @@ public abstract class Variables {
 	public static void setLocalVariables(Event event, Object map) {
 		localVariables.put(event, (VariablesMap) map);
 	}
+
+	/**
+	 * Creates a copy of the VariablesMap for local variables in an event.
+	 * This method should only be accessed in Bukkit's main thread.
+	 * @param event The event to copy local variables from.
+	 * @return A VariablesMap copy for the local variables in an event.
+	 */
+	@Nullable
+	public static Object copyLocalVariables(Event event) {
+		VariablesMap from = localVariables.get(event);
+		if (from == null)
+			return null;
+		VariablesMap copy = new VariablesMap();
+		copy.hashMap.putAll(from.hashMap);
+		copy.treeMap.putAll(from.treeMap);
+		return copy;
+	}
 	
 	/**
 	 * Remember to lock with {@link #getReadLock()}!
