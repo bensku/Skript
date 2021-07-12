@@ -18,11 +18,10 @@
  */
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.ServerPlatform;
+import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -41,11 +40,16 @@ import org.eclipse.jdt.annotation.Nullable;
 		"player is in water or rain",
 		"player is in water or bubble column",
 		"player is in water or rain or bubble column"})
+@RequiredPlugins("Minecraft 1.16+ / Paper 1.16+ for rain, lava and bubble column")
 @Since("INSERT VERSION")
 public class CondEntityIsIn extends Condition {
 	
 	static {
-		PropertyCondition.register(CondEntityIsIn.class, "in (1¦water|2¦lava|3¦bubble[ ]column|4¦rain|5¦water or rain|6¦water or bubble[ ]column|7¦water or rain or bubble[ ]column)", "entities");
+		if (Skript.isRunningMinecraft(1, 16)) {
+			PropertyCondition.register(CondEntityIsIn.class, "in (1¦water)", "entities");
+			if (Skript.getServerPlatform() == ServerPlatform.BUKKIT_PAPER)
+				PropertyCondition.register(CondEntityIsIn.class, "in (2¦lava|3¦bubble[ ]column|4¦rain|5¦water or rain|6¦water or bubble[ ]column|7¦water or rain or bubble[ ]column)", "entities");
+		}
 	}
 	
 	@SuppressWarnings("null")
