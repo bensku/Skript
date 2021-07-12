@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.conditions;
 
+import ch.njol.skript.classes.Comparator.Relation;
+import ch.njol.skript.registrations.Comparators;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EntityEquipment;
@@ -35,18 +37,19 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Is Holding")
 @Description("Checks whether a player is holding a specific item. Cannot be used with endermen, use 'entity is [not] an enderman holding &lt;item type&gt;' instead.")
-@Examples({"player is holding a stick",
-		"victim isn't holding a sword of sharpness"})
+@Examples({
+		"player is holding a stick",
+		"victim isn't holding a sword of sharpness"
+})
 @Since("1.0")
 public class CondItemInHand extends Condition {
+
+	private static final boolean OFFHAND_EXISTS = Skript.isRunningMinecraft(1, 9);
 	
 	static {
-		if (Skript.isRunningMinecraft(1, 9)) {
+		if (OFFHAND_EXISTS) {
 			Skript.registerCondition(CondItemInHand.class,
 					"[%livingentities%] ha(s|ve) %itemtypes% in [main] hand",
 					"[%livingentities%] (is|are) holding %itemtypes% [in main hand]",
@@ -55,20 +58,23 @@ public class CondItemInHand extends Condition {
 					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in [main] hand",
 					"[%livingentities%] (is not|isn't) holding %itemtypes% [in main hand]",
 					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes% in off[(-| )]hand",
-					"[%livingentities%] (is not|isn't) holding %itemtypes% in off[(-| )]hand");
+					"[%livingentities%] (is not|isn't) holding %itemtypes% in off[(-| )]hand"
+			);
 		} else {
 			Skript.registerCondition(CondItemInHand.class,
 					"[%livingentities%] ha(s|ve) %itemtypes% in hand",
 					"[%livingentities%] (is|are) holding %itemtypes% in hand",
 					"[%livingentities%] (ha(s|ve) not|do[es]n't have) %itemtypes%",
-					"[%livingentities%] (is not|isn't) holding %itemtypes%");
+					"[%livingentities%] (is not|isn't) holding %itemtypes%"
+			);
 		}
 	}
 	
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<LivingEntity> entities;
-	@SuppressWarnings("null")
+	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<ItemType> types;
+
 	private boolean offTool;
 	
 	@SuppressWarnings({"unchecked", "null"})
@@ -76,7 +82,7 @@ public class CondItemInHand extends Condition {
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parser) {
 		entities = (Expression<LivingEntity>) exprs[0];
 		types = (Expression<ItemType>) exprs[1];
-		if (Skript.isRunningMinecraft(1, 9)) {
+		if (OFFHAND_EXISTS) {
 			offTool = (matchedPattern == 2 || matchedPattern == 3 || matchedPattern == 6 || matchedPattern == 7);
 			setNegated(matchedPattern >= 4);
 		} else {
@@ -96,12 +102,15 @@ public class CondItemInHand extends Condition {
 								return false; // No equipment -> no item in hand
 							
 							if (Skript.isRunningMinecraft(1, 9)) {
-								return (offTool ? type.isOfType(equipment.getItemInOffHand()) : type.isOfType(equipment.getItemInMainHand()));
+								if (offTool) {
+									return Comparators.compare(equipment.getItemInOffHand(), type).is(Relation.EQUAL);
+								} else {
+									return Comparators.compare(equipment.getItemInMainHand(), type).is(Relation.EQUAL);
+								}
 							} else {
 								@SuppressWarnings("deprecation")
 								ItemStack itemInHand = equipment.getItemInHand();
-								
-								return type.isOfType(itemInHand);
+								return Comparators.compare(itemInHand, type).is(Relation.EQUAL);
 							}
 						}), isNegated());
 	}
