@@ -31,7 +31,7 @@ public class SkriptPattern {
 	private final PatternElement first;
 	private final int expressionAmount;
 
-	private final String @Nullable[] keywords;
+	private final String[] keywords;
 
 	public SkriptPattern(PatternElement first, int expressionAmount) {
 		this.first = first;
@@ -43,10 +43,9 @@ public class SkriptPattern {
 	public MatchResult match(String expr, int flags, ParseContext parseContext) {
 		// Matching shortcut
 		String lowerExpr = expr.toLowerCase();
-		if (keywords != null)
-			for (String keyword : keywords)
-				if (!lowerExpr.contains(keyword))
-					return null;
+		for (String keyword : keywords)
+			if (!lowerExpr.contains(keyword))
+				return null;
 
 		expr = expr.trim();
 
@@ -68,7 +67,7 @@ public class SkriptPattern {
 		return first.toFullString();
 	}
 
-	public static String @Nullable[] getKeywords(PatternElement first) {
+	public static String[] getKeywords(PatternElement first) {
 		List<String> keywords = new ArrayList<>();
 		PatternElement next = first;
 		while (next != null) {
@@ -83,8 +82,6 @@ public class SkriptPattern {
 			}
 			next = next.next;
 		}
-		if (keywords.size() == 0)
-			return null;
 		return keywords.toArray(new String[0]);
 	}
 
