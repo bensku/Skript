@@ -28,8 +28,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-@Name("Is in Rain/Lava/Water/BubbleColumn")
-@Description("Checks whether an entity is in Rain/Lava/Water/BubbleColumn")
+@Name("Is In")
+@Description("Checks whether an entity is in rain, lava, water or a bubble column.")
 @Examples({"player is in rain",
 		"player is in water",
 		"player is in lava",
@@ -44,38 +44,25 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 	static {
 		StringBuilder patterns = new StringBuilder("");
 		if (Skript.methodExists(Entity.class, "isInWater"))
-			patterns.append("1¦water|");
-		if (Skript.methodExists(Entity.class, "isInLava"))
-			patterns.append("2¦lava|");
-		if (Skript.methodExists(Entity.class, "isInBubbleColumn"))
-			patterns.append("3¦bubble[ ]column|");
-		if (Skript.methodExists(Entity.class, "isInRain"))
-			patterns.append("4¦rain|");
-		if (Skript.methodExists(Entity.class, "isInWaterOrRain"))
-			patterns.append("5¦water or rain|");
-		if (Skript.methodExists(Entity.class, "isInWaterOrBubbleColumn"))
-			patterns.append("6¦water or bubble[ ]column|");
-		if (Skript.methodExists(Entity.class, "isInWaterOrRainOrBubbleColumn"))
-			patterns.append("7¦water or rain or bubble[ ]column");
-
-		if (patterns.toString().endsWith("|")) // Remove last empty '|' if exists
-			patterns.deleteCharAt(patterns.length() - 1);
+			patterns.append("1¦water");
+		if (Skript.methodExists(Entity.class, "isInLava")) // All added at the same time + isInWater
+			patterns.append("|2¦lava|3¦bubble[ ]column|4¦rain|5¦water or rain|6¦water or bubble[ ]column|7¦water or rain or bubble[ ]column");
 
 		register(CondEntityIsIn.class, PropertyType.BE, "in (" + patterns + ")", "entities");
 	}
 
-	static final int IN_WATER = 1;
-	static final int IN_LAVA = 2;
-	static final int IN_BUBBLE_COLUMN = 3;
-	static final int IN_RAIN = 4;
-	static final int IN_WATER_OR_RAIN = 5;
-	static final int IN_WATER_OR_BUBBLE_COLUMN = 6;
-	static final int IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN = 7;
+	static final int
+			IN_WATER = 1,
+			IN_LAVA = 2,
+			IN_BUBBLE_COLUMN = 3,
+			IN_RAIN = 4, IN_WATER_OR_RAIN = 5,
+			IN_WATER_OR_BUBBLE_COLUMN = 6,
+			IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN = 7;
 
 	private int mark;
 
-	@SuppressWarnings({"unchecked", "null"})
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
 		setExpr((Expression<? extends Entity>) exprs[0]);
 		setNegated(matchedPattern == 1);
@@ -85,24 +72,16 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 	
 	@Override
 	public boolean check(Entity entity) {
-		switch (mark) {
-			case IN_WATER:
-				return entity.isInWater();
-			case IN_LAVA:
-				return entity.isInLava();
-			case IN_BUBBLE_COLUMN:
-				return entity.isInBubbleColumn();
-			case IN_RAIN:
-				return entity.isInRain();
-			case IN_WATER_OR_RAIN:
-				return entity.isInWaterOrRain();
-			case IN_WATER_OR_BUBBLE_COLUMN:
-				return entity.isInWaterOrBubbleColumn();
-			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN:
-				return entity.isInWaterOrRainOrBubbleColumn();
-			default:
-				return false;
-		}
+		return switch (mark) {
+			case IN_WATER -> entity.isInWater();
+			case IN_LAVA -> entity.isInLava();
+			case IN_BUBBLE_COLUMN -> entity.isInBubbleColumn();
+			case IN_RAIN -> entity.isInRain();
+			case IN_WATER_OR_RAIN -> entity.isInWaterOrRain();
+			case IN_WATER_OR_BUBBLE_COLUMN -> entity.isInWaterOrBubbleColumn();
+			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN -> entity.isInWaterOrRainOrBubbleColumn();
+			default -> false;
+		};
 	}
 
 	@Override
