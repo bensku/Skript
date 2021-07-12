@@ -115,3 +115,4 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 		}
 	}
 }
+
