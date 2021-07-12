@@ -72,16 +72,24 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 	
 	@Override
 	public boolean check(Entity entity) {
-		return switch (mark) {
-			case IN_WATER -> entity.isInWater();
-			case IN_LAVA -> entity.isInLava();
-			case IN_BUBBLE_COLUMN -> entity.isInBubbleColumn();
-			case IN_RAIN -> entity.isInRain();
-			case IN_WATER_OR_RAIN -> entity.isInWaterOrRain();
-			case IN_WATER_OR_BUBBLE_COLUMN -> entity.isInWaterOrBubbleColumn();
-			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN -> entity.isInWaterOrRainOrBubbleColumn();
-			default -> false;
-		};
+		switch (mark) {
+			case IN_WATER:
+				return entity.isInWater();
+			case IN_LAVA:
+				return entity.isInLava();
+			case IN_BUBBLE_COLUMN:
+				return entity.isInBubbleColumn();
+			case IN_RAIN:
+				return entity.isInRain();
+			case IN_WATER_OR_RAIN:
+				return entity.isInWaterOrRain();
+			case IN_WATER_OR_BUBBLE_COLUMN:
+				return entity.isInWaterOrBubbleColumn();
+			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN:
+				return entity.isInWaterOrRainOrBubbleColumn();
+			default:
+				return false;
+		}
 	}
 
 	@Override
