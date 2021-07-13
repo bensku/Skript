@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Examples({"set whitelist to false",
 	"add all players to whitelist",
 	"reset the whitelist"})
-@Since("2.5.2")
+@Since("2.5.2, INSERT VERSION (toggle support)")
 public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	
 	static {
@@ -68,7 +68,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
 			return CollectionUtils.array(OfflinePlayer[].class);
-		else if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
+		else if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return CollectionUtils.array(Boolean.class);
 		else
 			return null;
@@ -78,8 +78,7 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
 		switch (mode) {
 			case SET:
-				if (delta != null)
-					Bukkit.setWhitelist((Boolean) delta[0]);
+				Bukkit.setWhitelist((Boolean) delta[0]);
 				break;
 			case ADD:
 				if (delta != null) {
@@ -96,6 +95,14 @@ public class ExprWhitelist extends SimpleExpression<OfflinePlayer> {
 			case RESET:
 				for (OfflinePlayer p : Bukkit.getWhitelistedPlayers())
 					p.setWhitelisted(false);
+				break;
+			case TOGGLE:
+				if (delta != null) {
+					for (Object p : delta) {
+						OfflinePlayer player = (OfflinePlayer) p;
+						player.setWhitelisted(!player.isWhitelisted());
+					}
+				}
 				break;
 			default:
 				assert false;

@@ -32,7 +32,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 @Name("Glowing")
 @Description("Indicates if targeted entity is glowing (new 1.9 effect) or not. Glowing entities can be seen through walls.")
 @Examples({"set glowing of player to true"})
-@Since("2.2-dev18")
+@Since("2.2-dev18, INSERT VERSION (toggle support)")
 public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	
 	static {
@@ -57,14 +57,19 @@ public class ExprGlowing extends SimplePropertyExpression<Entity, Boolean> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET)
+		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.TOGGLE)
 			return new Class[] {Boolean.class};
 		return null;
 	}
 	
 	@Override
 	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
-		for (final Entity entity : getExpr().getArray(e))
-			entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
+		for (final Entity entity : getExpr().getArray(e)) {
+			if (mode == ChangeMode.TOGGLE) {
+				entity.setGlowing(!entity.isGlowing());
+			} else {
+				entity.setGlowing(delta == null ? false : (Boolean) delta[0]);
+			}
+		}
 	}
 }

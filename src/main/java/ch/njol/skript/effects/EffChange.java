@@ -19,6 +19,7 @@
 package ch.njol.skript.effects;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.event.Event;
@@ -73,7 +74,10 @@ import ch.njol.util.Kleenean;
 		"delete {variable}",
 		"# reset:",
 		"reset walk speed of player",
-		"reset chunk at the targeted block"})
+		"reset chunk at the targeted block",
+		"# toggle:",
+		"toggle player's flight mode",
+		"toggle player's gravity"})
 @Since("1.0 (set, add, remove, delete), 2.0 (remove all)")
 public class EffChange extends Effect {
 	private static Patterns<ChangeMode> patterns = new Patterns<>(new Object[][] {
@@ -90,7 +94,9 @@ public class EffChange extends Effect {
 			
 			{"(delete|clear) %~objects%", ChangeMode.DELETE},
 			
-			{"reset %~objects%", ChangeMode.RESET}
+			{"reset %~objects%", ChangeMode.RESET},
+
+			{"toggle %~objects%", ChangeMode.TOGGLE}
 	});
 	
 	static {
@@ -146,6 +152,10 @@ public class EffChange extends Effect {
 				break;
 			case RESET:
 				changed = exprs[0];
+				break;
+			case TOGGLE:
+				changed = exprs[0];
+				break;
 		}
 		
 		CountingLogHandler h = new CountingLogHandler(Level.SEVERE).start();
@@ -187,6 +197,9 @@ public class EffChange extends Effect {
 						Skript.error(what + " can't be reset. It can however be deleted which might result in the desired effect.", ErrorQuality.SEMANTIC_ERROR);
 					else
 						Skript.error(what + " can't be reset", ErrorQuality.SEMANTIC_ERROR);
+					break;
+				case TOGGLE:
+					Skript.error(what + " can't be toggled", ErrorQuality.SEMANTIC_ERROR);
 			}
 			return false;
 		}
@@ -272,9 +285,9 @@ public class EffChange extends Effect {
 	protected void execute(Event e) {
 		Expression<?> changer = this.changer;
 		Object[] delta = changer == null ? null : changer.getArray(e);
+		List<ChangeMode> modes = List.of(ChangeMode.DELETE, ChangeMode.RESET, ChangeMode.TOGGLE);
 		delta = changer == null ? delta : changer.beforeChange(changed, delta);
-
-		if ((delta == null || delta.length == 0) && (mode != ChangeMode.DELETE && mode != ChangeMode.RESET)) {
+		if ((delta == null || delta.length == 0) && (!modes.contains(mode))) {
 			if (changed.acceptChange(ChangeMode.DELETE) != null)
 				changed.change(e, null, ChangeMode.DELETE);
 			return;
@@ -302,6 +315,8 @@ public class EffChange extends Effect {
 				return "delete/clear " + changed.toString(e, debug);
 			case RESET:
 				return "reset " + changed.toString(e, debug);
+			case TOGGLE:
+				return "toggle " + changed.toString(e, debug);
 		}
 		assert false;
 		return "";

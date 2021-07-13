@@ -40,7 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Saturation")
 @Description("The saturation of a player. If used in a player event, it can be omitted and will default to event-player.")
 @Examples("set saturation of player to 20")
-@Since("2.2-Fixes-v10, 2.2-dev35 (fully modifiable)")
+@Since("2.2-Fixes-v10, 2.2-dev35 (fully modifiable), INSERT VERSION (toggle support)")
 public class ExprSaturation extends PropertyExpression<Player, Number> {
 
 	static {
@@ -97,6 +97,10 @@ public class ExprSaturation extends PropertyExpression<Player, Number> {
 			case RESET:
 				for (Player player : getExpr().getArray(e))
 					player.setSaturation(0);
+				break;
+			case TOGGLE:
+				for (Player player : getExpr().getArray(e))
+					player.setSaturation(player.getSaturation() == 100 ? 0 : 100);
 				break;
 		}
 	}
