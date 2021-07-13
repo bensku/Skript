@@ -864,7 +864,12 @@ public class SkriptClasses {
 					@Override
 					@Nullable
 					public VisualEffect parse(String s, ParseContext context) {
-						return VisualEffects.parse(s);
+						return null;
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
 					}
 
 					@Override
