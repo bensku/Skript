@@ -33,12 +33,10 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"player is in rain",
 		"player is in water",
 		"player is in lava",
-		"player is in bubble column",
-		"player is in water or rain",
-		"player is in water or bubble column",
-		"player is in water or rain or bubble column"})
+		"player is in bubble column"})
 @RequiredPlugins("Minecraft 1.16+, Paper 1.16+ (rain, lava and bubble column)")
 @Since("INSERT VERSION")
+
 public class CondEntityIsIn extends PropertyCondition<Entity> {
 	
 	static {
@@ -46,7 +44,7 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 		if (Skript.methodExists(Entity.class, "isInWater"))
 			patterns.append("1¦water");
 		if (Skript.methodExists(Entity.class, "isInLava")) // All added at the same time + isInWater
-			patterns.append("|2¦lava|3¦bubble[ ]column|4¦rain|5¦water or rain|6¦water or bubble[ ]column|7¦water or rain or bubble[ ]column");
+			patterns.append("|2¦lava|3¦bubble[ ]column|4¦rain");
 
 		register(CondEntityIsIn.class, PropertyType.BE, "in (" + patterns + ")", "entities");
 	}
@@ -55,9 +53,7 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 			IN_WATER = 1,
 			IN_LAVA = 2,
 			IN_BUBBLE_COLUMN = 3,
-			IN_RAIN = 4, IN_WATER_OR_RAIN = 5,
-			IN_WATER_OR_BUBBLE_COLUMN = 6,
-			IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN = 7;
+			IN_RAIN = 4;
 
 	private int mark;
 
@@ -81,12 +77,6 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 				return entity.isInBubbleColumn();
 			case IN_RAIN:
 				return entity.isInRain();
-			case IN_WATER_OR_RAIN:
-				return entity.isInWaterOrRain();
-			case IN_WATER_OR_BUBBLE_COLUMN:
-				return entity.isInWaterOrBubbleColumn();
-			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN:
-				return entity.isInWaterOrRainOrBubbleColumn();
 			default:
 				return false;
 		}
@@ -112,14 +102,8 @@ public class CondEntityIsIn extends PropertyCondition<Entity> {
 				return "bubble column";
 			case IN_RAIN:
 				return "rain";
-			case IN_WATER_OR_RAIN:
-				return "water or rain";
-			case IN_WATER_OR_BUBBLE_COLUMN:
-				return "water or bubble column";
-			case IN_WATER_OR_RAIN_OR_BUBBLE_COLUMN:
-				return "water or rain or bubble column";
 			default:
-				return "";
+				return "unknown";
 		}
 	}
 }
